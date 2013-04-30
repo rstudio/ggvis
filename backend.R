@@ -1,13 +1,28 @@
 library(httpuv)
 library(Rook)
+library(ggplot2)
+library(gg2v)
+library(RJSONIO)
 
+plotToScript <- function(id, plotObj) {
+  json <- toJSON(plot_spec(plotObj, embed_data=TRUE))
+  paste(
+    sep = '\n',
+    '<script>',
+    sprintf('var spec = %s;', spec),
+    'vg.parse.spec(spec, function(chart) {',
+    sprintf('  chart({el:"#%s"}).update();', id),
+    '});',
+    '</script>'
+  )
+}
 
 headFunc <- function() {
-  ""
+  plotToScript('vis', qplot(speed, dist, data=cars))
 }
 
 bodyFunc <- function() {
-  "Hello world!!"
+  '<div id="vis"></div>'
 }
 
 
