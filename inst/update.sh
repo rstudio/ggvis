@@ -2,7 +2,9 @@
 
 set -e
 cd www/lib
-wget https://raw.github.com/trifacta/vega/master/vega.js
-wget https://raw.github.com/trifacta/vega/master/vega.min.js
-wget https://github.com/mbostock/d3/raw/master/d3.js
-wget https://github.com/mbostock/d3/raw/master/d3.min.js
+curl -O https://raw.github.com/trifacta/vega/master/vega.js
+curl -O https://raw.github.com/trifacta/vega/master/vega.min.js
+curl -O https://raw.github.com/mbostock/d3/master/d3.js
+curl -O https://raw.github.com/mbostock/d3/master/d3.min.js
+curl -O http://code.jquery.com/jquery-1.9.1.min.js
+curl -O http://code.jquery.com/jquery-1.9.1.js
