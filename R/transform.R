@@ -1,3 +1,9 @@
+transform <- function(type, ...) {
+  structure(list(...), class = c(paste0("transform_", type), "transform"))
+}
+print.transform <- function(x, ...) str(x)
+
+
 transform_smooth <- function(method = "auto", formula = "auto", se = TRUE,
                              level = 0.95, n = 80L, na.rm = FALSE, ...) {
   assert_that(is.string(method))
@@ -7,8 +13,8 @@ transform_smooth <- function(method = "auto", formula = "auto", se = TRUE,
   assert_that(is.integer(n), length(n) == 1, n >= 0)
   assert_that(is.flag(na.rm))
 
-  list(method = method, formula = formula, se = se, level = level, n = n,
-    na.rm = na.rm, dots = dots(...))
+  transform("smooth", method = method, formula = formula, se = se,
+    level = level, n = n, na.rm = na.rm, dots = dots(...))
 }
 compute.transform_smooth <- function(x, data) {
   if (x$method == "auto") {
@@ -27,6 +33,6 @@ compute.transform_smooth <- function(x, data) {
 }
 
 
-transform_bin <- function(...) {
-
+transform_bin <- function(binwidth = 1) {
+  transform("bin", binwidth = binwidth)
 }
