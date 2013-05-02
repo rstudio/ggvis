@@ -1,3 +1,4 @@
+#' @import assertthat
 ggvis <- function(data = NULL, mapping = NULL, ...) {
   node(data = data, mapping = mapping, ...)
 }
