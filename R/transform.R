@@ -1,7 +1,7 @@
 transform_smooth <- function(method = "auto", formula = "auto", se = TRUE,
                              level = 0.95, n = 80L, na.rm = FALSE, ...) {
   assert_that(is.string(method))
-  assert_that(is.formula(formula) || identical(formula, "auto"))
+  # assert_that(is.formula(formula) || identical(formula, "auto"))
   assert_that(is.flag(se))
   assert_that(is.numeric(level), length(level) == 1, level >= 0, level <= 1)
   assert_that(is.integer(n), length(n) == 1, n >= 0)
@@ -24,4 +24,9 @@ compute.transform_smooth <- function(x, data) {
   mod <- eval(call)
 
   predictdf(mod, xseq, x$se, x$level)
+}
+
+
+transform_bin <- function(...) {
+
 }

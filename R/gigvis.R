@@ -12,7 +12,7 @@ node <- function(..., data = NULL, mapping = NULL, transform = NULL,
   # scales is a list of scale objects
   # split is a spitter object
 
-  assert_that(is.character(mapping), !is.null(names(mapping)))
+  # assert_that(is.character(mapping), !is.null(names(mapping)))
 
   children <- list(...)
 
