@@ -1,7 +1,8 @@
 Package: gigvis
 Title: Interactive grammar of graphics
 Version: 0.0.99
-Authors: RStudio, Inc.
+Author: RStudio, Inc.
+Maintainer: Winston Chang <winston@rstudio.com>
 Description: 
 Depends:
     R (>= 2.15.1)
