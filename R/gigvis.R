@@ -1,5 +1,5 @@
 #' @import assertthat
-ggvis <- function(data = NULL, mapping = NULL, ...) {
+gigvis <- function(data = NULL, mapping = NULL, ...) {
   structure(
     node(data = data, mapping = mapping, fill_defaults = TRUE, ...),
     class = "gigvis"
