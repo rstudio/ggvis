@@ -25,6 +25,10 @@ socket.onclose = function() {
 };
 
 
+function getSceneBounds(view) {
+  return view.model().scene().items[0].bounds;
+}
+
 // Function that retrieves vega scene items using a hard coded path. This will
 // obviously not work when our charts start getting interesting.
 function getItems(view) {
@@ -98,22 +102,30 @@ ItemIndex.prototype.getByKey = function(key) {
 };
 
 
+function mouseOffset(e) {
+  var bounds = e.target.getBoundingClientRect();
+  return {
+    x: e.clientX - bounds.left,
+    y: e.clientY - bounds.top
+  };
+}
+
 function subscribe(view) {
   var $el = $(view._el);
   // Hook up handlers
   $el.on('mousedown.gigvis', function (event, item) {
-    startBrushing(removePadding({x: event.offsetX, y: event.offsetY}));
+    startBrushing(removePadding(mouseOffset(event)));
   });
   $el.on('mouseup.gigvis', function (event, item) {
     stopBrushing();
   });
   $el.on('mousemove.gigvis', function (event, item) {
-    brushTo(removePadding({x: event.offsetX, y: event.offsetY}));
+    brushTo(removePadding(mouseOffset(event)));
   });
 
   var dragStart = null;
 
-  // offsetX/Y are relative to the containing div. We need to account for the
+  // x/y coords are relative to the containing div. We need to account for the
   // padding that surrounds the data area by removing the padding before we
   // compare it to any scene item bounds.
   // TODO: Do we need to multiply by x/y ratio?
@@ -147,12 +159,14 @@ function subscribe(view) {
     if (!dragStart)
       return; // we're not brushing right now
 
+    var limits = getSceneBounds(view);
+
     // Calculate the bounds based on start and end points
     var end = point;
-    var maxX = Math.max(dragStart.x, end.x);
-    var minX = Math.min(dragStart.x, end.x);
-    var maxY = Math.max(dragStart.y, end.y);
-    var minY = Math.min(dragStart.y, end.y);
+    var maxX = Math.min(Math.max(dragStart.x, end.x), limits.x2);
+    var minX = Math.max(Math.min(dragStart.x, end.x), limits.x1);
+    var maxY = Math.min(Math.max(dragStart.y, end.y), limits.y2);
+    var minY = Math.max(Math.min(dragStart.y, end.y), limits.y1);
     var bounds = new vg.Bounds().set(minX, minY, maxX, maxY);
 
     // Update the brush bounding box
