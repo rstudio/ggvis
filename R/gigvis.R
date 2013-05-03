@@ -1,6 +1,9 @@
 #' @import assertthat
 ggvis <- function(data = NULL, mapping = NULL, ...) {
-  node(data = data, mapping = mapping, fill_defaults = TRUE, ...)
+  structure(
+    node(data = data, mapping = mapping, fill_defaults = TRUE, ...),
+    class = "gigvis"
+  )
 }
 
 node <- function(..., data = NULL, mapping = NULL, transform = NULL,

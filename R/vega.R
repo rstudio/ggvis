@@ -1,19 +1,19 @@
 #' Given a gigvis object, output a vega object
+#'
+#'
+#' @param envir The environment in which to evaluate the \code{data} parameter
+#'   of the gigvis object.
+#'
 #' @importFrom RJSONIO toJSON
 vega_spec <- function(gv,
                       width = 600, height = 400, padding = c(20, 20, 30, 50),
                       envir = parent.frame()) {
 
-  data <- eval(parse(text = gv$data), envir)
-  data <- list(vega_df(data, name = gv$data))
-
-
+  # These are key-values that only appear at the top level of the tree
   spec <- list(
     width = width,
     height = height,
-    data = data,
     scales = vega_scales(gv$scales, gv$mapping, gv$data),
-    marks = lapply(gv$children, process_node, gv$mapping, gv$data),
 
     axes = list(list(type = "x", scale = "x"), list(type = "y", scale = "y")),
     padding = c(
@@ -24,16 +24,44 @@ vega_spec <- function(gv,
     )
   )
 
+  # Now deal with keys that also appear in lower levels of the tree, and merge
+  # them in to the spec.
+  spec <- c(spec, vega_process_node(node = gv, state = list(), envir = envir))
+
   spec
 }
 
 
-process_node <- function(node, mapping, data) {
-  if (inherits(node, "mark")) {
-    vega_mark(node, mapping, data)
-  }
+# Recursively process nodes in the tree.
+#
+# The `state` argument should be a list containing the values of `data` and
+# `mapping` at this level of the tree. This is necessary because the values
+# can be set (or not) at each level of the tree; if they're not set, they're
+# inherited from the previous level. This algorithm recursively traverses
+# the tree, and needs to keep track of what the inherited state currently is.
+#
+# @param node A gigvis object node.
+# @param state The inherited state of data and mapping at this level of the tree.
+# @param envir Environment in which to evaluate \code{data}, to retrieve
+#   the data object.
+vega_process_node <- function(node, state, envir) {
 
-  # TODO: recurse into children if necessary
+  if (inherits(node, "gigvis")) {
+    data <- eval(parse(text = node$data), envir)
+    data <- list(vega_df(data, name = node$data))
+
+    return(list(
+      data = data,
+      marks = lapply(
+        node$children,
+        FUN = vega_process_node,
+        state = list(data = node$data, mapping = node$mapping),
+        envir = envir)
+    ))
+
+  } else if (inherits(node, "mark")) {
+    vega_mark(node, state$mapping, state$data)
+  }
 }
 
 
