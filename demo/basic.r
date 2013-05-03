@@ -1,9 +1,11 @@
 
 
-
+# Basic scatter plot
 ggvis("mtcars", c(x = "wt", y = "mpg"),
   mark_point()
 )
+
+# Scatter plot with linear model line
 ggvis("mtcars", c(x = "wt", y = "mpg"),
   mark_point(),
   node(
@@ -14,6 +16,8 @@ ggvis("mtcars", c(x = "wt", y = "mpg"),
     )
   )
 )
+
+# Scatter plot with linear model line for each level of cyl
 ggvis("mtcars", c(x = "wt", y = "mpg"),
   mark_point(),
   node(
@@ -26,6 +30,7 @@ ggvis("mtcars", c(x = "wt", y = "mpg"),
   )
 )
 
+# Histogram
 ggvis("mtcars", c(x = "wt"),
   transform = transform_bin(binwidth = 1),
   node(

@@ -1,12 +1,12 @@
 
 mark <- function(type, ...) {
-  structure(list(...), class = c(paste0("mark_", type), "mark"))
+  structure(list(type = type, ...), class = c(paste0("mark_", type), "mark"))
 }
 print.mark <- function(x, ...) str(x)
 
 mark_point <- function(x = NULL, y = NULL, opacity = NULL,
-                       fill = NULL, fillOpacity = NULL,
-                       stroke = NULL, strokeWidth = NULL, strokeOpacity = NULL,
+                       fill = "#000000", fillOpacity = NULL,
+                       stroke = "#000000", strokeWidth = NULL, strokeOpacity = NULL,
                        size = NULL, shape = NULL) {
 
   mark("point", x = x, y = y, opacity = opacity,
