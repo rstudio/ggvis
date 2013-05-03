@@ -1,6 +1,9 @@
 
 mark <- function(type, ...) {
-  structure(list(type = type, ...), class = c(paste0("mark_", type), "mark"))
+  structure(
+    list(type = type, ...),
+    class = c(paste0("mark_", type), "mark", "gigvis_node")
+  )
 }
 print.mark <- function(x, ...) str(x)
 

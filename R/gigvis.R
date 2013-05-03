@@ -2,7 +2,7 @@
 gigvis <- function(data = NULL, mapping = NULL, ...) {
   structure(
     node(data = data, mapping = mapping, fill_defaults = TRUE, ...),
-    class = "gigvis"
+    class = c("gigvis", "gigvis_node")
   )
 }
 
@@ -31,12 +31,15 @@ node <- function(..., data = NULL, mapping = NULL, transform = NULL,
 
   children <- list(...)
 
-  list(
-    data = data,
-    mapping = mapping,
-    transform = transform,
-    scales = scales,
-    split = split,
-    children = children
+  structure(
+    list(
+      data = data,
+      mapping = mapping,
+      transform = transform,
+      scales = scales,
+      split = split,
+      children = children
+    ),
+    class = "gigvis_node"
   )
 }
