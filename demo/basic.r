@@ -5,6 +5,12 @@ gigvis("mtcars", c(x = "wt", y = "mpg"),
   mark_point()
 )
 
+# Line and point graph
+gigvis("mtcars", c(x = "wt", y = "mpg"),
+  mark_line(stroke="#000000"),
+  mark_point()
+)
+
 # Scatter plot with linear model line
 gigvis("mtcars", c(x = "wt", y = "mpg"),
   mark_point(),
