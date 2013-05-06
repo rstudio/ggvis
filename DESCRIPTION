@@ -9,3 +9,12 @@ Depends:
 Imports:
     assertthat
 License: GPL-2
+Collate:
+    'branch.R'
+    'gigvis.R'
+    'mark.R'
+    'scales.R'
+    'split.R'
+    'transform.R'
+    'utils.R'
+    'vega.R'
