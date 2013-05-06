@@ -2,13 +2,13 @@
 
 # Basic scatter plot
 gigvis("mtcars", c(x = "wt", y = "mpg"),
-  mark_point()
+  mark_point(stroke = "#000000", fill = "#000000")
 )
 
 # Line and point graph
 gigvis("mtcars", c(x = "wt", y = "mpg"),
-  mark_line(stroke="#000000"),
-  mark_point()
+  mark_line(stroke = "#000000"),
+  mark_point(stroke = "#000000", fill = "#000000")
 )
 
 # Scatter plot with linear model line
