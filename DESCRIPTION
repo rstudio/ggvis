@@ -18,3 +18,5 @@ Collate:
     'transform.R'
     'utils.R'
     'vega.R'
+    'aes.R'
+    'fill_tree.R'

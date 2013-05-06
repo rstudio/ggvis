@@ -34,3 +34,15 @@ modify_call <- function(call, new_args) {
 }
 
 "%||%" <- function(a, b) if (!is.null(a)) a else b
+
+
+# Given two named vectors, join them together, and keep only the last element
+# with a given name in the resulting vector. If b has any elements with the
+# same name as elements in a, the element in a is dropped. Also, if there are
+# any duplicated names in a or b, only the last one with that name is kept.
+merge_vectors <- function(a, b) {
+  x <- c(a, b)
+  # Use `duplicated` backwards, because we want to keep only the last element
+  drop_idx <- rev(duplicated(rev(names(x))))
+  x[!drop_idx]
+}
