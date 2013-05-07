@@ -7,6 +7,8 @@ vega_spec <- function(gv,
                       width = 600, height = 400, padding = c(20, 20, 30, 50),
                       envir = parent.frame()) {
 
+  gv <- gigvis_fill_tree(gv)
+
   # These are key-values that only appear at the top level of the tree
   spec <- list(
     width = width,
@@ -24,7 +26,7 @@ vega_spec <- function(gv,
 
   # Now deal with keys that also appear in lower levels of the tree, and merge
   # them in to the spec.
-  spec <- c(spec, vega_process_node(node = gv, state = list(), envir = envir))
+  spec <- c(spec, vega_process_node(node = gv, envir = envir))
 
   spec
 }
@@ -32,20 +34,18 @@ vega_spec <- function(gv,
 
 # Recursively process nodes in the tree.
 #
-# The `state` argument should be a list containing the values of `data` and
-# `mapping` at this level of the tree. This is necessary because the values
-# can be set (or not) at each level of the tree; if they're not set, they're
-# inherited from the previous level. This algorithm recursively traverses
-# the tree, and needs to keep track of what the inherited state currently is.
-#
 # @param node A gigvis object node.
-# @param state The inherited state of data and mapping at this level of the tree.
 # @param envir Environment in which to evaluate \code{data}, to retrieve
 #   the data object.
-vega_process_node <- function(node, state, envir) {
+vega_process_node <- function(node, envir) {
 
-  if (inherits(node, "gigvis")) {
-    data <- eval(parse(text = node$data), envir)
+  if (inherits(node, "mark")) {
+    # Leaf nodes
+    vega_mark(node)
+
+  } else if (inherits(node, "gigvis_node")) {
+    # Non-leaf nodes
+    data <- get(node$data, envir)
     data <- list(vega_df(data, name = node$data))
 
     return(list(
@@ -53,12 +53,9 @@ vega_process_node <- function(node, state, envir) {
       marks = lapply(
         node$children,
         FUN = vega_process_node,
-        state = list(data = node$data, mapping = node$mapping),
-        envir = envir)
+        envir = envir
+      )
     ))
-
-  } else if (inherits(node, "mark")) {
-    vega_mark(node, state$mapping, state$data)
   }
 }
 
@@ -143,29 +140,29 @@ vega_scale <- function(scale, domain, data) {
 
 
 # Given a gigvis mark object, output a vega mark object
-vega_mark <- function(mark, mapping, data) {
+vega_mark <- function(node) {
 
   # Generate the fields related to mappings (x, y, etc)
   # This assumes that the scale's name is the same as the 'name' field, which
   # is true now but might not be a good assumption in the long run.
   vega_mapping <- list()
-  for (name in names(mapping)) {
+  for (name in names(node$mapping)) {
     vega_mapping[[name]] <- list(
-      field = paste("data", mapping[[name]], sep = "."),
+      field = paste("data", node$mapping[[name]], sep = "."),
       scale = name
     )
   }
 
   # TODO: Support other properties besides just stroke and fill
   list(
-    type = vega_mark_type(mark),
-    from = list(data = data),
+    type = vega_mark_type(node),
+    from = list(data = node$data),
     properties = list(
       update = c(
         vega_mapping,
         list(
-          stroke = list(value = mark$stroke),
-          fill = list(value = mark$fill)
+          stroke = list(value = node$stroke),
+          fill = list(value = node$fill)
         )
       )
     )

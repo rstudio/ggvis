@@ -10,9 +10,6 @@
 #
 #
 gigvis_fill_tree <- function(node, parent = NULL) {
-  # Marks (leaf nodes) are returned as-is
-  if (inherits(node, "mark"))  return(node)
-
   if (is.null(parent))  parent <- list()
 
   # Handle data sets
@@ -34,8 +31,6 @@ gigvis_fill_tree <- function(node, parent = NULL) {
     }
   }
 
-
-
   # Inherit mappings
   if (is.null(node$mapping)) {
     node$mapping <- parent$mapping
@@ -52,13 +47,10 @@ gigvis_fill_tree <- function(node, parent = NULL) {
     }
   }
 
-
   # Fill in children recursively
-  node$children <- lapply(
-    node$children,
-    FUN = gigvis_fill_tree,
-    parent = node
-  )
+  if (!is.null(node$children)) {
+    node$children <- lapply(node$children, FUN = gigvis_fill_tree, parent = node)
+  }
 
   node
 }
