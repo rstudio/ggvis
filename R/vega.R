@@ -14,6 +14,7 @@ vega_spec <- function(gv,
   spec <- list(
     width = width,
     height = height,
+    data = gather_datasets(gv),
     scales = vega_scales(gv$scales, gv$mapping, gv$data),
 
     axes = list(list(type = "x", scale = "x"), list(type = "y", scale = "y")),
@@ -33,6 +34,29 @@ vega_spec <- function(gv,
 }
 
 
+# Recursively traverse tree and collect all the data sets used. Returns a flat
+# list of data sets, converted to vega data format.
+gather_datasets <- function(node) {
+  if (!is.null(node$data)) {
+    dataset <- vega_df(node$data_std, name = node$data)
+  } else {
+    dataset <- NULL
+  }
+
+  # Generate flat list of datasets, joining this node's data with children's
+  datasets <- c(
+    list(dataset),
+    unlist(lapply(node$children, gather_datasets), recursive = FALSE)
+  )
+
+  # Drop duplicate datasets, by checking for duplicated 'name' keys
+  datanames <- vapply(datasets, FUN = `[[`, 'name', FUN.VALUE = character(1))
+  datasets[duplicated(datanames)] <- NULL
+
+  datasets
+}
+
+
 # Recursively process nodes in the tree.
 #
 # @param node A gigvis object node.
@@ -46,17 +70,13 @@ vega_process_node <- function(node, envir) {
 
   } else if (inherits(node, "gigvis_node")) {
     # Non-leaf nodes
-
-    data <- list(vega_df(node$data_std, name = node$data))
-
-    return(list(
-      data = data,
+    list(
       marks = lapply(
         node$children,
         FUN = vega_process_node,
         envir = envir
       )
-    ))
+    )
   }
 }
 

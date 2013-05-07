@@ -61,7 +61,7 @@ gigvis_fill_tree <- function(node, parent = NULL) {
 
 
 # Transform the data at each node into a standardized format.
-# * Evaluates
+# * Gets data from name in node$data
 # * Converts data frame to have names x, y, color, etc.
 # * Drops unused columns
 # * Modifies `mapping` to reflect new, standardized column names
