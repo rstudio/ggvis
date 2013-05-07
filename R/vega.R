@@ -8,6 +8,7 @@ vega_spec <- function(gv,
                       envir = parent.frame()) {
 
   gv <- gigvis_fill_tree(gv)
+  gv <- standardize_data(gv, envir)
 
   # These are key-values that only appear at the top level of the tree
   spec <- list(
@@ -45,8 +46,8 @@ vega_process_node <- function(node, envir) {
 
   } else if (inherits(node, "gigvis_node")) {
     # Non-leaf nodes
-    data <- get(node$data, envir)
-    data <- list(vega_df(data, name = node$data))
+
+    data <- list(vega_df(node$data_std, name = node$data))
 
     return(list(
       data = data,
@@ -74,45 +75,12 @@ d3df <- function(x) {
 
 
 # Given a gigvis scales object, return a vega scales object.
-# Input:
-# $ scales   :List of 2
-#  ..$ x:List of 2
-#  .. ..$ name: chr "x"
-#  .. ..$ type: chr "linear"
-#  ..$ y:List of 2
-#  .. ..$ name: chr "y"
-#  .. ..$ type: chr "linear"
-# $ mapping  : Named chr [1:2] "wt" "mpg"
-#  ..- attr(*, "names")= chr [1:2] "x" "y"
-# $ data     : chr "mtcars"
-#
-# Output:
-# $ scales :List of 2
-#  ..$ :List of 6
-#  .. ..$ name  : chr "x"
-#  .. ..$ type  : chr "linear"
-#  .. ..$ domain:List of 2
-#  .. .. ..$ data : chr "mtcars"
-#  .. .. ..$ field: chr "data.wt"
-#  .. ..$ range : chr "width"
-#  .. ..$ zero  : logi FALSE
-#  .. ..$ nice  : logi TRUE
-#  ..$ :List of 6
-#  .. ..$ name  : chr "y"
-#  .. ..$ type  : chr "linear"
-#  .. ..$ domain:List of 2
-#  .. .. ..$ data : chr "mtcars"
-#  .. .. ..$ field: chr "data.mpg"
-#  .. ..$ range : chr "height"
-#  .. ..$ zero  : logi FALSE
-#  .. ..$ nice  : logi TRUE
 vega_scales <- function(scales, mapping, data) {
-  # This assumes that the scale's name is the same as the 'name' field, which
-  # is true now but might not be a good assumption in the long run.
-  # (The 'name' field is matched up with the names in mapping.)
-  lapply(names(scales), function(name) {
-    vega_scale(scales[[name]], mapping[[name]], data)
+  scales <- lapply(scales, function(s) {
+    vega_scale(s, s$name, data)
   })
+
+  unname(scales)
 }
 
 
