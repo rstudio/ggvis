@@ -1,3 +1,4 @@
+S3method(vega_mark_properties,default)
 S3method(vega_mark_type,default)
 S3method(vega_mark_type,mark_line)
 S3method(vega_mark_type,mark_point)

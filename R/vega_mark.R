@@ -12,17 +12,13 @@ vega_mark <- function(node) {
     )
   }
 
-  # TODO: Support other properties besides just stroke and fill
   list(
     type = vega_mark_type(node),
     from = list(data = node$data),
     properties = list(
       update = c(
         vega_mapping,
-        list(
-          stroke = list(value = node$stroke),
-          fill = list(value = node$fill)
-        )
+        vega_mark_properties(node)
       )
     )
   )
@@ -41,3 +37,17 @@ vega_mark_type.mark_point <- function(mark) "symbol"
 
 #' @S3method vega_mark_type mark_line
 vega_mark_type.mark_line <- function(mark) "line"
+
+
+
+# Given a gigvis mark object, return a list of vega mark properties
+vega_mark_properties <- function(mark) UseMethod("vega_mark_properties")
+
+#' @S3method vega_mark_properties default
+vega_mark_properties.default <- function(mark) {
+  # For most marks, we can remove some gigvis-specific fields, then remove
+  # the class, drop nulls, and convert to proper format for vega properties
+  mark[c("type", "data", "data_std", "mapping")] <- NULL
+  mark <- unclass(drop_nulls(mark))
+  lapply(mark, function(x) list(value=x))
+}

@@ -20,3 +20,4 @@ Collate:
     'vega.R'
     'aes.R'
     'fill_tree.R'
+    'vega_mark.R'
