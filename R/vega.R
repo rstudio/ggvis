@@ -57,7 +57,8 @@ gather_datasets <- function(node) {
 }
 
 
-# Recursively process nodes in the tree.
+# Recursively process nodes in the gigvis tree, and return corresponding vega
+# tree.
 #
 # @param node A gigvis object node.
 # @param envir Environment in which to evaluate \code{data}, to retrieve
@@ -66,18 +67,26 @@ vega_process_node <- function(node, envir) {
 
   if (inherits(node, "mark")) {
     # Leaf nodes
-    vega_mark(node)
+    vega_node <- vega_mark(node)
 
   } else if (inherits(node, "gigvis_node")) {
-    # Non-leaf nodes
-    list(
+    # Non-leaf nodes (including root node)
+    vega_node <- list(
       marks = lapply(
         node$children,
         FUN = vega_process_node,
         envir = envir
       )
     )
+
+    # For non-root, non-leaf nodes, add in grouping
+    if (!inherits(node, "gigvis")) {
+      vega_node$type <- "group"
+      vega_node$from <- list(data = node$data, keys = NULL)
+    }
   }
+
+  vega_node
 }
 
 
