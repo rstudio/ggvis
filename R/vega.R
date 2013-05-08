@@ -49,6 +49,8 @@ gather_datasets <- function(node) {
     unlist(lapply(node$children, gather_datasets), recursive = FALSE)
   )
 
+  datasets <- drop_nulls(datasets)
+
   # Drop duplicate datasets, by checking for duplicated 'name' keys
   datanames <- vapply(datasets, FUN = `[[`, 'name', FUN.VALUE = character(1))
   datasets[duplicated(datanames)] <- NULL

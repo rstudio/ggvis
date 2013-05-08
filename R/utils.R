@@ -35,6 +35,10 @@ modify_call <- function(call, new_args) {
 
 "%||%" <- function(a, b) if (!is.null(a)) a else b
 
+# Given a vector or list, drop all the NULL items in it
+drop_nulls <- function(x) {
+  x[!vapply(x, is.null, FUN.VALUE=logical(1))]
+}
 
 # Given two named vectors, join them together, and keep only the last element
 # with a given name in the resulting vector. If b has any elements with the
