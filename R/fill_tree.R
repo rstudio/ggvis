@@ -17,11 +17,14 @@ gigvis_fill_tree <- function(node, parent = NULL, envir = NULL) {
   if (is.null(node$data)) {
     node$data <- parent$data
   }
-  # Store data frame in node
-  node$data_df <- get(node$data, envir = envir)
 
-  if (!is.null(node$transform)) {
-    node$data <- compute(node$transform, node$data)
+  # Get data frame:
+  # - First check if parent has the data set (transformed data will be there)
+  # - If not, then try to get data from envir
+  if (!is.null(parent$data) && parent$data == node$data) {
+    node$data_df <- parent$data_df
+  } else {
+    node$data_df <- get(node$data, envir = envir)
   }
 
   # Inherit mappings
@@ -39,10 +42,17 @@ gigvis_fill_tree <- function(node, parent = NULL, envir = NULL) {
 
     } else if (inherit_mapping == FALSE) {
       node$mapping <- parent$mapping
-
     }
   }
 
+  # Transform the data
+  if (!is.null(node$transform)) {
+    node$data_df <- compute(node$transform, node$data_df, node$mapping)
+
+    # Rename the dataset with the transform type appended (e.g., "mtc" becomes
+    # "mtc_smooth")
+    node$data <- paste(node$data, transform_type(node$transform), sep = "_")
+  }
 
   # Fill in children recursively
   if (!is.null(node$children)) {

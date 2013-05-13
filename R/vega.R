@@ -103,7 +103,8 @@ gather_mapped_vars <- function(node) {
 # Given a named list of data frames and a corresponding named list of mapped
 # variables for each data frame,
 prune_datasets_columns <- function(datasets, mapped_vars) {
-  if (sort(names(datasets)) != sort(names(mapped_vars))) {
+  if (length(datasets) != length(mapped_vars) ||
+      sort(names(datasets)) != sort(names(mapped_vars))) {
     stop("Names of datasets do not match names of sets of mapped vars.")
   }
 
