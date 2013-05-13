@@ -140,7 +140,13 @@ vega_process_node <- function(node, envir) {
     # For non-root, non-leaf nodes, add in grouping
     if (!inherits(node, "gigvis")) {
       vega_node$type <- "group"
-      vega_node$from <- list(data = node$data, keys = NULL)
+      vega_node$from <- list(
+        data = node$data,
+        transform = list(list(
+          type = "facet",
+          keys = NULL
+        ))
+      )
     }
   }
 
