@@ -88,8 +88,7 @@ gather_mapped_vars <- function(node) {
 
     if (sum(matchidx) > 1) {
       # Append the vectors together, and drop duplicate entries
-      mapped_vars <- Reduce(c, all_mapped_vars[matchidx], character(0))
-      mapped_vars <- unique(mapped_vars)
+      mapped_vars <- unique(unlist(all_mapped_vars[matchidx]))
 
       # Drop all existing data sets, and then add back the
       all_mapped_vars[matchidx] <- NULL
