@@ -17,3 +17,15 @@ test_that("merge_vectors behaves as expected", {
   expect_error(merge_vectors(c(a=1, b=2), c(1, 2)))
 })
 
+
+test_that("all_same behaves as expected", {
+  expect_identical(all_same(1:2), FALSE)
+  expect_identical(all_same(1), TRUE)
+  expect_identical(all_same(c(1, 1)), TRUE)
+  expect_identical(all_same(NA), TRUE)
+  expect_identical(all_same(c(NA, NA)), TRUE)
+  expect_identical(all_same(c(NA, 1)), FALSE)
+
+  # Zero-length vector
+  expect_identical(all_same(character()), TRUE)
+})

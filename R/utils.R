@@ -55,3 +55,10 @@ merge_vectors <- function(a, b) {
   drop_idx <- rev(duplicated(rev(names(x))))
   x[!drop_idx]
 }
+
+
+# Tests whether all elements in a vector are the same, respecting NA.
+# Returns TRUE for zero-length vectors
+all_same <- function(x) {
+  length(unique(x)) <= 1
+}
