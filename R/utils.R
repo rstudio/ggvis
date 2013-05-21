@@ -45,6 +45,11 @@ drop_nulls <- function(x) {
 # same name as elements in a, the element in a is dropped. Also, if there are
 # any duplicated names in a or b, only the last one with that name is kept.
 merge_vectors <- function(a, b) {
+  if ((!is.null(a) && is.null(names(a))) ||
+      (!is.null(b) && is.null(names(b)))) {
+    stop("merge_vectors: vectors must be either NULL or named vectors")
+  }
+
   x <- c(a, b)
   # Use `duplicated` backwards, because we want to keep only the last element
   drop_idx <- rev(duplicated(rev(names(x))))
