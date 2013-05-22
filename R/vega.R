@@ -75,8 +75,12 @@ gather_mapped_vars <- function(node) {
   all_mapped_vars <-
     unlist(lapply(node$children, gather_mapped_vars), recursive = FALSE)
 
-  # Add current node's mapped variables to the list
-  all_mapped_vars[[node$data]] <- unname(node$mapping)
+  # Add current node's splitting and mapped variables to the list
+  vars <- unname(node$mapping)
+  if (inherits(node$split, "split_by_group")) {
+    vars <- unique(c(vars, node$split))
+  }
+  all_mapped_vars[[node$data]] <- vars
 
   all_mapped_vars <- drop_nulls(all_mapped_vars)
 
@@ -90,7 +94,8 @@ gather_mapped_vars <- function(node) {
       # Append the vectors together, and drop duplicate entries
       mapped_vars <- unique(unlist(all_mapped_vars[matchidx]))
 
-      # Drop all existing data sets, and then add back the
+      # Drop all existing entries for this data set, then add back the new
+      # single copy of it.
       all_mapped_vars[matchidx] <- NULL
       all_mapped_vars[[dataname]] <- mapped_vars
     }
@@ -101,18 +106,34 @@ gather_mapped_vars <- function(node) {
 
 # Given a named list of data frames and a corresponding named list of mapped
 # variables for each data frame,
-prune_datasets_columns <- function(datasets, mapped_vars) {
-  if (length(datasets) != length(mapped_vars) ||
-      sort(names(datasets)) != sort(names(mapped_vars))) {
-    stop("Names of datasets do not match names of sets of mapped vars.")
+prune_datasets_columns <- function(datasets, keep_vars) {
+  if (length(datasets) != length(keep_vars) ||
+      sort(names(datasets)) != sort(names(keep_vars))) {
+    stop("Names of datasets do not match names of sets of keep vars.")
   }
 
   for (name in names(datasets)) {
-    datasets[[name]] <- datasets[[name]][, mapped_vars[[name]] ]
+    datasets[[name]] <- prune_columns(datasets[[name]], keep_vars[[name]])
   }
-
   datasets
 }
+
+
+prune_columns <- function(data, keep_vars) UseMethod("prune_columns")
+
+#' @S3method prune_columns split_data_dflist
+prune_columns.split_data_dflist <- function(data, keep_vars) {
+  structure(
+    lapply(data, prune_columns, keep_vars),
+    class = c("split_data_dflist", "split_data")
+  )
+}
+
+#' @S3method prune_columns data.frame
+prune_columns.data.frame <- function(data, keep_vars) {
+  data[ keep_vars]
+}
+
 
 # Recursively process nodes in the gigvis tree, and return corresponding vega
 # tree.
@@ -139,11 +160,18 @@ vega_process_node <- function(node, envir) {
     # For non-root, non-leaf nodes, add in grouping
     if (!inherits(node, "gigvis")) {
       vega_node$type <- "group"
+
+      if (is.null(node$split)) {
+        facet_keys <- NULL
+      } else {
+        facet_keys <- paste("data", node$split, sep = ".")
+      }
+
       vega_node$from <- list(
         data = node$data,
         transform = list(list(
           type = "facet",
-          keys = NULL
+          keys = facet_keys
         ))
       )
     }
@@ -160,41 +188,17 @@ vega_df <- function(x, name) {
   )
 }
 
-d3df <- function(x) {
+
+
+d3df <- function(x) UseMethod("d3df")
+
+#' @S3method d3df data.frame
+d3df.data.frame <- function(x) {
   n <- nrow(x)
   lapply(seq_len(n), function(i) as.list(x[i, ]))
 }
 
-
-# Given a gigvis scales object, a named vector of mappings, and the name of the
-# source data, return a vega scales object.
-vega_scales <- function(scales, mapping, data) {
-  scales <- lapply(names(scales), function(name) {
-    vega_scale(scales[[name]], mapping[[name]], data)
-  })
-
-  unname(scales)
-}
-
-
-# Given a gigvis scale, domain (the name of a source column, like 'mpg'), and
-# name of data set, return a vega scale specification.
-vega_scale <- function(scale, domain, data) {
-  if (scale$name == "x") {
-    range <- "width"
-  } else if (scale$name == "y") {
-    range <- "height"
-  }
-
-  list(
-    name = scale$name,
-    type = scale$type,
-    domain = list(
-      data = data,
-      field = paste("data", domain, sep = ".")
-    ),
-    range = range,
-    zero = FALSE,
-    nice = TRUE
-  )
+#' @S3method d3df split_data_dflist
+d3df.split_data_dflist <- function(x) {
+  unlist(lapply(x, d3df), recursive = FALSE)
 }

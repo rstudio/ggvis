@@ -4,26 +4,36 @@ vega_mark <- function(node) {
   # Generate the fields related to mappings (x, y, etc)
   # This assumes that the scale's name is the same as the 'name' field, which
   # is true now but might not be a good assumption in the long run.
-  vega_mapping <- list()
-  for (name in names(node$mapping)) {
-    vega_mapping[[name]] <- list(
-      field = paste("data", node$mapping[[name]], sep = "."),
-      scale = name
-    )
-  }
-
   list(
     type = vega_mark_type(node),
     from = list(data = node$data),
     properties = list(
       update = c(
-        vega_mapping,
+        vega_mappings(node$mapping),
         vega_mark_properties(node)
       )
     )
   )
 }
 
+
+# Given a gigvis mapping object, return a vega mapping object
+vega_mappings <- function(mappings) {
+  vm <- list()
+  for (name in names(mappings)) {
+    if (name %in% c("x", "y", "fill")) {
+      v_name <- name
+    } else if (name == "color") {
+      v_name <- "stroke"
+    }
+    vm[[v_name]] <- list(
+      field = paste("data", mappings[[name]], sep = "."),
+      scale = name
+    )
+  }
+
+  vm
+}
 
 
 # Given a gigvis mark object, return the vega mark type

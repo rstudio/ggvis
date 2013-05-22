@@ -31,6 +31,24 @@ transform_type <- function(transform) {
 }
 
 
+# Apply transformation to a data object, dispatching on data type
+apply_transform <- function(data, transform, mapping) UseMethod("apply_transform")
+
+#' @S3method apply_transform data.frame
+apply_transform.data.frame <- function(data, transform, mapping) {
+  compute(transform, data, mapping)
+}
+
+#' @S3method apply_transform split_data_dflist
+apply_transform.split_data_dflist <- function(data, transform, mapping) {
+  structure(
+    lapply(data, function(x) compute(transform, x, mapping)),
+    class = c("split_data_dflist", "split_data")
+  )
+}
+
+
+# Compute transformation
 compute <- function(transform, data, mapping) UseMethod("compute")
 
 #' @S3method compute transform_smooth
@@ -49,6 +67,10 @@ compute.transform_smooth <- function(transform, data, mapping) {
   }
   transform$method <- as.name(transform$method)
 
+  # Find columns where all entries have the same value
+  same_cols <- vapply(data, all_same, FUN.VALUE = logical(1), USE.NAMES = TRUE)
+  same_col_names <- names(data)[same_cols]
+
   call <- substitute(method(transform$formula, data = data), transform["method"])
   call <- modify_call(call, transform$dots)
   mod <- eval(call)
@@ -57,6 +79,9 @@ compute.transform_smooth <- function(transform, data, mapping) {
 
   # Make prediction
   pred_data <- predictdf(mod, xseq, xvar, yvar, transform$se, transform$level)
+
+  # Add back columns that all had the same value
+  pred_data[same_col_names] <- data[1, same_col_names, drop = FALSE]
 
   pred_data
 }

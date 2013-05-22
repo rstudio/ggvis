@@ -8,8 +8,8 @@ mark <- function(type, ...) {
 print.mark <- function(x, ...) str(x)
 
 mark_point <- function(x = NULL, y = NULL, opacity = NULL,
-                       fill = "#000000", fillOpacity = NULL,
-                       stroke = "#000000", strokeWidth = NULL, strokeOpacity = NULL,
+                       fill = NULL, fillOpacity = NULL,
+                       stroke = NULL, strokeWidth = NULL, strokeOpacity = NULL,
                        size = NULL, shape = NULL) {
 
   mark("point", x = x, y = y, opacity = opacity,

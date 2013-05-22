@@ -21,3 +21,4 @@ Collate:
     'aes.R'
     'fill_tree.R'
     'vega_mark.R'
+    'vega_scales.R'

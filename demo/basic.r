@@ -66,19 +66,43 @@ p <- gigvis("mtcars", aes(x = "wt", y = "mpg"),
 )
 vegafy(p)
 
+
+
+# Scatter plot, colored by cyl
+p <- gigvis("mtcars", aes(x = "wt", y = "mpg", color = "cyl"),
+  mark_point()
+)
+vegafy(p)
+
+
 # Scatter plot with linear model line for each level of cyl
-p <- gigvis("mtcars", aes(x = "wt", y = "mpg"),
+p <- gigvis("mtcars", aes(x = "wt", y = "mpg", color = "cyl"),
   mark_point(),
   node(
     split = by_group("cyl"),
-    transform = transform_smooth(se = F),
+    transform = transform_smooth(method = "lm", se = F),
     node(
-      mapping = aes(x = "x", y = "y"),
       mark_line(stroke = "red")
     )
   )
 )
 vegafy(p)
+
+
+# Scatter plot with linear model line for each level of cyl
+p <- gigvis("mtcars", aes(x = "wt", y = "mpg"),
+  mark_point(),
+  node(
+    split = by_group("cyl"),
+    mapping = aes(color = "cyl"),
+    transform = transform_smooth(se = F),
+    node(
+      mark_line(stroke = "red")
+    )
+  )
+)
+vegafy(p)
+
 
 # Histogram
 p <- gigvis("mtcars", aes(x = "wt"),

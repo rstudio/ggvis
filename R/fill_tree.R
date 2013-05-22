@@ -45,9 +45,14 @@ gigvis_fill_tree <- function(node, parent = NULL, envir = NULL) {
     }
   }
 
+  # Split the data
+  if (!is.null(node$split)) {
+    node$data_df <- split_data(node$data_df, node$split)
+  }
+
   # Transform the data
   if (!is.null(node$transform)) {
-    node$data_df <- compute(node$transform, node$data_df, node$mapping)
+    node$data_df <- apply_transform(node$data_df, node$transform, node$mapping)
 
     # Rename the dataset with the transform type appended (e.g., "mtc" becomes
     # "mtc_smooth")
