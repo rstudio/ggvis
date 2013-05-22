@@ -6,7 +6,7 @@
 #
 # * First pass. After this pass, no need to refer to parents again
 #   * Propagate name of the data set
-#   * Retrieve the data set (as a data frame) and store in node$data_df
+#   * Retrieve the data set (as a data frame) and store in node$data_obj
 #   * Merges aesthetic mappings with the parent's aesthetics
 #
 #
@@ -26,13 +26,13 @@ gigvis_fill_tree <- function(node, parent = NULL, envir = NULL) {
     node$inherit_data <- TRUE
   }
 
-  # Get data frame:
+  # Get data object:
   # - First check if parent has the data set (transformed data will be there)
   # - If not, then try to get data from envir
   if (!is.null(parent$data) && parent$data == node$data) {
-    node$data_df <- parent$data_df
+    node$data_obj <- parent$data_obj
   } else {
-    node$data_df <- get(node$data, envir = envir)
+    node$data_obj <- get(node$data, envir = envir)
   }
 
   # Inherit mappings
@@ -55,12 +55,12 @@ gigvis_fill_tree <- function(node, parent = NULL, envir = NULL) {
 
   # Split the data
   if (!is.null(node$split)) {
-    node$data_df <- split_data(node$data_df, node$split)
+    node$data_obj <- split_data(node$data_obj, node$split)
   }
 
   # Transform the data
   if (!is.null(node$transform)) {
-    node$data_df <- apply_transform(node$data_df, node$transform, node$mapping)
+    node$data_obj <- apply_transform(node$data_obj, node$transform, node$mapping)
 
     # Rename the dataset with the transform type appended (e.g., "mtc" becomes
     # "mtc_smooth")

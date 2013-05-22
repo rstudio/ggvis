@@ -56,7 +56,7 @@ gather_datasets <- function(node) {
 
   # Add this node's data set if not already present
   if (!(node$data %in% names(datasets))) {
-    datasets[[node$data]] <- node$data_df
+    datasets[[node$data]] <- node$data_obj
   }
 
   datasets <- drop_nulls(datasets)
