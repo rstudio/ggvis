@@ -70,6 +70,7 @@ vegafy(p)
 
 # Scatter plot, colored by cyl
 p <- gigvis("mtcars", aes(x = "wt", y = "mpg", color = "cyl"),
+  scales = list(color = scale(name = "color", type = "ordinal")),
   mark_point()
 )
 vegafy(p)
@@ -78,6 +79,7 @@ vegafy(p)
 # Scatter plot with linear model line for each level of cyl
 p <- gigvis("mtcars", aes(x = "wt", y = "mpg", color = "cyl"),
   mark_point(),
+  scales = list(color = scale(name = "color", type = "ordinal")),
   node(
     split = by_group("cyl"),
     transform = transform_smooth(method = "lm", se = F),
@@ -89,14 +91,13 @@ vegafy(p)
 
 # Scatter plot with linear model line for each level of cyl
 p <- gigvis("mtcars", aes(x = "wt", y = "mpg"),
-  mark_point(),
+  mark_point(fill = "#000000"),
+  scales = list(color = scale(name = "color", type = "ordinal")),
   node(
     split = by_group("cyl"),
     mapping = aes(color = "cyl"),
     transform = transform_smooth(se = F),
-    node(
-      mark_line(stroke = "red")
-    )
+    mark_line()
   )
 )
 vegafy(p)
