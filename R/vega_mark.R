@@ -4,9 +4,8 @@ vega_mark <- function(node) {
   # Generate the fields related to mappings (x, y, etc)
   # This assumes that the scale's name is the same as the 'name' field, which
   # is true now but might not be a good assumption in the long run.
-  list(
+  vega_node <- list(
     type = vega_mark_type(node),
-    from = list(data = node$data),
     properties = list(
       update = c(
         vega_mappings(node$mapping),
@@ -14,6 +13,12 @@ vega_mark <- function(node) {
       )
     )
   )
+
+  if (!node$inherit_data) {
+    vega_node$from <- list(data = node$data)
+  }
+
+  vega_node
 }
 
 

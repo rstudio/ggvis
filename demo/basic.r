@@ -81,9 +81,7 @@ p <- gigvis("mtcars", aes(x = "wt", y = "mpg", color = "cyl"),
   node(
     split = by_group("cyl"),
     transform = transform_smooth(method = "lm", se = F),
-    node(
-      mark_line(stroke = "red")
-    )
+    mark_line()
   )
 )
 vegafy(p)

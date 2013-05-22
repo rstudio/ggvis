@@ -159,6 +159,7 @@ vega_process_node <- function(node, envir) {
 
     # For non-root, non-leaf nodes, add in grouping
     if (!inherits(node, "gigvis")) {
+
       vega_node$type <- "group"
 
       if (is.null(node$split)) {

@@ -18,6 +18,14 @@ gigvis_fill_tree <- function(node, parent = NULL, envir = NULL) {
     node$data <- parent$data
   }
 
+  # If parent node isn't the root node, then inherit data (this is used when
+  # generating the vega tree)
+  if (inherits(parent, "gigvis")) {
+    node$inherit_data <- FALSE
+  } else {
+    node$inherit_data <- TRUE
+  }
+
   # Get data frame:
   # - First check if parent has the data set (transformed data will be there)
   # - If not, then try to get data from envir
