@@ -62,3 +62,9 @@ merge_vectors <- function(a, b) {
 all_same <- function(x) {
   length(unique(x)) <= 1
 }
+
+# Test whether a file exists and is a directory
+dir.exists <- function(x) {
+  res <- file.exists(x) & file.info(x)$isdir
+  setNames(res, x)
+}

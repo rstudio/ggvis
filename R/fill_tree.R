@@ -7,9 +7,9 @@
 # * First pass. After this pass, no need to refer to parents again
 #   * Propagate name of the data set
 #   * Retrieve the data set (as a data frame) and store in node$data_obj
-#   * Merges aesthetic mappings with the parent's aesthetics
-#
-#
+#   * Merge aesthetic mappings with the parent's aesthetics
+#   * Split data (if needed)
+#   * Transform data (if needed)
 gigvis_fill_tree <- function(node, parent = NULL, envir = NULL) {
   if (is.null(parent))  parent <- list()
 
