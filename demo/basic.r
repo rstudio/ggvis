@@ -1,21 +1,15 @@
-# Convert gigvis to vega and print resulting JSON to terminal
-vegafy <- function(p) {
-  cat(toJSON(vega_spec(p), pretty = TRUE), "\n")
-}
-
-
 # Basic scatter plot
 p <- gigvis("mtcars", aes(x = "wt", y = "mpg"),
   mark_point(stroke = "#000000", fill = "#000000")
 )
-vegafy(p)
+view_static(p)
 
 # Line and point graph
 p <- gigvis("mtcars", aes(x = "wt", y = "mpg"),
   mark_line(stroke = "#000000"),
   mark_point(stroke = "#000000", fill = "#000000")
 )
-vegafy(p)
+view_static(p)
 
 # Two marks, at different levels of the tree
 p <- gigvis("mtcars", aes(x = "wt", y = "mpg"),
@@ -24,7 +18,7 @@ p <- gigvis("mtcars", aes(x = "wt", y = "mpg"),
     mark_point(stroke = "black", fill = "red")
   )
 )
-vegafy(p)
+view_static(p)
 
 # Two separate data sets, equal in the tree
 mtc1 <- mtcars[1:10, ]
@@ -39,12 +33,12 @@ p <- gigvis(data = NULL, mapping = aes(x = "wt", y = "mpg"),
     mark_point(stroke = "black", fill = "red")
   )
 )
-vegafy(p)
+view_static(p)
 
 
 # Scatter plot with loess model line
 p <- gigvis("mtcars", aes(x = "wt", y = "mpg"),
-  mark_point(),
+  mark_point(stroke = "black"),
   node(
     transform = transform_smooth(se = F),
     node(
@@ -52,7 +46,7 @@ p <- gigvis("mtcars", aes(x = "wt", y = "mpg"),
     )
   )
 )
-vegafy(p)
+view_static(p)
 
 # Scatter plot with lm model line
 p <- gigvis("mtcars", aes(x = "wt", y = "mpg"),
@@ -64,7 +58,7 @@ p <- gigvis("mtcars", aes(x = "wt", y = "mpg"),
     )
   )
 )
-vegafy(p)
+view_static(p)
 
 
 
@@ -73,7 +67,7 @@ p <- gigvis("mtcars", aes(x = "wt", y = "mpg", color = "cyl"),
   scales = list(color = scale(name = "color", type = "ordinal")),
   mark_point()
 )
-vegafy(p)
+view_static(p)
 
 
 # Scatter plot with linear model line for each level of cyl
@@ -86,10 +80,10 @@ p <- gigvis("mtcars", aes(x = "wt", y = "mpg", color = "cyl"),
     mark_line()
   )
 )
-vegafy(p)
+view_static(p)
 
 
-# Scatter plot with linear model line for each level of cyl
+# Scatter plot with all black points and loess model line for each level of cyl
 p <- gigvis("mtcars", aes(x = "wt", y = "mpg"),
   mark_point(fill = "#000000"),
   scales = list(color = scale(name = "color", type = "ordinal")),
@@ -100,7 +94,7 @@ p <- gigvis("mtcars", aes(x = "wt", y = "mpg"),
     mark_line()
   )
 )
-vegafy(p)
+view_static(p)
 
 
 # Histogram
@@ -111,4 +105,4 @@ p <- gigvis("mtcars", aes(x = "wt"),
     mark_rect()
   )
 )
-vegafy(p)
+view_static(p)
