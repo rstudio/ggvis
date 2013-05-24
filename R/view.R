@@ -5,14 +5,14 @@
 #'
 #' @export
 #' @importFrom RJSONIO toJSON
-view_static <- function(gv, launch = TRUE) {
+view_static <- function(gv, envir = parent.frame(), launch = TRUE) {
 
   temp_dir <- tempfile(pattern = "gigvis")
   dir.create(temp_dir)
 
   copy_www_resources(temp_dir)
 
-  vega_json <- toJSON(vega_spec(gv), pretty = TRUE)
+  vega_json <- toJSON(vega_spec(gv, envir = envir), pretty = TRUE)
 
   template <- paste(readLines(system.file('index.html', package='gigvis')),
     collapse='\n')
