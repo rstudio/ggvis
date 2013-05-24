@@ -1,4 +1,5 @@
 #' @import assertthat
+#' @export
 gigvis <- function(data = NULL, mapping = NULL, ...) {
   structure(
     node(data = data, mapping = mapping, fill_defaults = TRUE, ...),
@@ -6,6 +7,7 @@ gigvis <- function(data = NULL, mapping = NULL, ...) {
   )
 }
 
+#' @export
 node <- function(..., data = NULL, mapping = NULL, transform = NULL,
                  scales = NULL, split = NULL, fill_defaults = FALSE) {
   # data is a string

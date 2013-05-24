@@ -5,8 +5,10 @@ mark <- function(type, ...) {
     class = c(paste0("mark_", type), "mark", "gigvis_node")
   )
 }
+
 print.mark <- function(x, ...) str(x)
 
+#' @export
 mark_point <- function(x = NULL, y = NULL, opacity = NULL,
                        fill = NULL, fillOpacity = NULL,
                        stroke = NULL, strokeWidth = NULL, strokeOpacity = NULL,
@@ -19,6 +21,7 @@ mark_point <- function(x = NULL, y = NULL, opacity = NULL,
 
 }
 
+#' @export
 mark_line <- function(x = NULL, y = NULL, opacity = NULL,
                       stroke = NULL, strokeWidth = NULL, strokeOpacity = NULL) {
 
@@ -26,6 +29,7 @@ mark_line <- function(x = NULL, y = NULL, opacity = NULL,
     stroke = stroke, strokeWidth = strokeWidth, strokeOpacity = strokeOpacity)
 }
 
+#' @export
 mark_ribbon <- function(x = NULL, y = NULL, y2 = NULL, opacity = NULL,
                         fill = NULL, fillOpacity = NULL,
                         stroke = NULL, strokeWidth = NULL, strokeOpacity = NULL) {
@@ -35,6 +39,7 @@ mark_ribbon <- function(x = NULL, y = NULL, y2 = NULL, opacity = NULL,
     stroke = stroke, strokeWidth = strokeWidth, strokeOpacity = strokeOpacity)
 }
 
+#' @export
 mark_rect <- function(x = NULL, x2 = NULL, y = NULL, y2 = NULL, opacity = NULL,
                       fill = NULL, fillOpacity = NULL,
                       stroke = NULL, strokeWidth = NULL, strokeOpacity = NULL) {

@@ -4,6 +4,7 @@ transform <- function(type, ...) {
 print.transform <- function(x, ...) str(x)
 
 
+#' @export
 transform_smooth <- function(method = "auto", formula = "auto", se = TRUE,
                              level = 0.95, n = 80L, na.rm = FALSE, ...) {
   assert_that(is.string(method))
@@ -17,6 +18,7 @@ transform_smooth <- function(method = "auto", formula = "auto", se = TRUE,
     level = level, n = n, na.rm = na.rm, dots = dots(...))
 }
 
+#' @export
 transform_bin <- function(binwidth = 1) {
   transform("bin", binwidth = binwidth)
 }
