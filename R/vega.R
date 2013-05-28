@@ -3,6 +3,7 @@
 #'
 #' @param envir The environment in which to evaluate the \code{data} parameter
 #'   of the gigvis object.
+#' @export
 vega_spec <- function(gv,
                       width = 600, height = 400, padding = c(20, 20, 30, 50),
                       envir = parent.frame()) {
