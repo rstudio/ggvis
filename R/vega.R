@@ -66,10 +66,10 @@ gather_datasets <- function(node) {
 }
 
 
-# Given a gigvis node, recursively traverse tree and collect all mapped
-# variables for all data sets used. Returns a flat named list of vectors, where
-# the name of each vector is the name of the data set, and the content of each
-# vector are strings naming each column used.
+# Given a gigvis node, recursively traverse tree and collect all mapped and
+# split variables for all data sets used. Returns a flat named list of vectors,
+# where the name of each vector is the name of the data set, and the content of
+# each vector are strings naming each column used.
 gather_mapped_vars <- function(node) {
 
   # Find all of children's mapped variables
@@ -109,7 +109,7 @@ gather_mapped_vars <- function(node) {
 # variables for each data frame,
 prune_datasets_columns <- function(datasets, keep_vars) {
   if (length(datasets) != length(keep_vars) ||
-      sort(names(datasets)) != sort(names(keep_vars))) {
+      !identical(sort(names(datasets)), sort(names(keep_vars))) ) {
     stop("Names of datasets do not match names of sets of keep vars.")
   }
 
@@ -132,7 +132,7 @@ prune_columns.split_data_dflist <- function(data, keep_vars) {
 
 #' @S3method prune_columns data.frame
 prune_columns.data.frame <- function(data, keep_vars) {
-  data[ keep_vars]
+  data[keep_vars]
 }
 
 

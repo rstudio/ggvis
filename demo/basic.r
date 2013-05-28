@@ -1,3 +1,5 @@
+library(gigvis)
+
 # Basic scatter plot
 p <- gigvis("mtcars", aes(x = "wt", y = "mpg"),
   mark_point(stroke = "#000000", fill = "#000000")

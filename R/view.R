@@ -5,6 +5,7 @@
 #'
 #' @export
 #' @importFrom RJSONIO toJSON
+#' @importFrom whisker whisker.render
 view_static <- function(gv, envir = parent.frame(), launch = TRUE) {
 
   temp_dir <- tempfile(pattern = "gigvis")

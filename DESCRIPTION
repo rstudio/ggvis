@@ -3,11 +3,12 @@ Title: Interactive grammar of graphics
 Version: 0.0.99
 Author: RStudio, Inc.
 Maintainer: Winston Chang <winston@rstudio.com>
-Description: 
+Description:
 Depends:
     R (>= 2.15.1)
 Imports:
-    assertthat
+    assertthat,
+    whisker
 License: GPL-2
 Collate:
     'branch.R'
