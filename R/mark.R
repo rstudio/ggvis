@@ -23,9 +23,10 @@ mark_point <- function(x = NULL, y = NULL, opacity = NULL,
 
 #' @export
 mark_line <- function(x = NULL, y = NULL, opacity = NULL,
-                      stroke = NULL, strokeWidth = NULL, strokeOpacity = NULL) {
+                      fill = NULL, stroke = NULL, strokeWidth = NULL,
+                      strokeOpacity = NULL) {
 
-  mark("line", x = x, y = y, opacity = opacity,
+  mark("line", x = x, y = y, opacity = opacity, fill = fill,
     stroke = stroke, strokeWidth = strokeWidth, strokeOpacity = strokeOpacity)
 }
 

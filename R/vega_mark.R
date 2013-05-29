@@ -88,7 +88,7 @@ valid_vega_mark_properties.area <- function(mark) {
 
 #' @S3method valid_vega_mark_properties line
 valid_vega_mark_properties.line <- function(mark) {
-  c(.common_vega_mark_properties, "interpolate", "tension")
+  c(.common_vega_mark_properties, "fill", "interpolate", "tension")
 }
 
 #' @S3method valid_vega_mark_properties image

@@ -81,8 +81,8 @@ p <- gigvis("mtcars", aes(x = "wt", y = "mpg", color = "cyl", fill = "cyl"),
   ),
   node(
     split = by_group("cyl"),
-    transform = transform_smooth(method = "lm", se = F),
-    mark_line()
+    transform = transform_smooth(method = "loess", se = F),
+    mark_line(fill = NA)
   )
 )
 view_static(p)
