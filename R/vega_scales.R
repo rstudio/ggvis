@@ -46,5 +46,8 @@ vega_scale <- function(scale, domain, data) {
       type   = scale$type,
       range  = "category10"
     )
+
+  } else {
+    stop("Unknown scale: ", scale$name)
   }
 }

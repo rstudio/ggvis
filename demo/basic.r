@@ -73,9 +73,12 @@ view_static(p)
 
 
 # Scatter plot with linear model line for each level of cyl
-p <- gigvis("mtcars", aes(x = "wt", y = "mpg", color = "cyl"),
+p <- gigvis("mtcars", aes(x = "wt", y = "mpg", color = "cyl", fill = "cyl"),
   mark_point(),
-  scales = list(color = scale(name = "color", type = "ordinal")),
+  scales = list(
+    color = scale(name = "color", type = "ordinal"),
+    fill  = scale(name = "fill", type = "ordinal")
+  ),
   node(
     split = by_group("cyl"),
     transform = transform_smooth(method = "lm", se = F),

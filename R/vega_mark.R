@@ -131,10 +131,15 @@ default_mark_properties <- function(mark) {
 
 #' @S3method default_mark_properties mark_point
 default_mark_properties.mark_point <- function(mark) {
-  list(fill = "#000000", stroke = "#000000")
+  list(fill = "#000000", color = "#000000")
 }
 
 #' @S3method default_mark_properties mark_line
 default_mark_properties.mark_line <- function(mark) {
-  list(stroke = "#000000")
+  list(color = "#000000")
+}
+
+#' @S3method default_mark_properties mark_rect
+default_mark_properties.mark_rect <- function(mark) {
+  list(color = "#000000")
 }
