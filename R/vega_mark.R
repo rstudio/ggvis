@@ -57,7 +57,9 @@ vega_mark_type.mark_line <- function(mark) "line"
 vega_mark_properties <- function(mark) {
   # Keep only the vega-specific fields, then remove the class, drop nulls,
   # and convert to proper format for vega properties.
+  mark <- apply_default_mark_properties(mark)
   mark <- mark[names(mark) %in% valid_vega_mark_properties(mark)]
+
   mark <- unclass(drop_nulls(mark))
   lapply(mark, function(x) list(value=x))
 }
@@ -74,8 +76,8 @@ valid_vega_mark_properties.default <- function(mark) {
   .common_vega_mark_properties
 }
 
-#' @S3method valid_vega_mark_properties symbol
-valid_vega_mark_properties.symbol <- function(mark) {
+#' @S3method valid_vega_mark_properties mark_point
+valid_vega_mark_properties.mark_point <- function(mark) {
   c(.common_vega_mark_properties, "size", "shape")
 }
 
@@ -102,3 +104,37 @@ valid_vega_mark_properties.text <- function(mark) {
 
 .common_vega_mark_properties <- c("x", "x2", "width", "y", "y2", "height",
   "opacity", "fill", "fillOpacity", "stroke", "strokeWidth", "strokeOpacity")
+
+
+
+# Given a mark, return a named list with default values for each property that
+# is NULL and unmapped.
+apply_default_mark_properties <- function(mark) {
+  defaults <- default_mark_properties(mark)
+
+  # Keep only the properties that are NULL
+  null_props <- names(mark)[vapply(mark, is.null, FUN.VALUE = logical(1))]
+  defaults <- defaults[names(defaults) %in% null_props]
+
+  # Keep only properties that aren't mapped
+  defaults <- defaults[!(names(defaults) %in% names(mark$mapping))]
+
+  mark[names(defaults)] <- defaults
+  mark
+}
+
+
+# Return a named list of default properties for a mark.
+default_mark_properties <- function(mark) {
+  UseMethod("default_mark_properties")
+}
+
+#' @S3method default_mark_properties mark_point
+default_mark_properties.mark_point <- function(mark) {
+  list(fill = "#000000", stroke = "#000000")
+}
+
+#' @S3method default_mark_properties mark_line
+default_mark_properties.mark_line <- function(mark) {
+  list(stroke = "#000000")
+}
