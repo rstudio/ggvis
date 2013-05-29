@@ -2,22 +2,22 @@ library(gigvis)
 
 # Basic scatter plot
 p <- gigvis("mtcars", aes(x = "wt", y = "mpg"),
-  mark_point(stroke = "#000000", fill = "#000000")
+  mark_point(stroke = "#000000")
 )
 view_static(p)
 
 # Line and point graph
 p <- gigvis("mtcars", aes(x = "wt", y = "mpg"),
-  mark_line(stroke = "#000000"),
-  mark_point(stroke = "#000000", fill = "#000000")
+  mark_line(),
+  mark_point(fill = "red")
 )
 view_static(p)
 
 # Two marks, at different levels of the tree
 p <- gigvis("mtcars", aes(x = "wt", y = "mpg"),
-  mark_point(stroke = "black", fill = "black"),
+  mark_point(),
   node(
-    mark_point(stroke = "black", fill = "red")
+    mark_point(fill = "red", size = 25)
   )
 )
 view_static(p)
@@ -40,7 +40,7 @@ view_static(p)
 
 # Scatter plot with loess model line
 p <- gigvis("mtcars", aes(x = "wt", y = "mpg"),
-  mark_point(stroke = "black"),
+  mark_point(fill = NA),
   node(
     transform = transform_smooth(se = F),
     node(
@@ -52,7 +52,7 @@ view_static(p)
 
 # Scatter plot with lm model line
 p <- gigvis("mtcars", aes(x = "wt", y = "mpg"),
-  mark_point(stroke = "black", fill = "black"),
+  mark_point(),
   node(
     transform = transform_smooth(method = "lm", se = F),
     node(
