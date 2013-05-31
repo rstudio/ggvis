@@ -68,3 +68,10 @@ dir.exists <- function(x) {
   res <- file.exists(x) & file.info(x)$isdir
   setNames(res, x)
 }
+
+# Check whether a package is installed, and stop if not
+assert_installed <- function(pkg) {
+  if (nchar(system.file(package = pkg)) == 0) {
+    stop("The '", pkg, "' package is required for this functionality")
+  }
+}

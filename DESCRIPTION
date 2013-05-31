@@ -9,6 +9,8 @@ Depends:
 Imports:
     assertthat,
     whisker
+Suggests:
+    shiny (>= 0.5.0)
 License: GPL-2
 Collate:
     'branch.R'
@@ -24,3 +26,4 @@ Collate:
     'vega_mark.R'
     'vega_scales.R'
     'view.R'
+    'shiny.R'
