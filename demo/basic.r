@@ -102,6 +102,15 @@ p <- gigvis("mtcars", aes(x = "wt", y = "mpg"),
 view_static(p)
 
 
+
+# Bar graph
+p <- gigvis("pressure",
+  mapping = aes(x = "temperature", y = "pressure"),
+  mark_rect()
+)
+view_static(p)
+
+
 # Histogram
 p <- gigvis("mtcars", aes(x = "wt"),
   transform = transform_bin(binwidth = 1),

@@ -43,7 +43,7 @@ gigvis_fill_tree <- function(node, parent = NULL, envir = NULL) {
     inherit_mapping <- attr(node$mapping, "inherit", exact = TRUE)
 
     if (is.null(inherit_mapping)) {
-      stop("Aesthetic mappings must be create with aes().")
+      stop("Aesthetic mappings must be created with aes().")
 
     } else if (inherit_mapping == TRUE) {
       node$mapping <- merge_vectors(parent$mapping, node$mapping)
