@@ -84,15 +84,16 @@ gather_mapped_vars <- function(node) {
     vars <- unique(c(vars, node$split))
   }
 
-  if (!is.null(node$data))
-    all_mapped_vars[[node$data]] <- vars
+  if (!is.null(node$data)) {
+    all_mapped_vars[[node$data]] <- unique(c(all_mapped_vars[[node$data]], vars))
+  }
 
   all_mapped_vars <- drop_nulls(all_mapped_vars)
 
 
   # Iterate over each data name, merging all entries that share the same name
   for (dataname in unique(names(all_mapped_vars))) {
-    # Find all entries for this data frame
+    # Find all entries for this data object
     matchidx <- names(all_mapped_vars) == dataname
 
     if (sum(matchidx) > 1) {

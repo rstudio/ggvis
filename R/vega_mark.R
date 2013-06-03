@@ -23,7 +23,10 @@ vega_mark <- function(node, scales) {
 # Given a gigvis mapping object, return a vega mapping object
 vega_mappings <- function(mappings) {
   vm <- lapply(names(mappings), function(name) {
-    list(scale = name, field = paste("data", mappings[[name]], sep = "."))
+    list(
+      scale = properties_to_scales(name),
+      field = paste("data", mappings[[name]], sep = ".")
+    )
   })
   setNames(vm, names(mappings))
 }
@@ -153,8 +156,14 @@ vega_mark_property <- function(prop, val, scales) {
   #   mark_rect(y2 = list(offset = -1))
   if (!is.list(val))  val <- list(value = val)
 
-  if (prop %in% c("x", "y", "stroke", "fill")) {
+  if (prop %in% c("x", "y", "stroke", "color", "fill", "size")) {
     list(value = val$value)
+
+  } else if (prop == "x2") {
+    list(scale = "x", value = val$value)
+
+  } else if (prop == "y2") {
+    list(scale = "y", value = val$value)
 
   } else if (prop == "width") {
     if (scales$x$type == "ordinal")
@@ -162,8 +171,11 @@ vega_mark_property <- function(prop, val, scales) {
     else
       list(scale = "x", value = val$value)
 
-  } else if (prop == "y2") {
-    list(scale = "y", value = val$value)
+  } else if (prop == "height") {
+    if (scales$x$type == "ordinal")
+      list(scale = "y", band = TRUE, offset = val$offset)
+    else
+      list(scale = "y", value = val$value)
 
   } else {
     stop("Unkown property: ", prop)

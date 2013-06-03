@@ -1,6 +1,6 @@
 library(gigvis)
 
-# Basic scatter plot, hollow circles
+# Basic scatter plot
 p <- gigvis("mtcars", aes(x = "wt", y = "mpg"),
   mark_point()
 )
@@ -120,12 +120,26 @@ p <- gigvis("pressure",
 view_static(p)
 
 
-# Histogram
-p <- gigvis("mtcars", aes(x = "wt"),
+# Histogram, with specified width
+p <- gigvis("mtcars",
+  mapping = aes(x = "wt"),
   transform = transform_bin(binwidth = 1),
+  scales = list(y = scale(name = "y", type = "linear", zero = TRUE)),
   node(
-    mapping = aes(x = "left", x2 = "right", y = 0, y2 = "count"),
-    mark_rect()
+    mapping = aes(x = "xmin__", x2 = "xmax__", y = "count__"),
+    mark_rect(y2 = 0)
+  )
+)
+view_static(p)
+
+# Histogram, automatic binwidth
+p <- gigvis("diamonds",
+  mapping = aes(x = "table"),
+  transform = transform_bin(),
+  scales = list(y = scale(name = "y", type = "linear", zero = TRUE)),
+  node(
+    mapping = aes(x = "xmin__", x2 = "xmax__", y = "count__"),
+    mark_rect(y2 = 0)
   )
 )
 view_static(p)

@@ -22,10 +22,11 @@ gather_mappings <- function(node) {
   mappings <- do.call(rbind, mappings)
 
   # Find the mappings for this node, returning data frame with columns
-  # scale, data, var
+  # scale, property, data, var
   if (!is.null(node$data) && !is.null(node$mapping)) {
     mapping <- data.frame(row.names = NULL, stringsAsFactors = FALSE,
-      scale = names(node$mapping),
+      property = names(node$mapping),
+      scale = properties_to_scales(names(node$mapping)),
       data  = node$data,
       var   = node$mapping
     )
@@ -64,7 +65,7 @@ vega_scale <- function(scale, domain, data) {
       type   = scale$type,
       range  = "width",
       domain = domain_list,
-      zero   = FALSE,
+      zero   = scale$zero,
       nice   = FALSE
     )
 
@@ -74,7 +75,7 @@ vega_scale <- function(scale, domain, data) {
       type   = scale$type,
       range  = "height",
       domain = domain_list,
-      zero   = FALSE,
+      zero   = scale$zero,
       nice   = FALSE
     )
 
@@ -95,4 +96,17 @@ vega_scale <- function(scale, domain, data) {
   } else {
     stop("Unknown scale: ", scale$name)
   }
+}
+
+
+# Given a vector of properties (like x, fill, x2 and y2) return a vector of scales
+# used by each property (like x, fill, x, y, in this case)
+properties_to_scales <- function(properties) {
+  from <- c("x2", "y2")
+  to   <- c("x",  "y")
+
+  mapidx <- match(properties, from)
+  mapidxNA <- is.na(mapidx)
+  properties[!mapidxNA] <- to[mapidx[!mapidxNA]]
+  properties
 }

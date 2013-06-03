@@ -27,3 +27,6 @@ Collate:
     'vega_scales.R'
     'view.R'
     'shiny.R'
+    'transform_bin.R'
+    'transform_smooth.R'
+    'full_seq.R'
