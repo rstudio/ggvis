@@ -32,7 +32,7 @@ p <- gigvis(data = NULL, mapping = aes(x = "wt", y = "mpg"),
   ),
   node(
     data = "mtc2",
-    mark_point(stroke = "black", fill = "red")
+    mark_point(fill = "red", size = 40)
   )
 )
 view_static(p)

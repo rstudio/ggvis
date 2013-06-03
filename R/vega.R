@@ -13,6 +13,9 @@ vega_spec <- function(gv,
   datasets <- gather_datasets(gv)
   datasets <- prune_datasets_columns(datasets, mapped_vars)
 
+  scales <- gather_scales(gv, datasets)
+  # scales <- vega_scales(gv$scales, gv$mapping, names(datasets)[2])
+
   # Convert data frames to vega format
   datasets <- lapply(names(datasets), function(name) {
     vega_df(datasets[[name]], name = name)
@@ -23,7 +26,7 @@ vega_spec <- function(gv,
     width = width,
     height = height,
     data = datasets,
-    scales = vega_scales(gv$scales, gv$mapping, gv$data),
+    scales = scales,
 
     axes = list(list(type = "x", scale = "x"), list(type = "y", scale = "y")),
     padding = c(
@@ -56,7 +59,7 @@ gather_datasets <- function(node) {
   }
 
   # Add this node's data set if not already present
-  if (!(node$data %in% names(datasets))) {
+  if (!is.null(node$data) && !(node$data %in% names(datasets))) {
     datasets[[node$data]] <- node$data_obj
   }
 
@@ -81,7 +84,9 @@ gather_mapped_vars <- function(node) {
   if (inherits(node$split, "split_by_group")) {
     vars <- unique(c(vars, node$split))
   }
-  all_mapped_vars[[node$data]] <- vars
+
+  if (!is.null(node$data))
+    all_mapped_vars[[node$data]] <- vars
 
   all_mapped_vars <- drop_nulls(all_mapped_vars)
 

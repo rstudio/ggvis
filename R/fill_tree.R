@@ -31,6 +31,8 @@ gigvis_fill_tree <- function(node, parent = NULL, envir = NULL) {
   # - If not, then try to get data from envir
   if (!is.null(parent$data) && parent$data == node$data) {
     node$data_obj <- parent$data_obj
+  } else if (is.null(node$data)) {
+    node$data_obj <- NULL
   } else {
     node$data_obj <- get(node$data, envir = envir)
   }
