@@ -102,11 +102,20 @@ p <- gigvis("mtcars", aes(x = "wt", y = "mpg"),
 view_static(p)
 
 
-
-# Bar graph
+# Bar graph with continuous x
 p <- gigvis("pressure",
   mapping = aes(x = "temperature", y = "pressure"),
-  mark_rect()
+  scales = list(x = scale(name = "x", type = "linear")),
+  mark_rect(y2 = 0, width = 15)
+)
+view_static(p)
+
+
+# Bar graph with ordinal x
+p <- gigvis("pressure",
+  mapping = aes(x = "temperature", y = "pressure"),
+  scales = list(x = scale(name = "x", type = "ordinal")),
+  mark_rect(y2 = 0, width = list(offset = -4))
 )
 view_static(p)
 

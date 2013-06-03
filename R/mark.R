@@ -41,10 +41,12 @@ mark_ribbon <- function(x = NULL, y = NULL, y2 = NULL, opacity = NULL,
 }
 
 #' @export
-mark_rect <- function(x = NULL, x2 = NULL, y = NULL, y2 = NULL, opacity = NULL,
+mark_rect <- function(x = NULL, x2 = NULL, y = NULL, y2 = NULL, width = NULL,
+                      opacity = NULL,
                       fill = NULL, fillOpacity = NULL,
                       stroke = NULL, strokeWidth = NULL, strokeOpacity = NULL) {
-  mark("rect", x = x, x2 = x2, y = y, y2 = y2, opacity = opacity,
+  mark("rect", x = x, x2 = x2, y = y, y2 = y2, width = width,
+    opacity = opacity,
     fill = fill, fillOpacity = fillOpacity,
     stroke = stroke, strokeWidth = strokeWidth, strokeOpacity = strokeOpacity)
 }

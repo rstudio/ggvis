@@ -14,7 +14,6 @@ vega_spec <- function(gv,
   datasets <- prune_datasets_columns(datasets, mapped_vars)
 
   scales <- gather_scales(gv, datasets)
-  # scales <- vega_scales(gv$scales, gv$mapping, names(datasets)[2])
 
   # Convert data frames to vega format
   datasets <- lapply(names(datasets), function(name) {
@@ -39,7 +38,7 @@ vega_spec <- function(gv,
 
   # Now deal with keys that also appear in lower levels of the tree, and merge
   # them in to the spec.
-  spec <- c(spec, vega_process_node(node = gv, envir = envir))
+  spec <- c(spec, vega_process_node(node = gv, envir = envir, scales = scales))
 
   spec
 }
@@ -147,11 +146,12 @@ prune_columns.data.frame <- function(data, keep_vars) {
 # @param node A gigvis object node.
 # @param envir Environment in which to evaluate \code{data}, to retrieve
 #   the data object.
-vega_process_node <- function(node, envir) {
+# @param scales A list of scale objects
+vega_process_node <- function(node, envir, scales) {
 
   if (inherits(node, "mark")) {
     # Leaf nodes
-    vega_node <- vega_mark(node)
+    vega_node <- vega_mark(node, scales)
 
   } else if (inherits(node, "gigvis_node")) {
     # Non-leaf nodes (including root node)
@@ -159,7 +159,8 @@ vega_process_node <- function(node, envir) {
       marks = lapply(
         node$children,
         FUN = vega_process_node,
-        envir = envir
+        envir = envir,
+        scales = scales
       )
     )
 

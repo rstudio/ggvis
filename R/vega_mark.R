@@ -1,5 +1,5 @@
-# Given a gigvis mark object, output a vega mark object
-vega_mark <- function(node) {
+# Given a gigvis mark object and set of scales, output a vega mark object
+vega_mark <- function(node, scales) {
 
   # Generate the fields related to mappings (x, y, etc)
   vega_node <- list(
@@ -7,7 +7,7 @@ vega_mark <- function(node) {
     properties = list(
       update = c(
         vega_mappings(node$mapping),
-        vega_mark_properties(node)
+        vega_mark_properties(node, scales)
       )
     )
   )
@@ -23,7 +23,7 @@ vega_mark <- function(node) {
 # Given a gigvis mapping object, return a vega mapping object
 vega_mappings <- function(mappings) {
   vm <- lapply(names(mappings), function(name) {
-    list(field = paste("data", mappings[[name]], sep = "."), scale = name)
+    list(scale = name, field = paste("data", mappings[[name]], sep = "."))
   })
   setNames(vm, names(mappings))
 }
@@ -41,17 +41,23 @@ vega_mark_type.mark_point <- function(mark) "symbol"
 #' @S3method vega_mark_type mark_line
 vega_mark_type.mark_line <- function(mark) "line"
 
+#' @S3method vega_mark_type mark_rect
+vega_mark_type.mark_rect <- function(mark) "rect"
 
 
-# Given a gigvis mark object, return a list of vega mark properties
-vega_mark_properties <- function(mark) {
+
+# Given a gigvis mark object and set of scales, return a list of vega mark properties
+vega_mark_properties <- function(mark, scales) {
   # Keep only the vega-specific fields, then remove the class, drop nulls,
   # and convert to proper format for vega properties.
   mark <- apply_default_mark_properties(mark)
   mark <- mark[names(mark) %in% valid_vega_mark_properties(mark)]
 
   mark <- unclass(drop_nulls(mark))
-  lapply(mark, function(x) list(value=x))
+
+  # Convert each property to a Vega-structured property
+  mapply(prop = names(mark), val = mark, MoreArgs = list(scales = scales),
+    FUN = vega_mark_property, SIMPLIFY = FALSE)
 }
 
 
@@ -131,5 +137,35 @@ default_mark_properties.mark_line <- function(mark) {
 
 #' @S3method default_mark_properties mark_rect
 default_mark_properties.mark_rect <- function(mark) {
-  list(stroke = "#000000")
+  list(stroke = "#000000", fill = "#333333")
+}
+
+
+
+vega_mark_property <- function(prop, val, scales) {
+  # Convert scales to a named list for convenience
+  names(scales) <- vapply(scales, `[[`, "name", FUN.VALUE = character(1))
+
+  # If val is a _not_ a list, then wrap it into a list. These two calls are
+  # therefore equivalent:
+  #   mark_rect(y2 = 0)  or  mark_rect(y2 = list(value = 0))
+  # This allows users to pass in other properties if needed:
+  #   mark_rect(y2 = list(offset = -1))
+  if (!is.list(val))  val <- list(value = val)
+
+  if (prop %in% c("x", "y", "stroke", "fill")) {
+    list(value = val$value)
+
+  } else if (prop == "width") {
+    if (scales$x$type == "ordinal")
+      list(scale = "x", band = TRUE, offset = val$offset)
+    else
+      list(scale = "x", value = val$value)
+
+  } else if (prop == "y2") {
+    list(scale = "y", value = val$value)
+
+  } else {
+    stop("Unkown property: ", prop)
+  }
 }
