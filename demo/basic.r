@@ -1,8 +1,8 @@
 library(gigvis)
 
-# Basic scatter plot
+# Basic scatter plot, hollow circles
 p <- gigvis("mtcars", aes(x = "wt", y = "mpg"),
-  mark_point(stroke = "#000000")
+  mark_point()
 )
 view_static(p)
 
@@ -40,7 +40,7 @@ view_static(p)
 
 # Scatter plot with loess model line
 p <- gigvis("mtcars", aes(x = "wt", y = "mpg"),
-  mark_point(fill = NA),
+  mark_point(fill = NA, stroke = "black"),
   node(
     transform = transform_smooth(se = F),
     node(
@@ -65,23 +65,23 @@ view_static(p)
 
 
 # Scatter plot, colored by cyl
-p <- gigvis("mtcars", aes(x = "wt", y = "mpg", color = "cyl"),
-  scales = list(color = scale(name = "color", type = "ordinal")),
+p <- gigvis("mtcars", aes(x = "wt", y = "mpg", fill = "cyl"),
+  scales = list(fill = scale(name = "fill", type = "ordinal")),
   mark_point()
 )
 view_static(p)
 
 
 # Scatter plot with linear model line for each level of cyl
-p <- gigvis("mtcars", aes(x = "wt", y = "mpg", color = "cyl", fill = "cyl"),
+p <- gigvis("mtcars", aes(x = "wt", y = "mpg", stroke = "cyl", fill = "cyl"),
   mark_point(),
   scales = list(
-    color = scale(name = "color", type = "ordinal"),
+    stroke = scale(name = "stroke", type = "ordinal"),
     fill  = scale(name = "fill", type = "ordinal")
   ),
   node(
     split = by_group("cyl"),
-    transform = transform_smooth(method = "loess", se = F),
+    transform = transform_smooth(method = "lm", se = F),
     mark_line(fill = NA)
   )
 )
@@ -91,10 +91,10 @@ view_static(p)
 # Scatter plot with all black points and loess model line for each level of cyl
 p <- gigvis("mtcars", aes(x = "wt", y = "mpg"),
   mark_point(fill = "#000000"),
-  scales = list(color = scale(name = "color", type = "ordinal")),
+  scales = list(stroke = scale(name = "stroke", type = "ordinal")),
   node(
     split = by_group("cyl"),
-    mapping = aes(color = "cyl"),
+    mapping = aes(stroke = "cyl"),
     transform = transform_smooth(se = F),
     mark_line()
   )

@@ -24,12 +24,7 @@ vega_mark <- function(node) {
 vega_mappings <- function(mappings) {
   vm <- list()
   for (name in names(mappings)) {
-    if (name %in% c("x", "y", "fill")) {
-      v_name <- name
-    } else if (name == "color") {
-      v_name <- "stroke"
-    }
-    vm[[v_name]] <- list(
+    vm[[name]] <- list(
       field = paste("data", mappings[[name]], sep = "."),
       scale = name
     )
@@ -131,15 +126,15 @@ default_mark_properties <- function(mark) {
 
 #' @S3method default_mark_properties mark_point
 default_mark_properties.mark_point <- function(mark) {
-  list(fill = "#000000", color = "#000000")
+  list(fill = "#000000")
 }
 
 #' @S3method default_mark_properties mark_line
 default_mark_properties.mark_line <- function(mark) {
-  list(color = "#000000")
+  list(stroke = "#000000")
 }
 
 #' @S3method default_mark_properties mark_rect
 default_mark_properties.mark_rect <- function(mark) {
-  list(color = "#000000")
+  list(stroke = "#000000")
 }

@@ -78,7 +78,7 @@ vega_scale <- function(scale, domain, data) {
       nice   = FALSE
     )
 
-  } else if (scale$name == "color") {
+  } else if (scale$name == "stroke") {
     list(
       name   = scale$name,
       type   = scale$type,
