@@ -22,15 +22,10 @@ vega_mark <- function(node) {
 
 # Given a gigvis mapping object, return a vega mapping object
 vega_mappings <- function(mappings) {
-  vm <- list()
-  for (name in names(mappings)) {
-    vm[[name]] <- list(
-      field = paste("data", mappings[[name]], sep = "."),
-      scale = name
-    )
-  }
-
-  vm
+  vm <- lapply(names(mappings), function(name) {
+    list(field = paste("data", mappings[[name]], sep = "."), scale = name)
+  })
+  setNames(vm, names(mappings))
 }
 
 
