@@ -156,7 +156,8 @@ vega_mark_property <- function(prop, val, scales) {
   #   mark_rect(y2 = list(offset = -1))
   if (!is.list(val))  val <- list(value = val)
 
-  if (prop %in% c("x", "y", "stroke", "color", "fill", "size")) {
+  if (prop %in% c("x", "y", "size", "opacity", "fill", "fillOpacity",
+                  "stroke", "strokeWidth", "strokeOpacity")) {
     list(value = val$value)
 
   } else if (prop == "x2") {
