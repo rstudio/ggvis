@@ -8,7 +8,8 @@ Depends:
     R (>= 2.15.1)
 Imports:
     assertthat,
-    whisker
+    whisker,
+    RJSONIO
 Suggests:
     shiny (>= 0.5.0)
 License: GPL-2
