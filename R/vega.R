@@ -43,6 +43,46 @@ vega_spec <- function(gv,
   spec
 }
 
+vega_spec_dynamic <- function(gv,
+                              width = 600, height = 400,
+                              padding = c(20, 20, 30, 50),
+                              envir = parent.frame()) {
+
+  gv <- gigvis_fill_tree(gv, parent = NULL, envir = envir)
+  mapped_vars <- gather_mapped_vars(gv)
+  datasets <- gather_datasets(gv)
+  datasets <- prune_datasets_columns(datasets, mapped_vars)
+  
+  scales <- gather_scales(gv, datasets)
+  
+  # Convert data frames to vega format
+  datasets <- lapply(names(datasets), function(name) {
+    vega_df(datasets[[name]], name = name)
+  })
+  
+  # These are key-values that only appear at the top level of the tree
+  spec <- list(
+    width = width,
+    height = height,
+    data = datasets,
+    scales = scales,
+    
+    axes = list(list(type = "x", scale = "x"), list(type = "y", scale = "y")),
+    padding = c(
+      top = padding[1],
+      right = padding[2],
+      bottom = padding[3],
+      left = padding[4]
+    )
+  )
+  
+  # Now deal with keys that also appear in lower levels of the tree, and merge
+  # them in to the spec.
+  spec <- c(spec, vega_process_node(node = gv, envir = envir, scales = scales))
+  
+  spec
+}
+
 
 # Recursively traverse tree and collect all the data sets used. Returns a flat
 # list of data sets

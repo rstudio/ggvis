@@ -44,6 +44,41 @@ view_static <- function(gv, envir = parent.frame(), renderer = "canvas",
   browseURL(html_file)
 }
 
+view_dynamic <- function(gv, envir = parent.frame(), controls,
+                         renderer = "canvas", launch = TRUE, port = 8228) {
+  
+  if (!(renderer %in% c("canvas", "svg")))
+    stop("renderer must be 'canvas' or 'svg'")
+  
+  temp_dir <- tempfile(pattern = "gigvis")
+  dir.create(temp_dir)
+  
+  copy_www_resources(temp_dir)
+  
+  vega_json <- toJSON(vega_spec(gv, envir = envir), pretty = TRUE)
+  
+  template <- paste(readLines(system.file('index.html', package='gigvis')),
+                    collapse='\n')
+  
+  js <- paste0(
+    '<script type="text/javascript">
+    function parse(spec) {
+    vg.parse.spec(spec, function(chart) {
+    chart({el:"#vis", renderer: "', renderer, '"}).update();
+    });
+    }
+    parse(', vega_json, ');
+    </script>')
+  
+  body <- paste('<div id="vis"></div>', js, sep ='\n')
+  
+  html_file <- file.path(temp_dir, "plot.html")
+  writeLines(whisker.render(template, list(head = '', body = body)),
+             con = html_file)
+  
+  browseURL(html_file)
+}
+
 
 #' Generate an PNG file from a gigvis object
 #'
