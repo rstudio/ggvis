@@ -3,22 +3,49 @@
 #'
 #' @param envir The environment in which to evaluate the \code{data} parameter
 #'   of the gigvis object.
+#' @param dynamic Should this be prepared for dynamic data? If so, the data
+#'   object will _not_ be embedded; instead a symbol referring to the data will
+#'   be embedded, and the data itself will be sent later.
 #' @export
 vega_spec <- function(gv,
                       width = 600, height = 400, padding = c(20, 20, 30, 50),
-                      envir = parent.frame()) {
+                      envir = parent.frame(), dynamic = FALSE) {
 
-  gv <- gigvis_fill_tree(gv, parent = NULL, envir = envir)
-  mapped_vars <- gather_mapped_vars(gv)
-  datasets <- gather_datasets(gv)
-  datasets <- prune_datasets_columns(datasets, mapped_vars)
+  gv <- gigvis_fill_tree(gv, parent = NULL, envir = envir, dynamic = dynamic)
 
-  scales <- gather_scales(gv, datasets)
 
-  # Convert data frames to vega format
-  datasets <- lapply(names(datasets), function(name) {
-    vega_df(datasets[[name]], name = name)
-  })
+  if (dynamic) {
+    # The gv object is full of data=function() {...}; crawl over the tree and
+    # replace each of those with a synthetic ID, and return the transformed tree.
+    # The transformed tree will also have a list that maps the synthetic IDs to
+    # their functions; it will be made available as the attribute "symbol_table".
+    gv <- symbolize_data(gv)
+    symbol_table <- attr(gv, "symbol_table")
+
+    mapped_vars <- gather_mapped_vars(gv)
+
+    scales <- gather_scales(gv, symbol_table)
+
+    # Convert data frames to vega format
+    datasets <- lapply(names(symbol_table), function(name) {
+      # Don't provide data now, just the name
+      list(name = name)
+    })
+
+  } else {
+    mapped_vars <- gather_mapped_vars(gv)
+
+    datasets <- gather_datasets(gv)
+    datasets <- prune_datasets_columns(datasets, mapped_vars)
+
+    scales <- gather_scales(gv, datasets)
+
+    # Convert data frames to vega format
+    datasets <- lapply(names(datasets), function(name) {
+      vega_df(datasets[[name]], name = name)
+    })
+  }
+
 
   # These are key-values that only appear at the top level of the tree
   spec <- list(
@@ -40,60 +67,14 @@ vega_spec <- function(gv,
   # them in to the spec.
   spec <- c(spec, vega_process_node(node = gv, envir = envir, scales = scales))
 
+  if (dynamic) {
+    # Pass along the dataset expressions too.
+    attr(spec, "datasets") <- symbol_table
+  }
+
   spec
 }
 
-vega_spec_dynamic <- function(gv,
-                              width = 600, height = 400,
-                              padding = c(20, 20, 30, 50),
-                              envir = parent.frame()) {
-  
-  # The gv object is full of data=function() {...}; crawl over the tree and
-  # replace each of those with a synthetic ID, and return the transformed tree.
-  # The transformed tree will also have a list that maps the synthetic IDs to
-  # their functions; it will be made available as the attribute "symbol_table".
-  gv <- symbolize_data(gv)
-  symbol_table <- attr(gv, "symbol_table")
-  
-  gv <- gigvis_fill_tree_dynamic(gv, parent = NULL)
-  mapped_vars <- gather_mapped_vars(gv)
-  
-  # jcheng: This would need to happen later (before it's sent to the client)
-  # datasets <- prune_datasets_columns(datasets, mapped_vars)
-  
-  scales <- gather_scales(gv, symbol_table)
-  
-  # Convert data frames to vega format
-  datasets <- lapply(names(symbol_table), function(name) {
-    # jcheng: Don't provide data now, just the name
-    list(name = name)
-  })
-  
-  # These are key-values that only appear at the top level of the tree
-  spec <- list(
-    width = width,
-    height = height,
-    data = datasets,
-    scales = scales,
-    
-    axes = list(list(type = "x", scale = "x"), list(type = "y", scale = "y")),
-    padding = c(
-      top = padding[1],
-      right = padding[2],
-      bottom = padding[3],
-      left = padding[4]
-    )
-  )
-  
-  # Now deal with keys that also appear in lower levels of the tree, and merge
-  # them in to the spec.
-  spec <- c(spec, vega_process_node(node = gv, envir = envir, scales = scales))
-  
-  # Pass along the dataset expressions too.
-  attr(spec, "datasets") <- symbol_table
-  
-  spec
-}
 
 # The gv object is full of data=function() {...}; crawl over the tree and
 # replace each of those with a synthetic ID, and return the transformed tree.
@@ -104,7 +85,7 @@ vega_spec_dynamic <- function(gv,
 # chart.
 symbolize_data <- function(gv) {
   symbol_table <- SymbolTable$new("data")
-  
+
   gv <- symbolize_data_node(gv, symbol_table)
   attr(gv, "symbol_table") <- symbol_table$to_list()
 
@@ -115,12 +96,12 @@ symbolize_data_node <- function(node, symbol_table) {
   if (!is.null(node$data)) {
     node$data <- symbol_table$add_item(node$data)
   }
-  
+
   if (!is.null(node$children)) {
     node$children <- lapply(node$children, FUN = symbolize_data_node,
                             symbol_table=symbol_table)
   }
-  
+
   node
 }
 

@@ -48,19 +48,19 @@ view_static <- function(gv, envir = parent.frame(), renderer = "canvas",
 # or (reactive expressions) as data instead of names in an environment.
 view_dynamic <- function(gv, envir = parent.frame(), controls = NULL,
                          renderer = "canvas", launch = TRUE, port = 8228) {
-  
+
   if (!require("shiny"))
     stop("Can't proceed without shiny package")
-  
+
   if (!(renderer %in% c("canvas", "svg")))
     stop("renderer must be 'canvas' or 'svg'")
-  
+
   plot_id <- "plot1"
-  
-  dynamic_spec <- vega_spec_dynamic(gv, envir = envir)
+
+  dynamic_spec <- vega_spec(gv, envir = envir, dynamic = TRUE)
   datasets <- attr(dynamic_spec, "datasets")
   dynamic_spec_json <- RJSONIO::toJSON(dynamic_spec, pretty = TRUE)
-  
+
   # Make our resources available
   script_tags <- deploy_www_resources()
   if (is.null(controls)) {
@@ -90,7 +90,7 @@ view_dynamic <- function(gv, envir = parent.frame(), controls = NULL,
       )
     )
   }
-  
+
   server <- function(input, output, session) {
     for (name in names(datasets)) {
       # The datasets list contains named objects. The names are synthetic IDs
@@ -99,7 +99,7 @@ view_dynamic <- function(gv, envir = parent.frame(), controls = NULL,
       local({
         # Have to do everything in a local so that these variables are not shared
         # between the different iterations
-        
+
         data_name <- name
         obs <- observe({
           data <- datasets[[data_name]]
@@ -120,7 +120,10 @@ view_dynamic <- function(gv, envir = parent.frame(), controls = NULL,
           } else {
             stop("Unexpected expression")
           }
-          
+
+          # Perform splits and
+
+
           session$sendCustomMessage("gigvis_data", list(
             plot = plot_id,
             name = data_name,
@@ -133,7 +136,7 @@ view_dynamic <- function(gv, envir = parent.frame(), controls = NULL,
       })
     }
   }
-  
+
   runApp(list(ui=ui, server=server))
 }
 
@@ -248,7 +251,7 @@ deploy_www_resources <- function() {
     "lib/QuadTree.js",
     "js/shiny-gigvis.js"
   )
-  
+
   addResourcePath("gigvis", system.file("www", package="gigvis"))
   lapply(files, function(file) {
     tags$script(src=paste("gigvis", file, sep="/"))

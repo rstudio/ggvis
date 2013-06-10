@@ -10,7 +10,15 @@
 #   * Merge aesthetic mappings with the parent's aesthetics
 #   * Split data (if needed)
 #   * Transform data (if needed)
-gigvis_fill_tree <- function(node, parent = NULL, envir = NULL) {
+#
+# @param node The gigvis node to operate on.
+# @param parent The parent node.
+# @param envir Environment in which to look for data object.
+# @param dynamic Should this be prepared for dynamic data? If so, the data
+#   object will _not_ be embedded; instead a symbol referring to the data will
+#   be embedded, and the data itself will be sent later.
+gigvis_fill_tree <- function(node, parent = NULL, envir = NULL,
+                             dynamic = FALSE) {
   if (is.null(parent))  parent <- list()
 
   # Handle data sets
@@ -26,15 +34,19 @@ gigvis_fill_tree <- function(node, parent = NULL, envir = NULL) {
     node$inherit_data <- TRUE
   }
 
-  # Get data object:
-  # - First check if parent has the data set (transformed data will be there)
-  # - If not, then try to get data from envir
-  if (!is.null(parent$data) && parent$data == node$data) {
-    node$data_obj <- parent$data_obj
-  } else if (is.null(node$data)) {
-    node$data_obj <- NULL
+  if (dynamic) {
+    # TODO: fill this in
   } else {
-    node$data_obj <- get(node$data, envir = envir)
+    # For non-dynamic, get data object:
+    # - First check if parent has the data set (transformed data will be there)
+    # - If not, then try to get data from envir
+    if (!is.null(parent$data) && parent$data == node$data) {
+      node$data_obj <- parent$data_obj
+    } else if (is.null(node$data)) {
+      node$data_obj <- NULL
+    } else {
+      node$data_obj <- get(node$data, envir = envir)
+    }
   }
 
   # Inherit mappings
@@ -57,11 +69,17 @@ gigvis_fill_tree <- function(node, parent = NULL, envir = NULL) {
 
   # Split the data
   if (!is.null(node$split)) {
+    if(dynamic)
+      stop("Dynamic split not implemented yet")
+
     node$data_obj <- split_data(node$data_obj, node$split)
   }
 
   # Transform the data
   if (!is.null(node$transform)) {
+    if(dynamic)
+      stop("Dynamic transform not implemented yet")
+
     node$data_obj <- apply_transform(node$data_obj, node$transform, node$mapping)
 
     # Rename the dataset with the transform type appended (e.g., "mtc" becomes
@@ -72,74 +90,8 @@ gigvis_fill_tree <- function(node, parent = NULL, envir = NULL) {
   # Fill in children recursively
   if (!is.null(node$children)) {
     node$children <- lapply(node$children, FUN = gigvis_fill_tree,
-      parent = node, envir = envir)
+      parent = node, envir = envir, dynamic = dynamic)
   }
 
-  node
-}
-
-# jcheng: This is a copy of gigvis_fill_tree that works for dynamic rendering
-# (see comment above view_dynamic for what that means). The main difference
-# is that data_obj isn't present, so I had to remove a bunch of code. I also
-# don't understand split or transform so I just throw an error if those are
-# present.
-gigvis_fill_tree_dynamic <- function(node, parent = NULL) {
-  if (is.null(parent))  parent <- list()
-  
-  # Handle data sets
-  if (is.null(node$data)) {
-    node$data <- parent$data
-  }
-  
-  # If parent node isn't the root node, then inherit data (this is used when
-  # generating the vega tree)
-  if (inherits(parent, "gigvis")) {
-    node$inherit_data <- FALSE
-  } else {
-    node$inherit_data <- TRUE
-  }
-  
-  # Inherit mappings
-  if (is.null(node$mapping)) {
-    node$mapping <- parent$mapping
-    
-  } else {
-    inherit_mapping <- attr(node$mapping, "inherit", exact = TRUE)
-    
-    if (is.null(inherit_mapping)) {
-      stop("Aesthetic mappings must be created with aes().")
-      
-    } else if (inherit_mapping == TRUE) {
-      node$mapping <- merge_vectors(parent$mapping, node$mapping)
-      
-    } else if (inherit_mapping == FALSE) {
-      node$mapping <- parent$mapping
-    }
-  }
-  
-  # Split the data
-  if (!is.null(node$split)) {
-    stop("Dynamic split not implemented yet")
-
-    node$data_obj <- split_data(node$data_obj, node$split)
-  }
-  
-  # Transform the data
-  if (!is.null(node$transform)) {
-    stop("Dynamic transform not implemented yet")
-    
-    node$data_obj <- apply_transform(node$data_obj, node$transform, node$mapping)
-    
-    # Rename the dataset with the transform type appended (e.g., "mtc" becomes
-    # "mtc_smooth")
-    node$data <- paste(node$data, transform_type(node$transform), sep = "_")
-  }
-  
-  # Fill in children recursively
-  if (!is.null(node$children)) {
-    node$children <- lapply(node$children, FUN = gigvis_fill_tree_dynamic,
-                            parent = node)
-  }
-  
   node
 }
