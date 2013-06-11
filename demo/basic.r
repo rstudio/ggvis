@@ -143,3 +143,19 @@ p <- gigvis("diamonds",
   )
 )
 view_static(p)
+
+# Histogram, by cyl
+p <- gigvis("mtcars",
+  mapping = aes(x = "wt", fill = "cyl"),
+  transform = transform_bin(binwidth = 1),
+  split = by_group("cyl"),
+  scales = list(
+    y = scale(name = "y", type = "linear", zero = TRUE),
+    fill = scale(name = "fill", type = "ordinal")
+  ),
+  node(
+    mapping = aes(x = "xmin__", x2 = "xmax__", y = "count__"),
+    mark_rect(y2 = 0)
+  )
+)
+view_static(p)
