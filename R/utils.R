@@ -76,9 +76,11 @@ assert_installed <- function(pkg) {
   }
 }
 
+
 # Gives unique names to an unnamed set of items. The names are automatically
 # generated and are designed to be "universally" unique (though current
 # implementation falls far short!).
+# TODO: if data is duplicated, don't add another symbol for it
 SymbolTable <- setRefClass(
   'SymbolTable',
   fields = list(
@@ -95,6 +97,17 @@ SymbolTable <- setRefClass(
       id <- .unique_id(prefix)
       .symbols[[id]] <<- item
       return(id)
+    },
+    # Reports whether a given id is in the symbol table.
+    contains = function(id) {
+      # If not a string, return FALSE
+      if (!is.character(id))
+        return(FALSE)
+
+      return(exists(id, .symbols, inherits = FALSE))
+    },
+    get = function(id) {
+      return(.symbols[[id]])
     },
     to_list = function() {
       as.list(.symbols)

@@ -15,13 +15,6 @@ vega_spec <- function(gv,
 
 
   if (dynamic) {
-    # The gv object is full of data=function() {...}; crawl over the tree and
-    # replace each of those with a synthetic ID, and return the transformed tree.
-    # The transformed tree will also have a list that maps the synthetic IDs to
-    # their functions; it will be made available as the attribute "symbol_table".
-    gv <- symbolize_data(gv)
-    symbol_table <- attr(gv, "symbol_table")
-
     mapped_vars <- gather_mapped_vars(gv)
 
     scales <- gather_scales(gv, symbol_table)
@@ -73,36 +66,6 @@ vega_spec <- function(gv,
   }
 
   spec
-}
-
-
-# The gv object is full of data=function() {...}; crawl over the tree and
-# replace each of those with a synthetic ID, and return the transformed tree.
-# The transformed tree will also have a list that maps the synthetic IDs to
-# their functions; it will be made available as the attribute "symbol_table".
-# Later on, in view_dynamic, this table will be used to create observers that
-# send data to the client, where they will be plugged into the appropriate
-# chart.
-symbolize_data <- function(gv) {
-  symbol_table <- SymbolTable$new("data")
-
-  gv <- symbolize_data_node(gv, symbol_table)
-  attr(gv, "symbol_table") <- symbol_table$to_list()
-
-  gv
-}
-
-symbolize_data_node <- function(node, symbol_table) {
-  if (!is.null(node$data)) {
-    node$data <- symbol_table$add_item(node$data)
-  }
-
-  if (!is.null(node$children)) {
-    node$children <- lapply(node$children, FUN = symbolize_data_node,
-                            symbol_table=symbol_table)
-  }
-
-  node
 }
 
 

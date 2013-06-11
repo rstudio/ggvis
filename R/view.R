@@ -102,27 +102,7 @@ view_dynamic <- function(gv, envir = parent.frame(), controls = NULL,
 
         data_name <- name
         obs <- observe({
-          data <- datasets[[data_name]]
-          if (is.function(data)) {
-            # If it's a function, run it.
-            # TODO: Inject `input` and `session` into data function
-            data <- data()
-            if (!is.data.frame(data) && !is.null(data)) {
-              stop("Unexpected function result")
-            }
-          } else if (is.character(data)) {
-            # If it's a string, get it from the envir. (Same as view_static)
-            data <- get(data, envir = envir)
-          } else if (is.data.frame(data)) {
-            # If it's a data frame, just use it.
-          } else if (is.null(data)) {
-            # If it's null, do nothing
-          } else {
-            stop("Unexpected expression")
-          }
-
-          # Perform splits and
-
+          data <- get_data_dynamic(datasets[[data_name]], envir = envir)
 
           session$sendCustomMessage("gigvis_data", list(
             plot = plot_id,

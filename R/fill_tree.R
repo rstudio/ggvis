@@ -17,9 +17,17 @@
 # @param dynamic Should this be prepared for dynamic data? If so, the data
 #   object will _not_ be embedded; instead a symbol referring to the data will
 #   be embedded, and the data itself will be sent later.
+# @param symbol_table A table of data symbols, used only when \code{dynamic=TRUE}.
 gigvis_fill_tree <- function(node, parent = NULL, envir = NULL,
-                             dynamic = FALSE) {
-  if (is.null(parent))  parent <- list()
+                             dynamic = FALSE, symbol_table = NULL) {
+
+  # If we're at the top of the tree, initialize some data structures
+  if (is.null(parent)) {
+    parent <- list()
+
+    if (dynamic)
+      symbol_table <- SymbolTable$new("data")
+  }
 
   # Handle data sets
   if (is.null(node$data)) {
@@ -34,20 +42,6 @@ gigvis_fill_tree <- function(node, parent = NULL, envir = NULL,
     node$inherit_data <- TRUE
   }
 
-  if (dynamic) {
-    # TODO: fill this in
-  } else {
-    # For non-dynamic, get data object:
-    # - First check if parent has the data set (transformed data will be there)
-    # - If not, then try to get data from envir
-    if (!is.null(parent$data) && parent$data == node$data) {
-      node$data_obj <- parent$data_obj
-    } else if (is.null(node$data)) {
-      node$data_obj <- NULL
-    } else {
-      node$data_obj <- get(node$data, envir = envir)
-    }
-  }
 
   # Inherit mappings
   if (is.null(node$mapping)) {
@@ -67,31 +61,88 @@ gigvis_fill_tree <- function(node, parent = NULL, envir = NULL,
     }
   }
 
-  # Split the data
-  if (!is.null(node$split)) {
-    if(dynamic)
-      stop("Dynamic split not implemented yet")
 
-    node$data_obj <- split_data(node$data_obj, node$split)
+  if (dynamic) {
+    # For dynamic, add the data to the symbol table
+    if (!is.null(node$data)) {
+      data_ref <- node$data
+
+      # The gv object is full of data=function() {...}; crawl over the tree and
+      # replace each of those with a synthetic ID, and return the transformed tree.
+      # The transformed tree will also have a list that maps the synthetic IDs to
+      # their functions; it will be made available as the attribute "symbol_table".
+      # Later on, in view_dynamic, this table will be used to create observers that
+      # send data to the client, where they will be plugged into the appropriate
+      # chart.
+      # Check whether this data ref is already in the symbol table; if not, add
+      # it to the table.
+      if (!symbol_table$contains(data_ref)) {
+        data_ref <- symbol_table$add_item(data_ref)
+      }
+
+      # Save a function which will return the data, properly split and
+      # transformed
+      node$data <- symbol_table$add_item(function() {
+        # First search in the symbol table for the data_ref, before searching
+        # the usual places with get_data_dynamic.
+        if (symbol_table$contains(data_ref))
+          data_ref <- symbol_table$get(data_ref)
+
+        data_obj <- get_data_dynamic(data_ref, envir = envir)
+
+        # Split the data
+        if (!is.null(node$split)) {
+          data_obj <- split_data(data_obj, node$split)
+        }
+
+        # Transform the data
+        if (!is.null(node$transform)) {
+          data_obj <- apply_transform(data_obj, node$transform, node$mapping)
+        }
+
+        data_obj
+      })
+    }
+
+  } else {
+    # For non-dynamic, get data object:
+    # - First check if parent has the data set (transformed data will be there)
+    # - If not, then try to get data from envir
+    if (!is.null(parent$data) && parent$data == node$data) {
+      node$data_obj <- parent$data_obj
+    } else if (is.null(node$data)) {
+      node$data_obj <- NULL
+    } else {
+      node$data_obj <- get(node$data, envir = envir)
+    }
+
+    # Split the data
+    if (!is.null(node$split)) {
+      node$data_obj <- split_data(node$data_obj, node$split)
+    }
+
+    # Transform the data
+    if (!is.null(node$transform)) {
+      node$data_obj <- apply_transform(node$data_obj, node$transform, node$mapping)
+
+      # Rename the dataset with the transform type appended (e.g., "mtc" becomes
+      # "mtc_smooth")
+      node$data <- paste(node$data, transform_type(node$transform), sep = "_")
+    }
   }
 
-  # Transform the data
-  if (!is.null(node$transform)) {
-    if(dynamic)
-      stop("Dynamic transform not implemented yet")
-
-    node$data_obj <- apply_transform(node$data_obj, node$transform, node$mapping)
-
-    # Rename the dataset with the transform type appended (e.g., "mtc" becomes
-    # "mtc_smooth")
-    node$data <- paste(node$data, transform_type(node$transform), sep = "_")
-  }
 
   # Fill in children recursively
   if (!is.null(node$children)) {
     node$children <- lapply(node$children, FUN = gigvis_fill_tree,
-      parent = node, envir = envir, dynamic = dynamic)
+      parent = node, envir = envir, dynamic = dynamic,
+      symbol_table = symbol_table)
   }
+
+  # If this was the top node, add the symbol table as an attribute, so that
+  # it can be returned to the caller.
+  attr(node, "symbol_table") <- symbol_table$to_list()
+
 
   node
 }
