@@ -44,6 +44,95 @@ view_static <- function(gv, envir = parent.frame(), renderer = "canvas",
   browseURL(html_file)
 }
 
+# This is used similarly to view_static, but view_dynamic can take functions
+# or (reactive expressions) as data instead of names in an environment.
+view_dynamic <- function(gv, envir = parent.frame(), controls = NULL,
+                         renderer = "canvas", launch = TRUE, port = 8228) {
+
+  if (!require("shiny"))
+    stop("Can't proceed without shiny package")
+
+  if (!(renderer %in% c("canvas", "svg")))
+    stop("renderer must be 'canvas' or 'svg'")
+
+  plot_id <- "plot1"
+
+  dynamic_spec <- vega_spec(gv, envir = envir, dynamic = TRUE)
+  datasets <- attr(dynamic_spec, "datasets")
+  dynamic_spec_json <- RJSONIO::toJSON(dynamic_spec, pretty = TRUE)
+
+  # Make our resources available
+  script_tags <- deploy_www_resources()
+  if (is.null(controls)) {
+    ui <- basicPage(
+      tags$head(script_tags),
+      gigvisOutput2(plot_id, dynamic_spec_json, renderer = renderer)
+    )
+  } else {
+    ui <- bootstrapPage(
+      tags$head(script_tags),
+      tags$div(
+        class = "container",
+        tags$div(
+          class = "row",
+          tags$div(
+            class = "span3",
+            tags$div(
+              class = "well",
+              controls
+            )
+          ),
+          tags$div(
+            class = "span9",
+            gigvisOutput2(plot_id, dynamic_spec_json, renderer = renderer)
+          )
+        )
+      )
+    )
+  }
+
+  server <- function(input, output, session) {
+    for (name in names(datasets)) {
+      # The datasets list contains named objects. The names are synthetic IDs
+      # that are present in the vega spec. The values can be a variety of things,
+      # see the if/else clauses below.
+      local({
+        # Have to do everything in a local so that these variables are not shared
+        # between the different iterations
+
+        data_name <- name
+        obs <- observe({
+          data <- get_data_dynamic(datasets[[data_name]], envir = envir)
+
+          session$sendCustomMessage("gigvis_data", list(
+            plot = plot_id,
+            name = data_name,
+            value = d3df(data)
+          ))
+        })
+        session$onSessionEnded(function() {
+          obs$suspend()
+        })
+      })
+    }
+  }
+
+  runApp(list(ui=ui, server=server))
+}
+
+gigvisOutput2 <- function(outputId, vega_json, renderer = 'canvas') {
+  js <- paste0(
+  '<script type="text/javascript">
+    var spec = ', vega_json, ';
+    vg.parse.spec(spec, function(chart) {
+      var chart = chart({el:"#', outputId, '", renderer: "', renderer, '"});
+      $("#', outputId, '").data("gigvis-chart", chart);
+      gigvisInit("', outputId, '");
+    });
+  </script>')
+  list(HTML(js), tags$div(id=outputId))
+}
+
 
 #' Generate an PNG file from a gigvis object
 #'
@@ -131,5 +220,20 @@ copy_www_resources <- function(destdir) {
       dir.create(parent_dir)
 
     file.copy(src, destfile)
+  })
+}
+
+deploy_www_resources <- function() {
+  files <- c(
+    "lib/jquery-1.9.1.js",
+    "lib/d3.js",
+    "lib/vega.js",
+    "lib/QuadTree.js",
+    "js/shiny-gigvis.js"
+  )
+
+  addResourcePath("gigvis", system.file("www", package="gigvis"))
+  lapply(files, function(file) {
+    tags$script(src=paste("gigvis", file, sep="/"))
   })
 }

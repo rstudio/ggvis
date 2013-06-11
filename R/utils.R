@@ -75,3 +75,49 @@ assert_installed <- function(pkg) {
     stop("The '", pkg, "' package is required for this functionality")
   }
 }
+
+
+# Gives unique names to an unnamed set of items. The names are automatically
+# generated and are designed to be "universally" unique (though current
+# implementation falls far short!).
+# TODO: if data is duplicated, don't add another symbol for it
+SymbolTable <- setRefClass(
+  'SymbolTable',
+  fields = list(
+    .symbols = 'environment',
+    .default_prefix = 'character'
+  ),
+  methods = list(
+    initialize = function(default_prefix = "item") {
+      .symbols <<- new.env()
+      .default_prefix <<- default_prefix
+    },
+    # Add a source; return the unique ID generated for the source
+    add_item = function(item, prefix = .default_prefix) {
+      id <- .unique_id(prefix)
+      .symbols[[id]] <<- item
+      return(id)
+    },
+    # Reports whether a given id is in the symbol table.
+    contains = function(id) {
+      # If not a string, return FALSE
+      if (!is.character(id))
+        return(FALSE)
+
+      return(exists(id, .symbols, inherits = FALSE))
+    },
+    get = function(id) {
+      return(.symbols[[id]])
+    },
+    to_list = function() {
+      as.list(.symbols)
+    },
+    # Generate a unique ID, starting with the given prefix. The prefix should be
+    # a valid JavaScript identifier (must start with a letter or underscore, can
+    # contain letters, numbers, or underscore).
+    .unique_id = function(prefix) {
+      # TODO: Use better unique ID
+      sprintf('%s_%d', prefix, as.integer(runif(1, min=1e8, max=1e9-1)))
+    }
+  )
+)

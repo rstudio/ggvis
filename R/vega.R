@@ -3,22 +3,42 @@
 #'
 #' @param envir The environment in which to evaluate the \code{data} parameter
 #'   of the gigvis object.
+#' @param dynamic Should this be prepared for dynamic data? If so, the data
+#'   object will _not_ be embedded; instead a symbol referring to the data will
+#'   be embedded, and the data itself will be sent later.
 #' @export
 vega_spec <- function(gv,
                       width = 600, height = 400, padding = c(20, 20, 30, 50),
-                      envir = parent.frame()) {
+                      envir = parent.frame(), dynamic = FALSE) {
 
-  gv <- gigvis_fill_tree(gv, parent = NULL, envir = envir)
-  mapped_vars <- gather_mapped_vars(gv)
-  datasets <- gather_datasets(gv)
-  datasets <- prune_datasets_columns(datasets, mapped_vars)
+  gv <- gigvis_fill_tree(gv, parent = NULL, envir = envir, dynamic = dynamic)
 
-  scales <- gather_scales(gv, datasets)
 
-  # Convert data frames to vega format
-  datasets <- lapply(names(datasets), function(name) {
-    vega_df(datasets[[name]], name = name)
-  })
+  if (dynamic) {
+    mapped_vars <- gather_mapped_vars(gv)
+
+    scales <- gather_scales(gv, symbol_table)
+
+    # Convert data frames to vega format
+    datasets <- lapply(names(symbol_table), function(name) {
+      # Don't provide data now, just the name
+      list(name = name)
+    })
+
+  } else {
+    mapped_vars <- gather_mapped_vars(gv)
+
+    datasets <- gather_datasets(gv)
+    datasets <- prune_datasets_columns(datasets, mapped_vars)
+
+    scales <- gather_scales(gv, datasets)
+
+    # Convert data frames to vega format
+    datasets <- lapply(names(datasets), function(name) {
+      vega_df(datasets[[name]], name = name)
+    })
+  }
+
 
   # These are key-values that only appear at the top level of the tree
   spec <- list(
@@ -40,6 +60,11 @@ vega_spec <- function(gv,
   # them in to the spec.
   spec <- c(spec, vega_process_node(node = gv, envir = envir, scales = scales))
 
+  if (dynamic) {
+    # Pass along the dataset expressions too.
+    attr(spec, "datasets") <- symbol_table
+  }
+
   spec
 }
 
@@ -59,6 +84,10 @@ gather_datasets <- function(node) {
 
   # Add this node's data set if not already present
   if (!is.null(node$data) && !(node$data %in% names(datasets))) {
+    # jcheng: datasets being NULL here is fine for data frames, but
+    # not fine for functions (you get an error on the [[<- below)
+    if (is.null(datasets) && is.function(node$data_obj))
+      datasets <- list()
     datasets[[node$data]] <- node$data_obj
   }
 
