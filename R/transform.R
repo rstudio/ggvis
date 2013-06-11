@@ -21,7 +21,7 @@ apply_transform <- function(data, transform, mapping) UseMethod("apply_transform
 #' @S3method apply_transform data.frame
 apply_transform.data.frame <- function(data, transform, mapping) {
   # Identify constant variables, extract and add back in
-  constant_vars <- vapply(data, is.constant, logical(1))
+  constant_vars <- vapply(data, is_constant, logical(1))
   
   transformed <- compute(transform, data, mapping)
   carry_over <- data[1, constant_vars, drop = FALSE]
@@ -44,4 +44,4 @@ apply_transform.split_data_dflist <- function(data, transform, mapping) {
 compute <- function(transform, data, mapping) UseMethod("compute")
 
 
-is.constant <- function(x) all(x == x[1])
+is_constant <- function(x) all(x == x[1])
