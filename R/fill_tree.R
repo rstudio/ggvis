@@ -18,6 +18,7 @@
 #   object will _not_ be embedded; instead a symbol referring to the data will
 #   be embedded, and the data itself will be sent later.
 # @param symbol_table A table of data symbols, used only when \code{dynamic=TRUE}.
+#' @importFrom digest digest
 gigvis_fill_tree <- function(node, parent = NULL, envir = NULL,
                              dynamic = FALSE, symbol_table = NULL) {
 
@@ -125,9 +126,17 @@ gigvis_fill_tree <- function(node, parent = NULL, envir = NULL,
     if (!is.null(node$transform)) {
       node$data_obj <- apply_transform(node$data_obj, node$transform, node$mapping)
 
-      # Rename the dataset with the transform type appended (e.g., "mtc" becomes
-      # "mtc_smooth")
-      node$data <- paste(node$data, transform_type(node$transform), sep = "_")
+      # Rename the dataset with the transform type and hashed transform appended
+      # (e.g., "mtc" becomes "mtc_smooth_asdf842af3")
+      # The hashing is done so that if there are multiple transforms of the
+      # same type, they won't interfere. For example, if there are two smooth
+      # transforms with different methods ("lm" and "loess") or with different
+      # mappings, they should result in different data names.
+      node$data <- paste(
+        node$data,
+        transform_type(node$transform),
+        digest::digest(node[c("transform", "mapping")], algo = "crc32"),
+        sep = "_")
     }
   }
 
