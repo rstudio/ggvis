@@ -84,11 +84,11 @@ gigvis_fill_tree <- function(node, parent = NULL, envir = NULL,
       # transformed
       node$data <- symbol_table$add_item(function() {
         # First search in the symbol table for the data_ref, before searching
-        # the usual places with get_data_dynamic.
+        # the usual places with find_data_object
         if (symbol_table$contains(data_ref))
           data_ref <- symbol_table$get(data_ref)
 
-        data_obj <- get_data_dynamic(data_ref, envir = envir)
+        data_obj <- find_data_object(data_ref, envir = envir)
 
         # Split the data
         if (!is.null(node$split)) {

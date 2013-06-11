@@ -102,7 +102,7 @@ view_dynamic <- function(gv, envir = parent.frame(), controls = NULL,
 
         data_name <- name
         obs <- observe({
-          data <- get_data_dynamic(datasets[[data_name]], envir = envir)
+          data <- find_data_object(datasets[[data_name]], envir = envir)
 
           session$sendCustomMessage("gigvis_data", list(
             plot = plot_id,

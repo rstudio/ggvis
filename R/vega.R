@@ -17,6 +17,7 @@ vega_spec <- function(gv,
   if (dynamic) {
     mapped_vars <- gather_mapped_vars(gv)
 
+    symbol_table <- attr(gv, "symbol_table")
     scales <- gather_scales(gv, symbol_table)
 
     # Convert data frames to vega format
