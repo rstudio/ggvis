@@ -101,6 +101,48 @@ p <- gigvis("mtcars", aes(x = "wt", y = "mpg"),
 )
 view_static(p)
 
+# Scatter plot with linear and loess model line for each level of cyl
+p <- gigvis("mtcars", aes(x = "wt", y = "mpg", stroke = "cyl", fill = "cyl"),
+  mark_point(),
+  scales = list(
+    stroke = scale(name = "stroke", type = "ordinal"),
+    fill  = scale(name = "fill", type = "ordinal")
+  ),
+  node(
+    split = by_group("cyl"),
+    transform = transform_smooth(method = "lm", se = F),
+    mark_line(fill = NA)
+  ),
+  node(
+    split = by_group("cyl"),
+    transform = transform_smooth(method = "loess", se = F),
+    mark_line(fill = NA)
+  )
+)
+view_static(p)
+
+# Scatter plot with two linear model lines for each level of cyl, with different
+# mappings
+p <- gigvis("mtcars", aes(x = "wt", y = "mpg", stroke = "cyl", fill = "cyl"),
+  mark_point(),
+  scales = list(
+    stroke = scale(name = "stroke", type = "ordinal"),
+    fill  = scale(name = "fill", type = "ordinal")
+  ),
+  node(
+    split = by_group("cyl"),
+    transform = transform_smooth(method = "lm", se = F),
+    mark_line(fill = NA)
+  ),
+  node(
+    split = by_group("cyl"),
+    transform = transform_smooth(method = "lm", se = F),
+    mapping = aes(y = "qsec"),
+    mark_line(fill = NA, opacity = 0.25)
+  )
+)
+view_static(p)
+
 
 # Bar graph with continuous x
 p <- gigvis("pressure",
