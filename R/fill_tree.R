@@ -139,10 +139,11 @@ gigvis_fill_tree <- function(node, parent = NULL, envir = NULL,
       symbol_table = symbol_table)
   }
 
-  # If this was the top node, add the symbol table as an attribute, so that
-  # it can be returned to the caller.
-  attr(node, "symbol_table") <- symbol_table$to_list()
-
+  # If dynamic and this was the top node, add the symbol table as an attribute,
+  # so that it can be returned to the caller.
+  if (dynamic && identical(parent, list())) {
+    attr(node, "symbol_table") <- symbol_table$to_list()
+  }
 
   node
 }
