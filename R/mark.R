@@ -6,6 +6,7 @@ mark <- function(type, ...) {
   )
 }
 
+#' @S3method print mark
 print.mark <- function(x, ...) str(x)
 
 #' @export

@@ -3,6 +3,8 @@
 transform <- function(type, ...) {
   structure(list(...), class = c(paste0("transform_", type), "transform"))
 }
+
+#' @S3method print transform
 print.transform <- function(x, ...) str(x)
 
 
