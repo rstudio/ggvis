@@ -29,7 +29,7 @@ view_static <- function(gv, envir = parent.frame(), renderer = "canvas",
     '<script type="text/javascript">
       function parse(spec) {
         vg.parse.spec(spec, function(chart) {
-          chart({el:"#vis", renderer: "', renderer, '"}).update();
+          view = chart({el:"#vis", renderer: "', renderer, '"}).update();
         });
       }
       parse(', vega_json, ');
