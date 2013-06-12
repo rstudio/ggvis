@@ -4,8 +4,8 @@ transform_bin <- function(binwidth = "auto") {
 }
 
 
-#' @S3method compute transform_bin
-compute.transform_bin <- function(transform, data, mapping) {
+#' @S3method compute_transform transform_bin
+compute_transform.transform_bin <- function(transform, data, mapping) {
   xvar <- mapping["x"]
 
   if (transform$binwidth == "auto") {

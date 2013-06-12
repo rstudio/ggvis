@@ -24,11 +24,11 @@ apply_transform <- function(data, transform, mapping) UseMethod("apply_transform
 apply_transform.data.frame <- function(data, transform, mapping) {
   # Identify constant variables, extract and add back in
   constant_vars <- vapply(data, is_constant, logical(1))
-  
-  transformed <- compute(transform, data, mapping)
+
+  transformed <- compute_transform(transform, data, mapping)
   carry_over <- data[1, constant_vars, drop = FALSE]
   rownames(carry_over) <- NULL
-  
+
   cbind(transformed, carry_over)
 }
 
@@ -43,7 +43,8 @@ apply_transform.split_data_dflist <- function(data, transform, mapping) {
 
 # Compute transformation. This is an S3 generic; a method should be implemented
 # for each type of transform.
-compute <- function(transform, data, mapping) UseMethod("compute")
+compute_transform <- function(transform, data, mapping)
+  UseMethod("compute_transform")
 
 
 is_constant <- function(x) all(x == x[1])
