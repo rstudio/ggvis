@@ -33,3 +33,4 @@ Collate:
     'transform_smooth.R'
     'full_seq.R'
     'find_data.R'
+    'range.R'
