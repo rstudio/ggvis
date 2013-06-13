@@ -98,7 +98,7 @@ gigvis_fill_tree <- function(node, parent = NULL, envir = NULL,
 
         # Transform the data
         if (!is.null(node$transform)) {
-          data_obj <- apply_transform(data_obj, node$transform, node$mapping)
+          data_obj <- apply_transform(node$transform, data_obj, node$mapping)
         }
 
         data_obj
@@ -124,7 +124,7 @@ gigvis_fill_tree <- function(node, parent = NULL, envir = NULL,
 
     # Transform the data
     if (!is.null(node$transform)) {
-      node$data_obj <- apply_transform(node$data_obj, node$transform, node$mapping)
+      node$data_obj <- apply_transform(node$transform, node$data_obj, node$mapping)
 
       # Rename the dataset with the transform type and hashed transform appended
       # (e.g., "mtc" becomes "mtc_smooth_asdf842af3")

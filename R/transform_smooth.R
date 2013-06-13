@@ -13,8 +13,7 @@ transform_smooth <- function(method = "auto", formula = "auto", se = TRUE,
 }
 
 
-#' @S3method compute transform_smooth
-compute.transform_smooth <- function(transform, data, mapping) {
+compute_transform.transform_smooth <- function(transform, data, mapping) {
   xvar <- mapping["x"]
   yvar <- mapping["y"]
 
