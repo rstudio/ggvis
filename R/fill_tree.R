@@ -92,9 +92,7 @@ gigvis_fill_tree <- function(node, parent = NULL, envir = NULL,
         data_obj <- find_data_object(data_ref, envir = envir)
 
         # Split the data
-        if (!is.null(node$split)) {
-          data_obj <- split_data(data_obj, node$split)
-        }
+        data_obj <- split_data(data_obj, node$split)
 
         # Transform the data
         if (!is.null(node$transform)) {
@@ -118,9 +116,7 @@ gigvis_fill_tree <- function(node, parent = NULL, envir = NULL,
     }
 
     # Split the data
-    if (!is.null(node$split)) {
-      node$data_obj <- split_data(node$data_obj, node$split)
-    }
+    node$data_obj <- split_data(node$data_obj, node$split)
 
     # Transform the data
     if (!is.null(node$transform)) {
