@@ -34,3 +34,4 @@ Collate:
     'full_seq.R'
     'find_data.R'
     'range.R'
+    'position.R'

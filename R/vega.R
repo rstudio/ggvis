@@ -157,11 +157,11 @@ prune_datasets_columns <- function(datasets, keep_vars) {
 
 prune_columns <- function(data, keep_vars) UseMethod("prune_columns")
 
-#' @S3method prune_columns split_data_dflist
-prune_columns.split_data_dflist <- function(data, keep_vars) {
+#' @S3method prune_columns split_df
+prune_columns.split_df <- function(data, keep_vars) {
   structure(
     lapply(data, prune_columns, keep_vars),
-    class = c("split_data_dflist", "split_data")
+    class = "split_df"
   )
 }
 
@@ -250,7 +250,7 @@ d3df.data.frame <- function(x) {
   })
 }
 
-#' @S3method d3df split_data_dflist
-d3df.split_data_dflist <- function(x) {
+#' @S3method d3df split_df
+d3df.split_df <- function(x) {
   unlist(lapply(x, d3df), recursive = FALSE)
 }

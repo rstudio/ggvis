@@ -18,15 +18,15 @@ find_var_range.data.frame <- function(data, var, drop = FALSE) {
     unique(col)
 }
 
-#' @S3method find_var_range split_data_dflist
-find_var_range.split_data_dflist <- function(data, var, drop = FALSE) {
+#' @S3method find_var_range split_df
+find_var_range.split_df <- function(data, var, drop = FALSE) {
   # Find range of each data frame in the list
   ranges <- lapply(data, find_var_range, var = var, drop = drop)
 
   # Verify that all ranges are the same type
   types <- vapply(data, function(d) mode(d[[var]]), FUN.VALUE = character(1))
   if (!is_constant(types))
-    stop("Data frames in split_data_dflist object do not all have same type for column '",
+    stop("Data frames in split_df object do not all have same type for column '",
       var, "'.")
 
   if (types[1] == "numeric") {

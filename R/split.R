@@ -22,17 +22,17 @@ split_data.data.frame <- function(data, split) {
 
   structure(
     data,
-    class = c("split_data_dflist", "split_data")
+    class = "split_df"
   )
 }
 
-#' @S3method split_data split_data_dflist
-split_data.split_data_dflist <- function(data, split) {
+#' @S3method split_data split_df
+split_data.split_df <- function(data, split) {
   if (is.null(split))
     return(data)
 
   data <- structure(
     unlist(lapply(data, split_data, split), recursive = TRUE),
-    class = c("split_data_dflist", "split_data")
+    class = "split_df"
   )
 }

@@ -47,12 +47,12 @@ compute_transform_bin.data.frame <- function(data, transform, mapping) {
   cbind(transformed, carry_over)
 }
 
-#' @S3method compute_transform_bin split_data_dflist
-compute_transform_bin.split_data_dflist <- function(data, transform, mapping) {
+#' @S3method compute_transform_bin split_df
+compute_transform_bin.split_df <- function(data, transform, mapping) {
   # Run compute_transform_bin on each data frame in the list
   data <- structure(
     lapply(data, compute_transform_bin, transform = transform, mapping = mapping),
-    class = c("split_data_dflist", "split_data")
+    class = "split_df"
   )
 }
 
