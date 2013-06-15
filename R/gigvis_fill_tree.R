@@ -14,35 +14,32 @@
 # @param node The gigvis node to operate on.
 # @param parent The parent node.
 # @param envir Environment in which to look for data object.
-# @param dynamic Should this be prepared for dynamic data? If so, the data
-#   object will _not_ be embedded; instead a symbol referring to the data will
-#   be embedded, and the data itself will be sent later.
 # @param symbol_table A table of data symbols, used only when \code{dynamic=TRUE}.
 #' @importFrom digest digest
 gigvis_fill_tree <- function(node, parent = NULL, envir = NULL,
-                             dynamic = FALSE, symbol_table = NULL) {
-
+                             symbol_table = NULL) {
   # If we're at the top of the tree, initialize some data structures
   if (is.null(parent)) {
+    root_node <- TRUE
     parent <- list()
 
-    if (dynamic)
+    if (node$dynamic)
       symbol_table <- SymbolTable$new("data")
+
+  } else {
+    root_node <- FALSE
   }
 
-  # Handle data sets
-  if (is.null(node$data)) {
-    node$data <- parent$data
-  }
+  if (is.null(node$dynamic))  node$dynamic <- parent$dynamic
+  if (is.null(node$data))  node$data <- parent$data
 
-  # If parent node isn't the root node, then inherit data (this is used when
+  # If parent node is NOT the root node, then inherit data (this is used when
   # generating the vega tree)
   if (inherits(parent, "gigvis")) {
     node$inherit_data <- FALSE
   } else {
     node$inherit_data <- TRUE
   }
-
 
   # Inherit mappings
   if (is.null(node$mapping)) {
@@ -63,7 +60,7 @@ gigvis_fill_tree <- function(node, parent = NULL, envir = NULL,
   }
 
 
-  if (dynamic) {
+  if (node$dynamic) {
     # For dynamic, add the data to the symbol table
     if (!is.null(node$data)) {
       data_ref <- node$data
@@ -140,13 +137,12 @@ gigvis_fill_tree <- function(node, parent = NULL, envir = NULL,
   # Fill in children recursively
   if (!is.null(node$children)) {
     node$children <- lapply(node$children, FUN = gigvis_fill_tree,
-      parent = node, envir = envir, dynamic = dynamic,
-      symbol_table = symbol_table)
+      parent = node, envir = envir, symbol_table = symbol_table)
   }
 
   # If dynamic and this was the top node, add the symbol table as an attribute,
   # so that it can be returned to the caller.
-  if (dynamic && identical(parent, list())) {
+  if (root_node && node$dynamic) {
     attr(node, "symbol_table") <- symbol_table$to_list()
   }
 

@@ -1,7 +1,6 @@
 #' Generate a static web page with the embedded gigvis graph
 #'
-#' @param gv A gigvis object.
-#' @param envir The environment in which to evaluate \code{gv}.
+#' @param gv A gigvis_prerender object.
 #' @param renderer The renderer to use in the browser. Can be \code{"canvas"}
 #'   (the default) or \code{"svg"}.
 #' @param launch If \code{TRUE}, launch this web page in a browser.
@@ -9,8 +8,7 @@
 #' @export
 #' @importFrom RJSONIO toJSON
 #' @importFrom whisker whisker.render
-view_static <- function(gv, envir = parent.frame(), renderer = "canvas",
-                        launch = TRUE) {
+view_static <- function(gv, renderer = "canvas", launch = TRUE) {
 
   if (!(renderer %in% c("canvas", "svg")))
     stop("renderer must be 'canvas' or 'svg'")
@@ -20,7 +18,7 @@ view_static <- function(gv, envir = parent.frame(), renderer = "canvas",
 
   copy_www_resources(temp_dir)
 
-  vega_json <- toJSON(vega_spec(gv, envir = envir), pretty = TRUE)
+  vega_json <- toJSON(gv$vega_spec, pretty = TRUE)
 
   template <- paste(readLines(system.file('index.html', package='gigvis')),
     collapse='\n')

@@ -1,20 +1,16 @@
-#' Given a gigvis object, output a vega object
+#' Given a filled gigvis spec object, output a gigvis_prerender object
 #'
+#'
+#' The gigvis_prerender object contains a Vega spec.
 #'
 #' @param envir The environment in which to evaluate the \code{data} parameter
 #'   of the gigvis object.
-#' @param dynamic Should this be prepared for dynamic data? If so, the data
-#'   object will _not_ be embedded; instead a symbol referring to the data will
-#'   be embedded, and the data itself will be sent later.
 #' @export
 vega_spec <- function(gv,
                       width = 600, height = 400, padding = c(20, 20, 30, 50),
-                      envir = parent.frame(), dynamic = FALSE) {
+                      envir = parent.frame()) {
 
-  gv <- gigvis_fill_tree(gv, parent = NULL, envir = envir, dynamic = dynamic)
-
-
-  if (dynamic) {
+  if (gv$dynamic) {
     mapped_vars <- gather_mapped_vars(gv)
 
     symbol_table <- attr(gv, "symbol_table")
@@ -61,7 +57,7 @@ vega_spec <- function(gv,
   # them in to the spec.
   spec <- c(spec, vega_process_node(node = gv, envir = envir, scales = scales))
 
-  if (dynamic) {
+  if (gv$dynamic) {
     # Pass along the dataset expressions too.
     attr(spec, "datasets") <- symbol_table
   }
