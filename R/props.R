@@ -1,5 +1,5 @@
 #' Manage a list of properties.
-#' 
+#'
 #' @param ... A set of name-value pairs. The name should be a valid vega
 #'   property.
 #' @param inherit If \code{TRUE}, the defaults, will inherit from properties
@@ -15,15 +15,22 @@
 props <- function(..., inherit = TRUE) {
   pieces <- list(...)
   is_formula <- vapply(pieces, is.formula, logical(1))
-  
+
   # Pull apart formulae in to name and value
   formulae <- pieces[is_formula]
   parsed <- lapply(formulae, parse_component)
   names <- lapply(parsed, "[[", "name")
   values <- lapply(parsed, "[[", "value")
-                                   
- c(pieces[!is_formula], setNames(values, names))
+
+  structure(
+    c(pieces[!is_formula], setNames(values, names)),
+    class = "gigvis_props"
+  )
 }
+
+#' @S3method print gigvis_props
+print.gigvis_props <- function(x) str(x)
+
 
 parse_component <- function(x) {
   stopifnot(is.formula(x))
@@ -33,7 +40,7 @@ parse_component <- function(x) {
 
   name <- as.character(x[[2]])
   value <- variable(x[[3]])
-  
+
   list(name = name, value = value)
 }
 
