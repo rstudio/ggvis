@@ -76,6 +76,8 @@ assert_installed <- function(pkg) {
   }
 }
 
+# Are all elements in a vector the same?
+is_constant <- function(x) all(x == x[1])
 
 # Gives unique names to an unnamed set of items. The names are automatically
 # generated and are designed to be "universally" unique (though current

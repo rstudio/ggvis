@@ -14,10 +14,7 @@ by_group <- function(variables) {
 split_data <- function(data, split) UseMethod("split_data")
 
 #' @S3method split_data NULL
-split_data.NULL <- function(data, split) {
-  NULL
-}
-
+split_data.NULL <- function(data, split) NULL
 
 #' @S3method split_data data.frame
 split_data.data.frame <- function(data, split) {

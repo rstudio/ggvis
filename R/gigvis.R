@@ -1,5 +1,4 @@
 #' @export
-#' @export
 gigvis <- function(data = NULL, mapping = NULL, ..., dynamic = FALSE) {
   structure(
     node(data = data, mapping = mapping, fill_defaults = TRUE, ...,
@@ -7,10 +6,6 @@ gigvis <- function(data = NULL, mapping = NULL, ..., dynamic = FALSE) {
     class = c("gigvis", "gigvis_node")
   )
 }
-
-
-
-#' @import assertthat
 
 
 #' @export

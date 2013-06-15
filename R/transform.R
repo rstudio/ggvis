@@ -21,9 +21,5 @@ transform_type <- function(transform) {
 # method should be implemented for each type of transform.
 apply_transform <- function(transform, data, mapping) UseMethod("apply_transform")
 
-
 #' @S3method apply_transform NULL
 apply_transform.NULL <- function(transform, data, mapping) data
-
-
-is_constant <- function(x) all(x == x[1])
