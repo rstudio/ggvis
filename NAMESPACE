@@ -1,3 +1,4 @@
+S3method(apply_transform,"NULL")
 S3method(apply_transform,transform_bin)
 S3method(compute_transform_bin,data.frame)
 S3method(compute_transform_bin,default)

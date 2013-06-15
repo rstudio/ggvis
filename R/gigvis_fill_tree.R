@@ -92,9 +92,7 @@ gigvis_fill_tree <- function(node, parent = NULL, envir = NULL,
         data_obj <- split_data(data_obj, node$split)
 
         # Transform the data
-        if (!is.null(node$transform)) {
-          data_obj <- apply_transform(node$transform, data_obj, node$mapping)
-        }
+        data_obj <- apply_transform(node$transform, data_obj, node$mapping)
 
         data_obj
       })
