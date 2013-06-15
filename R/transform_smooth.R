@@ -13,7 +13,27 @@ transform_smooth <- function(method = "auto", formula = "auto", se = TRUE,
 }
 
 
-compute_transform.transform_smooth <- function(transform, data, mapping) {
+#' @S3method apply_transform transform_bin
+apply_transform.transform_smooth <- function(transform, data, mapping) {
+  # We've dispatched on transform type, now dispatch on data type
+  compute_transform_smooth(data, transform, mapping)
+}
+
+
+compute_transform_smooth <- function(data, transform, mapping)
+  UseMethod("compute_transform_smooth")
+
+#' @S3method compute_transform_smooth split_df
+compute_transform_smooth.split_df <- function(data, transform, mapping) {
+  # Run compute_transform_smooth on each data frame in the list
+  data <- structure(
+    lapply(data, compute_transform_smooth, transform = transform, mapping = mapping),
+    class = "split_df"
+  )
+}
+
+#' @S3method compute_transform_smooth data.frame
+compute_transform_smooth.data.frame <- function(data, transform, mapping) {
   xvar <- mapping["x"]
   yvar <- mapping["y"]
 
@@ -47,6 +67,11 @@ compute_transform.transform_smooth <- function(transform, data, mapping) {
   pred_data
 }
 
+#' @S3method compute_transform_smooth default
+compute_transform_smooth.default <- function(data, transform, mapping) {
+  stop("Don't know how to compute_transform_smooth for data structure with class ",
+    paste(class(data), sep = ", "))
+}
 
 
 predictdf <- function(model, xseq, xvar, yvar, se, level) UseMethod("predictdf")
