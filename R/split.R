@@ -38,7 +38,7 @@ split_data.split_df <- function(data, split) {
     return(data)
 
   data <- structure(
-    unlist(lapply(data, split_data, split), recursive = TRUE),
+    unlist(lapply(data, split_data, split), recursive = FALSE),
     class = "split_df"
   )
 }
