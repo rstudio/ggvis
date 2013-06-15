@@ -56,11 +56,16 @@ merge_vectors <- function(a, b) {
   x[!drop_idx]
 }
 
-
 # Tests whether all elements in a vector are the same, respecting NA.
 # Returns TRUE for zero-length vectors
 all_same <- function(x) {
-  length(unique(x)) <= 1
+  nas <- is.na(x)
+  if (length(x) == 0 || all(nas))
+    TRUE
+  else if (any(nas))
+    FALSE
+  else
+    all(x == x[1])
 }
 
 # Test whether a file exists and is a directory
@@ -75,9 +80,6 @@ assert_installed <- function(pkg) {
     stop("The '", pkg, "' package is required for this functionality")
   }
 }
-
-# Are all elements in a vector the same?
-is_constant <- function(x) all(x == x[1])
 
 # Gives unique names to an unnamed set of items. The names are automatically
 # generated and are designed to be "universally" unique (though current

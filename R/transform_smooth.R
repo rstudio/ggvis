@@ -48,9 +48,8 @@ compute_transform_smooth.data.frame <- function(data, transform, mapping) {
   }
   transform$method <- as.name(transform$method)
 
-  # Find columns where all entries have the same value
-  same_cols <- vapply(data, all_same, FUN.VALUE = logical(1), USE.NAMES = TRUE)
-  same_col_names <- names(data)[same_cols]
+  # Identify constant variables, extract and add back in
+  constant_vars <- vapply(data, all_same, logical(1))
 
   call <- substitute(method(transform$formula, data = data), transform["method"])
   call <- modify_call(call, transform$dots)
@@ -59,12 +58,12 @@ compute_transform_smooth.data.frame <- function(data, transform, mapping) {
   xseq <- seq(min(data[[xvar]]), max(data[[xvar]]), length = transform$n)
 
   # Make prediction
-  pred_data <- predictdf(mod, xseq, xvar, yvar, transform$se, transform$level)
+  transformed <- predictdf(mod, xseq, xvar, yvar, transform$se, transform$level)
 
-  # Add back columns that all had the same value
-  pred_data[same_col_names] <- data[1, same_col_names, drop = FALSE]
-
-  pred_data
+  # Add back the constant variables
+  carry_over <- data[1, constant_vars, drop = FALSE]
+  rownames(carry_over) <- NULL
+  cbind(transformed, carry_over)
 }
 
 #' @S3method compute_transform_smooth default

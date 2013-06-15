@@ -34,7 +34,7 @@ compute_transform_bin.data.frame <- function(data, transform, mapping) {
   xvar <- mapping["x"]
 
   # Identify constant variables, extract and add back in
-  constant_vars <- vapply(data, is_constant, logical(1))
+  constant_vars <- vapply(data, all_same, logical(1))
 
   # Do the binning
   # TODO: implement weight, origin, right

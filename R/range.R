@@ -25,7 +25,7 @@ find_var_range.split_df <- function(data, var, drop = FALSE) {
 
   # Verify that all ranges are the same type
   types <- vapply(data, function(d) mode(d[[var]]), FUN.VALUE = character(1))
-  if (!is_constant(types))
+  if (!all_same(types))
     stop("Data frames in split_df object do not all have same type for column '",
       var, "'.")
 
