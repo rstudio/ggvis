@@ -5,8 +5,8 @@ transform_bin <- function(binwidth = "auto") {
 
 
 #' @S3method apply_transform transform_bin
-apply_transform.transform_bin <- function(transform, data, mapping) {
-  xvar <- mapping["x"]
+apply_transform.transform_bin <- function(transform, data, props) {
+  xvar <- as.character(props$x)
 
   # Find the bindwidth; this can handle different types for `data`, since
   # find_var_range() dispatches on data's class.
@@ -16,22 +16,22 @@ apply_transform.transform_bin <- function(transform, data, mapping) {
   }
 
   # We've dispatched on transform type, now dispatch on data type
-  compute_transform_bin(data, transform, mapping)
+  compute_transform_bin(data, transform, props)
 }
 
 
-compute_transform_bin <- function(data, transform, mapping)
+compute_transform_bin <- function(data, transform, props)
   UseMethod("compute_transform_bin")
 
 #' @S3method compute_transform_bin default
-compute_transform_bin.default <- function(data, transform, mapping) {
+compute_transform_bin.default <- function(data, transform, props) {
   stop("Don't know how to compute_transform_bin for data structure with class ",
     paste(class(data), sep = ", "))
 }
 
 #' @S3method compute_transform_bin data.frame
-compute_transform_bin.data.frame <- function(data, transform, mapping) {
-  xvar <- mapping["x"]
+compute_transform_bin.data.frame <- function(data, transform, props) {
+  xvar <- as.character(props$x)
 
   # Identify constant variables, extract and add back in
   constant_vars <- vapply(data, all_same, logical(1))
@@ -48,10 +48,10 @@ compute_transform_bin.data.frame <- function(data, transform, mapping) {
 }
 
 #' @S3method compute_transform_bin split_df
-compute_transform_bin.split_df <- function(data, transform, mapping) {
+compute_transform_bin.split_df <- function(data, transform, props) {
   # Run compute_transform_bin on each data frame in the list
   data <- structure(
-    lapply(data, compute_transform_bin, transform = transform, mapping = mapping),
+    lapply(data, compute_transform_bin, transform = transform, props = props),
     class = "split_df"
   )
 }

@@ -14,28 +14,28 @@ transform_smooth <- function(method = "auto", formula = "auto", se = TRUE,
 
 
 #' @S3method apply_transform transform_bin
-apply_transform.transform_smooth <- function(transform, data, mapping) {
+apply_transform.transform_smooth <- function(transform, data, props) {
   # We've dispatched on transform type, now dispatch on data type
-  compute_transform_smooth(data, transform, mapping)
+  compute_transform_smooth(data, transform, props)
 }
 
 
-compute_transform_smooth <- function(data, transform, mapping)
+compute_transform_smooth <- function(data, transform, props)
   UseMethod("compute_transform_smooth")
 
 #' @S3method compute_transform_smooth split_df
-compute_transform_smooth.split_df <- function(data, transform, mapping) {
+compute_transform_smooth.split_df <- function(data, transform, props) {
   # Run compute_transform_smooth on each data frame in the list
   data <- structure(
-    lapply(data, compute_transform_smooth, transform = transform, mapping = mapping),
+    lapply(data, compute_transform_smooth, transform = transform, props = props),
     class = "split_df"
   )
 }
 
 #' @S3method compute_transform_smooth data.frame
-compute_transform_smooth.data.frame <- function(data, transform, mapping) {
-  xvar <- mapping["x"]
-  yvar <- mapping["y"]
+compute_transform_smooth.data.frame <- function(data, transform, props) {
+  xvar <- as.character(props$x)
+  yvar <- as.character(props$y)
 
   if (transform$method == "auto") {
     transform$method <- if (nrow(data) > 1000) "gam" else "loess"
@@ -67,7 +67,7 @@ compute_transform_smooth.data.frame <- function(data, transform, mapping) {
 }
 
 #' @S3method compute_transform_smooth default
-compute_transform_smooth.default <- function(data, transform, mapping) {
+compute_transform_smooth.default <- function(data, transform, props) {
   stop("Don't know how to compute_transform_smooth for data structure with class ",
     paste(class(data), sep = ", "))
 }
