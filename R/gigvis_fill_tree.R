@@ -1,13 +1,13 @@
 # Given a gigvis object, fill out the tree.
 #
 # Returns a gigvis object in where each node has its own data set and
-# aesthetic mappings, and does not need to refer to its parent to find out any
+# aesthetic properties, and does not need to refer to its parent to find out any
 # of this information.
 #
 # * First pass. After this pass, no need to refer to parents again
 #   * Propagate name of the data set
 #   * Retrieve the data set (as a data frame) and store in node$data_obj
-#   * Merge aesthetic mappings with the parent's aesthetics
+#   * Merge aesthetic properties with the parent's aesthetics
 #   * Split data (if needed)
 #   * Transform data (if needed)
 #
@@ -41,21 +41,21 @@ gigvis_fill_tree <- function(node, parent = NULL, envir = NULL,
     node$inherit_data <- TRUE
   }
 
-  # Inherit mappings
-  if (is.null(node$mapping)) {
-    node$mapping <- parent$mapping
+  # Inherit properties
+  if (is.null(node$props)) {
+    node$props <- parent$props
 
   } else {
-    inherit_mapping <- attr(node$mapping, "inherit", exact = TRUE)
+    inherit_props <- attr(node$props, "inherit", exact = TRUE)
 
-    if (is.null(inherit_mapping)) {
-      stop("Aesthetic mappings must be created with aes().")
+    if (is.null(inherit_props)) {
+      stop("Missing 'inherit' parameter for properties.")
 
-    } else if (inherit_mapping == TRUE) {
-      node$mapping <- merge_vectors(parent$mapping, node$mapping)
+    } else if (inherit_props == TRUE) {
+      node$props <- merge_props(parent$props, node$props)
 
-    } else if (inherit_mapping == FALSE) {
-      node$mapping <- parent$mapping
+    } else if (inherit_props == FALSE) {
+      node$props <- parent$props
     }
   }
 
@@ -92,7 +92,7 @@ gigvis_fill_tree <- function(node, parent = NULL, envir = NULL,
         data_obj <- split_data(data_obj, node$split)
 
         # Transform the data
-        data_obj <- apply_transform(node$transform, data_obj, node$mapping)
+        data_obj <- apply_transform(node$transform, data_obj, node$props)
 
         data_obj
       })
@@ -115,7 +115,7 @@ gigvis_fill_tree <- function(node, parent = NULL, envir = NULL,
 
     # Transform the data
     if (!is.null(node$transform)) {
-      node$data_obj <- apply_transform(node$transform, node$data_obj, node$mapping)
+      node$data_obj <- apply_transform(node$transform, node$data_obj, node$props)
 
       # Rename the dataset with the transform type and hashed transform appended
       # (e.g., "mtc" becomes "mtc_smooth_asdf842af3")
@@ -126,7 +126,7 @@ gigvis_fill_tree <- function(node, parent = NULL, envir = NULL,
       node$data <- paste(
         node$data,
         transform_type(node$transform),
-        digest::digest(node[c("transform", "mapping")], algo = "crc32"),
+        digest::digest(node[c("transform", "props")], algo = "crc32"),
         sep = "_")
     }
   }

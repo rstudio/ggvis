@@ -26,7 +26,7 @@ vega_spec <- function(gv,
     mapped_vars <- gather_mapped_vars(gv)
 
     datasets <- gather_datasets(gv)
-    datasets <- prune_datasets_columns(datasets, mapped_vars)
+    # datasets <- prune_datasets_columns(datasets, mapped_vars)
 
     scales <- gather_scales(gv, datasets)
 
@@ -104,8 +104,10 @@ gather_mapped_vars <- function(node) {
   all_mapped_vars <-
     unlist(lapply(node$children, gather_mapped_vars), recursive = FALSE)
 
-  # Add current node's splitting and mapped variables to the list
-  vars <- unname(node$mapping)
+  # Add current node's mapped and splitting variables to the list
+  # Get mapped variables
+  vars <- vapply(mapped_props(node$props), as.character, character(1))
+  # Add split variables
   if (inherits(node$split, "split_by_group")) {
     vars <- unique(c(vars, node$split))
   }

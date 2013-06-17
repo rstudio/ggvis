@@ -6,7 +6,7 @@ vega_mark <- function(node, scales) {
     type = vega_mark_type(node),
     properties = list(
       update = c(
-        vega_mappings(node$mapping),
+        vega_mappings(node$props),
         vega_mark_properties(node, scales)
       )
     )
@@ -20,15 +20,15 @@ vega_mark <- function(node, scales) {
 }
 
 
-# Given a gigvis mapping object, return a vega mapping object
-vega_mappings <- function(mappings) {
-  vm <- lapply(names(mappings), function(name) {
+# Given a gigvis_props object, return a vega mapping object
+vega_mappings <- function(props) {
+  vm <- lapply(names(props), function(name) {
     list(
       scale = properties_to_scales(name),
-      field = paste("data", mappings[[name]], sep = ".")
+      field = paste("data", as.character(props[[name]]), sep = ".")
     )
   })
-  setNames(vm, names(mappings))
+  setNames(vm, names(props))
 }
 
 
@@ -116,7 +116,7 @@ apply_default_mark_properties <- function(mark) {
   defaults <- defaults[names(defaults) %in% null_props]
 
   # Keep only properties that aren't mapped
-  defaults <- defaults[!(names(defaults) %in% names(mark$mapping))]
+  defaults <- defaults[!(names(defaults) %in% names(mapped_props(mark$props)))]
 
   mark[names(defaults)] <- defaults
   mark

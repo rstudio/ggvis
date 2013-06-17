@@ -21,14 +21,17 @@ gather_mappings <- function(node) {
   mappings <- lapply(node$children, gather_mappings)
   mappings <- do.call(rbind, mappings)
 
+  # Get the mapped properties for this node
+  node_mappings <- mapped_props(node$props)
+
   # Find the mappings for this node, returning data frame with columns
   # scale, property, data, var
-  if (!is.null(node$data) && !is.null(node$mapping)) {
+  if (!is.null(node$data) && !is.null(node_mappings)) {
     mapping <- data.frame(row.names = NULL, stringsAsFactors = FALSE,
-      property = names(node$mapping),
-      scale = properties_to_scales(names(node$mapping)),
-      data  = node$data,
-      var   = node$mapping
+      property = names(node_mappings),
+      scale    = properties_to_scales(names(node_mappings)),
+      data     = node$data,
+      var      = vapply(node_mappings, as.character, character(1))
     )
 
     # Add current node's mapping to data frame
