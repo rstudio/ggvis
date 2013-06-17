@@ -26,7 +26,7 @@ vega_spec <- function(gv,
     mapped_vars <- gather_mapped_vars(gv)
 
     datasets <- gather_datasets(gv)
-    # datasets <- prune_datasets_columns(datasets, mapped_vars)
+    datasets <- prune_datasets_columns(datasets, mapped_vars)
 
     scales <- gather_scales(gv, datasets)
 
