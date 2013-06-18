@@ -29,6 +29,14 @@ props <- function(..., inherit = TRUE) {
   )
 }
 
+#' @S3method format gigvis_props
+format.gigvis_props <- function(x, ...) {
+  labels <- lapply(x, format, ...)
+  paste0("* ", names(x), ": ", labels, collapse = "\n")
+}
+#' @S3method print gigvis_props
+print.gigvis_props <- function(x, ...) cat(format(x, ...))
+
 # Return a list of properties that are mapped (not set)
 mapped_props <- function(p) {
   if (!is.gigvis_props(p)) {
@@ -48,9 +56,6 @@ as.character.variable <- function(x, ...) {
   }
   deparse(x[[1]])
 }
-
-#' @S3method print gigvis_props
-print.gigvis_props <- function(x) str(x)
 
 is.gigvis_props <- function(x) inherits(x, "gigvis_props")
 
@@ -87,6 +92,13 @@ parse_component <- function(x) {
 # buggy behavior in R. For example, using str() will remove class:
 # x <- structure(quote(foo), class="bar"); str(x); str(x)
 variable <- function(x) structure(list(x), class = "variable")
+
+#' @S3method format variable
+format.variable <- function(x, ...) {
+  paste0("<field> ", deparse(x[[1]]), "\n")
+}
+#' @S3method print variable
+print.variable <- function(x, ...) cat(format(x, ...), "\n", sep = "")
 
 is.variable <- function(x) inherits(x, "variable")
 
