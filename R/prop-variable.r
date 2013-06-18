@@ -1,18 +1,42 @@
-
-# Given a quoted object, wrap it in a list and attach a class. The list-wrapping
-# is needed because attaching a class directly to a symbol object results in
-# buggy behavior in R. For example, using str() will remove class:
-# x <- structure(quote(foo), class="bar"); str(x); str(x)
-variable <- function(x) structure(list(x), class = "variable")
+#' Property: variable
+#'
+#' Given a quoted object, wrap it in a list and attach a class. The 
+#' list-wrapping is needed because attaching a class directly to a symbol
+#' is not possible
+#' 
+#' Long-term this function needs to behave more like dplyr::partial_eval so 
+#' that it captures local values immediately.
+#' 
+#' @param x A quoted object
+#' @examples
+#' variable(quote(x))
+#' variable(quote(1))
+#' variable(quote(x * y))
+#' 
+#' v <- variable(quote(cyl))
+#' prop_value(v, mtcars)
+variable <- function(x) {
+  stopifnot(is.quoted(x))
+  
+  structure(list(x), class = "variable")
+}
 
 #' @S3method format variable
 format.variable <- function(x, ...) {
   paste0("<field> ", deparse(x[[1]]), "\n")
 }
+
 #' @S3method print variable
 print.variable <- function(x, ...) cat(format(x, ...), "\n", sep = "")
 
+#' @rdname variable
 is.variable <- function(x) inherits(x, "variable")
+
+#' @S3method get_value variable
+prop_value.variable <- function(x, data) {
+  eval(x[[1]], data, baseenv())
+}
+
 
 # Given a variable object, return a string representation of the value
 # @examples
