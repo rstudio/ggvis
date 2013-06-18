@@ -55,13 +55,19 @@ print.gigvis_props <- function(x) str(x)
 is.gigvis_props <- function(x) inherits(x, "gigvis_props")
 
 # Merge two gigvis_props objects
-merge_props <- function(a, b) {
-  if ((!is.null(a) && !is.gigvis_props(a)) ||
-      (!is.null(b) && !is.gigvis_props(b))) {
-    stop("a and b are not both gigvis_props objects.", call. = FALSE)
-  }
+#
+# merge_props(props(x ~ x))
+# merge_props(props(x ~ x), props(x ~ y))
+# merge_props(props(x ~ x, y ~ 1), props(x ~ y))
+# merge_props(props(x ~ x, y ~ 1), props(x ~ y, inherit = FALSE))
+merge_props <- function(parent = NULL, child = NULL) {
+  if (is.null(parent)) return(child)
+  if (is.null(child)) return(parent)
+  stopifnot(is.gigvis_props(parent), is.gigvis_props(child))
 
-  structure(merge_vectors(a, b), class = "gigvis_props")
+  if (!attr(child, "inherit")) return(child)
+
+  structure(merge_vectors(parent, child), class = "gigvis_props")
 }
 
 parse_component <- function(x) {

@@ -41,25 +41,9 @@ gigvis_fill_tree <- function(node, parent = NULL, envir = NULL,
     node$inherit_data <- TRUE
   }
 
-  # Inherit properties
-  if (is.null(node$props)) {
-    node$props <- parent$props
-
-  } else {
-    inherit_props <- attr(node$props, "inherit", exact = TRUE)
-
-    if (is.null(inherit_props)) {
-      stop("Missing 'inherit' parameter for properties.")
-
-    } else if (inherit_props == TRUE) {
-      node$props <- merge_props(parent$props, node$props)
-
-    } else if (inherit_props == FALSE) {
-      node$props <- parent$props
-    }
-  }
-
-
+  # Inherit properties from parent
+  node$props <- merge_props(parent$props, node$props)
+  
   if (node$dynamic) {
     # For dynamic, add the data to the symbol table
     if (!is.null(node$data)) {
