@@ -35,3 +35,4 @@ Collate:
     'gigvis_fill_tree.R'
     'gigvis_prerender.R'
     'props.R'
+    'prop-variable.r'
