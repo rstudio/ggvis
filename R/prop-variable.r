@@ -18,12 +18,12 @@
 variable <- function(x) {
   stopifnot(is.quoted(x))
   
-  structure(list(x), class = "variable")
+  structure(list(x), class = c("variable", "prop"))
 }
 
 #' @S3method format variable
 format.variable <- function(x, ...) {
-  paste0("<field> ", deparse(x[[1]]), "\n")
+  paste0("<field> ", deparse(x[[1]]))
 }
 
 #' @S3method print variable
@@ -32,7 +32,7 @@ print.variable <- function(x, ...) cat(format(x, ...), "\n", sep = "")
 #' @rdname variable
 is.variable <- function(x) inherits(x, "variable")
 
-#' @S3method get_value variable
+#' @S3method prop_value variable
 prop_value.variable <- function(x, data) {
   eval(x[[1]], data, baseenv())
 }
