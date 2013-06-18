@@ -129,3 +129,5 @@ SymbolTable <- setRefClass(
 is.quoted <- function(x) {
   is.atomic(x) || is.call(x) || is.name(x)
 }
+
+compact <- function(x) Filter(Negate(is.null), x)

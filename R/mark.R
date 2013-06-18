@@ -1,7 +1,7 @@
 
 mark <- function(type, ...) {
   structure(
-    list(type = type, ...),
+    list(type = type, properties = props(...)),
     class = c(paste0("mark_", type), "mark", "gigvis_node")
   )
 }

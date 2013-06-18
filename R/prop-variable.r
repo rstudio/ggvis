@@ -37,6 +37,13 @@ prop_value.variable <- function(x, data) {
   eval(x[[1]], data, baseenv())
 }
 
+#' @S3method prop_vega variable
+prop_vega.variable <- function(x, default_scale) {
+  compact(list(
+    field = paste0("data.", as.character(x)), 
+    scale = default_scale
+  ))
+}
 
 # Given a variable object, return a string representation of the value
 # @examples

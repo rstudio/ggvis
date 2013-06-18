@@ -5,10 +5,7 @@ vega_mark <- function(node, scales) {
   vega_node <- list(
     type = vega_mark_type(node),
     properties = list(
-      update = c(
-        vega_mappings(node$props),
-        vega_mark_properties(node, scales)
-      )
+      update = vega_mark_properties(node, scales)
     )
   )
 
@@ -18,19 +15,6 @@ vega_mark <- function(node, scales) {
 
   vega_node
 }
-
-
-# Given a gigvis_props object, return a vega mapping object
-vega_mappings <- function(props) {
-  vm <- lapply(names(props), function(name) {
-    list(
-      scale = properties_to_scales(name),
-      field = paste("data", as.character(props[[name]]), sep = ".")
-    )
-  })
-  setNames(vm, names(props))
-}
-
 
 # Given a gigvis mark object, return the vega mark type
 vega_mark_type <- function(mark) UseMethod("vega_mark_type")
@@ -48,21 +32,17 @@ vega_mark_type.mark_line <- function(mark) "line"
 vega_mark_type.mark_rect <- function(mark) "rect"
 
 
-
 # Given a gigvis mark object and set of scales, return a list of vega mark properties
 vega_mark_properties <- function(mark, scales) {
   # Keep only the vega-specific fields, then remove the class, drop nulls,
   # and convert to proper format for vega properties.
-  mark <- apply_default_mark_properties(mark)
-  mark <- mark[names(mark) %in% valid_vega_mark_properties(mark)]
-
-  mark <- unclass(drop_nulls(mark))
-
+  defaults <- default_mark_properties(mark)
+  props <- merge_props(defaults, merge_props(mark$properties, mark$props))
+  
   # Convert each property to a Vega-structured property
-  mapply(prop = names(mark), val = mark, MoreArgs = list(scales = scales),
+  mapply(prop = names(props), val = props, MoreArgs = list(scales = scales),
     FUN = vega_mark_property, SIMPLIFY = FALSE)
 }
-
 
 # Given a gigvis mark object, return a vector of strings of valid vega
 # mark properties
@@ -105,24 +85,6 @@ valid_vega_mark_properties.text <- function(mark) {
   "opacity", "fill", "fillOpacity", "stroke", "strokeWidth", "strokeOpacity")
 
 
-
-# Given a mark, return a named list with default values for each property that
-# is NULL and unmapped.
-apply_default_mark_properties <- function(mark) {
-  defaults <- default_mark_properties(mark)
-
-  # Keep only the properties that are NULL
-  null_props <- names(mark)[vapply(mark, is.null, FUN.VALUE = logical(1))]
-  defaults <- defaults[names(defaults) %in% null_props]
-
-  # Keep only properties that aren't mapped
-  defaults <- defaults[!(names(defaults) %in% names(mapped_props(mark$props)))]
-
-  mark[names(defaults)] <- defaults
-  mark
-}
-
-
 # Return a named list of default properties for a mark.
 default_mark_properties <- function(mark) {
   UseMethod("default_mark_properties")
@@ -130,55 +92,48 @@ default_mark_properties <- function(mark) {
 
 #' @S3method default_mark_properties mark_point
 default_mark_properties.mark_point <- function(mark) {
-  list(fill = "#000000")
+  props(fill = "#000000")
 }
 
 #' @S3method default_mark_properties mark_line
 default_mark_properties.mark_line <- function(mark) {
-  list(stroke = "#000000")
+  props(stroke = "#000000")
 }
 
 #' @S3method default_mark_properties mark_rect
 default_mark_properties.mark_rect <- function(mark) {
-  list(stroke = "#000000", fill = "#333333")
+  props(stroke = "#000000", fill = "#333333")
 }
-
-
 
 vega_mark_property <- function(prop, val, scales) {
   # Convert scales to a named list for convenience
   names(scales) <- vapply(scales, `[[`, "name", FUN.VALUE = character(1))
-
-  # If val is a _not_ a list, then wrap it into a list. These two calls are
-  # therefore equivalent:
-  #   mark_rect(y2 = 0)  or  mark_rect(y2 = list(value = 0))
-  # This allows users to pass in other properties if needed:
-  #   mark_rect(y2 = list(offset = -1))
-  if (!is.list(val))  val <- list(value = val)
-
-  if (prop %in% c("x", "y", "size", "opacity", "fill", "fillOpacity",
-                  "stroke", "strokeWidth", "strokeOpacity")) {
-    list(value = val$value)
-
-  } else if (prop == "x2") {
-    list(scale = "x", value = val$value)
-
-  } else if (prop == "y2") {
-    list(scale = "y", value = val$value)
-
-  } else if (prop == "width") {
-    if (scales$x$type == "ordinal")
-      list(scale = "x", band = TRUE, offset = val$offset)
-    else
-      list(scale = "x", value = val$value)
-
-  } else if (prop == "height") {
-    if (scales$x$type == "ordinal")
-      list(scale = "y", band = TRUE, offset = val$offset)
-    else
-      list(scale = "y", value = val$value)
-
-  } else {
-    stop("Unkown property: ", prop)
+  
+  vega <- prop_vega(val, default_scale(prop))
+  
+  # This is an ugly hack, but not sure yet how to make better.
+  if ((prop == "width"  && scales$x$type == "ordinal") || 
+      (prop == "height" && scales$y$type == "ordinal")) {
+    vega$band <- TRUE
   }
+  
+  vega
+}
+
+default_scale <- function(prop) {
+  stopifnot(is.character(prop), length(prop) == 1)
+  
+  as_is <- c("x", "y", "size", "opacity", "fill", "fillOpacity",
+    "stroke", "strokeWidth", "strokeOpacity")
+  if (prop %in% as_is) return(prop)
+  
+  mapped <- c(
+    "x2" = "x",
+    "width" = "x",
+    "y" = "y",
+    "y2" = "y"
+  )
+  if (prop %in% names(mapped)) return(mapped[[prop]])
+  
+  stop("Unkown property: ", prop)
 }

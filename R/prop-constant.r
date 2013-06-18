@@ -1,3 +1,6 @@
+# TODO: need to be able to pass additional properties (like offset)
+#  into constants
+
 #' Property: constant
 #' 
 #' Use a constant value for a mark property.
@@ -43,4 +46,20 @@ print.constant  <- function(x, ...) cat(format(x, ...), "\n", sep = "")
 prop_value.constant <- function(x, data) {
   # Shouldn't insert any data
   NULL
+}
+
+#' @S3method prop_vega constant
+prop_vega.constant <- function(x, default_scale) {
+  if (isTRUE(x$scale)) {
+    scale <- default_scale
+  } else if (is.character(x$scale)) {
+    scale <- scale
+  } else {
+    scale <- NULL
+  }
+  
+  compact(list(
+    value = x$value,
+    scale = scale 
+  ))
 }

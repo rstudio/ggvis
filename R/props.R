@@ -13,17 +13,23 @@
 #' # Set to a constant value in the data space
 #' props(x ~ 1, y ~ 1)
 props <- function(..., inherit = TRUE) {
-  pieces <- list(...)
-  is_formula <- vapply(pieces, is.formula, logical(1))
+  pieces <- compact(list(...))
 
   # Pull apart formulae in to name and value
+  is_formula <- vapply(pieces, is.formula, logical(1))
   formulae <- pieces[is_formula]
   parsed <- lapply(formulae, parse_component)
   names <- lapply(parsed, "[[", "name")
   values <- lapply(parsed, "[[", "value")
+  pieces[is_formula] <- values
+  names(pieces)[is_formula] <- names
 
+  # Anything else that's not already a prop gets turned into a constant
+  is_constant <- !vapply(pieces, is.prop, logical(1))
+  pieces[is_constant] <- lapply(pieces[is_constant], constant)
+  
   structure(
-    c(pieces[!is_formula], setNames(values, names)),
+    pieces,
     inherit = inherit,
     class = "gigvis_props"
   )
@@ -58,7 +64,7 @@ merge_props <- function(parent = NULL, child = NULL) {
   if (is.null(child)) return(parent)
   stopifnot(is.gigvis_props(parent), is.gigvis_props(child))
 
-  if (!attr(child, "inherit")) return(child)
+  if (identical(attr(child, "inherit"), FALSE)) return(child)
 
   structure(merge_vectors(parent, child), class = "gigvis_props")
 }
