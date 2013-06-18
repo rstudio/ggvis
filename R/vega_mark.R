@@ -24,7 +24,7 @@ vega_mark_properties <- function(mark, scales) {
   # Keep only the vega-specific fields, then remove the class, drop nulls,
   # and convert to proper format for vega properties.
   defaults <- default_mark_properties(mark)
-  props <- merge_props(defaults, merge_props(mark$properties, mark$props))
+  props <- merge_props(defaults, mark$props)
   
   # Convert each property to a Vega-structured property
   mapply(prop = names(props), val = props, MoreArgs = list(scales = scales),
