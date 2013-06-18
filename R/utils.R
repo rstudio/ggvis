@@ -51,8 +51,7 @@ merge_vectors <- function(a, b) {
   }
 
   x <- c(a, b)
-  # Use `duplicated` backwards, because we want to keep only the last element
-  drop_idx <- rev(duplicated(rev(names(x))))
+  drop_idx <- duplicated(names(x), fromLast = TRUE)
   x[!drop_idx]
 }
 
