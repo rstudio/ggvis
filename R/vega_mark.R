@@ -19,19 +19,6 @@ vega_mark <- function(node, scales) {
 # Given a gigvis mark object, return the vega mark type
 vega_mark_type <- function(mark) UseMethod("vega_mark_type")
 
-#' @S3method vega_mark_type default
-vega_mark_type.default <- function(mark) NULL
-
-#' @S3method vega_mark_type mark_point
-vega_mark_type.mark_point <- function(mark) "symbol"
-
-#' @S3method vega_mark_type mark_line
-vega_mark_type.mark_line <- function(mark) "line"
-
-#' @S3method vega_mark_type mark_rect
-vega_mark_type.mark_rect <- function(mark) "rect"
-
-
 # Given a gigvis mark object and set of scales, return a list of vega mark properties
 vega_mark_properties <- function(mark, scales) {
   # Keep only the vega-specific fields, then remove the class, drop nulls,
@@ -42,6 +29,11 @@ vega_mark_properties <- function(mark, scales) {
   # Convert each property to a Vega-structured property
   mapply(prop = names(props), val = props, MoreArgs = list(scales = scales),
     FUN = vega_mark_property, SIMPLIFY = FALSE)
+}
+
+# Return a named list of default properties for a mark.
+default_mark_properties <- function(mark) {
+  UseMethod("default_mark_properties")
 }
 
 # Given a gigvis mark object, return a vector of strings of valid vega
@@ -83,27 +75,6 @@ valid_vega_mark_properties.text <- function(mark) {
 
 .common_vega_mark_properties <- c("x", "x2", "width", "y", "y2", "height",
   "opacity", "fill", "fillOpacity", "stroke", "strokeWidth", "strokeOpacity")
-
-
-# Return a named list of default properties for a mark.
-default_mark_properties <- function(mark) {
-  UseMethod("default_mark_properties")
-}
-
-#' @S3method default_mark_properties mark_point
-default_mark_properties.mark_point <- function(mark) {
-  props(fill = "#000000")
-}
-
-#' @S3method default_mark_properties mark_line
-default_mark_properties.mark_line <- function(mark) {
-  props(stroke = "#000000")
-}
-
-#' @S3method default_mark_properties mark_rect
-default_mark_properties.mark_rect <- function(mark) {
-  props(stroke = "#000000", fill = "#333333")
-}
 
 vega_mark_property <- function(prop, val, scales) {
   # Convert scales to a named list for convenience

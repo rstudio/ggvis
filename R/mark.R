@@ -21,6 +21,13 @@ mark_point <- function(x = NULL, y = NULL, opacity = NULL,
     size = size, shape = shape)
 
 }
+#' @S3method vega_mark_type mark_point
+vega_mark_type.mark_point <- function(mark) "symbol"
+#' @S3method default_mark_properties mark_point
+default_mark_properties.mark_point <- function(mark) {
+  props(fill = "#000000")
+}
+
 
 #' @export
 mark_line <- function(x = NULL, y = NULL, opacity = NULL,
@@ -29,6 +36,12 @@ mark_line <- function(x = NULL, y = NULL, opacity = NULL,
 
   mark("line", x = x, y = y, opacity = opacity, fill = fill,
     stroke = stroke, strokeWidth = strokeWidth, strokeOpacity = strokeOpacity)
+}
+#' @S3method vega_mark_type mark_line
+vega_mark_type.mark_line <- function(mark) "line"
+#' @S3method default_mark_properties mark_line
+default_mark_properties.mark_line <- function(mark) {
+  props(stroke = "#000000")
 }
 
 #' @export
@@ -50,4 +63,10 @@ mark_rect <- function(x = NULL, x2 = NULL, y = NULL, y2 = NULL, width = NULL,
     opacity = opacity,
     fill = fill, fillOpacity = fillOpacity,
     stroke = stroke, strokeWidth = strokeWidth, strokeOpacity = strokeOpacity)
+}
+#' @S3method vega_mark_type mark_rect
+vega_mark_type.mark_rect <- function(mark) "rect"
+#' @S3method default_mark_properties mark_rect
+default_mark_properties.mark_rect <- function(mark) {
+  props(stroke = "#000000", fill = "#333333")
 }
