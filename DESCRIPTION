@@ -36,3 +36,5 @@ Collate:
     'gigvis_prerender.R'
     'props.R'
     'prop-variable.r'
+    'prop-constant.r'
+    'prop.R'
