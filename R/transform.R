@@ -9,6 +9,24 @@ transform <- function(type, ...) {
   pipe(type, ...)
 }
 
+check_prop <- function(trans, props, data, prop_name, types = NULL) {
+  name <- class(trans)[[1]]
+  prop <- props[[prop_name]]
+  
+  if (is.null(prop)) {
+    stop(name, "() needs ", prop_name, " property", call. = FALSE)
+  }
+  if (is.null(types)) return(invisible(TRUE))
+  
+  type <- prop_type(data, prop)
+  if (!(type %in% types)) {
+    stop(name, "() needs ", prop_name, " property to be of type ", 
+      paste(types, collapse = "/"), call. = FALSE)
+  }
+  
+  invisible(TRUE)  
+}
+
 
 # Returns a string representing the transform type. For example, if it has
 # class "transform_smooth", then this returns "smooth".

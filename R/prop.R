@@ -53,7 +53,12 @@ prop_type.complex <- function(data, prop) "complex"
 prop_type.character <- function(data, prop) "character" 
 #' @S3method prop_type logical
 prop_type.logical <- function(data, prop) "logical" 
-
+#' @S3method prop_type factor
+prop_type.factor <- function(data, prop) "factor"
+#' @S3method prop_type default
+prop_type.default <- function(data, prop) {
+  stop("Unknown variable type:", paste0(class(data, sep = "/")))
+}
 
 #' Determine the numeric range of a variable
 #' 

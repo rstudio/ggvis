@@ -30,21 +30,8 @@ format.transform_smooth <- function(x, ...) {
 
 #' @S3method flow transform_smooth
 flow.transform_smooth <- function(x, props, data) {
-  if (is.null(props$x)) {
-    stop("transform_smooth needs x variable", call. = FALSE)
-  }
-  type <- prop_type(data, props$x)
-  if (!(type %in% c("double", "integer"))) {
-    stop("transform_bin needs numeric x", call. = FALSE)
-  }
-    
-  if (is.null(props$y)) {
-    stop("transform_smooth needs y variable", call. = FALSE)
-  }
-  type <- prop_type(data, props$y)
-  if (!(type %in% c("double", "integer"))) {
-    stop("transform_bin needs numeric y", call. = FALSE)
-  }
+  check_prop(x, props, data, "x", c("double", "integer"))
+  check_prop(x, props, data, "y", c("double", "integer"))
   
   if (is.guess(x$method)) {
     x$method <- if (max_rows(data) > 1000) "gam" else "loess"

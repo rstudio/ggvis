@@ -57,14 +57,7 @@ format.transform_bin <- function(x, ...) {
 
 #' @S3method flow transform_bin
 flow.transform_bin <- function(x, props, data) {
-  if (is.null(props$x)) {
-    stop("transform_bin needs x variable", call. = FALSE)
-  }
-  
-  type <- prop_type(data, props$x)
-  if (!(type %in% c("double", "integer"))) {
-    stop("transform_bin needs numeric input", call. = FALSE)
-  }
+  check_prop(x, props, data, "x", c("double", "integer"))
   
   if (is.guess(x$binwidth)) {
     x$binwidth <- diff(prop_range(data, props$x)) / 30
