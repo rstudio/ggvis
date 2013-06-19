@@ -76,6 +76,9 @@ as.pipeline.list <- function(x, ...) {
 #' @S3method as.pipeline character
 as.pipeline.character <- function(x, ...) pipeline(source_lazy(x))
 
+#' @S3method as.pipeline pipe
+as.pipeline.pipe <- function(x, ...) pipeline(x)
+
 format.pipeline <- function(x, ...) {
   pipes <- vapply(x$pipes, format, character(1))
   paste0(pipes, collapse = "\n")
