@@ -35,6 +35,7 @@
 #' # You can see the results of a transformation by creating your own pipeline
 #' # and flowing data through it
 #' flow(transform_bin(10), props(x ~ disp), mtcars)
+#' flow(pipeline(mtcars, by_group("cyl"), transform_bin(10)), props(x ~ disp))
 #' # Or
 #' pl <- pipeline("mtcars", transform_bin(10))
 #' flow(pl, props(x ~ disp))
@@ -65,8 +66,9 @@ flow.transform_bin <- function(x, props, data) {
       ") # range / 30")    
   }
   
-  bin(data, x_var = props$x, 
+  output <- bin(data, x_var = props$x, 
     binwidth = x$binwidth, origin = x$origin, right = x$right)
+  preserve_constants(data, output)
 }
 
 bin <- function(data, ...) UseMethod("bin")

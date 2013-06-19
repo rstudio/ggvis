@@ -43,7 +43,8 @@ flow.transform_smooth <- function(x, props, data) {
   }
   x$method <- as.name(x$method)
 
-  smooth(data, x, x_var = props$x, y_var = props$y)
+  output <- smooth(data, x, x_var = props$x, y_var = props$y)
+  preserve_constants(data, output)
 }
 
 smooth <- function(data, trans, x_var, y_var) UseMethod("smooth")

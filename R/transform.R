@@ -27,6 +27,40 @@ check_prop <- function(trans, props, data, prop_name, types = NULL) {
   invisible(TRUE)  
 }
 
+preserve_constants <- function(input, output) UseMethod("preserve_constants")
+
+preserve_constants.data.frame <- function(input, output) {
+  is_constant <- constant_vars(input)
+  constants <- input[1, is_constant, drop = FALSE]
+  rownames(constants) <- NULL
+  
+  merge_df(constants, output)
+}
+
+preserve_constants.split_df <- function(input, output) {
+  is_constant <- constant_vars(input)
+  
+  preserve <- function(input, output) {
+    constants <- input[1, is_constant, drop = FALSE]
+    rownames(constants) <- NULL
+    merge_df(constants, output)
+  }
+  structure(Map(preserve, input, output), class = "split_df")
+}
+
+constant_vars <- function(data) UseMethod("constant_vars")
+#' @S3method constant_vars data.frame
+constant_vars.data.frame <- function(data) {
+  vapply(data, all_same, logical(1), USE.NAMES = FALSE)
+}
+#' @S3method constant_vars split_df
+constant_vars.split_df <- function(data) {
+  n <- length(data)
+
+  vec <- unlist(lapply(data, constant_vars), use.names = FALSE)
+  mat <- matrix(vec, nrow = n, byrow = TRUE)
+  colSums(mat) == n
+}
 
 # Returns a string representing the transform type. For example, if it has
 # class "transform_smooth", then this returns "smooth".
