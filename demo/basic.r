@@ -5,6 +5,16 @@ gigvis("mtcars", props(x ~ wt, y ~ mpg),
   mark_point()
 )
 
+# Basic scatter plot, more verbose
+gigvis("mtcars", props(x ~ wt, y ~ mpg),
+  mark_point(y = constant(10, scale = TRUE))
+)
+
+# Basic scatter plot, more verbose
+gigvis("mtcars", props(x = variable(quote(wt)), y = constant(quote(mpg))),
+  mark_point()
+)
+
 # Line and point graph
 gigvis("mtcars", props(x ~ wt, y ~ mpg),
   mark_line(),

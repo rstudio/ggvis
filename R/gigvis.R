@@ -10,15 +10,12 @@ gigvis <- function(data = NULL, props = NULL, ..., dynamic = FALSE) {
 
 
 #' @export
-node <- function(..., data = NULL, props = NULL, transform = NULL,
-                 scales = NULL, split = NULL, fill_defaults = FALSE,
-                 dynamic = NULL) {
-  # data is a string
+node <- function(..., data = NULL, props = NULL, scales = NULL,
+                 fill_defaults = FALSE, dynamic = NULL) {
+  # data is a data object, or a pipeline
   # props is a named character vector, permissible names are properties
   #   that vega understands
-  # transform is a transform object
   # scales is a list of scale objects
-  # split is a spitter object
 
   # assert_that(is.character(props), !is.null(names(props)))
 
@@ -37,11 +34,9 @@ node <- function(..., data = NULL, props = NULL, transform = NULL,
   children <- list(...)
 
   node <- list(
-    data = data,
+    data = as.pipeline(data),
     props = props,
-    transform = transform,
     scales = scales,
-    split = split,
     children = children
   )
 

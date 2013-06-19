@@ -43,7 +43,7 @@ gigvis_fill_tree <- function(node, parent = NULL, envir = NULL,
 
   # Inherit properties from parent
   node$props <- merge_props(parent$props, node$props)
-  
+
   if (node$dynamic) {
     # For dynamic, add the data to the symbol table
     if (!is.null(node$data)) {
@@ -84,18 +84,13 @@ gigvis_fill_tree <- function(node, parent = NULL, envir = NULL,
 
   } else {
     # For non-dynamic, get data object:
-    # - First check if parent has the data set (transformed data will be there)
-    # - If not, then try to get data from envir
-    if (!is.null(parent$data) && parent$data == node$data) {
+    # - First check if parent has the same data set
+    # - If not, then run the data pipeline
+    if (!is.null(parent$data) && identical(parent$data, node$data)) {
       node$data_obj <- parent$data_obj
-    } else if (is.null(node$data)) {
-      node$data_obj <- NULL
     } else {
-      node$data_obj <- get(node$data, envir = envir)
+      node$data_obj <- flow(node$data, node$props)
     }
-
-    # Split the data
-    node$data_obj <- split_data(node$data_obj, node$split)
 
     # Transform the data
     if (!is.null(node$transform)) {
