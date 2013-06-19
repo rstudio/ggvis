@@ -38,3 +38,7 @@ Collate:
     'prop-variable.r'
     'prop-constant.r'
     'prop.R'
+    'pipe.R'
+    'pipeline.R'
+    'source-eager.r'
+    'source-lazy.r'

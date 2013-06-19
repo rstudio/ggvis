@@ -1,7 +1,11 @@
-# This is to be called by transform_* functions, like transform_smooth,
-# transform_bin, etc.
+#' S3 class: transform
+#' 
+#' This is a type of \code{\link{pipe}}.
+#' 
+#' @export
+#' @keywords internal
 transform <- function(type, ...) {
-  structure(list(...), class = c(paste0("transform_", type), "transform"))
+  structure(list(...), class = c(paste0("transform_", type), "transform", "pipe"))
 }
 
 #' @S3method print transform
