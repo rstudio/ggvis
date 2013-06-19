@@ -37,7 +37,7 @@ pipeline <- function(..., .pipes = list()) {
   )
 }
 
-#' S3method c pipeline
+#' @S3method c pipeline
 c.pipeline <- function(x, ...) {
   pipes <- c(x$pipes, unlist(lapply(list(...), function(p) p$pipes),
                              recursive = FALSE))
