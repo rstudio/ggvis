@@ -3,7 +3,7 @@
 branch_smooth <- function(..., se = TRUE) {
   node(
     transform = transform_smooth(..., se = se),
-    if (se) mark_ribbon(),
+    if (se) mark_area(),
     mark_line()
   )
 }
