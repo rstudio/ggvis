@@ -11,4 +11,8 @@
 \description{
   Split data by group
 }
+\examples{
+pl <- pipeline(mtcars, by_group("cyl"), transform_bin())
+flow(pl, props(x ~ disp))
+}
 

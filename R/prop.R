@@ -67,7 +67,7 @@ prop_range.data.frame <- function(data, prop, na.rm = TRUE) {
 }
 #' @S3method prop_range split_df
 prop_range.split_df <- function(data, var, na.rm = TRUE) {
-  ranges <- vapply(data, prop_range, na.rm = na.rm, 
+  ranges <- vapply(data, prop_range, var, na.rm = na.rm, 
     FUN.VALUE = numeric(2))
   range(ranges)
 }
