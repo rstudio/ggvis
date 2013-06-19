@@ -22,12 +22,12 @@ source_eager <- function(data, name = NULL) {
 }
 
 #' @S3method flow source_eager
-flow.source_eager <- function(x, data, props, ...) {
+flow.source_eager <- function(x, data, props) {
   x$data
 }
 
 #' @S3method format source_eager
-format.source_eager <- function(x, ...) {
+format.source_eager <- function(x) {
   paste0("|-> ", x$name, " [eager]")
 }
 

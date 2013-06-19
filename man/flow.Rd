@@ -2,7 +2,7 @@
 \alias{flow}
 \title{Flow data down a pipe or pipeline}
 \usage{
-  flow(x, props, data = NULL, ...)
+  flow(x, props, data = NULL)
 }
 \arguments{
   \item{x}{a pipeline or pipe}

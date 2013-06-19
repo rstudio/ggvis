@@ -16,7 +16,7 @@ source_lazy <- function(name) {
 }
 
 #' @S3method flow source_lazy
-flow.source_lazy <- function(x, data, props, ...) {
+flow.source_lazy <- function(x, data, props) {
   if (!exists(x$name, globalenv())) {
     stop("Can't find object ", x$name, " in global environment", call. = FALSE)
   }

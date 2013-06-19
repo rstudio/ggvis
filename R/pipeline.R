@@ -112,20 +112,20 @@ trim_to_source <- function(x) {
 #' @param data the data source to start the flow
 #' @export
 #' @keywords internal
-flow <- function(x, props, data = NULL, ...) {
+flow <- function(x, props, data = NULL) {
   stopifnot(is.gigvis_props(props))
   UseMethod("flow")
 }
 
 #' @S3method flow pipeline
-flow.pipeline <- function(x, props, data = NULL, ...) {
+flow.pipeline <- function(x, props, data = NULL) {
   for (pipe in x$pipes) {
-    data <- flow(pipe, props, data, ...)
+    data <- flow(pipe, props, data)
   }
   data
 }
 
 #' @S3method flow NULL
-flow.NULL <- function(x, data, props, ...) {
+flow.NULL <- function(x, data, props) {
   data
 }
