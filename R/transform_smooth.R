@@ -13,7 +13,6 @@ transform_smooth <- function(method = "auto", formula = "auto", se = TRUE,
 }
 
 
-#' @S3method apply_transform transform_bin
 apply_transform.transform_smooth <- function(transform, data, props) {
   # We've dispatched on transform type, now dispatch on data type
   compute_transform_smooth(data, transform, props)

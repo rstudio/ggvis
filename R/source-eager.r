@@ -18,7 +18,7 @@ source_eager <- function(data, name = NULL) {
   }
   stopifnot(is.character(name), length(name) == 1)
   
-  pipe(data = data, name = name, type = "source_eager")
+  pipe("source_eager", data = data, name = name)
 }
 
 #' @S3method flow source_eager

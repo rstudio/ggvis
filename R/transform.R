@@ -5,11 +5,9 @@
 #' @export
 #' @keywords internal
 transform <- function(type, ...) {
-  structure(list(...), class = c(paste0("transform_", type), "transform", "pipe"))
+  type <- c(paste0("transform_", type), "transform")
+  pipe(type, ...)
 }
-
-#' @S3method print transform
-print.transform <- function(x, ...) str(x)
 
 
 # Returns a string representing the transform type. For example, if it has
@@ -23,7 +21,6 @@ transform_type <- function(transform) {
 
 # Apply transformation to a data object, dispatching on transform type. A
 # method should be implemented for each type of transform.
-apply_transform <- function(transform, data, mapping) UseMethod("apply_transform")
-
-#' @S3method apply_transform NULL
-apply_transform.NULL <- function(transform, data, mapping) data
+apply_transform <- function(transform, data, mapping) {
+  flow(transform, mapping, data) 
+}

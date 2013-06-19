@@ -131,3 +131,11 @@ is.quoted <- function(x) {
 }
 
 compact <- function(x) Filter(Negate(is.null), x)
+
+param_string <- function(x) {
+  is_string <- vapply(x, is.character, logical(1))
+  values <- vapply(x, toString, character(1))
+  values[is_string] <- paste0("'", encodeString(values[is_string]), "'")
+  
+  paste0("(", paste0(names(x), " = ", values, collapse = ", "), ")")
+}

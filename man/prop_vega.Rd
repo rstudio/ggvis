@@ -13,4 +13,5 @@
 \description{
   Will be inserted in to the vega properties object.
 }
+\keyword{internal}
 

@@ -4,10 +4,9 @@
 #' 
 #' @keywords internal
 #' @export
-pipe <- function(..., type = NULL) {
+pipe <- function(type, ...) {
   structure(
-    list(...), 
-    type = type,
+    compact(list(...)), 
     class = c(type, "pipe")
   )
 }
@@ -28,7 +27,7 @@ as.pipe.data.frame <- function(x, name = deparse(substitute(x)), ...) {
   source_eager(x, name = name)
 }
 
-#' @S3mthod as.pipe NULL
+#' @S3method as.pipe NULL
 as.pipe.NULL <- function(x, ...) {
   NULL
 }

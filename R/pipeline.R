@@ -77,20 +77,24 @@ print.pipeline <- function(x, ...) {
 #' This flows data down a pipeline (starting with \code{NULL}), applying
 #' each pipe (transformation) in sequence.
 #' 
+#' Every element in a pipeline recieves the same set of properties: this
+#' generally means that for more complicated transformations you will need
+#' to create multiple branches.
+#' 
 #' @param x a pipeline or pipe
-#' @param data the data source to start the flow
 #' @param properties a \code{props} object
+#' @param data the data source to start the flow
 #' @export
 #' @keywords internal
-flow <- function(x, data = NULL, props, ...) {
-  stopifnot(is.props(pros))
+flow <- function(x, props, data = NULL, ...) {
+  stopifnot(is.gigvis_props(props))
   UseMethod("flow")
 }
 
 #' @S3method flow pipeline
-flow.pipeline <- function(x, data = NULL, props, ...) {
+flow.pipeline <- function(x, props, data = NULL, ...) {
   for (pipe in x$pipes) {
-    data <- flow(pipe, data, props, ...)
+    data <- flow(pipe, props, data, ...)
   }
   data
 }

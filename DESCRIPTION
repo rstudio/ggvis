@@ -42,3 +42,4 @@ Collate:
     'pipeline.R'
     'source-eager.r'
     'source-lazy.r'
+    'guess.R'

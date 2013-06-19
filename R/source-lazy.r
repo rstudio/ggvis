@@ -12,7 +12,7 @@
 source_lazy <- function(name) {
   stopifnot(is.character(name), length(name) == 1)
   
-  pipe(name = name, type = "source_lazy")
+  pipe("source_lazy", name = name)
 }
 
 #' @S3method flow source_lazy

@@ -4,7 +4,7 @@
 \alias{pipe}
 \title{S3 class: pipe}
 \usage{
-  pipe(..., type = NULL)
+  pipe(type, ...)
 
   is.pipe(x)
 
