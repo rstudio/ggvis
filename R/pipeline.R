@@ -30,7 +30,20 @@ pipeline <- function(..., .pipes = list()) {
   
   names <- names(input) %||% rep(list(NULL), length(input))
   pipes <- compact(Map(as.pipe, input, names))
-  
+
+  structure(
+    list(pipes = pipes),
+    class = "pipeline"
+  )
+}
+
+#' S3method c pipeline
+c.pipeline <- function(x, ...) {
+  pipes <- c(x$pipes, unlist(lapply(list(...), function(p) p$pipes),
+                             recursive = FALSE))
+
+  pipes <- trim_to_source(pipes)
+
   structure(
     list(pipes = pipes),
     class = "pipeline"
@@ -70,6 +83,16 @@ format.pipeline <- function(x, ...) {
 
 print.pipeline <- function(x, ...) {
   cat(format(x, ...), "\n", sep = "")
+}
+
+# Given a pipeline object, trim off all items previous to the last source
+trim_to_source <- function(x) {
+  sources <- vapply(x, is_source, FUN.VALUE = logical(1))
+
+  if (any(sources))
+    x <- x[max(which(sources)):length(x)]
+
+  x
 }
 
 #' Flow data down a pipe or pipeline

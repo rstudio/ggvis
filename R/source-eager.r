@@ -30,3 +30,6 @@ flow.source_eager <- function(x, data, props, ...) {
 format.source_eager <- function(x, ...) {
   paste0("|-> ", x$name, " [eager]")
 }
+
+#' @S3method is_source source_eager
+is_source.source_eager <- function(x) TRUE

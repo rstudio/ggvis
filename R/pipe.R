@@ -41,3 +41,9 @@ as.pipe.character <- function(x, ...) {
 print.pipe <- function(x, ...) {
   cat(format(x, ...), "\n", sep = "")
 }
+
+# Reports whether a pipe object is a data source.
+is_source <- function(x) UseMethod("is_source")
+
+#' @S3method is_source default
+is_source.default <- function(x) FALSE

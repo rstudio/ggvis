@@ -34,3 +34,6 @@ flow.source_lazy <- function(x, data, props, ...) {
 format.source_lazy <- function(x, ...) {
   paste0("|-> ", x$name, " [lazy]")
 }
+
+#' @S3method is_source source_lazy
+is_source.source_lazy <- function(x) TRUE
