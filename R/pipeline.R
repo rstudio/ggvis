@@ -14,6 +14,7 @@
 #' # If you refer to it by name, you need to provide R some help to figure
 #' # out itss name
 #' pipeline(mtcars)
+#' as.pipeline(mtcars)
 #' pipeline(mtcars = mtcars)
 #' pipeline("mtcars")
 #' 
@@ -28,7 +29,7 @@ pipeline <- function(..., .pipes = list()) {
   input <- c(list(...), .pipes)
   
   names <- names(input) %||% rep(list(NULL), length(input))
-  pipes <- Map(as.pipe, input, names)
+  pipes <- compact(Map(as.pipe, input, names))
   
   structure(
     list(pipes = pipes),
@@ -50,8 +51,9 @@ as.pipeline <- function(x, ...) {
 as.pipeline.pipeline <- function(x, ...) x
 
 #' @S3method as.pipeline data.frame
-as.pipeline.data.frame <- function(x, name = name, ...) {
-  pipeline(as.pipe(x, name = name))
+as.pipeline.data.frame <- function(x, name = NULL, ...) {
+  if (is.null(name)) name <- deparse(substitute(x))
+  pipeline(source_eager(x, name = name))
 }
 #' @S3method as.pipeline list
 as.pipeline.list <- function(x, ...) {
@@ -59,7 +61,7 @@ as.pipeline.list <- function(x, ...) {
   pipeline(.pipes = pipes)
 }
 #' @S3method as.pipeline character
-as.pipeline.data.frame <- function(x, ...) pipeline(as.pipe(x))
+as.pipeline.character <- function(x, ...) pipeline(source_lazy(x))
 
 format.pipeline <- function(x, ...) {
   pipes <- vapply(x$pipes, format, character(1))
@@ -90,5 +92,10 @@ flow.pipeline <- function(x, data = NULL, props, ...) {
   for (pipe in x$pipes) {
     data <- flow(pipe, data, props, ...)
   }
+  data
+}
+
+#' @S3method flow NULL
+flow.NULL <- function(x, data, props, ...) {
   data
 }

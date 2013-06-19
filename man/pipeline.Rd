@@ -31,6 +31,7 @@
 # If you refer to it by name, you need to provide R some help to figure
 # out itss name
 pipeline(mtcars)
+as.pipeline(mtcars)
 pipeline(mtcars = mtcars)
 pipeline("mtcars")
 

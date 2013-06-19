@@ -28,6 +28,11 @@ as.pipe.data.frame <- function(x, name = deparse(substitute(x)), ...) {
   source_eager(x, name = name)
 }
 
+#' @S3mthod as.pipe NULL
+as.pipe.NULL <- function(x, ...) {
+  NULL
+}
+
 #' @S3method as.pipe character
 as.pipe.character <- function(x, ...) {
   source_lazy(x)
