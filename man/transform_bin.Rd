@@ -25,7 +25,9 @@
   have methods for \code{prop_type}, \code{prop_range} and
   \code{bin}. Currently, this implies that the input data
   must be a data frame.
+}
 
+\section{Properties}{
   It must have an \code{x} property, and that property must
   be numeric.
 }
