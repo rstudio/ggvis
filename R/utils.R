@@ -1,12 +1,3 @@
-
-args_as_list <- function() {
-  call <- sys.call(-1)
-  std <- match.call(eval(call[[1]]), call = call)
-  args <- as.list(std[-1])
-
-  lapply(args, eval, parent.frame())
-}
-
 dots <- function(...) {
   eval(substitute(alist(...)))
 }
