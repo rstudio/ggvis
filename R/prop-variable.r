@@ -15,7 +15,7 @@
 #'
 #' v <- variable(quote(cyl))
 #' prop_value(v, mtcars)
-variable <- function(x) {
+variable <- function(x, scale = TRUE) {
   stopifnot(is.quoted(x))
 
   structure(list(x), class = c("variable", "prop"))
@@ -42,11 +42,15 @@ prop_name.variable <- function(x) {
   as.character(x)
 }
 
+prop_scale.variable <- function(x, default_scale) {
+  default_scale
+} 
+
 #' @S3method prop_vega variable
 prop_vega.variable <- function(x, default_scale) {
   compact(list(
     field = paste0("data.", as.character(x)),
-    scale = default_scale
+    scale = prop_scale(x, default_scale)
   ))
 }
 

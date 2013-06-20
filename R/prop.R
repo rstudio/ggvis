@@ -18,6 +18,11 @@ prop_name <- function(x) {
   UseMethod("prop_name")
 }
 
+#' The scale (if any) that this property needs
+#' 
+prop_scale <- function(x, default_scale) {
+  UseMethod("prop_scale")
+}
 
 #' Generate a vega object for the individual mark.
 #'
@@ -64,9 +69,11 @@ prop_type.character <- function(data, prop) "character"
 prop_type.logical <- function(data, prop) "logical"
 #' @S3method prop_type factor
 prop_type.factor <- function(data, prop) "factor"
+#' @S3method prop_type NULL
+prop_type.NULL <- function(data, prop) "NULL"
 #' @S3method prop_type default
 prop_type.default <- function(data, prop) {
-  stop("Unknown variable type:", paste0(class(data, sep = "/")))
+  stop("Unknown variable type: ", paste0(class(data), collapse = "/"))
 }
 
 #' Determine the numeric range of a variable

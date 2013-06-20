@@ -3,7 +3,7 @@
 \alias{variable}
 \title{Property: variable}
 \usage{
-  variable(x)
+  variable(x, scale = TRUE)
 
   is.variable(x)
 }

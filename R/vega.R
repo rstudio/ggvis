@@ -24,7 +24,7 @@ vega_spec <- function(gv,
 
   } else {
     datasets <- gather_datasets(gv)
-    scales <- gather_scales(gv, datasets)
+    scales <- add_scales(gv)
 
     # Convert data frames to vega format
     datasets <- lapply(names(datasets), function(name) {

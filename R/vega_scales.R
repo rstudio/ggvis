@@ -1,115 +1,125 @@
 # Given a gigvis object, get the scales
-gather_scales <- function(node, datasets) {
-  all_mappings <- gather_mappings(node)
 
-  vega_scales <- list()
-  for (scale in unique(all_mappings$scale)) {
-    # Get all the mappings for this scale
-    mappings <- all_mappings[all_mappings$scale == scale, ]
+# Add scales: ensure that each node - either provided explicitly at that
+# level or above, or assigned by the user. 
+#
+# First figure out which scales are needed (i.e. not found at )
 
-    vega_scales[[scale]] <- vega_scale(node$scale[[scale]], mappings$var,
-      mappings$data)
+# Build complete set of scales needed. For each property in each mark, need:
+# * property name
+# * scale name
+# * dataset
+# * variable type
+# (but only if scale isn't already provided)
+
+needed_scales <- function(node, provided = NULL) {
+  provided <- c(provided, names(node$scales))
+  
+  # Base case, no children (so a mark)
+  if (!is.null(node$children)) {
+    info <- prop_info(node)
+    handled <- is.na(info$scale) | info$scale %in% provided
+    return(info[handled, , drop = FALSE])
   }
-  unname(vega_scales)
+  
+  children <- lapply(node$children, needed_scales, provided = provided)
+  do.call("rbind", children)
 }
 
-
-# Recursively find all mappings at this node and below, and return a data
-# frame of them.
-gather_mappings <- function(node) {
-  # Find child node mappings and put them in a data frame
-  mappings <- lapply(node$children, gather_mappings)
-  mappings <- do.call(rbind, mappings)
-
-  # Get the mapped properties for this node
-  node_mappings <- mapped_props(node$props)
-
-  # Find the mappings for this node, returning data frame with columns
-  # scale, property, data, var
-  if (!is.null(node$data_id) && !is.null(node_mappings)) {
-    mapping <- data.frame(row.names = NULL, stringsAsFactors = FALSE,
-      property = names(node_mappings),
-      scale    = properties_to_scales(names(node_mappings)),
-      data     = node$data_id,
-      var      = vapply(node_mappings, as.character, character(1))
-    )
-
-    # Add current node's mapping to data frame
-    mappings <- rbind(mappings, mapping)
+prop_info <- function(node, name = NULL) {
+  if (is.null(name)) {
+    all <- lapply(names(node$props), prop_info, node = node)
+    return(do.call(rbind, all))
   }
+  
+  prop <- node$props[[name]]
 
-  # Drop duplicate rows
-  unique(mappings)
+  scale <- prop_scale(prop, default_scale(name))
+  type <- prop_type(node$data_obj, prop)
+  var <- prop_name(prop)
+  
+  data.frame(
+    prop = name, 
+    scale = scale, 
+    var = var, 
+    var_type = type, 
+    data = node$data_id,
+    stringsAsFactors = FALSE)
+}
+
+add_scales <- function(node, datasets) {
+  needed <- needed_scales(node)
+  
+  by_scale <- split(needed, needed$scale)
+  scales <- lapply(by_scale, function(x) {
+    vega_scale(x$scale[[1]], x$var, x$data, x$var_type)
+  })
+  unname(scales)
 }
 
 
 # Given a gigvis scale, domain (the name of a source column, like 'mpg'), and
 # name of data set, return a vega scale specification. Domain and data can be
 # vectors with length > 1, though they must have the same length.
-vega_scale <- function(scale, domain, data) {
-  if (length(domain) != length(data))
-    stop("domain and data must be the same length.")
-
-  if (length(domain) == 1) {
-    domain_list <- list(data = data, field = paste0("data.", domain))
-
-  } else {
-    # If more than one thing mapped to this scale, wrap them in another list
-    domain_list <- mapply(domain, data, SIMPLIFY = FALSE,
-      FUN = function(domain_, data_) {
-        list(data = data_, field = paste0("data.", domain_))
-    })
-    domain_list <- list(fields = unname(domain_list))
+vega_scale <- function(scale, field, data, var_type) {
+  var_type <- unique(var_type)
+  if (length(var_type) > 1) {
+    stop("Scale ", scale, " has multiple types of data: ", 
+      paste0(var_type, collapse = ", "), call. = FALSE)
+  }
+  if (var_type == "null") return()
+  
+  if (length(field) != length(data)) {
+    stop("field and data must be the same length.")
   }
 
-  if (scale$name == "x") {
+  scale <- make_default_scale(scale, var_type)
+
+  # These need to be added to all scales not just the ones we've added
+  # automatically, so really need to go in a separate step after the
+  # default scales have been added
+  scale$domain <- list(fields = unname(Map(function(field, data) {
+    list(data = data, field = paste0("data.", field))
+  }, field, data)))
+  
+  scale
+}
+
+make_default_scale <- function(scale, var_type) {
+  scale_type <- if (var_type %in% c("double", "integer")) "linear" else "ordinal"
+  
+  if (scale == "x") {
     list(
-      name   = scale$name,
-      type   = scale$type,
+      name   = scale,
+      type   = scale_type,
       range  = "width",
-      domain = domain_list,
-      zero   = scale$zero,
+      zero   = FALSE,
       nice   = FALSE
     )
-
-  } else if (scale$name == "y") {
+  } else if (scale == "y") {
     list(
-      name   = scale$name,
-      type   = scale$type,
+      name   = scale,
+      type   = scale_type,
       range  = "height",
-      domain = domain_list,
-      zero   = scale$zero,
+      zero   = FALSE,
       nice   = FALSE
     )
-
-  } else if (scale$name == "stroke") {
+    
+  } else if (scale == "stroke") {
     list(
-      name   = scale$name,
-      type   = scale$type,
+      name   = scale,
+      type   = scale_type,
       range  = "category10"
     )
-
-  } else if (scale$name == "fill") {
+    
+  } else if (scale == "fill") {
     list(
-      name   = scale$name,
-      type   = scale$type,
+      name   = scale,
+      type   = scale_type,
       range  = "category10"
     )
-
+    
   } else {
     stop("Unknown scale: ", scale$name)
   }
-}
-
-
-# Given a vector of properties (like x, fill, x2 and y2) return a vector of scales
-# used by each property (like x, fill, x, y, in this case)
-properties_to_scales <- function(properties) {
-  from <- c("x2", "y2")
-  to   <- c("x",  "y")
-
-  mapidx <- match(properties, from)
-  mapidxNA <- is.na(mapidx)
-  properties[!mapidxNA] <- to[mapidx[!mapidxNA]]
-  properties
 }

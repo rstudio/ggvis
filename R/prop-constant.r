@@ -57,19 +57,22 @@ prop_name.constant <- function(x, data) {
   ""
 }
 
+prop_scale.constant <- function(x, default_scale) {
+  if (isTRUE(x$scale)) {
+    default_scale
+  } else if (is.character(x$scale)) {
+    x$scale
+  } else {
+    NA
+  }
+}
+
 #' @S3method prop_vega constant
 prop_vega.constant <- function(x, default_scale) {
-  if (isTRUE(x$scale)) {
-    scale <- default_scale
-  } else if (is.character(x$scale)) {
-    scale <- scale
-  } else {
-    scale <- NULL
-  }
-
+  scale <- prop_scale(x, default_scale)
   compact(list(
     value = x$value,
-    scale = scale,
+    scale = if (!is.na(scale)) scale,
     mult = x$mult,
     offset = x$offset
   ))
