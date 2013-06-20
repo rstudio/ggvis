@@ -36,42 +36,8 @@ default_mark_properties <- function(mark) {
 # Given a gigvis mark object, return a vector of strings of valid vega
 # mark properties
 valid_vega_mark_properties <- function(mark) {
-  UseMethod("valid_vega_mark_properties")
+  names(formals(get(paste0("mark_", mark))))
 }
-
-#' @S3method valid_vega_mark_properties default
-valid_vega_mark_properties.default <- function(mark) {
-  .common_vega_mark_properties
-}
-
-#' @S3method valid_vega_mark_properties mark_symbol
-valid_vega_mark_properties.mark_symbol <- function(mark) {
-  c(.common_vega_mark_properties, "size", "shape")
-}
-
-#' @S3method valid_vega_mark_properties area
-valid_vega_mark_properties.area <- function(mark) {
-  c(.common_vega_mark_properties, "interpolate", "tension")
-}
-
-#' @S3method valid_vega_mark_properties line
-valid_vega_mark_properties.line <- function(mark) {
-  c(.common_vega_mark_properties, "fill", "interpolate", "tension")
-}
-
-#' @S3method valid_vega_mark_properties image
-valid_vega_mark_properties.image <- function(mark) {
-  c(.common_vega_mark_properties, "url", "align", "baseline")
-}
-
-#' @S3method valid_vega_mark_properties text
-valid_vega_mark_properties.text <- function(mark) {
-  c(.common_vega_mark_properties, "text", "align", "baseline", "dx", "dy",
-    "angle", "font", "fontSize", "fontWeight", "fontStyle")
-}
-
-.common_vega_mark_properties <- c("x", "x2", "width", "y", "y2", "height",
-  "opacity", "fill", "fillOpacity", "stroke", "strokeWidth", "strokeOpacity")
 
 vega_mark_property <- function(prop, val, scales) {
   # Convert scales to a named list for convenience
