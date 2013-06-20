@@ -22,7 +22,8 @@ vega_mark_properties <- function(mark, scales) {
   # and convert to proper format for vega properties.
   defaults <- default_mark_properties(mark)
   props <- merge_props(defaults, mark$props)
-
+  check_mark_props(mark, names(props))
+  
   # Convert each property to a Vega-structured property
   mapply(prop = names(props), val = props, MoreArgs = list(scales = scales),
     FUN = vega_mark_property, SIMPLIFY = FALSE)
@@ -37,6 +38,22 @@ default_mark_properties <- function(mark) {
 # mark properties
 valid_vega_mark_properties <- function(mark) {
   names(formals(get(paste0("mark_", mark))))
+}
+
+#' @importFrom tools adist
+check_mark_props <- function(mark, props) {
+  valid <- valid_vega_mark_properties(mark)
+  
+  invalid <- setdiff(props, valid)
+  if (length(invalid) == 0) return(invisible(TRUE))
+ 
+  ldist <- adist(invalid, valid, ignore.case = TRUE, partial = FALSE,
+                 costs = c(ins = 0.5, sub = 1, del = 2))
+  best <- apply(ldist, 1, which.min)
+
+  stop("Unknown property: ", paste0(invalid, collapse = ", "), ".\n",
+       "Did you mean: ", paste0(valid[best], collapse = ", "), "?",
+       call. = FALSE)
 }
 
 vega_mark_property <- function(prop, val, scales) {
