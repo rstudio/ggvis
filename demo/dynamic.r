@@ -9,11 +9,11 @@ mtc2 <- reactive({invalidateLater(2000); mtcars[sample(11:20, 5), ]})
 p <- gigvis(data = NULL, mapping = aes(x = "wt", y = "mpg"),
             node(
               data = mtc1,
-              mark_point(stroke = "black", fill = "black")
+              mark_symbol(stroke = "black", fill = "black")
             ),
             node(
               data = mtc2,
-              mark_point(fill = "red", size = 40)
+              mark_symbol(fill = "red", size = 40)
             )
 )
 view_dynamic(p)
@@ -22,7 +22,7 @@ view_dynamic(p)
 # With a transform
 mtc1 <- reactive({invalidateLater(2000); mtcars[sample(1:nrow(mtcars), 20), ]})
 p <- gigvis(data = mtc1, mapping = aes(x = "wt", y = "mpg"),
-            mark_point(stroke = "black", fill = "black"),
+            mark_symbol(stroke = "black", fill = "black"),
             node(
               transform = transform_smooth(method = "lm", se = F),
               mark_line(stroke = "red")

@@ -3,13 +3,13 @@
 \alias{mark_area}
 \alias{mark_image}
 \alias{mark_line}
-\alias{mark_point}
 \alias{mark_rect}
+\alias{mark_symbol}
 \alias{mark_text}
 \alias{marks}
 \title{Vega mark properties.}
 \usage{
-  mark_point(x = NULL, y = NULL, opacity = NULL,
+  mark_symbol(x = NULL, y = NULL, opacity = NULL,
     fill = NULL, fillOpacity = NULL, stroke = NULL,
     strokeWidth = NULL, strokeOpacity = NULL, size = NULL,
     shape = NULL)

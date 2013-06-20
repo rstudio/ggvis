@@ -47,8 +47,8 @@ valid_vega_mark_properties.default <- function(mark) {
   .common_vega_mark_properties
 }
 
-#' @S3method valid_vega_mark_properties mark_point
-valid_vega_mark_properties.mark_point <- function(mark) {
+#' @S3method valid_vega_mark_properties mark_symbol
+valid_vega_mark_properties.mark_symbol <- function(mark) {
   c(.common_vega_mark_properties, "size", "shape")
 }
 

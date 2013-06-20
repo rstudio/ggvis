@@ -65,7 +65,7 @@ NULL
 
 #' @rdname marks
 #' @export
-mark_point <- function(x = NULL, y = NULL, opacity = NULL,
+mark_symbol <- function(x = NULL, y = NULL, opacity = NULL,
                        fill = NULL, fillOpacity = NULL,
                        stroke = NULL, strokeWidth = NULL, strokeOpacity = NULL,
                        size = NULL, shape = NULL) {
@@ -76,10 +76,10 @@ mark_point <- function(x = NULL, y = NULL, opacity = NULL,
     size = size, shape = shape)
 
 }
-#' @S3method vega_mark_type mark_point
-vega_mark_type.mark_point <- function(mark) "symbol"
-#' @S3method default_mark_properties mark_point
-default_mark_properties.mark_point <- function(mark) {
+#' @S3method vega_mark_type mark_symbol
+vega_mark_type.mark_symbol <- function(mark) "symbol"
+#' @S3method default_mark_properties mark_symbol
+default_mark_properties.mark_symbol <- function(mark) {
   props(fill = "#000000")
 }
 

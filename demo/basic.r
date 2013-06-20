@@ -2,30 +2,30 @@ library(gigvis)
 
 # Basic scatter plot
 gigvis("mtcars", props(x ~ wt, y ~ mpg),
-  mark_point()
+  mark_symbol()
 )
 
 # Basic scatter plot, more verbose
 gigvis("mtcars", props(x ~ wt, y ~ mpg),
-  mark_point(y = constant(10, scale = TRUE))
+  mark_symbol(y = constant(10, scale = TRUE))
 )
 
 # Basic scatter plot, more verbose
 gigvis("mtcars", props(x = variable(quote(wt)), y = constant(quote(mpg))),
-  mark_point()
+  mark_symbol()
 )
 
 # Line and point graph
 gigvis("mtcars", props(x ~ wt, y ~ mpg),
   mark_line(),
-  mark_point(fill = "red")
+  mark_symbol(fill = "red")
 )
 
 # Two marks, at different levels of the tree
 gigvis("mtcars", props(x ~ wt, y ~ mpg),
-  mark_point(),
+  mark_symbol(),
   node(
-    mark_point(fill = "red", size = 25)
+    mark_symbol(fill = "red", size = 25)
   )
 )
 
@@ -35,18 +35,18 @@ mtc2 <- mtcars[11:20, ]
 gigvis(data = NULL, props = props(x ~ wt, y ~ mpg),
   node(
     data = "mtc1",
-    mark_point(stroke = "black", fill = "black")
+    mark_symbol(stroke = "black", fill = "black")
   ),
   node(
     data = "mtc2",
-    mark_point(fill = "red", size = 40)
+    mark_symbol(fill = "red", size = 40)
   )
 )
 
 
 # Scatter plot with loess model line
 gigvis("mtcars", props(x ~ wt, y ~ mpg),
-  mark_point(fill = NA, stroke = "black"),
+  mark_symbol(fill = NA, stroke = "black"),
   node(
     transform = transform_smooth(se = F),
     node(
@@ -57,7 +57,7 @@ gigvis("mtcars", props(x ~ wt, y ~ mpg),
 
 # Scatter plot with lm model line
 gigvis("mtcars", props(x ~ wt, y ~ mpg),
-  mark_point(),
+  mark_symbol(),
   node(
     transform = transform_smooth(method = "lm", se = F),
     node(
@@ -70,13 +70,13 @@ gigvis("mtcars", props(x ~ wt, y ~ mpg),
 # Scatter plot, colored by cyl
 gigvis("mtcars", props(x ~ wt, y ~ mpg, fill ~ cyl),
   scales = list(fill = scale(name = "fill", type = "ordinal")),
-  mark_point()
+  mark_symbol()
 )
 
 
 # Scatter plot with linear model line for each level of cyl
 gigvis("mtcars", props(x ~ wt, y ~ mpg, stroke ~ cyl, fill ~ cyl),
-  mark_point(),
+  mark_symbol(),
   scales = list(
     stroke = scale(name = "stroke", type = "ordinal"),
     fill  = scale(name = "fill", type = "ordinal")
@@ -91,7 +91,7 @@ gigvis("mtcars", props(x ~ wt, y ~ mpg, stroke ~ cyl, fill ~ cyl),
 
 # Scatter plot with all black points and loess model line for each level of cyl
 gigvis("mtcars", props(x ~ wt, y ~ mpg),
-  mark_point(fill = "#000000"),
+  mark_symbol(fill = "#000000"),
   scales = list(stroke = scale(name = "stroke", type = "ordinal")),
   node(
     split = by_group("cyl"),
@@ -103,7 +103,7 @@ gigvis("mtcars", props(x ~ wt, y ~ mpg),
 
 # Scatter plot with linear and loess model line for each level of cyl
 gigvis("mtcars", props(x ~ wt, y ~ mpg, stroke ~ cyl, fill ~ cyl),
-  mark_point(),
+  mark_symbol(),
   scales = list(
     stroke = scale(name = "stroke", type = "ordinal"),
     fill  = scale(name = "fill", type = "ordinal")
@@ -123,7 +123,7 @@ gigvis("mtcars", props(x ~ wt, y ~ mpg, stroke ~ cyl, fill ~ cyl),
 # Scatter plot with two linear model lines for each level of cyl, with different
 # mappings
 gigvis("mtcars", props(x ~ wt, y ~ mpg, stroke ~ cyl, fill ~ cyl),
-  mark_point(),
+  mark_symbol(),
   scales = list(
     stroke = scale(name = "stroke", type = "ordinal"),
     fill  = scale(name = "fill", type = "ordinal")
