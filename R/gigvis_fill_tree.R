@@ -83,15 +83,8 @@ gigvis_fill_tree <- function(node, parent = NULL, envir = NULL,
     }
 
   } else {
-    # For non-dynamic, get data object:
-    # - First check if parent has the same data set
-    # - If not, then run the data pipeline
-    if (identical(parent$data, node$data)) {
-      node$data_obj <- parent$data_obj
-    } else {
-      node$data <- c(as.pipeline(parent$data_obj), node$data)
-      node$data_obj <- flow(node$data, node$props)
-    }
+    node$data <- c(as.pipeline(parent$data_obj), node$data)
+    node$data_obj <- flow(node$data, node$props)
 
     # Give an id to the data object; this becomes the vega 'data' field
     node$data_id <- pipeline_id(node$data)
