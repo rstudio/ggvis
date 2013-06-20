@@ -3,7 +3,7 @@ vega_mark <- function(node, scales) {
 
   # Generate the fields related to mappings (x, y, etc)
   vega_node <- list(
-    type = vega_mark_type(node),
+    type = node$mark,
     properties = list(
       update = vega_mark_properties(node, scales)
     )
@@ -15,9 +15,6 @@ vega_mark <- function(node, scales) {
 
   vega_node
 }
-
-# Given a gigvis mark object, return the vega mark type
-vega_mark_type <- function(mark) UseMethod("vega_mark_type")
 
 # Given a gigvis mark object and set of scales, return a list of vega mark properties
 vega_mark_properties <- function(mark, scales) {

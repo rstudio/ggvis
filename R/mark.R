@@ -76,8 +76,6 @@ mark_symbol <- function(x = NULL, y = NULL, opacity = NULL,
     size = size, shape = shape)
 
 }
-#' @S3method vega_mark_type mark_symbol
-vega_mark_type.mark_symbol <- function(mark) "symbol"
 #' @S3method default_mark_properties mark_symbol
 default_mark_properties.mark_symbol <- function(mark) {
   props(fill = "#000000")
@@ -97,8 +95,6 @@ mark_image <- function(x = NULL, y = NULL, opacity = NULL,
        url = url, align = align, baseline = baseline)
 
 }
-#' @S3method vega_mark_type mark_image
-vega_mark_type.mark_image <- function(mark) "image"
 #' @S3method default_mark_properties mark_image
 default_mark_properties.mark_image <- function(mark) {
   props(fill = "#000000")
@@ -120,8 +116,6 @@ mark_arc <- function(x = NULL, y = NULL, opacity = NULL,
        startAngle = startAngle, endAngle = endAngle)
 }
 
-#' @S3method vega_mark_type mark_arc
-vega_mark_type.mark_arc <- function(mark) "arc"
 #' @S3method default_mark_properties mark_arc
 default_mark_properties.mark_arc <- function(mark) {
   props(fill = "#333333")
@@ -140,8 +134,6 @@ mark_area <- function(x = NULL, y = NULL, opacity = NULL,
        interpolote = interpolote, tension = tension)
 }
 
-#' @S3method vega_mark_type mark_area
-vega_mark_type.mark_area <- function(mark) "area"
 #' @S3method default_mark_properties mark_area
 default_mark_properties.mark_area <- function(mark) {
   props(fill = "#333333")
@@ -159,8 +151,6 @@ mark_line <- function(x = NULL, y = NULL, opacity = NULL,
     interpolote = interpolote, tension = tension)
 
 }
-#' @S3method vega_mark_type mark_line
-vega_mark_type.mark_line <- function(mark) "line"
 #' @S3method default_mark_properties mark_line
 default_mark_properties.mark_line <- function(mark) {
   props(stroke = "#000000")
@@ -177,8 +167,6 @@ mark_rect <- function(x = NULL, x2 = NULL, y = NULL, y2 = NULL, width = NULL,
     fill = fill, fillOpacity = fillOpacity,
     stroke = stroke, strokeWidth = strokeWidth, strokeOpacity = strokeOpacity)
 }
-#' @S3method vega_mark_type mark_rect
-vega_mark_type.mark_rect <- function(mark) "rect"
 #' @S3method default_mark_properties mark_rect
 default_mark_properties.mark_rect <- function(mark) {
   props(stroke = "#000000", fill = "#333333")
@@ -201,8 +189,6 @@ mark_text <- function(x = NULL, y = NULL, text = NULL, opacity = NULL,
        fontWeight = fontWeight, fontStyle = fontStyle)
 }
 
-#' @S3method vega_mark_type mark_text
-vega_mark_type.mark_text <- function(mark) "text"
 #' @S3method default_mark_properties mark_text
 default_mark_properties.mark_text <- function(mark) {
   props(fill = "#333333")
