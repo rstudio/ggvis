@@ -11,7 +11,7 @@ gigvis("mtcars", props(x ~ wt, y ~ mpg),
 )
 
 # Basic scatter plot, more verbose
-gigvis("mtcars", props(x = variable(quote(wt)), y = constant(quote(mpg))),
+gigvis("mtcars", props(x = variable("wt"), y = constant(10)),
   mark_symbol()
 )
 
@@ -42,7 +42,6 @@ gigvis(data = NULL, props = props(x ~ wt, y ~ mpg),
     mark_symbol(fill = "red", size = 40)
   )
 )
-
 
 # Scatter plot with loess model line
 gigvis("mtcars", props(x ~ wt, y ~ mpg),
