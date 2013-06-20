@@ -8,10 +8,10 @@ library(whisker)
 # Convert a ggplot2 plot object to a JS vega spec with related gigvis calls
 plotToScript <- function(id, plotObj) {
   ps <- plot_spec(plotObj, embed_data=TRUE)
-  
+
   # Do some monkeypatching of the generated vega plotspec. The monkeypatching
   # is very crude, assumes only 1 data item and 1 mark.
-  
+
   # Add a data source that will represent the brush
   ps$data[[2]] <- list(
     name = "brush",
@@ -21,19 +21,19 @@ plotToScript <- function(id, plotObj) {
       )
     )
   )
-  
+
   # Change the mark specification to make it look a little nicer
   ps$marks[[1]]$properties$update$size <- list(value = 20)
   ps$marks[[1]]$properties$update$stroke <- list(value = "transparent")
   ps$marks[[1]]$properties$update$opacity <- list(value = 0.5)
-  
+
   # Add a mark property set for selected (linked) data points
   ps$marks[[1]]$properties$selected <- list(
     fill=list(
       value="#00CC00"
     )
   )
-  
+
   # Add a mark for the brushing rectangle
   ps$marks[[2]] <- list(
     type = "rect",
@@ -50,7 +50,7 @@ plotToScript <- function(id, plotObj) {
       )
     )
   )
-  
+
   json <- toJSON(ps)
   whisker.render("<script>
 vg.parse.spec({{{json}}}, function(chart) {
@@ -93,14 +93,14 @@ template <- paste(readLines(file.path(rootDir, 'index.html')), collapse='\n')
 # This is our rook/httpuv app
 app <- list(
   call = function(req) {
-    
+
     # Try using static resources in www to fulfill the request
     resp <- suppressWarnings(libServer$call(req))
     if (resp$status == 200)
       return(resp)
-    
+
     # Nothing static found; handle it dynamically if possible
-    
+
     switch (
       req$PATH_INFO,
       '/' = {
@@ -126,12 +126,12 @@ app <- list(
         ws$close()
         return()
       }
-      
+
       msg <- fromJSON(message)
       str(msg)
     })
     ws$onClose(function() {
-      
+
     })
   }
 )

@@ -49,7 +49,7 @@ merge_vectors <- function(a, b) {
 merge_df <- function(a, b) {
   if (is.null(a) || nrow(a) == 0 || ncol(a) == 0) return(b)
   if (is.null(b) || nrow(b) == 0 || ncol(b) == 0) return(a)
-  
+
   cbind(a[setdiff(names(a), names(b))], b)
 }
 
@@ -134,6 +134,6 @@ param_string <- function(x) {
   is_string <- vapply(x, is.character, logical(1))
   values <- vapply(x, toString, character(1))
   values[is_string] <- paste0("'", encodeString(values[is_string]), "'")
-  
+
   paste0("(", paste0(names(x), " = ", values, collapse = ", "), ")")
 }

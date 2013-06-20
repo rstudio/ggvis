@@ -1,5 +1,5 @@
 #' Property: constant
-#' 
+#'
 #' Use a constant value for a mark property.
 #'
 #' @param value The value of the constant. If \code{scale = FALSE}, the default
@@ -10,10 +10,10 @@
 #'   the value will be left as is. If \code{TRUE}, the default scale for that
 #'   property will be used. Otherwise, you can supply the name of a specific
 #'   scale as a string.
-#' @param mult A multiplier for the value, equivalent to (mult * value). 
+#' @param mult A multiplier for the value, equivalent to (mult * value).
 #'   Multipliers are applied after any scale transformation.
-#' @param offset A simple additive offset to bias the final value, equivalent to 
-#'   (value + offset). Offsets are added after any scale transformation and 
+#' @param offset A simple additive offset to bias the final value, equivalent to
+#'   (value + offset). Offsets are added after any scale transformation and
 #'   multipliers.
 #' @export
 #' @examples
@@ -25,9 +25,9 @@ constant <- function(value, scale = FALSE, mult = NULL, offset = NULL) {
   stopifnot(is.logical(scale) || is.character(scale), length(scale) == 1)
   if (!is.null(mult)) stopifnot(is.numeric(mult), length(mult) == 1)
   if (!is.null(offset)) stopifnot(is.numeric(offset), length(offset) == 1)
-  
+
   structure(
-    list(value = value, scale = scale, mult = mult, offset = offset), 
+    list(value = value, scale = scale, mult = mult, offset = offset),
     class = c("constant", "prop"))
 }
 
@@ -40,7 +40,7 @@ format.constant <- function(x, ...) {
   } else {
     scale <- ""
   }
-  
+
   paste0("<const> ", x$value, scale)
 }
 #' @S3method print constant
@@ -61,7 +61,7 @@ prop_vega.constant <- function(x, default_scale) {
   } else {
     scale <- NULL
   }
-  
+
   compact(list(
     value = x$value,
     scale = scale,

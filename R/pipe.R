@@ -1,12 +1,12 @@
 #' S3 class: pipe
-#' 
+#'
 #' This function is used to create pipe classes and subclasses.
-#' 
+#'
 #' @keywords internal
 #' @export
 pipe <- function(type, ...) {
   structure(
-    compact(list(...)), 
+    compact(list(...)),
     class = c(type, "pipe")
   )
 }

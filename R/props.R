@@ -27,7 +27,7 @@ props <- function(..., inherit = TRUE) {
   # Anything else that's not already a prop gets turned into a constant
   is_constant <- !vapply(pieces, is.prop, logical(1))
   pieces[is_constant] <- lapply(pieces[is_constant], constant)
-  
+
   structure(
     pieces,
     inherit = inherit,

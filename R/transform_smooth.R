@@ -1,5 +1,5 @@
 #' Transformation: smooth the data
-#' 
+#'
 #' @export
 #' @examples
 #' transform_smooth()
@@ -32,7 +32,7 @@ format.transform_smooth <- function(x, ...) {
 flow.transform_smooth <- function(x, props, data) {
   check_prop(x, props, data, "x", c("double", "integer"))
   check_prop(x, props, data, "y", c("double", "integer"))
-  
+
   if (is.guess(x$method)) {
     x$method <- if (max_rows(data) > 1000) "gam" else "loess"
     message("Guess transform_smooth(method = '", x$method, "')")
@@ -61,15 +61,15 @@ smooth.split_df <- function(data, trans, x_var, y_var) {
 smooth.data.frame <- function(data, trans, x_var, y_var) {
   env <- new.env(parent = globalenv())
   env$data <- data.frame(
-    x = prop_value(x_var, data), 
+    x = prop_value(x_var, data),
     y = prop_value(y_var, data)
   )
-  
+
   # Create model call and combine with ... captured earlier, evaluating in
   call <- substitute(method(formula, data = data), trans)
   call <- modify_call(call, trans$dots)
   mod <- eval(call, env)
-  
+
   # Make prediction
   x_grid <- seq(min(env$data$x), max(env$data$x), length = trans$n)
   predict_df(mod, x_grid, trans$se, trans$level)

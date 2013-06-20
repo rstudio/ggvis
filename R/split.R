@@ -7,7 +7,7 @@
 #' flow(pl, props(x ~ disp))
 by_group <- function(variables) {
   stopifnot(is.character(variables))
-  
+
   pipe(c("split_by_group", "split"), variables = variables)
 }
 

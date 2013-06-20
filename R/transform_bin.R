@@ -1,17 +1,17 @@
 #' Transformation: bin continuous variable.
-#' 
+#'
 #' @section Input:
 #' The data that \code{transform_bin} is applied to, must have methods
 #' for \code{prop_type}, \code{prop_range} and \code{bin}. Currently, this
 #' implies that the input data must be a data frame.
-#' 
+#'
 #' @section Properties:
 #' It must have an \code{x} property, and that property must be numeric.
-#' 
+#'
 #' @section Ouput:
-#' 
+#'
 #' \code{transform_bin} creates a data frame with columns:
-#' 
+#'
 #' \itemize{
 #'  \item \code{count__}
 #'  \item \code{x}
@@ -19,19 +19,19 @@
 #'  \item \code{xmax__}
 #'  \item \code{width__}
 #' }
-#' 
+#'
 #' @param binwidth The width of the bins. The default is \code{guess()}, which
-#'   yields 30 bins that cover the range of the data. 
+#'   yields 30 bins that cover the range of the data.
 #' @param origin The initial position of the left-most bin. If \code{NULL}, the
 #'   the default, will using the smallest value in the dataset
-#' @param right Should bins be right-open, left-closed, or 
+#' @param right Should bins be right-open, left-closed, or
 #'   right-closed, left-open
 #' @export
 #' @examples
 #' transform_bin()
 #' transform_bin(binwidth = 10, origin = 1)
 #' transform_bin(right = FALSE)
-#' 
+#'
 #' # You can see the results of a transformation by creating your own pipeline
 #' # and flowing data through it
 #' flow(transform_bin(10), props(x ~ disp), mtcars)
@@ -43,10 +43,10 @@ transform_bin <- function(binwidth = guess(), origin = NULL, right = TRUE) {
   stopifnot(is.guess(binwidth) || (is.numeric(binwidth) && length(binwidth) == 1))
   stopifnot(is.null(origin) || (is.numeric(origin) && length(origin) == 1))
   stopifnot(identical(right, TRUE) || identical(right, FALSE))
-  
-  transform("bin", 
-    binwidth = binwidth, 
-    origin = origin, 
+
+  transform("bin",
+    binwidth = binwidth,
+    origin = origin,
     right = right
   )
 }
@@ -59,14 +59,14 @@ format.transform_bin <- function(x, ...) {
 #' @S3method flow transform_bin
 flow.transform_bin <- function(x, props, data) {
   check_prop(x, props, data, "x", c("double", "integer"))
-  
+
   if (is.guess(x$binwidth)) {
     x$binwidth <- diff(prop_range(data, props$x)) / 30
     message("Guess: transform_bin(binwidth = ", format(x$binwidth, digits = 3),
-      ") # range / 30")    
+      ") # range / 30")
   }
-  
-  output <- bin(data, x_var = props$x, 
+
+  output <- bin(data, x_var = props$x,
     binwidth = x$binwidth, origin = x$origin, right = x$right)
   preserve_constants(data, output)
 }
@@ -129,17 +129,17 @@ bin.numeric <- function(x, weight = NULL, binwidth = 1, origin = NULL, right = T
 
 
 # bin()
-# 
+#
 # xvar <- as.character(props$x)
-# 
+#
 # # Identify constant variables, extract and add back in
 # constant_vars <- vapply(data, all_same, logical(1))
-# 
+#
 # # Do the binning
 # # TODO: implement weight, origin, right
 # transformed <- bin(data[[xvar]], weight = NULL, binwidth = transform$binwidth)
 # names(transformed)[names(transformed) == "x"] <- xvar
-# 
+#
 # # Add back the constant variables
 # carry_over <- data[1, constant_vars, drop = FALSE]
 # rownames(carry_over) <- NULL

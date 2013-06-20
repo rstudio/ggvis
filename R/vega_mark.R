@@ -25,7 +25,7 @@ vega_mark_properties <- function(mark, scales) {
   # and convert to proper format for vega properties.
   defaults <- default_mark_properties(mark)
   props <- merge_props(defaults, mark$props)
-  
+
   # Convert each property to a Vega-structured property
   mapply(prop = names(props), val = props, MoreArgs = list(scales = scales),
     FUN = vega_mark_property, SIMPLIFY = FALSE)
@@ -79,25 +79,25 @@ valid_vega_mark_properties.text <- function(mark) {
 vega_mark_property <- function(prop, val, scales) {
   # Convert scales to a named list for convenience
   names(scales) <- vapply(scales, `[[`, "name", FUN.VALUE = character(1))
-  
+
   vega <- prop_vega(val, default_scale(prop))
-  
+
   # This is an ugly hack, but not sure yet how to make better.
-  if ((prop == "width"  && scales$x$type == "ordinal") || 
+  if ((prop == "width"  && scales$x$type == "ordinal") ||
       (prop == "height" && scales$y$type == "ordinal")) {
     vega$band <- TRUE
   }
-  
+
   vega
 }
 
 default_scale <- function(prop) {
   stopifnot(is.character(prop), length(prop) == 1)
-  
+
   as_is <- c("x", "y", "size", "opacity", "fill", "fillOpacity",
     "stroke", "strokeWidth", "strokeOpacity")
   if (prop %in% as_is) return(prop)
-  
+
   mapped <- c(
     "x2" = "x",
     "width" = "x",
@@ -105,6 +105,6 @@ default_scale <- function(prop) {
     "y2" = "y"
   )
   if (prop %in% names(mapped)) return(mapped[[prop]])
-  
+
   stop("Unkown property: ", prop)
 }
