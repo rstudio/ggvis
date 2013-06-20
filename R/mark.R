@@ -70,7 +70,7 @@ mark_symbol <- function(x = NULL, y = NULL, opacity = NULL,
                        stroke = NULL, strokeWidth = NULL, strokeOpacity = NULL,
                        size = NULL, shape = NULL) {
 
-  mark("point", x = x, y = y, opacity = opacity,
+  mark("symbol", x = x, y = y, opacity = opacity,
     fill = fill, fillOpacity = fillOpacity,
     stroke = stroke, strokeWidth = strokeWidth, strokeOpacity = strokeOpacity,
     size = size, shape = shape)

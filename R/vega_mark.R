@@ -3,7 +3,7 @@ vega_mark <- function(node, scales) {
 
   # Generate the fields related to mappings (x, y, etc)
   vega_node <- list(
-    type = node$mark,
+    type = node$type,
     properties = list(
       update = vega_mark_properties(node, scales)
     )
