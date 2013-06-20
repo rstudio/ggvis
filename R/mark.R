@@ -6,6 +6,9 @@ mark <- function(type, ...) {
   )
 }
 
+#' export
+is.mark <- function(x) inherits(x, "mark")
+
 #' @S3method print mark
 print.mark <- function(x, ...) str(x)
 

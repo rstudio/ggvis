@@ -12,6 +12,8 @@
 #' @examples
 #' source_eager(mtcars)
 source_eager <- function(data, name = NULL) {
+  if (is.null(data)) return(NULL)
+  
   stopifnot(is.data.frame(data))
   if (is.null(name)) {
     name <- deparse(substitute(data))

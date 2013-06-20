@@ -52,6 +52,11 @@ prop_value.constant <- function(x, data) {
   NULL
 }
 
+#' @S3method prop_name constant
+prop_name.constant <- function(x, data) {
+  ""
+}
+
 #' @S3method prop_vega constant
 prop_vega.constant <- function(x, default_scale) {
   if (isTRUE(x$scale)) {

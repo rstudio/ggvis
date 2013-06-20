@@ -9,6 +9,15 @@ prop_value <- function(x, data) {
   UseMethod("prop_value")
 }
 
+#' The name of the property.
+#' 
+#' Used for naming the variable it produces in the vega data frame
+#' 
+#' @param x a vega property
+prop_name <- function(x) {
+  UseMethod("prop_name")
+}
+
 
 #' Generate a vega object for the individual mark.
 #'

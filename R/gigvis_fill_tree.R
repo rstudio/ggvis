@@ -83,20 +83,27 @@ gigvis_fill_tree <- function(node, parent = NULL, envir = NULL,
     }
 
   } else {
-    node$data <- c(as.pipeline(parent$data_obj), node$data)
+    pipe <- source_eager(parent$data_obj, name = parent$data_id)
+    node$data <- c(as.pipeline(pipe), node$data)
     node$data_obj <- flow(node$data, node$props)
 
     # Give an id to the data object; this becomes the vega 'data' field
     node$data_id <- pipeline_id(node$data)
   }
+  
+  if (is.mark(node)) {
+    # Base case: is a mark
+    cols <- lapply(node$props, prop_value, data = node$data_obj)
+    names(cols) <- vapply(node$props, prop_name, character(1))
 
-
-  # Fill in children recursively
-  if (!is.null(node$children)) {
+    node$data_obj <- as.data.frame(compact(cols))
+    node$data_id <- paste0(parent$data_id, "_", node$type)
+  } else {
+    # Fill in children recursively
     node$children <- lapply(node$children, FUN = gigvis_fill_tree,
       parent = node, envir = envir, symbol_table = symbol_table)
   }
-
+    
   # If dynamic and this was the top node, add the symbol table as an attribute,
   # so that it can be returned to the caller.
   if (root_node && node$dynamic) {

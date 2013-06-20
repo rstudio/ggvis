@@ -49,7 +49,6 @@ node <- function(..., data = NULL, props = NULL, scales = NULL,
   )
 }
 
-
 #' @S3method print gigvis
 print.gigvis <- function(gv, envir = parent.frame()) {
   gv_filled <- gigvis_fill_tree(gv, parent = NULL, envir = envir)

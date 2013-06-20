@@ -23,11 +23,7 @@ vega_spec <- function(gv,
     })
 
   } else {
-    mapped_vars <- gather_mapped_vars(gv)
-
     datasets <- gather_datasets(gv)
-    datasets <- prune_datasets_columns(datasets, mapped_vars)
-
     scales <- gather_scales(gv, datasets)
 
     # Convert data frames to vega format
@@ -66,108 +62,17 @@ vega_spec <- function(gv,
 }
 
 
-# Recursively traverse tree and collect all the data sets used. Returns a flat
-# list of data sets
+# Recursively traverse tree and collect all the data sets used - this currently
+# sends all datasets to vega, even though internal nodes probably don't need
+# to sent
 gather_datasets <- function(node) {
-  # Generate flat list of datasets, joining this node's data with children's
-  datasets <-
-    unlist(lapply(node$children, gather_datasets), recursive = FALSE)
+  data <- setNames(list(node$data_obj), node$data_id)
+  if (is.null(node$children)) return(data)
 
-  # Drop any duplicates (e.g., if two children have same data set)
-  dups <- duplicated(names(datasets))
-  if (any(dups)) {
-    datasets <- datasets[!dups]
-  }
-
-  # Add this node's data set if not already present
-  if (!is.null(node$data_id) && !(node$data_id %in% names(datasets))) {
-    # jcheng: datasets being NULL here is fine for data frames, but
-    # not fine for functions (you get an error on the [[<- below)
-    if (is.null(datasets) && is.function(node$data_obj))
-      datasets <- list()
-    datasets[[node$data_id]] <- node$data_obj
-  }
-
-  datasets <- drop_nulls(datasets)
-
-  datasets
+  children <- unlist(lapply(node$children, gather_datasets), recursive = FALSE)
+  all <- c(children, data)
+  all[!duplicated(all)]
 }
-
-
-# Given a gigvis node, recursively traverse tree and collect all mapped and
-# split variables for all data sets used. Returns a flat named list of vectors,
-# where the name of each vector is the name of the data set, and the content of
-# each vector are strings naming each column used.
-gather_mapped_vars <- function(node) {
-
-  # Find all of children's mapped variables
-  all_mapped_vars <-
-    unlist(lapply(node$children, gather_mapped_vars), recursive = FALSE)
-
-  # Add current node's mapped and splitting variables to the list
-  # Get mapped variables
-  vars <- vapply(mapped_props(node$props), as.character, character(1))
-  # Add split variables
-  if (inherits(node$split, "split_by_group")) {
-    vars <- unique(c(vars, node$split))
-  }
-
-  if (!is.null(node$data_id)) {
-    all_mapped_vars[[node$data_id]] <- unique(c(all_mapped_vars[[node$data_id]], vars))
-  }
-
-  all_mapped_vars <- drop_nulls(all_mapped_vars)
-
-
-  # Iterate over each data name, merging all entries that share the same name
-  for (dataname in unique(names(all_mapped_vars))) {
-    # Find all entries for this data object
-    matchidx <- names(all_mapped_vars) == dataname
-
-    if (sum(matchidx) > 1) {
-      # Append the vectors together, and drop duplicate entries
-      mapped_vars <- unique(unlist(all_mapped_vars[matchidx]))
-
-      # Drop all existing entries for this data set, then add back the new
-      # single copy of it.
-      all_mapped_vars[matchidx] <- NULL
-      all_mapped_vars[[dataname]] <- mapped_vars
-    }
-  }
-
-  all_mapped_vars
-}
-
-# Given a named list of data frames and a corresponding named list of mapped
-# variables for each data frame,
-prune_datasets_columns <- function(datasets, keep_vars) {
-  if (length(datasets) != length(keep_vars) ||
-      !identical(sort(names(datasets)), sort(names(keep_vars))) ) {
-    stop("Names of datasets do not match names of sets of keep vars.")
-  }
-
-  for (name in names(datasets)) {
-    datasets[[name]] <- prune_columns(datasets[[name]], keep_vars[[name]])
-  }
-  datasets
-}
-
-
-prune_columns <- function(data, keep_vars) UseMethod("prune_columns")
-
-#' @S3method prune_columns split_df
-prune_columns.split_df <- function(data, keep_vars) {
-  structure(
-    lapply(data, prune_columns, keep_vars),
-    class = "split_df"
-  )
-}
-
-#' @S3method prune_columns data.frame
-prune_columns.data.frame <- function(data, keep_vars) {
-  data[keep_vars]
-}
-
 
 # Recursively process nodes in the gigvis tree, and return corresponding vega
 # tree.
@@ -205,11 +110,12 @@ vega_process_node <- function(node, envir, scales) {
       }
 
       vega_node$from <- list(
-        data = node$data_id,
-        transform = list(list(
-          type = "facet",
-          keys = facet_keys
-        ))
+        data = node$data_id
+#         ,
+#         transform = list(list(
+#           type = "facet",
+#           keys = facet_keys
+#         ))
       )
     }
   }

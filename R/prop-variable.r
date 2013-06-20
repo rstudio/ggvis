@@ -37,6 +37,11 @@ prop_value.variable <- function(x, data) {
   eval(x[[1]], data, baseenv())
 }
 
+#' @S3method prop_name variable
+prop_name.variable <- function(x) {
+  as.character(x)
+}
+
 #' @S3method prop_vega variable
 prop_vega.variable <- function(x, default_scale) {
   compact(list(
