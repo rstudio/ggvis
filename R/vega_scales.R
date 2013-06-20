@@ -26,11 +26,11 @@ gather_mappings <- function(node) {
 
   # Find the mappings for this node, returning data frame with columns
   # scale, property, data, var
-  if (!is.null(node$data) && !is.null(node_mappings)) {
+  if (!is.null(node$data_id) && !is.null(node_mappings)) {
     mapping <- data.frame(row.names = NULL, stringsAsFactors = FALSE,
       property = names(node_mappings),
       scale    = properties_to_scales(names(node_mappings)),
-      data     = node$data,
+      data     = node$data_id,
       var      = vapply(node_mappings, as.character, character(1))
     )
 

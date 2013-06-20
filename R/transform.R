@@ -62,17 +62,15 @@ constant_vars.split_df <- function(data) {
   colSums(mat) == n
 }
 
+#' @S3method pipe_id transform
+pipe_id.transform <- function(x) {
+  paste(transform_type(x), digest(x, algo = "crc32"), sep = "_")
+}
+
 # Returns a string representing the transform type. For example, if it has
 # class "transform_smooth", then this returns "smooth".
 transform_type <- function(transform) {
   classes <- class(transform)
   type <- classes[grep("^transform_", classes)]
   sub("^transform_", "", type)
-}
-
-
-# Apply transformation to a data object, dispatching on transform type. A
-# method should be implemented for each type of transform.
-apply_transform <- function(transform, data, mapping) {
-  flow(transform, mapping, data) 
 }

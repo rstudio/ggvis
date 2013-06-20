@@ -80,12 +80,12 @@ gather_datasets <- function(node) {
   }
 
   # Add this node's data set if not already present
-  if (!is.null(node$data) && !(node$data %in% names(datasets))) {
+  if (!is.null(node$data_id) && !(node$data_id %in% names(datasets))) {
     # jcheng: datasets being NULL here is fine for data frames, but
     # not fine for functions (you get an error on the [[<- below)
     if (is.null(datasets) && is.function(node$data_obj))
       datasets <- list()
-    datasets[[node$data]] <- node$data_obj
+    datasets[[node$data_id]] <- node$data_obj
   }
 
   datasets <- drop_nulls(datasets)
@@ -112,8 +112,8 @@ gather_mapped_vars <- function(node) {
     vars <- unique(c(vars, node$split))
   }
 
-  if (!is.null(node$data)) {
-    all_mapped_vars[[node$data]] <- unique(c(all_mapped_vars[[node$data]], vars))
+  if (!is.null(node$data_id)) {
+    all_mapped_vars[[node$data_id]] <- unique(c(all_mapped_vars[[node$data_id]], vars))
   }
 
   all_mapped_vars <- drop_nulls(all_mapped_vars)
@@ -205,7 +205,7 @@ vega_process_node <- function(node, envir, scales) {
       }
 
       vega_node$from <- list(
-        data = node$data,
+        data = node$data_id,
         transform = list(list(
           type = "facet",
           keys = facet_keys

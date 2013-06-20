@@ -20,3 +20,8 @@ format.split_by_group <- function(x, ...) {
 flow.split_by_group <- function(x, props, data) {
   split_df(data, x$variables)
 }
+
+#' @S3method pipe_id split
+pipe_id.split <- function(x) {
+  paste("split", digest(x, algo = "crc32"), sep = "_")
+}

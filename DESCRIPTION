@@ -15,7 +15,6 @@ Suggests:
     shiny (>= 0.5.0)
 License: GPL-2
 Collate:
-    'branch.R'
     'gigvis.R'
     'mark.R'
     'scales.R'

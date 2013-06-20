@@ -14,7 +14,7 @@
 source_eager <- function(data, name = NULL) {
   stopifnot(is.data.frame(data))
   if (is.null(name)) {
-    name <- deparse(substitute(x))
+    name <- deparse(substitute(data))
   }
   stopifnot(is.character(name), length(name) == 1)
   
@@ -33,3 +33,6 @@ format.source_eager <- function(x) {
 
 #' @S3method is_source source_eager
 is_source.source_eager <- function(x) TRUE
+
+#' @S3method pipe_id source_eager
+pipe_id.source_eager <- function(x) x$name

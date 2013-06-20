@@ -86,28 +86,15 @@ gigvis_fill_tree <- function(node, parent = NULL, envir = NULL,
     # For non-dynamic, get data object:
     # - First check if parent has the same data set
     # - If not, then run the data pipeline
-    if (!is.null(parent$data) && identical(parent$data, node$data)) {
+    if (identical(parent$data, node$data)) {
       node$data_obj <- parent$data_obj
     } else {
+      node$data <- c(as.pipeline(parent$data_obj), node$data)
       node$data_obj <- flow(node$data, node$props)
     }
 
-    # Transform the data
-    if (!is.null(node$transform)) {
-      node$data_obj <- apply_transform(node$transform, node$data_obj, node$props)
-
-      # Rename the dataset with the transform type and hashed transform appended
-      # (e.g., "mtc" becomes "mtc_smooth_asdf842af3")
-      # The hashing is done so that if there are multiple transforms of the
-      # same type, they won't interfere. For example, if there are two smooth
-      # transforms with different methods ("lm" and "loess") or with different
-      # mappings, they should result in different data names.
-      node$data <- paste(
-        node$data,
-        transform_type(node$transform),
-        digest::digest(node[c("transform", "props")], algo = "crc32"),
-        sep = "_")
-    }
+    # Give an id to the data object; this becomes the vega 'data' field
+    node$data_id <- pipeline_id(node$data)
   }
 
 

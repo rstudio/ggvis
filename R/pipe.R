@@ -47,3 +47,7 @@ is_source <- function(x) UseMethod("is_source")
 
 #' @S3method is_source default
 is_source.default <- function(x) FALSE
+
+
+# Give an abbreviated identifier for the pipe
+pipe_id <- function(x) UseMethod("pipe_id")

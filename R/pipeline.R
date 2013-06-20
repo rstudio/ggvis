@@ -29,25 +29,27 @@ pipeline <- function(..., .pipes = list()) {
   input <- c(list(...), .pipes)
   
   names <- names(input) %||% rep(list(NULL), length(input))
-  pipes <- compact(Map(as.pipe, input, names))
+  pipes <- trim_to_source(compact(Map(as.pipe, input, names)))
 
   structure(
-    list(pipes = pipes),
+    pipes,
     class = "pipeline"
   )
 }
 
 #' @S3method c pipeline
 c.pipeline <- function(x, ...) {
-  pipes <- c(x$pipes, unlist(lapply(list(...), function(p) p$pipes),
-                             recursive = FALSE))
-
-  pipes <- trim_to_source(pipes)
+  new_pipes <- lapply(list(...), as.pipeline)
 
   structure(
-    list(pipes = pipes),
+    trim_to_source(c(unclass(x), unlist(new_pipes, recursive = FALSE))),
     class = "pipeline"
   )
+}
+
+#' @S3method [ pipeline
+`[.pipeline` <- function(x, ...) {
+  structure(NextMethod(x, ...), class = "pipeline")
 }
 
 #' @export
@@ -75,17 +77,25 @@ as.pipeline.list <- function(x, ...) {
 }
 #' @S3method as.pipeline character
 as.pipeline.character <- function(x, ...) pipeline(source_lazy(x))
+#' @S3method as.pipeline NULL
+as.pipeline.NULL <- function(x, ...) pipeline(NULL)
 
 #' @S3method as.pipeline pipe
 as.pipeline.pipe <- function(x, ...) pipeline(x)
 
 format.pipeline <- function(x, ...) {
-  pipes <- vapply(x$pipes, format, character(1))
+  pipes <- vapply(x, format, character(1))
   paste0(pipes, collapse = "\n")
 }
 
 print.pipeline <- function(x, ...) {
   cat(format(x, ...), "\n", sep = "")
+}
+
+# Return an id string, summarizing the pipeline
+pipeline_id <- function(x) {
+  if (length(x) == 0) return(NULL)
+  paste(vapply(x, pipe_id, character(1)), collapse = "_")
 }
 
 # Given a pipeline object, trim off all items previous to the last source
@@ -119,7 +129,7 @@ flow <- function(x, props, data = NULL) {
 
 #' @S3method flow pipeline
 flow.pipeline <- function(x, props, data = NULL) {
-  for (pipe in x$pipes) {
+  for (pipe in x) {
     data <- flow(pipe, props, data)
   }
   data
