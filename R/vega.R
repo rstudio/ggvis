@@ -71,7 +71,7 @@ gather_datasets <- function(node) {
 
   children <- unlist(lapply(node$children, gather_datasets), recursive = FALSE)
   all <- c(children, data)
-  all[!duplicated(all)]
+  all[!duplicated(names(all))]
 }
 
 # Recursively process nodes in the gigvis tree, and return corresponding vega
