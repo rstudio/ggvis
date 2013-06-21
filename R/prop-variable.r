@@ -33,13 +33,32 @@ print.variable <- function(x, ...) cat(format(x, ...), "\n", sep = "")
 is.variable <- function(x) inherits(x, "variable")
 
 #' @S3method prop_value variable
-prop_value.variable <- function(x, data) {
-  eval(x[[1]], data, baseenv())
+prop_value.variable <- function(x, data, processed = FALSE) {
+  if (processed)
+    data[[prop_name(x)]]
+  else
+    eval(x[[1]], data, baseenv())
 }
 
 #' @S3method prop_name variable
 prop_name.variable <- function(x) {
-  as.character(x)
+  var <- x[[1]]
+  if (is.symbol(var)) {
+    # var is a single variable; just return it
+    as.character(var)
+
+  } else if (is.language(var)) {
+    # var is calculated; translate some of the special characters (so it doesn't
+    # cause problems in the Vega spec) and hash it (so that other calculated
+    # columns in the same data set won't have the same name).
+    var_str <- deparse(var)
+    paste(gsub("[^a-zA-Z0-9]", "_", var_str),
+          digest(var_str, algo = "crc32"), sep = "_")
+
+  } else {
+    # var is a constant
+    ""
+  }
 }
 
 prop_scale.variable <- function(x, default_scale) {
@@ -49,7 +68,7 @@ prop_scale.variable <- function(x, default_scale) {
 #' @S3method prop_vega variable
 prop_vega.variable <- function(x, default_scale) {
   compact(list(
-    field = paste0("data.", as.character(x)),
+    field = paste0("data.", prop_name(x)),
     scale = prop_scale(x, default_scale)
   ))
 }

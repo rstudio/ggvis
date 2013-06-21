@@ -16,7 +16,7 @@ needed_scales <- function(node, provided = NULL) {
   provided <- c(provided, names(node$scales))
   
   # Base case, no children (so a mark)
-  if (!is.null(node$children)) {
+  if (is.null(node$children)) {
     info <- prop_info(node)
     handled <- is.na(info$scale) | info$scale %in% provided
     return(info[handled, , drop = FALSE])
@@ -35,7 +35,7 @@ prop_info <- function(node, name = NULL) {
   prop <- node$props[[name]]
 
   scale <- prop_scale(prop, default_scale(name))
-  type <- prop_type(node$data_obj, prop)
+  type <- prop_type(node$data_obj, prop, processed = TRUE)
   var <- prop_name(prop)
   
   data.frame(

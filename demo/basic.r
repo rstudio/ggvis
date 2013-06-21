@@ -43,6 +43,11 @@ gigvis(data = NULL, props = props(x ~ wt, y ~ mpg),
   )
 )
 
+# Basic scatter plot with calculations in property
+gigvis("mtcars", props(x ~ wt, y ~ wt/mpg),
+  mark_symbol()
+)
+
 # Scatter plot with loess model line
 gigvis("mtcars", props(x ~ wt, y ~ mpg),
   mark_symbol(fill = NA, stroke = "black"),

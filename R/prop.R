@@ -5,7 +5,9 @@ is.prop <- function(x) inherits(x, "prop")
 #'
 #' @param x a vega property
 #' @param data a object containing data
-prop_value <- function(x, data) {
+#' @param processed Has this data object been processed so that new columns
+#'   have been calculated and unused columns have been dropped?
+prop_value <- function(x, data, processed) {
   UseMethod("prop_value")
 }
 
@@ -37,21 +39,26 @@ prop_vega <- function(x, default_scale) {
 
 #' Determine the variable type given a data frame and property.
 #'
+#' @param data The data object.
+#' @param prop The property object.
+#' @param processed Has this data object been processed so that new columns
+#'   have been calculated and unused columns have been dropped?
 #' @keywords internal
-prop_type <- function(data, prop) {
+prop_type <- function(data, prop, processed = FALSE) {
   UseMethod("prop_type")
 }
 #' @S3method prop_type split_df
-prop_type.split_df <- function(data, prop) {
-  types <- vapply(data, prop_type, prop = prop, FUN.VALUE = character(1))
+prop_type.split_df <- function(data, prop, processed = FALSE) {
+  types <- vapply(data, prop_type, prop = prop, processed = processed,
+    FUN.VALUE = character(1))
   if (!all_same(types)) {
     stop("Inconsistent types", call. = FALSE)
   }
   types[1]
 }
 #' @S3method prop_type data.frame
-prop_type.data.frame <- function(data, prop) {
-  prop_type(prop_value(prop, data))
+prop_type.data.frame <- function(data, prop, processed = FALSE) {
+  prop_type(prop_value(prop, data, processed))
 }
 #' @S3method prop_type POSIXt
 prop_type.POSIXt <- function(data, prop) "time"
