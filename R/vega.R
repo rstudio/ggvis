@@ -152,6 +152,8 @@ vega_process_node <- function(node, envir, scales) {
 
       vega_node$type <- "group"
 
+      # group nodes need a transform of some type to work. If there's no
+      # operation to be done, use type="facet" and keys=NULL.
       if (is.null(node$split)) {
         facet_keys <- NULL
       } else {
@@ -159,12 +161,11 @@ vega_process_node <- function(node, envir, scales) {
       }
 
       vega_node$from <- list(
-        data = node$data_id
-#         ,
-#         transform = list(list(
-#           type = "facet",
-#           keys = facet_keys
-#         ))
+        data = node$data_id,
+        transform = list(list(
+          type = "facet",
+          keys = facet_keys
+        ))
       )
     }
   }
