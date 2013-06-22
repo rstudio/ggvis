@@ -24,6 +24,8 @@ vega_spec <- function(gv,
 
   } else {
     datasets <- gather_datasets(gv)
+    props <- gather_props(gv)
+    datasets <- apply_props(datasets, props)
     scales <- add_scales(gv)
 
     # Convert data frames to vega format
@@ -66,13 +68,60 @@ vega_spec <- function(gv,
 # sends all datasets to vega, even though internal nodes probably don't need
 # to sent
 gather_datasets <- function(node) {
-  data <- setNames(list(node$data_obj), node$data_id)
-  if (is.null(node$children)) return(data)
+  if (is.null(node$data_id))
+    data_id <-NULL
+  else
+    data_id <- setNames(list(node$data_obj), node$data_id)
+
+  if (is.null(node$children)) return(data_id)
 
   children <- unlist(lapply(node$children, gather_datasets), recursive = FALSE)
-  all <- c(children, data)
+  all <- c(children, data_id)
   all[!duplicated(names(all))]
 }
+
+# Recursively traverse tree and collect all the variable props used, for each
+# data set.
+gather_props <- function(node) {
+  # Create a list with an entry for this data_id, containing the props for the
+  # data_id
+  data_id <- node$data_id
+  props <- list()
+  if (!is.null(data_id)) {
+    var_props <- Filter(is.variable, node$props)
+    names(var_props) <- vapply(var_props, prop_name, character(1))
+    props[[data_id]] <- var_props
+  }
+
+  if (is.null(node$children)) return(props)
+
+  children <- unlist(lapply(node$children, gather_props), recursive = FALSE)
+  all <- c(props, children)
+
+  # Merge the properties for each data_id (there may be multiple entries for
+  # each data_id)
+  all_names <- unique(names(all))
+  names(all_names) <- all_names
+  lapply(all_names, function(name) {
+    Reduce(merge_vectors, all[names(all) == name])
+  })
+}
+
+
+# Apply properties to each data object in the datasets list, creating
+# calculated columns and dropping unused columns.
+apply_props <- function(datasets, props) {
+  mapply(datasets, names(datasets), SIMPLIFY = FALSE,
+    FUN = function(data_obj, name) {
+      # Get/calculate columns
+      cols <- lapply(props[[name]], prop_value, data = data_obj)
+      names(cols) <- vapply(props[[name]], prop_name, character(1))
+
+      as.data.frame(compact(cols))
+    }
+  )
+}
+
 
 # Recursively process nodes in the gigvis tree, and return corresponding vega
 # tree.

@@ -91,14 +91,7 @@ gigvis_fill_tree <- function(node, parent = NULL, envir = NULL,
     node$data_id <- pipeline_id(node$data)
   }
   
-  if (is.mark(node)) {
-    # Base case: is a mark
-    cols <- lapply(node$props, prop_value, data = node$data_obj)
-    names(cols) <- vapply(node$props, prop_name, character(1))
-
-    node$data_obj <- as.data.frame(compact(cols))
-    node$data_id <- paste0(parent$data_id, "_", node$type)
-  } else {
+  if (!is.null(node$children)) {
     # Fill in children recursively
     node$children <- lapply(node$children, FUN = gigvis_fill_tree,
       parent = node, envir = envir, symbol_table = symbol_table)
