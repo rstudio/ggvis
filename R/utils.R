@@ -137,3 +137,15 @@ param_string <- function(x) {
 
   paste0("(", paste0(names(x), " = ", values, collapse = ", "), ")")
 }
+
+# Given a string, return a string that is safe as a Javascript variable. The
+# returned string consists of the first 10 "JS-safe" characters (for
+# readability), and if hash=TRUE, a hash of the entire string is appended (for
+# uniqueness).
+safe_jsvar <- function(x) {
+  paste(substr(gsub("[^a-zA-Z0-9]", "", x), 1, 10),
+        digest(x, algo = "crc32"), sep = "_")
+}
+
+# Returns TRUE if the string is a safe Javascript variable name, false otherwise
+is_safe_jsvar <- function(x) !grepl("[^a-zA-Z0-9]", x)

@@ -43,17 +43,21 @@ prop_value.variable <- function(x, data, processed = FALSE) {
 #' @S3method prop_name variable
 prop_name.variable <- function(x) {
   var <- x[[1]]
+
   if (is.symbol(var)) {
-    # var is a single variable; just return it
-    as.character(var)
+    # var is a single variable. If name is JS-safe, just return it; otherwise
+    # return a unique JS-safe version
+    var <- as.character(var)
+    if (is_safe_jsvar(var))
+      var
+    else
+      safe_jsvar(var)
 
   } else if (is.language(var)) {
-    # var is calculated; translate some of the special characters (so it doesn't
-    # cause problems in the Vega spec) and hash it (so that other calculated
-    # columns in the same data set won't have the same name).
-    var_str <- deparse(var)
-    paste(gsub("[^a-zA-Z0-9]", "_", var_str),
-          digest(var_str, algo = "crc32"), sep = "_")
+    # var is calculated from an expression; get a unique, JS-safe name. Prepend
+    # a string to so that an expression with same text as a var will have a
+    # different hash, e.g., the expression wt/mpg vs. the variable `wt/mpg`.
+    safe_jsvar(paste("[expr]", deparse(var)))
 
   } else {
     # var is a constant
