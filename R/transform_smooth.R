@@ -38,8 +38,13 @@ flow.transform_smooth <- function(x, props, data) {
     message("Guess transform_smooth(method = '", x$method, "')")
   }
   if (is.guess(x$formula)) {
-    x$formula <- if (x$method == "gam") y ~ s(x) else y ~ x
-    message("Guess transform_smooth(formula = '", x$formula, "')")
+    if (x$method == "gam")
+      formula <- sprintf("%s ~ s(%s)", props$y, props$x)
+    else
+      formula <- sprintf("%s ~ %s", props$y, props$x)
+
+    x$formula <- as.formula(formula)
+    message("Guess transform_smooth(formula = ", formula, ")")
   }
   x$method <- as.name(x$method)
 
@@ -59,11 +64,15 @@ smooth.split_df <- function(data, trans, x_var, y_var) {
 
 #' @S3method smooth data.frame
 smooth.data.frame <- function(data, trans, x_var, y_var) {
+  x_name <- prop_name(x_var)
+  y_name <- prop_name(y_var)
+
   env <- new.env(parent = globalenv())
   env$data <- data.frame(
-    x = prop_value(x_var, data),
-    y = prop_value(y_var, data)
+    prop_value(x_var, data),
+    prop_value(y_var, data)
   )
+  names(env$data) <- c(x_name, y_name)
 
   # Create model call and combine with ... captured earlier, evaluating in
   call <- substitute(method(formula, data = data), trans)
@@ -71,43 +80,45 @@ smooth.data.frame <- function(data, trans, x_var, y_var) {
   mod <- eval(call, env)
 
   # Make prediction
-  x_grid <- seq(min(env$data$x), max(env$data$x), length = trans$n)
-  predict_df(mod, x_grid, trans$se, trans$level)
+  x_grid <- seq(min(env$data[[x_name]]), max(env$data[[x_name]]), length = trans$n)
+  predict_df(mod, x_name, y_name, x_grid, trans$se, trans$level)
 }
 
 # Helper function to create data frame of predictions -------------------------
 
-predict_df <- function(model, x_grid, se, level) UseMethod("predict_df")
+predict_df <- function(model, x_name, y_name, x_grid, se, level) UseMethod("predict_df")
 
 #' @S3method predict_df lm
-predict_df.lm <- function(model, x_grid, se, level) {
-  dat <- data.frame(x = x_grid)
+predict_df.lm <- function(model, x_name, y_name, x_grid, se, level) {
+  dat <- data.frame(x_grid)
+  names(dat) <- x_name
   pred <- predict(model, newdata = dat, se = se,
     level = level, interval = if(se) "confidence" else "none")
 
   if (se) {
     fit <- as.data.frame(pred$fit)
-    names(fit) <- c("y", "y_min", "y_max")
+    names(fit) <- c(y_name, "y_min", "y_max")
     dat <- cbind(dat, fit, se = pred$se)
   } else {
-    dat$y <- as.vector(pred)
+    dat[[y_name]] <- as.vector(pred)
   }
   dat
 }
 
 #' @S3method predict_df loess
-predict_df.loess <- function(model, x_grid, se, level) {
-  dat <- data.frame(x = x_grid)
+predict_df.loess <- function(model, x_name, y_name, x_grid, se, level) {
+  dat <- data.frame(x_grid)
+  names(dat) <- x_name
   pred <- predict(model, newdata = dat, se = se)
 
   if (se) {
-    dat$y <- pred$fit
+    dat[[y_name]] <- pred$fit
     ci <- pred$se.fit * qt(level / 2 + .5, pred$df)
-    dat$y_min <- dat$y - ci
-    dat$y_max <- dat$y + ci
+    dat$y_min <- dat[[y_name]] - ci
+    dat$y_max <- dat[[y_name]] + ci
     dat$se <- pred$se.fit
   } else {
-    dat$y <- as.vector(pred)
+    dat[[y_name]] <- as.vector(pred)
   }
   dat
 }

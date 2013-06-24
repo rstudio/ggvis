@@ -52,10 +52,8 @@ gigvis("mtcars", props(x ~ wt, y ~ wt/mpg),
 gigvis("mtcars", props(x ~ wt, y ~ mpg),
   mark_symbol(fill = NA, stroke = "black"),
   node(
-    transform = transform_smooth(se = F),
-    node(
-      mark_line(stroke = "red")
-    )
+    data = transform_smooth(se = F),
+    mark_line(stroke = "red")
   )
 )
 
