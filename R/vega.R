@@ -25,7 +25,7 @@ vega_spec <- function(gv,
   } else {
     datasets <- gather_datasets(gv)
     props <- gather_props(gv)
-    datasets <- apply_props(datasets, props)
+    datasets <- apply_props_datasets(datasets, props)
     scales <- add_scales(gv)
 
     # Convert data frames to vega format
@@ -110,16 +110,14 @@ gather_props <- function(node) {
 
 # Apply properties to each data object in the datasets list, creating
 # calculated columns and dropping unused columns.
-apply_props <- function(datasets, props) {
-  mapply(datasets, names(datasets), SIMPLIFY = FALSE,
-    FUN = function(data_obj, name) {
-      # Get/calculate columns
-      cols <- lapply(props[[name]], prop_value, data = data_obj)
-      names(cols) <- vapply(props[[name]], prop_name, character(1))
-
-      as.data.frame(compact(cols))
-    }
-  )
+# @param datasets A named list of data objects
+# @param all_props A named list (with same names as datasets) of property lists
+apply_props_datasets <- function(datasets, all_props) {
+  # Make sure items in props are in the same order as datasets
+  all_props <- all_props[names(datasets)]
+  mapply(datasets, all_props, SIMPLIFY = FALSE, FUN = function(data, props) {
+    apply_props(data, props)
+  })
 }
 
 

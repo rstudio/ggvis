@@ -75,10 +75,7 @@ bin <- function(data, ...) UseMethod("bin")
 
 #' @S3method bin split_df
 bin.split_df <- function(x, x_var, ...) {
-  structure(
-    lapply(x, bin, x_var = x_var, ...),
-    class = "split_df"
-  )
+  split_df_apply(x, bin, x_var = x_var, ...)
 }
 
 #' @S3method bin data.frame

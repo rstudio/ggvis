@@ -43,3 +43,4 @@ Collate:
     'source-lazy.r'
     'guess.R'
     'split-df.r'
+    'apply_props.R'

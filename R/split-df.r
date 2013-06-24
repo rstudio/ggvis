@@ -30,3 +30,13 @@ split_df.split_df <- function(data, split) {
   pieces <- unlist(splits, recursive = FALSE, use.names = FALSE)
   structure(pieces, class = "split_df")
 }
+
+#' @export
+is.split_df <- function(x) inherits(x, "split_df")
+
+# A wrapper around lapply, which takes a split_df, applies a function to the
+# pieces, and returns a split_df.
+split_df_apply <- function(X, FUN, ...) {
+  assert_that(is.split_df(X))
+  structure(lapply(X, FUN, ...), class = "split_df")
+}

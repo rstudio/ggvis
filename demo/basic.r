@@ -61,10 +61,8 @@ gigvis("mtcars", props(x ~ wt, y ~ mpg),
 gigvis("mtcars", props(x ~ wt, y ~ mpg),
   mark_symbol(),
   node(
-    transform = transform_smooth(method = "lm", se = F),
-    node(
-      mark_line(stroke = "red")
-    )
+    data = transform_smooth(method = "lm", se = F),
+    mark_line(stroke = "red")
   )
 )
 
@@ -84,8 +82,9 @@ gigvis("mtcars", props(x ~ wt, y ~ mpg, stroke ~ cyl, fill ~ cyl),
     fill  = scale(name = "fill", type = "ordinal")
   ),
   node(
-    split = by_group("cyl"),
-    transform = transform_smooth(method = "lm", se = F),
+    data = pipeline(
+      by_group("cyl"),
+      transform_smooth(method = "lm", se = F)),
     mark_line(fill = NA)
   )
 )

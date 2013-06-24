@@ -56,10 +56,7 @@ smooth <- function(data, trans, x_var, y_var) UseMethod("smooth")
 
 #' @S3method smooth split_df
 smooth.split_df <- function(data, trans, x_var, y_var) {
-  structure(
-    lapply(data, smooth, trans = trans, x_var = x_var, y_var = y_var),
-    class = "split_df"
-  )
+  split_df_apply(data, smooth, trans = trans, x_var = x_var, y_var = y_var)
 }
 
 #' @S3method smooth data.frame
