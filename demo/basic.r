@@ -61,21 +61,21 @@ gigvis("mtcars", props(x ~ wt, y ~ mpg),
 gigvis("mtcars", props(x ~ wt, y ~ mpg),
   mark_symbol(),
   node(
-    data = transform_smooth(method = "lm", se = F),
+    data = transform_smooth(method = "lm"),
     mark_line(stroke = "red")
   )
 )
 
 
 # Scatter plot, colored by cyl
-gigvis("mtcars", props(x ~ wt, y ~ mpg, fill ~ cyl),
+gigvis("mtcars", props(x ~ wt, y ~ mpg, fill ~ factor(cyl)),
   scales = list(fill = scale(name = "fill", type = "ordinal")),
   mark_symbol()
 )
 
 
 # Scatter plot with linear model line for each level of cyl
-gigvis("mtcars", props(x ~ wt, y ~ mpg, stroke ~ cyl, fill ~ cyl),
+gigvis("mtcars", props(x ~ wt, y ~ mpg, stroke ~ factor(cyl), fill ~ factor(cyl)),
   mark_symbol(),
   scales = list(
     stroke = scale(name = "stroke", type = "ordinal"),
@@ -145,7 +145,7 @@ gigvis("mtcars", props(x ~ wt, y ~ mpg, stroke ~ cyl, fill ~ cyl),
 
 
 # Bar graph with continuous x
-gigvis("pressure",
+gigvis(pressure,
   props = props(x ~ temperature, y ~ pressure),
   scales = list(x = scale(name = "x", type = "linear")),
   mark_rect(y2 = 0, width = 15)
@@ -166,7 +166,7 @@ gigvis("mtcars",
   transform = transform_bin(binwidth = 1),
   scales = list(y = scale(name = "y", type = "linear", zero = TRUE)),
   node(
-    props = props(x ~ xmin__, x2 ~ xmax__, y ~ count__),
+    props = props(x ~ x_min__, x2 ~ xmax__, y ~ count__),
     mark_rect(y2 = 0)
   )
 )
