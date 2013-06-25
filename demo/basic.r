@@ -29,6 +29,17 @@ gigvis("mtcars", props(x ~ wt, y ~ mpg),
   )
 )
 
+# Two marks at different levels of the tree, with different mappings for a
+# variable
+gigvis("mtcars", props(x ~ wt, y ~ mpg),
+  mark_symbol(),
+  node(
+    props = props(y ~ qsec),
+    mark_symbol(fill = "red", size = 25)
+  )
+)
+
+
 # Two separate data sets, equal in the tree
 mtc1 <- mtcars[1:10, ]
 mtc2 <- mtcars[11:20, ]
@@ -42,6 +53,43 @@ gigvis(data = NULL, props = props(x ~ wt, y ~ mpg),
     mark_symbol(fill = "red", size = 40)
   )
 )
+
+# Scatter plot with one set of points with `cyl` mapped to stroke, and another set
+# with `am` mapped to fill
+gigvis("mtcars", props(x ~ wt, y ~ mpg),
+  scales = list(
+    stroke = scale(name = "stroke", type = "ordinal"),
+    fill = scale(name = "fill", type = "ordinal")
+  ),
+  node(
+    props = props(stroke ~ factor(cyl)),
+    mark_symbol(fill = NA)
+  ),
+  node(
+    props = props(fill ~ factor(am)),
+    mark_symbol(size = 25)
+  )
+)
+
+
+# Same as previous, but also with (useless) grouping in the nodes
+gigvis("mtcars", props(x ~ wt, y ~ mpg),
+  scales = list(
+    stroke = scale(name = "stroke", type = "ordinal"),
+    fill = scale(name = "fill", type = "ordinal")
+  ),
+  node(
+    data = by_group(variable(quote(factor(cyl)))),
+    props = props(stroke ~ factor(cyl)),
+    mark_symbol(fill = NA)
+  ),
+  node(
+    data = by_group(variable(quote(factor(am)))),
+    props = props(fill ~ factor(am)),
+    mark_symbol(size = 25)
+  )
+)
+
 
 # Basic scatter plot with calculations in property
 gigvis("mtcars", props(x ~ wt, y ~ wt/mpg),
@@ -106,54 +154,101 @@ gigvis("mtcars", props(x ~ wt, y ~ mpg, stroke ~ factor(cyl), fill ~ factor(cyl)
   )
 )
 
+# Scatter plot with loess lines for each level of factor(cyl), but the loess
+# is based on a different y variable.
+gigvis ("mtcars", props(x ~ wt, y ~ mpg),
+  mark_symbol(),
+  node(
+    data = pipeline(
+      by_group(variable(quote(cyl))),
+      transform_smooth()
+    ),
+    props = props(y ~ qsec),
+    mark_line(stroke = "red")
+  )
+)
+
 
 # Scatter plot with all black points and loess model line for each level of cyl
 gigvis("mtcars", props(x ~ wt, y ~ mpg),
   mark_symbol(fill = "#000000"),
   scales = list(stroke = scale(name = "stroke", type = "ordinal")),
   node(
-    split = by_group("cyl"),
-    props = props(stroke ~ cyl),
-    transform = transform_smooth(se = F),
+    data = pipeline(
+      by_group(variable(quote(factor(cyl)))),
+      transform_smooth(se = F)
+    ),
+    props = props(stroke ~ factor(cyl)),
     mark_line()
   )
 )
 
+
+# Scatter plot with loess model lines on different y variables, with split by
+# group
+gigvis("mtcars", props(x ~ wt, y ~ mpg),
+  mark_symbol(fill = "blue"),
+  node(
+    data = pipeline(
+      by_group(variable(quote(cyl))),
+      transform_smooth()
+    ),
+    mark_line(stroke = "blue")
+  ),
+  node(
+    data = pipeline(
+      by_group(variable(quote(cyl))),
+      transform_smooth()
+    ),
+    props = props(y ~ qsec),
+    mark_line(stroke = "red")
+  )
+)
+
+
 # Scatter plot with linear and loess model line for each level of cyl
-gigvis("mtcars", props(x ~ wt, y ~ mpg, stroke ~ cyl, fill ~ cyl),
+gigvis("mtcars", props(x ~ wt, y ~ mpg, stroke ~ factor(cyl), fill ~ factor(cyl)),
   mark_symbol(),
   scales = list(
     stroke = scale(name = "stroke", type = "ordinal"),
     fill  = scale(name = "fill", type = "ordinal")
   ),
   node(
-    split = by_group("cyl"),
-    transform = transform_smooth(method = "lm", se = F),
+    data = pipeline(
+      by_group(variable(quote(factor(cyl)))),
+      transform_smooth(method = "lm", se = F)
+    ),
     mark_line(fill = NA)
   ),
   node(
-    split = by_group("cyl"),
-    transform = transform_smooth(method = "loess", se = F),
+    data = pipeline(
+      by_group(variable(quote(factor(cyl)))),
+      transform_smooth(method = "loess", se = F)
+    ),
     mark_line(fill = NA)
   )
 )
 
 # Scatter plot with two linear model lines for each level of cyl, with different
 # mappings
-gigvis("mtcars", props(x ~ wt, y ~ mpg, stroke ~ cyl, fill ~ cyl),
+gigvis("mtcars", props(x ~ wt, y ~ mpg, stroke ~ factor(cyl), fill ~ factor(cyl)),
   mark_symbol(),
   scales = list(
     stroke = scale(name = "stroke", type = "ordinal"),
     fill  = scale(name = "fill", type = "ordinal")
   ),
   node(
-    split = by_group("cyl"),
-    transform = transform_smooth(method = "lm", se = F),
+    data = pipeline(
+      by_group(variable(quote(factor(cyl)))),
+      transform_smooth(method = "lm", se = F)
+    ),
     mark_line(fill = NA)
   ),
   node(
-    split = by_group("cyl"),
-    transform = transform_smooth(method = "lm", se = F),
+    data = pipeline(
+      by_group(variable(quote(factor(cyl)))),
+      transform_smooth(method = "lm", se = F)
+    ),
     props = props(y ~ qsec),
     mark_line(fill = NA, opacity = 0.25)
   )

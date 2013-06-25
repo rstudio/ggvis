@@ -65,8 +65,10 @@ constant_vars.split_df <- function(data) {
 }
 
 #' @S3method pipe_id transform
-pipe_id.transform <- function(x) {
-  paste(transform_type(x), digest(x, algo = "crc32"), sep = "_")
+pipe_id.transform <- function(x, props) {
+  # Hash the transform's settings, as well as props, since the props can affect
+  # the result (e.g., transform_bin's output depends on the x mapping)
+  paste(transform_type(x), digest(list(x, props), algo = "crc32"), sep = "_")
 }
 
 # Returns a string representing the transform type. For example, if it has

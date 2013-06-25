@@ -39,4 +39,4 @@ format.source_lazy <- function(x, ...) {
 is_source.source_lazy <- function(x) TRUE
 
 #' @S3method pipe_id source_lazy
-pipe_id.source_lazy <- function(x) x$name
+pipe_id.source_lazy <- function(x, props) x$name

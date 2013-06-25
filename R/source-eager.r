@@ -37,4 +37,4 @@ format.source_eager <- function(x) {
 is_source.source_eager <- function(x) TRUE
 
 #' @S3method pipe_id source_eager
-pipe_id.source_eager <- function(x) x$name
+pipe_id.source_eager <- function(x, props) x$name

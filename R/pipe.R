@@ -50,4 +50,4 @@ is_source.default <- function(x) FALSE
 
 
 # Give an abbreviated identifier for the pipe
-pipe_id <- function(x) UseMethod("pipe_id")
+pipe_id <- function(x, props) UseMethod("pipe_id")
