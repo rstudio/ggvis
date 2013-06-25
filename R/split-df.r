@@ -16,19 +16,22 @@ split_df <- function(data, split) {
 split_df.data.frame <- function(data, split) {
   if (is.null(split)) return(data)
 
-  stopifnot(is.character(split))
-  pieces <- unname(split(data, data[split], drop = TRUE))
-  structure(pieces, class = "split_df")
+  stopifnot(all(vapply(split, is.variable, logical(1))))
+
+  split_values <- lapply(split, prop_value, data, processed = FALSE)
+  pieces <- unname(split(data, split_values, drop = TRUE))
+  structure(pieces, class = "split_df", variables = split)
 }
 
 #' @S3method split_df split_df
 split_df.split_df <- function(data, split) {
   if (is.null(split)) return(data)
 
-  stopifnot(is.character(split))
-  splits <- lapply(data, function(x) split(x, x[split], drop = TRUE))
+  stopifnot(all(vapply(split, is.variable, logical(1))))
+
+  splits <- lapply(data, function(x) split_df(x, split))
   pieces <- unlist(splits, recursive = FALSE, use.names = FALSE)
-  structure(pieces, class = "split_df")
+  structure(pieces, class = "split_df", variables = c(data$variables, split))
 }
 
 #' @export
@@ -38,5 +41,9 @@ is.split_df <- function(x) inherits(x, "split_df")
 # pieces, and returns a split_df.
 split_df_apply <- function(X, FUN, ...) {
   assert_that(is.split_df(X))
-  structure(lapply(X, FUN, ...), class = "split_df")
+  structure(lapply(X, FUN, ...), class = "split_df",
+    variables = attr(X, "variables"))
 }
+
+# Returns the variables that a split_df is split on
+split_df_variables <- function(x) attr(x, "variables")

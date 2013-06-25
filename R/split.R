@@ -1,12 +1,13 @@
 #' Split data by group
 #'
-#' @param variables A character vector of variable names to split on.
+#' @param ... Variables to split on.
 #' @export
 #' @examples
-#' pl <- pipeline(mtcars, by_group("cyl"), transform_bin())
+#' pl <- pipeline(mtcars, by_group(variable(quote(cyl))), transform_bin())
 #' flow(pl, props(x ~ disp))
-by_group <- function(variables) {
-  stopifnot(is.character(variables))
+by_group <- function(...) {
+  variables <- list(...)
+  stopifnot(all(vapply(variables, is.variable, logical(1))))
 
   pipe(c("split_by_group", "split"), variables = variables)
 }

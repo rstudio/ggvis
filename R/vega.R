@@ -152,10 +152,13 @@ vega_process_node <- function(node, envir, scales) {
 
       # group nodes need a transform of some type to work. If there's no
       # operation to be done, use type="facet" and keys=NULL.
-      if (is.null(node$split)) {
-        facet_keys <- NULL
+      # Extract the split vars from the data object
+      if (is.split_df(node$data_obj)) {
+        split_vars <- vapply(split_df_variables(node$data_obj), prop_name,
+          character(1))
+        facet_keys <- paste("data", split_vars, sep = ".")
       } else {
-        facet_keys <- paste("data", node$split, sep = ".")
+        facet_keys <- NULL
       }
 
       vega_node$from <- list(

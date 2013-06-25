@@ -45,7 +45,9 @@ preserve_constants.split_df <- function(input, output) {
     rownames(constants) <- NULL
     merge_df(constants, output)
   }
-  structure(Map(preserve, input, output), class = "split_df")
+
+  structure(Map(preserve, input, output), class = "split_df",
+    variables = attr(input, "variables"))
 }
 
 constant_vars <- function(data) UseMethod("constant_vars")
