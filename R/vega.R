@@ -88,7 +88,10 @@ gather_props <- function(node) {
   data_id <- node$data_id
   props <- list()
   if (!is.null(data_id)) {
+    # Get variables from props
     var_props <- Filter(is.variable, node$props)
+    # Also get split vars from data_obj
+    var_props <- c(var_props, split_vars(node$data_obj))
     names(var_props) <- vapply(var_props, prop_name, character(1))
     props[[data_id]] <- var_props
   }
@@ -154,8 +157,7 @@ vega_process_node <- function(node, envir, scales) {
       # operation to be done, use type="facet" and keys=NULL.
       # Extract the split vars from the data object
       if (is.split_df(node$data_obj)) {
-        split_vars <- vapply(split_df_variables(node$data_obj), prop_name,
-          character(1))
+        split_vars <- vapply(split_vars(node$data_obj), prop_name, character(1))
         facet_keys <- paste("data", split_vars, sep = ".")
       } else {
         facet_keys <- NULL

@@ -74,7 +74,7 @@ gigvis("mtcars", props(x ~ wt, y ~ mpg, fill ~ factor(cyl)),
 )
 
 
-# Scatter plot with linear model line for each level of cyl
+# Scatter plot with linear model line for each level of factor(cyl)
 gigvis("mtcars", props(x ~ wt, y ~ mpg, stroke ~ factor(cyl), fill ~ factor(cyl)),
   mark_symbol(),
   scales = list(
@@ -84,6 +84,22 @@ gigvis("mtcars", props(x ~ wt, y ~ mpg, stroke ~ factor(cyl), fill ~ factor(cyl)
   node(
     data = pipeline(
       by_group(variable(quote(factor(cyl))),
+      transform_smooth(method = "lm", se = F)
+    ),
+    mark_line(fill = NA)
+  )
+)
+
+# Same as previous, but group by cyl instead of factor(cyl)
+gigvis("mtcars", props(x ~ wt, y ~ mpg, stroke ~ factor(cyl), fill ~ factor(cyl)),
+  mark_symbol(),
+  scales = list(
+    stroke = scale(name = "stroke", type = "ordinal"),
+    fill  = scale(name = "fill", type = "ordinal")
+  ),
+  node(
+    data = pipeline(
+      by_group(variable(quote(cyl))),
       transform_smooth(method = "lm", se = F)
     ),
     mark_line(fill = NA)

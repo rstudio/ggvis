@@ -45,5 +45,5 @@ split_df_apply <- function(X, FUN, ...) {
     variables = attr(X, "variables"))
 }
 
-# Returns the variables that a split_df is split on
-split_df_variables <- function(x) attr(x, "variables")
+#' @S3method split_vars split_df
+split_vars.split_df <- function(x) attr(x, "variables")
