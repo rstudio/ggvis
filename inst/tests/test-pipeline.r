@@ -42,15 +42,17 @@ test_that("pipeline objects are trimmed to sources", {
 })
 
 test_that("pipeline id", {
+  props <- props(x ~ wt, y ~ mpg)
+
   p <- pipeline("mtcars")
-  expect_identical(pipeline_id(p), "mtcars")
+  expect_identical(pipeline_id(p, props), "mtcars")
 
   p <- pipeline(source_eager(mtcars))
-  expect_identical(pipeline_id(p), "mtcars")
+  expect_identical(pipeline_id(p, props), "mtcars")
 
   p <- pipeline(NULL)
-  expect_identical(pipeline_id(p), NULL)
+  expect_identical(pipeline_id(p, props), NULL)
 
   p <- pipeline("mtcars", transform_bin())
-  expect_true(grepl("^mtcars_bin_", pipeline_id(p)))
+  expect_true(grepl("^mtcars_bin_", pipeline_id(p, props)))
 })
