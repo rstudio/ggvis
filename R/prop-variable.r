@@ -57,7 +57,7 @@ prop_name.variable <- function(x) {
     # var is calculated from an expression; get a unique, JS-safe name. Prepend
     # a string to so that an expression with same text as a var will have a
     # different hash, e.g., the expression wt/mpg vs. the variable `wt/mpg`.
-    safe_jsvar(paste("[expr]", deparse(var)))
+    safe_jsvar(paste("[e]", deparse(var)))
 
   } else {
     # var is a constant
