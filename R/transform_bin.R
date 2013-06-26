@@ -68,6 +68,7 @@ flow.transform_bin <- function(x, props, data) {
 
   output <- bin(data, x_var = props$x,
     binwidth = x$binwidth, origin = x$origin, right = x$right)
+  names(output)[names(output) == "x"] <- prop_name(props$x)
   preserve_constants(data, output)
 }
 
@@ -113,8 +114,11 @@ bin.numeric <- function(x, weight = NULL, binwidth = 1, origin = NULL, right = T
   x <- (left + right)/2
   width <- diff(breaks)
 
+  count <- as.numeric(tapply(weight, bins, sum, na.rm=TRUE))
+  count[is.na(count)] <- 0
+
   results <- data.frame(
-    count__ = as.numeric(tapply(weight, bins, sum, na.rm=TRUE)),
+    count__ = count,
     x = x,
     xmin__ = x - width/2,
     xmax__ = x + width/2,
