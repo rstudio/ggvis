@@ -50,7 +50,7 @@ prop_info <- function(node, name = NULL) {
     stringsAsFactors = FALSE)
 }
 
-add_scales <- function(node, datasets) {
+add_scales <- function(node) {
   needed <- needed_scales(node)
   
   by_scale <- split(needed, needed$scale)
