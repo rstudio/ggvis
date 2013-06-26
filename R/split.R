@@ -34,3 +34,6 @@ split_vars <- function(x) UseMethod("split_vars")
 
 #' @S3method split_vars default
 split_vars.default <- function(x) NULL
+
+#' @S3method split_vars split_by_group
+split_vars.split_by_group <- function(x) x$variables

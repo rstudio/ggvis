@@ -131,7 +131,7 @@ gigvis("mtcars", props(x ~ wt, y ~ mpg, stroke ~ factor(cyl), fill ~ factor(cyl)
   ),
   node(
     data = pipeline(
-      by_group(variable(quote(factor(cyl))),
+      by_group(variable(quote(factor(cyl)))),
       transform_smooth(method = "lm", se = F)
     ),
     mark_line(fill = NA)

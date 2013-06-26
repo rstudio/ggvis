@@ -16,17 +16,17 @@ vega_spec <- function(gv,
     symbol_table <- attr(gv, "symbol_table")
     scales <- gather_scales(gv, symbol_table)
 
-    # Convert data frames to vega format
     datasets <- lapply(names(symbol_table), function(name) {
       # Don't provide data now, just the name
       list(name = name)
     })
 
   } else {
-    datasets <- gather_datasets(gv)
-    props <- gather_props(gv)
-    datasets <- apply_props_datasets(datasets, props)
     scales <- add_scales(gv)
+    props <- gather_props(gv)
+
+    datasets <- gather_datasets(gv)
+    datasets <- apply_props_datasets(datasets, props)
 
     # Convert data frames to vega format
     datasets <- lapply(names(datasets), function(name) {
@@ -90,8 +90,8 @@ gather_props <- function(node) {
   if (!is.null(data_id)) {
     # Get variables from props
     var_props <- Filter(is.variable, node$props)
-    # Also get split vars from data_obj
-    var_props <- c(var_props, split_vars(node$data_obj))
+    # Also get split vars from the data pipeline
+    var_props <- c(var_props, split_vars(node$data))
     names(var_props) <- vapply(var_props, prop_name, character(1))
     props[[data_id]] <- var_props
   }
@@ -155,9 +155,9 @@ vega_process_node <- function(node, envir, scales) {
 
       # group nodes need a transform of some type to work. If there's no
       # operation to be done, use type="facet" and keys=NULL.
-      # Extract the split vars from the data object
-      if (is.split_df(node$data_obj)) {
-        split_vars <- vapply(split_vars(node$data_obj), prop_name, character(1))
+      # Extract the split vars from the pipeline
+      split_vars <- vapply(split_vars(node$data), prop_name, character(1))
+      if (length(split_vars) > 0) {
         facet_keys <- paste("data", split_vars, sep = ".")
       } else {
         facet_keys <- NULL

@@ -139,3 +139,9 @@ flow.pipeline <- function(x, props, data = NULL) {
 flow.NULL <- function(x, data, props) {
   data
 }
+
+
+#' @S3method split_vars pipeline
+split_vars.pipeline <- function(x) {
+  unlist(lapply(x, split_vars), recursive = FALSE)
+}
