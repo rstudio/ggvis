@@ -68,7 +68,6 @@ flow.transform_bin <- function(x, props, data) {
 
   output <- bin(data, x_var = props$x,
     binwidth = x$binwidth, origin = x$origin, right = x$right)
-  names(output)[names(output) == "x"] <- prop_name(props$x)
   preserve_constants(data, output)
 }
 
@@ -82,7 +81,9 @@ bin.split_df <- function(x, x_var, ...) {
 #' @S3method bin data.frame
 bin.data.frame <- function(x, x_var, ...) {
   x_val <- prop_value(x_var, x)
-  bin(x_val, ...)
+  binned <- bin(x_val, ...)
+  names(binned)[names(binned) == "x"] <- x_var
+  binned
 }
 
 #' @S3method bin numeric

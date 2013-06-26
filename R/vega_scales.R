@@ -18,6 +18,9 @@ needed_scales <- function(node, provided = NULL) {
   # Base case, no children (so a mark)
   if (is.null(node$children)) {
     info <- prop_info(node)
+    # Drop items that use a scale but don't have a variable (like constants)
+    info <- info[info$var != "", ]
+
     handled <- is.na(info$scale) | info$scale %in% provided
     return(info[handled, , drop = FALSE])
   }

@@ -272,55 +272,64 @@ gigvis("pressure",
 
 
 # Histogram, with specified width
-gigvis("mtcars",
+gigvis(
+  data = pipeline(mtcars, transform_bin(binwidth = 1)),
   props = props(x ~ wt),
-  transform = transform_bin(binwidth = 1),
   scales = list(y = scale(name = "y", type = "linear", zero = TRUE)),
   node(
-    props = props(x ~ x_min__, x2 ~ xmax__, y ~ count__),
-    mark_rect(y2 = 0)
+    props = props(x ~ xmin__, x2 ~ xmax__, y ~ count__,
+      y2 = constant(0, scale = TRUE)),
+    mark_rect()
   )
 )
 
 # Histogram, automatic binwidth
-diamonds <- ggplot2::diamonds
-gigvis("diamonds",
+gigvis(
+  data = pipeline(ggplot2::diamonds, transform_bin()),
   props = props(x ~ table),
-  transform = transform_bin(),
   scales = list(y = scale(name = "y", type = "linear", zero = TRUE)),
   node(
-    props = props(x ~ xmin__, x2 ~ xmax__, y ~ count__),
-    mark_rect(y2 = 0)
+    props = props(x ~ xmin__, x2 ~ xmax__, y ~ count__,
+      y2 = constant(0, scale = TRUE)),
+    mark_rect()
   )
 )
 
 # Histogram, fill by cyl
-gigvis("mtcars",
-  props = props(x ~ wt, fill ~ cyl),
-  transform = transform_bin(binwidth = 1),
-  split = by_group("cyl"),
+gigvis(
+  data = pipeline(
+    "mtcars",
+    by_group(variable(quote(factor(cyl)))),
+    transform_bin(binwidth = 1)
+  ),
+  props = props(x ~ wt, fill ~ factor(cyl)),
   scales = list(
     y = scale(name = "y", type = "linear", zero = TRUE),
     fill = scale(name = "fill", type = "ordinal")
   ),
   node(
-    props = props(x ~ xmin__, x2 ~ xmax__, y ~ count__),
-    mark_rect(y2 = 0)
+    props = props(x ~ xmin__, x2 ~ xmax__, y ~ count__,
+      y2 = constant(0, scale = TRUE)),
+    mark_rect()
   )
 )
 
 # Histogram, fill by cut
 diamonds <- ggplot2::diamonds
-gigvis("diamonds",
-  props = props(x ~ table, fill ~ cut),
-  split = by_group("cut"),
-  transform = transform_bin(),
+gigvis(
+  data = pipeline(
+    "diamonds",
+    by_group(variable(quote(factor(cut)))),
+    transform_bin()
+  ),
+  props = props(x ~ table, fill ~ factor(cut)),
   scales = list(
     y = scale(name = "y", type = "linear", zero = TRUE),
     fill = scale(name = "fill", type = "ordinal")
   ),
   node(
-    props = props(x ~ xmin__, x2 ~ xmax__, y ~ count__),
-    mark_rect(y2 = 0)
+    props = props(x ~ xmin__, x2 ~ xmax__, y ~ count__,
+                  y2 = constant(0, scale = TRUE)),
+    mark_rect()
   )
 )
