@@ -1,10 +1,19 @@
 # Given a gigvis object, return vega scales.
 add_scales <- function(node) {
   # Scales that will be filled in by default
-  default_scales <- c("x", "y", "stroke", "fill", "opacity")
-  # Find scales that are used in the tree
-  needed <- needed_scales(node, provided = default_scales)
+  default_scales <- do.call(scales,
+    lapply(c("x", "y", "stroke", "fill", "opacity"), scale))
+
+  # Find scales that are specified in the gigvis object
+  provided <- merge_scales(default_scales, node$scales)
+
+  # Find scales that are used in the tree: data, var, scale, prop
+  needed <- needed_scales(node, provided)
   by_scale <- split(needed, needed$scale)
+
+  # For scales that are used but not provided by user, examine the data to
+  # find the variable type
+  need_type <- by_scale[!names(by_scale) %in% names(node$scales)]
 
   # Get the appropriate scales. If supplied by user, use that; otherwise use
   # vega_scale to automatically generate the scale.
@@ -29,16 +38,28 @@ add_scales <- function(node) {
 # (but only if scale isn't already provided)
 
 # Find scales that are used by this node and descendents
+# @param node A gigvis node.
+# @param provided Scales that are provided. This is used in two ways: (1) props
+#   which use non-provided scales are dropped, and (2) if a provided scale
+#   does not specify a type, then the data_obj will be examined to find the
+#   type; otherwise the data_obj will not be examined. This is useful for
+#   dynamic gigvis plots, where running the pipelines (and generating data_obj)
+#   may be deferred for a later stage.
 needed_scales <- function(node, provided = NULL) {
-  provided <- unique(c(provided, names(node$scales)))
+  provided <- merge_scales(provided, node$scales)
   
   # Base case, no children (so a mark)
   if (is.null(node$children)) {
-    info <- prop_info(node)
+    # Find which scales we know the type of already (because it was provided)
+    known_types <- vapply(provided, function(x) x$type %||% "", character(1))
+    known_types <- known_types[nzchar(known_types)]
+
+    info <- prop_info(node, known_types = known_types)
+
     # Drop items that use a scale but don't have a variable (like constants)
     info <- info[info$var != "", ]
 
-    handled <- is.na(info$scale) | info$scale %in% provided
+    handled <- is.na(info$scale) | info$scale %in% names(provided)
     return(info[handled, , drop = FALSE])
   }
   
@@ -46,7 +67,11 @@ needed_scales <- function(node, provided = NULL) {
   do.call("rbind", children)
 }
 
-prop_info <- function(node, name = NULL) {
+# Get information about a property.
+# @param known_types A character vector of scales for which the type is already
+#   known. If the type is known, then there's no need to examine data_obj to
+#   find the type; if not known, then it will examine data_obj.
+prop_info <- function(node, name = NULL, known_types = character(0)) {
   if (is.null(name)) {
     all <- lapply(names(node$props), prop_info, node = node)
     return(do.call(rbind, all))
@@ -55,14 +80,22 @@ prop_info <- function(node, name = NULL) {
   prop <- node$props[[name]]
 
   scale <- prop_scale(prop, default_scale(name))
-  type <- prop_type(node$data_obj, prop, processed = TRUE)
+
+  # If type is known, use that; otherwise examine the data_obj to find type
+  if (name %in% names(known_types)) {
+    type <- known_types[[name]]
+  } else {
+    type <- prop_type(node$data_obj, prop, processed = TRUE)
+    type <- if (type %in% c("double", "integer")) "linear" else "ordinal"
+  }
+
   var <- prop_name(prop)
   
   data.frame(
     prop = name, 
     scale = scale, 
     var = var, 
-    var_type = type, 
+    var_type = type,
     data = node$data_id,
     stringsAsFactors = FALSE)
 }
@@ -101,12 +134,10 @@ vega_scale <- function(scale = NULL, scale_name, field, data, var_type) {
 
 
 scale_defaults <- function(scale, var_type) {
-  scale_type <- if (var_type %in% c("double", "integer")) "linear" else "ordinal"
-  
   if (scale == "x") {
     list(
       name   = scale,
-      type   = scale_type,
+      type   = var_type,
       range  = "width",
       zero   = FALSE,
       nice   = FALSE
@@ -114,7 +145,7 @@ scale_defaults <- function(scale, var_type) {
   } else if (scale == "y") {
     list(
       name   = scale,
-      type   = scale_type,
+      type   = var_type,
       range  = "height",
       zero   = FALSE,
       nice   = FALSE
@@ -123,18 +154,18 @@ scale_defaults <- function(scale, var_type) {
   } else if (scale == "stroke") {
     list(
       name   = scale,
-      type   = scale_type,
+      type   = var_type,
       range  = "category10"
     )
     
   } else if (scale == "fill") {
     list(
       name   = scale,
-      type   = scale_type,
+      type   = var_type,
       range  = "category10"
     )
     
   } else {
-    stop("Unknown scale: ", scale$name)
+    stop("Unknown scale: ", scale)
   }
 }
