@@ -268,8 +268,8 @@ gigvis(pressure,
 # Bar graph with ordinal x
 gigvis("pressure",
   props = props(x ~ temperature, y ~ pressure),
-  scales = scales(scale(name = "x", type = "ordinal")),
-  mark_rect(y2 = 0, width = list(offset = -4))
+  scales = scales(scale(name = "x", type = "linear")),
+  mark_rect(y2 = constant(0, scale = TRUE), width = list(offset = -4))
 )
 
 
