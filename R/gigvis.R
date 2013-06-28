@@ -11,8 +11,8 @@ gigvis <- function(data = NULL, props = NULL, ..., dynamic = FALSE) {
 #' @export
 node <- function(..., data = NULL, props = NULL, scales = NULL,
                  dynamic = FALSE) {
-  # assert_that(is.character(props), !is.null(names(props)))
-  if (is.null(scales))  scales <- list()
+  stopifnot(is.null(scales) || is.scales(scales))
+  if (is.null(scales))  scales <- scales()
 
   structure(
     list(

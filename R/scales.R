@@ -45,7 +45,7 @@ is.scale <- function(x) inherits(x, "scale")
 
 #' S3method format scale
 format.scale <- function(x, ...) {
-  sprintf("%s: %-7s zero:%s", x$name, x$type, x$zero)
+  sprintf("%-9s %-7s zero:%s", paste0(x$name, ":"), x$type, x$zero)
 }
 
 #' S3method print scale

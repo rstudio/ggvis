@@ -57,9 +57,9 @@ gigvis(data = NULL, props = props(x ~ wt, y ~ mpg),
 # Scatter plot with one set of points with `cyl` mapped to stroke, and another set
 # with `am` mapped to fill
 gigvis("mtcars", props(x ~ wt, y ~ mpg),
-  scales = list(
-    stroke = scale(name = "stroke", type = "ordinal"),
-    fill = scale(name = "fill", type = "ordinal")
+  scales = scales(
+    scale(name = "stroke", type = "ordinal"),
+    scale(name = "fill", type = "ordinal")
   ),
   node(
     props = props(stroke ~ factor(cyl)),
@@ -74,9 +74,9 @@ gigvis("mtcars", props(x ~ wt, y ~ mpg),
 
 # Same as previous, but also with (useless) grouping in the nodes
 gigvis("mtcars", props(x ~ wt, y ~ mpg),
-  scales = list(
-    stroke = scale(name = "stroke", type = "ordinal"),
-    fill = scale(name = "fill", type = "ordinal")
+  scales = scales(
+    scale(name = "stroke", type = "ordinal"),
+    scale(name = "fill", type = "ordinal")
   ),
   node(
     data = by_group(variable(quote(factor(cyl)))),
@@ -100,8 +100,10 @@ gigvis("mtcars", props(x ~ wt, y ~ wt/mpg),
 gigvis("mtcars", props(x ~ wt, y ~ mpg),
   mark_symbol(fill = NA, stroke = "black"),
   node(
-    data = transform_smooth(se = F),
-    mark_line(stroke = "red")
+    transform = transform_smooth(se = F),
+    node(
+      mark_line(stroke = "red")
+    )
   )
 )
 
@@ -117,7 +119,7 @@ gigvis("mtcars", props(x ~ wt, y ~ mpg),
 
 # Scatter plot, colored by cyl
 gigvis("mtcars", props(x ~ wt, y ~ mpg, fill ~ factor(cyl)),
-  scales = list(fill = scale(name = "fill", type = "ordinal")),
+  scales = scales(scale(name = "fill", type = "ordinal")),
   mark_symbol()
 )
 
@@ -125,9 +127,9 @@ gigvis("mtcars", props(x ~ wt, y ~ mpg, fill ~ factor(cyl)),
 # Scatter plot with linear model line for each level of factor(cyl)
 gigvis("mtcars", props(x ~ wt, y ~ mpg, stroke ~ factor(cyl), fill ~ factor(cyl)),
   mark_symbol(),
-  scales = list(
-    stroke = scale(name = "stroke", type = "ordinal"),
-    fill  = scale(name = "fill", type = "ordinal")
+  scales = scales(
+    scale(name = "stroke", type = "ordinal"),
+    scale(name = "fill", type = "ordinal")
   ),
   node(
     data = pipeline(
@@ -141,9 +143,9 @@ gigvis("mtcars", props(x ~ wt, y ~ mpg, stroke ~ factor(cyl), fill ~ factor(cyl)
 # Same as previous, but group by cyl instead of factor(cyl)
 gigvis("mtcars", props(x ~ wt, y ~ mpg, stroke ~ factor(cyl), fill ~ factor(cyl)),
   mark_symbol(),
-  scales = list(
-    stroke = scale(name = "stroke", type = "ordinal"),
-    fill  = scale(name = "fill", type = "ordinal")
+  scales = scales(
+    scale(name = "stroke", type = "ordinal"),
+    scale(name = "fill", type = "ordinal")
   ),
   node(
     data = pipeline(
@@ -172,7 +174,7 @@ gigvis ("mtcars", props(x ~ wt, y ~ mpg),
 # Scatter plot with all black points and loess model line for each level of cyl
 gigvis("mtcars", props(x ~ wt, y ~ mpg),
   mark_symbol(fill = "#000000"),
-  scales = list(stroke = scale(name = "stroke", type = "ordinal")),
+  scales = scales(scale(name = "stroke", type = "ordinal")),
   node(
     data = pipeline(
       by_group(variable(quote(factor(cyl)))),
@@ -209,9 +211,9 @@ gigvis("mtcars", props(x ~ wt, y ~ mpg),
 # Scatter plot with linear and loess model line for each level of cyl
 gigvis("mtcars", props(x ~ wt, y ~ mpg, stroke ~ factor(cyl), fill ~ factor(cyl)),
   mark_symbol(),
-  scales = list(
-    stroke = scale(name = "stroke", type = "ordinal"),
-    fill  = scale(name = "fill", type = "ordinal")
+  scales = scales(
+    scale(name = "stroke", type = "ordinal"),
+    scale(name = "fill", type = "ordinal")
   ),
   node(
     data = pipeline(
@@ -233,9 +235,9 @@ gigvis("mtcars", props(x ~ wt, y ~ mpg, stroke ~ factor(cyl), fill ~ factor(cyl)
 # mappings
 gigvis("mtcars", props(x ~ wt, y ~ mpg, stroke ~ factor(cyl), fill ~ factor(cyl)),
   mark_symbol(),
-  scales = list(
-    stroke = scale(name = "stroke", type = "ordinal"),
-    fill  = scale(name = "fill", type = "ordinal")
+  scales = scales()
+    scale(name = "stroke", type = "ordinal"),
+    scale(name = "fill", type = "ordinal")
   ),
   node(
     data = pipeline(
@@ -258,7 +260,7 @@ gigvis("mtcars", props(x ~ wt, y ~ mpg, stroke ~ factor(cyl), fill ~ factor(cyl)
 # Bar graph with continuous x
 gigvis(pressure,
   props = props(x ~ temperature, y ~ pressure),
-  scales = list(x = scale(name = "x", type = "linear")),
+  scales = scales(scale(name = "x", type = "linear")),
   mark_rect(y2 = 0, width = 15)
 )
 
@@ -266,7 +268,7 @@ gigvis(pressure,
 # Bar graph with ordinal x
 gigvis("pressure",
   props = props(x ~ temperature, y ~ pressure),
-  scales = list(x = scale(name = "x", type = "ordinal")),
+  scales = scales(scale(name = "x", type = "ordinal")),
   mark_rect(y2 = 0, width = list(offset = -4))
 )
 
@@ -275,7 +277,7 @@ gigvis("pressure",
 gigvis(
   data = pipeline(mtcars, transform_bin(binwidth = 1)),
   props = props(x ~ wt),
-  scales = list(y = scale(name = "y", type = "linear", zero = TRUE)),
+  scales = scales(scale(name = "y", type = "linear", zero = TRUE)),
   node(
     props = props(x ~ xmin__, x2 ~ xmax__, y ~ count__,
       y2 = constant(0, scale = TRUE)),
@@ -287,7 +289,7 @@ gigvis(
 gigvis(
   data = pipeline(ggplot2::diamonds, transform_bin()),
   props = props(x ~ table),
-  scales = list(y = scale(name = "y", type = "linear", zero = TRUE)),
+  scales = scales(scale(name = "y", type = "linear", zero = TRUE)),
   node(
     props = props(x ~ xmin__, x2 ~ xmax__, y ~ count__,
       y2 = constant(0, scale = TRUE)),
@@ -303,9 +305,9 @@ gigvis(
     transform_bin(binwidth = 1)
   ),
   props = props(x ~ wt, fill ~ factor(cyl)),
-  scales = list(
-    y = scale(name = "y", type = "linear", zero = TRUE),
-    fill = scale(name = "fill", type = "ordinal")
+  scales = scales(
+    scale(name = "y", type = "linear", zero = TRUE),
+    scale(name = "fill", type = "ordinal")
   ),
   node(
     props = props(x ~ xmin__, x2 ~ xmax__, y ~ count__,
@@ -323,9 +325,9 @@ gigvis(
     transform_bin()
   ),
   props = props(x ~ table, fill ~ factor(cut)),
-  scales = list(
-    y = scale(name = "y", type = "linear", zero = TRUE),
-    fill = scale(name = "fill", type = "ordinal")
+  scales = scales(
+    scale(name = "y", type = "linear", zero = TRUE),
+    scale(name = "fill", type = "ordinal")
   ),
   node(
     props = props(x ~ xmin__, x2 ~ xmax__, y ~ count__,
