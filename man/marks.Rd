@@ -9,42 +9,19 @@
 \alias{marks}
 \title{Vega mark properties.}
 \usage{
-  mark_symbol(x = NULL, y = NULL, opacity = NULL,
-    fill = NULL, fillOpacity = NULL, stroke = NULL,
-    strokeWidth = NULL, strokeOpacity = NULL, size = NULL,
-    shape = NULL)
+  mark_symbol(...)
 
-  mark_image(x = NULL, y = NULL, opacity = NULL,
-    fill = NULL, fillOpacity = NULL, stroke = NULL,
-    strokeWidth = NULL, strokeOpacity = NULL, url = NULL,
-    align = NULL, baseline = NULL)
+  mark_image(...)
 
-  mark_arc(x = NULL, y = NULL, opacity = NULL, fill = NULL,
-    fillOpacity = NULL, stroke = NULL, strokeWidth = NULL,
-    strokeOpacity = NULL, innerRadius = NULL,
-    outerRadius = NULL, startAngle = NULL, endAngle = NULL)
+  mark_arc(...)
 
-  mark_area(x = NULL, y = NULL, opacity = NULL,
-    fill = NULL, fillOpacity = NULL, stroke = NULL,
-    strokeWidth = NULL, strokeOpacity = NULL,
-    interpolote = NULL, tension = NULL)
+  mark_area(...)
 
-  mark_line(x = NULL, y = NULL, opacity = NULL,
-    fill = NULL, stroke = NULL, strokeWidth = NULL,
-    strokeOpacity = NULL, interpolote = NULL,
-    tension = NULL)
+  mark_line(...)
 
-  mark_rect(x = NULL, x2 = NULL, y = NULL, y2 = NULL,
-    width = NULL, opacity = NULL, fill = NULL,
-    fillOpacity = NULL, stroke = NULL, strokeWidth = NULL,
-    strokeOpacity = NULL)
+  mark_rect(...)
 
-  mark_text(x = NULL, y = NULL, text = NULL,
-    opacity = NULL, fill = NULL, fillOpacity = NULL,
-    stroke = NULL, strokeWidth = NULL,
-    strokeOpacity = NULL, align = NULL, baseline = NULL,
-    dx = NULL, dy = NULL, angle = NULL, font = NULL,
-    fontSize = NULL, fontWeight = NULL, fontStyle = NULL)
+  mark_text(...)
 }
 \arguments{
   \item{x}{The first (typically left-most) x-coordinate.}

@@ -29,11 +29,6 @@ vega_mark_properties <- function(mark, scales) {
     FUN = vega_mark_property, SIMPLIFY = FALSE)
 }
 
-# Return a named list of default properties for a mark.
-default_mark_properties <- function(mark) {
-  UseMethod("default_mark_properties")
-}
-
 # Given a gigvis mark object, return a vector of strings of valid vega
 # mark properties
 valid_vega_mark_properties <- function(mark) {

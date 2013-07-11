@@ -1,6 +1,17 @@
 library(gigvis)
 library(shiny)
 
+# Basic dynamic example
+mtc1 <- reactive({invalidateLater(2000); mtcars[sample(1:10, 5), ]})
+p <- gigvis(
+  data = mtc1,
+  props = props(x ~ wt, y ~ mpg),
+  mark_symbol()
+)
+view_dynamic(p)
+
+
+
 # Two separate data sets, equal in the tree
 mtc1 <- reactive({invalidateLater(2000); mtcars[sample(1:10, 5), ]})
 mtc2 <- reactive({invalidateLater(2000); mtcars[sample(11:20, 5), ]})

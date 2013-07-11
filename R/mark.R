@@ -1,9 +1,18 @@
 
 mark <- function(type, ...) {
-  structure(
+  m <- structure(
     list(type = type, props = props(...)),
     class = c(paste0("mark_", type), "mark", "gigvis_node")
   )
+
+  # Check that the properties are valid for the type of mark
+  valid_props <- names(m$props) %in% valid_mark_properties(m)
+  if (!all(valid_props)) {
+    stop("Invalid properties: ",
+      paste(names(m$props)[!valid_props], sep = ", "))
+  }
+
+  m
 }
 
 #' export
@@ -11,6 +20,7 @@ is.mark <- function(x) inherits(x, "mark")
 
 #' @S3method print mark
 print.mark <- function(x, ...) str(x)
+
 
 #' Vega mark properties.
 #'
@@ -66,18 +76,28 @@ print.mark <- function(x, ...) str(x)
 #' @name marks
 NULL
 
+# Return a character vector of valid properties for a given mark
+valid_mark_properties <- function(mark) UseMethod("valid_mark_properties")
+#' @S3method valid_mark_properties default
+valid_mark_properties.default <- function(mark) {
+  stop("Unknown mark type: ", paste(class(mark), collapse=", "))
+}
+
+# Return a named list of default properties for a mark.
+default_mark_properties <- function(mark) UseMethod("default_mark_properties")
+#' @S3method default_mark_properties default
+default_mark_properties.default <- function(mark) {
+  stop("Unknown mark type: ", paste(class(mark), collapse=", "))
+}
+
+
 #' @rdname marks
 #' @export
-mark_symbol <- function(x = NULL, y = NULL, opacity = NULL,
-                       fill = NULL, fillOpacity = NULL,
-                       stroke = NULL, strokeWidth = NULL, strokeOpacity = NULL,
-                       size = NULL, shape = NULL) {
-
-  mark("symbol", x = x, y = y, opacity = opacity,
-    fill = fill, fillOpacity = fillOpacity,
-    stroke = stroke, strokeWidth = strokeWidth, strokeOpacity = strokeOpacity,
-    size = size, shape = shape)
-
+mark_symbol <- function(...) mark("symbol", ...)
+#' @S3method valid_mark_properties mark_symbol
+valid_mark_properties.mark_symbol <- function(mark) {
+  c("x", "y", "opacity", "fill", "fillOpacity", "stroke", "strokeWidth",
+    "strokeOpacity", "size", "shape")
 }
 #' @S3method default_mark_properties mark_symbol
 default_mark_properties.mark_symbol <- function(mark) {
@@ -87,16 +107,11 @@ default_mark_properties.mark_symbol <- function(mark) {
 
 #' @rdname marks
 #' @export
-mark_image <- function(x = NULL, y = NULL, opacity = NULL,
-                       fill = NULL, fillOpacity = NULL,
-                       stroke = NULL, strokeWidth = NULL, strokeOpacity = NULL,
-                       url = NULL, align = NULL, baseline = NULL) {
-
-  mark("image", x = x, y = y, opacity = opacity,
-       fill = fill, fillOpacity = fillOpacity,
-       stroke = stroke, strokeWidth = strokeWidth, strokeOpacity = strokeOpacity,
-       url = url, align = align, baseline = baseline)
-
+mark_image <- function(...) mark("image", ...)
+#' @S3method valid_mark_properties mark_image
+valid_mark_properties.mark_image <- function(mark) {
+  c("x", "y", "opacity", "fill", "fillOpacity", "stroke", "strokeWidth",
+    "strokeOpacity", "url", "align", "baseline")
 }
 #' @S3method default_mark_properties mark_image
 default_mark_properties.mark_image <- function(mark) {
@@ -106,37 +121,26 @@ default_mark_properties.mark_image <- function(mark) {
 
 #' @rdname marks
 #' @export
-mark_arc <- function(x = NULL, y = NULL, opacity = NULL,
-                     fill = NULL, fillOpacity = NULL,
-                     stroke = NULL, strokeWidth = NULL, strokeOpacity = NULL,
-                     innerRadius = NULL, outerRadius = NULL,
-                     startAngle = NULL, endAngle = NULL) {
-
-  mark("arc", x = x, y = y, opacity = opacity,
-       fill = fill, fillOpacity = fillOpacity,
-       stroke = stroke, strokeWidth = strokeWidth, strokeOpacity = strokeOpacity,
-       innerRadius = innerRadius, outerRadius = outerRadius,
-       startAngle = startAngle, endAngle = endAngle)
+mark_arc <- function(...) mark("arc", ...)
+#' @S3method valid_mark_properties mark_arc
+valid_mark_properties.mark_arc <- function(mark) {
+  c("x", "y", "opacity", "fill", "fillOpacity", "stroke", "strokeWidth",
+    "strokeOpacity", "innerRadius", "outerRadius", "startAngle", "endAngle")
 }
-
 #' @S3method default_mark_properties mark_arc
 default_mark_properties.mark_arc <- function(mark) {
   props(fill = "#333333")
 }
 
+
 #' @rdname marks
 #' @export
-mark_area <- function(x = NULL, y = NULL, opacity = NULL,
-                      fill = NULL, fillOpacity = NULL,
-                      stroke = NULL, strokeWidth = NULL, strokeOpacity = NULL,
-                      interpolote = NULL, tension = NULL) {
-
-  mark("arc", x = x, y = y, opacity = opacity,
-       fill = fill, fillOpacity = fillOpacity,
-       stroke = stroke, strokeWidth = strokeWidth, strokeOpacity = strokeOpacity,
-       interpolote = interpolote, tension = tension)
+mark_area <- function(...) mark("area", ...)
+#' @S3method valid_mark_properties mark_area
+valid_mark_properties.mark_area <- function(mark) {
+  c("x", "y", "opacity", "fill", "fillOpacity", "stroke", "strokeWidth",
+    "strokeOpacity", "interpolate", "tension")
 }
-
 #' @S3method default_mark_properties mark_area
 default_mark_properties.mark_area <- function(mark) {
   props(fill = "#333333")
@@ -145,14 +149,11 @@ default_mark_properties.mark_area <- function(mark) {
 
 #' @rdname marks
 #' @export
-mark_line <- function(x = NULL, y = NULL, opacity = NULL,
-                      fill = NULL, stroke = NULL, strokeWidth = NULL,
-                      strokeOpacity = NULL, interpolote = NULL, tension = NULL) {
-
-  mark("line", x = x, y = y, opacity = opacity, fill = fill,
-    stroke = stroke, strokeWidth = strokeWidth, strokeOpacity = strokeOpacity,
-    interpolote = interpolote, tension = tension)
-
+mark_line <- function(...) mark("line", ...)
+#' @S3method valid_mark_properties mark_line
+valid_mark_properties.mark_line <- function(mark) {
+  c("x", "y", "opacity", "fill", "fillOpacity", "stroke", "strokeWidth",
+    "strokeOpacity", "interpolate", "tension")
 }
 #' @S3method default_mark_properties mark_line
 default_mark_properties.mark_line <- function(mark) {
@@ -161,14 +162,11 @@ default_mark_properties.mark_line <- function(mark) {
 
 #' @export
 #' @rdname marks
-mark_rect <- function(x = NULL, x2 = NULL, y = NULL, y2 = NULL, width = NULL,
-                      opacity = NULL,
-                      fill = NULL, fillOpacity = NULL,
-                      stroke = NULL, strokeWidth = NULL, strokeOpacity = NULL) {
-  mark("rect", x = x, x2 = x2, y = y, y2 = y2, width = width,
-    opacity = opacity,
-    fill = fill, fillOpacity = fillOpacity,
-    stroke = stroke, strokeWidth = strokeWidth, strokeOpacity = strokeOpacity)
+mark_rect <- function(...) mark("rect", ...)
+#' @S3method valid_mark_properties mark_rect
+valid_mark_properties.mark_rect <- function(mark) {
+  c("x", "x2", "y", "y2", "width", "opacity", "fill", "fillOpacity", "stroke",
+    "strokeWidth", "strokeOpacity")
 }
 #' @S3method default_mark_properties mark_rect
 default_mark_properties.mark_rect <- function(mark) {
@@ -177,21 +175,13 @@ default_mark_properties.mark_rect <- function(mark) {
 
 #' @export
 #' @rdname marks
-mark_text <- function(x = NULL, y = NULL, text = NULL, opacity = NULL,
-                      fill = NULL, fillOpacity = NULL,
-                      stroke = NULL, strokeWidth = NULL, strokeOpacity = NULL,
-                      align = NULL, baseline = NULL, dx = NULL, dy = NULL,
-                      angle = NULL, font = NULL, fontSize = NULL,
-                      fontWeight = NULL, fontStyle = NULL) {
-
-  mark("text", x = x, y = y, text = text, opacity = opacity,
-       fill = fill, fillOpacity = fillOpacity,
-       stroke = stroke, strokeWidth = strokeWidth, strokeOpacity = strokeOpacity,
-       align = align, baseline = baseline, dx = dx, dy = dy,
-       angle = angle, font = font, fontSize = fontSize,
-       fontWeight = fontWeight, fontStyle = fontStyle)
+mark_text <- function(...) mark("text", ...)
+#' @S3method valid_mark_properties mark_text
+valid_mark_properties.mark_text <- function(mark) {
+  c("x", "y", "text", "opacity", "fill", "fillOpacity", "stroke",
+    "strokeWidth", "strokeOpacity", "align", "baseline", "dx", "dy",
+    "angle", "font", "fontSize", "fontWeight", "fontStyle")
 }
-
 #' @S3method default_mark_properties mark_text
 default_mark_properties.mark_text <- function(mark) {
   props(fill = "#333333")

@@ -235,7 +235,7 @@ gigvis("mtcars", props(x ~ wt, y ~ mpg, stroke ~ factor(cyl), fill ~ factor(cyl)
 # mappings
 gigvis("mtcars", props(x ~ wt, y ~ mpg, stroke ~ factor(cyl), fill ~ factor(cyl)),
   mark_symbol(),
-  scales = scales()
+  scales = scales(
     scale(name = "stroke", type = "ordinal"),
     scale(name = "fill", type = "ordinal")
   ),
@@ -261,7 +261,7 @@ gigvis("mtcars", props(x ~ wt, y ~ mpg, stroke ~ factor(cyl), fill ~ factor(cyl)
 gigvis(pressure,
   props = props(x ~ temperature, y ~ pressure),
   scales = scales(scale(name = "x", type = "linear")),
-  mark_rect(y2 = 0, width = 15)
+  mark_rect(y2 = constant(0, scale = TRUE), width = 15)
 )
 
 
