@@ -12,6 +12,16 @@ test_that("merge_vectors behaves as expected", {
   expect_identical(merge_vectors(NULL, c(a=1, b=2)), c(a=1, b=2))
   expect_identical(merge_vectors(c(a=1, b=2), NULL), c(a=1, b=2))
 
+  # Lists and empty lists
+  expect_identical(merge_vectors(list(a=1, b=2), list(b=3, c=4)),
+                   list(a=1, b=3, c=4))
+  expect_identical(merge_vectors(list(a=1, b=2), list()),
+                   list(a=1, b=2))
+  expect_identical(merge_vectors(list(), list(a=1, b=2)),
+                   list(a=1, b=2))
+
+  expect_identical(merge_vectors(c(a=1, b=2), NULL), c(a=1, b=2))
+
   expect_error(merge_vectors(c(1, 2), c(1, 2)))
   expect_error(merge_vectors(c(1, 2), c(a=1, b=2)))
   expect_error(merge_vectors(c(a=1, b=2), c(1, 2)))
