@@ -29,15 +29,9 @@ vega_mark_properties <- function(mark, scales) {
     FUN = vega_mark_property, SIMPLIFY = FALSE)
 }
 
-# Given a gigvis mark object, return a vector of strings of valid vega
-# mark properties
-valid_vega_mark_properties <- function(mark) {
-  names(formals(get(paste0("mark_", mark))))
-}
-
 #' @importFrom utils adist
 check_mark_props <- function(mark, props) {
-  valid <- valid_vega_mark_properties(mark)
+  valid <- valid_mark_properties(mark)
   
   invalid <- setdiff(props, valid)
   if (length(invalid) == 0) return(invisible(TRUE))
