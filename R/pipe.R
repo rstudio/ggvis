@@ -37,6 +37,11 @@ as.pipe.character <- function(x, ...) {
   source_lazy(x)
 }
 
+#' @S3method as.pipe function
+as.pipe.function <- function(x, ...) {
+  source_function(x)
+}
+
 #' @S3method print pipe
 print.pipe <- function(x, ...) {
   cat(format(x, ...), "\n", sep = "")

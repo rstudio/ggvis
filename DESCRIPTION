@@ -44,3 +44,4 @@ Collate:
     'guess.R'
     'split-df.r'
     'apply_props.R'
+    'source-function.R'
