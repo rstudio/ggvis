@@ -37,6 +37,11 @@ as.pipe.character <- function(x, ...) {
   source_lazy(x)
 }
 
+#' @S3method as.pipe refMethodDef
+as.pipe.refMethodDef <- function(x, ...) {
+  source_reactive(x)
+}
+
 #' @S3method as.pipe function
 as.pipe.function <- function(x, ...) {
   source_function(x)
