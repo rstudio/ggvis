@@ -79,6 +79,10 @@ as.pipeline.list <- function(x, ...) {
 as.pipeline.character <- function(x, ...) pipeline(source_lazy(x))
 #' @S3method as.pipeline NULL
 as.pipeline.NULL <- function(x, ...) pipeline(NULL)
+#' @S3method as.pipeline refMethodDef
+as.pipeline.refMethodDef <- function(x, ...) pipeline(source_reactive(x))
+#' @S3method as.pipeline function
+as.pipeline.function <- function(x, ...) pipeline(source_function(x))
 
 #' @S3method as.pipeline pipe
 as.pipeline.pipe <- function(x, ...) pipeline(x)
