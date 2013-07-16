@@ -83,9 +83,8 @@ gigvis_fill_tree <- function(node, parent = NULL, envir = NULL,
     }
 
   } else {
-    pipe <- source_eager(parent$data_obj, name = parent$data_id)
-    node$data <- c(as.pipeline(pipe), node$data)
-    node$data_obj <- flow(node$data, node$props)
+    # Connect this node's data pipeline to the parent's
+    node$data <- c(as.pipeline(parent$data), node$data)
 
     # Give an id to the data object; this becomes the vega 'data' field.
     node$data_id <- pipeline_id(node$data, node$props)
