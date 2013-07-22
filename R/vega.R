@@ -7,7 +7,7 @@
 #'   of the gigvis object.
 #' @export
 vega_spec <- function(gv,
-                      width = 600, height = 400, padding = c(20, 80, 30, 50),
+                      width = 600, height = 400, padding = NULL,
                       envir = parent.frame()) {
 
   if (gv$dynamic) {
@@ -35,7 +35,6 @@ vega_spec <- function(gv,
     })
   }
 
-
   # These are key-values that only appear at the top level of the tree
   spec <- list(
     width = width,
@@ -44,14 +43,17 @@ vega_spec <- function(gv,
     scales = scales,
     legends = legends,
 
-    axes = list(list(type = "x", scale = "x"), list(type = "y", scale = "y")),
-    padding = c(
+    axes = list(list(type = "x", scale = "x"), list(type = "y", scale = "y"))
+  )
+
+  if (!is.null(padding)) {
+    spec$padding <- c(
       top = padding[1],
       right = padding[2],
       bottom = padding[3],
       left = padding[4]
     )
-  )
+  }
 
   # Now deal with keys that also appear in lower levels of the tree, and merge
   # them in to the spec.
