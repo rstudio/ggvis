@@ -1,9 +1,9 @@
-vg = (function(d3){ // take d3 instance as sole import
-var vg = {};
-
-// semantic versioning
-vg.version = '1.3.0';
-
+vg = (function(d3, topojson) { // take d3 & topojson as imports
+  var vg = {
+    version:  "1.3.0", // semantic versioning
+    d3:       d3,      // stash d3 for use in property functions
+    topojson: topojson // stash topojson similarly
+  };
 // type checking functions
 var toString = Object.prototype.toString;
 
@@ -29,6 +29,10 @@ vg.isNumber = function(obj) {
 
 vg.isBoolean = function(obj) {
   return toString.call(obj) == '[object Boolean]';
+};
+
+vg.isTree = function(obj) {
+  return vg.isArray(obj) && obj.__vgtree__;
 };
 
 vg.number = function(s) { return +s; };
@@ -103,10 +107,16 @@ vg.values = function(x) {
 };
 
 vg.str = function(x) {
-  return vg.isArray(x) ? "[" + str.map(x) + "]"
+  return vg.isArray(x) ? "[" + x.map(vg.str) + "]"
     : vg.isObject(x) ? JSON.stringify(x)
-    : vg.isString(x) ? ("'"+x+"'") : x;
+    : vg.isString(x) ? ("'"+vg_escape_str(x)+"'") : x;
 };
+
+var escape_str_re = /(^|[^\\])'/g;
+
+function vg_escape_str(x) {
+  return x.replace(escape_str_re, "$1\\'");
+}
 
 vg.keys = function(x) {
   var keys = [];
@@ -210,6 +220,24 @@ vg.config.baseURL = "";
 vg.config.svgNamespace =
   'version="1.1" xmlns="http://www.w3.org/2000/svg" ' +
   'xmlns:xlink="http://www.w3.org/1999/xlink"';
+
+// inset padding for automatic padding calculation
+vg.config.autopadInset = 5;
+
+// extensible scale lookup table
+// all d3.scale.* instances also supported
+vg.config.scale = {
+  time: d3.time.scale,
+  utc:  d3.time.scale.utc
+};
+
+// default rendering settings
+vg.config.render = {
+  lineWidth: 1,
+  lineCap:   "butt",
+  font:      "sans-serif",
+  fontSize:  11
+};
 
 // default axis properties
 vg.config.axis = {
@@ -505,6 +533,23 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
     for (var i=0; i<segs.length; i++) {
       var bez = segmentToBezier.apply(null, segs[i]);
       g.bezierCurveTo.apply(g, bez);
+      bounds.add(bez[0]-l, bez[1]-t);
+      bounds.add(bez[2]-l, bez[3]-t);
+      bounds.add(bez[4]-l, bez[5]-t);
+    }
+  }
+
+  function boundArc(x, y, coords, bounds) {
+    var rx = coords[0];
+    var ry = coords[1];
+    var rot = coords[2];
+    var large = coords[3];
+    var sweep = coords[4];
+    var ex = coords[5];
+    var ey = coords[6];
+    var segs = arcToSegments(ex, ey, rx, ry, large, sweep, rot, x, y);
+    for (var i=0; i<segs.length; i++) {
+      var bez = segmentToBezier.apply(null, segs[i]);
       bounds.add(bez[0]-l, bez[1]-t);
       bounds.add(bez[2]-l, bez[3]-t);
       bounds.add(bez[4]-l, bez[5]-t);
@@ -907,15 +952,271 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
       previous = current;
     }
     return bounds.translate(l, t);
-  };
+  }
+
+  function bounds(path, bounds) {
+    var current, // current instruction
+        previous = null,
+        x = 0, // current x
+        y = 0, // current y
+        controlX = 0, // current control point x
+        controlY = 0, // current control point y
+        tempX,
+        tempY,
+        tempControlX,
+        tempControlY;
+
+    for (var i=0, len=path.length; i<len; ++i) {
+      current = path[i];
+
+      switch (current[0]) { // first letter
+
+        case 'l': // lineto, relative
+          x += current[1];
+          y += current[2];
+          bounds.add(x, y);
+          break;
+
+        case 'L': // lineto, absolute
+          x = current[1];
+          y = current[2];
+          bounds.add(x, y);
+          break;
+
+        case 'h': // horizontal lineto, relative
+          x += current[1];
+          bounds.add(x, y);
+          break;
+
+        case 'H': // horizontal lineto, absolute
+          x = current[1];
+          bounds.add(x, y);
+          break;
+
+        case 'v': // vertical lineto, relative
+          y += current[1];
+          bounds.add(x, y);
+          break;
+
+        case 'V': // verical lineto, absolute
+          y = current[1];
+          bounds.add(x, y);
+          break;
+
+        case 'm': // moveTo, relative
+          x += current[1];
+          y += current[2];
+          bounds.add(x, y);
+          break;
+
+        case 'M': // moveTo, absolute
+          x = current[1];
+          y = current[2];
+          bounds.add(x, y);
+          break;
+
+        case 'c': // bezierCurveTo, relative
+          tempX = x + current[5];
+          tempY = y + current[6];
+          controlX = x + current[3];
+          controlY = y + current[4];
+          bounds.add(x + current[1], y + current[2]);
+          bounds.add(controlX, controlY);
+          bounds.add(tempX, tempY);
+          x = tempX;
+          y = tempY;
+          break;
+
+        case 'C': // bezierCurveTo, absolute
+          x = current[5];
+          y = current[6];
+          controlX = current[3];
+          controlY = current[4];
+          bounds.add(current[1], current[2]);
+          bounds.add(controlX, controlY);
+          bounds.add(x, y);
+          break;
+
+        case 's': // shorthand cubic bezierCurveTo, relative
+          // transform to absolute x,y
+          tempX = x + current[3];
+          tempY = y + current[4];
+          // calculate reflection of previous control points
+          controlX = 2 * x - controlX;
+          controlY = 2 * y - controlY;
+          bounds.add(controlX, controlY);
+          bounds.add(x + current[1], y + current[2]);
+          bounds.add(tempX, tempY);
+
+          // set control point to 2nd one of this command
+          // "... the first control point is assumed to be the reflection of the second control point on the previous command relative to the current point."
+          controlX = x + current[1];
+          controlY = y + current[2];
+
+          x = tempX;
+          y = tempY;
+          break;
+
+        case 'S': // shorthand cubic bezierCurveTo, absolute
+          tempX = current[3];
+          tempY = current[4];
+          // calculate reflection of previous control points
+          controlX = 2*x - controlX;
+          controlY = 2*y - controlY;
+          x = tempX;
+          y = tempY;
+          bounds.add(current[1], current[2]);
+          bounds.add(controlX, controlY);
+          bounds.add(tempX, tempY);
+          // set control point to 2nd one of this command
+          // "... the first control point is assumed to be the reflection of the second control point on the previous command relative to the current point."
+          controlX = current[1];
+          controlY = current[2];
+
+          break;
+
+        case 'q': // quadraticCurveTo, relative
+          // transform to absolute x,y
+          tempX = x + current[3];
+          tempY = y + current[4];
+
+          controlX = x + current[1];
+          controlY = y + current[2];
+
+          x = tempX;
+          y = tempY;
+          bounds.add(controlX, controlY);
+          bounds.add(tempX, tempY);
+          break;
+
+        case 'Q': // quadraticCurveTo, absolute
+          tempX = current[3];
+          tempY = current[4];
+
+          x = tempX;
+          y = tempY;
+          controlX = current[1];
+          controlY = current[2];
+          bounds.add(controlX, controlY);
+          bounds.add(tempX, tempY);
+          break;
+
+        case 't': // shorthand quadraticCurveTo, relative
+
+          // transform to absolute x,y
+          tempX = x + current[1];
+          tempY = y + current[2];
+
+          if (previous[0].match(/[QqTt]/) === null) {
+            // If there is no previous command or if the previous command was not a Q, q, T or t,
+            // assume the control point is coincident with the current point
+            controlX = x;
+            controlY = y;
+          }
+          else if (previous[0] === 't') {
+            // calculate reflection of previous control points for t
+            controlX = 2 * x - tempControlX;
+            controlY = 2 * y - tempControlY;
+          }
+          else if (previous[0] === 'q') {
+            // calculate reflection of previous control points for q
+            controlX = 2 * x - controlX;
+            controlY = 2 * y - controlY;
+          }
+
+          tempControlX = controlX;
+          tempControlY = controlY;
+
+          x = tempX;
+          y = tempY;
+          controlX = x + current[1];
+          controlY = y + current[2];
+          bounds.add(controlX, controlY);
+          bounds.add(tempX, tempY);
+          break;
+
+        case 'T':
+          tempX = current[1];
+          tempY = current[2];
+
+          // calculate reflection of previous control points
+          controlX = 2 * x - controlX;
+          controlY = 2 * y - controlY;
+
+          x = tempX;
+          y = tempY;
+          bounds.add(controlX, controlY);
+          bounds.add(tempX, tempY);
+          break;
+
+        case 'a':
+          boundArc(x, y, [
+            current[1],
+            current[2],
+            current[3],
+            current[4],
+            current[5],
+            current[6] + x,
+            current[7] + y
+          ], bounds);
+          x += current[6];
+          y += current[7];
+          break;
+
+        case 'A':
+          boundArc(x, y, [
+            current[1],
+            current[2],
+            current[3],
+            current[4],
+            current[5],
+            current[6],
+            current[7]
+          ], bounds);
+          x = current[6];
+          y = current[7];
+          break;
+
+        case 'z':
+        case 'Z':
+          break;
+      }
+      previous = current;
+    }
+    return bounds;
+  }
+  
+  function area(items) {
+    var o = items[0];
+    var area = d3.svg.area()
+      .x(function(d) { return d.x; })
+      .y1(function(d) { return d.y; })
+      .y0(function(d) { return d.y + d.height; });
+    if (o.interpolate) area.interpolate(o.interpolate);
+    if (o.tension != null) area.tension(o.tension);
+    return area(items);
+  }
+
+  function line(items) {
+    var o = items[0];
+    var line = d3.svg.line()
+     .x(function(d) { return d.x; })
+     .y(function(d) { return d.y; });
+    if (o.interpolate) line.interpolate(o.interpolate);
+    if (o.tension != null) line.tension(o.tension);
+    return line(items);
+  }
   
   return {
-    parse: parse,
-    render: render
+    parse:  parse,
+    render: render,
+    bounds: bounds,
+    area:   area,
+    line:   line
   };
   
 })();vg.canvas.marks = (function() {
-  
+
   var parsePath = vg.canvas.path.parse,
       renderPath = vg.canvas.path.render,
       halfpi = Math.PI / 2,
@@ -937,49 +1238,26 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
     else g.arc(x, y, ir, sa, ea, 0);
     g.arc(x, y, or, ea, sa, 1);
     g.closePath();
-    return arcBounds(sa, ea, ir, or, x, y);
-  }
-  
-  function arcBounds(sa, ea, ir, or, cx, cy) {
-    var a, i, n, x, y, ix, iy, ox, oy,
-        xmin = Infinity, xmax = -Infinity,
-        ymin = Infinity, ymax = -Infinity;
-    
-    var angles = [sa, ea],
-        s = sa - (sa%halfpi) + halfpi;
-    for (var i=0; i<4 && s<ea; ++i, s+=halfpi) {
-      angles.push(s);
-    }
-
-    for (i=0, n=angles.length; i<n; ++i) {
-      a = angles[i];
-      x = Math.cos(a); ix = ir*x; ox = or*x;
-      y = Math.sin(a); iy = ir*y; oy = or*y;
-      xmin = Math.min(xmin, ix, ox);
-      xmax = Math.max(xmax, ix, ox);
-      ymin = Math.min(ymin, iy, oy);
-      ymax = Math.max(ymax, iy, oy);
-    }
-   
-    return new vg.Bounds()
-      .set(cx+xmin, cy+ymin, cx+xmax, cy+ymax);
   }
 
   function pathPath(g, o) {
-    return renderPath(g, parsePath(o.path), o.x, o.y);
+    if (o.path == null) return;
+    if (!o["path:parsed"]) {
+      o["path:parsed"] = parsePath(o.path);
+    }
+    return renderPath(g, o["path:parsed"], o.x, o.y);
   }
-  
+
   function symbolPath(g, o) {
     g.beginPath();
-    var size = o.size != undefined ? o.size : 100,
-        x = o.x, y = o.y, r, t, rx, ry,
-        bounds = new vg.Bounds();
+    var size = o.size != null ? o.size : 100,
+        x = o.x, y = o.y, r, t, rx, ry;
 
-    if (o.shape == undefined || o.shape === "circle") {
+    if (o.shape == null || o.shape === "circle") {
       r = Math.sqrt(size/Math.PI);
       g.arc(x, y, r, 0, 2*Math.PI, 0);
       g.closePath();
-      return bounds.set(x-r, y-r, x+r, y+r);
+      return;
     }
 
     switch (o.shape) {
@@ -998,7 +1276,6 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
         g.lineTo(x-r, y+t);
         g.lineTo(x-r, y+r);
         g.lineTo(x-t, y+r);
-        bounds.set(x-t, y-t, x+y, y+t);
         break;
 
       case "diamond":
@@ -1008,14 +1285,12 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
         g.lineTo(x+rx, y);
         g.lineTo(x, y+ry);
         g.lineTo(x-rx, y);
-        bounds.set(x-rx, y-ry, x+rx, y+ry);
         break;
 
       case "square":
         t = Math.sqrt(size);
         r = t / 2;
         g.rect(x-r, y-r, t, t);
-        bounds.set(x-r, y-r, x+r, y+r);
         break;
 
       case "triangle-down":
@@ -1024,7 +1299,6 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
         g.moveTo(x, y+ry);
         g.lineTo(x+rx, y-ry);
         g.lineTo(x-rx, y-ry);
-        bounds.set(x-rx, y-ry, x+rx, y+ry);
         break;
 
       case "triangle-up":
@@ -1033,39 +1307,55 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
         g.moveTo(x, y-ry);
         g.lineTo(x+rx, y+ry);
         g.lineTo(x-rx, y+ry);
-        bounds.set(x-rx, y-ry, x+rx, y+ry);
     }
     g.closePath();
-    return bounds;
   }
-  
+
   function areaPath(g, items) {
-    var area = d3.svg.area()
-     .x(function(d) { return d.x; })
-     .y1(function(d) { return d.y; })
-     .y0(function(d) { return d.y + d.height; });
-    var o = items[0];
-    if (o.interpolate) area.interpolate(o.interpolate);
-    if (o.tension != undefined) area.tension(o.tension);
-    return renderPath(g, parsePath(area(items)));
+    var o = items[0],
+        p = o["path:parsed"] ||
+           (o["path:parsed"] = parsePath(vg.canvas.path.area(items)));
+    renderPath(g, p);
   }
 
   function linePath(g, items) {
-    var line = d3.svg.line()
-     .x(function(d) { return d.x; })
-     .y(function(d) { return d.y; });
-    var o = items[0];
-    if (o.interpolate) line.interpolate(o.interpolate);
-    if (o.tension != undefined) line.tension(o.tension);
-    return renderPath(g, parsePath(line(items)));
+    var o = items[0],
+        p = o["path:parsed"] ||
+           (o["path:parsed"] = parsePath(vg.canvas.path.line(items)));
+    renderPath(g, p);
   }
-  
+
+  function lineStroke(g, items) {
+    var o = items[0],
+        lw = o.strokeWidth,
+        lc = o.strokeCap;
+    g.lineWidth = lw != null ? lw : vg.config.render.lineWidth;
+    g.lineCap   = lc != null ? lc : vg.config.render.lineCap;
+    linePath(g, items);
+  }
+
+  function ruleStroke(g, o) {
+    var x1 = o.x || 0,
+        y1 = o.y || 0,
+        x2 = o.x2 != null ? o.x2 : x1,
+        y2 = o.y2 != null ? o.y2 : y1,
+        lw = o.strokeWidth,
+        lc = o.strokeCap;
+
+    g.lineWidth = lw != null ? lw : vg.config.render.lineWidth;
+    g.lineCap   = lc != null ? lc : vg.config.render.lineCap;
+    g.beginPath();
+    g.moveTo(x1, y1);
+    g.lineTo(x2, y2);
+  }
+
   // drawing functions
-  
+
   function drawPathOne(path, g, o, items) {
     var fill = o.fill, stroke = o.stroke, opac, lc, lw;
-    o.bounds = path(g, items);
-    
+
+    path(g, items);
+
     opac = o.opacity == null ? 1 : o.opacity;
     if (opac == 0 || !fill && !stroke) return;
 
@@ -1076,14 +1366,15 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
     }
 
     if (stroke) {
-      lw = (lw = o.strokeWidth) != undefined ? lw : 1;
+      lw = (lw = o.strokeWidth) != null ? lw : vg.config.render.lineWidth;
       if (lw > 0) {
         g.globalAlpha = opac * (o.strokeOpacity==null ? 1 : o.strokeOpacity);
         g.strokeStyle = color(g, o, stroke);
         g.lineWidth = lw;
-        g.lineCap = (lc = o.strokeCap) != undefined ? lc : "butt";
+        g.lineCap = (lc = o.strokeCap) != null ? lc : vg.config.render.lineCap;
+        g.vgLineDash(o.strokeDash || null);
+        g.vgLineDashOffset(o.strokeDashOffset || 0);
         g.stroke();
-        o.bounds.expand(lw);
       }
     }
   }
@@ -1097,11 +1388,11 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
       drawPathOne(path, g, item, item);
     }
   }
-  
+
   function drawRect(g, scene, bounds) {
     if (!scene.items.length) return;
     var items = scene.items,
-        o, fill, stroke, opac, lc, lw, x, y;
+        o, fill, stroke, opac, lc, lw, x, y, w, h;
 
     for (var i=0, len=items.length; i<len; ++i) {
       o = items[i];
@@ -1110,8 +1401,8 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
 
       x = o.x || 0;
       y = o.y || 0;
-      o.bounds = (o.bounds || new vg.Bounds())
-        .set(x, y, x+o.width, y+o.height);
+      w = o.width || 0;
+      h = o.height || 0;
 
       opac = o.opacity == null ? 1 : o.opacity;
       if (opac == 0) return;
@@ -1119,18 +1410,19 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
       if (fill = o.fill) {
         g.globalAlpha = opac * (o.fillOpacity==null ? 1 : o.fillOpacity);
         g.fillStyle = color(g, o, fill);
-        g.fillRect(x, y, o.width, o.height);
+        g.fillRect(x, y, w, h);
       }
 
       if (stroke = o.stroke) {
-        lw = (lw = o.strokeWidth) != undefined ? lw : 1;
+        lw = (lw = o.strokeWidth) != null ? lw : vg.config.render.lineWidth;
         if (lw > 0) {
           g.globalAlpha = opac * (o.strokeOpacity==null ? 1 : o.strokeOpacity);
           g.strokeStyle = color(g, o, stroke);
           g.lineWidth = lw;
-          g.lineCap = (lc = o.strokeCap) != undefined ? lc : "butt";
-          g.strokeRect(x, y, o.width, o.height);
-          o.bounds.expand(lw);
+          g.lineCap = (lc = o.strokeCap) != null ? lc : vg.config.render.lineCap;
+          g.vgLineDash(o.strokeDash || null);
+          g.vgLineDashOffset(o.strokeDashOffset || 0);
+          g.strokeRect(x, y, w, h);
         }
       }
     }
@@ -1148,31 +1440,30 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
 
       x1 = o.x || 0;
       y1 = o.y || 0;
-      x2 = o.x2 !== undefined ? o.x2 : x1;
-      y2 = o.y2 !== undefined ? o.y2 : y1;
-      o.bounds = (o.bounds || new vg.Bounds())
-        .set(x1, y1, x2, y2);
+      x2 = o.x2 != null ? o.x2 : x1;
+      y2 = o.y2 != null ? o.y2 : y1;
 
       opac = o.opacity == null ? 1 : o.opacity;
       if (opac == 0) return;
-
+      
       if (stroke = o.stroke) {
-        lw = (lw = o.strokeWidth) != undefined ? lw : 1;
+        lw = (lw = o.strokeWidth) != null ? lw : vg.config.render.lineWidth;
         if (lw > 0) {
           g.globalAlpha = opac * (o.strokeOpacity==null ? 1 : o.strokeOpacity);
           g.strokeStyle = color(g, o, stroke);
           g.lineWidth = lw;
-          g.lineCap = (lc = o.strokeCap) != undefined ? lc : "butt";
+          g.lineCap = (lc = o.strokeCap) != null ? lc : vg.config.render.lineCap;
+          g.vgLineDash(o.strokeDash || null);
+          g.vgLineDashOffset(o.strokeDashOffset || 0);
           g.beginPath();
           g.moveTo(x1, y1);
           g.lineTo(x2, y2);
           g.stroke();
-          o.bounds.expand(lw);
         }
       }
     }
   }
-  
+
   function drawImage(g, scene, bounds) {
     if (!scene.items.length) return;
     var renderer = this,
@@ -1191,28 +1482,18 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
       var x, y, w, h, opac;
       w = o.width || (o.image && o.image.width) || 0;
       h = o.height || (o.image && o.image.height) || 0;
-      x = o.x - (o.align === "center"
+      x = (o.x||0) - (o.align === "center"
         ? w/2 : (o.align === "right" ? w : 0));
-      y = o.y - (o.baseline === "middle"
+      y = (o.y||0) - (o.baseline === "middle"
         ? h/2 : (o.baseline === "bottom" ? h : 0));
-      o.bounds = (o.bounds || new vg.Bounds()).set(x, y, x+w, y+h);
 
       if (o.image.loaded) {
-        g.globalAlpha = (opac = o.opacity) != undefined ? opac : 1;
+        g.globalAlpha = (opac = o.opacity) != null ? opac : 1;
         g.drawImage(o.image, x, y, w, h);
       }
     }
   }
-  
-  function fontString(o) {
-    // TODO config
-    return (o.fontStyle ? o.fontStyle + " " : "")
-      + (o.fontVariant ? o.fontVariant + " " : "")
-      + (o.fontWeight ? o.fontWeight + " " : "")
-      + (o.fontSize != null ? o.fontSize + "px " : "11px ")
-      + (o.font || "sans-serif");
-  }
-  
+
   function drawText(g, scene, bounds) {
     if (!scene.items.length) return;
     var items = scene.items,
@@ -1223,23 +1504,22 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
       if (bounds && !bounds.intersects(o.bounds))
         continue; // bounds check
 
-      g.font = fontString(o);
+      g.font = vg.scene.fontString(o);
       g.textAlign = o.align || "left";
       g.textBaseline = o.baseline || "alphabetic";
-      o.bounds = textBounds(g, o, (o.bounds || new vg.Bounds()));
 
       opac = o.opacity == null ? 1 : o.opacity;
       if (opac == 0) return;
 
       if (o.angle) {
         g.save();
-        g.translate(o.x, o.y);
+        g.translate(o.x || 0, o.y || 0);
         g.rotate(o.angle * Math.PI/180);
         x = o.dx || 0;
         y = o.dy || 0;
       } else {
-        x = o.x + (o.dx || 0);
-        y = o.y + (o.dy || 0);
+        x = (o.x || 0) + (o.dx || 0);
+        y = (o.y || 0) + (o.dy || 0);
       }
 
       if (fill = o.fill) {
@@ -1247,9 +1527,9 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
         g.fillStyle = color(g, o, fill);
         g.fillText(o.text, x, y);
       }
-      
+
       if (stroke = o.stroke) {
-        lw = (lw = o.strokeWidth) != undefined ? lw : 1;
+        lw = (lw = o.strokeWidth) != null ? lw : 1;
         if (lw > 0) {
           g.globalAlpha = opac * (o.strokeOpacity==null ? 1 : o.strokeOpacity);
           g.strokeStyle = color(o, stroke);
@@ -1257,56 +1537,17 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
           g.strokeText(o.text, x, y);
         }
       }
-      
-      if (o.angle) {
-        o.bounds.rotate(o.angle*Math.PI/180, o.x, o.y);
-        g.restore();
-      }
-      o.bounds.expand(1);
+
+      if (o.angle) g.restore();
     }
   }
-  
-  function textBounds(g, o, bounds) {
-    var x = o.x + (o.dx || 0),
-        y = o.y + (o.dy || 0),
-        w = g.measureText(o.text).width,
-        h = o.fontSize || 11,
-        a = o.align,
-        b = o.baseline;
-    
-    // horizontal
-    if (a === "center") {
-      x = x - (w / 2);
-    } else if (a === "right") {
-      x = x - w;
-    } else {
-      // left by default, do nothing
-    }
-    
-    /// TODO find a robust solution for heights.
-    /// These offsets work for some but not all fonts.
-    
-    // vertical
-    if (b === "top") {
-      y = y + (h/5);
-    } else if (b === "bottom") {
-      y = y - h;
-    } else if (b === "middle") {
-      y = y - (h/2) + (h/10);
-    } else {
-      // alphabetic by default
-      y = y - 4*h/5;
-    }
-    
-    return bounds.set(x, y, x+w, y+h);
-  }
-  
+
   function drawAll(pathFunc) {
     return function(g, scene, bounds) {
       drawPathAll(pathFunc, g, scene, bounds);
     }
   }
-  
+
   function drawOne(pathFunc) {
     return function(g, scene, bounds) {
       if (!scene.items.length) return;
@@ -1315,21 +1556,21 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
       drawPathOne(pathFunc, g, scene.items[0], scene.items);
     }
   }
-  
+
   function drawGroup(g, scene, bounds) {
     if (!scene.items.length) return;
     var items = scene.items, group, axes, legends,
-        renderer = this, gx, gy, i, n, j, m;
-    
+        renderer = this, gx, gy, gb, i, n, j, m;
+
     drawRect(g, scene, bounds);
-    
+
     for (i=0, n=items.length; i<n; ++i) {
       group = items[i];
       axes = group.axisItems || [];
       legends = group.legendItems || [];
       gx = group.x || 0;
       gy = group.y || 0;
-      
+
       // render group contents
       g.save();
       g.translate(gx, gy);
@@ -1351,8 +1592,8 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
         renderer.draw(g, legends[j], bounds);
       }
       if (bounds) bounds.translate(gx, gy);
-      g.restore(); 
-    }
+      g.restore();
+    }    
   }
 
   function color(g, o, value) {
@@ -1360,7 +1601,7 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
       ? gradient(g, value, o.bounds)
       : value;
   }
-  
+
   function gradient(g, p, b) {
     var w = b.width(),
         h = b.height(),
@@ -1377,9 +1618,9 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
     }
     return grad;
   }
-  
+
   // hit testing
-  
+
   function pickGroup(g, scene, x, y, gx, gy) {
     if (scene.items.length === 0 ||
         scene.bounds && !scene.bounds.contains(gx, gy)) {
@@ -1392,7 +1633,7 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
       group = items[i];
       dx = group.x || 0;
       dy = group.y || 0;
-      
+
       g.save();
       g.translate(dx, dy);
       for (var j=0, llen=group.items.length; j<llen; ++j) {
@@ -1406,12 +1647,12 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
       }
       g.restore();
     }
-    
+
     return scene.interactive
       ? pickAll(hitTests.rect, g, scene, x, y, gx, gy)
       : false;
   }
-  
+
   function pickAll(test, g, scene, x, y, gx, gy) {
     if (!scene.items.length) return false;
     var o, b, i;
@@ -1430,7 +1671,7 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
     }
     return false;
   }
-  
+
   function pickArea(g, scene, x, y, gx, gy) {
     if (!scene.items.length) return false;
     var items = scene.items,
@@ -1445,40 +1686,33 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
     if (!hitTests.area(g, items, x, y)) return false;
     return items[0];
   }
-  
+
   function pickLine(g, scene, x, y, gx, gy) {
-    // TODO...
-    return false;
+    if (!scene.items.length) return false;
+    var items = scene.items,
+        o, b, i, di, dd, od, dx, dy;
+
+    b = items[0].bounds;
+    if (b && !b.contains(gx, gy)) return false;
+    if (g._ratio !== 1) {
+      x *= g._ratio;
+      y *= g._ratio;
+    }
+    if (!hitTests.line(g, items, x, y)) return false;
+    return items[0];
   }
-  
-  function pickRule(g, scene, x, y, gx, gy) {
-    // TODO...
-    return false;
-  }
-  
+
   function pick(test) {
     return function (g, scene, x, y, gx, gy) {
       return pickAll(test, g, scene, x, y, gx, gy);
     };
   }
 
-  var hitTests = {
-    text:   hitTestText,
-    rect:   function(g,o,x,y) { return true; }, // bounds test is sufficient
-    image:  function(g,o,x,y) { return true; }, // bounds test is sufficient
-    arc:    function(g,o,x,y) { arcPath(g,o);  return g.isPointInPath(x,y); },
-    area:   function(g,s,x,y) { areaPath(g,s); return g.isPointInPath(x,y); },
-    path:   function(g,o,x,y) { pathPath(g,o); return g.isPointInPath(x,y); },
-    symbol: function(g,o,x,y) {symbolPath(g,o); return g.isPointInPath(x,y);},
-  };
-  
-  function hitTestText(g, o, x, y, gx, gy) {
+  function textHit(g, o, x, y, gx, gy) {
     if (!o.fontSize) return false;
     if (!o.angle) return true; // bounds sufficient if no rotation
 
-    g.font = fontString(o);
-    
-    var b = textBounds(g, o, tmpBounds),
+    var b = vg.scene.bounds.text(o, tmpBounds, true),
         a = -o.angle * Math.PI / 180,
         cos = Math.cos(a),
         sin = Math.sin(a),
@@ -1486,10 +1720,28 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
         y = o.y,
         px = cos*gx - sin*gy + (x - x*cos + y*sin),
         py = sin*gx + cos*gy + (y - x*sin - y*cos);
-        
+
     return b.contains(px, py);
   }
-  
+
+  var hitTests = {
+    text:   textHit,
+    rect:   function(g,o,x,y) { return true; }, // bounds test is sufficient
+    image:  function(g,o,x,y) { return true; }, // bounds test is sufficient
+    rule:   function(g,o,x,y) {
+              if (!g.isPointInStroke) return false;
+              ruleStroke(g,o); return g.isPointInStroke(x,y);
+            },
+    line:   function(g,s,x,y) {
+              if (!g.isPointInStroke) return false;
+              lineStroke(g,s); return g.isPointInStroke(x,y);
+            },
+    arc:    function(g,o,x,y) { arcPath(g,o);  return g.isPointInPath(x,y); },
+    area:   function(g,s,x,y) { areaPath(g,s); return g.isPointInPath(x,y); },
+    path:   function(g,o,x,y) { pathPath(g,o); return g.isPointInPath(x,y); },
+    symbol: function(g,o,x,y) { symbolPath(g,o); return g.isPointInPath(x,y); }
+  };
+
   return {
     draw: {
       group:   drawGroup,
@@ -1513,13 +1765,13 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
       path:    pick(hitTests.path),
       symbol:  pick(hitTests.symbol),
       rect:    pick(hitTests.rect),
-      rule:    pickRule,
+      rule:    pick(hitTests.rule),
       text:    pick(hitTests.text),
       image:   pick(hitTests.image),
       pickAll: pickAll  // expose for extensibility
     }
   };
-  
+
 })();vg.canvas.Renderer = (function() {  
   var renderer = function() {
     this._ctx = null;
@@ -1531,9 +1783,6 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
   
   prototype.initialize = function(el, width, height, pad) {
     this._el = el;
-    this._width = width;
-    this._height = height;
-    this._padding = pad;
     
     if (!el) return this; // early exit if no DOM element
 
@@ -1547,17 +1796,33 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
       .append("canvas")
       .attr("class", "marks");
     
-    // initialize canvas attributes
-    canvas
-      .attr("width", width + pad.left + pad.right)
-      .attr("height", height + pad.top + pad.bottom);
+    // remove extraneous canvas if needed
+    canvas.exit().remove();
     
-    // get the canvas graphics context
-    var s;
-    this._ctx = canvas.node().getContext("2d");
-    this._ctx._ratio = (s = scaleCanvas(canvas.node(), this._ctx) || 1);
-    this._ctx.setTransform(s, 0, 0, s, s*pad.left, s*pad.top);
+    return this.resize(width, height, pad);
+  };
+  
+  prototype.resize = function(width, height, pad) {
+    this._width = width;
+    this._height = height;
+    this._padding = pad;
     
+    if (this._el) {
+      var canvas = d3.select(this._el).select("canvas.marks");
+
+      // initialize canvas attributes
+      canvas
+        .attr("width", width + pad.left + pad.right)
+        .attr("height", height + pad.top + pad.bottom);
+
+      // get the canvas graphics context
+      var s;
+      this._ctx = canvas.node().getContext("2d");
+      this._ctx._ratio = (s = scaleCanvas(canvas.node(), this._ctx) || 1);
+      this._ctx.setTransform(s, 0, 0, s, s*pad.left, s*pad.top);
+    }
+    
+    initializeLineDash(this._ctx);
     return this;
   };
   
@@ -1582,6 +1847,24 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
     }
     return ratio;
   }
+
+  function initializeLineDash(ctx) {
+    if (ctx.vgLineDash) return; // already set
+
+    if (ctx.setLineDash) {
+      ctx.vgLineDash = function(dash) { this.setLineDash(dash); };
+      ctx.vgLineDashOffset = function(off) { this.lineDashOffset = off; };
+    } else if (ctx.webkitLineDash !== undefined) {
+    	ctx.vgLineDash = function(dash) { this.webkitLineDash = dash; };
+      ctx.vgLineDashOffset = function(off) { this.webkitLineDashOffset = off; };
+    } else if (ctx.mozDash !== undefined) {
+      ctx.vgLineDash = function(dash) { this.mozDash = dash; };
+      ctx.vgLineDashOffset = function(off) { /* unsupported */ };
+    } else {
+      ctx.vgLineDash = function(dash) { /* unsupported */ };
+      ctx.vgLineDashOffset = function(off) { /* unsupported */ };
+    }
+  }
   
   prototype.context = function(ctx) {
     if (ctx) { this._ctx = ctx; return this; }
@@ -1596,8 +1879,8 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
     return this._imgload;
   };
 
-  function translatedBounds(item) {
-    var b = new vg.Bounds(item.bounds);
+  function translatedBounds(item, bounds) {
+    var b = new vg.Bounds(bounds);
     while ((item = item.mark.group) != null) {
       b.translate(item.x || 0, item.y || 0);
     }
@@ -1607,7 +1890,8 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
   function getBounds(items) {
     return !items ? null :
       vg.array(items).reduce(function(b, item) {
-        return b.union(translatedBounds(item));
+        return b.union(translatedBounds(item, item.bounds))
+                .union(translatedBounds(item, item['bounds:prev']));
       }, new vg.Bounds());  
   }
   
@@ -1658,6 +1942,11 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
     var marktype = scene.marktype,
         renderer = vg.canvas.marks.draw[marktype];
     renderer.call(this, ctx, scene, bounds);
+
+    // compute mark-level bounds
+    scene.bounds = scene.items.reduce(function(b, item) {
+      return item.bounds ? b.union(item.bounds) : b;
+    }, scene.bounds || new vg.Bounds());
   };
   
   prototype.renderAsync = function(scene) {
@@ -1725,6 +2014,11 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
       });
     });
     
+    return this;
+  };
+  
+  prototype.padding = function(pad) {
+    this._padding = pad;
     return this;
   };
   
@@ -1873,18 +2167,22 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
   };
   
   var styles = {
-    "fill":          "fill",
-    "fillOpacity":   "fill-opacity",
-    "stroke":        "stroke",
-    "strokeWidth":   "stroke-width",
-    "strokeOpacity": "stroke-opacity",
-    "opacity":       "opacity"
+    "fill":             "fill",
+    "fillOpacity":      "fill-opacity",
+    "stroke":           "stroke",
+    "strokeWidth":      "stroke-width",
+    "strokeOpacity":    "stroke-opacity",
+    "strokeCap":        "stroke-linecap",
+    "strokeDash":       "stroke-dasharray",
+    "strokeDashOffset": "stroke-dashoffset",
+    "opacity":          "opacity"
   };
   var styleProps = vg.keys(styles);
 
   function style(d) {
-    var o = d.mark ? d : d[0],
-        i, n, prop, name, value;
+    var i, n, prop, name, value,
+        o = d.mark ? d : d.length ? d[0] : null;
+    if (o === null) return;
 
     for (i=0, n=styleProps.length; i<n; ++i) {
       prop = styleProps[i];
@@ -1900,7 +2198,7 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
           vg.svg._cur._defs[value.id] = value;
           value = "url(#" + value.id + ")";
         }
-        this.style.setProperty(name, value, null);
+        this.style.setProperty(name, value+"", null);
       }
     }
   }
@@ -1913,18 +2211,20 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
   }
   
   function area(items) {
+    if (!items.length) return;
     var o = items[0];
     area_path
       .interpolate(o.interpolate || "linear")
-      .tension(o.tension == undefined ? 0.7 : o.tension);
+      .tension(o.tension == null ? 0.7 : o.tension);
     this.setAttribute("d", area_path(items));
   }
   
   function line(items) {
+    if (!items.length) return;
     var o = items[0];
     line_path
       .interpolate(o.interpolate || "linear")
-      .tension(o.tension == undefined ? 0.7 : o.tension);
+      .tension(o.tension == null ? 0.7 : o.tension);
     this.setAttribute("d", line_path(items));
   }
   
@@ -1932,7 +2232,7 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
     var x = o.x || 0,
         y = o.y || 0;
     this.setAttribute("transform", "translate("+x+","+y+")");
-    this.setAttribute("d", o.path);
+    if (o.path != null) this.setAttribute("d", o.path);
   }
 
   function rect(o) {
@@ -1947,8 +2247,8 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
         y1 = o.y || 0;
     this.setAttribute("x1", x1);
     this.setAttribute("y1", y1);
-    this.setAttribute("x2", o.x2 !== undefined ? o.x2 : x1);
-    this.setAttribute("y2", o.y2 !== undefined ? o.y2 : y1);
+    this.setAttribute("x2", o.x2 != null ? o.x2 : x1);
+    this.setAttribute("y2", o.y2 != null ? o.y2 : y1);
   }
   
   function symbol(o) {
@@ -1977,8 +2277,8 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
     return (o.fontStyle ? o.fontStyle + " " : "")
       + (o.fontVariant ? o.fontVariant + " " : "")
       + (o.fontWeight ? o.fontWeight + " " : "")
-      + (o.fontSize != undefined ? o.fontSize + "px " : "11px ")
-      + (o.font || "sans-serif");
+      + (o.fontSize != null ? o.fontSize : vg.config.render.fontSize) + "px "
+      + (o.font || vg.config.render.font);
   }
   
   function text(o) {
@@ -2041,7 +2341,10 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
 
     if (notG) {
       p.style("pointer-events", evts);
-      e.each(function(d) { (d.mark ? d : d[0])._svg = this; });
+      e.each(function(d) {
+        if (d.mark) d._svg = this;
+        else if (d.length) d[0]._svg = this;
+      });
     } else {
       e.append("rect").attr("class","background").style("pointer-events",evts);
     }
@@ -2129,9 +2432,6 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
   
   prototype.initialize = function(el, width, height, pad) {
     this._el = el;
-    this._width = width;
-    this._height = height;
-    this._padding = pad;
 
     // remove any existing svg element
     d3.select(el).select("svg.marks").remove();
@@ -2139,14 +2439,26 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
     // create svg element and initialize attributes
     this._svg = d3.select(el)
       .append("svg")
-      .attr("class", "marks")
-      .attr("width", width + pad.left + pad.right)
-      .attr("height", height + pad.top + pad.bottom);
+      .attr("class", "marks");
     
     // set the svg root group
-    this._ctx = this._svg.append("g")
-      .attr("transform", "translate("+pad.left+","+pad.top+")");
+    this._ctx = this._svg.append("g");
     
+    return this.resize(width, height, pad);
+  };
+  
+  prototype.resize = function(width, height, pad) {
+    this._width = width;
+    this._height = height;
+    this._padding = pad;
+    
+    this._svg
+      .attr("width", width + pad.left + pad.right)
+      .attr("height", height + pad.top + pad.bottom);
+      
+    this._ctx
+      .attr("transform", "translate("+pad.left+","+pad.top+")");
+
     return this;
   };
   
@@ -2254,6 +2566,11 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
     return this;
   };
   
+  prototype.padding = function(pad) {
+    this._padding = pad;
+    return this;
+  };
+  
   prototype.model = function(model) {
     if (!arguments.length) return this._model;
     this._model = model;
@@ -2304,11 +2621,42 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
   return handler;
 })();vg.data = {};
 
+vg.data.ingestAll = function(data) {
+  if (vg.isTree(data)) {
+    var t = vg.data.ingestTree(data[0], data.children);
+    t.__vgtree__ = true;
+    t.nodes = function() { return vg_tree_nodes(this, []); }
+    return t;
+  } else {
+    return data.map(vg.data.ingest);
+  }
+};
+
 vg.data.ingest = function(datum, index) {
   return {
     data: datum,
     index: index
   };
+};
+
+vg.data.ingestTree = function(node, children) {
+  var d = vg.data.ingest(node),
+      c = node[children], n, i;
+  if (c && (n = c.length)) {
+    d.values = Array(n);
+    for (i=0; i<n; ++i) {
+      d.values[i] = vg.data.ingestTree(c[i], children);
+    }
+  }
+  return d;
+};
+
+function vg_tree_nodes(root, nodes) {
+  var c = root.values,
+      n = c ? c.length : 0, i;
+  nodes.push(root);
+  for (i=0; i<n; ++i) { vg_tree_nodes(c[i], nodes); }
+  return nodes;
 };
 
 vg.data.mapper = function(func) {
@@ -2405,16 +2753,49 @@ function vg_load_http(url, callback) {
     return d;
   };
   
+  formats.topojson = function(data, format) {
+    if (topojson == null) {
+      vg.error("TopoJSON library not loaded.");
+      return [];
+    }    
+    var t = JSON.parse(data), obj = [];
+
+    if (format && format.feature) {
+      obj = (obj = t.objects[format.feature])
+        ? topojson.feature(t, obj).features
+        : (vg.error("Invalid TopoJSON object: "+format.feature), []);
+    } else if (format && format.mesh) {
+      obj = (obj = t.objects[format.mesh])
+        ? [topojson.mesh(t, t.objects[format.mesh])]
+        : (vg.error("Invalid TopoJSON object: " + format.mesh), []);
+    }
+    else { vg.error("Missing TopoJSON feature or mesh parameter."); }
+
+    return obj;
+  };
+  
+  formats.treejson = function(data, format) {
+    var d = [JSON.parse(data)];
+    d.__vgtree__ = true;
+    d.children = format.children || "children";
+    return d;
+  };
+  
   function parseValues(data, types) {
     var cols = vg.keys(types),
         p = cols.map(function(col) { return parsers[types[col]]; }),
-        d, i, j, len, clen;        
-
+        tree = vg.isTree(data);
+    vg_parseArray(tree ? [data] : data, cols, p, tree);
+  }
+  
+  function vg_parseArray(data, cols, p, tree) {
+    var d, i, j, len, clen;
     for (i=0, len=data.length; i<len; ++i) {
       d = data[i];
       for (j=0, clen=cols.length; j<clen; ++j) {
         d[cols[j]] = p[j](d[cols[j]]);
       }
+      if (tree && d.values) parseCollection(d, cols, p, true);
     }
   }
 
@@ -2471,6 +2852,39 @@ function vg_load_http(url, callback) {
   };
 
   return copy;
+};vg.data.cross = function() {
+  var other = null,
+      nodiag = false,
+      output = {left:"a", right:"b"};
+
+  function cross(data) {
+    var result = [],
+        data2 = other || data,
+        o, i, j, n = data.length;
+
+    for (i=0; i<n; ++i) {
+      for (j=0; j<n; ++j) {
+        if (nodiag && i===j) continue;
+        o = {};
+        o[output.left] = data[i];
+        o[output.right] = data2[j];
+        result.push(o);
+      }
+    }
+    return result;
+  }
+
+  cross["with"] = function(d) {
+    other = d;
+    return cross;
+  };
+  
+  cross.diagonal = function(x) {
+    nodiag = !x;
+    return cross;
+  };
+
+  return cross;
 };vg.data.facet = function() {
 
   var keys = [],
@@ -2548,6 +2962,24 @@ function vg_load_http(url, callback) {
   };
 
   return filter;
+};vg.data.flatten = function() {
+    
+  function flatten(data) {
+    return flat(data, []);
+  }
+  
+  function flat(data, list) {
+    if (data.values) {
+      for (var i=0, n=data.values.length; i<n; ++i) {
+        flat(data.values[i], list);
+      }
+    } else {
+      list.push(data);
+    }
+    return list;
+  }
+  
+  return flatten;
 };vg.data.fold = function() {
   var fields = [],
       accessors = [],
@@ -2678,8 +3110,8 @@ function vg_load_http(url, callback) {
     var field = null,
         expr = vg.identity;
   
-    var formula = vg.data.mapper(function(d) {
-      if (field) d[field] = expr.call(null, d);
+    var formula = vg.data.mapper(function(d, i, list) {
+      if (field) d[field] = expr.call(null, d, i, list);
       return d;
     });
 
@@ -3035,17 +3467,20 @@ function vg_load_http(url, callback) {
       params = ["offset", "order"],
       output = {
         "y0": "y2",
-        "y1": "y"
+        "y1": "y",
+        "cy": "cy"
       };
 
   function stack(data) {
     var out_y0 = output["y0"],
-        out_y1 = output["y1"];
+        out_y1 = output["y1"],
+        out_cy = output["cy"];
     
     layout.out(function(d, y0, y) {
       if (d.datum) {
         d.datum[out_y0] = y0;
         d.datum[out_y1] = y + y0;
+        d.datum[out_cy] = y0 + y/2;
       }
     })(stacks(data));
     
@@ -3114,6 +3549,7 @@ function vg_load_http(url, callback) {
   return stack;
 };vg.data.stats = function() {
   var value = vg.accessor("data"),
+      assign = false,
       median = false,
       output = {
         "count":    "count",
@@ -3163,6 +3599,23 @@ function vg_load_http(url, callback) {
     o[output.mean] = mean;
     o[output.variance] = M2;
     o[output.stdev] = Math.sqrt(M2);
+    
+    if (assign) {
+      list = (vg.isArray(data) ? data : data.values);
+      v = {};
+      v[output.count] = len;
+      v[output.min] = min;
+      v[output.max] = max;
+      v[output.sum] = sum;
+      v[output.mean] = mean;
+      v[output.variance] = M2;
+      v[output.stdev] = Math.sqrt(M2);
+      if (median) v[output.median] = o[output.median];
+      for (i=0, len=list.length; i<len; ++i) {
+        list[i].stats = v;
+      }
+    }
+    
     return o;
   }
   
@@ -3178,6 +3631,11 @@ function vg_load_http(url, callback) {
   
   stats.value = function(field) {
     value = vg.accessor(field);
+    return stats;
+  };
+
+  stats.assign = function(b) {
+    assign = b;
     return stats;
   };
   
@@ -3208,7 +3666,7 @@ function vg_load_http(url, callback) {
     data = layout
       .size(vg.data.size(size, group))
       .value(value)
-      .nodes(data);
+      .nodes(vg.isTree(data) ? data.nodes() : data);
     
     var keys = vg.keys(output),
         len = keys.length;
@@ -3272,7 +3730,7 @@ function vg_load_http(url, callback) {
     return truncate;
   };
   
-  truncate.as = function(field) {
+  truncate.output = function(field) {
     as = field;
     return truncate;
   };
@@ -3292,7 +3750,7 @@ function vg_load_http(url, callback) {
     return truncate;
   };
 
-  truncate.wordBreak = function(b) {
+  truncate.wordbreak = function(b) {
     wordBreak = !!b;
     return truncate;
   };
@@ -3323,6 +3781,32 @@ function vg_load_http(url, callback) {
   };
 
   return unique;
+};vg.data.window = function() {
+
+  var size = 2,
+      step = 1;
+  
+  function win(data) {
+    data = vg.isArray(data) ? data : data.values || [];
+    var runs = [], i, j, n=data.length-size, curr;
+    for (i=0; i<=n; i+=step) {
+      for (j=0, curr=[]; j<size; ++j) curr.push(data[i+j]);
+      runs.push({key: i, values: curr});
+    }
+    return {values: runs};
+  }
+  
+  win.size = function(n) {
+    size = n;
+    return win;
+  };
+  
+  win.step = function(n) {
+    step = n;
+    return win;
+  };
+
+  return win;
 };vg.data.wordcloud = function() {
   var layout = d3.layout.cloud().size([900, 500]),
       text = vg.accessor("data"),
@@ -3669,8 +4153,7 @@ function vg_load_http(url, callback) {
       }
     }
     
-    // TODO security check
-    return Function("d", "return ("+tokens.join("")+");");
+    return Function("d", "index", "data", "return ("+tokens.join("")+");");
   };
   
 })();vg.parse.legends = (function() {
@@ -3720,10 +4203,12 @@ function vg_load_http(url, callback) {
   
   // parse mark property definitions
   vg.keys(props).forEach(function(k) {
-    props[k] = vg.parse.properties(props[k]);
+    props[k] = vg.parse.properties(mark.type, props[k]);
   });
   // parse delay function
-  if (mark.delay) mark.delay = vg.parse.properties({delay: mark.delay});
+  if (mark.delay) {
+    mark.delay = vg.parse.properties(mark.type, {delay: mark.delay});
+  }
       
   // parse mark data definition
   if (mark.from) {
@@ -3752,12 +4237,14 @@ function vg_load_http(url, callback) {
     marks: (spec.marks || []).map(vg.parse.mark)
   };
 };vg.parse.padding = function(pad) {
-  if (vg.isObject(pad)) return pad;
+  if (pad == null) return "auto";
+  else if (vg.isString(pad)) return pad==="strict" ? "strict" : "auto";
+  else if (vg.isObject(pad)) return pad;
   var p = vg.isNumber(pad) ? pad : 20;
   return {top:p, left:p, right:p, bottom:p};
 };
 vg.parse.properties = (function() {
-  function compile(spec) {
+  function compile(mark, spec) {
     var code = "",
         names = vg.keys(spec),
         i, len, name, ref, vars = {};
@@ -3767,77 +4254,126 @@ vg.parse.properties = (function() {
     for (i=0, len=names.length; i<len; ++i) {
       ref = spec[name = names[i]];
       code += (i > 0) ? "\n  " : "  ";
-      code += "o."+name+" = "+valueRef(ref)+";";
+      code += "o."+name+" = "+valueRef(name, ref)+";";
       vars[name] = true;
     }
     
     if (vars.x2) {
-      code += "\n  if (o.x > o.x2) { "
-            + "var t = o.x; o.x = o.x2; o.x2 = t; };"
-      code += "\n  o.width = (o.x2 - o.x);"
+      if (vars.width) {
+        code += "\n  o.x = (o.x2 - o.width);";
+      } else if (vars.x) {
+        code += "\n  if (o.x > o.x2) { "
+              + "var t = o.x; o.x = o.x2; o.x2 = t; };";
+        code += "\n  o.width = (o.x2 - o.x);";
+      }
     }
-    
+
     if (vars.y2) {
-      code += "\n  if (o.y > o.y2) { "
-            + "var t = o.y; o.y = o.y2; o.y2 = t; };"
-      code += "\n  o.height = (o.y2 - o.y);"
-    }
-    
-    code += "if (trans) trans.interpolate(item, o);";
-
-    return Function("item", "group", "trans", code);
-  }
-
-  // TODO security check for strings emitted into code
-  function valueRef(ref) {
-    if (ref == null) return null;
-
-    if (ref.c) {
-      return colorRef("hcl", ref.h, ref.c, ref.l);
-    } else if (ref.h || ref.s) {
-      return colorRef("hsl", ref.h, ref.s, ref.l);
-    } else if (ref.l || ref.a) {
-      return colorRef("lab", ref.l, ref.a, ref.b);
-    } else if (ref.r || ref.g || ref.b) {
-      return colorRef("rgb", ref.r, ref.g, ref.b);
-    }
-
-    var val = ref.value !== undefined
-              ? vg.str(ref.value)
-              : "item.datum.data";
-
-    // get value from enclosing group
-    if (ref.group !== undefined) {
-      val = "group." + ref.group;
-    }
-
-    // get data field value
-    if (ref.field !== undefined) {
-      val = "item.datum["
-          + vg.field(ref.field).map(vg.str).join("][")
-          + "]";
-    }
-    
-    // run through scale function
-    if (ref.scale !== undefined) {
-      var scale = "group.scales['"+ref.scale+"']";
-      if (ref.band) {
-        val = scale + ".rangeBand()";
-      } else {
-        val = scale + "(" + val + ")";
+      if (vars.height) {
+        code += "\n  o.y = (o.y2 - o.height);";
+      } else if (vars.y) {
+        code += "\n  if (o.y > o.y2) { "
+              + "var t = o.y; o.y = o.y2; o.y2 = t; };";
+        code += "\n  o.height = (o.y2 - o.y);";
       }
     }
     
+    if (hasPath(mark, vars)) {
+      code += "\n  if (o['path:parsed']) o['path:parsed'] = null;"
+    }
+    code += "\n  if (trans) trans.interpolate(item, o);";
+
+    try {
+      return Function("item", "group", "trans", code);
+    } catch (e) {
+      vg.error(e);
+      vg.log(code);
+    }
+  }
+  
+  function hasPath(mark, vars) {
+    return vars.path ||
+      ((mark==="area" || mark==="line") &&
+        (vars.x || vars.x2 || vars.width ||
+         vars.y || vars.y2 || vars.height ||
+         vars.tension || vars.interpolate));
+  }
+  
+  var GROUP_VARS = {
+    "width": 1,
+    "height": 1,
+    "mark.group.width": 1,
+    "mark.group.height": 1
+  };
+
+  function valueRef(name, ref) {
+    if (ref == null) return null;
+    var isColor = name==="fill" || name==="stroke";
+
+    if (isColor) {
+      if (ref.c) {
+        return colorRef("hcl", ref.h, ref.c, ref.l);
+      } else if (ref.h || ref.s) {
+        return colorRef("hsl", ref.h, ref.s, ref.l);
+      } else if (ref.l || ref.a) {
+        return colorRef("lab", ref.l, ref.a, ref.b);
+      } else if (ref.r || ref.g || ref.b) {
+        return colorRef("rgb", ref.r, ref.g, ref.b);
+      }
+    }
+
+    // initialize value
+    var val = "item.datum.data";
+    if (ref.value !== undefined) {
+      val = vg.str(ref.value);
+    }
+
+    // get field reference for enclosing group
+    if (ref.group != null) {
+      var grp = "";
+      if (vg.isString(ref.group)) {
+        grp = GROUP_VARS[ref.group]
+          ? "group." + ref.group
+          : "group.datum["+vg.field(ref.group).map(vg.str).join("][")+"]";
+      }
+    }
+
+    // get data field value
+    if (ref.field != null) {
+      if (vg.isString(ref.field)) {
+        val = "item.datum["+vg.field(ref.field).map(vg.str).join("][")+"]";
+        if (ref.group != null) { val = grp+"["+val+"]"; }
+      } else {
+        val = "this.accessor(group.datum["
+            + vg.field(ref.field.group).map(vg.str).join("][")
+            + "])(item.datum.data)";
+      }
+    } else if (ref.group != null) {
+      val = grp;
+    }
+
+    // run through scale function
+    if (ref.scale != null) {
+      var scale = vg.isString(ref.scale)
+        ? vg.str(ref.scale)
+        : (ref.scale.group ? "group" : "item")
+          + ".datum[" + vg.str(ref.scale.group || ref.scale.field) + "]";
+      scale = "group.scales[" + scale + "]";
+      val = scale + (ref.band ? ".rangeBand()" : "("+val+")");
+    }
+    
     // multiply, offset, return value
-    return "(" + (ref.mult ? (ref.mult+" * ") : "") + val + ")"
-      + (ref.offset ? " + "+ref.offset : "");
+    val = "(" + (ref.mult?(vg.number(ref.mult)+" * "):"") + val + ")"
+      + (ref.offset ? " + " + vg.number(ref.offset) : "");
+    if (isColor) val = '('+val+')+""';
+    return val;
   }
   
   function colorRef(type, x, y, z) {
-    var xx = x ? valueRef(x) : vg.config.color[type][0],
-        yy = y ? valueRef(y) : vg.config.color[type][1],
-        zz = z ? valueRef(z) : vg.config.color[type][2];
-    return "(d3." + type + "(" + [xx,yy,zz].join(",") + ') + "")';
+    var xx = x ? valueRef("", x) : vg.config.color[type][0],
+        yy = y ? valueRef("", y) : vg.config.color[type][1],
+        zz = z ? valueRef("", z) : vg.config.color[type][2];
+    return "(this.d3." + type + "(" + [xx,yy,zz].join(",") + ') + "")';
   }
   
   return compile;
@@ -3848,11 +4384,6 @@ vg.parse.properties = (function() {
       POWER = "pow",
       TIME = "time",
       GROUP_PROPERTY = {width: 1, height: 1};
-
-  var SCALES = {
-    "time": d3.time.scale,
-    "utc":  d3.time.scale.utc
-  };
 
   function scales(spec, scales, db, group) {
     return (spec || []).reduce(function(o, def) {
@@ -3872,18 +4403,18 @@ vg.parse.properties = (function() {
     m(def, s, rng, db, data);
     return s;
   }
-  
+
   function instance(def, scale) {
     var type = def.type || LINEAR;
     if (!scale || type !== scale.type) {
-      var ctor = SCALES[type] || d3.scale[type];
+      var ctor = vg.config.scale[type] || d3.scale[type];
       if (!ctor) vg.error("Unrecognized scale type: " + type);
-      (scale = ctor()).type = type;
+      (scale = ctor()).type = scale.type || type;
       scale.scaleName = def.name;
     }
     return scale;
   }
-  
+
   function ordinal(def, scale, rng, db, data) {
     var domain, refs, values, str;
     
@@ -3893,9 +4424,10 @@ vg.parse.properties = (function() {
       scale.domain(domain);
     } else if (vg.isObject(domain)) {
       refs = def.domain.fields || vg.array(def.domain);
-      values = refs.reduce(function(values, r) {
-        var dat = db[r.data] || data,
-            get = vg.accessor(r.field);
+      values = refs.reduce(function(values, r) {        
+        var dat = vg.values(db[r.data] || data),
+            get = vg.accessor(vg.isString(r.field)
+              ? r.field : "data." + vg.accessor(r.field.group)(data));
         return vg.unique(dat, get, values);
       }, []);
       if (def.sort) values.sort(vg.cmp);
@@ -3914,18 +4446,23 @@ vg.parse.properties = (function() {
       scale.rangeBands(rng, def.padding||0);
     }
   }
-  
+
   function quantitative(def, scale, rng, db, data) {
-    var domain, refs, interval;
+    var domain, refs, interval, z;
 
     // domain
     domain = [null, null];
-    function extract(ref, min, max) {
-      var dat = db[ref.data] || data;
-      vg.array(ref.field).forEach(function(f,i) {
+    function extract(ref, min, max, z) {
+      var dat = vg.values(db[ref.data] || data);
+      var fields = vg.array(ref.field).map(function(f) {
+        return vg.isString(f) ? f
+          : "data." + vg.accessor(f.group)(data);
+      });
+      
+      fields.forEach(function(f,i) {
         f = vg.accessor(f);
         if (min) domain[0] = d3.min([domain[0], d3.min(dat, f)]);
-        if (max) domain[1] = d3.max([domain[1], d3.max(dat, f)]);
+        if (max) domain[z] = d3.max([domain[z], d3.max(dat, f)]);
       });
     }
     if (def.domain !== undefined) {
@@ -3933,32 +4470,33 @@ vg.parse.properties = (function() {
         domain = def.domain.slice();
       } else if (vg.isObject(def.domain)) {
         refs = def.domain.fields || vg.array(def.domain);
-        refs.forEach(function(r) { extract(r,1,1); });
+        refs.forEach(function(r) { extract(r,1,1,1); });
       } else {
         domain = def.domain;
       }
     }
+    z = domain.length - 1;
     if (def.domainMin !== undefined) {
       if (vg.isObject(def.domainMin)) {
         domain[0] = null;
         refs = def.domainMin.fields || vg.array(def.domainMin);
-        refs.forEach(function(r) { extract(r,1,0); });
+        refs.forEach(function(r) { extract(r,1,0,z); });
       } else {
         domain[0] = def.domainMin;
       }
     }
     if (def.domainMax !== undefined) {
       if (vg.isObject(def.domainMax)) {
-        domain[1] = null;
+        domain[z] = null;
         refs = def.domainMax.fields || vg.array(def.domainMax);
-        refs.forEach(function(r) { extract(r,0,1); });
+        refs.forEach(function(r) { extract(r,0,1,z); });
       } else {
-        domain[1] = def.domainMax;
+        domain[z] = def.domainMax;
       }
     }
     if (def.type !== LOG && def.type !== TIME && (def.zero || def.zero===undefined)) {
       domain[0] = Math.min(0, domain[0]);
-      domain[1] = Math.max(0, domain[1]);
+      domain[z] = Math.max(0, domain[z]);
     }
     scale.domain(domain);
 
@@ -3979,7 +4517,7 @@ vg.parse.properties = (function() {
       }
     }
   }
-  
+
   function range(def, group) {
     var rng = [null, null];
 
@@ -4003,7 +4541,7 @@ vg.parse.properties = (function() {
       rng[0] = def.rangeMin;
     }
     if (def.rangeMax !== undefined) {
-      rng[1] = def.rangeMax;
+      rng[rng.length-1] = def.rangeMax;
     }
     
     if (def.reverse !== undefined) {
@@ -4016,9 +4554,10 @@ vg.parse.properties = (function() {
     
     return rng;
   }
-  
+
   return scales;
-})();vg.parse.spec = function(spec, callback, viewFactory) {
+})();
+vg.parse.spec = function(spec, callback, viewFactory) {
   
   viewFactory = viewFactory || vg.ViewFactory;
   
@@ -4074,6 +4613,14 @@ vg.scene.data = function(data, parentData) {
   if (data === DEFAULT) data = [DEFAULT];
   
   return data;
+};
+
+vg.scene.fontString = function(o) {
+  return (o.fontStyle ? o.fontStyle + " " : "")
+    + (o.fontVariant ? o.fontVariant + " " : "")
+    + (o.fontWeight ? o.fontWeight + " " : "")
+    + (o.fontSize != null ? o.fontSize : vg.config.render.fontSize) + "px "
+    + (o.font || vg.config.render.font);
 };vg.scene.Item = (function() {
   function item(mark) {
     this.mark = mark;
@@ -4117,6 +4664,14 @@ vg.scene.data = function(data, parentData) {
 
 vg.scene.item = function(mark) {
   return new vg.scene.Item(mark);
+};vg.scene.visit = function(node, func) {
+  var i, n, items;
+  if (func(node)) return true;
+  if (items = node.items) {
+    for (i=0, n=items.length; i<n; ++i) {
+      if (vg.scene.visit(items[i], func)) return true;
+    }
+  }
 };vg.scene.build = (function() {
   var GROUP  = vg.scene.GROUP,
       ENTER  = vg.scene.ENTER,
@@ -4173,7 +4728,7 @@ vg.scene.item = function(mark) {
       item.key = key;
       next.push(item);
     }
-    
+
     for (i=0, len=prev.length; i<len; ++i) {
       item = prev[i];
       if (item.status === EXIT) {
@@ -4231,11 +4786,296 @@ vg.scene.item = function(mark) {
   }
   
   return build;
+})();vg.scene.bounds = (function() {
+
+  var parse = vg.canvas.path.parse,
+      boundPath = vg.canvas.path.bounds,
+      areaPath = vg.canvas.path.area,
+      linePath = vg.canvas.path.line,
+      halfpi = Math.PI / 2,
+      gfx = null;
+
+  function context() {
+    return gfx || (gfx = (vg.config.isNode
+      ? new (require("canvas"))(1,1)
+      : d3.select("body").append("canvas")
+          .attr("class", "vega_hidden")
+          .attr("width", 1)
+          .attr("height", 1)
+          .style("display", "none")
+          .node())
+      .getContext("2d"));
+  }
+
+  function pathBounds(o, path, bounds) {
+    if (path == null) {
+      bounds.set(0, 0, 0, 0);
+    } else {
+      boundPath(path, bounds);
+      if (o.stroke && o.opacity !== 0 && o.strokeWidth > 0) {
+        bounds.expand(o.strokeWidth);
+      }
+    }
+    return bounds;
+  }
+
+  function path(o, bounds) {
+    var p = o.path
+      ? o["path:parsed"] || (o["path:parsed"] = parse(o.path))
+      : null;
+    return pathBounds(o, p, bounds);
+  }
+  
+  function area(o, bounds) {
+    var items = o.mark.items, o = items[0];
+    var p = o["path:parsed"] || (o["path:parsed"]=parse(areaPath(items)));
+    return pathBounds(items[0], p, bounds);
+  }
+
+  function line(o, bounds) {
+    var items = o.mark.items, o = items[0];
+    var p = o["path:parsed"] || (o["path:parsed"]=parse(linePath(items)));
+    return pathBounds(items[0], p, bounds);
+  }
+
+  function rect(o, bounds) {
+    var x = o.x || 0,
+        y = o.y || 0,
+        w = (x + o.width) || 0,
+        h = (y + o.height) || 0;
+    bounds.set(x, y, w, h);
+    if (o.stroke && o.opacity !== 0 && o.strokeWidth > 0) {
+      bounds.expand(o.strokeWidth);
+    }
+    return bounds;
+  }
+
+  function image(o, bounds) {
+    var w = o.width || 0,
+        h = o.height || 0,
+        x = (o.x||0) - (o.align === "center"
+            ? w/2 : (o.align === "right" ? w : 0)),
+        y = (o.y||0) - (o.baseline === "middle"
+            ? h/2 : (o.baseline === "bottom" ? h : 0));
+    return bounds.set(x, y, x+w, y+h);
+  }
+
+  function rule(o, bounds) {
+    var x1, y1;
+    bounds.set(
+      x1 = o.x || 0,
+      y1 = o.y || 0,
+      o.x2 != null ? o.x2 : x1,
+      o.y2 != null ? o.y2 : y1
+    );
+    if (o.stroke && o.opacity !== 0 && o.strokeWidth > 0) {
+      bounds.expand(o.strokeWidth);
+    }
+    return bounds;
+  }
+  
+  function arc(o, bounds) {
+    var cx = o.x || 0,
+        cy = o.y || 0,
+        ir = o.innerRadius || 0,
+        or = o.outerRadius || 0,
+        sa = (o.startAngle || 0) - halfpi,
+        ea = (o.endAngle || 0) - halfpi,
+        xmin = Infinity, xmax = -Infinity,
+        ymin = Infinity, ymax = -Infinity,
+        a, i, n, x, y, ix, iy, ox, oy;
+
+    var angles = [sa, ea],
+        s = sa - (sa%halfpi) + halfpi;
+    for (var i=0; i<4 && s<ea; ++i, s+=halfpi) {
+      angles.push(s);
+    }
+
+    for (i=0, n=angles.length; i<n; ++i) {
+      a = angles[i];
+      x = Math.cos(a); ix = ir*x; ox = or*x;
+      y = Math.sin(a); iy = ir*y; oy = or*y;
+      xmin = Math.min(xmin, ix, ox);
+      xmax = Math.max(xmax, ix, ox);
+      ymin = Math.min(ymin, iy, oy);
+      ymax = Math.max(ymax, iy, oy);
+    }
+
+    bounds.set(cx+xmin, cy+ymin, cx+xmax, cy+ymax);
+    if (o.stroke && o.opacity !== 0 && o.strokeWidth > 0) {
+      bounds.expand(o.strokeWidth);
+    }
+    return bounds;
+  }
+
+  function symbol(o, bounds) {
+    var size = o.size != null ? o.size : 100,
+        x = o.x || 0,
+        y = o.y || 0,
+        r, t, rx, ry;
+
+    switch (o.shape) {
+      case "cross":
+        r = Math.sqrt(size / 5) / 2;
+        t = 3*r;
+        bounds.set(x-t, y-t, x+y, y+t);
+        break;
+
+      case "diamond":
+        ry = Math.sqrt(size / (2 * tan30));
+        rx = ry * tan30;
+        bounds.set(x-rx, y-ry, x+rx, y+ry);
+        break;
+
+      case "square":
+        t = Math.sqrt(size);
+        r = t / 2;
+        bounds.set(x-r, y-r, x+r, y+r);
+        break;
+
+      case "triangle-down":
+        rx = Math.sqrt(size / sqrt3);
+        ry = rx * sqrt3 / 2;
+        bounds.set(x-rx, y-ry, x+rx, y+ry);
+        break;
+
+      case "triangle-up":
+        rx = Math.sqrt(size / sqrt3);
+        ry = rx * sqrt3 / 2;
+        bounds.set(x-rx, y-ry, x+rx, y+ry);
+        break;
+
+      default:
+        r = Math.sqrt(size/Math.PI);
+        bounds.set(x-r, y-r, x+r, y+r);
+    }
+    if (o.stroke && o.opacity !== 0 && o.strokeWidth > 0) {
+      bounds.expand(o.strokeWidth);
+    }
+    return bounds;
+  }
+
+  function text(o, bounds, noRotate) {
+    var x = (o.x || 0) + (o.dx || 0),
+        y = (o.y || 0) + (o.dy || 0),
+        h = o.fontSize || vg.config.render.fontSize,
+        a = o.align,
+        b = o.baseline,
+        g = context(), w;
+
+    g.font = vg.scene.fontString(o);
+    g.textAlign = a || "left";
+    g.textBaseline = b || "alphabetic";
+    w = g.measureText(o.text || "").width;
+
+    // horizontal
+    if (a === "center") {
+      x = x - (w / 2);
+    } else if (a === "right") {
+      x = x - w;
+    } else {
+      // left by default, do nothing
+    }
+
+    /// TODO find a robust solution for heights.
+    /// These offsets work for some but not all fonts.
+
+    // vertical
+    if (b === "top") {
+      y = y + (h/5);
+    } else if (b === "bottom") {
+      y = y - h;
+    } else if (b === "middle") {
+      y = y - (h/2) + (h/10);
+    } else {
+      y = y - 4*h/5; // alphabetic by default
+    }
+    
+    bounds.set(x, y, x+w, y+h);
+    if (o.angle && !noRotate) {
+      bounds.rotate(o.angle*Math.PI/180, o.x||0, o.y||0);
+    }
+    return bounds.expand(noRotate ? 0 : 1);
+  }
+
+  function group(g, bounds, includeLegends) {
+    var axes = g.axisItems || [],
+        legends = g.legendItems || [], j, m;
+
+    for (j=0, m=axes.length; j<m; ++j) {
+      bounds.union(axes[j].bounds);
+    }
+    for (j=0, m=g.items.length; j<m; ++j) {
+      bounds.union(g.items[j].bounds);
+    }
+    if (includeLegends) {
+      for (j=0, m=legends.length; j<m; ++j) {
+        bounds.union(legends[j].bounds);
+      }
+      if (g.width != null && g.height != null) {
+        bounds.add(g.width, g.height);
+      }
+      if (g.x != null && g.y != null) {
+        bounds.add(0, 0);
+      }
+    }
+    bounds.translate(g.x||0, g.y||0);
+    return bounds;
+  }
+
+  var methods = {
+    group:  group,
+    symbol: symbol,
+    image:  image,
+    rect:   rect,
+    rule:   rule,
+    arc:    arc,
+    text:   text,
+    path:   path,
+    area:   area,
+    line:   line
+  };
+
+  function itemBounds(item, func, opt) {
+    func = func || methods[item.mark.marktype];
+    if (!item.bounds_prev) item['bounds:prev'] = new vg.Bounds();
+    var b = item.bounds, pb = item['bounds:prev'];
+    if (b) pb.clear().union(b);
+    item.bounds = func(item, b ? b.clear() : new vg.Bounds(), opt);
+    if (!b) pb.clear().union(item.bounds);
+    return item.bounds;
+  }
+
+  function markBounds(mark, bounds, opt) {
+    bounds = bounds || mark.bounds && mark.bounds.clear() || new vg.Bounds();
+    var type  = mark.marktype,
+        func  = methods[type],
+        items = mark.items,
+        item, i, len;
+        
+    if (type==="area" || type==="line") {
+      items[0].bounds = func(items[0], bounds);
+    } else {
+      for (i=0, len=items.length; i<len; ++i) {
+        bounds.union(itemBounds(items[i], func, opt));
+      }
+    }
+    mark.bounds = bounds;
+  }
+  
+  return {
+    mark:  markBounds,
+    item:  itemBounds,
+    text:  text,
+    group: group
+  };
+
 })();vg.scene.encode = (function() {
   var GROUP  = vg.scene.GROUP,
       ENTER  = vg.scene.ENTER,
       UPDATE = vg.scene.UPDATE,
-      EXIT   = vg.scene.EXIT;
+      EXIT   = vg.scene.EXIT,
+      EMPTY  = {};
 
   function main(scene, def, trans, request, items) {
     (request && items)
@@ -4252,7 +5092,10 @@ vg.scene.item = function(mark) {
       group = item.mark.group || null;
       props = item.mark.def.properties;
       prop = props && props[request];
-      if (prop) prop.call(this, item, group, trans);
+      if (prop) {
+        prop.call(vg, item, group, trans);
+        vg.scene.bounds.item(item);
+      }
     }
   }
   
@@ -4260,7 +5103,15 @@ vg.scene.item = function(mark) {
     encodeItems.call(this, group, scene.items, def, trans, request);
     if (scene.marktype === GROUP) {
       encodeGroup.call(this, scene, def, group, trans, request);
+    } else {
+      vg.scene.bounds.mark(scene);
     }
+  }
+  
+  function encodeLegend(group, scene, def, trans, request) {
+    encodeGroup.call(this, scene, def, group, trans, request);
+    encodeItems.call(this, group, scene.items, def, trans, request);
+    vg.scene.bounds.mark(scene, null, true);
   }
   
   function encodeGroup(scene, def, parent, trans, request) {
@@ -4271,7 +5122,9 @@ vg.scene.item = function(mark) {
       group = scene.items[i];
 
       // cascade scales recursively
-      scales = group.scales || (group.scales = vg.extend({}, parent.scales));    
+      // use parent scales if there are no group-level scale defs
+      scales = group.scales || (group.scales =
+        def.scales ? vg.extend({}, parent.scales) : parent.scales);
       
       // update group-level scales
       if (def.scales) {
@@ -4286,6 +5139,7 @@ vg.scene.item = function(mark) {
         axes.forEach(function(a, i) {
           axisDef = a.def();
           axisItems[i] = vg.scene.build(axisDef, this._data, axisItems[i]);
+          axisItems[i].group = group;
           encode.call(this, group, group.axisItems[i], axisDef, trans);
         });
       }
@@ -4294,33 +5148,41 @@ vg.scene.item = function(mark) {
       for (m=0, mlen=group.items.length; m<mlen; ++m) {
         encode.call(this, group, group.items[m], def.marks[m], trans, request);
       }
-      
-      // update group-level legends
-      if (def.legends) {
+    }
+    
+    // compute bounds (without legend)
+    vg.scene.bounds.mark(scene, null, !def.legends);
+    
+    // update legends
+    if (def.legends) {
+      for (i=0, len=scene.items.length; i<len; ++i) {
+        group = scene.items[i];
         leg = group.legends || (group.legends = []);
         legItems = group.legendItems || (group.legendItems = []);
         vg.parse.legends(def.legends, leg, group.scales);
         leg.forEach(function(l, i) {
           legDef = l.def();
           legItems[i] = vg.scene.build(legDef, this._data, legItems[i]);
-          encode.call(this, group, group.legendItems[i], legDef, trans);
+          legItems[i].group = group;
+          encodeLegend.call(this, group, group.legendItems[i], legDef, trans);
         });
       }
+      vg.scene.bounds.mark(scene, null, true);
     }
   }
   
-  function encodeItems(group, items, def, trans, request) {
-    if (def.properties == null) return;
-    
-    var props  = def.properties,
+  function encodeItems(group, items, def, trans, request) {    
+    var props  = def.properties || EMPTY,
         enter  = props.enter,
         update = props.update,
         exit   = props.exit,
         i, len, item, prop;
 
-    if (request && (prop = props[request])) {
-      for (i=0, len=items.length; i<len; ++i) {
-        prop.call(this, items[i], group, trans);
+    if (request) {
+      if (prop = props[request]) {
+        for (i=0, len=items.length; i<len; ++i) {
+          prop.call(vg, items[i], group, trans);
+        }
       }
       return; // exit early if given request
     }
@@ -4330,19 +5192,20 @@ vg.scene.item = function(mark) {
 
       // enter set
       if (item.status === ENTER) {
-        if (enter) enter.call(this, item, group);
+        if (enter) enter.call(vg, item, group);
         item.status = UPDATE;
       }
 
       // update set      
       if (item.status !== EXIT && update) {
-        update.call(this, item, group, trans);
+        update.call(vg, item, group, trans);
       }
       
       // exit set
       if (item.status === EXIT) {
-        if (exit && trans) exit.call(this, item, group, trans);
-        if (!trans) items[i--].remove();
+        if (exit) exit.call(vg, item, group, trans);
+        if (trans && !exit) trans.interpolate(item, EMPTY);
+        else if (!trans) items[i--].remove();
       }
     }
   }
@@ -4362,15 +5225,25 @@ vg.scene.item = function(mark) {
 
     for (key in values) {
       curr = item[key];
-      next = values[key];
+      next = values[key];      
       if (curr !== next) {
-        interp = d3.interpolate(curr, next);
-        interp.property = key;
-        (list || (list=[])).push(interp);
+        if (key === "text") {
+          // skip interpolation for text labels
+          item[key] = next;
+        } else {
+          // otherwise lookup interpolator
+          interp = d3.interpolate(curr, next);
+          interp.property = key;
+          (list || (list=[])).push(interp);
+        }
       }
     }
 
-    if (interp) {
+    if (list === null && item.status === vg.scene.EXIT) {
+      list = []; // ensure exiting items are included
+    }
+
+    if (list != null) {
       list.item = item;
       list.ease = item.mark.ease || this.ease;
       list.next = this.updates.next;
@@ -4404,6 +5277,7 @@ vg.scene.item = function(mark) {
 
       for (i=0, n=curr.length; i<n; ++i) {
         item[curr[i].property] = curr[i](e);
+        vg.scene.bounds.item(item);
       }
 
       if (f === 1) {
@@ -4451,9 +5325,10 @@ vg.scene.transition = function(dur, ease) {
 
   var axis = {};
 
+  function reset() { axisDef = null; }
+
   axis.def = function() {
-    // TODO: only generate def as-needed; use dirty bit?
-    var def = axisDef = axis_def(scale);
+    var def = axisDef ? axisDef : (axisDef = axis_def(scale));
     
     // generate data
     var major = tickValues == null
@@ -4504,8 +5379,8 @@ vg.scene.transition = function(dur, ease) {
     vg_axisTicksExtend(orient, majorTicks, oldScale, newScale, tickMajorSize);
     vg_axisTicksExtend(orient, minorTicks, oldScale, newScale, tickMinorSize);
     vg_axisLabelExtend(orient, tickLabels, oldScale, newScale, tickMajorSize, tickPadding);
+
     vg_axisDomainExtend(orient, domain, range, tickEndSize);
-    
     vg_axisTitleExtend(orient, title, range, titleOffset); // TODO get offset
     
     // add / override custom style properties
@@ -4520,26 +5395,29 @@ vg.scene.transition = function(dur, ease) {
     return {
       type: "group",
       interactive: false,
-      properties: { update: vg_axisUpdate },
+      properties: { enter: vg_axisUpdate, update: vg_axisUpdate },
       marks: marks.map(vg.parse.mark)
     };
   }
 
   axis.scale = function(x) {
     if (!arguments.length) return scale;
-    scale = x;
+    if (scale !== x) { scale = x; reset(); }
     return axis;
   };
 
   axis.orient = function(x) {
     if (!arguments.length) return orient;
-    orient = x in vg_axisOrients ? x + "" : vg.config.axis.orient;
+    if (orient !== x) {
+      orient = x in vg_axisOrients ? x + "" : vg.config.axis.orient;
+      reset();
+    }
     return axis;
   };
 
   axis.title = function(x) {
     if (!arguments.length) return title;
-    title = x;
+    if (title !== x) { title = x; reset(); }
     return axis;
   };
 
@@ -4563,16 +5441,20 @@ vg.scene.transition = function(dur, ease) {
   
   axis.tickSize = function(x, y) {
     if (!arguments.length) return tickMajorSize;
-    var n = arguments.length - 1;
-    tickMajorSize = +x;
-    tickMinorSize = n > 1 ? +y : tickMajorSize;
-    tickEndSize = n > 0 ? +arguments[n] : tickMajorSize;
-    return axis;
-  };
+    var n = arguments.length - 1,
+        major = +x,
+        minor = n > 1 ? +y : tickMajorSize,
+        end   = n > 0 ? +arguments[n] : tickMajorSize;
 
-  axis.tickPadding = function(x) {
-    if (!arguments.length) return tickPadding;
-    tickPadding = +x;
+    if (tickMajorSize !== major ||
+        tickMinorSize !== minor ||
+        tickEndSize !== end) {
+      reset();
+    }
+
+    tickMajorSize = major;
+    tickMinorSize = minor;
+    tickEndSize = end;
     return axis;
   };
 
@@ -4584,63 +5466,71 @@ vg.scene.transition = function(dur, ease) {
   
   axis.offset = function(x) {
     if (!arguments.length) return tickValues;
-    offset = +x;
+    offset = vg.isObject(x) ? x : +x;
+    return axis;
+  };
+
+  axis.tickPadding = function(x) {
+    if (!arguments.length) return tickPadding;
+    if (tickPadding !== +x) { tickPadding = +x; reset(); }
     return axis;
   };
 
   axis.titleOffset = function(x) {
     if (!arguments.length) return titleOffset;
-    titleOffset = +x;
+    if (titleOffset !== +x) { titleOffset = +x; reset(); }
     return axis;
   };
 
   axis.layer = function(x) {
     if (!arguments.length) return layer;
-    layer = x;
+    if (layer !== x) { layer = x; reset(); }
     return axis;
   };
 
   axis.grid = function(x) {
     if (!arguments.length) return grid;
-    grid = x;
+    if (grid !== x) { grid = x; reset(); }
     return axis;
   };
 
   axis.gridLineProperties = function(x) {
     if (!arguments.length) return gridLineStyle;
-    gridLineStyle = x;
+    if (gridLineStyle !== x) { gridLineStyle = x; }
     return axis;
   };
 
   axis.majorTickProperties = function(x) {
     if (!arguments.length) return majorTickStyle;
-    majorTickStyle = x;
+    if (majorTickStyle !== x) { majorTickStyle = x; }
     return axis;
   };
 
   axis.minorTickProperties = function(x) {
     if (!arguments.length) return minorTickStyle;
-    minorTickStyle = x;
+    if (minorTickStyle !== x) { minorTickStyle = x; }
     return axis;
   };
 
   axis.tickLabelProperties = function(x) {
     if (!arguments.length) return tickLabelStyle;
-    tickLabelStyle = x;
+    if (tickLabelStyle !== x) { tickLabelStyle = x; }
     return axis;
   };
 
   axis.titleProperties = function(x) {
     if (!arguments.length) return titleStyle;
-    titleStyle = x;
+    if (titleStyle !== x) { titleStyle = x; }
     return axis;
   };
 
   axis.domainProperties = function(x) {
     if (!arguments.length) return domainStyle;
-    domainStyle = x;
+    if (domainStyle !== x) { domainStyle = x; }
     return axis;
   };
+  
+  axis.reset = function() { reset(); };
 
   return axis;
 };
@@ -4730,8 +5620,8 @@ function vg_axisTicksExtend(orient, ticks, oldScale, newScale, size) {
   var sign = (orient === "left" || orient === "top") ? -1 : 1;
   if (size === Infinity) {
     size = (orient === "top" || orient === "bottom")
-      ? {group: "height", mult: -sign}
-      : {group: "width", mult: -sign};
+      ? {group: "mark.group.height", mult: -sign}
+      : {group: "mark.group.width", mult: -sign};
   } else {
     size = {value: sign * size};
   }
@@ -4805,16 +5695,18 @@ function vg_axisUpdate(item, group, trans) {
       width  = group.width,
       height = group.height; // TODO fallback to global w,h?
 
-  item.width = width;
-  item.height = height;
+  if (vg.isObject(offset)) {
+    offset = -group.scales[offset.scale](offset.value);
+  }
 
-  switch(orient) {
+  switch (orient) {
     case "left":   { o.x = -offset; o.y = 0; break; }
     case "right":  { o.x = width + offset; o.y = 0; break; }
     case "bottom": { o.x = 0; o.y = height + offset; break; }
     case "top":    { o.x = 0; o.y = -offset; break; }
     default:       { o.x = 0; o.y = 0; }
   }
+
   if (trans) trans.interpolate(item, o);
 }
 
@@ -4838,7 +5730,7 @@ function vg_axisTicks() {
 function vg_axisTickLabels() {
   return {
     type: "text",
-    interactive: false,
+    interactive: true,
     key: "data",
     properties: {
       enter: {
@@ -4857,7 +5749,7 @@ function vg_axisTickLabels() {
 function vg_axisTitle() {
   return {
     type: "text",
-    interactive: false,
+    interactive: true,
     properties: {
       enter: {
         font: {value: vg.config.axis.titleFont},
@@ -4887,7 +5779,8 @@ function vg_axisDomain() {
       update: {}
     }
   };
-}vg.scene.legend = function() {
+}
+vg.scene.legend = function() {
   var size = null,
       shape = null,
       fill = null,
@@ -4910,14 +5803,18 @@ function vg_axisDomain() {
   var legend = {},
       legendDef = null;
 
-  legend.def = function() {
-    var scale = size || shape || fill || stroke;
+  function reset() { legendDef = null; }
 
-    // TODO: only generate def as-needed; use dirty bit?
-    legendDef = (scale === fill || scale === stroke) && !discrete(scale.type)
-      ? quantDef(scale) : ordinalDef(scale);
+  legend.def = function() {
+    var scale = size || shape || fill || stroke; 
+    if (!legendDef) {
+      legendDef = (scale===fill || scale===stroke) && !discrete(scale.type)
+        ? quantDef(scale)
+        : ordinalDef(scale);      
+    }
     legendDef.orient = orient;
     legendDef.offset = offset;
+    legendDef.padding = padding;
     return legendDef;
   };
 
@@ -4965,6 +5862,7 @@ function vg_axisDomain() {
     var scale = {
       name: "legend",
       type: "ordinal",
+      points: true,
       domain: domain,
       range: range
     };
@@ -4982,7 +5880,7 @@ function vg_axisDomain() {
     return def;
   }
 
-  function o_legend_def(size, shape, fill, stroke) {    
+  function o_legend_def(size, shape, fill, stroke) {
     // setup legend marks
     var titles = vg_legendTitle(),
         symbols = vg_legendSymbols(),
@@ -5006,7 +5904,7 @@ function vg_axisDomain() {
       type: "group",
       interactive: false,
       properties: {
-        enter: vg.parse.properties(legendStyle),
+        enter: vg.parse.properties("group", legendStyle),
         update: vg_legendUpdate
       },
       marks: [titles, symbols, labels].map(vg.parse.mark)
@@ -5044,7 +5942,7 @@ function vg_axisDomain() {
     return def;
   }
   
-  function q_legend_def(scale) {    
+  function q_legend_def(scale) {
     // setup legend marks
     var titles = vg_legendTitle(),
         gradient = vg_legendGradient(),
@@ -5096,7 +5994,7 @@ function vg_axisDomain() {
       type: "group",
       interactive: false,
       properties: {
-        enter: vg.parse.properties(legendStyle),
+        enter: vg.parse.properties("group", legendStyle),
         update: vg_legendUpdate
       },
       marks: [titles, gradient, labels].map(vg.parse.mark)
@@ -5105,43 +6003,43 @@ function vg_axisDomain() {
 
   legend.size = function(x) {
     if (!arguments.length) return size;
-    size = x;
+    if (size !== x) { size = x; reset(); }
     return legend;
   };
 
   legend.shape = function(x) {
     if (!arguments.length) return shape;
-    shape = x;
+    if (shape !== x) { shape = x; reset(); }
     return legend;
   };
 
   legend.fill = function(x) {
     if (!arguments.length) return fill;
-    fill = x;
+    if (fill !== x) { fill = x; reset(); }
     return legend;
   };
   
   legend.stroke = function(x) {
     if (!arguments.length) return stroke;
-    stroke = x;
+    if (stroke !== x) { stroke = x; reset(); }
     return legend;
   };
 
   legend.title = function(x) {
     if (!arguments.length) return title;
-    title = x;
+    if (title !== x) { title = x; reset(); }
     return legend;
   };
 
   legend.format = function(x) {
     if (!arguments.length) return format;
-    format = x;
+    if (format !== x) { format = x; reset(); }
     return legend;
   };
 
   legend.spacing = function(x) {
     if (!arguments.length) return spacing;
-    spacing = +x;
+    if (spacing !== +x) { spacing = +x; reset(); }
     return legend;
   };
 
@@ -5193,6 +6091,8 @@ function vg_axisDomain() {
     return legend;
   };
 
+  legend.reset = function() { reset(); };
+
   return legend;
 };
 
@@ -5202,18 +6102,23 @@ function vg_legendUpdate(item, group, trans) {
   var o = trans ? {} : item,
       offset = item.mark.def.offset,
       orient = item.mark.def.orient,
-      width  = group.width,
-      lw     = 100; // legend width (TODO)
+      pad    = item.mark.def.padding * 2,
+      gx1    = group.bounds ? group.bounds.x1 : 0,
+      gx2    = group.bounds ? group.bounds.x2 : group.width,
+      lw     = ~~item.bounds.width() + (o.width ? 0 : pad),
+      lh     = ~~item.bounds.height() + (o.height ? 0 : pad);
 
   o.x = 0.5;
   o.y = 0.5;
+  o.width = lw;
+  o.height = lh;
 
-  switch(orient) {
-    case "left":   { o.x += -offset - lw; break; }
-    case "right":  { o.x += width + offset; break; }
+  switch (orient) {
+    case "left":  { o.x += gx1 - offset - lw; break; };
+    case "right": { o.x += gx2 + offset; break; };
   }
   
-  if (trans) trans.interpolate(item, o);
+  item.mark.def.properties.enter(item, group, trans);
 }
 
 function vg_legendSymbolExtend(mark, size, shape, fill, stroke) {
@@ -5343,6 +6248,7 @@ function vg_hLegendLabels() {
     this._defs = null;
     this._data = {};
     this._scene = null;
+    this._reset = false;
   }
   
   var prototype = model.prototype;
@@ -5382,6 +6288,7 @@ function vg_hLegendLabels() {
     if (this._defs) this._defs.width = width;
     if (this._defs && this._defs.marks) this._defs.marks.width = width;
     if (this._scene) this._scene.items[0].width = width;
+    this._reset = true;
     return this;
   };
   
@@ -5389,6 +6296,7 @@ function vg_hLegendLabels() {
     if (this._defs) this._defs.height = height;
     if (this._defs && this._defs.marks) this._defs.marks.height = height;
     if (this._scene) this._scene.items[0].height = height;
+    this._reset = true;
     return this;
   };
   
@@ -5408,19 +6316,30 @@ function vg_hLegendLabels() {
   };
   
   prototype.encode = function(trans, request, item) {
+    if (this._reset) { this.reset(); this._reset = false; }
     var m = this, scene = m._scene, defs = m._defs;
     vg.scene.encode.call(m, scene, defs.marks, trans, request, item);
     return this;
   };
-  
+
+  prototype.reset = function() {
+    if (this._scene) {
+      vg.scene.visit(this._scene, function(item) {
+        if (item.axes) item.axes.forEach(function(s) { s.reset(); });
+      });
+    }
+    return this;
+  };
+
   return model;
 })();vg.View = (function() {
   var view = function(el, width, height) {
     this._el = null;
     this._build = false;
     this._model = new vg.Model();
-    this._width = width || 500;
-    this._height = height || 500;
+    this._width = this.__width = width || 500;
+    this._height = this.__height = height || 500;
+    this._autopad = 1;
     this._padding = {top:0, left:0, bottom:0, right:0};
     this._viewport = null;
     this._renderer = null;
@@ -5432,21 +6351,23 @@ function vg_hLegendLabels() {
   var prototype = view.prototype;
   
   prototype.width = function(width) {
-    if (!arguments.length) return this._width;
-    if (this._width !== width) {
-      this._width = width;
+    if (!arguments.length) return this.__width;
+    if (this.__width !== width) {
+      this._width = this.__width = width;
       if (this._el) this.initialize(this._el.parentNode);
       this._model.width(width);
+      if (this._strict) this._autopad = 1;
     }
     return this;
   };
 
   prototype.height = function(height) {
-    if (!arguments.length) return this._height;
-    if (this._height !== height) {
-      this._height = height;
+    if (!arguments.length) return this.__height;
+    if (this.__height !== height) {
+      this._height = this.__height = height;
       if (this._el) this.initialize(this._el.parentNode);
       this._model.height(this._height);
+      if (this._strict) this._autopad = 1;
     }
     return this;
   };
@@ -5454,8 +6375,47 @@ function vg_hLegendLabels() {
   prototype.padding = function(pad) {
     if (!arguments.length) return this._padding;
     if (this._padding !== pad) {
+      if (vg.isString(pad)) {
+        this._autopad = 1;
+        this._padding = {top:0, left:0, bottom:0, right:0};
+        this._strict = (pad === "strict");
+      } else {
+        this._autopad = 0;
+        this._padding = pad;
+        this._strict = false;
+      }
+      if (this._el) {
+        this._renderer.resize(this._width, this._height, pad);
+        this._handler.padding(pad);
+      }
+    }
+    return this;
+  };
+  
+  prototype.autopad = function(opt) {
+    if (this._autopad < 1) return this;
+    else this._autopad = 0;
+
+    var pad = this._padding,
+        b = this.model().scene().bounds,
+        inset = vg.config.autopadInset,
+        l = b.x1 < 0 ? Math.ceil(-b.x1) + inset : 0,
+        t = b.y1 < 0 ? Math.ceil(-b.y1) + inset : 0,
+        r = b.x2 > this._width  ? Math.ceil(+b.x2 - this._width) + inset : 0,
+        b = b.y2 > this._height ? Math.ceil(+b.y2 - this._height) + inset : 0;
+    pad = {left:l, top:t, right:r, bottom:b};
+
+    if (this._strict) {
+      this._autopad = 0;
       this._padding = pad;
+      this._width = Math.max(0, this.__width - (l+r));
+      this._height = Math.max(0, this.__height - (t+b));
+      this._model.width(this._width);
+      this._model.height(this._height);
       if (this._el) this.initialize(this._el.parentNode);
+      this.update({props:"enter"}).update({props:"update"});
+    } else {
+      this.padding(pad).update(opt);
     }
     return this;
   };
@@ -5491,7 +6451,7 @@ function vg_hLegendLabels() {
   prototype.data = function(data) {
     if (!arguments.length) return this._model.data();
     var ingest = vg.keys(data).reduce(function(d, k) {
-      return (d[k] = data[k].map(vg.data.ingest), d);
+      return (d[k] = vg.data.ingestAll(data[k]), d);
     }, {});
     this._model.data(ingest);
     this._build = false;
@@ -5561,7 +6521,7 @@ function vg_hLegendLabels() {
     return this;
   };
   
-  prototype.update = function(opt) {
+  prototype.update = function(opt) {    
     opt = opt || {};
     var view = this,
         trans = opt.duration
@@ -5577,7 +6537,8 @@ function vg_hLegendLabels() {
       });
     }
     else view.render(opt.items);
-    return view;
+
+    return view.autopad(opt);
   };
       
   return view;
@@ -5719,8 +6680,9 @@ vg.headless = {};vg.headless.View = (function() {
     this._el = "body";
     this._build = false;
     this._model = new vg.Model();
-    this._width = width || 500;
-    this._height = height || 500;
+    this._width = this.__width = width || 500;
+    this._height = this.__height = height || 500;
+    this._autopad = 1;
     this._padding = pad || {top:0, left:0, bottom:0, right:0};
     this._renderer = new vg[type].Renderer();
     this.initialize();
@@ -5760,9 +6722,50 @@ vg.headless = {};vg.headless.View = (function() {
   prototype.padding = function(pad) {
     if (!arguments.length) return this._padding;
     if (this._padding !== pad) {
-      this._padding = pad;
+      if (vg.isString(pad)) {
+        this._autopad = 1;
+        this._padding = {top:0, left:0, bottom:0, right:0};
+        this._strict = (pad === "strict");
+      } else {
+        this._autopad = 0;
+        this._padding = pad;
+        this._strict = false;
+      }
       this.initialize();
     }
+    return this;
+  };
+
+  prototype.autopad = function(opt) {
+    if (this._autopad < 1) return this;
+    else this._autopad = 0;
+
+    var pad = this._padding,
+        b = this._model.scene().bounds,
+        inset = vg.config.autopadInset,
+        l = b.x1 < 0 ? Math.ceil(-b.x1) + inset : 0,
+        t = b.y1 < 0 ? Math.ceil(-b.y1) + inset : 0,
+        r = b.x2 > this._width  ? Math.ceil(+b.x2 - this._width) + inset : 0,
+        b = b.y2 > this._height ? Math.ceil(+b.y2 - this._height) + inset : 0;
+    pad = {left:l, top:t, right:r, bottom:b};
+
+    if (this._strict) {
+      this._autopad = 0;
+      this._padding = pad;
+      this._width = Math.max(0, this.__width - (l+r));
+      this._height = Math.max(0, this.__height - (t+b));
+      this._model.width(this._width);
+      this._model.height(this._height);
+      if (this._el) this.initialize();
+      this.update({props:"enter"}).update({props:"update"});
+    } else {
+      this.padding(pad).update(opt);
+    }
+    return this;
+  };
+
+  prototype.viewport = function() {
+    if (!arguments.length) return null;
     return this;
   };
 
@@ -5775,7 +6778,7 @@ vg.headless = {};vg.headless.View = (function() {
   prototype.data = function(data) {
     if (!arguments.length) return this._model.data();
     var ingest = vg.keys(data).reduce(function(d, k) {
-      return (d[k] = data[k].map(vg.data.ingest), d);
+      return (d[k] = vg.data.ingestAll(data[k]), d);
     }, {});
     this._model.data(ingest);
     this._build = false;
@@ -5791,12 +6794,12 @@ vg.headless = {};vg.headless.View = (function() {
   };
   
   prototype.canvasAsync = function(callback) {
-    var r = this._renderer;
+    var r = this._renderer, view = this;
     
     function wait() {
       if (r.pendingImages() === 0) {
-        this.render(); // re-render with all images
-        callback(this._canvas);
+        view.render(); // re-render with all images
+        callback(view._canvas);
       } else {
         setTimeout(wait, 10);
       }
@@ -5849,8 +6852,8 @@ vg.headless = {};vg.headless.View = (function() {
     ctx.setTransform(1, 0, 0, 1, pad.left, pad.top);
 
     // configure renderer
-    this._renderer.initialize(null, w, h, pad);
     this._renderer.context(ctx);
+    this._renderer.resize(w, h, pad);
   };
   
   prototype.initSVG = function(w, h, pad) {
@@ -5872,7 +6875,7 @@ vg.headless = {};vg.headless.View = (function() {
     view._build = view._build || (view._model.build(), true);
     view._model.encode(null, opt.props, opt.items);
     view.render(opt.items);
-    return view;
+    return view.autopad(opt);
   };
     
   return view;
@@ -5917,5 +6920,6 @@ vg.headless.View.Factory = function(defs) {
   }
 
   vg.parse.spec(opt.spec, draw, vg.headless.View.Factory);
-};return vg;
-})(d3); // assumes availability of D3 in global namespace
+};  return vg;
+})(d3, typeof topojson === "undefined" ? null : topojson);
+// assumes D3 and topojson in global namespace
