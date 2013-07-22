@@ -7,7 +7,7 @@
 #'   of the gigvis object.
 #' @export
 vega_spec <- function(gv,
-                      width = 600, height = 400, padding = c(20, 20, 30, 50),
+                      width = 600, height = 400, padding = c(20, 80, 30, 50),
                       envir = parent.frame()) {
 
   if (gv$dynamic) {
@@ -23,6 +23,7 @@ vega_spec <- function(gv,
 
   } else {
     scales <- add_scales(gv)
+    legends <- vega_legends(scales)
     props <- gather_props(gv)
 
     datasets <- gather_datasets(gv)
@@ -41,6 +42,7 @@ vega_spec <- function(gv,
     height = height,
     data = datasets,
     scales = scales,
+    legends = legends,
 
     axes = list(list(type = "x", scale = "x"), list(type = "y", scale = "y")),
     padding = c(
