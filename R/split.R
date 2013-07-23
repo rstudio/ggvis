@@ -24,9 +24,9 @@ format.split_by_group <- function(x, ...) {
 }
 
 #' @S3method connect split_by_group
-connect.split_by_group <- function(x, props, data) {
-  data <- as.reactive(data)
-  reactive(split_df(data(), x$variables))
+connect.split_by_group <- function(x, props, source = NULL) {
+  source <- as.reactive(source)
+  reactive(split_df(source(), x$variables))
 }
 
 #' @S3method pipe_id split

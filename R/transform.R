@@ -102,7 +102,7 @@ apply_transform <- function(transform, data, mapping) {
 }
 
 #' @S3method connect transform
-connect.transform <- function(x, props, data) {
+connect.transform <- function(x, props, source = NULL) {
   reactive({
     x_now <- render_data(x)
     if (is.function(data)) data <- data()

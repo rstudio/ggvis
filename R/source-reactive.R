@@ -29,7 +29,7 @@ source_reactive <- function(data, name = NULL) {
 }
 
 #' @S3method connect source_reactive
-connect.source_reactive <- function(x, props, data) {
+connect.source_reactive <- function(x, props, source = NULL) {
   x$data
 }
 

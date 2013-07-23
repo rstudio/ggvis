@@ -3,16 +3,16 @@
 \alias{sluice}
 \title{Connect a pipeline, creating a reactive expression.}
 \usage{
-  connect(x, props, data = NULL)
+  connect(x, props, source = NULL)
 
-  sluice(x, props, data = NULL)
+  sluice(x, props, source = NULL)
 }
 \arguments{
   \item{x}{a pipeline or pipe}
 
   \item{properties}{a \code{\link{props}} object}
 
-  \item{data}{the data source to start the pipeline. This
+  \item{source}{the data source to start the pipeline. This
   is used when the output from one pipeline into the input
   of another. Methods must check if is a reactive object
   and deal with appropriately.}

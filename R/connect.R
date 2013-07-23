@@ -11,7 +11,7 @@
 #'
 #' @param x a pipeline or pipe
 #' @param properties a \code{\link{props}} object
-#' @param data the data source to start the pipeline. This is used when 
+#' @param source the data source to start the pipeline. This is used when 
 #'   the output from one pipeline into the input of another. Methods must check
 #'   if is a reactive object and deal with appropriately.
 #' @export
@@ -49,7 +49,7 @@
 #' v$add <- 2
 #' v$n <- 10
 #' isolate(r())
-connect <- function(x, props, data = NULL) {
+connect <- function(x, props, source = NULL) {
   stopifnot(is.gigvis_props(props))
   needs_shiny()
 
@@ -57,29 +57,29 @@ connect <- function(x, props, data = NULL) {
 }
 
 #' @rdname connect
-sluice <- function(x, props, data = NULL) {
+sluice <- function(x, props, source = NULL) {
   needs_shiny()
-  isolate(connect(x, props, data)())
+  isolate(connect(x, props, source)())
 }
 
 #' @S3method connect pipeline
-connect.pipeline <- function(x, props, data = NULL) {
-  data <- as.reactive(data)
+connect.pipeline <- function(x, props, source = NULL) {
+  source <- as.reactive(source)
 
-  connect_pipe <- function(pipe, props, data) {
-    force(data)
+  connect_pipe <- function(pipe, props, source) {
+    force(source)
     force(pipe)
-    connect(pipe, props, data)
+    connect(pipe, props, source)
   }
 
   for (pipe in x) {
-    data <- connect_pipe(pipe, props, data)
+    source <- connect_pipe(pipe, props, source)
   }
 
-  data
+  source
 }
 
 #' @S3method connect NULL
-connect.NULL <- function(x, data, props) {
-  as.reactive(data)
+connect.NULL <- function(x, props, source = NULL) {
+  as.reactive(source)
 }
