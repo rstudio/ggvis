@@ -45,20 +45,14 @@ prop_name.variable <- function(x) {
   var <- x[[1]]
 
   if (is.symbol(var)) {
-    # var is a single variable. If name is JS-safe, just return it; otherwise
-    # return a unique JS-safe version
-    var <- as.character(var)
-    if (is_safe_jsvar(var))
-      var
-    else
-      safe_jsvar(var)
+    safe_jsvar(as.character(var))
 
   } else if (is.language(var)) {
     # var is calculated from an expression; get a unique, JS-safe name. Prepend
     # a string to so that an expression with same text as a var will have a
     # different hash, e.g., the expression wt/mpg vs. the variable `wt/mpg`.
     safe_jsvar(paste("[e]", deparse(var)))
-
+    
   } else {
     # var is a constant
     ""

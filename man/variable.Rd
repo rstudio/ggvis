@@ -13,7 +13,7 @@
 \description{
   Given a quoted object, wrap it in a list and attach a
   class. The list-wrapping is needed because attaching a
-  class directly to a symbol is not possible
+  class directly to a symbol is not possible.
 }
 \details{
   Long-term this function needs to behave more like
