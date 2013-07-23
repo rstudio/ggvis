@@ -3,22 +3,19 @@
 #' @export
 #' @examples
 #' transform_smooth()
-#' flow(transform_smooth(), props(x ~ mpg, y ~ disp), mtcars)
+#' sluice(transform_smooth(), props(x ~ mpg, y ~ disp), mtcars)
 #' # You can see the results of a transformation by creating your own pipeline
 #' # and flowing data through it
-#' flow(transform_smooth(n = 5L), props(x ~ disp, y ~ mpg), mtcars)
+#' sluice(transform_smooth(n = 5L), props(x ~ disp, y ~ mpg), mtcars)
 #' # Or
-#' pl <- pipeline("mtcars", by_group("cyl"), transform_smooth(n = 5L))
-#' flow(pl, props(x ~ disp, y ~ mpg))
+#' pl <- pipeline(
+#'   "mtcars", 
+#'   by_group(variable(quote(cyl))), 
+#'   transform_smooth(n = 5L, method = "lm")
+#' )
+#' sluice(pl, props(x ~ disp, y ~ mpg))
 transform_smooth <- function(method = guess(), formula = guess(), se = TRUE,
                              level = 0.95, n = 80L, na.rm = FALSE, ...) {
-  assert_that(is.guess(method) || is.string(method))
-  assert_that(is.guess(formula) || is.formula(formula))
-  assert_that(is.flag(se))
-  assert_that(is.numeric(level), length(level) == 1, level >= 0, level <= 1)
-  assert_that(is.integer(n), length(n) == 1, n >= 0)
-  assert_that(is.flag(na.rm))
-
   transform("smooth", method = method, formula = formula, se = se,
     level = level, n = n, na.rm = na.rm, dots = dots(...))
 }
@@ -28,8 +25,8 @@ format.transform_smooth <- function(x, ...) {
   paste0(" -> smooth()", param_string(x[c("method", "formula")]))
 }
 
-#' @S3method connect transform_smooth
-connect.transform_smooth <- function(x, props, data) {
+#' @S3method compute transform_smooth
+compute.transform_smooth <- function(x, props, data) {
   check_prop(x, props, data, "x", c("double", "integer"))
   check_prop(x, props, data, "y", c("double", "integer"))
 
@@ -61,6 +58,14 @@ smooth.split_df <- function(data, trans, x_var, y_var) {
 
 #' @S3method smooth data.frame
 smooth.data.frame <- function(data, trans, x_var, y_var) {
+  assert_that(is.name(trans$method))
+  assert_that(is.formula(trans$formula))
+  assert_that(is.flag(trans$se))
+  assert_that(is.numeric(trans$level), length(trans$level) == 1, 
+              trans$level >= 0, trans$level <= 1)
+  assert_that(is.integer(trans$n), length(trans$n) == 1, trans$n >= 0)
+  assert_that(is.flag(trans$na.rm))
+
   x_name <- prop_name(x_var)
   y_name <- prop_name(y_var)
 

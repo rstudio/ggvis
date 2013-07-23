@@ -10,12 +10,16 @@
 }
 \examples{
 transform_smooth()
-flow(transform_smooth(), props(x ~ mpg, y ~ disp), mtcars)
+sluice(transform_smooth(), props(x ~ mpg, y ~ disp), mtcars)
 # You can see the results of a transformation by creating your own pipeline
 # and flowing data through it
-flow(transform_smooth(n = 5L), props(x ~ disp, y ~ mpg), mtcars)
+sluice(transform_smooth(n = 5L), props(x ~ disp, y ~ mpg), mtcars)
 # Or
-pl <- pipeline("mtcars", by_group("cyl"), transform_smooth(n = 5L))
-flow(pl, props(x ~ disp, y ~ mpg))
+pl <- pipeline(
+  "mtcars",
+  by_group(variable(quote(cyl))),
+  transform_smooth(n = 5L, method = "lm")
+)
+sluice(pl, props(x ~ disp, y ~ mpg))
 }
 
