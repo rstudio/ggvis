@@ -15,7 +15,6 @@
 \examples{
 neg <- transform_scale(mult = -1)
 neg
-check_values(neg)
 compute(neg, props(x ~ mpg, y ~ disp), mtcars)
 }
 \keyword{internal}
