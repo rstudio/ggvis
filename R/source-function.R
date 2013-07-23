@@ -6,21 +6,23 @@
 #' @export
 #' @examples
 #' mt <- function() mtcars
-#' source_function(mt)
+#' s <- source_function(mt)
+#' sluice(s, props())
 source_function <- function(func, name = NULL) {
   if (is.null(func)) return(NULL)
-
+  assert_that(length(formals(func)) == 0)
+  
   if (is.null(name)) {
     name <- deparse(substitute(data))
   }
-  stopifnot(is.character(name), length(name) == 1)
-
+  assert_that(is.string(name))
+  
   pipe("source_function", func = func, name = name)
 }
 
 #' @S3method connect source_function
 connect.source_function <- function(x, data, props) {
-  react(x$func())
+  reactive(x$func())
 }
 
 #' @S3method format source_function

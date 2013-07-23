@@ -12,6 +12,7 @@
 }
 \examples{
 mt <- function() mtcars
-source_function(mt)
+s <- source_function(mt)
+sluice(s, props())
 }
 
