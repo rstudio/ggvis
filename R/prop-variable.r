@@ -2,7 +2,7 @@
 #'
 #' Given a quoted object, wrap it in a list and attach a class. The
 #' list-wrapping is needed because attaching a class directly to a symbol
-#' is not possible
+#' is not possible.
 #'
 #' Long-term this function needs to behave more like dplyr::partial_eval so
 #' that it captures local values immediately.

@@ -29,7 +29,7 @@ test_that("splitting by group", {
 
   # Splitting by one variable
   p <- pipeline(mtcars, by_group(variable(quote(cyl))))
-  dat <- flow(p, prop)
+  dat <- sluice(p, prop)
   expect_equal(length(dat), 3)
   expect_true(has_unique_combinations(dat, "cyl"))
 
@@ -37,7 +37,7 @@ test_that("splitting by group", {
   p <- pipeline(mtcars,
                 by_group(variable(quote(cyl)),
                          variable(quote(am))))
-  dat <- flow(p, prop)
+  dat <- sluice(p, prop)
   expect_equal(length(dat), 6)
   expect_true(has_unique_combinations(dat, "cyl", "am"))
 
@@ -45,7 +45,7 @@ test_that("splitting by group", {
   p <- pipeline(mtcars,
                 by_group(variable(quote(cyl))),
                 by_group(variable(quote(am))))
-  dat <- flow(p, prop)
+  dat <- sluice(p, prop)
   expect_equal(length(dat), 6)
   expect_true(has_unique_combinations(dat, "cyl", "am"))
 })
