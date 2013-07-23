@@ -16,6 +16,9 @@
   weight gigvis object.
 }
 \examples{
-source_lazy("mtcars")
+p <- pipeline(source_lazy("mtcars"))
+props <- props(x ~ wt, y ~ mpg)
+
+sluice(p, props)
 }
 

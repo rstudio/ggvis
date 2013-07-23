@@ -8,7 +8,11 @@
 #' @param name the name of the data frame
 #' @export
 #' @examples
-#' source_lazy("mtcars")
+#' 
+#' p <- pipeline(source_lazy("mtcars"))
+#' props <- props(x ~ wt, y ~ mpg)
+#'
+#' sluice(p, props)
 source_lazy <- function(name) {
   stopifnot(is.character(name), length(name) == 1)
 
@@ -30,7 +34,8 @@ find_df <- function(name, env = globalenv()) {
     stop(name, " in the global environment is not a data frame",
          call. = FALSE)
   }
-
+  
+  df
 }
 
 #' @S3method format source_lazy
