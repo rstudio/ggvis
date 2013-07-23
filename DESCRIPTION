@@ -47,3 +47,4 @@ Collate:
     'source-function.R'
     'source-reactive.R'
     'vega_legend.R'
+    'utils-reactive.r'
