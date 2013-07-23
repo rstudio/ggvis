@@ -12,7 +12,10 @@ is.reactive <- function(x) {
 }
 
 needs_shiny <- function() {
-  if (!require("shiny")) {
-    stop("Please install the shiny package", call. = FALSE)
+  if (suppressWarnings(require("shiny", quietly = TRUE))) {
+    return(invisible(TRUE))
   }
+
+  stop("This functionality requires the shiny package.\n", 
+       "Please install it with `install.packages('shiny')`", call. = FALSE)
 }
