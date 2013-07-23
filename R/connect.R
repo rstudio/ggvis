@@ -52,8 +52,14 @@ sluice <- function(x, props, data) {
 connect.pipeline <- function(x, props, data = NULL) {
   data <- as.reactive(data)
   
+  connect_pipe <- function(pipe, props, data) {
+    force(data)
+    force(pipe)
+    connect(pipe, props, data())
+  }
+  
   for (pipe in x) {
-    data <- connect(pipe, props, data())
+    data <- connect_pipe(pipe, props, data)
   }
   
   data
