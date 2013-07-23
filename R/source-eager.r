@@ -23,9 +23,9 @@ source_eager <- function(data, name = NULL) {
   pipe("source_eager", data = data, name = name)
 }
 
-#' @S3method flow source_eager
-flow.source_eager <- function(x, data, props) {
-  x$data
+#' @S3method connect source_eager
+connect.source_eager <- function(x, data, props) {
+  reactive(x$data)
 }
 
 #' @S3method format source_eager

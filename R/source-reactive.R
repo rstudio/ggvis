@@ -12,9 +12,9 @@ source_reactive <- function(data, name = NULL) {
   pipe("source_reactive", data = data, name = name)
 }
 
-#' @S3method flow source_reactive
-flow.source_reactive <- function(x, data, props) {
-  isolate(x$data())
+#' @S3method connect source_reactive
+connect.source_reactive <- function(x, data, props) {
+  x$data
 }
 
 #' @S3method format source_reactive

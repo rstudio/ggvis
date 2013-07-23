@@ -17,9 +17,9 @@ format.split_by_group <- function(x, ...) {
   paste0(" -> split_by", param_string(x))
 }
 
-#' @S3method flow split_by_group
-flow.split_by_group <- function(x, props, data) {
-  split_df(data, x$variables)
+#' @S3method connect split_by_group
+connect.split_by_group <- function(x, props, data) {
+  react(split_df(data, x$variables))
 }
 
 #' @S3method pipe_id split

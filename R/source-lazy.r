@@ -15,19 +15,22 @@ source_lazy <- function(name) {
   pipe("source_lazy", name = name)
 }
 
-#' @S3method flow source_lazy
-flow.source_lazy <- function(x, data, props) {
-  if (!exists(x$name, globalenv())) {
-    stop("Can't find object ", x$name, " in global environment", call. = FALSE)
-  }
-  df <- get(x$name, globalenv())
+#' @S3method connect source_lazy
+connect.source_lazy <- function(x, data, props) {
+  reactive(find_df(x$name))
+}
 
+find_df <- function(name, env = globalenv()) {
+  if (!exists(name, env)) {
+    stop("Can't find object ", name, " in global environment", call. = FALSE)
+  }
+  df <- get(name, env)
+  
   if (!is.data.frame(df)) {
-    stop(x$name, " in the global environment is not a data frame",
-      call. = FALSE)
+    stop(name, " in the global environment is not a data frame",
+         call. = FALSE)
   }
-
-  df
+  
 }
 
 #' @S3method format source_lazy

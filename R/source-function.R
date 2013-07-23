@@ -18,15 +18,9 @@ source_function <- function(func, name = NULL) {
   pipe("source_function", func = func, name = name)
 }
 
-#' @S3method flow source_function
-flow.source_function <- function(x, data, props) {
-  df <- x$func()
-
-  if (!is.data.frame(df)) {
-    stop(x$name, " did not return a data frame", call. = FALSE)
-  }
-
-  df
+#' @S3method connect source_function
+connect.source_function <- function(x, data, props) {
+  react(x$func())
 }
 
 #' @S3method format source_function

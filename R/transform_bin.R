@@ -56,8 +56,8 @@ format.transform_bin <- function(x, ...) {
   paste0(" -> bin", param_string(x))
 }
 
-#' @S3method flow transform_bin
-flow.transform_bin <- function(x, props, data) {
+#' @S3method connect transform_bin
+connect.transform_bin <- function(x, props, data) {
   check_prop(x, props, data, "x", c("double", "integer"))
 
   if (is.guess(x$binwidth)) {

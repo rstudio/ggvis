@@ -28,8 +28,8 @@ format.transform_smooth <- function(x, ...) {
   paste0(" -> smooth()", param_string(x[c("method", "formula")]))
 }
 
-#' @S3method flow transform_smooth
-flow.transform_smooth <- function(x, props, data) {
+#' @S3method connect transform_smooth
+connect.transform_smooth <- function(x, props, data) {
   check_prop(x, props, data, "x", c("double", "integer"))
   check_prop(x, props, data, "y", c("double", "integer"))
 

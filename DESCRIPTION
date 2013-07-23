@@ -49,3 +49,4 @@ Collate:
     'vega_legend.R'
     'utils-reactive.r'
     'transform-scale.r'
+    'flow.R'

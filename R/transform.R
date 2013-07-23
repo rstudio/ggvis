@@ -114,3 +114,25 @@ transform_type <- function(transform) {
 apply_transform <- function(transform, data, mapping) {
   flow(transform, mapping, data)
 }
+
+#' @S3method connect transform
+connect.transform <- function(x, props, data) {
+  x_now <- reactive(render_data(x))
+  
+  reactive({
+    check_values(x_now())
+    compute(x_now(), props, data)
+  })
+}
+
+render_data <- function(x) {
+  xnew <- lapply(x, function(x) {
+    if (is.function(x)) {
+      x()
+    } else {
+      x
+    }
+  })
+  class(xnew) <- class(x)
+  xnew
+}
