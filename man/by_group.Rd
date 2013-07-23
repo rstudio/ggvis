@@ -12,6 +12,6 @@
 }
 \examples{
 pl <- pipeline(mtcars, by_group(variable(quote(cyl))), transform_bin())
-flow(pl, props(x ~ disp))
+sluice(pl, props(x ~ disp))
 }
 

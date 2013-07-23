@@ -4,7 +4,7 @@
 #' @export
 #' @examples
 #' pl <- pipeline(mtcars, by_group(variable(quote(cyl))), transform_bin())
-#' flow(pl, props(x ~ disp))
+#' sluice(pl, props(x ~ disp))
 by_group <- function(...) {
   variables <- list(...)
   stopifnot(all(vapply(variables, is.variable, logical(1))))
@@ -19,7 +19,8 @@ format.split_by_group <- function(x, ...) {
 
 #' @S3method connect split_by_group
 connect.split_by_group <- function(x, props, data) {
-  react(split_df(data, x$variables))
+  data <- as.reactive(data)
+  reactive(split_df(data(), x$variables))
 }
 
 #' @S3method pipe_id split
