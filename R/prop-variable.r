@@ -89,3 +89,13 @@ as.character.variable <- function(x, ...) {
   }
   deparse(x[[1]])
 }
+
+as.variable <- function(x) UseMethod("as.variable")
+#' @S3method as.variable character
+as.variable.character <- function(x) variable(as.name(x))
+#' @S3method as.variable name
+as.variable.name <- function(x) variable(x)
+#' @S3method as.variable call
+as.variable.call <- function(x) variable(x)
+#' @S3method as.variable variable
+as.variable.variable <- function(x) x
