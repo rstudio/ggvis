@@ -87,11 +87,13 @@ as.pipeline.function <- function(x, ...) pipeline(source_function(x))
 #' @S3method as.pipeline pipe
 as.pipeline.pipe <- function(x, ...) pipeline(x)
 
+#' @S3method format pipeline
 format.pipeline <- function(x, ...) {
   pipes <- vapply(x, format, character(1))
   paste0(pipes, collapse = "\n")
 }
 
+#' @S3method print pipeline
 print.pipeline <- function(x, ...) {
   cat(format(x, ...), "\n", sep = "")
 }

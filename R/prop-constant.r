@@ -57,6 +57,7 @@ prop_name.constant <- function(x, data) {
   ""
 }
 
+#' @S3method prop_scale constant
 prop_scale.constant <- function(x, default_scale) {
   if (isTRUE(x$scale)) {
     default_scale

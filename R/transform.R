@@ -43,6 +43,7 @@ check_prop <- function(trans, props, data, prop_name, types = NULL) {
 
 preserve_constants <- function(input, output) UseMethod("preserve_constants")
 
+#' @S3method preserve_constants data.frame
 preserve_constants.data.frame <- function(input, output) {
   is_constant <- constant_vars(input)
   constants <- input[1, is_constant, drop = FALSE]
@@ -51,6 +52,7 @@ preserve_constants.data.frame <- function(input, output) {
   merge_df(constants, output)
 }
 
+#' @S3method preserve_constants split_df
 preserve_constants.split_df <- function(input, output) {
   is_constant <- constant_vars(input)
 

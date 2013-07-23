@@ -17,12 +17,12 @@ scales <- function(...) {
 #' @export
 is.scales <- function(x) inherits(x, "gigvis_scales")
 
-#' S3method format gigvis_scales
+#' @S3method format gigvis_scales
 format.gigvis_scales <- function(x, ...) {
   paste("*", vapply(x, format, character(1)), collapse = "\n")
 }
 
-#' S3method print gigvis_scales
+#' @S3method print gigvis_scales
 print.gigvis_scales <- function(x, ...) cat(format(x, ...), "\n", sep = "")
 
 
@@ -43,7 +43,7 @@ scale <- function(name, type = NULL, zero = NULL) {
 #' @export
 is.scale <- function(x) inherits(x, "scale")
 
-#' S3method format scale
+#' @S3method format scale
 format.scale <- function(x, ...) {
   str <- sprintf("%-9s ", paste0(x$name, ":"))
   if (!is.null(x$type)) str <- paste0(str, "type:", x$type)
@@ -51,7 +51,7 @@ format.scale <- function(x, ...) {
   str
 }
 
-#' S3method print scale
+#' @S3method print scale
 print.scale <- function(x, ...) cat(format(x, ...), "\n", sep = "")
 
 # Merge two gigvis scales objects
