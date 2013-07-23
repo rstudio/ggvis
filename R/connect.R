@@ -67,7 +67,7 @@ connect.pipeline <- function(x, props, data = NULL) {
   connect_pipe <- function(pipe, props, data) {
     force(data)
     force(pipe)
-    connect(pipe, props, data())
+    connect(pipe, props, data)
   }
 
   for (pipe in x) {
