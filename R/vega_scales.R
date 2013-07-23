@@ -26,7 +26,7 @@ add_scales <- function(node) {
 }
 
 # Add scales: ensure that each node - either provided explicitly at that
-# level or above, or assigned by the user. 
+# level or above, or assigned by the user.
 #
 # First figure out which scales are needed (i.e. not found at )
 
@@ -47,7 +47,7 @@ add_scales <- function(node) {
 #   may be deferred for a later stage.
 needed_scales <- function(node, provided = NULL) {
   provided <- merge_scales(provided, node$scales)
-  
+
   # Base case, no children (so a mark)
   if (is.null(node$children)) {
     # Find which scales we know the type of already (because it was provided)
@@ -62,7 +62,7 @@ needed_scales <- function(node, provided = NULL) {
     handled <- is.na(info$scale) | info$scale %in% names(provided)
     return(info[handled, , drop = FALSE])
   }
-  
+
   children <- lapply(node$children, needed_scales, provided = provided)
   do.call("rbind", children)
 }
@@ -76,7 +76,7 @@ prop_info <- function(node, name = NULL, known_types = character(0)) {
     all <- lapply(names(node$props), prop_info, node = node)
     return(do.call(rbind, all))
   }
-  
+
   prop <- node$props[[name]]
 
   scale <- prop_scale(prop, default_scale(name))
@@ -90,11 +90,11 @@ prop_info <- function(node, name = NULL, known_types = character(0)) {
   }
 
   var <- prop_name(prop)
-  
+
   data.frame(
-    prop = name, 
-    scale = scale, 
-    var = var, 
+    prop = name,
+    scale = scale,
+    var = var,
     var_type = type,
     data = node$data_id,
     stringsAsFactors = FALSE)
@@ -115,7 +115,7 @@ vega_scale <- function(scale = NULL, scale_name, field, data, var_type) {
       paste0(var_type, collapse = ", "), call. = FALSE)
   }
   if (var_type == "null") return()
-  
+
   if (length(field) != length(data)) {
     stop("field and data must be the same length.")
   }
@@ -128,7 +128,7 @@ vega_scale <- function(scale = NULL, scale_name, field, data, var_type) {
   scale$domain <- list(fields = unname(Map(function(field, data) {
     list(data = data, field = paste0("data.", field))
   }, field, data)))
-  
+
   scale
 }
 
@@ -150,21 +150,21 @@ scale_defaults <- function(scale, var_type) {
       zero   = FALSE,
       nice   = FALSE
     )
-    
+
   } else if (scale == "stroke") {
     list(
       name   = scale,
       type   = var_type,
       range  = "category10"
     )
-    
+
   } else if (scale == "fill") {
     list(
       name   = scale,
       type   = var_type,
       range  = "category10"
     )
-    
+
   } else {
     stop("Unknown scale: ", scale)
   }

@@ -25,12 +25,12 @@ find_df <- function(name, env = globalenv()) {
     stop("Can't find object ", name, " in global environment", call. = FALSE)
   }
   df <- get(name, env)
-  
+
   if (!is.data.frame(df)) {
     stop(name, " in the global environment is not a data frame",
          call. = FALSE)
   }
-  
+
 }
 
 #' @S3method format source_lazy

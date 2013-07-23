@@ -1,5 +1,5 @@
 #' Transform scale: a simple transform for testing
-#' 
+#'
 #' @param add constant to add to x
 #' @param mult constant to multiply x by
 #' @export
@@ -28,6 +28,6 @@ format.transform_scale <- function(x, ...) {
 compute.transform_scale <- function(x, props, data) {
   x_val <- prop_value(props$x, data)
   y_val <- prop_value(props$y, data)
-  
+
   data.frame(x = x_val * x$mult + x$add, y = y_val)
 }

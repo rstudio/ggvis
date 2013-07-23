@@ -9,7 +9,7 @@
 #' source_function(mt)
 source_function <- function(func, name = NULL) {
   if (is.null(func)) return(NULL)
-  
+
   if (is.null(name)) {
     name <- deparse(substitute(data))
   }

@@ -12,16 +12,16 @@ prop_value <- function(x, data, processed) {
 }
 
 #' The name of the property.
-#' 
+#'
 #' Used for naming the variable it produces in the vega data frame
-#' 
+#'
 #' @param x a vega property
 prop_name <- function(x) {
   UseMethod("prop_name")
 }
 
 #' The scale (if any) that this property needs
-#' 
+#'
 prop_scale <- function(x, default_scale) {
   UseMethod("prop_scale")
 }

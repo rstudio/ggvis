@@ -89,13 +89,13 @@ gigvis_fill_tree <- function(node, parent = NULL, envir = NULL,
     # Give an id to the data object; this becomes the vega 'data' field.
     node$data_id <- pipeline_id(node$data, node$props)
   }
-  
+
   if (!is.null(node$children)) {
     # Fill in children recursively
     node$children <- lapply(node$children, FUN = gigvis_fill_tree,
       parent = node, envir = envir, symbol_table = symbol_table)
   }
-    
+
   # If dynamic and this was the top node, add the symbol table as an attribute,
   # so that it can be returned to the caller.
   if (root_node && node$dynamic) {

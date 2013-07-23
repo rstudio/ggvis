@@ -3,7 +3,7 @@ vega_legends <- function(scales) {
   scale_names <- vapply(scales, function(x) x$name, character(1))
 
   # Keep only particular scales for the legend
-  keep_scales <- c("size", "shape", "fill", "stroke") 
+  keep_scales <- c("size", "shape", "fill", "stroke")
   scales <- scales[scale_names %in% keep_scales]
 
   legends <- lapply(scales, vega_legend)

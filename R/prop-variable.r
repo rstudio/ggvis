@@ -67,7 +67,7 @@ prop_name.variable <- function(x) {
 
 prop_scale.variable <- function(x, default_scale) {
   default_scale
-} 
+}
 
 #' @S3method prop_vega variable
 prop_vega.variable <- function(x, default_scale) {

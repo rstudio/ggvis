@@ -22,7 +22,7 @@ test_that("splitting by group", {
 
     TRUE
   }
-  
+
   # Properties; will be used repeatedly
   prop <- props(x ~ wt, y ~ mpg, stroke ~ cyl)
 
@@ -40,7 +40,7 @@ test_that("splitting by group", {
   dat <- flow(p, prop)
   expect_equal(length(dat), 6)
   expect_true(has_unique_combinations(dat, "cyl", "am"))
-  
+
   # Splitting by two variables, in two separate by_group()
   p <- pipeline(mtcars,
                 by_group(variable(quote(cyl))),
