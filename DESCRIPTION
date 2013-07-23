@@ -46,3 +46,4 @@ Collate:
     'apply_props.R'
     'source-function.R'
     'source-reactive.R'
+    'vega_legend.R'
