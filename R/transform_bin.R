@@ -34,16 +34,12 @@
 #'
 #' # You can see the results of a transformation by creating your own pipeline
 #' # and flowing data through it
-#' flow(transform_bin(10), props(x ~ disp), mtcars)
-#' flow(pipeline(mtcars, by_group("cyl"), transform_bin(10)), props(x ~ disp))
+#' sluice(transform_bin(10), props(x ~ disp), mtcars)
+#' sluice(pipeline(mtcars, by_group(variable(quote(cyl))), transform_bin(10)), props(x ~ disp))
 #' # Or
 #' pl <- pipeline("mtcars", transform_bin(10))
-#' flow(pl, props(x ~ disp))
+#' sluice(pl, props(x ~ disp))
 transform_bin <- function(binwidth = guess(), origin = NULL, right = TRUE) {
-  stopifnot(is.guess(binwidth) || (is.numeric(binwidth) && length(binwidth) == 1))
-  stopifnot(is.null(origin) || (is.numeric(origin) && length(origin) == 1))
-  stopifnot(identical(right, TRUE) || identical(right, FALSE))
-
   transform("bin",
     binwidth = binwidth,
     origin = origin,
@@ -51,13 +47,13 @@ transform_bin <- function(binwidth = guess(), origin = NULL, right = TRUE) {
   )
 }
 
-#' @format format transform_bin
+#' @S3method format transform_bin
 format.transform_bin <- function(x, ...) {
   paste0(" -> bin", param_string(x))
 }
 
-#' @S3method connect transform_bin
-connect.transform_bin <- function(x, props, data) {
+#' @S3method compute transform_bin
+compute.transform_bin <- function(x, props, data) {
   check_prop(x, props, data, "x", c("double", "integer"))
 
   if (is.guess(x$binwidth)) {
@@ -68,6 +64,7 @@ connect.transform_bin <- function(x, props, data) {
 
   output <- bin(data, x_var = props$x,
     binwidth = x$binwidth, origin = x$origin, right = x$right)
+  
   preserve_constants(data, output)
 }
 
@@ -88,6 +85,10 @@ bin.data.frame <- function(x, x_var, ...) {
 
 #' @S3method bin numeric
 bin.numeric <- function(x, weight = NULL, binwidth = 1, origin = NULL, right = TRUE) {
+  stopifnot(is.numeric(binwidth) && length(binwidth) == 1)
+  stopifnot(is.null(origin) || (is.numeric(origin) && length(origin) == 1))
+  stopifnot(is.flag(right))
+  
   if (length(na.omit(x)) == 0)  return(data.frame())
 
   if (is.null(weight))  weight <- rep(1, length(x))
