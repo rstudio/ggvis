@@ -10,8 +10,10 @@
 #' to create multiple branches. 
 #'
 #' @param x a pipeline or pipe
-#' @param properties a \code{props} object
-#' @param data the data source to start the connect. May be reactive.
+#' @param properties a \code{\link{props}} object
+#' @param data the data source to start the pipeline. This is used when 
+#'   the output from one pipeline into the input of another. Methods must check
+#'   if is a reactive object and deal with appropriately.
 #' @export
 #' @keywords internal
 #' @examples

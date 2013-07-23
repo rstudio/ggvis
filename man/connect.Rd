@@ -10,10 +10,12 @@
 \arguments{
   \item{x}{a pipeline or pipe}
 
-  \item{properties}{a \code{props} object}
+  \item{properties}{a \code{\link{props}} object}
 
-  \item{data}{the data source to start the connect. May be
-  reactive.}
+  \item{data}{the data source to start the pipeline. This
+  is used when the output from one pipeline into the input
+  of another. Methods must check if is a reactive object
+  and deal with appropriately.}
 }
 \description{
   \code{connect} creates a reactive pipeline (starting with
