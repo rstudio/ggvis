@@ -43,7 +43,7 @@ connect <- function(x, props, data = NULL) {
 }
 
 #' @rdname connect
-sluice <- function(x, props, data) {
+sluice <- function(x, props, data = NULL) {
   needs_shiny()
   isolate(connect(x, props, data)())
 }

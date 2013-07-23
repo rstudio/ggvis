@@ -5,7 +5,7 @@
 \usage{
   connect(x, props, data = NULL)
 
-  sluice(x, props, data)
+  sluice(x, props, data = NULL)
 }
 \arguments{
   \item{x}{a pipeline or pipe}

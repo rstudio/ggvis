@@ -14,6 +14,19 @@
   A reactive source.
 }
 \examples{
-source_reactive(reactive())
+source_reactive(reactive(mtcars))
+
+# Pipeline automatically puts reactive objects in a source_reactive
+pipeline(reactive(mtcars))
+
+# A simple example
+v <- reactiveValues(n = 10)
+p <- pipeline(reactive(mtcars[1:v$n, ]))
+props <- props(x ~ wt, y ~ mpg)
+
+sluice(p, props)
+
+v$n <- 5
+sluice(p, props)
 }
 
