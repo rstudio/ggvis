@@ -22,7 +22,7 @@ source_function <- function(func, name = NULL) {
 
 #' @S3method connect source_function
 connect.source_function <- function(x, data, props) {
-  reactive(x$func())
+  reactive(x$func(), label = x$name)
 }
 
 #' @S3method format source_function
