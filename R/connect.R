@@ -37,11 +37,14 @@
 #' isolate(r())
 connect <- function(x, props, data = NULL) {
   stopifnot(is.gigvis_props(props))
+  needs_shiny()
+  
   UseMethod("connect")
 }
 
 #' @rdname connect
 sluice <- function(x, props, data) {
+  needs_shiny()
   isolate(connect(x, props, data)()) 
 }
 
@@ -49,11 +52,8 @@ sluice <- function(x, props, data) {
 connect.pipeline <- function(x, props, data = NULL) {
   data <- as.reactive(data)
   
-  for (pipe in x$pipes) {
-    local({
-      force(pipe)
-      data <- connect(pipe, props, data())
-    })
+  for (pipe in x) {
+    data <- connect(pipe, props, data())
   }
   
   data
