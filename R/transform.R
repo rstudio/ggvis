@@ -9,6 +9,36 @@ transform <- function(type, ...) {
   pipe(type, ...)
 }
 
+#' Compute the transformation.
+#' 
+#' This generic represents the actual numerical computation performed by
+#' the transformation. This is the method that does most of the work, and
+#' only needs to know about props and values, not about reactive objects.
+#' 
+#' @param x the \code{\link{transform}} object
+#' @param props a list of properties, \code{\link{props}}
+#' @param data input data, often (but not necessarily) a data frame
+#' @export
+#' @return a data frame
+#' @keywords internal
+compute <- function(x, props, data) UseMethod("compute")
+
+#' Check transformation values are ok
+#' 
+#' Subclasses of \code{\link{transform}} can optionally implement this method
+#' to check that the parameters of the transformation are valid. It is called
+#' every time before the transformation is computed (because the parameters may
+#' be reactive and changing over time), so should be quick to execute.
+#' 
+#' @export
+#' @param x a \code{\link{transform}} object
+#' @keywords internal
+#' @return invisible TRUE on success, otherwise throws an error
+check_values <- function(x) UseMethod("check_values")
+
+#' @S3method check_values transform
+check_values.transform <- function(x) TRUE
+
 check_prop <- function(trans, props, data, prop_name, types = NULL) {
   name <- class(trans)[[1]]
   prop <- props[[prop_name]]
