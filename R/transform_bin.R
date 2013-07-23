@@ -129,21 +129,3 @@ bin.numeric <- function(x, weight = NULL, binwidth = 1, origin = NULL, right = T
 
   results
 }
-
-
-# bin()
-#
-# xvar <- as.character(props$x)
-#
-# # Identify constant variables, extract and add back in
-# constant_vars <- vapply(data, all_same, logical(1))
-#
-# # Do the binning
-# # TODO: implement weight, origin, right
-# transformed <- bin(data[[xvar]], weight = NULL, binwidth = transform$binwidth)
-# names(transformed)[names(transformed) == "x"] <- xvar
-#
-# # Add back the constant variables
-# carry_over <- data[1, constant_vars, drop = FALSE]
-# rownames(carry_over) <- NULL
-# cbind(transformed, carry_over)
