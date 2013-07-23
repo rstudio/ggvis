@@ -1,4 +1,4 @@
-#' Connect a pipeline creating a reactive expression.
+#' Connect a pipeline, creating a reactive expression.
 #'
 #' \code{connect} creates a reactive pipeline (starting with \code{NULL}),
 #' applying each pipe (transformation) in sequence. \code{sluice} is a
@@ -7,7 +7,7 @@
 #'
 #' Every element in a pipeline recieves the same set of properties: this
 #' generally means that for more complicated transformations you will need
-#' to create multiple branches.
+#' to create multiple branches. 
 #'
 #' @param x a pipeline or pipe
 #' @param properties a \code{props} object
@@ -22,11 +22,11 @@
 #' sluice(transform_scale(mult = -1), asis, df)
 #' sluice(transform_scale(add = 10), asis, df)
 #'
-#' # Length two pipeline
-#' p <- pipeline(transform_scale(mult = -1), transform_scale(mult = -1))
-#' sluice(p, asis, df)
-#' p <- pipeline(transform_scale(mult = 2), transform_scale(mult = 2))
-#' sluice(p, asis, df)
+#' # Length three pipeline
+#' p <- pipeline(df, transform_scale(mult = -1), transform_scale(mult = -1))
+#' sluice(p, asis)
+#' p <- pipeline(df, transform_scale(mult = 2), transform_scale(mult = 2))
+#' sluice(p, asis)
 #'
 #' # Reactive pipeline
 #' v <- reactiveValues(add = 0, mult = 1)

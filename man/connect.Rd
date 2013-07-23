@@ -1,7 +1,7 @@
 \name{connect}
 \alias{connect}
 \alias{sluice}
-\title{Connect a pipeline creating a reactive expression.}
+\title{Connect a pipeline, creating a reactive expression.}
 \usage{
   connect(x, props, data = NULL)
 
@@ -36,11 +36,11 @@ sluice(transform_scale(), asis, df)
 sluice(transform_scale(mult = -1), asis, df)
 sluice(transform_scale(add = 10), asis, df)
 
-# Length two pipeline
-p <- pipeline(transform_scale(mult = -1), transform_scale(mult = -1))
-sluice(p, asis, df)
-p <- pipeline(transform_scale(mult = 2), transform_scale(mult = 2))
-sluice(p, asis, df)
+# Length three pipeline
+p <- pipeline(df, transform_scale(mult = -1), transform_scale(mult = -1))
+sluice(p, asis)
+p <- pipeline(df, transform_scale(mult = 2), transform_scale(mult = 2))
+sluice(p, asis)
 
 # Reactive pipeline
 v <- reactiveValues(add = 0, mult = 1)
