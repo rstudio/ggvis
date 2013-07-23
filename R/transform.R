@@ -105,9 +105,9 @@ apply_transform <- function(transform, data, mapping) {
 connect.transform <- function(x, props, source = NULL) {
   reactive({
     x_now <- render_data(x)
-    if (is.function(data)) data <- data()
+    if (is.function(source)) source <- source()
     
-    compute(x_now, props, data)
+    compute(x_now, props, source)
   })
 }
 
