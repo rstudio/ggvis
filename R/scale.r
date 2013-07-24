@@ -1,15 +1,65 @@
+#' Create a new vega scale object
+#' 
+#' Usually you would not call this function directly, but would instead 
+#' call one of the subclasses.
+#' 
+#' @param name name of the scale.
+#' @param type type of scale. Should be one of "linear", "ordinal", "time", 
+#'   "utc", "linear", "log", "pow", "sqrt", "quantile", "quantize", "threshold".
+#' @param domain,range For ordinal scales, a character vector. For quantitative 
+#'   scales, a numeric vector of length two. Either value (but not both) may
+#'   be missing, in which case \code{domainMin}/\code{rangeMin} or 
+#'   \code{domainMax}/\code{rangeMin} is set.
+#' @param reverse  If true, flips the scale range.
+#' @param round If true, rounds numeric output values to integers. This can be 
+#'   helpful for snapping to the pixel grid.
+#' @param ... other named arguments.
 #' @export
-scale <- function(name, type = NULL, zero = NULL) {
+#' @keywords internal
+scale <- function(name, type = NULL, domain = NULL, range = NULL, 
+                  reverse = FALSE, round = FALSE, ...) {
+  assert_that(is.string(name), is.string(type))
+  type <- match.arg(type, c("linear", "ordinal", "time", "utc", "linear", "log",
+    "pow", "sqrt", "quantile", "quantize", "threshold"))
+  assert_that(is.flag(reverse), is.flag(round))
+  
   structure(
-    drop_nulls(list(
-      name = name,
-      type = type,
-      zero = zero
+    drop_nulls(c(
+      list(name = name, type = type, reverse = reverse, round = round),
+      range_prop(range, "range"), 
+      range_prop(domain, "domain")
     )),
     class = "scale"
   )
-  # TODO: validate arguments. Some scales don't use some properties; e.g.,
-  # color doesn't use zero.
+}
+
+range_prop <- function(x, name) {
+  if (is.null(x)) return(list())
+  
+  # Character vector always left as is
+  if (is.character(x)) {
+    return(named_list(name, x))
+  }
+  
+  assert_that(is.numeric(x), length(x) <= 2)
+  n_miss <- sum(is.na(x))
+
+  if (n_miss == 0) {
+    named_list(name, x)
+  } else if (n_miss == 1) {
+    if (is.na(x[1])) {
+      named_list(paste0(name, "Max"), x[2])
+    } else {
+      named_list(paste0(name, "Min"), x[2])
+    }
+  } else if (n_miss == 2) {
+    list()
+  }
+  
+}
+
+named_list <- function(names, ...) {
+  setNames(list(...), names)
 }
 
 #' @export
@@ -17,10 +67,11 @@ is.scale <- function(x) inherits(x, "scale")
 
 #' @S3method format scale
 format.scale <- function(x, ...) {
-  str <- sprintf("%-9s ", paste0(x$name, ":"))
-  if (!is.null(x$type)) str <- paste0(str, "type:", x$type)
-  if (!is.null(x$zero)) str <- paste0(str, "zero:", x$zero)
-  str
+  params <- param_string(x, collapse = FALSE)
+  param_s <- paste0(" ", format(paste0(names(params), ":")), " ", format(params), "\n", 
+    collapse = "")
+  
+  paste0("<scale>\n", param_s)
 }
 
 #' @S3method print scale

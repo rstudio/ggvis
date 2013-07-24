@@ -130,7 +130,7 @@ is.quoted <- function(x) {
 
 compact <- function(x) Filter(Negate(is.null), x)
 
-param_string <- function(x) {
+param_string <- function(x, collapse = TRUE) {
   is_reactive <- vapply(x, is.reactive, logical(1))
   is_string <- vapply(x, is.character, logical(1))
 
@@ -138,6 +138,7 @@ param_string <- function(x) {
   values <- vapply(x, toString, character(1))
   values[is_string] <- paste0("'", encodeString(values[is_string]), "'")
 
+  if (!collapse) return(values)
   paste0("(", paste0(names(x), " = ", values, collapse = ", "), ")")
 }
 
