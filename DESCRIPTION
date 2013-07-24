@@ -50,3 +50,4 @@ Collate:
     'utils-reactive.r'
     'transform-scale.r'
     'connect.R'
+    'scale.r'
