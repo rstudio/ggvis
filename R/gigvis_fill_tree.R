@@ -6,7 +6,6 @@
 #
 # * First pass. After this pass, no need to refer to parents again
 #   * Propagate name of the data set
-#   * Retrieve the data set (as a data frame) and store in node$data_obj
 #   * Merge aesthetic properties with the parent's aesthetics
 #   * Split data (if needed)
 #   * Transform data (if needed)
@@ -84,10 +83,13 @@ gigvis_fill_tree <- function(node, parent = NULL, envir = NULL,
 
   } else {
     # Connect this node's data pipeline to the parent's
-    node$data <- c(as.pipeline(parent$data), node$data)
+    node$pipeline <- c(as.pipeline(parent$data), node$data)
+
+    # Create the reactive expression which will yield the data
+    node$data <- connect(node$pipeline, node$props)
 
     # Give an id to the data object; this becomes the vega 'data' field.
-    node$data_id <- pipeline_id(node$data, node$props)
+    node$data_id <- pipeline_id(node$pipeline, node$props)
   }
 
   if (!is.null(node$children)) {

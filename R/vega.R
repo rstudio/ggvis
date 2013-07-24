@@ -22,8 +22,6 @@ vega_spec <- function(gv,
     })
 
   } else {
-    gv <- flow_pipelines(gv)
-
     scales <- add_scales(gv)
     legends <- vega_legends(scales)
     props <- gather_props(gv)
@@ -70,16 +68,6 @@ vega_spec <- function(gv,
 }
 
 
-# Run the pipelines in this node and its descendents, and save it in data_obj
-# for each node.
-flow_pipelines <- function(node) {
-  node$data_obj <- flow(node$data, node$props)
-  if (!is.null(node$children)) {
-    node$children <- lapply(node$children, flow_pipelines)
-  }
-  node
-}
-
 # Recursively traverse tree and collect all the data sets used - this currently
 # sends all datasets to vega, even though internal nodes probably don't need
 # to sent
@@ -87,7 +75,7 @@ gather_datasets <- function(node) {
   if (is.null(node$data_id))
     data_id <-NULL
   else
-    data_id <- setNames(list(node$data_obj), node$data_id)
+    data_id <- setNames(list(isolate(node$data())), node$data_id)
 
   if (is.null(node$children)) return(data_id)
 

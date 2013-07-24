@@ -41,10 +41,10 @@ add_scales <- function(node) {
 # @param node A gigvis node.
 # @param provided Scales that are provided. This is used in two ways: (1) props
 #   which use non-provided scales are dropped, and (2) if a provided scale
-#   does not specify a type, then the data_obj will be examined to find the
-#   type; otherwise the data_obj will not be examined. This is useful for
-#   dynamic gigvis plots, where running the pipelines (and generating data_obj)
-#   may be deferred for a later stage.
+#   does not specify a type, then the data will be examined to find the
+#   type; otherwise the data will not be examined. This is useful for
+#   dynamic gigvis plots, where running the pipelines may be deferred for a
+#   later stage.
 needed_scales <- function(node, provided = NULL) {
   provided <- merge_scales(provided, node$scales)
 
@@ -81,11 +81,11 @@ prop_info <- function(node, name = NULL, known_types = character(0)) {
 
   scale <- prop_scale(prop, default_scale(name))
 
-  # If type is known, use that; otherwise examine the data_obj to find type
+  # If type is known, use that; otherwise examine the data to find type
   if (name %in% names(known_types)) {
     type <- known_types[[name]]
   } else {
-    type <- prop_type(node$data_obj, prop, processed = TRUE)
+    type <- prop_type(isolate(node$data()), prop, processed = TRUE)
     type <- if (type %in% c("double", "integer")) "linear" else "ordinal"
   }
 
