@@ -19,6 +19,7 @@
 #' v$n <- 5
 #' sluice(p, props)
 source_reactive <- function(data, name = NULL) {
+  needs_shiny()
   assert_that(is.reactive(data))
   
   if (is.null(name))

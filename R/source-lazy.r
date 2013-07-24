@@ -13,20 +13,20 @@
 #' props <- props(x ~ wt, y ~ mpg)
 #'
 #' sluice(p, props)
-source_lazy <- function(name) {
+source_lazy <- function(name, env = parent.frame()) {
   stopifnot(is.character(name), length(name) == 1)
 
-  pipe("source_lazy", name = name)
+  pipe("source_lazy", name = name, env = env)
 }
 
 #' @S3method connect source_lazy
 connect.source_lazy <- function(x, data, props) {
-  reactive(find_df(x$name))
+  reactive(find_df(x$name, x$env))
 }
 
 find_df <- function(name, env = globalenv()) {
   if (!exists(name, env)) {
-    stop("Can't find object ", name, " in global environment", call. = FALSE)
+    stop("Can't find object ", name, " in ", env, call. = FALSE)
   }
   df <- get(name, env)
 
