@@ -2,7 +2,7 @@
 \alias{source_lazy}
 \title{A lazy source.}
 \usage{
-  source_lazy(name)
+  source_lazy(name, env = parent.frame())
 }
 \arguments{
   \item{name}{the name of the data frame}
