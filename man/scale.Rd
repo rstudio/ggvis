@@ -3,7 +3,7 @@
 \title{Create a new vega scale object}
 \usage{
   scale(name, type = NULL, domain = NULL, range = NULL,
-    reverse = FALSE, round = FALSE, ...)
+    reverse = FALSE, round = FALSE, ..., subclass = NULL)
 }
 \arguments{
   \item{name}{name of the scale.}
@@ -29,6 +29,10 @@
 \description{
   Usually you would not call this function directly, but
   would instead call one of the subclasses.
+}
+\examples{
+scale("x", "linear")
+scale("x", "ord")
 }
 \keyword{internal}
 

@@ -16,10 +16,13 @@
 #' @param ... other named arguments.
 #' @export
 #' @keywords internal
+#' @examples
+#' scale("x", "linear")
+#' scale("x", "ord")
 scale <- function(name, type = NULL, domain = NULL, range = NULL, 
-                  reverse = FALSE, round = FALSE, ...) {
+                  reverse = FALSE, round = FALSE, ..., subclass = NULL) {
   assert_that(is.string(name), is.string(type))
-  type <- match.arg(type, c("linear", "ordinal", "time", "utc", "linear", "log",
+  type <- match.arg(type, c("linear", "ordinal", "time", "utc", "log",
     "pow", "sqrt", "quantile", "quantize", "threshold"))
   assert_that(is.flag(reverse), is.flag(round))
   
@@ -29,7 +32,7 @@ scale <- function(name, type = NULL, domain = NULL, range = NULL,
       range_prop(range, "range"), 
       range_prop(domain, "domain")
     )),
-    class = "scale"
+    class = c(subclass, "scale")
   )
 }
 
@@ -71,7 +74,7 @@ format.scale <- function(x, ...) {
   param_s <- paste0(" ", format(paste0(names(params), ":")), " ", format(params), "\n", 
     collapse = "")
   
-  paste0("<scale>\n", param_s)
+  paste0("<", class(x)[1], ">\n", param_s)
 }
 
 #' @S3method print scale
