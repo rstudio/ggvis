@@ -8,6 +8,7 @@
 #' that it captures local values immediately.
 #'
 #' @param x A quoted object
+#' @inheritParams constant
 #' @examples
 #' variable(quote(x))
 #' variable(quote(1))
@@ -15,15 +16,21 @@
 #'
 #' v <- variable(quote(cyl))
 #' prop_value(v, mtcars)
-variable <- function(x, scale = TRUE) {
-  stopifnot(is.quoted(x))
-
-  structure(list(x), class = c("variable", "prop"))
+#' prop_vega(v, "x")
+#' 
+#' v <- variable(quote(cyl), offset = -1, scale = FALSE)
+#' prop_vega(v, "y")
+variable <- function(x, scale = TRUE, offset = NULL, mult = NULL) {
+  assert_that(is.quoted(x))
+  assert_that(is.flag(scale) || is.string(scale))
+  
+  prop("variable",
+    x = x, scale = scale, offset = offset, mult = mult)
 }
 
 #' @S3method format variable
 format.variable <- function(x, ...) {
-  paste0("<field> ", deparse(x[[1]]))
+  paste0("<variable> ", deparse(x[[1]]))
 }
 
 #' @S3method print variable
@@ -61,14 +68,23 @@ prop_name.variable <- function(x) {
 
 #' @S3method prop_scale variable
 prop_scale.variable <- function(x, default_scale) {
-  default_scale
+  if (isTRUE(x$scale)) {
+    default_scale
+  } else if (is.character(x$scale)) {
+    x$scale
+  } else {
+    NA
+  }
 }
 
 #' @S3method prop_vega variable
 prop_vega.variable <- function(x, default_scale) {
+  scale <- prop_scale(x, default_scale)
   compact(list(
     field = paste0("data.", prop_name(x)),
-    scale = prop_scale(x, default_scale)
+    scale = if (!is.na(scale)) scale,
+    mult = x$mult,
+    offset = x$offset
   ))
 }
 

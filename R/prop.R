@@ -1,4 +1,13 @@
+#' S3 property class
+#' 
+#' @keywords internal
 #' @export
+prop <- function(subclass, ...) {
+  structure(list(...), class = c(subclass, "prop"))
+}
+
+#' @export
+#' @rdname prop
 is.prop <- function(x) inherits(x, "prop")
 
 #' Given a property and a dataset, get the value of the property.
