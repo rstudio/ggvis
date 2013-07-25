@@ -30,7 +30,7 @@ scale_quantitative <- function(name, trans = "linear", exponent = NULL,
     is.numeric(exponent) && length(exponent) == 1))
   assert_that(is.flag(clamp), is.flag(nice), is.flag(zero))
   
-  scale(name, trans,
+  scale(name, trans, subclass = "quantitative",
         exponent = exponent, clamp = clamp, nice = nice, zero = zero,
         domain = domain, range = range, reverse = reverse, round = round)  
 }
