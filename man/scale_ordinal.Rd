@@ -50,6 +50,7 @@ scale_ordinal("x", padding = 0.5, sort = TRUE, points = FALSE)
 
   \url{https://github.com/mbostock/d3/wiki/Ordinal-Scales}
 
-  Other vega.scales: \code{\link{scale_time}}
+  Other vega.scales: \code{\link{scale_quantitative}},
+  \code{\link{scale_time}}
 }
 
