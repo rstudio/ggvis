@@ -38,10 +38,19 @@ check_mark_props <- function(mark, props) {
 
   ldist <- adist(invalid, valid, ignore.case = TRUE, partial = FALSE,
                  costs = c(ins = 0.5, sub = 1, del = 2))
-  best <- apply(ldist, 1, which.min)
+  
+  closest <- apply(ldist, 1, min)
+  possible_match <- closest < 5
+  if (any(possible_match)) {
+    best <- apply(ldist, 1, which.min)
+    
+    matches <- valid[best][possible_match]  
+    suggest <- paste0("Did you mean: ", paste0(matches, collapse = ", "), "?")
+  } else {
+    suggest <- ""
+  }
 
-  stop("Unknown property: ", paste0(invalid, collapse = ", "), ".\n",
-       "Did you mean: ", paste0(valid[best], collapse = ", "), "?",
+  stop("Unknown properties: ", paste0(invalid, collapse = ", "), ".\n", suggest,
        call. = FALSE)
 }
 

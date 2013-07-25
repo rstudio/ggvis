@@ -5,13 +5,7 @@ mark <- function(type, ...) {
     class = c(paste0("mark_", type), "mark", "gigvis_node")
   )
 
-  # Check that the properties are valid for the type of mark
-  valid_props <- names(m$props) %in% valid_mark_properties(m)
-  if (!all(valid_props)) {
-    stop("Invalid properties: ",
-      paste(names(m$props)[!valid_props], sep = ", "))
-  }
-
+  check_mark_props(m, names(m$props))
   m
 }
 
