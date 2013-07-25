@@ -18,8 +18,14 @@ mark <- function(type, ...) {
 #' export
 is.mark <- function(x) inherits(x, "mark")
 
+
+#' @S3method format mark
+format.mark <- function(x, ...) {
+  paste0("<", class(x)[1], ">\n", format(x$props))
+}
+
 #' @S3method print mark
-print.mark <- function(x, ...) str(x)
+print.mark <- function(x, ...) cat(format(x), "\n")
 
 
 #' Vega mark properties.
