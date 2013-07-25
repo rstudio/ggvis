@@ -49,5 +49,7 @@ scale_ordinal("x", padding = 0.5, sort = TRUE, points = FALSE)
   \url{https://github.com/trifacta/vega/wiki/Scales#ordinal-scale-properties}
 
   \url{https://github.com/mbostock/d3/wiki/Ordinal-Scales}
+
+  Other vega.scales: \code{\link{scale_time}}
 }
 

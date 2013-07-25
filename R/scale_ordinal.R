@@ -19,6 +19,7 @@
 #' @seealso \url{https://github.com/trifacta/vega/wiki/Scales#ordinal-scale-properties}
 #' @seealso \url{https://github.com/mbostock/d3/wiki/Ordinal-Scales}
 #' @export
+#' @family vega scales
 #' @examples
 #' scale_ordinal("x")
 #' scale_ordinal("x", padding = 0.5, sort = TRUE, points = FALSE)

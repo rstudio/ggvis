@@ -5,6 +5,7 @@
 #'   either the minimum or maximum range value.
 #' @param utc if \code{TRUE}, uses UTC times.
 #' @seealso \url{https://github.com/trifacta/vega/wiki/Scales#time-scale-properties}
+#' @family vega scales
 #' @export
 #' @examples
 #' scale_time("x", nice = "year")

@@ -30,5 +30,7 @@ scale_time("x", utc = TRUE)
 }
 \seealso{
   \url{https://github.com/trifacta/vega/wiki/Scales#time-scale-properties}
+
+  Other vega.scales: \code{\link{scale_ordinal}}
 }
 
