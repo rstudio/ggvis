@@ -55,3 +55,4 @@ Collate:
     'scale_time.R'
     'scale_ordinal.R'
     'scale_quantitative.R'
+    'scale_defaults.R'

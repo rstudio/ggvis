@@ -79,7 +79,7 @@ prop_info <- function(node, name = NULL, known_types = character(0)) {
 
   prop <- node$props[[name]]
 
-  scale <- prop_scale(prop, default_scale(name))
+  scale <- prop_scale(prop, prop_to_scale(name))
 
   # If type is known, use that; otherwise examine the data to find type
   if (name %in% names(known_types)) {
