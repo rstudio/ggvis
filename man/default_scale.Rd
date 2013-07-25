@@ -20,4 +20,9 @@
   a crude S3-like double dispatch mechanism, looking for a
   function called \code{dscale_prop_type}.
 }
+\examples{
+default_scale("x", "numeric")
+default_scale("fillOpacity", "ordinal")
+default_scale("stroke", "nominal")
+}
 

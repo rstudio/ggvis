@@ -9,15 +9,20 @@
 #'   \code{\link{prop_to_scale}}
 #' @param type A variable type, as returned by \code{\link{prop_type}}
 #' @param ... other arguments passed to the scale function
+#' @export
+#' @examples
+#' default_scale("x", "numeric")
+#' default_scale("fillOpacity", "ordinal")
+#' default_scale("stroke", "nominal")
 default_scale <- function(prop, type, ...) { 
-  assert_that(is.string(prop, type))
+  assert_that(is.string(prop), is.string(type))
   scale <- prop_to_scale(prop)
   
   # This is an interim design choice making it clear that user can not
   # modify the default scales.
   env <- asNamespace("gigvis")
   
-  f_name <- paste("dscale", prop, type, sep = "_")
+  f_name <- paste("dscale", scale, type, sep = "_")
   if (!exists(f_name, mode = "function", envir = env)) {
     stop("Don't know how to make default scale for ", prop, 
       " with variable of type ", type, call. = FALSE)
