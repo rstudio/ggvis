@@ -52,3 +52,4 @@ Collate:
     'connect.R'
     'scale.r'
     'scale_time.R'
+    'scale_ordinal.R'

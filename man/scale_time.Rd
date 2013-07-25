@@ -1,6 +1,6 @@
 \name{scale_time}
 \alias{scale_time}
-\title{Scale for dates and times.}
+\title{Date time scale.}
 \usage{
   scale_time(name, utc = FALSE, clamp = FALSE, nice = NULL,
     domain = NULL, range = NULL, reverse = FALSE,
@@ -22,7 +22,7 @@
   grid.}
 }
 \description{
-  Scale for dates and times.
+  Date time scale.
 }
 \examples{
 scale_time("x", nice = "year")

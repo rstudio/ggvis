@@ -1,4 +1,4 @@
-#' Scale for dates and times.
+#' Date time scale.
 #' 
 #' @inheritParams scale
 #' @param clamp  If true, values that exceed the data domain are clamped to 
