@@ -12,7 +12,8 @@ Imports:
     RJSONIO,
     digest
 Suggests:
-    shiny (>= 0.5.0)
+    shiny (>= 0.5.0),
+    testthat (>= 0.7.1.99)
 License: GPL-2
 Collate:
     'gigvis.R'
