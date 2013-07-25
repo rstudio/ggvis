@@ -78,7 +78,6 @@ prop_info <- function(node, name = NULL, known_types = character(0)) {
   }
 
   prop <- node$props[[name]]
-
   scale <- prop_scale(prop, prop_to_scale(name))
 
   # If type is known, use that; otherwise examine the data to find type
@@ -86,7 +85,6 @@ prop_info <- function(node, name = NULL, known_types = character(0)) {
     type <- known_types[[name]]
   } else {
     type <- prop_type(isolate(node$data()), prop, processed = TRUE)
-    type <- if (type %in% c("double", "integer")) "linear" else "ordinal"
   }
 
   var <- prop_name(prop)
@@ -120,7 +118,8 @@ vega_scale <- function(scale = NULL, scale_name, field, data, var_type) {
     stop("field and data must be the same length.")
   }
 
-  scale <- merge_vectors(scale_defaults(scale_name, var_type), scale)
+  default <- default_scale(scale_name, var_type)
+  scale <- merge_vectors(default, scale)
 
   # These need to be added to all scales not just the ones we've added
   # automatically, so really need to go in a separate step after the
@@ -130,42 +129,4 @@ vega_scale <- function(scale = NULL, scale_name, field, data, var_type) {
   }, field, data)))
 
   scale
-}
-
-
-scale_defaults <- function(scale, var_type) {
-  if (scale == "x") {
-    list(
-      name   = scale,
-      type   = var_type,
-      range  = "width",
-      zero   = FALSE,
-      nice   = FALSE
-    )
-  } else if (scale == "y") {
-    list(
-      name   = scale,
-      type   = var_type,
-      range  = "height",
-      zero   = FALSE,
-      nice   = FALSE
-    )
-
-  } else if (scale == "stroke") {
-    list(
-      name   = scale,
-      type   = var_type,
-      range  = "category10"
-    )
-
-  } else if (scale == "fill") {
-    list(
-      name   = scale,
-      type   = var_type,
-      range  = "category10"
-    )
-
-  } else {
-    stop("Unknown scale: ", scale)
-  }
 }
