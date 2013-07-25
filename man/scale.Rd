@@ -25,6 +25,9 @@
   grid.}
 
   \item{...}{other named arguments.}
+
+  \item{subclass}{Class name for subclass.  Will have
+  \code{scale_} prepended.}
 }
 \description{
   Usually you would not call this function directly, but
@@ -33,6 +36,9 @@
 \examples{
 scale("x", "linear")
 scale("x", "ord")
+}
+\seealso{
+  \url{https://github.com/trifacta/vega/wiki/Scales}
 }
 \keyword{internal}
 

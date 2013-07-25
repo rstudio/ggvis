@@ -14,6 +14,8 @@
 #' @param round If true, rounds numeric output values to integers. This can be 
 #'   helpful for snapping to the pixel grid.
 #' @param ... other named arguments.
+#' @param subclass Class name for subclass.  Will have \code{scale_} prepended.
+#' @seealso \url{https://github.com/trifacta/vega/wiki/Scales}
 #' @export
 #' @keywords internal
 #' @examples
@@ -26,9 +28,14 @@ scale <- function(name, type = NULL, domain = NULL, range = NULL,
     "pow", "sqrt", "quantile", "quantize", "threshold"))
   assert_that(is.flag(reverse), is.flag(round))
   
+  if (!is.null(subclass)) {
+    assert_that(is.string(subclass))
+    subclass <- paste0("scale_", subclass)
+  }
+  
   structure(
     drop_nulls(c(
-      list(name = name, type = type, reverse = reverse, round = round),
+      list(name = name, type = type, reverse = reverse, round = round, ...),
       range_prop(range, "range"), 
       range_prop(domain, "domain")
     )),

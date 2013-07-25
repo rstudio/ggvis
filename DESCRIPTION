@@ -51,3 +51,4 @@ Collate:
     'transform-scale.r'
     'connect.R'
     'scale.r'
+    'scale_time.R'
