@@ -13,10 +13,8 @@
 # @param node The gigvis node to operate on.
 # @param parent The parent node.
 # @param envir Environment in which to look for data object.
-# @param symbol_table A table of data symbols, used only when \code{dynamic=TRUE}.
 #' @importFrom digest digest
-gigvis_fill_tree <- function(node, parent = NULL, envir = NULL,
-                             symbol_table = NULL) {
+gigvis_fill_tree <- function(node, parent = NULL, envir = NULL) {
   # If we're at the top of the tree, initialize some data structures
   if (is.null(parent)) {
     root_node <- TRUE
@@ -52,7 +50,7 @@ gigvis_fill_tree <- function(node, parent = NULL, envir = NULL,
   if (!is.null(node$children)) {
     # Fill in children recursively
     node$children <- lapply(node$children, FUN = gigvis_fill_tree,
-      parent = node, envir = envir, symbol_table = symbol_table)
+      parent = node, envir = envir)
   }
 
   node
