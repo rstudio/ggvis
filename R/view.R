@@ -55,16 +55,15 @@ view_dynamic <- function(gv, envir = parent.frame(), controls = NULL,
 
   plot_id <- "plot1"
 
-  dynamic_spec <- vega_spec(gv, envir = envir, dynamic = TRUE)
-  datasets <- attr(dynamic_spec, "datasets")
-  dynamic_spec_json <- RJSONIO::toJSON(dynamic_spec, pretty = TRUE)
+  vega_spec_json <- RJSONIO::toJSON(gv$vega_spec, pretty = TRUE)
+  data_table <- gv$data_table
 
   # Make our resources available
   script_tags <- deploy_www_resources()
   if (is.null(controls)) {
     ui <- basicPage(
       tags$head(script_tags),
-      gigvisOutput2(plot_id, dynamic_spec_json, renderer = renderer)
+      gigvisOutput2(plot_id, vega_spec_json, renderer = renderer)
     )
   } else {
     ui <- bootstrapPage(
@@ -82,7 +81,7 @@ view_dynamic <- function(gv, envir = parent.frame(), controls = NULL,
           ),
           tags$div(
             class = "span9",
-            gigvisOutput2(plot_id, dynamic_spec_json, renderer = renderer)
+            gigvisOutput2(plot_id, vega_spec_json, renderer = renderer)
           )
         )
       )
@@ -90,17 +89,18 @@ view_dynamic <- function(gv, envir = parent.frame(), controls = NULL,
   }
 
   server <- function(input, output, session) {
-    for (name in names(datasets)) {
+    for (name in ls(data_table, all = TRUE)) {
       # The datasets list contains named objects. The names are synthetic IDs
       # that are present in the vega spec. The values can be a variety of things,
       # see the if/else clauses below.
       local({
         # Have to do everything in a local so that these variables are not shared
         # between the different iterations
-
         data_name <- name
+
         obs <- observe({
-          data <- find_data_object(datasets[[data_name]], envir = envir)
+          data_reactive <- get(data_name, data_table)
+          data <- data_reactive()
 
           session$sendCustomMessage("gigvis_data", list(
             plot = plot_id,
@@ -115,7 +115,7 @@ view_dynamic <- function(gv, envir = parent.frame(), controls = NULL,
     }
   }
 
-  runApp(list(ui=ui, server=server))
+  runApp(list(ui = ui, server = server))
 }
 
 gigvisOutput2 <- function(outputId, vega_json, renderer = 'canvas') {

@@ -6,17 +6,16 @@
 #' @param envir The environment in which to evaluate the \code{data} parameter
 #'   of the gigvis object.
 #' @export
-vega_spec <- function(gv,
+vega_spec <- function(gv, data_table,
                       width = 600, height = 400, padding = NULL,
                       envir = parent.frame()) {
 
   if (gv$dynamic) {
-    mapped_vars <- gather_mapped_vars(gv)
+    scales <- add_scales(gv)
+    legends <- vega_legends(scales)
+    props <- gather_props(gv)
 
-    symbol_table <- attr(gv, "symbol_table")
-    scales <- gather_scales(gv, symbol_table)
-
-    datasets <- lapply(names(symbol_table), function(name) {
+    datasets <- lapply(ls(data_table, all = TRUE), function(name) {
       # Don't provide data now, just the name
       list(name = name)
     })
@@ -58,11 +57,6 @@ vega_spec <- function(gv,
   # Now deal with keys that also appear in lower levels of the tree, and merge
   # them in to the spec.
   spec <- c(spec, vega_process_node(node = gv, envir = envir, scales = scales))
-
-  if (gv$dynamic) {
-    # Pass along the dataset expressions too.
-    attr(spec, "datasets") <- symbol_table
-  }
 
   spec
 }
