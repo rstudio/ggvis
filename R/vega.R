@@ -10,21 +10,16 @@ vega_spec <- function(gv, data_table,
                       width = 600, height = 400, padding = NULL,
                       envir = parent.frame()) {
 
+  scales <- add_scales(gv)
+  legends <- vega_legends(scales)
+  props <- gather_props(gv)
+  
   if (gv$dynamic) {
-    scales <- add_scales(gv)
-    legends <- vega_legends(scales)
-    props <- gather_props(gv)
-
     datasets <- lapply(ls(data_table, all = TRUE), function(name) {
       # Don't provide data now, just the name
       list(name = name)
     })
-
   } else {
-    scales <- add_scales(gv)
-    legends <- vega_legends(scales)
-    props <- gather_props(gv)
-
     datasets <- gather_datasets(gv)
     datasets <- apply_props_datasets(datasets, props)
 
