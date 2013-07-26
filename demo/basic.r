@@ -4,6 +4,9 @@ library(gigvis)
 gigvis("mtcars", props(x ~ wt, y ~ mpg),
   mark_symbol()
 )
+gigvis("mtcars", props(x ~ factor(cyl), y ~ mpg),
+  mark_symbol()
+)
 
 # Basic scatter plot, more verbose
 gigvis("mtcars", props(x ~ wt, y ~ mpg),
