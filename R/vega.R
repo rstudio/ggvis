@@ -14,18 +14,16 @@ vega_spec <- function(gv, data_table,
   legends <- vega_legends(scales)
   props <- gather_props(gv)
   
+  data_names <- ls(data_table, all = TRUE)
   if (gv$dynamic) {
-    datasets <- lapply(ls(data_table, all = TRUE), function(name) {
+    datasets <- lapply(data_names, function(name) {
       # Don't provide data now, just the name
       list(name = name)
     })
   } else {
-    datasets <- gather_datasets(gv)
-    datasets <- apply_props_datasets(datasets, props)
-
-    # Convert data frames to vega format
-    datasets <- lapply(names(datasets), function(name) {
-      vega_df(datasets[[name]], name = name)
+    datasets <- lapply(data_names, function(name) {
+      data <- isolate(data_table[[name]]())
+      vega_df(data, name = name)
     })
   }
 
