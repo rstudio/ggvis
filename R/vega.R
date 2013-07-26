@@ -55,22 +55,6 @@ vega_spec <- function(gv, data_table,
 }
 
 
-# Recursively traverse tree and collect all the data sets used - this currently
-# sends all datasets to vega, even though internal nodes probably don't need
-# to sent
-gather_datasets <- function(node) {
-  if (is.null(node$data_id))
-    data_id <-NULL
-  else
-    data_id <- setNames(list(isolate(node$data())), node$data_id)
-
-  if (is.null(node$children)) return(data_id)
-
-  children <- unlist(lapply(node$children, gather_datasets), recursive = FALSE)
-  all <- c(children, data_id)
-  all[!duplicated(names(all))]
-}
-
 # Recursively traverse tree and collect all the variable props used, for each
 # data set.
 gather_props <- function(node) {
@@ -100,20 +84,6 @@ gather_props <- function(node) {
     Reduce(merge_vectors, all[names(all) == name])
   })
 }
-
-
-# Apply properties to each data object in the datasets list, creating
-# calculated columns and dropping unused columns.
-# @param datasets A named list of data objects
-# @param all_props A named list (with same names as datasets) of property lists
-apply_props_datasets <- function(datasets, all_props) {
-  # Make sure items in props are in the same order as datasets
-  all_props <- all_props[names(datasets)]
-  mapply(datasets, all_props, SIMPLIFY = FALSE, FUN = function(data, props) {
-    apply_props(data, props)
-  })
-}
-
 
 # Recursively process nodes in the gigvis tree, and return corresponding vega
 # tree.
