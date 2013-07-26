@@ -35,7 +35,7 @@ Shiny.addCustomMessageHandler("gigvis_data", function(message) {
     // The plot doesn't exist, save it for when the plot arrives
     if (!pendingData[plot])
       pendingData[plot] = {}
-    pendingData[plot][name] = data;
+    pendingData[plot][name] = value;
   }
 });
 
