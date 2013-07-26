@@ -63,7 +63,10 @@ view_dynamic <- function(gv, envir = parent.frame(), controls = NULL,
   if (is.null(controls)) {
     ui <- basicPage(
       tags$head(script_tags),
-      gigvisOutput2(plot_id, vega_spec_json, renderer = renderer)
+      gigvisOutput2(plot_id, vega_spec_json, renderer = renderer),
+      # Add an actionButton that quits the app and closes the browser window
+      tags$button(id="quit", type="button", class="btn action-button",
+        onclick = "window.close()", "Quit")
     )
   } else {
     ui <- bootstrapPage(
@@ -113,6 +116,12 @@ view_dynamic <- function(gv, envir = parent.frame(), controls = NULL,
         })
       })
     }
+
+    observe({
+      # Stop the app when the quit button is clicked
+      if (is.null(input$quit)) return()
+      if (input$quit > 0) stopApp()
+    })
   }
 
   runApp(list(ui = ui, server = server))
