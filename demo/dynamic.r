@@ -11,6 +11,22 @@ gigvis(mtc1, props(x ~ wt, y ~ mpg),
   dynamic = TRUE
 )
 
+# Rapidly changing dynamic example
+df <- data.frame(x = runif(20), y = runif(20))
+# Basic dynamic example
+mtc1 <- reactive({
+  invalidateLater(20, NULL);
+  
+  df$x <<- df$x + runif(20, -0.05, 0.05)
+  df$y <<- df$y + runif(20, -0.05, 0.05)
+  df
+})
+gigvis(mtc1, props(x ~ x, y ~ y),
+  mark_symbol(),
+  dynamic = TRUE,
+  scales = scales(x = scale("x", domain = c(0, 1)))
+)
+
 
 # Two separate data sets, equal in the tree
 mtc1 <- reactive({
