@@ -39,6 +39,20 @@ Shiny.addCustomMessageHandler("gigvis_data", function(message) {
   }
 });
 
+
+// Receive a vega spec and parse it
+Shiny.addCustomMessageHandler("gigvis_vega_spec", function(message) {
+  var plotId = message.plotId;
+  var spec = message.spec;
+
+  vg.parse.spec(spec, function(chart) {
+    var chart = chart({ el: "#" + plotId, renderer: "canvas" });
+    $("#" + plotId).data("gigvis-chart", chart);
+    gigvisInit(plotId);
+  });
+});
+
+
 var allPlots = {};
 window.gigvisInit = function(plotId) {
   var chart = $("#" + plotId).data("gigvis-chart");
