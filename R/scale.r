@@ -23,7 +23,7 @@
 #' scale("x", "ord")
 scale <- function(name, type = NULL, domain = NULL, range = NULL, 
                   reverse = FALSE, round = FALSE, ..., subclass = NULL) {
-  assert_that(is.string(name), is.string(type))
+  assert_that(is.string(name))
   type <- match.arg(type, c("linear", "ordinal", "time", "utc", "log",
     "pow", "sqrt", "quantile", "quantize", "threshold"))
   assert_that(is.flag(reverse), is.flag(round))
