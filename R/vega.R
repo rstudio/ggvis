@@ -6,32 +6,24 @@
 #' @param envir The environment in which to evaluate the \code{data} parameter
 #'   of the gigvis object.
 #' @export
-vega_spec <- function(gv,
+vega_spec <- function(gv, data_table,
                       width = 600, height = 400, padding = NULL,
                       envir = parent.frame()) {
 
+  scales <- add_scales(gv)
+  legends <- vega_legends(scales)
+  props <- gather_props(gv)
+  
+  data_names <- ls(data_table, all = TRUE)
   if (gv$dynamic) {
-    mapped_vars <- gather_mapped_vars(gv)
-
-    symbol_table <- attr(gv, "symbol_table")
-    scales <- gather_scales(gv, symbol_table)
-
-    datasets <- lapply(names(symbol_table), function(name) {
+    datasets <- lapply(data_names, function(name) {
       # Don't provide data now, just the name
       list(name = name)
     })
-
   } else {
-    scales <- add_scales(gv)
-    legends <- vega_legends(scales)
-    props <- gather_props(gv)
-
-    datasets <- gather_datasets(gv)
-    datasets <- apply_props_datasets(datasets, props)
-
-    # Convert data frames to vega format
-    datasets <- lapply(names(datasets), function(name) {
-      vega_df(datasets[[name]], name = name)
+    datasets <- lapply(data_names, function(name) {
+      data <- isolate(data_table[[name]]())
+      vega_df(data, name = name)
     })
   }
 
@@ -59,30 +51,9 @@ vega_spec <- function(gv,
   # them in to the spec.
   spec <- c(spec, vega_process_node(node = gv, envir = envir, scales = scales))
 
-  if (gv$dynamic) {
-    # Pass along the dataset expressions too.
-    attr(spec, "datasets") <- symbol_table
-  }
-
   spec
 }
 
-
-# Recursively traverse tree and collect all the data sets used - this currently
-# sends all datasets to vega, even though internal nodes probably don't need
-# to sent
-gather_datasets <- function(node) {
-  if (is.null(node$data_id))
-    data_id <-NULL
-  else
-    data_id <- setNames(list(isolate(node$data())), node$data_id)
-
-  if (is.null(node$children)) return(data_id)
-
-  children <- unlist(lapply(node$children, gather_datasets), recursive = FALSE)
-  all <- c(children, data_id)
-  all[!duplicated(names(all))]
-}
 
 # Recursively traverse tree and collect all the variable props used, for each
 # data set.
@@ -113,20 +84,6 @@ gather_props <- function(node) {
     Reduce(merge_vectors, all[names(all) == name])
   })
 }
-
-
-# Apply properties to each data object in the datasets list, creating
-# calculated columns and dropping unused columns.
-# @param datasets A named list of data objects
-# @param all_props A named list (with same names as datasets) of property lists
-apply_props_datasets <- function(datasets, all_props) {
-  # Make sure items in props are in the same order as datasets
-  all_props <- all_props[names(datasets)]
-  mapply(datasets, all_props, SIMPLIFY = FALSE, FUN = function(data, props) {
-    apply_props(data, props)
-  })
-}
-
 
 # Recursively process nodes in the gigvis tree, and return corresponding vega
 # tree.
