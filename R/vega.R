@@ -100,14 +100,9 @@ vega_process_node <- function(node, envir, scales) {
 
   } else if (inherits(node, "gigvis_node")) {
     # Non-leaf nodes (including root node)
-    vega_node <- list(
-      marks = lapply(
-        node$children,
-        FUN = vega_process_node,
-        envir = envir,
-        scales = scales
-      )
-    )
+    marks <- lapply(node$children, FUN = vega_process_node,
+      envir = envir, scales = scales)
+    vega_node <- list(marks = marks)
 
     # For non-root, non-leaf nodes, add in grouping
     if (!inherits(node, "gigvis")) {
@@ -132,6 +127,8 @@ vega_process_node <- function(node, envir, scales) {
         ))
       )
     }
+  } else {
+    stop("Invalid node of class ", paste0(class(node), collapse = "/"), call. = FALSE)
   }
 
   vega_node
