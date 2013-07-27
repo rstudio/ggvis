@@ -17,5 +17,8 @@ format.transform_identity <- function(x, ...) {
 
 #' @S3method compute transform_identity
 compute.transform_identity <- function(x, props, data) {
-  data.frame(lapply(props, prop_value, data))
+  values <- lapply(props, prop_value, data)
+  names(values) <- vapply(props, prop_name, character(1))
+  
+  data.frame(values)
 }

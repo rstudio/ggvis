@@ -5,7 +5,10 @@ gigvis("mtcars", props(x ~ wt, y ~ mpg),
   mark_symbol()
 )
 gigvis("mtcars", props(x ~ factor(cyl), y ~ mpg),
-  mark_symbol()
+  node(
+    data = transform_identity(),
+    mark_symbol()
+  )
 )
 
 # Basic scatter plot, more verbose
