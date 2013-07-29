@@ -56,3 +56,4 @@ Collate:
     'vega_mark.R'
     'vega_scales.R'
     'view.R'
+    'vega_axes.R'
