@@ -10,9 +10,6 @@ vega_spec <- function(x, nodes, data_table,
                       width = 600, height = 400, padding = NULL,
                       envir = parent.frame()) {
 
-  scales <- find_scales(x, nodes, data_table)
-  legends <- vega_legends(scales)
-  
   data_names <- ls(data_table, all = TRUE)
   if (x$dynamic) {
     datasets <- lapply(data_names, function(name) {
@@ -28,16 +25,16 @@ vega_spec <- function(x, nodes, data_table,
       )
     })
   }
-
-  # These are key-values that only appear at the top level of the tree
+  
+  scales <- find_scales(x, nodes, data_table)
   spec <- list(
-    width = width,
-    height = height,
     data = datasets,
     scales = scales,
-    legends = legends,
-
-    axes = list(list(type = "x", scale = "x"), list(type = "y", scale = "y"))
+    marks = lapply(nodes, vega_mark, scales = scales),
+    width = width,
+    height = height,
+    legends = vega_legends(scales),
+    axes = vega_axes(scales)
   )
 
   if (!is.null(padding)) {
@@ -48,8 +45,6 @@ vega_spec <- function(x, nodes, data_table,
       left = padding[4]
     )
   }
-  
-  spec$marks <- lapply(nodes, vega_mark, scales = scales)
 
   spec
 }

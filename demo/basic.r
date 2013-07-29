@@ -5,20 +5,16 @@ gigvis("mtcars", props(x ~ wt, y ~ mpg),
   mark_symbol()
 )
 gigvis("mtcars", props(x ~ factor(cyl), y ~ mpg),
-  node(
-    data = transform_identity(),
-    mark_symbol()
-  )
+  mark_symbol()
 )
 
-# Basic scatter plot, more verbose
+# Constant, scaled
+gigvis("mtcars", props(x ~ wt, y = constant(10)),
+  mark_symbol()
+)
+# Constant, unscaled
 gigvis("mtcars", props(x ~ wt, y ~ mpg),
   mark_symbol(y = constant(10, scale = TRUE))
-)
-
-# Basic scatter plot, more verbose
-gigvis("mtcars", props(x = variable("wt"), y = constant(10)),
-  mark_symbol()
 )
 
 # Line and point graph

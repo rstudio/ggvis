@@ -48,8 +48,7 @@ print.constant  <- function(x, ...) cat(format(x, ...), "\n", sep = "")
 
 #' @S3method prop_value constant
 prop_value.constant <- function(x, data, processed = FALSE) {
-  # Shouldn't insert any data
-  NULL
+  x$value
 }
 
 #' @S3method prop_name constant
