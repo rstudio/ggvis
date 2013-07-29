@@ -2,7 +2,7 @@
 \alias{constant}
 \title{Property: constant}
 \usage{
-  constant(value, scale = FALSE, mult = NULL,
+  constant(value = NULL, scale = FALSE, mult = NULL,
     offset = NULL)
 }
 \arguments{
@@ -33,5 +33,6 @@
 constant("red")
 constant("red", scale = TRUE)
 constant("red", scale = "alarm")
+constant(offset = -4)
 }
 

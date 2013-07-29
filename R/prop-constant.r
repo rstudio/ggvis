@@ -20,8 +20,9 @@
 #' constant("red")
 #' constant("red", scale = TRUE)
 #' constant("red", scale = "alarm")
-constant <- function(value, scale = FALSE, mult = NULL, offset = NULL) {
-  stopifnot(is.atomic(value), length(value) == 1)
+#' constant(offset = -4)
+constant <- function(value = NULL, scale = FALSE, mult = NULL, offset = NULL) {
+  if (!is.null(value)) stopifnot(is.atomic(value), length(value) == 1)
   stopifnot(is.logical(scale) || is.character(scale), length(scale) == 1)
   if (!is.null(mult)) stopifnot(is.numeric(mult), length(mult) == 1)
   if (!is.null(offset)) stopifnot(is.numeric(offset), length(offset) == 1)
@@ -40,8 +41,11 @@ format.constant <- function(x, ...) {
   } else {
     scale <- ""
   }
+  params <- param_string(compact(x[c("mult", "offset")]), collapse = FALSE)
 
-  paste0("<const> ", x$value, scale)
+  paste0("<const> ", x$value, scale, "\n",
+    if (length(params) > 0) paste0(" * ", names(params), " ", params, collapse = "\n")
+  )
 }
 #' @S3method print constant
 print.constant  <- function(x, ...) cat(format(x, ...), "\n", sep = "")
