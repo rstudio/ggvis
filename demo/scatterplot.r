@@ -14,6 +14,11 @@ gigvis("mtcars", props(x ~ factor(cyl), y ~ mpg),
 )
 
 # With colour
+# continuous:
+gigvis("mtcars", props(x ~ wt, y ~ mpg, fill ~ cyl),
+  mark_symbol()
+)
+# and discrete:
 gigvis("mtcars", props(x ~ wt, y ~ mpg, fill ~ factor(cyl)),
   mark_symbol()
 )
