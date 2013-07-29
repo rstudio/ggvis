@@ -12,6 +12,7 @@ find_scales <- function(x, nodes, data_table) {
     for (prop_n in names(node$props)) {
       prop <- node$props[[prop_n]]
       scale <- prop_scale(prop, prop_n)
+      if (is.na(scale)) next
       
       type <- prop_type(data, prop)
       scale_types[[scale]] <- c(scale_types[[scale]], type)
