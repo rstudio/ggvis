@@ -1,15 +1,11 @@
 \name{vega_spec}
 \alias{vega_spec}
-\title{Given a filled gigvis spec object, output a gigvis_prerender object}
+\title{Create a vega specification.}
 \usage{
   vega_spec(x, nodes, data_table, width = 600,
-    height = 400, padding = NULL, envir = parent.frame())
-}
-\arguments{
-  \item{envir}{The environment in which to evaluate the
-  \code{data} parameter of the gigvis object.}
+    height = 400, padding = NULL)
 }
 \description{
-  The gigvis_prerender object contains a Vega spec.
+  Create a vega specification.
 }
 

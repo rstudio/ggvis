@@ -30,10 +30,10 @@ node <- function(..., data = NULL, props = NULL) {
 }
 
 #' @S3method print gigvis
-print.gigvis <- function(gv, envir = parent.frame()) {
-  gr <- gigvis_render(gv)
+print.gigvis <- function(x, ...) {
+  gr <- gigvis_render(x)
 
-  if (gv$dynamic) {
+  if (x$dynamic) {
     view_dynamic(gr)
   } else {
     view_static(gr)

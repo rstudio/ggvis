@@ -1,14 +1,8 @@
-#' Given a filled gigvis spec object, output a gigvis_prerender object
+#' Create a vega specification.
 #'
-#'
-#' The gigvis_prerender object contains a Vega spec.
-#'
-#' @param envir The environment in which to evaluate the \code{data} parameter
-#'   of the gigvis object.
 #' @export
 vega_spec <- function(x, nodes, data_table,
-                      width = 600, height = 400, padding = NULL,
-                      envir = parent.frame()) {
+                      width = 600, height = 400, padding = NULL) {
 
   data_names <- ls(data_table, all = TRUE)
   if (x$dynamic) {
