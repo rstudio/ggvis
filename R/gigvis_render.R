@@ -1,15 +1,15 @@
-# Given a gigvis object, fill out the tree.
-#
-# Returns a gigvis object in where each node has its own data set and
-# aesthetic properties, and does not need to refer to its parent to find out any
-# of this information.
-#
-# @param node The gigvis node to operate on.
-# @param parent The parent node.
-# @return a list of nodes
-#' @importFrom digest digest
-gigvis_flatten <- function(node, parent = NULL) {
+gigvis_render <- function(x, ...) {
+  nodes <- flatten(x)
+  data <- extract_data(nodes)
+  
+  # Create spec
+  spec <- vega_spec(nodes, data, ...)
+  
+  list(spec = spec, data = data)
+}
 
+flatten <- function(node, parent = NULL) {
+  
   # Inherit behaviour from parent
   node$dynamic <- node$dynamic %||% parent$dynamic
   node$props <- merge_props(parent$props, node$props)
@@ -18,9 +18,9 @@ gigvis_flatten <- function(node, parent = NULL) {
   if (empty(node$data)) {
     if (empty(parent$pipeline)) {
       stop("Node inherits data from parent, but parent has no data", 
-        call. = FALSE)
+           call. = FALSE)
     }
-
+    
     # Point to parent data
     node$pipeline <- parent$pipeline
     node$pipeline_id <- parent$pipeline_id
@@ -33,13 +33,24 @@ gigvis_flatten <- function(node, parent = NULL) {
     )
   }
   
-
   if (is.mark(node)) {
     # Base case: so return self
     list(node)
   } else {
     # Otherwise, recurse through children
-    children <- lapply(node$children, gigvis_flatten, parent = node)
+    children <- lapply(node$children, flatten, parent = node)
     unlist(children, recursive = FALSE)
   }
+}
+
+extract_data <- function(nodes) {
+  data_table <- new.env(parent = emptyenv())
+  for (node in nodes) {
+    id <- node$pipeline_id
+    if (exists(id, data_table)) next
+    
+    data_table[[id]] <- node$data
+  }
+  
+  data_table
 }

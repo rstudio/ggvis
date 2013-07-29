@@ -28,11 +28,11 @@ node <- function(..., data = NULL, props = NULL, scales = NULL,
 
 #' @S3method print gigvis
 print.gigvis <- function(gv, envir = parent.frame()) {
-  gv_filled <- gigvis_fill_tree(gv, parent = NULL, envir = envir)
-  prerendered <- gigvis_prerender(gv_filled)
+  gr <- gigvis_render(gv)
 
-  if (gv$dynamic)
-    view_dynamic(prerendered)
-  else
-    view_static(prerendered)
+  if (gv$dynamic) {
+    view_dynamic(gr)
+  } else {
+    view_static(gr)
+  }
 }
