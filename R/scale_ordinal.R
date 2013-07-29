@@ -23,7 +23,7 @@
 #' @examples
 #' scale_ordinal("x")
 #' scale_ordinal("x", padding = 0.5, sort = TRUE, points = FALSE)
-scale_ordinal <- function(name, points = TRUE, padding = NULL, sort = FALSE,
+scale_ordinal <- function(name, points = TRUE, padding = NULL, sort = TRUE,
                           domain = NULL, range = NULL, reverse = FALSE, 
                           round = FALSE) {
   assert_that(is.flag(points))   
