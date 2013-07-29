@@ -1,4 +1,5 @@
-# Given a gigvis object, return vega scales.
+# Given a gigvis object, return all needed vega scales, with correct
+# domain values set.
 find_scales <- function(x, nodes, data_table) {
   
   scales <- x$scales  
@@ -27,7 +28,9 @@ find_scales <- function(x, nodes, data_table) {
     scales[[scale_n]] <- default_scale(scale_n, type)
   }
 
+  # Override domains (if not already present)
   for (scale_n in names(scales)) {
+    if (!is.null(scales[[scale_n]]$domain)) next
     scales[[scale_n]]$domain <- list(fields = scale_uses[[scale_n]])
   }
   
