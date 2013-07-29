@@ -8,11 +8,6 @@
 # @param parent The parent node.
 # @return a list of nodes
 #' @importFrom digest digest
-#' 
-#' p <- gigvis("mtcars", props(x ~ wt, y ~ mpg), mark_symbol())
-#' gigvis_flatten(p)
-#' p <- gigvis("mtcars", props(x ~ wt, y ~ mpg), node(node(mark_symbol())))
-#' gigvis_flatten(p)
 gigvis_flatten <- function(node, parent = NULL) {
 
   # Inherit behaviour from parent
