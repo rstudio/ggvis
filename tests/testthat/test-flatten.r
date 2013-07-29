@@ -8,7 +8,7 @@ test_that("props inherited from parent", {
       mark_line(x = 3)
     )
   )
-  nodes <- gigvis_flatten(p)
+  nodes <- flatten(p)
   
   expect_equal(length(nodes), 1)
   props <- nodes[[1]]$props
@@ -22,7 +22,7 @@ test_that("data flows through pipeline", {
   df <- data.frame(x = 1, y = 2)
   p <- gigvis(data = df, props = props(x ~ x, y ~ y),
     node(node(node(node(node(mark_line()))))))
-  nodes <- gigvis_flatten(p)
+  nodes <- flatten(p)
   
   expect_equal(length(nodes), 1)
   pipeline <- nodes[[1]]$pipeline
@@ -33,7 +33,7 @@ test_that("data flows through pipeline", {
 test_that("no data is an error", {
   p <- gigvis(NULL, props(x ~ x, y ~ y),
     node(node(node(node(node(mark_line()))))))
-  expect_error(gigvis_flatten(p), "parent has no data")
+  expect_error(flatten(p), "parent has no data")
 })
 
 test_that("reactive source data only run once", {
@@ -48,7 +48,7 @@ test_that("reactive source data only run once", {
   p <- gigvis(rdf, props(x ~ x, y ~ y),
     mark_line(),
     mark_symbol())
-  nodes <- gigvis_flatten(p)
+  nodes <- flatten(p)
   
   expect_equal(length(nodes), 2)
   
