@@ -15,7 +15,10 @@ is.mark <- function(x) inherits(x, "mark")
 
 #' @S3method format mark
 format.mark <- function(x, ...) {
-  paste0("<", class(x)[1], ">\n", format(x$props))
+  paste0("<", class(x)[1], ">", 
+    if (!is.null(x$pipeline_id)) paste0(" (ID: ", x$pipeline_id, ")"),
+    "\n",
+    format(x$props))
 }
 
 #' @S3method print mark

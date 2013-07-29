@@ -4,54 +4,34 @@
 # aesthetic properties, and does not need to refer to its parent to find out any
 # of this information.
 #
-# * First pass. After this pass, no need to refer to parents again
-#   * Propagate name of the data set
-#   * Merge aesthetic properties with the parent's aesthetics
-#   * Split data (if needed)
-#   * Transform data (if needed)
-#
 # @param node The gigvis node to operate on.
 # @param parent The parent node.
-# @param envir Environment in which to look for data object.
+# @return a list of nodes
 #' @importFrom digest digest
-gigvis_fill_tree <- function(node, parent = NULL, envir = NULL) {
-  # If we're at the top of the tree, initialize some data structures
-  if (is.null(parent)) {
-    root_node <- TRUE
-    parent <- list()
+#' 
+#' p <- gigvis("mtcars", props(x ~ wt, y ~ mpg), mark_symbol())
+#' gigvis_flatten(p)
+#' p <- gigvis("mtcars", props(x ~ wt, y ~ mpg), node(node(mark_symbol())))
+#' gigvis_flatten(p)
+gigvis_flatten <- function(node, parent = NULL) {
 
-  } else {
-    root_node <- FALSE
-  }
-
-  if (is.null(node$dynamic))  node$dynamic <- parent$dynamic
-  if (is.null(node$data))  node$data <- parent$data
-
-  # If parent node is NOT the root node, then inherit data (this is used when
-  # generating the vega tree)
-  if (inherits(parent, "gigvis")) {
-    node$inherit_data <- FALSE
-  } else {
-    node$inherit_data <- TRUE
-  }
-
-  # Inherit properties from parent
+  # Inherit behaviour from parent
+  node$dynamic <- node$dynamic %||% parent$dynamic
   node$props <- merge_props(parent$props, node$props)
+  
+  # Create reactive pipeline, connected to parents
+  node$pipeline <- connect(node$data, node$props, parent$pipeline)
+  node$pipeline_id <- paste0(
+    parent$pipeline_id,
+    pipeline_id(node$data, node$props)
+  )
 
-  # Connect this node's data pipeline to the parent's
-  node$pipeline <- c(as.pipeline(parent$data), node$data)
-
-  # Create the reactive expression which will yield the data
-  node$data <- connect(node$pipeline, node$props)
-
-  # Give an id to the data object; this becomes the vega 'data' field.
-  node$data_id <- pipeline_id(node$pipeline, node$props)
-
-  if (!is.null(node$children)) {
-    # Fill in children recursively
-    node$children <- lapply(node$children, FUN = gigvis_fill_tree,
-      parent = node, envir = envir)
+  if (is.mark(node)) {
+    # Base case: so return self
+    list(node)
+  } else {
+    # Otherwise, recurse through children
+    children <- lapply(node$children, gigvis_flatten, parent = node)
+    unlist(children, recursive = FALSE)
   }
-
-  node
 }
