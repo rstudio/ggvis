@@ -1,0 +1,25 @@
+\name{prop_to_scale}
+\alias{prop_to_scale}
+\title{Convert the name of a property to the name of it's default scale.}
+\usage{
+  prop_to_scale(prop)
+}
+\arguments{
+  \item{prop}{character vector of property names. Any
+  unrecognised names are left unchanged.}
+}
+\value{
+  character vector of default scale names.
+}
+\description{
+  This is mainly used to ensure that similar properties
+  share the same scale by default - e.g. \code{x} and
+  \code{x2} should use the same scale.
+}
+\examples{
+prop_to_scale(c("x", "x2"))
+prop_to_scale(c("foo", "bar"))
+prop_to_scale(c("opacity", "fillOpacity", "strokeOpacity"))
+}
+\keyword{internal}
+

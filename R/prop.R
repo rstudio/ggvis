@@ -70,21 +70,21 @@ prop_type.data.frame <- function(data, prop, processed = FALSE) {
   prop_type(prop_value(prop, data, processed))
 }
 #' @S3method prop_type POSIXt
-prop_type.POSIXt <- function(data, prop) "time"
+prop_type.POSIXt <- function(data, prop) "datetime"
 #' @S3method prop_type Date
-prop_type.Date <- function(data, prop) "date"
+prop_type.Date <- function(data, prop) "datetime"
 #' @S3method prop_type numeric
-prop_type.numeric <- function(data, prop) "double"
+prop_type.numeric <- function(data, prop) "numeric"
 #' @S3method prop_type integer
-prop_type.integer <- function(data, prop) "integer"
-#' @S3method prop_type complex
-prop_type.complex <- function(data, prop) "complex"
+prop_type.integer <- function(data, prop) "numeric"
 #' @S3method prop_type character
-prop_type.character <- function(data, prop) "character"
+prop_type.character <- function(data, prop) "nominal"
 #' @S3method prop_type logical
 prop_type.logical <- function(data, prop) "logical"
 #' @S3method prop_type factor
-prop_type.factor <- function(data, prop) "factor"
+prop_type.factor <- function(data, prop) "nominal"
+#' @S3method prop_type ordered
+prop_type.ordered <- function(data, prop) "ordinal"
 #' @S3method prop_type NULL
 prop_type.NULL <- function(data, prop) "NULL"
 #' @S3method prop_type default

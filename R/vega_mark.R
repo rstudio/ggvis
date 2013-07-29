@@ -56,7 +56,7 @@ vega_mark_property <- function(prop, val, scales) {
   # Convert scales to a named list for convenience
   names(scales) <- vapply(scales, `[[`, "name", FUN.VALUE = character(1))
 
-  vega <- prop_vega(val, default_scale(prop))
+  vega <- prop_vega(val, prop_to_scale(prop))
 
   # This is an ugly hack, but not sure yet how to make better.
   if ((prop == "width"  && scales$x$type == "ordinal") ||
@@ -65,22 +65,4 @@ vega_mark_property <- function(prop, val, scales) {
   }
 
   vega
-}
-
-default_scale <- function(prop) {
-  stopifnot(is.character(prop), length(prop) == 1)
-
-  as_is <- c("x", "y", "size", "opacity", "fill", "fillOpacity",
-    "stroke", "strokeWidth", "strokeOpacity")
-  if (prop %in% as_is) return(prop)
-
-  mapped <- c(
-    "x2" = "x",
-    "width" = "x",
-    "y" = "y",
-    "y2" = "y"
-  )
-  if (prop %in% names(mapped)) return(mapped[[prop]])
-
-  stop("Unkown property: ", prop)
 }

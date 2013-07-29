@@ -24,52 +24,12 @@ find_scales <- function(x, nodes, data_table) {
   needed <- setdiff(names(scale_types), names(scales))
   for (scale_n in needed) {
     type <- scale_types[[scale_n]][[1]]
-    scales[[scale_n]] <- scale_defaults(scale_n, type)
+    scales[[scale_n]] <- default_scale(scale_n, type)
   }
-  
-  # Associate each scale with the data values
+
   for (scale_n in names(scales)) {
     scales[[scale_n]]$domain <- list(fields = scale_uses[[scale_n]])
   }
   
   unclass(unname(scales))
-}
-
-scale_defaults <- function(scale, var_type) {
-  if (var_type == "double") var_type <- "linear"
-  
-  if (scale == "x") {
-    list(
-      name   = scale,
-      type   = var_type,
-      range  = "width",
-      zero   = FALSE,
-      nice   = FALSE
-    )
-  } else if (scale == "y") {
-    list(
-      name   = scale,
-      type   = var_type,
-      range  = "height",
-      zero   = FALSE,
-      nice   = FALSE
-    )
-
-  } else if (scale == "stroke") {
-    list(
-      name   = scale,
-      type   = var_type,
-      range  = "category10"
-    )
-
-  } else if (scale == "fill") {
-    list(
-      name   = scale,
-      type   = var_type,
-      range  = "category10"
-    )
-
-  } else {
-    stop("Unknown scale: ", scale)
-  }
 }
