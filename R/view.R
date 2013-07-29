@@ -8,7 +8,7 @@
 #' @export
 #' @importFrom RJSONIO toJSON
 #' @importFrom whisker whisker.render
-view_static <- function(gv, renderer = "canvas", launch = TRUE) {
+view_static <- function(spec, renderer = "canvas", launch = TRUE) {
 
   if (!(renderer %in% c("canvas", "svg")))
     stop("renderer must be 'canvas' or 'svg'")
@@ -18,7 +18,7 @@ view_static <- function(gv, renderer = "canvas", launch = TRUE) {
 
   copy_www_resources(temp_dir)
 
-  vega_json <- toJSON(gv$spec, pretty = TRUE)
+  vega_json <- toJSON(spec, pretty = TRUE)
 
   template <- paste(readLines(system.file('index.html', package='gigvis')),
     collapse='\n')
@@ -44,7 +44,7 @@ view_static <- function(gv, renderer = "canvas", launch = TRUE) {
 
 # This is used similarly to view_static, but view_dynamic can take functions
 # or (reactive expressions) as data instead of names in an environment.
-view_dynamic <- function(gv, envir = parent.frame(), controls = NULL,
+view_dynamic <- function(spec, data_table, envir = parent.frame(), controls = NULL,
                          renderer = "canvas", launch = TRUE, port = 8228) {
 
   if (!require("shiny"))
@@ -55,8 +55,8 @@ view_dynamic <- function(gv, envir = parent.frame(), controls = NULL,
 
   plot_id <- "plot1"
 
-  vega_spec_json <- RJSONIO::toJSON(gv$spec, pretty = TRUE)
-  data_table <- gv$data_table
+  vega_spec_json <- RJSONIO::toJSON(spec, pretty = TRUE)
+  data_table <- data_table
 
   # Make our resources available
   script_tags <- deploy_www_resources()

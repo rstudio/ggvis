@@ -2,7 +2,7 @@
 \alias{view_static}
 \title{Generate a static web page with the embedded gigvis graph}
 \usage{
-  view_static(gv, renderer = "canvas", launch = TRUE)
+  view_static(spec, renderer = "canvas", launch = TRUE)
 }
 \arguments{
   \item{gv}{A gigvis_prerender object.}

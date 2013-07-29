@@ -34,8 +34,29 @@ print.gigvis <- function(x, ...) {
   gr <- gigvis_render(x)
 
   if (x$dynamic) {
-    view_dynamic(gr)
+    view_dynamic(gr$spec, gr$data_table)
   } else {
-    view_static(gr)
+    view_static(gr$spec)
   }
+}
+
+#' Tools to save and view static specs.
+#' 
+#' These functions are mainly useful for testing.
+#' 
+#' @keywords internal
+#' @export
+save_spec <- function(x, path, ...) {
+  gr <- gigvis_render(x, ...)
+  
+  json <- toJSON(gr$spec, pretty = TRUE)
+  writeLines(json, path)
+}
+
+#' @importFrom RJSONIO fromJSON
+#' @rdname save_spec
+view_spec <- function(path, ...) {
+  contents <- paste0(readLines(path), collapse = "\n")
+  spec <- fromJSON(contents)
+  view_static(spec)
 }
