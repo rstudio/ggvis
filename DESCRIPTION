@@ -32,7 +32,6 @@ Collate:
     'full_seq.R'
     'find_data.R'
     'range.R'
-    'gigvis_prerender.R'
     'props.R'
     'prop-variable.r'
     'prop-constant.r'
@@ -55,4 +54,4 @@ Collate:
     'scale_ordinal.R'
     'scale_quantitative.R'
     'transform_identity.R'
-    'gigvis_flatten.R'
+    'gigvis_render.R'
