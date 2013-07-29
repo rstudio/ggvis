@@ -6,16 +6,16 @@
 #' @param envir The environment in which to evaluate the \code{data} parameter
 #'   of the gigvis object.
 #' @export
-vega_spec <- function(gv, data_table,
+vega_spec <- function(x, nodes, data_table,
                       width = 600, height = 400, padding = NULL,
                       envir = parent.frame()) {
 
-  scales <- add_scales(gv)
+  scales <- find_scales(x, nodes, data_table)
   legends <- vega_legends(scales)
-  props <- gather_props(gv)
+  props <- gather_props(x)
   
   data_names <- ls(data_table, all = TRUE)
-  if (gv$dynamic) {
+  if (x$dynamic) {
     datasets <- lapply(data_names, function(name) {
       # Don't provide data now, just the name
       list(name = name)
@@ -23,7 +23,10 @@ vega_spec <- function(gv, data_table,
   } else {
     datasets <- lapply(data_names, function(name) {
       data <- isolate(data_table[[name]]())
-      vega_df(data, name = name)
+      list(
+        name = name,
+        values = d3df(data)
+      )
     })
   }
 
@@ -46,10 +49,8 @@ vega_spec <- function(gv, data_table,
       left = padding[4]
     )
   }
-
-  # Now deal with keys that also appear in lower levels of the tree, and merge
-  # them in to the spec.
-  spec <- c(spec, vega_process_node(node = gv, envir = envir, scales = scales))
+  
+  spec$marks <- lapply(nodes, vega_mark, scales = scales)
 
   spec
 }
@@ -84,64 +85,6 @@ gather_props <- function(node) {
     Reduce(merge_vectors, all[names(all) == name])
   })
 }
-
-# Recursively process nodes in the gigvis tree, and return corresponding vega
-# tree.
-#
-# @param node A gigvis object node.
-# @param envir Environment in which to evaluate \code{data}, to retrieve
-#   the data object.
-# @param scales A list of scale objects
-vega_process_node <- function(node, envir, scales) {
-
-  if (inherits(node, "mark")) {
-    # Leaf nodes
-    vega_node <- vega_mark(node, scales)
-
-  } else if (inherits(node, "gigvis_node")) {
-    # Non-leaf nodes (including root node)
-    marks <- lapply(node$children, FUN = vega_process_node,
-      envir = envir, scales = scales)
-    vega_node <- list(marks = marks)
-
-    # For non-root, non-leaf nodes, add in grouping
-    if (!inherits(node, "gigvis")) {
-
-      vega_node$type <- "group"
-
-      # group nodes need a transform of some type to work. If there's no
-      # operation to be done, use type="facet" and keys=NULL.
-      # Extract the split vars from the pipeline
-      split_vars <- vapply(split_vars(node$data), prop_name, character(1))
-      if (length(split_vars) > 0) {
-        facet_keys <- paste("data", split_vars, sep = ".")
-      } else {
-        facet_keys <- NULL
-      }
-
-      vega_node$from <- list(
-        data = node$data_id,
-        transform = list(list(
-          type = "facet",
-          keys = facet_keys
-        ))
-      )
-    }
-  } else {
-    stop("Invalid node of class ", paste0(class(node), collapse = "/"), call. = FALSE)
-  }
-
-  vega_node
-}
-
-
-vega_df <- function(x, name) {
-  list(
-    name = name,
-    values = d3df(x)
-  )
-}
-
 
 # Convert a data object to a D3-structured data object.
 # Numbers and strings stay the same type; everything else gets converted to

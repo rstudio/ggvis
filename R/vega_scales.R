@@ -1,28 +1,29 @@
 # Given a gigvis object, return vega scales.
-add_scales <- function(node) {
-  # Scales that will be filled in by default
-  default_scales <- do.call(scales,
-    lapply(c("x", "y", "stroke", "fill", "opacity"), scale))
+find_scales <- function(x, nodes, data_table) {
+  
+  scales <- x$scales
+  existing <- names(scales)
+  
+  # Loop through each node, looking for the scale associated with each property
+  needed_scales <- list()
+  for (node in nodes) {
+    data <- isolate(data_table[[node$pipeline_id]]())
+    for (prop_n in names(node$props)) {
+      prop <- node$props[[prop_n]]
+      scale <- prop_scale(prop, prop_n)
+      if (scale %in% existing) next
+      
+      type <- prop_type(data, prop)
+      needed_scales[[scale]] <- c(needed_scales[[scale]], type)
+    }
+  }
+  
+  for (scale_n in names(needed_scales)) {
+    type <- needed_scales[[scale_n]][[1]]
+    scales[[scale_n]] <- scale_defaults(scale_n, type)
+  }
 
-  # Find scales that are specified in the gigvis object
-  provided <- merge_scales(default_scales, node$scales)
-
-  # Find scales that are used in the tree: data, var, scale, prop
-  needed <- needed_scales(node, provided)
-  by_scale <- split(needed, needed$scale)
-
-  # For scales that are used but not provided by user, examine the data to
-  # find the variable type
-  need_type <- by_scale[!names(by_scale) %in% names(node$scales)]
-
-  # Get the appropriate scales. If supplied by user, use that; otherwise use
-  # vega_scale to automatically generate the scale.
-  scales <- lapply(by_scale, function(x) {
-    name <- x$scale[[1]]
-    gv_scale <- node$scale[[name]]
-    vega_scale(gv_scale, name, x$var, x$data, x$var_type)
-  })
-  unname(scales)
+  unclass(unname(scales))
 }
 
 # Add scales: ensure that each node - either provided explicitly at that

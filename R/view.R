@@ -18,7 +18,7 @@ view_static <- function(gv, renderer = "canvas", launch = TRUE) {
 
   copy_www_resources(temp_dir)
 
-  vega_json <- toJSON(gv$vega_spec, pretty = TRUE)
+  vega_json <- toJSON(gv$spec, pretty = TRUE)
 
   template <- paste(readLines(system.file('index.html', package='gigvis')),
     collapse='\n')
@@ -55,7 +55,7 @@ view_dynamic <- function(gv, envir = parent.frame(), controls = NULL,
 
   plot_id <- "plot1"
 
-  vega_spec_json <- RJSONIO::toJSON(gv$vega_spec, pretty = TRUE)
+  vega_spec_json <- RJSONIO::toJSON(gv$spec, pretty = TRUE)
   data_table <- gv$data_table
 
   # Make our resources available

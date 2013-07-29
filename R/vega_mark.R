@@ -9,9 +9,7 @@ vega_mark <- function(node, scales) {
     )
   )
 
-  if (!node$inherit_data) {
-    vega_node$from <- list(data = node$data_id)
-  }
+  vega_node$from <- list(data = node$pipeline_id)
 
   vega_node
 }

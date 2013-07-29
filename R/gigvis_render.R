@@ -3,7 +3,7 @@ gigvis_render <- function(x, ...) {
   data <- extract_data(nodes)
   
   # Create spec
-  spec <- vega_spec(nodes, data, ...)
+  spec <- vega_spec(x, nodes, data, ...)
   
   list(spec = spec, data = data)
 }
@@ -49,7 +49,7 @@ extract_data <- function(nodes) {
     id <- node$pipeline_id
     if (exists(id, data_table)) next
     
-    data_table[[id]] <- node$data
+    data_table[[id]] <- node$pipeline
   }
   
   data_table
