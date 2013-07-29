@@ -1,6 +1,7 @@
 gigvis_render <- function(x, ...) {
   nodes <- flatten(x)
   data <- extract_data(nodes)
+  data <- apply_props(data, nodes)
   
   # Create spec
   spec <- vega_spec(x, nodes, data, ...)
@@ -53,4 +54,36 @@ extract_data <- function(nodes) {
   }
   
   data_table
+}
+
+apply_props <- function(data, nodes) {
+  # Collect all props for given data
+  pipeline_id <- vapply(nodes, function(x) x$pipeline_id, character(1))
+  props <- lapply(nodes, function(x) x$props)
+  
+  props_by_id <- split(props, pipeline_id)
+  props_by_id <- lapply(props_by_id, unlist, recursive = FALSE)
+
+  uprops_by_id <- lapply(props_by_id, function(props) {
+    names <- vapply(props, prop_name, character(1))
+    ok <- !duplicated(names) & names != ""
+    
+    setNames(props[ok], names[ok])
+  })
+  
+  reactive_prop <- function(props, data) {
+    force(data)
+    force(props)
+    reactive({
+      data.frame(lapply(props, prop_value, data = data()))
+    })
+  }
+  
+  data_out <- new.env(parent = emptyenv())
+  for (data_n in names(uprops_by_id)) {
+    data_out[[data_n]] <- reactive_prop(uprops_by_id[[data_n]], data[[data_n]])
+  }
+  
+  data_out
+  
 }
