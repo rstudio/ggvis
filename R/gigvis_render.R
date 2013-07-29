@@ -17,7 +17,7 @@ flatten <- function(node, parent = NULL) {
   
   # Create reactive pipeline, connected to parents
   if (empty(node$data)) {
-    if (empty(parent$pipeline)) {
+    if (is.mark(node) && empty(parent$pipeline)) {
       stop("Node inherits data from parent, but parent has no data", 
            call. = FALSE)
     }
