@@ -1,6 +1,10 @@
 #' @export
 #' @import assertthat
-gigvis <- function(data = NULL, props = NULL, ..., dynamic = FALSE, scales = NULL) {
+gigvis <- function(data = NULL, props = NULL, ..., dynamic = FALSE, 
+                   scales = NULL) {
+  if (is.null(scales)) scales <- scales()
+  stopifnot(is.scales(scales))
+  
   structure(
     list(
       data = as.pipeline(data), 
@@ -15,16 +19,11 @@ gigvis <- function(data = NULL, props = NULL, ..., dynamic = FALSE, scales = NUL
 
 #' @export
 node <- function(..., data = NULL, props = NULL) {
-  stopifnot(is.null(scales) || is.scales(scales))
-  if (is.null(scales))  scales <- scales()
-
   structure(
     list(
       data = as.pipeline(data),
       props = props,
-      scales = scales,
-      children = list(...),
-      dynamic = dynamic
+      children = list(...)
     ),
     class = "gigvis_node"
   )
