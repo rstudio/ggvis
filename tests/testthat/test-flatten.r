@@ -17,3 +17,15 @@ test_that("props inherited from parent", {
   expect_equal(props$x$value, 3)
   expect_equal(props$y$value, 2)
 })
+
+test_that("data flows through pipeline", {
+  df <- data.frame(x = 1, y = 2)
+  p <- gigvis(data = df, props = props(x ~ x, y ~ y),
+    node(node(node(node(node(mark_line()))))))
+  nodes <- gigvis_flatten(p)
+  
+  expect_equal(length(nodes), 1)
+  pipeline <- nodes[[1]]$pipeline
+  
+  expect_equal(isolate(pipeline()), df)
+})
