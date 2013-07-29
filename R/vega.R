@@ -12,7 +12,6 @@ vega_spec <- function(x, nodes, data_table,
 
   scales <- find_scales(x, nodes, data_table)
   legends <- vega_legends(scales)
-  props <- gather_props(x)
   
   data_names <- ls(data_table, all = TRUE)
   if (x$dynamic) {
@@ -53,37 +52,6 @@ vega_spec <- function(x, nodes, data_table,
   spec$marks <- lapply(nodes, vega_mark, scales = scales)
 
   spec
-}
-
-
-# Recursively traverse tree and collect all the variable props used, for each
-# data set.
-gather_props <- function(node) {
-  # Create a list with an entry for this data_id, containing the props for the
-  # data_id
-  data_id <- node$data_id
-  props <- list()
-  if (!is.null(data_id)) {
-    # Get variables from props
-    var_props <- Filter(is.variable, node$props)
-    # Also get split vars from the data pipeline
-    var_props <- c(var_props, split_vars(node$data))
-    names(var_props) <- vapply(var_props, prop_name, character(1))
-    props[[data_id]] <- var_props
-  }
-
-  if (is.null(node$children)) return(props)
-
-  children <- unlist(lapply(node$children, gather_props), recursive = FALSE)
-  all <- c(props, children)
-
-  # Merge the properties for each data_id (there may be multiple entries for
-  # each data_id)
-  all_names <- unique(names(all))
-  names(all_names) <- all_names
-  lapply(all_names, function(name) {
-    Reduce(merge_vectors, all[names(all) == name])
-  })
 }
 
 # Convert a data object to a D3-structured data object.
