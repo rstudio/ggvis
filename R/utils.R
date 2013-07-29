@@ -109,3 +109,6 @@ safe_jsvar <- function(x) {
 
 # Returns TRUE if the string is a safe Javascript variable name, false otherwise
 is_safe_jsvar <- function(x) !grepl("[^a-zA-Z0-9_]", x)
+
+
+empty <- function(x) length(x) == 0

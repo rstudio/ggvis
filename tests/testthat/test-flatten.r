@@ -29,3 +29,9 @@ test_that("data flows through pipeline", {
   
   expect_equal(isolate(pipeline()), df)
 })
+
+test_that("no data is an error", {
+  p <- gigvis(NULL, props(x ~ x, y ~ y),
+    node(node(node(node(node(mark_line()))))))
+  expect_error(gigvis_flatten(p), "parent has no data")
+})

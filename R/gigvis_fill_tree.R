@@ -20,11 +20,24 @@ gigvis_flatten <- function(node, parent = NULL) {
   node$props <- merge_props(parent$props, node$props)
   
   # Create reactive pipeline, connected to parents
-  node$pipeline <- connect(node$data, node$props, parent$pipeline)
-  node$pipeline_id <- paste0(
-    parent$pipeline_id,
-    pipeline_id(node$data, node$props)
-  )
+  if (empty(node$data)) {
+    if (empty(parent$pipeline)) {
+      stop("Node inherits data from parent, but parent has no data", 
+        call. = FALSE)
+    }
+
+    # Point to parent data
+    node$pipeline <- parent$pipeline
+    node$pipeline_id <- parent$pipeline_id
+  } else {  
+    # Create new pipeline connected to parent
+    node$pipeline <- connect(node$data, node$props, parent$pipeline)
+    node$pipeline_id <- paste0(
+      parent$pipeline_id,
+      pipeline_id(node$data, node$props)
+    )
+  }
+  
 
   if (is.mark(node)) {
     # Base case: so return self
