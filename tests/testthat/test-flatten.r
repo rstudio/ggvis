@@ -35,3 +35,24 @@ test_that("no data is an error", {
     node(node(node(node(node(mark_line()))))))
   expect_error(gigvis_flatten(p), "parent has no data")
 })
+
+test_that("reactive source data only run once", {
+  library("shiny")
+  runs <- 0
+  df <- data.frame(x = 1, y = 2)
+  rdf <- reactive({
+    runs <<- runs + 1
+    df
+  })
+  
+  p <- gigvis(rdf, props(x ~ x, y ~ y),
+    mark_line(),
+    mark_symbol())
+  nodes <- gigvis_flatten(p)
+  
+  expect_equal(length(nodes), 2)
+  
+  expect_equal(isolate(nodes[[1]]$pipeline()), df)
+  expect_equal(isolate(nodes[[2]]$pipeline()), df)
+  expect_equal(runs, 1)
+})
