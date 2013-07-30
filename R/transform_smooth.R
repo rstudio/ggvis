@@ -35,8 +35,8 @@ format.transform_smooth <- function(x, ...) {
 
 #' @S3method compute transform_smooth
 compute.transform_smooth <- function(x, props, data) {
-  check_prop(x, props, data, "x", c("numeric", "integer"))
-  check_prop(x, props, data, "y", c("numeric", "integer"))
+  check_prop(x, props, data, "x", "numeric")
+  check_prop(x, props, data, "y", "numeric")
 
   if (is.guess(x$method)) {
     x$method <- if (max_rows(data) > 1000) "gam" else "loess"
