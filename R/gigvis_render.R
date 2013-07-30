@@ -1,14 +1,3 @@
-gigvis_render <- function(x, ...) {
-  nodes <- flatten(x)
-  data <- extract_data(nodes)
-  data <- active_props(data, nodes)
-  
-  # Create spec
-  spec <- as.vega(x, nodes, data, ...)
-  
-  list(spec = spec, data = data)
-}
-
 flatten <- function(node, parent = NULL) {
   
   # Inherit behaviour from parent

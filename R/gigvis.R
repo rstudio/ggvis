@@ -31,12 +31,12 @@ node <- function(..., data = NULL, props = NULL) {
 
 #' @S3method print gigvis
 print.gigvis <- function(x, ...) {
-  gr <- gigvis_render(x)
+  vega <- as.vega(x, ...)
 
   if (x$dynamic) {
-    view_dynamic(gr$spec, gr$data_table)
+    view_dynamic(vega)
   } else {
-    view_static(gr$spec)
+    view_static(vega)
   }
 }
 

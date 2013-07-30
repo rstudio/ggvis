@@ -10,12 +10,18 @@ as.vega <- function(x, ...) {
   UseMethod("as.vega", x)
 }
 
-#' @S3method as.vega gigvis
-as.vega.gigvis <- function(x, nodes, data_table,
-                      width = 600, height = 400, padding = NULL) {
-  
+#' @method as.vega gigvis
+#' @export
+#' @rdname as.vega
+#' @param width,height width and height of plot, in pixels
+#' @param padding padding, as described by \code{\link{padding}}
+as.vega.gigvis <- function(x, width = 600, height = 400, padding = NULL) {
   if (is.null(padding)) padding <- padding()
 
+  nodes <- flatten(x)
+  data_table <- extract_data(nodes)
+  data_table <- active_props(data_table, nodes)
+  
   data_names <- ls(data_table, all = TRUE)
   if (x$dynamic) {
     datasets <- lapply(data_names, function(name) {
@@ -43,7 +49,7 @@ as.vega.gigvis <- function(x, nodes, data_table,
     padding = as.vega(padding)
   )
 
-  spec
+  structure(spec, data_table = data_table)
 }
 
 # Given a gigvis mark object and set of scales, output a vega mark object

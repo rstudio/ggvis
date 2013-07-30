@@ -44,7 +44,7 @@ view_static <- function(spec, renderer = "canvas", launch = TRUE) {
 
 # This is used similarly to view_static, but view_dynamic can take functions
 # or (reactive expressions) as data instead of names in an environment.
-view_dynamic <- function(spec, data_table, envir = parent.frame(), controls = NULL,
+view_dynamic <- function(spec, envir = parent.frame(), controls = NULL,
                          renderer = "canvas", launch = TRUE, port = 8228) {
 
   if (!require("shiny"))
@@ -56,7 +56,7 @@ view_dynamic <- function(spec, data_table, envir = parent.frame(), controls = NU
   plot_id <- "plot1"
 
   vega_spec_json <- RJSONIO::toJSON(spec, pretty = TRUE)
-  data_table <- data_table
+  data_table <- attr(spec, "data_table")
 
   # Make our resources available
   script_tags <- deploy_www_resources()
@@ -108,7 +108,7 @@ view_dynamic <- function(spec, data_table, envir = parent.frame(), controls = NU
           session$sendCustomMessage("gigvis_data", list(
             plot = plot_id,
             name = data_name,
-            value = d3df(data)
+            value = as.vega(data)
           ))
         })
         session$onSessionEnded(function() {
