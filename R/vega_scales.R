@@ -17,11 +17,10 @@ find_scales <- function(x, nodes, data_table) {
       type <- prop_type(data, prop, TRUE)
       scale_types[[scale]] <- c(scale_types[[scale]], type)
       
-      use <- list(
-        data = node$pipeline_id, 
-        field = paste0("data.", prop_name(prop))
-      )
-      scale_uses[[scale]] <- c(scale_uses[[scale]], list(use))
+      use <- prop_domain(prop, node$pipeline_id)
+      if (!is.null(use)) {
+        scale_uses[[scale]] <- c(scale_uses[[scale]], list(use))        
+      }
     }
   }
   

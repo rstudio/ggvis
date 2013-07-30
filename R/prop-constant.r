@@ -81,3 +81,11 @@ prop_vega.constant <- function(x, default_scale) {
     offset = x$offset
   ))
 }
+
+#' @S3method prop_domain constant
+# FIXME: for scaled constants, this should really insert a literal value in
+#   to the domain, but it's not obvious how to do that in vega currently.
+prop_domain.constant <- function(x, data) {
+  NULL
+}
+

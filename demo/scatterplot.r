@@ -23,15 +23,16 @@ gigvis("mtcars", props(x ~ wt, y ~ mpg, fill ~ factor(cyl)),
   mark_symbol()
 )
 
-# Use unscaled constant
-gigvis("mtcars", props(x ~ wt, y = constant(10)),
-  mark_symbol()
+# Use unscaled constant: 10 refers to 10 pixels from top
+gigvis("mtcars", props(x ~ wt),
+  mark_symbol(y ~ mpg),
+  mark_symbol(y = constant(10), fill = "red")
 )
 
-# Use scaled constant
-# FIXME: needs prop_domain generic
-gigvis("mtcars", props(x ~ wt, y ~ mpg),
-  mark_symbol(y = constant(10, scale = TRUE))
+# Use scaled constant: 10 refers to data space
+gigvis("mtcars", props(x ~ wt),
+  mark_symbol(y ~ mpg),
+  mark_symbol(y = constant(10, scale = TRUE), fill = "red")
 )
 
 # Line and point graph

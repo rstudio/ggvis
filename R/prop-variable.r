@@ -77,6 +77,14 @@ prop_scale.variable <- function(x, default_scale) {
   }
 }
 
+#' @S3method prop_domain variable
+prop_domain.variable <- function(x, data) {
+  list(
+    data = data, 
+    field = paste0("data.", prop_name(x))
+  )  
+}
+
 #' @S3method prop_vega variable
 prop_vega.variable <- function(x, default_scale) {
   scale <- prop_scale(x, default_scale)

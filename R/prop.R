@@ -108,3 +108,11 @@ prop_range.split_df <- function(data, var, na.rm = TRUE) {
     FUN.VALUE = numeric(2))
   range(ranges)
 }
+
+#' Property domain.
+#' 
+#' @param x property to dispatch on
+#' @param data name of data set
+prop_domain <- function(x, data) {
+  UseMethod("prop_domain")
+}
