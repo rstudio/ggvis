@@ -7,6 +7,13 @@
 
   view_spec(path, ...)
 }
+\arguments{
+  \item{x}{a gigvis object}
+
+  \item{path}{location to save spec to, or load spec from}
+
+  \item{...}{other arguments passed to \code{as.vega}}
+}
 \description{
   These functions are mainly useful for testing.
 }

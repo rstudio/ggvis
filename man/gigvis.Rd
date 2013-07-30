@@ -1,0 +1,36 @@
+\name{gigvis}
+\alias{gigvis}
+\alias{is.gigvis}
+\alias{node}
+\title{Create a gigvis object, or a node in a gigvis plot.}
+\usage{
+  gigvis(data = NULL, props = NULL, ..., dynamic = FALSE,
+    scales = NULL)
+
+  is.gigvis(x)
+
+  node(..., data = NULL, props = NULL)
+}
+\arguments{
+  \item{data}{A data \code{\link{pipeline}}, or anything
+  that can be coerced to a pipeline using
+  \code{\link{as.pipeline}}}
+
+  \item{props}{a list of \code{\link{props}} defining
+  default mark properties for this node and all its
+  children.}
+
+  \item{...}{children \code{node}s or \code{\link{marks}}.}
+
+  \item{dynamic}{if \code{TRUE}, this printing this plot
+  will generate a dynamic shiny app; if \code{FALSE},
+  creates a static html file. See also
+  \code{\link{save_spec}} to just output the vega spec}
+
+  \item{scales}{a \code{\link{scales}} object, to override
+  the default scales}
+}
+\description{
+  Create a gigvis object, or a node in a gigvis plot.
+}
+
