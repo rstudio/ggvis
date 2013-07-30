@@ -52,13 +52,13 @@ prop_name.variable <- function(x) {
   var <- x[[1]]
 
   if (is.symbol(var)) {
-    safe_jsvar(as.character(var))
+    safe_vega_var(as.character(var))
 
   } else if (is.language(var)) {
     # var is calculated from an expression; get a unique, JS-safe name. Prepend
     # a string to so that an expression with same text as a var will have a
     # different hash, e.g., the expression wt/mpg vs. the variable `wt/mpg`.
-    safe_jsvar(paste("[e]", deparse(var)))
+    safe_vega_var(paste0("[e]", deparse(var)))
     
   } else {
     # var is a constant

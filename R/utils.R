@@ -97,18 +97,17 @@ param_string <- function(x, collapse = TRUE) {
   paste0("(", paste0(names(x), " = ", values, collapse = ", "), ")")
 }
 
-# Given a string, return a string that is safe as a Javascript variable. The
-# returned string consists of the first 10 "JS-safe" characters (for
-# readability) along with a hash of the entire string (for uniqueness).
-safe_jsvar <- function(x) {
-  if (is_safe_jsvar(x)) return(x)
-  
-  paste(substr(gsub("[^a-zA-Z0-9]", "", x), 1, 10),
-        digest(x, algo = "crc32"), sep = "_")
+# Given a string, return a string that is safe as a vega variable.
+# Replaces . with \.
+safe_vega_var <- function(x) {
+  gsub(".", "\\.", x, fixed = TRUE)
 }
 
-# Returns TRUE if the string is a safe Javascript variable name, false otherwise
-is_safe_jsvar <- function(x) !grepl("[^a-zA-Z0-9_]", x)
-
-
 empty <- function(x) length(x) == 0
+
+quickdf <- function(list) {
+  class(list) <- "data.frame"
+  attr(list, "row.names") <- c(NA_integer_, -length(list[[1]]))
+  
+  list
+}
