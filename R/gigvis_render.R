@@ -4,7 +4,7 @@ gigvis_render <- function(x, ...) {
   data <- active_props(data, nodes)
   
   # Create spec
-  spec <- vega_spec(x, nodes, data, ...)
+  spec <- as.vega(x, nodes, data, ...)
   
   list(spec = spec, data = data)
 }

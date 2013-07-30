@@ -1,4 +1,3 @@
-
 mark <- function(type, props, data = NULL) {
   m <- structure(
     compact(list(
@@ -16,6 +15,31 @@ mark <- function(type, props, data = NULL) {
 #' export
 is.mark <- function(x) inherits(x, "mark")
 
+#' @importFrom utils adist
+check_mark_props <- function(mark, props) {
+  valid <- valid_mark_properties(mark)
+  
+  invalid <- setdiff(props, valid)
+  if (length(invalid) == 0) return(invisible(TRUE))
+  
+  ldist <- adist(invalid, valid, ignore.case = TRUE, partial = FALSE,
+    costs = c(ins = 0.5, sub = 1, del = 2))
+  
+  closest <- apply(ldist, 1, min)
+  possible_match <- closest < 5
+  if (any(possible_match)) {
+    best <- apply(ldist, 1, which.min)
+    
+    matches <- valid[best][possible_match]  
+    suggest <- paste0("Did you mean: ", paste0(matches, collapse = ", "), "?")
+  } else {
+    suggest <- ""
+  }
+  
+  stop("Unknown properties: ", paste0(invalid, collapse = ", "), ".\n", suggest,
+    call. = FALSE)
+}
+
 
 #' @S3method format mark
 format.mark <- function(x, ...) {
@@ -27,169 +51,3 @@ format.mark <- function(x, ...) {
 
 #' @S3method print mark
 print.mark <- function(x, ...) cat(format(x), "\n")
-
-
-#' Vega mark properties.
-#'
-#' These functions define the properties that that each vega mark has. To
-#' each of this you can assign any property (\code{\link{prop}}) either
-#' locally (i.e. in the mark function), or in a parent \code{\link{node}}.
-#' There are many available property types to choose from:
-#' \code{\link{variable}} and \code{\link{constant}} are the most commonly
-#' used.
-#'
-#' @param x  The first (typically left-most) x-coordinate.
-#' @param x2 The second (typically right-most) x-coordinate.
-#' @param width The width of the mark (if supported).
-#' @param y The first (typically top-most) y-coordinate.
-#' @param y2 The second (typically bottom-most) y-coordinate.
-#' @param height The height of the mark (if supported).
-#' @param opacity The overall opacity.
-#' @param fill The fill color.
-#' @param fillOpacity The fill opacity
-#' @param stroke The stroke color.
-#' @param strokeWidth The stroke width, in pixels.
-#' @param strokeOpacity The stroke opacity.
-#' @param size [symbol] The pixel area of the symbol. For example in the case
-#'   of circles, the radius is determined in part by the square root of the size
-#'   value.
-#' @param shape [symbol] The symbol shape to use. One of circle (default),
-#'   square, cross, diamond, triangle-up, or triangle-down (symbol only)
-#' @param innerRadius [arc] The inner radius of the arc, in pixels.
-#' @param outerRadius [arc] The outer radius of the arc, in pixels.
-#' @param startAngle [arc] The start angle of the arc, in radians.
-#' @param endAngle [arc] The end angle of the arc, in radians.
-#' @param interpolate [area, line] The line interpolation method to use. One
-#'   of linear, step-before, step-after, basis, basis-open, cardinal,
-#'   cardinal-open, monotone.
-#' @param tension [area, line] Depending on the interpolation type, sets the
-#'   tension parameter.
-#' @param url [image] The URL from which to retrieve the image.
-#' @param align [image, text] The horizontal alignment of the object. One of
-#'   left, right, center.
-#' @param baseline [image, text] The vertical alignment of the object. One of
-#'   top, middle, bottom.
-#' @param text [text] The text to display.
-#' @param dx [text] The horizontal margin, in pixels, between the text label
-#'   and its anchor point. The value is ignored if the align property is center.
-#' @param dy [text] The vertical margin, in pixels, between the text label
-#'   and its anchor point. The value is ignored if the baseline property is
-#'   middle.
-#' @param angle [text] The rotation angle of the text, in degrees.
-#' @param font [text] The typeface to set the text in (e.g., Helvetica Neue).
-#' @param fontSize [text] The font size, in pixels.
-#' @param fontWeight [text] The font weight (e.g., bold).
-#' @param fontStyle [text] The font style (e.g., italic).
-#' @name marks
-NULL
-
-# Return a character vector of valid properties for a given mark
-valid_mark_properties <- function(mark) UseMethod("valid_mark_properties")
-#' @S3method valid_mark_properties default
-valid_mark_properties.default <- function(mark) {
-  stop("Unknown mark type: ", paste(class(mark), collapse=", "))
-}
-
-# Return a named list of default properties for a mark.
-default_mark_properties <- function(mark) UseMethod("default_mark_properties")
-#' @S3method default_mark_properties default
-default_mark_properties.default <- function(mark) {
-  stop("Unknown mark type: ", paste(class(mark), collapse=", "))
-}
-
-
-#' @rdname marks
-#' @export
-mark_symbol <- function(props = NULL, data = NULL) mark("symbol", props = props, data = data)
-#' @S3method valid_mark_properties mark_symbol
-valid_mark_properties.mark_symbol <- function(mark) {
-  c("x", "y", "opacity", "fill", "fillOpacity", "stroke", "strokeWidth",
-    "strokeOpacity", "size", "shape")
-}
-#' @S3method default_mark_properties mark_symbol
-default_mark_properties.mark_symbol <- function(mark) {
-  props(fill = "#000000")
-}
-
-
-#' @rdname marks
-#' @export
-mark_image <- function(props = NULL, data = NULL) mark("image", props = props, data = data)
-#' @S3method valid_mark_properties mark_image
-valid_mark_properties.mark_image <- function(mark) {
-  c("x", "y", "opacity", "fill", "fillOpacity", "stroke", "strokeWidth",
-    "strokeOpacity", "url", "align", "baseline")
-}
-#' @S3method default_mark_properties mark_image
-default_mark_properties.mark_image <- function(mark) {
-  props(fill = "#000000")
-}
-
-
-#' @rdname marks
-#' @export
-mark_arc <- function(props = NULL, data = NULL) mark("arc", props = props, data = data)
-#' @S3method valid_mark_properties mark_arc
-valid_mark_properties.mark_arc <- function(mark) {
-  c("x", "y", "opacity", "fill", "fillOpacity", "stroke", "strokeWidth",
-    "strokeOpacity", "innerRadius", "outerRadius", "startAngle", "endAngle")
-}
-#' @S3method default_mark_properties mark_arc
-default_mark_properties.mark_arc <- function(mark) {
-  props(fill = "#333333")
-}
-
-
-#' @rdname marks
-#' @export
-mark_area <- function(props = NULL, data = NULL) mark("area", props = props, data = data)
-#' @S3method valid_mark_properties mark_area
-valid_mark_properties.mark_area <- function(mark) {
-  c("x", "y", "opacity", "fill", "fillOpacity", "stroke", "strokeWidth",
-    "strokeOpacity", "interpolate", "tension")
-}
-#' @S3method default_mark_properties mark_area
-default_mark_properties.mark_area <- function(mark) {
-  props(fill = "#333333")
-}
-
-
-#' @rdname marks
-#' @export
-mark_line <- function(props = NULL, data = NULL) mark("line", props = props, data = data)
-#' @S3method valid_mark_properties mark_line
-valid_mark_properties.mark_line <- function(mark) {
-  c("x", "y", "opacity", "fill", "fillOpacity", "stroke", "strokeWidth",
-    "strokeOpacity", "interpolate", "tension")
-}
-#' @S3method default_mark_properties mark_line
-default_mark_properties.mark_line <- function(mark) {
-  props(stroke = "#000000")
-}
-
-#' @export
-#' @rdname marks
-mark_rect <- function(props = NULL, data = NULL) mark("rect", props = props, data = data)
-#' @S3method valid_mark_properties mark_rect
-valid_mark_properties.mark_rect <- function(mark) {
-  c("x", "x2", "y", "y2", "width", "opacity", "fill", "fillOpacity", "stroke",
-    "strokeWidth", "strokeOpacity")
-}
-#' @S3method default_mark_properties mark_rect
-default_mark_properties.mark_rect <- function(mark) {
-  props(stroke = "#000000", fill = "#333333")
-}
-
-#' @export
-#' @rdname marks
-mark_text <- function(props = NULL, data = NULL) mark("text", props = props, data = data)
-#' @S3method valid_mark_properties mark_text
-valid_mark_properties.mark_text <- function(mark) {
-  c("x", "y", "text", "opacity", "fill", "fillOpacity", "stroke",
-    "strokeWidth", "strokeOpacity", "align", "baseline", "dx", "dy",
-    "angle", "font", "fontSize", "fontWeight", "fontStyle")
-}
-#' @S3method default_mark_properties mark_text
-default_mark_properties.mark_text <- function(mark) {
-  props(fill = "#333333")
-}

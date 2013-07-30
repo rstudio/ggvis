@@ -1,22 +1,6 @@
 # Convert a data object to a D3-structured data object.
 # Numbers and strings stay the same type; everything else gets converted to
 # strings with as.character().
-d3df <- function(x) UseMethod("d3df")
-
-#' @S3method d3df data.frame
-d3df.data.frame <- function(x) {
-  list(values = df_to_json(x))
-}
-
-#' @S3method d3df split_df
-d3df.split_df <- function(x) {
-  list(
-    format = "treejson",
-    children = lapply(x, function(x) list(children = df_to_json(x)))
-  )
-}
-
-
 df_to_json <- function(x) {
   rows <- nrow(x)
   colnames <- setNames(names(x), names(x))
