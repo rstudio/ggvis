@@ -1,17 +1,12 @@
 # Given a gigvis mark object and set of scales, output a vega mark object
 vega_mark <- function(node, scales) {
-
-  # Generate the fields related to mappings (x, y, etc)
-  vega_node <- list(
+  list(
     type = node$type,
     properties = list(
       update = vega_mark_properties(node, scales)
-    )
+    ),
+    from = list(data = node$pipeline_id)
   )
-
-  vega_node$from <- list(data = node$pipeline_id)
-
-  vega_node
 }
 
 # Given a gigvis mark object and set of scales, return a list of vega mark properties
@@ -26,6 +21,22 @@ vega_mark_properties <- function(mark, scales) {
   mapply(prop = names(props), val = props, MoreArgs = list(scales = scales),
     FUN = vega_mark_property, SIMPLIFY = FALSE)
 }
+
+vega_mark_property <- function(prop, val, scales) {
+  # Convert scales to a named list for convenience
+  names(scales) <- vapply(scales, `[[`, "name", FUN.VALUE = character(1))
+  
+  vega <- prop_vega(val, prop_to_scale(prop))
+  
+  # This is an ugly hack, but not sure yet how to make better.
+  if ((prop == "width"  && scales$x$type == "ordinal") ||
+      (prop == "height" && scales$y$type == "ordinal")) {
+    vega$band <- TRUE
+  }
+  
+  vega
+}
+
 
 #' @importFrom utils adist
 check_mark_props <- function(mark, props) {
@@ -50,19 +61,4 @@ check_mark_props <- function(mark, props) {
 
   stop("Unknown properties: ", paste0(invalid, collapse = ", "), ".\n", suggest,
        call. = FALSE)
-}
-
-vega_mark_property <- function(prop, val, scales) {
-  # Convert scales to a named list for convenience
-  names(scales) <- vapply(scales, `[[`, "name", FUN.VALUE = character(1))
-
-  vega <- prop_vega(val, prop_to_scale(prop))
-
-  # This is an ugly hack, but not sure yet how to make better.
-  if ((prop == "width"  && scales$x$type == "ordinal") ||
-      (prop == "height" && scales$y$type == "ordinal")) {
-    vega$band <- TRUE
-  }
-
-  vega
 }
