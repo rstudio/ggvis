@@ -13,6 +13,8 @@ as.vega <- function(x, ...) {
 #' @S3method as.vega gigvis
 as.vega.gigvis <- function(x, nodes, data_table,
                       width = 600, height = 400, padding = NULL) {
+  
+  if (is.null(padding)) padding <- padding()
 
   data_names <- ls(data_table, all = TRUE)
   if (x$dynamic) {
@@ -37,17 +39,9 @@ as.vega.gigvis <- function(x, nodes, data_table,
     width = width,
     height = height,
     legends = vega_legends(scales),
-    axes = vega_axes(scales)
+    axes = vega_axes(scales),
+    padding = as.vega(padding)
   )
-
-  if (!is.null(padding)) {
-    spec$padding <- c(
-      top = padding[1],
-      right = padding[2],
-      bottom = padding[3],
-      left = padding[4]
-    )
-  }
 
   spec
 }
