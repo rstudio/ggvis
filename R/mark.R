@@ -1,10 +1,10 @@
 
-mark <- function(type, ..., data = NULL) {
+mark <- function(type, props, data = NULL) {
   m <- structure(
     compact(list(
       type = type, 
       data = as.pipeline(data), 
-      props = props(...)
+      props = props
     )),
     class = c(paste0("mark_", type), "mark", "gigvis_node")
   )
@@ -100,7 +100,7 @@ default_mark_properties.default <- function(mark) {
 
 #' @rdname marks
 #' @export
-mark_symbol <- function(...) mark("symbol", ...)
+mark_symbol <- function(props = NULL, data = NULL) mark("symbol", props = props, data = data)
 #' @S3method valid_mark_properties mark_symbol
 valid_mark_properties.mark_symbol <- function(mark) {
   c("x", "y", "opacity", "fill", "fillOpacity", "stroke", "strokeWidth",
@@ -114,7 +114,7 @@ default_mark_properties.mark_symbol <- function(mark) {
 
 #' @rdname marks
 #' @export
-mark_image <- function(...) mark("image", ...)
+mark_image <- function(props = NULL, data = NULL) mark("image", props = props, data = data)
 #' @S3method valid_mark_properties mark_image
 valid_mark_properties.mark_image <- function(mark) {
   c("x", "y", "opacity", "fill", "fillOpacity", "stroke", "strokeWidth",
@@ -128,7 +128,7 @@ default_mark_properties.mark_image <- function(mark) {
 
 #' @rdname marks
 #' @export
-mark_arc <- function(...) mark("arc", ...)
+mark_arc <- function(props = NULL, data = NULL) mark("arc", props = props, data = data)
 #' @S3method valid_mark_properties mark_arc
 valid_mark_properties.mark_arc <- function(mark) {
   c("x", "y", "opacity", "fill", "fillOpacity", "stroke", "strokeWidth",
@@ -142,7 +142,7 @@ default_mark_properties.mark_arc <- function(mark) {
 
 #' @rdname marks
 #' @export
-mark_area <- function(...) mark("area", ...)
+mark_area <- function(props = NULL, data = NULL) mark("area", props = props, data = data)
 #' @S3method valid_mark_properties mark_area
 valid_mark_properties.mark_area <- function(mark) {
   c("x", "y", "opacity", "fill", "fillOpacity", "stroke", "strokeWidth",
@@ -156,7 +156,7 @@ default_mark_properties.mark_area <- function(mark) {
 
 #' @rdname marks
 #' @export
-mark_line <- function(...) mark("line", ...)
+mark_line <- function(props = NULL, data = NULL) mark("line", props = props, data = data)
 #' @S3method valid_mark_properties mark_line
 valid_mark_properties.mark_line <- function(mark) {
   c("x", "y", "opacity", "fill", "fillOpacity", "stroke", "strokeWidth",
@@ -169,7 +169,7 @@ default_mark_properties.mark_line <- function(mark) {
 
 #' @export
 #' @rdname marks
-mark_rect <- function(...) mark("rect", ...)
+mark_rect <- function(props = NULL, data = NULL) mark("rect", props = props, data = data)
 #' @S3method valid_mark_properties mark_rect
 valid_mark_properties.mark_rect <- function(mark) {
   c("x", "x2", "y", "y2", "width", "opacity", "fill", "fillOpacity", "stroke",
@@ -182,7 +182,7 @@ default_mark_properties.mark_rect <- function(mark) {
 
 #' @export
 #' @rdname marks
-mark_text <- function(...) mark("text", ...)
+mark_text <- function(props = NULL, data = NULL) mark("text", props = props, data = data)
 #' @S3method valid_mark_properties mark_text
 valid_mark_properties.mark_text <- function(mark) {
   c("x", "y", "text", "opacity", "fill", "fillOpacity", "stroke",

@@ -3,13 +3,13 @@ library(gigvis)
 # Bar graph with continuous x
 gigvis(pressure,
   props = props(x ~ temperature, y ~ pressure),
-  mark_rect(y2 = constant(0, scale = TRUE), width = 15)
+  mark_rect(props(y2 = constant(0, scale = TRUE), width = 15))
 )
 
 # Bar graph with ordinal x
 gigvis("pressure",
   props = props(x ~ factor(temperature), y ~ pressure),
-  mark_rect(y2 = constant(0, scale = TRUE), width = 15)
+  mark_rect(props(y2 = constant(0, scale = TRUE), width = 15))
 )
 
 # Histogram, fully specified

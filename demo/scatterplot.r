@@ -25,14 +25,14 @@ gigvis("mtcars", props(x ~ wt, y ~ mpg, fill ~ factor(cyl)),
 
 # Use unscaled constant: 10 refers to 10 pixels from top
 gigvis("mtcars", props(x ~ wt),
-  mark_symbol(y ~ mpg),
-  mark_symbol(y = constant(10), fill = "red")
+  mark_symbol(props(y ~ mpg)),
+  mark_symbol(props(y = constant(10), fill = "red"))
 )
 
 # Use scaled constant: 10 refers to data space
 gigvis("mtcars", props(x ~ wt),
-  mark_symbol(y ~ mpg),
-  mark_symbol(y = constant(10, scale = TRUE), fill = "red")
+  mark_symbol(props(y ~ mpg)),
+  mark_symbol(props(y = constant(10, scale = TRUE), fill = "red"))
 )
 
 # Line and point graph
@@ -50,20 +50,20 @@ gigvis("mtcars", props(x ~ wt, y ~ mpg),
 # Multiple nested nodes
 gigvis("mtcars", props(x ~ wt, y ~ mpg),
   node(mark_symbol()),
-  node(node(mark_symbol(fill = "red", size = 25)))
+  node(node(mark_symbol(props(fill = "red", size = 25))))
 )
 
 # Two marks at different levels of the tree, with different mappings for a
 # variable
 gigvis("mtcars", props(x ~ wt, y ~ mpg),
   mark_symbol(),
-  mark_symbol(fill = "red", y ~ qsec, size = 25)
+  mark_symbol(props(fill = "red", y ~ qsec, size = 25))
 )
 
 # Two y scales
 gigvis("mtcars", props(x ~ wt, y ~ mpg),
   mark_symbol(),
-  mark_symbol(fill = "red", y = variable(quote(qsec), scale = "yq")),
+  mark_symbol(props(fill = "red", y = variable(quote(qsec), scale = "yq"))),
   scales = scales(scale_quantitative("yq", range = "height"))
 )
 
@@ -71,15 +71,15 @@ gigvis("mtcars", props(x ~ wt, y ~ mpg),
 mtc1 <- mtcars[1:10, ]
 mtc2 <- mtcars[11:20, ]
 gigvis(data = NULL, props = props(x ~ wt, y ~ mpg),
-  mark_symbol(data = "mtc1", stroke = "black", fill = "black"),
-  mark_symbol(data = "mtc2", fill = "red", size = 40)
+  mark_symbol(props(stroke = "black", fill = "black"), "mtc1"),
+  mark_symbol(props(fill = "red", size = 40), "mtc2")
 )
 
 # Scatter plot with one set of points with `cyl` mapped to stroke, 
 # and another set with `am` mapped to fill
 gigvis("mtcars", props(x ~ wt, y ~ mpg),
-  mark_symbol(stroke ~ factor(cyl), fill = NA),
-  mark_symbol(fill ~ factor(am), size = 25)
+  mark_symbol(props(stroke ~ factor(cyl), fill = NA)),
+  mark_symbol(props(fill ~ factor(am), size = 25))
 )
 
 # Same as previous, but also with (useless) grouping in the nodes
