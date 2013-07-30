@@ -23,7 +23,7 @@ vega_spec <- function(x, nodes, data_table,
   spec <- list(
     data = datasets,
     scales = scales,
-    marks = lapply(nodes, vega_mark, scales = scales),
+    marks = lapply(nodes, vega_mark),
     width = width,
     height = height,
     legends = vega_legends(scales),

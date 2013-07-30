@@ -16,6 +16,8 @@
 #' default_scale("stroke", "nominal")
 default_scale <- function(prop, type, ...) { 
   assert_that(is.string(prop), is.string(type))
+  if (type == "NULL") return()
+  
   scale <- prop_to_scale(prop)
   
   # This is an interim design choice making it clear that user can not

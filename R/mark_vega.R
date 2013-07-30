@@ -1,42 +1,22 @@
 # Given a gigvis mark object and set of scales, output a vega mark object
-vega_mark <- function(node, scales) {
-  list(
-    type = node$type,
-    properties = list(
-      update = vega_mark_properties(node, scales)
-    ),
-    from = list(data = node$pipeline_id)
-  )
-}
-
-# Given a gigvis mark object and set of scales, return a list of vega mark properties
-vega_mark_properties <- function(mark, scales) {
+vega_mark <- function(mark) {
   # Keep only the vega-specific fields, then remove the class, drop nulls,
   # and convert to proper format for vega properties.
   defaults <- default_mark_properties(mark)
   props <- merge_props(defaults, mark$props)
   check_mark_props(mark, names(props))
-
+  
   # Convert each property to a Vega-structured property
-  mapply(prop = names(props), val = props, MoreArgs = list(scales = scales),
-    FUN = vega_mark_property, SIMPLIFY = FALSE)
+  vega_props <- Map(prop_vega, props, prop_to_scale(names(props)))
+  
+  list(
+    type = mark$type,
+    properties = list(
+      update = vega_props
+    ),
+    from = list(data = mark$pipeline_id)
+  )
 }
-
-vega_mark_property <- function(prop, val, scales) {
-  # Convert scales to a named list for convenience
-  names(scales) <- vapply(scales, `[[`, "name", FUN.VALUE = character(1))
-  
-  vega <- prop_vega(val, prop_to_scale(prop))
-  
-  # This is an ugly hack, but not sure yet how to make better.
-  if ((prop == "width"  && scales$x$type == "ordinal") ||
-      (prop == "height" && scales$y$type == "ordinal")) {
-    vega$band <- TRUE
-  }
-  
-  vega
-}
-
 
 #' @importFrom utils adist
 check_mark_props <- function(mark, props) {

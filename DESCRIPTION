@@ -57,3 +57,4 @@ Collate:
     'utils_reactive.R'
     'vega.R'
     'view.R'
+    'prop_band.R'

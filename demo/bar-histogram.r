@@ -8,8 +8,9 @@ gigvis(pressure,
 
 # Bar graph with ordinal x
 gigvis("pressure",
-  props = props(x ~ factor(temperature), y ~ pressure),
-  mark_rect(props(y2 = constant(0, scale = TRUE), width = 15))
+  props = props(x ~ temperature, y ~ pressure),
+  mark_rect(props(y2 = constant(0, scale = TRUE), width = band())),
+  scales = scales(scale_ordinal("x", range = "width", padding = 0, points = FALSE))
 )
 
 # Histogram, fully specified
