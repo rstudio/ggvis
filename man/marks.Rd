@@ -9,19 +9,19 @@
 \alias{marks}
 \title{Vega mark properties.}
 \usage{
-  mark_symbol(...)
+  mark_symbol(props = NULL, data = NULL)
 
-  mark_image(...)
+  mark_image(props = NULL, data = NULL)
 
-  mark_arc(...)
+  mark_arc(props = NULL, data = NULL)
 
-  mark_area(...)
+  mark_area(props = NULL, data = NULL)
 
-  mark_line(...)
+  mark_line(props = NULL, data = NULL)
 
-  mark_rect(...)
+  mark_rect(props = NULL, data = NULL)
 
-  mark_text(...)
+  mark_text(props = NULL, data = NULL)
 }
 \arguments{
   \item{x}{The first (typically left-most) x-coordinate.}
