@@ -70,14 +70,8 @@ gigvis("mtcars", props(x ~ wt, y ~ mpg),
 mtc1 <- mtcars[1:10, ]
 mtc2 <- mtcars[11:20, ]
 gigvis(data = NULL, props = props(x ~ wt, y ~ mpg),
-  node(
-    data = "mtc1",
-    mark_symbol(stroke = "black", fill = "black")
-  ),
-  node(
-    data = "mtc2",
-    mark_symbol(fill = "red", size = 40)
-  )
+  mark_symbol(data = "mtc1", stroke = "black", fill = "black"),
+  mark_symbol(data = "mtc2", fill = "red", size = 40)
 )
 
 # Scatter plot with one set of points with `cyl` mapped to stroke, 

@@ -1,7 +1,11 @@
 
-mark <- function(type, ...) {
+mark <- function(type, ..., data = NULL) {
   m <- structure(
-    list(type = type, props = props(...)),
+    compact(list(
+      type = type, 
+      data = as.pipeline(data), 
+      props = props(...)
+    )),
     class = c(paste0("mark_", type), "mark", "gigvis_node")
   )
 
