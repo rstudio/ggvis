@@ -18,6 +18,7 @@
 #'
 #' v$n <- 5
 #' sluice(p, props)
+#' @importFrom digest digest
 source_reactive <- function(data, name = NULL) {
   needs_shiny()
   assert_that(is.reactive(data))
