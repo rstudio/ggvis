@@ -13,10 +13,9 @@ vega_spec <- function(x, nodes, data_table,
   } else {
     datasets <- lapply(data_names, function(name) {
       data <- isolate(data_table[[name]]())
-      list(
-        name = name,
-        values = d3df(data)
-      )
+      out <- d3df(data)
+      out$name <- name
+      out
     })
   }
   

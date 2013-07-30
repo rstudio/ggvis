@@ -5,6 +5,19 @@ d3df <- function(x) UseMethod("d3df")
 
 #' @S3method d3df data.frame
 d3df.data.frame <- function(x) {
+  list(values = df_to_json(x))
+}
+
+#' @S3method d3df split_df
+d3df.split_df <- function(x) {
+  list(
+    format = "treejson",
+    children = lapply(x, df_to_json)
+  )
+}
+
+
+df_to_json <- function(x) {
   rows <- nrow(x)
   colnames <- setNames(names(x), names(x))
   
@@ -18,9 +31,4 @@ d3df.data.frame <- function(x) {
       .subset2(.subset2(x, colname), i)
     })
   })
-}
-
-#' @S3method d3df split_df
-d3df.split_df <- function(x) {
-  unlist(lapply(x, d3df), recursive = FALSE)
 }
