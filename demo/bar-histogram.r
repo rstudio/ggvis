@@ -12,11 +12,10 @@ gigvis("pressure",
   mark_rect(y2 = constant(0, scale = TRUE), width = 15)
 )
 
-# Histogram, with specified width
+# Histogram, fully specified
 gigvis(
   data = pipeline(mtcars, transform_bin(binwidth = 1)),
   props = props(x ~ wt),
-  scales = scales(scale(name = "y", type = "linear", zero = TRUE)),
   node(
     props = props(x ~ xmin__, x2 ~ xmax__, y ~ count__,
       y2 = constant(0, scale = TRUE)),
@@ -24,53 +23,23 @@ gigvis(
   )
 )
 
-# Histogram, automatic binwidth
-gigvis(
-  data = pipeline(ggplot2::diamonds, transform_bin()),
-  props = props(x ~ table),
-  scales = scales(scale(name = "y", type = "linear", zero = TRUE)),
-  node(
-    props = props(x ~ xmin__, x2 ~ xmax__, y ~ count__,
-      y2 = constant(0, scale = TRUE)),
-    mark_rect()
-  )
+# Or using shorthand branch
+gigvis("mtcars", props(x ~ wt),
+  branch_histogram(binwidth = 1)
+)
+gigvis("mtcars", props(x ~ wt),
+  branch_histogram()
 )
 
-# Histogram, fill by cyl
-gigvis(
-  data = pipeline(
-    "mtcars",
-    by_group(variable(quote(factor(cyl)))),
-    transform_bin(binwidth = 1)
-  ),
-  props = props(x ~ wt, fill ~ factor(cyl)),
-  scales = scales(
-    scale(name = "y", type = "linear", zero = TRUE),
-    scale(name = "fill", type = "ordinal")
-  ),
-  node(
-    props = props(x ~ xmin__, x2 ~ xmax__, y ~ count__,
-      y2 = constant(0, scale = TRUE)),
-    mark_rect()
-  )
+# Histogram, filled by cyl
+by_cyl <- pipeline("mtcars", by_group("cyl"))
+gigvis(by_cyl, props(x ~ wt, fill ~ factor(cyl)),
+  branch_histogram(binwidth = 1))
+
+
+# Bigger dataset
+data(diamonds, package = "ggplot2")
+gigvis("diamonds", props(x ~ table),
+  branch_histogram()
 )
 
-# Histogram, fill by cut
-diamonds <- ggplot2::diamonds
-gigvis(
-  data = pipeline(
-    "diamonds",
-    by_group(variable(quote(factor(cut)))),
-    transform_bin()
-  ),
-  props = props(x ~ table, fill ~ factor(cut)),
-  scales = scales(
-    scale(name = "y", type = "linear", zero = TRUE),
-    scale(name = "fill", type = "ordinal")
-  ),
-  node(
-    props = props(x ~ xmin__, x2 ~ xmax__, y ~ count__,
-      y2 = constant(0, scale = TRUE)),
-    mark_rect()
-  )
-)

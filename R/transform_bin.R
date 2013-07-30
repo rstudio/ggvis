@@ -47,6 +47,23 @@ transform_bin <- function(binwidth = guess(), origin = NULL, right = TRUE) {
   )
 }
 
+branch_histogram <- function(props = NULL, ...) {
+  if (is.null(props)) props <- props()
+  
+  default <- props(
+    x ~ xmin__, 
+    x2 ~ xmax__, 
+    y ~ count__,
+    y2 = constant(0, scale = TRUE)
+  )
+  props <- merge_props(props, default)
+  
+  node(
+    data = transform_bin(...),
+    do.call("mark_rect", props)
+  )
+}
+
 #' @S3method format transform_bin
 format.transform_bin <- function(x, ...) {
   paste0(" -> bin", param_string(x))
