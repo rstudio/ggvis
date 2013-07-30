@@ -1,7 +1,7 @@
 gigvis_render <- function(x, ...) {
   nodes <- flatten(x)
   data <- extract_data(nodes)
-  data <- apply_props(data, nodes)
+  data <- active_props(data, nodes)
   
   # Create spec
   spec <- vega_spec(x, nodes, data, ...)
@@ -58,7 +58,7 @@ extract_data <- function(nodes) {
 
 # Create a new reactive dataset containing only the data actually used
 # by properties.
-apply_props <- function(data, nodes) {
+active_props <- function(data, nodes) {
   # Collect all props for given data
   pipeline_id <- vapply(nodes, function(x) x$pipeline_id, character(1))
   props <- lapply(nodes, function(x) x$props)
@@ -75,7 +75,7 @@ apply_props <- function(data, nodes) {
   
   reactive_prop <- function(props, data) {
     force(data)
-    reactive(apply_props2(data(), props))
+    reactive(apply_props(data(), props))
   }
   
   data_out <- new.env(parent = emptyenv())
@@ -88,19 +88,19 @@ apply_props <- function(data, nodes) {
 
 # Apply properties to a data object, creating calculated columns and dropping
 # unused columns.
-apply_props2 <- function(data, props) {
-  UseMethod("apply_props2")
+apply_props <- function(data, props) {
+  UseMethod("apply_props")
 }
 
-#' @S3method apply_props2 data.frame
-apply_props2.data.frame <- function(data, props) {
+#' @S3method apply_props data.frame
+apply_props.data.frame <- function(data, props) {
   cols <- lapply(props, prop_value, data = data)
   names(cols) <- vapply(props, prop_name, character(1))
   
   as.data.frame(compact(cols))
 }
 
-#' @S3method apply_props2 split_df
-apply_props2.split_df <- function(data, props) {
-  split_df_apply(data, apply_props2, props)
+#' @S3method apply_props split_df
+apply_props.split_df <- function(data, props) {
+  split_df_apply(data, apply_props, props)
 }

@@ -16,7 +16,6 @@ Suggests:
     testthat (>= 0.7.1.99)
 License: GPL-2
 Collate:
-    'apply_props.R'
     'connect.R'
     'find_data.R'
     'full_seq.R'
