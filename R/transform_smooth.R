@@ -20,10 +20,11 @@ transform_smooth <- function(method = guess(), formula = guess(), se = TRUE,
     level = level, n = n, na.rm = na.rm, dots = dots(...))
 }
 
-branch_smooth <- function(...) {
+branch_smooth <- function(props = NULL, ...) {
+  if (is.null(props)) props <- props()
   node(
     data = transform_smooth(...),
-    mark_line()
+    do.call("mark_line", props)
   )
 }
 

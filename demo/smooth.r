@@ -14,144 +14,36 @@ gigvis("mtcars", props(x ~ wt, y ~ mpg),
 # Or with shorthand branch_smooth
 gigvis("mtcars", props(x ~ wt, y ~ mpg),
   mark_symbol(fill = NA, stroke = "black"),
-  branch_smooth()
+  branch_smooth(props(stroke = "red"))
 )
 
 # Scatter plot with lm model line
 gigvis("mtcars", props(x ~ wt, y ~ mpg),
   mark_symbol(),
-  branch_smooth(method = "lm")
+  branch_smooth(props(stroke = "red"), method = "lm")
 )
 
-# Scatter plot with linear model line for each level of factor(cyl)
-gigvis("mtcars", props(x ~ wt, y ~ mpg, stroke ~ factor(cyl), fill ~ factor(cyl)),
-  mark_symbol(),
-  scales = scales(
-    scale(name = "stroke", type = "ordinal"),
-    scale(name = "fill", type = "ordinal")
-  ),
-  node(
-    data = pipeline(
-      by_group(variable(quote(factor(cyl)))),
-      transform_smooth(method = "lm", se = F)
-    ),
-    mark_line(fill = NA)
-  )
+# Scatter plot with linear model line for each level of cyl
+by_cyl <- pipeline("mtcars", by_group("cyl"))
+gigvis(by_cyl, props(x ~ wt, y ~ mpg),
+  mark_symbol(fill ~ factor(cyl)),
+  branch_smooth(props(stroke ~ factor(cyl)))
 )
 
-# Same as previous, but group by cyl instead of factor(cyl)
-gigvis("mtcars", props(x ~ wt, y ~ mpg, stroke ~ factor(cyl), fill ~ factor(cyl)),
-  mark_symbol(),
-  scales = scales(
-    scale(name = "stroke", type = "ordinal"),
-    scale(name = "fill", type = "ordinal")
-  ),
-  node(
-    data = pipeline(
-      by_group(variable(quote(cyl))),
-      transform_smooth(method = "lm", se = F)
-    ),
-    mark_line(fill = NA)
-  )
-)
-
-# Scatter plot with loess lines for each level of factor(cyl), but the loess
+# Scatter plot with loess lines for each level of cyl, but the loess
 # is based on a different y variable.
-gigvis ("mtcars", props(x ~ wt, y ~ mpg),
-  mark_symbol(),
+gigvis(by_cyl, props(x ~ wt, y ~ mpg),
+  mark_symbol(fill ~ factor(cyl)),
   node(
-    data = pipeline(
-      by_group(variable(quote(cyl))),
-      transform_smooth()
-    ),
-    props = props(y ~ qsec),
-    mark_line(stroke = "red")
+    props(y ~ qsec, stroke ~ factor(cyl))
+    branch_smooth()
   )
 )
-
-
-# Scatter plot with all black points and loess model line for each level of cyl
-gigvis("mtcars", props(x ~ wt, y ~ mpg),
-  mark_symbol(fill = "#000000"),
-  scales = scales(scale(name = "stroke", type = "ordinal")),
-  node(
-    data = pipeline(
-      by_group(variable(quote(factor(cyl)))),
-      transform_smooth(se = F)
-    ),
-    props = props(stroke ~ factor(cyl)),
-    mark_line()
-  )
-)
-
-
-# Scatter plot with loess model lines on different y variables, with split by
-# group
-gigvis("mtcars", props(x ~ wt, y ~ mpg),
-  mark_symbol(fill = "blue"),
-  node(
-    data = pipeline(
-      by_group(variable(quote(cyl))),
-      transform_smooth()
-    ),
-    mark_line(stroke = "blue")
-  ),
-  node(
-    data = pipeline(
-      by_group(variable(quote(cyl))),
-      transform_smooth()
-    ),
-    props = props(y ~ qsec),
-    mark_line(stroke = "red")
-  )
-)
-
 
 # Scatter plot with linear and loess model line for each level of cyl
-gigvis("mtcars", props(x ~ wt, y ~ mpg, stroke ~ factor(cyl), fill ~ factor(cyl)),
-  mark_symbol(),
-  scales = scales(
-    scale(name = "stroke", type = "ordinal"),
-    scale(name = "fill", type = "ordinal")
-  ),
-  node(
-    data = pipeline(
-      by_group(variable(quote(factor(cyl)))),
-      transform_smooth(method = "lm", se = F)
-    ),
-    mark_line(fill = NA)
-  ),
-  node(
-    data = pipeline(
-      by_group(variable(quote(factor(cyl)))),
-      transform_smooth(method = "loess", se = F)
-    ),
-    mark_line(fill = NA)
-  )
-)
-
-# Scatter plot with two linear model lines for each level of cyl, with different
-# mappings
-gigvis("mtcars", props(x ~ wt, y ~ mpg, stroke ~ factor(cyl), fill ~ factor(cyl)),
-  mark_symbol(),
-  scales = scales(
-    scale(name = "stroke", type = "ordinal"),
-    scale(name = "fill", type = "ordinal")
-  ),
-  node(
-    data = pipeline(
-      by_group(variable(quote(factor(cyl)))),
-      transform_smooth(method = "lm", se = F)
-    ),
-    mark_line(fill = NA)
-  ),
-  node(
-    data = pipeline(
-      by_group(variable(quote(factor(cyl)))),
-      transform_smooth(method = "lm", se = F)
-    ),
-    props = props(y ~ qsec),
-    mark_line(fill = NA, opacity = 0.25)
-  )
+gigvis(by_cyl, props(x ~ wt, y ~ mpg),
+  mark_symbol(fill ~ factor(cyl)),
+  branch_smooth(method = "loess"),
+  branch_smooth(method = "lm")
 )
 
