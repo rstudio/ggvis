@@ -12,7 +12,7 @@ d3df.data.frame <- function(x) {
 d3df.split_df <- function(x) {
   list(
     format = "treejson",
-    children = lapply(x, df_to_json)
+    children = lapply(x, function(x) list(children = df_to_json(x)))
   )
 }
 

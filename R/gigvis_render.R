@@ -56,6 +56,8 @@ extract_data <- function(nodes) {
   data_table
 }
 
+# Create a new reactive dataset containing only the data actually used
+# by properties.
 apply_props <- function(data, nodes) {
   # Collect all props for given data
   pipeline_id <- vapply(nodes, function(x) x$pipeline_id, character(1))
@@ -73,10 +75,7 @@ apply_props <- function(data, nodes) {
   
   reactive_prop <- function(props, data) {
     force(data)
-    force(props)
-    reactive({
-      data.frame(lapply(props, prop_value, data = data()))
-    })
+    reactive(apply_props2(data(), props))
   }
   
   data_out <- new.env(parent = emptyenv())
@@ -85,5 +84,23 @@ apply_props <- function(data, nodes) {
   }
   
   data_out
+}
+
+# Apply properties to a data object, creating calculated columns and dropping
+# unused columns.
+apply_props2 <- function(data, props) {
+  UseMethod("apply_props2")
+}
+
+#' @S3method apply_props2 data.frame
+apply_props2.data.frame <- function(data, props) {
+  cols <- lapply(props, prop_value, data = data)
+  names(cols) <- vapply(props, prop_name, character(1))
   
+  as.data.frame(compact(cols))
+}
+
+#' @S3method apply_props2 split_df
+apply_props2.split_df <- function(data, props) {
+  split_df_apply(data, apply_props2, props)
 }
