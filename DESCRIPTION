@@ -57,3 +57,4 @@ Collate:
     'vega_scales.R'
     'view.R'
     'vega_axes.R'
+    'd3df.r'
