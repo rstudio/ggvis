@@ -61,10 +61,10 @@ gigvis("mtcars", props(x ~ wt, y ~ mpg),
 )
 
 # Two y scales
-# FIXME: second scale not named correctly
 gigvis("mtcars", props(x ~ wt, y ~ mpg),
   mark_symbol(),
-  mark_symbol(fill = "red", y = variable(quote(qsec), scale = "y2"), size = 25)
+  mark_symbol(fill = "red", y = variable(quote(qsec), scale = "yq")),
+  scales = scales(scale_quantitative("yq", range = "height"))
 )
 
 # Two separate data sets, equal in the tree
