@@ -20,6 +20,13 @@ transform_smooth <- function(method = guess(), formula = guess(), se = TRUE,
     level = level, n = n, na.rm = na.rm, dots = dots(...))
 }
 
+branch_smooth <- function(...) {
+  node(
+    data = transform_smooth(...),
+    mark_line()
+  )
+}
+
 #' @S3method format transform_smooth
 format.transform_smooth <- function(x, ...) {
   paste0(" -> smooth()", param_string(x[c("method", "formula")]))
@@ -27,8 +34,8 @@ format.transform_smooth <- function(x, ...) {
 
 #' @S3method compute transform_smooth
 compute.transform_smooth <- function(x, props, data) {
-  check_prop(x, props, data, "x", c("double", "integer"))
-  check_prop(x, props, data, "y", c("double", "integer"))
+  check_prop(x, props, data, "x", c("numeric", "integer"))
+  check_prop(x, props, data, "y", c("numeric", "integer"))
 
   if (is.guess(x$method)) {
     x$method <- if (max_rows(data) > 1000) "gam" else "loess"

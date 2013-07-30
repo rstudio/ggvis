@@ -1,3 +1,4 @@
+library(gigvis)
 
 # Scatter plot with loess model line
 gigvis("mtcars", props(x ~ wt, y ~ mpg),
@@ -10,15 +11,17 @@ gigvis("mtcars", props(x ~ wt, y ~ mpg),
   )
 )
 
+# Or with shorthand branch_smooth
+gigvis("mtcars", props(x ~ wt, y ~ mpg),
+  mark_symbol(fill = NA, stroke = "black"),
+  branch_smooth()
+)
+
 # Scatter plot with lm model line
 gigvis("mtcars", props(x ~ wt, y ~ mpg),
   mark_symbol(),
-  node(
-    data = transform_smooth(method = "lm"),
-    mark_line(stroke = "red")
-  )
+  branch_smooth(method = "lm")
 )
-
 
 # Scatter plot with linear model line for each level of factor(cyl)
 gigvis("mtcars", props(x ~ wt, y ~ mpg, stroke ~ factor(cyl), fill ~ factor(cyl)),
