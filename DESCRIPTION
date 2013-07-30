@@ -16,6 +16,7 @@ Suggests:
     testthat (>= 0.7.1.99)
 License: GPL-2
 Collate:
+    'axes_vega.R'
     'connect.R'
     'd3df.R'
     'find_data.R'
@@ -23,7 +24,9 @@ Collate:
     'gigvis.R'
     'gigvis_render.R'
     'guess.R'
+    'legend_vega.R'
     'mark.R'
+    'mark_vega.R'
     'pipe.R'
     'pipeline.R'
     'prop.R'
@@ -37,6 +40,7 @@ Collate:
     'scale_quantitative.R'
     'scale_time.R'
     'scales.R'
+    'scales_vega.R'
     'shiny.R'
     'source_eager.R'
     'source_function.R'
@@ -52,8 +56,4 @@ Collate:
     'utils.R'
     'utils_reactive.R'
     'vega.R'
-    'vega_axes.R'
-    'vega_legend.R'
-    'vega_mark.R'
-    'vega_scales.R'
     'view.R'
