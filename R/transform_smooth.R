@@ -24,7 +24,7 @@ branch_smooth <- function(props = NULL, ...) {
   if (is.null(props)) props <- props()
   node(
     data = transform_smooth(...),
-    do.call("mark_line", props)
+    mark_line(props)
   )
 }
 

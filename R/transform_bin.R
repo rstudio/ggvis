@@ -60,7 +60,7 @@ branch_histogram <- function(props = NULL, ...) {
   
   node(
     data = transform_bin(...),
-    do.call("mark_rect", props)
+    mark_rect(props)
   )
 }
 
