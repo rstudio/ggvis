@@ -1,3 +1,14 @@
+#' S3 mark object.
+#' 
+#' This object is used by all \code{\link{marks}} - you should not have to call
+#' it directly, unless you are creating a new R mark object to represent a 
+#' vega mark that is not currently available in gigvis.
+#' 
+#' @param type vega mark list
+#' @param props list of properties
+#' @param data optional data pipeline
+#' @export
+#' @keywords internal
 mark <- function(type, props, data = NULL) {
   m <- structure(
     compact(list(
@@ -12,7 +23,8 @@ mark <- function(type, props, data = NULL) {
   m
 }
 
-#' export
+#' @export
+#' @rdname mark
 is.mark <- function(x) inherits(x, "mark")
 
 #' @importFrom utils adist
