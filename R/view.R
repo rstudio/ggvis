@@ -56,43 +56,43 @@ view_dynamic <- function(gv, envir = parent.frame(), controls = NULL,
 
   plot_id <- "plot1"
 
-  vega_spec_json <- RJSONIO::toJSON(spec, pretty = TRUE)
-  data_table <- attr(spec, "data_table")
-
   # Make our resources available
   script_tags <- deploy_www_resources()
-  if (is.null(controls)) {
-    ui <- basicPage(
-      tags$head(script_tags),
-      gigvisOutput2(plot_id, vega_spec_json, renderer = renderer),
+  ui <- pageWithSidebar(
+    headerPanel("Gigvis plot"),
+    sidebarPanel(
+      uiOutput("gigvis_ui")
+    ),
+    mainPanel(
+      tags$head(deploy_www_resources()),
+
+      # Placeholder for the plot
+      tags$div(id = plot_id),
+
       # Add an actionButton that quits the app and closes the browser window
       tags$button(id="quit", type="button", class="btn action-button",
         onclick = "window.close()", "Quit")
     )
-  } else {
-    ui <- bootstrapPage(
-      tags$head(script_tags),
-      tags$div(
-        class = "container",
-        tags$div(
-          class = "row",
-          tags$div(
-            class = "span3",
-            tags$div(
-              class = "well",
-              controls
-            )
-          ),
-          tags$div(
-            class = "span9",
-            gigvisOutput2(plot_id, vega_spec_json, renderer = renderer)
-          )
-        )
-      )
-    )
-  }
+  )
 
   server <- function(input, output, session) {
+
+    # Do the preprocessing steps for gigvis
+    spec <- as.vega(gv)
+    data_table <- attr(spec, "data_table")
+
+    # Send the vega spec
+    spec_obs <- observe({
+      session$sendCustomMessage("gigvis_vega_spec", list(
+        plotId = plot_id,
+        spec = spec
+      ))
+    })
+    session$onSessionEnded(function() {
+      spec_obs$suspend()
+    })
+
+    # Send each of the data objects
     for (name in ls(data_table, all = TRUE)) {
       # The datasets list contains named objects. The names are synthetic IDs
       # that are present in the vega spec. The values can be a variety of things,
@@ -109,7 +109,7 @@ view_dynamic <- function(gv, envir = parent.frame(), controls = NULL,
           session$sendCustomMessage("gigvis_data", list(
             plot = plot_id,
             name = data_name,
-            value = as.vega(data)
+            value = as.vega(data, data_name)
           ))
         })
         session$onSessionEnded(function() {
@@ -118,10 +118,15 @@ view_dynamic <- function(gv, envir = parent.frame(), controls = NULL,
       })
     }
 
+    # Stop the app when the quit button is clicked
     observe({
-      # Stop the app when the quit button is clicked
       if (is.null(input$quit)) return()
       if (input$quit > 0) stopApp()
+    })
+
+    # User interface elements (in the sidebar)
+    output$gigvis_ui <- renderUI({
+      # TODO: UI elements here
     })
   }
 

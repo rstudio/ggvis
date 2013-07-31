@@ -23,7 +23,7 @@ var pendingData = {};
 Shiny.addCustomMessageHandler("gigvis_data", function(message) {
   var plot = message.plot;
   var name = message.name;
-  var value = message.value.values;
+  var value = message.value[0].values;
 
   if (allPlots[plot]) {
     // If the plot exists already, feed it the data
