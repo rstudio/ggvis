@@ -29,10 +29,10 @@ as.vega.gigvis <- function(x, width = 600, height = 400, padding = NULL) {
       list(name = name)
     })
   } else {
-    datasets <- lapply(data_names, function(name) {
+    datasets <- unlist(lapply(data_names, function(name) {
       data <- isolate(data_table[[name]]())
       as.vega(data, name)
-    })
+    }), recursive = FALSE)
   }
   
   scales <- find_scales(x, nodes, data_table)
@@ -62,11 +62,29 @@ as.vega.mark <- function(mark) {
   props <- merge_props(defaults, mark$props)
   check_mark_props(mark, names(props))
   
-  list(
-    type = mark$type,
-    properties = list(update = as.vega(props)),
-    from = list(data = mark$pipeline_id)
-  )
+  # HW: It seems less than ideal to have to inspect the data here, but
+  # I'm not sure how else we can figure it out.
+  split <- is.split_df(isolate(mark$pipeline()))
+  
+  if (split) {
+    list(
+      type = "group",
+      from = list(data = paste0(mark$pipeline_id, "_tree")),
+      marks = list(
+        list(
+          type = mark$type,
+          properties = list(update = as.vega(props))
+        )
+      )
+    )
+  } else {
+    list(
+      type = mark$type,
+      properties = list(update = as.vega(props)),
+      from = list(data = mark$pipeline_id)
+    )
+  }
+  
 }
 
 #' @S3method as.vega gigvis_props
@@ -92,10 +110,10 @@ as.vega.vega_legend <- as.vega.vega_axis
 
 #' @S3method as.vega data.frame
 as.vega.data.frame <- function(x, name, ...) {
-  list(
+  list(list(
     name = name,
     values = df_to_json(x)
-  )
+  ))
 }
 
 #' @S3method as.vega split_df
@@ -103,9 +121,16 @@ as.vega.split_df <- function(x, name, ...) {
   data <- lapply(x, function(x) list(children = df_to_json(x)))
   
   list(
-    name = name,
-    format = list(type = "treejson"),
-    values = list(children = data)
+    list(
+      name = paste0(name, "_tree"),
+      format = list(type = "treejson"),
+      values = list(children = data)
+    ),
+    list(
+      name = name,
+      source = paste0(name, "_tree"),
+      transform = list(list(type = "flatten"))
+    )
   )
 }
 

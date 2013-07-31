@@ -83,19 +83,9 @@ gigvis("mtcars", props(x ~ wt, y ~ mpg),
 )
 
 # Same as previous, but also with (useless) grouping in the nodes
-gigvis("mtcars", props(x ~ wt, y ~ mpg),
-  scales = scales(
-    scale(name = "stroke", type = "ordinal"),
-    scale(name = "fill", type = "ordinal")
-  ),
-  node(
-    data = by_group(variable(quote(factor(cyl)))),
-    props = props(stroke ~ factor(cyl)),
-    mark_symbol(fill = NA)
-  ),
-  node(
-    data = by_group(variable(quote(factor(am)))),
-    props = props(fill ~ factor(am)),
-    mark_symbol(size = 25)
-  )
+by_cyl <- pipeline("mtcars", by_group("cyl"))
+gigvis(by_cyl, props(x ~ wt, y ~ mpg),
+  mark_symbol(props(stroke ~ factor(cyl), fill = NA)),
+  mark_symbol(props(fill ~ factor(am), size = 25))
 )
+
