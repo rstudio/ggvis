@@ -11,5 +11,5 @@ gigvis("mtcars", props(x ~ wt, y ~ mpg, fill ~ cyl),
 
 gigvis("mtcars", props(x ~ wt, y ~ mpg, fill ~ cyl),
   mark_symbol(),
-  legends = list(legend(fill = fill, title = "Cylinders"))
+  legends = list(legend(fill = "fill", title = "Cylinders"))
 )
