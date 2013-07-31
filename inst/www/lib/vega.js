@@ -1,6 +1,6 @@
 vg = (function(d3, topojson) { // take d3 & topojson as imports
   var vg = {
-    version:  "1.3.1", // semantic versioning
+    version:  "1.3.3", // semantic versioning
     d3:       d3,      // stash d3 for use in property functions
     topojson: topojson // stash topojson similarly
   };
@@ -33,6 +33,13 @@ vg.isBoolean = function(obj) {
 
 vg.isTree = function(obj) {
   return vg.isArray(obj) && obj.__vgtree__;
+};
+
+vg.tree = function(obj, children) {
+  var d = [obj];
+  d.__vgtree__ = true;
+  d.children = children || "children";
+  return d;
 };
 
 vg.number = function(s) { return +s; };
@@ -1405,7 +1412,7 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
       h = o.height || 0;
 
       opac = o.opacity == null ? 1 : o.opacity;
-      if (opac == 0) return;
+      if (opac == 0) continue;
 
       if (fill = o.fill) {
         g.globalAlpha = opac * (o.fillOpacity==null ? 1 : o.fillOpacity);
@@ -1444,7 +1451,7 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
       y2 = o.y2 != null ? o.y2 : y1;
 
       opac = o.opacity == null ? 1 : o.opacity;
-      if (opac == 0) return;
+      if (opac == 0) continue;
       
       if (stroke = o.stroke) {
         lw = (lw = o.strokeWidth) != null ? lw : vg.config.render.lineWidth;
@@ -1509,7 +1516,7 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
       g.textBaseline = o.baseline || "alphabetic";
 
       opac = o.opacity == null ? 1 : o.opacity;
-      if (opac == 0) return;
+      if (opac == 0) continue;
 
       if (o.angle) {
         g.save();
@@ -1627,16 +1634,16 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
       return false;
     }
     var items = scene.items, subscene, group, hit, dx, dy,
-        handler = this;
+        handler = this, i, j;
 
-    for (var i=0, len=items.length; i<len; ++i) {
+    for (i=items.length; --i>=0;) {
       group = items[i];
       dx = group.x || 0;
       dy = group.y || 0;
 
       g.save();
       g.translate(dx, dy);
-      for (var j=0, llen=group.items.length; j<llen; ++j) {
+      for (j=group.items.length; --j >= 0;) {
         subscene = group.items[j];
         if (subscene.interactive === false) continue;
         hit = handler.pick(subscene, x, y, gx-dx, gy-dy);
@@ -1942,11 +1949,6 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
     var marktype = scene.marktype,
         renderer = vg.canvas.marks.draw[marktype];
     renderer.call(this, ctx, scene, bounds);
-
-    // compute mark-level bounds
-    scene.bounds = scene.items.reduce(function(b, item) {
-      return item.bounds ? b.union(item.bounds) : b;
-    }, scene.bounds || new vg.Bounds());
   };
   
   prototype.renderAsync = function(scene) {
@@ -1964,7 +1966,7 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
   prototype.loadImage = function(uri) {
     var renderer = this,
         scene = renderer._scene,
-        image = null;
+        image = null, url;
 
     renderer._imgload += 1;
     if (vg.config.isNode) {
@@ -1977,13 +1979,14 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
       });
     } else {
       image = new Image();
+      url = vg.config.baseURL + uri;
       image.onload = function() {
-        vg.log("LOAD IMAGE: "+uri);
+        vg.log("LOAD IMAGE: "+url);
         image.loaded = true;
         renderer._imgload -= 1;
         renderer.renderAsync(scene);
       };
-      image.src = uri;
+      image.src = url;
     }
 
     return image;
@@ -2264,9 +2267,10 @@ var vg_gradient_id = 0;vg.canvas = {};vg.canvas.path = (function() {
         x = o.x - (o.align === "center"
           ? w/2 : (o.align === "right" ? w : 0)),
         y = o.y - (o.baseline === "middle"
-          ? h/2 : (o.baseline === "bottom" ? h : 0));
+          ? h/2 : (o.baseline === "bottom" ? h : 0)),
+        url = vg.config.baseURL + o.url;
     
-    this.setAttributeNS("http://www.w3.org/1999/xlink", "href", o.url);
+    this.setAttributeNS("http://www.w3.org/1999/xlink", "href", url);
     this.setAttribute("x", x);
     this.setAttribute("y", y);
     this.setAttribute("width", w);
@@ -2646,7 +2650,6 @@ vg.data.ingestTree = function(node, children) {
   return d;
 };
 
-
 function vg_make_tree(d) {
   d.__vgtree__ = true;
   d.nodes = function() { return vg_tree_nodes(this, []); };
@@ -2691,14 +2694,14 @@ vg.data.size = function(size, group) {
   });
   return size;
 };vg.data.load = function(uri, callback) {
+  var url = vg_load_hasProtocol(uri) ? uri : vg.config.baseURL + uri;
   if (vg.config.isNode) {
-    // in node.js, consult base url and select file or http
-    var url = vg_load_hasProtocol(uri) ? uri : vg.config.baseURL + uri,
-        get = vg_load_isFile(url) ? vg_load_file : vg_load_http;
+    // in node.js, consult url and select file or http
+    var get = vg_load_isFile(url) ? vg_load_file : vg_load_http;
     get(url, callback);
   } else {
     // in browser, use xhr
-    vg_load_xhr(uri, callback);
+    vg_load_xhr(url, callback);
   }  
 };
 
@@ -2754,7 +2757,7 @@ function vg_load_http(url, callback) {
   }
 
   formats.json = function(data, format) {
-    var d = JSON.parse(data);
+    var d = vg.isObject(data) ? data : JSON.parse(data);
     if (format && format.property) {
       d = vg.accessor(format.property)(d);
     }
@@ -2776,7 +2779,8 @@ function vg_load_http(url, callback) {
       vg.error("TopoJSON library not loaded.");
       return [];
     }    
-    var t = JSON.parse(data), obj = [];
+    var t = vg.isObject(data) ? data : JSON.parse(data),
+        obj = [];
 
     if (format && format.feature) {
       obj = (obj = t.objects[format.feature])
@@ -2793,10 +2797,8 @@ function vg_load_http(url, callback) {
   };
   
   formats.treejson = function(data, format) {
-    var d = [JSON.parse(data)];
-    d.__vgtree__ = true;
-    d.children = format.children || "children";
-    return d;
+    data = vg.isObject(data) ? data : JSON.parse(data);
+    return vg.tree(data, format.children);
   };
   
   function parseValues(data, types) {
@@ -2813,7 +2815,7 @@ function vg_load_http(url, callback) {
       for (j=0, clen=cols.length; j<clen; ++j) {
         d[cols[j]] = p[j](d[cols[j]]);
       }
-      if (tree && d.values) parseCollection(d, cols, p, true);
+      if (tree && d.values) parseValues(d, cols, p, true);
     }
   }
 
@@ -3502,13 +3504,16 @@ vg.data.facet = function() {
         out_y1 = output["y1"],
         out_cy = output["cy"];
     
+    var series = stacks(data);
+    if (series.length === 0) return data;
+    
     layout.out(function(d, y0, y) {
       if (d.datum) {
         d.datum[out_y0] = y0;
         d.datum[out_y1] = y + y0;
         d.datum[out_cy] = y0 + y/2;
       }
-    })(stacks(data));
+    })(series);
     
     return data;
   }
@@ -3517,6 +3522,9 @@ vg.data.facet = function() {
     var values = vg.values(data),
         points = [], series = [],
         a, i, n, j, m, k, p, v, x;
+
+    // exit early if no data
+    if (values.length === 0) return series;
 
     // collect and sort data points
     for (i=0, n=values.length; i<n; ++i) {
@@ -4098,17 +4106,9 @@ vg.data.facet = function() {
     if (d.url) {
       count += 1;
       vg.data.load(d.url, load(d)); 
-    }
-     
-    if (d.values) {
-      if (d.format && d.format.parse) {
-        // run specified value parsers
-        vg.data.read.parse(d.values, d.format.parse);
-      }
-      model.load[d.name] = d.values;
-    }
-    
-    if (d.source) {
+    } else if (d.values) {
+      model.load[d.name] = vg.data.read(d.values, d.format);
+    } else if (d.source) {
       var list = model.source[d.source] || (model.source[d.source] = []);
       list.push(d.name);
     }
@@ -4121,11 +4121,14 @@ vg.data.facet = function() {
   if (count === 0) setTimeout(callback, 1);
   return model;
 };vg.parse.dataflow = function(def) {
-  var tx = (def.transform || []).map(vg.parse.transform);
-  return !tx.length ? vg.identity :
-    function(data, db, group) {
-      return tx.reduce(function(d,t) { return t(d, db, group); }, data);
-    };
+  var tx = (def.transform || []).map(vg.parse.transform),
+      df = tx.length
+        ? function(data, db, group) {
+            return tx.reduce(function(d,t) { return t(d,db,group); }, data);
+          }
+        : vg.identity;
+  df.transforms = tx;
+  return df;
 };vg.parse.expr = (function() {
   
   var CONSTANT = {
@@ -4284,23 +4287,23 @@ vg.parse.properties = (function() {
       vars[name] = true;
     }
     
-    if (vars.x2 && !(vars.width && vars.x)) {
-      if (vars.width) {
-        code += "\n  o.x = (o.x2 - o.width);";
-      } else if (vars.x) {
+    if (vars.x2) {
+      if (vars.x) {
         code += "\n  if (o.x > o.x2) { "
               + "var t = o.x; o.x = o.x2; o.x2 = t; };";
         code += "\n  o.width = (o.x2 - o.x);";
-      }
+      } else if (vars.width && !vars.x1) {
+        code += "\n  o.x = (o.x2 - o.width);";
+      } 
     }
 
-    if (vars.y2 && !(vars.height && vars.y)) {
-      if (vars.height) {
-        code += "\n  o.y = (o.y2 - o.height);";
-      } else if (vars.y) {
+    if (vars.y2) {
+      if (vars.y) {
         code += "\n  if (o.y > o.y2) { "
               + "var t = o.y; o.y = o.y2; o.y2 = t; };";
         code += "\n  o.height = (o.y2 - o.y);";
+      } else if (vars.height && !vars.y1) {
+        code += "\n  o.y = (o.y2 - o.height);";
       }
     }
     
@@ -4356,7 +4359,7 @@ vg.parse.properties = (function() {
 
     // get field reference for enclosing group
     if (ref.group != null) {
-      var grp = "";
+      var grp = "group.datum";
       if (vg.isString(ref.group)) {
         grp = GROUP_VARS[ref.group]
           ? "group." + ref.group
@@ -4368,7 +4371,7 @@ vg.parse.properties = (function() {
     if (ref.field != null) {
       if (vg.isString(ref.field)) {
         val = "item.datum["+vg.field(ref.field).map(vg.str).join("][")+"]";
-        if (ref.group != null) { val = grp+"["+val+"]"; }
+        if (ref.group != null) { val = "this.accessor("+val+")("+grp+")"; }
       } else {
         val = "this.accessor(group.datum["
             + vg.field(ref.field.group).map(vg.str).join("][")
@@ -4914,8 +4917,8 @@ vg.scene.item = function(mark) {
         a, i, n, x, y, ix, iy, ox, oy;
 
     var angles = [sa, ea],
-        s = sa - (sa%halfpi) + halfpi;
-    for (var i=0; i<4 && s<ea; ++i, s+=halfpi) {
+        s = sa - (sa%halfpi);
+    for (i=0; i<4 && s<ea; ++i, s+=halfpi) {
       angles.push(s);
     }
 
