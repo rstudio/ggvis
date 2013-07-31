@@ -38,14 +38,15 @@ as.vega.gigvis <- function(x, width = 600, height = 400, padding = NULL) {
   }
   
   scales <- find_scales(x, nodes, data_table)
+  axes <- add_default_axes(x$axes, scales)
   spec <- list(
     data = datasets,
-    scales = scales,
+    scales = unname(scales),
     marks = lapply(nodes, as.vega),
     width = width,
     height = height,
-    legends = vega_legends(scales),
-    axes = vega_axes(scales),
+    legends = unname(vega_legends(scales)),
+    axes = lapply(axes, as.vega),
     padding = as.vega(padding)
   )
 
@@ -61,18 +62,31 @@ as.vega.mark <- function(mark) {
   props <- merge_props(defaults, mark$props)
   check_mark_props(mark, names(props))
   
-  # Convert each property to a Vega-structured property
-  vega_props <- Map(prop_vega, props, prop_to_scale(names(props)))
-  
   list(
     type = mark$type,
-    properties = list(
-      update = vega_props
-    ),
+    properties = list(update = as.vega(props)),
     from = list(data = mark$pipeline_id)
   )
 }
 
+#' @S3method as.vega props
+as.vega.gigvis_props <- function(x, default_scales = NULL) {
+  if (empty(x)) return(NULL)
+  
+  default_scales <- default_scales %||% prop_to_scale(names(x))
+  Map(prop_vega, x, default_scales)
+}
+
+#' @S3method as.vega vega_axis
+as.vega.vega_axis <- function(x) {
+  if (empty(x$properties)) {
+    x$properties <- NULL
+  } else {
+    x$properties <- lapply(x$properties, as.vega)
+  }
+  
+  unclass(x)
+}
 
 #' @S3method as.vega data.frame
 as.vega.data.frame <- function(x) {

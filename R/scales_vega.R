@@ -37,5 +37,5 @@ find_scales <- function(x, nodes, data_table) {
     scales[[scale_n]]$domain <- list(fields = scale_uses[[scale_n]])
   }
   
-  unclass(unname(scales))
+  unclass(scales)
 }
