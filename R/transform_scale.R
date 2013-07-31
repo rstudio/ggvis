@@ -18,7 +18,7 @@ format.transform_scale <- function(x, ...) {
 }
 
 #' @S3method compute transform_scale
-compute.transform_scale <- function(x, props, source = NULL) {
+compute.transform_scale <- function(x, props, data) {
   x_val <- prop_value(props$x, source)
   y_val <- prop_value(props$y, source)
 
