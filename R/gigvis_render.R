@@ -63,6 +63,7 @@ active_props <- function(data, nodes) {
   })
   
   reactive_prop <- function(props, data) {
+    force(props)
     force(data)
     reactive(apply_props(data(), props))
   }
