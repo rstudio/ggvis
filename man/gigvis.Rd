@@ -5,7 +5,7 @@
 \title{Create a gigvis object, or a node in a gigvis plot.}
 \usage{
   gigvis(data = NULL, props = NULL, ..., dynamic = FALSE,
-    scales = NULL)
+    scales = NULL, axes = NULL, legends = NULL)
 
   is.gigvis(x)
 
@@ -29,6 +29,11 @@
 
   \item{scales}{a \code{\link{scales}} object, to override
   the default scales}
+
+  \item{axes}{a list of \code{\link{axis}} specifications}
+
+  \item{legends}{a list of \code{\link{axis}}
+  specifications}
 }
 \description{
   Create a gigvis object, or a node in a gigvis plot.

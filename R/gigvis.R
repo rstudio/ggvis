@@ -9,10 +9,12 @@
 #'   dynamic shiny app; if \code{FALSE}, creates a static html file. See
 #'   also \code{\link{save_spec}} to just output the vega spec
 #' @param scales a \code{\link{scales}} object, to override the default scales
+#' @param axes a list of \code{\link{axis}} specifications
+#' @param legends a list of \code{\link{axis}} specifications
 #' @export
 #' @import assertthat
 gigvis <- function(data = NULL, props = NULL, ..., dynamic = FALSE, 
-                   scales = NULL) {
+                   scales = NULL, axes = NULL, legends = NULL) {
   if (is.null(scales)) scales <- scales()
   stopifnot(is.scales(scales))
   
@@ -22,6 +24,8 @@ gigvis <- function(data = NULL, props = NULL, ..., dynamic = FALSE,
       props = props, 
       dynamic = dynamic,
       scales = scales,
+      axes = axes,
+      legends = legends,
       children = list(...)),
     class = c("gigvis", "gigvis_node")
   )

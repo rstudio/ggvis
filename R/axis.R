@@ -65,7 +65,7 @@ axis <- function(type, scale = type, orient = NULL, title = NULL,
 }
 
 add_default_axes <- function(axes, scales) {
-  present <- vapply(axes, "[[", "name", FUN.VALUE = character(1))
+  present <- vapply(axes, "[[", "scale", FUN.VALUE = character(1))
 
   missing <- setdiff(intersect(names(scales), c("x", "y")), present)
   
