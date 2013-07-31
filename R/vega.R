@@ -31,9 +31,7 @@ as.vega.gigvis <- function(x, width = 600, height = 400, padding = NULL) {
   } else {
     datasets <- lapply(data_names, function(name) {
       data <- isolate(data_table[[name]]())
-      out <- as.vega(data)
-      out$name <- name
-      out
+      as.vega(data, name)
     })
   }
   
@@ -93,15 +91,21 @@ as.vega.vega_axis <- function(x) {
 as.vega.vega_legend <- as.vega.vega_axis
 
 #' @S3method as.vega data.frame
-as.vega.data.frame <- function(x) {
-  list(values = df_to_json(x))
+as.vega.data.frame <- function(x, name, ...) {
+  list(
+    name = name,
+    values = df_to_json(x)
+  )
 }
 
 #' @S3method as.vega split_df
-as.vega.split_df <- function(x) {
+as.vega.split_df <- function(x, name, ...) {
+  data <- lapply(x, function(x) list(children = df_to_json(x)))
+  
   list(
-    format = "treejson",
-    children = lapply(x, function(x) list(children = df_to_json(x)))
+    name = name,
+    format = list(type = "treejson"),
+    values = list(children = data)
   )
 }
 
