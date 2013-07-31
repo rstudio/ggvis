@@ -16,7 +16,7 @@ Suggests:
     testthat (>= 0.7.1.99)
 License: GPL-2
 Collate:
-    'axes_vega.R'
+    'axis.R'
     'connect.R'
     'df_to_json.R'
     'find_data.R'
@@ -26,6 +26,8 @@ Collate:
     'guess.R'
     'legend_vega.R'
     'mark.R'
+    'marks.R'
+    'padding.R'
     'pipe.R'
     'pipeline.R'
     'prop.R'
@@ -57,5 +59,3 @@ Collate:
     'utils_reactive.R'
     'vega.R'
     'view.R'
-    'marks.R'
-    'padding.R'
