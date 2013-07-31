@@ -50,12 +50,10 @@ node <- function(..., data = NULL, props = NULL) {
 
 #' @S3method print gigvis
 print.gigvis <- function(x, ...) {
-  vega <- as.vega(x, ...)
-
   if (x$dynamic) {
-    view_dynamic(vega)
+    view_dynamic(x)
   } else {
-    view_static(vega)
+    view_static(x)
   }
 }
 

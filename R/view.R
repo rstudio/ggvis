@@ -1,6 +1,6 @@
 #' Generate a static web page with the embedded gigvis graph
 #'
-#' @param gv A gigvis_prerender object.
+#' @param gv A gigvis object.
 #' @param renderer The renderer to use in the browser. Can be \code{"canvas"}
 #'   (the default) or \code{"svg"}.
 #' @param launch If \code{TRUE}, launch this web page in a browser.
@@ -8,7 +8,7 @@
 #' @export
 #' @importFrom RJSONIO toJSON
 #' @importFrom whisker whisker.render
-view_static <- function(spec, renderer = "canvas", launch = TRUE) {
+view_static <- function(gv, renderer = "canvas", launch = TRUE) {
 
   if (!(renderer %in% c("canvas", "svg")))
     stop("renderer must be 'canvas' or 'svg'")
@@ -18,6 +18,7 @@ view_static <- function(spec, renderer = "canvas", launch = TRUE) {
 
   copy_www_resources(temp_dir)
 
+  spec <- as.vega(gv)
   vega_json <- toJSON(spec, pretty = TRUE)
 
   template <- paste(readLines(system.file('index.html', package='gigvis')),
@@ -44,7 +45,7 @@ view_static <- function(spec, renderer = "canvas", launch = TRUE) {
 
 # This is used similarly to view_static, but view_dynamic can take functions
 # or (reactive expressions) as data instead of names in an environment.
-view_dynamic <- function(spec, envir = parent.frame(), controls = NULL,
+view_dynamic <- function(gv, envir = parent.frame(), controls = NULL,
                          renderer = "canvas", launch = TRUE, port = 8228) {
 
   if (!require("shiny"))
