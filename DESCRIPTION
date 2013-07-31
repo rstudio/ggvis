@@ -24,7 +24,6 @@ Collate:
     'gigvis.R'
     'gigvis_render.R'
     'guess.R'
-    'legend_vega.R'
     'mark.R'
     'marks.R'
     'padding.R'
@@ -59,3 +58,4 @@ Collate:
     'utils_reactive.R'
     'vega.R'
     'view.R'
+    'legend.R'

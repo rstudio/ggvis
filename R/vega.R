@@ -39,13 +39,15 @@ as.vega.gigvis <- function(x, width = 600, height = 400, padding = NULL) {
   
   scales <- find_scales(x, nodes, data_table)
   axes <- add_default_axes(x$axes, scales)
+  legends <- add_default_legends(x$legends, scales)
+  
   spec <- list(
     data = datasets,
     scales = unname(scales),
     marks = lapply(nodes, as.vega),
     width = width,
     height = height,
-    legends = unname(vega_legends(scales)),
+    legends = lapply(legends, as.vega),
     axes = lapply(axes, as.vega),
     padding = as.vega(padding)
   )
@@ -69,7 +71,7 @@ as.vega.mark <- function(mark) {
   )
 }
 
-#' @S3method as.vega props
+#' @S3method as.vega gigvis_props
 as.vega.gigvis_props <- function(x, default_scales = NULL) {
   if (empty(x)) return(NULL)
   
@@ -87,6 +89,8 @@ as.vega.vega_axis <- function(x) {
   
   unclass(x)
 }
+#' @S3method as.vega vega_legend
+as.vega.vega_legend <- as.vega.vega_axis
 
 #' @S3method as.vega data.frame
 as.vega.data.frame <- function(x) {
