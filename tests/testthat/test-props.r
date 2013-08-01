@@ -7,13 +7,12 @@ test_that("property names for variables", {
   # Regular variable names are simply converted to string
   expect_identical(pname(wt), "wt")
 
-  # Variable names with special characters are made js-safe, with a hash
-  expect_identical(pname(`wt/mpg`),
-                   paste0("wtmpg_", digest::digest("wt/mpg", algo="crc32")))
+  # Variable names with special characters are made vega-safe
+  expect_identical(pname(`wt/mpg`), paste0("wt/mpg"))
+  expect_identical(pname(`wt.mpg`), paste0("wt\\.mpg"))
 
   # Expressions are made js-safe, with a hash
-  expect_identical(pname(wt/mpg),
-                   paste0("ewtmpg_", digest::digest("[e] wt/mpg", algo="crc32")))
+  expect_identical(pname(wt/mpg), paste0("[e]wt/mpg"))
 
   # Expressions and weird column names don't result in same name
   expect_false(pname(wt/mpg) == pname(`wt/mpg`))
