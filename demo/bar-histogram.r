@@ -7,7 +7,7 @@ gigvis(pressure,
 )
 
 # Bar graph with ordinal x
-gigvis("pressure",
+gigvis(pressure,
   props = props(x ~ temperature, y ~ pressure),
   mark_rect(props(y2 = constant(0, scale = TRUE), width = band())),
   scales = scales(scale_ordinal("x", range = "width", padding = 0, points = FALSE))
@@ -37,10 +37,9 @@ by_cyl <- pipeline(mtcars, by_group("cyl"))
 gigvis(by_cyl, props(x ~ wt, fill ~ factor(cyl)),
   branch_histogram(binwidth = 1))
 
-
 # Bigger dataset
 data(diamonds, package = "ggplot2")
-gigvis("diamonds", props(x ~ table),
+gigvis(diamonds, props(x ~ table),
   branch_histogram()
 )
 
