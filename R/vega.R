@@ -23,7 +23,7 @@ as.vega.gigvis <- function(x, width = 600, height = 400, padding = NULL,
   data_table <- extract_data(nodes)
   data_table <- active_props(data_table, nodes)
   
-  data_names <- ls(data_table, all = TRUE)
+  data_names <- ls(data_table, all.names = TRUE)
   if (x$dynamic) {
     datasets <- lapply(data_names, function(name) {
       # Don't provide data now, just the name

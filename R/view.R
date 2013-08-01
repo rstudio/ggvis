@@ -47,7 +47,7 @@ view_static <- function(gv, renderer = "canvas", launch = TRUE) {
 # or (reactive expressions) as data instead of names in an environment.
 
 #' @importFrom shiny pageWithSidebar headerPanel sidebarPanel uiOutput
-#'   mainPanel tags observe runApp
+#'   mainPanel tags observe runApp stopApp renderUI
 view_dynamic <- function(gv, envir = parent.frame(), controls = NULL,
                          renderer = "canvas", launch = TRUE, port = 8228) {
 
@@ -93,7 +93,7 @@ view_dynamic <- function(gv, envir = parent.frame(), controls = NULL,
     })
 
     # Send each of the data objects
-    for (name in ls(data_table, all = TRUE)) {
+    for (name in ls(data_table, all.names = TRUE)) {
       # The datasets list contains named objects. The names are synthetic IDs
       # that are present in the vega spec. The values can be a variety of things,
       # see the if/else clauses below.
@@ -133,6 +133,7 @@ view_dynamic <- function(gv, envir = parent.frame(), controls = NULL,
   runApp(list(ui = ui, server = server))
 }
 
+#' @importFrom shiny HTML
 gigvisOutput2 <- function(outputId, vega_json, renderer = 'canvas') {
   js <- paste0(
   '<script type="text/javascript">
@@ -206,9 +207,8 @@ vega_file <- function(gv, envir = parent.frame(), file = NULL,
   cmd <- cmdsearch[min(found_idx)]
 
   # Generate the Vega JSON spec
-  vega_json <- toJSON(vega_spec(gv, envir = envir), pretty = TRUE)
   json_file <- file.path(temp_dir, "plot.json")
-  cat(vega_json, file = json_file)
+  vega_json <- save_spec(json_file, gv)
   on.exit(unlink(json_file))
 
   # Create the image file
@@ -236,6 +236,7 @@ copy_www_resources <- function(destdir) {
   })
 }
 
+#' @importFrom shiny addResourcePath
 deploy_www_resources <- function() {
   files <- c(
     "lib/jquery-1.9.1.js",

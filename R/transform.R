@@ -96,12 +96,6 @@ transform_type <- function(transform) {
   sub("^transform_", "", type)
 }
 
-# Apply transformation to a data object, dispatching on transform type. A
-# method should be implemented for each type of transform.
-apply_transform <- function(transform, data, mapping) {
-  flow(transform, mapping, data)
-}
-
 #' @S3method connect transform
 connect.transform <- function(x, props, source = NULL, session = NULL) {
   x <- advance_delayed_reactives(x, session)

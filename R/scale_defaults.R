@@ -56,10 +56,10 @@ dscale_fill_nominal <- function(...) scale_ordinal(..., range = "category10")
 
 dscale_shape_nominal <- function(...) scale_ordinal(..., range = "shapes")
 
-dscale_size_numeric <- function(...) scale_quantiative(..., range = c(1, 20))
+dscale_size_numeric <- function(...) scale_quantitative(..., range = c(1, 20))
 dscale_size_ordinal <- function(...) scale_ordinal(..., range = c(1, 20))
 
-dscale_fontSize_numeric <- function(...) scale_quantiative(..., range = c(10, 20))
+dscale_fontSize_numeric <- function(...) scale_quantitative(..., range = c(10, 20))
 dscale_fontSize_ordinal <- function(...) scale_ordinal(..., range = c(10, 20))
 
 dscale_opacity_numeric <- function(...) scale_quantitative(..., range = c(0, 1))

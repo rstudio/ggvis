@@ -27,15 +27,6 @@ fullseq.numeric <- function(range, size, ..., pad = FALSE) {
   }
 }
 
-#' @S3method fullseq Date
-fullseq.Date <- function(range, size, ...) {
-  seq(floor_date(range[1], size), ceiling_date(range[2], size), by = size)
-}
-#' @S3method fullseq POSIXt
-fullseq.POSIXt <- function(range, size, ...) {
-  seq(floor_time(range[1], size), ceiling_time(range[2], size), by = size)
-}
-
 round_any <- function(x, accuracy, f = round) {
   f(x / accuracy) * accuracy
 }
