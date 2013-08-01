@@ -111,3 +111,8 @@ quickdf <- function(list) {
   
   list
 }
+
+# Generate a random number to use in IDs
+rand_id <- function() {
+  floor(runif(1, 1e8, 1e9-1))
+}

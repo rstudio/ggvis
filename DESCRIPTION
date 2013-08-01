@@ -56,3 +56,5 @@ Collate:
     'legend.R'
     'datasource.R'
     'last_vis.R'
+    'delayed_reactive.R'
+    'input_slider.R'

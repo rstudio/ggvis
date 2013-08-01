@@ -46,11 +46,11 @@ pipe_id.datasource <- function(x, props) paste0(x$name, "_", x$hash)
 # Connect methods --------------------------------------------------------------
 
 #' @S3method connect datasource
-connect.datasource <- function(x, props, source = NULL) {
+connect.datasource <- function(x, props, source = NULL, session = NULL) {
   reactive(x$env$data)
 }
 #' @S3method connect datasource_reactive
-connect.datasource_reactive <- function(x, props, source = NULL) {
+connect.datasource_reactive <- function(x, props, source = NULL, session = NULL) {
   x$env$data
 }
 

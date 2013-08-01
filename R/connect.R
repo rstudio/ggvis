@@ -14,6 +14,8 @@
 #' @param source the data source to start the pipeline. This is used when 
 #'   the output from one pipeline into the input of another. Methods must check
 #'   if is a reactive object and deal with appropriately.
+#' @param session the session object, for if this is called within a Shiny
+#'   application.
 #' @export
 #' @keywords internal
 #' @examples
@@ -49,7 +51,7 @@
 #' v$add <- 2
 #' v$n <- 10
 #' isolate(r())
-connect <- function(x, props, source = NULL) {
+connect <- function(x, props, source = NULL, session = NULL) {
   stopifnot(is.gigvis_props(props))
   needs_shiny()
 
@@ -57,19 +59,19 @@ connect <- function(x, props, source = NULL) {
 }
 
 #' @rdname connect
-sluice <- function(x, props, source = NULL) {
+sluice <- function(x, props, source = NULL, session = NULL) {
   needs_shiny()
-  isolate(connect(x, props, source)())
+  isolate(connect(x, props, source, session)())
 }
 
 #' @S3method connect pipeline
-connect.pipeline <- function(x, props, source = NULL) {
+connect.pipeline <- function(x, props, source = NULL, session = NULL) {
   source <- as.reactive(source)
 
   connect_pipe <- function(pipe, props, source) {
     force(source)
     force(pipe)
-    connect(pipe, props, source)
+    connect(pipe, props, source, session)
   }
 
   for (pipe in x) {
@@ -80,6 +82,6 @@ connect.pipeline <- function(x, props, source = NULL) {
 }
 
 #' @S3method connect NULL
-connect.NULL <- function(x, props, source = NULL) {
+connect.NULL <- function(x, props, source = NULL, session = NULL) {
   as.reactive(source)
 }

@@ -1,4 +1,4 @@
-flatten <- function(node, parent = NULL) {
+flatten <- function(node, parent = NULL, session = NULL) {
   
   # Inherit behaviour from parent
   node$dynamic <- node$dynamic %||% parent$dynamic
@@ -16,7 +16,7 @@ flatten <- function(node, parent = NULL) {
     node$pipeline_id <- parent$pipeline_id
   } else {  
     # Create new pipeline connected to parent
-    node$pipeline <- connect(node$data, node$props, parent$pipeline)
+    node$pipeline <- connect(node$data, node$props, parent$pipeline, session)
     node$pipeline_id <- paste0(
       parent$pipeline_id,
       pipeline_id(node$data, node$props)

@@ -15,10 +15,11 @@ as.vega <- function(x, ...) {
 #' @rdname as.vega
 #' @param width,height width and height of plot, in pixels
 #' @param padding padding, as described by \code{\link{padding}}
-as.vega.gigvis <- function(x, width = 600, height = 400, padding = NULL) {
+as.vega.gigvis <- function(x, width = 600, height = 400, padding = NULL,
+                           session = NULL) {
   if (is.null(padding)) padding <- padding()
 
-  nodes <- flatten(x)
+  nodes <- flatten(x, session = session)
   data_table <- extract_data(nodes)
   data_table <- active_props(data_table, nodes)
   
