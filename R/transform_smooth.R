@@ -71,7 +71,7 @@ smooth.data.frame <- function(data, trans, x_var, y_var) {
   assert_that(is.flag(trans$se))
   assert_that(is.numeric(trans$level), length(trans$level) == 1, 
               trans$level >= 0, trans$level <= 1)
-  assert_that(is.integer(trans$n), length(trans$n) == 1, trans$n >= 0)
+  assert_that(length(trans$n) == 1, trans$n >= 0)
   assert_that(is.flag(trans$na.rm))
 
   x_name <- prop_name(x_var)
