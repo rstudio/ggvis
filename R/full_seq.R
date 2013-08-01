@@ -13,8 +13,8 @@ fullseq.numeric <- function(range, size, ..., pad = FALSE) {
   # if (zero_range(range)) return(range + size * c(-1, 1) / 2)
 
   x <- seq(
-    plyr::round_any(range[1], size, floor),
-    plyr::round_any(range[2], size, ceiling),
+    round_any(range[1], size, floor),
+    round_any(range[2], size, ceiling),
     by = size
   )
 
@@ -34,4 +34,8 @@ fullseq.Date <- function(range, size, ...) {
 #' @S3method fullseq POSIXt
 fullseq.POSIXt <- function(range, size, ...) {
   seq(floor_time(range[1], size), ceiling_time(range[2], size), by = size)
+}
+
+round_any <- function(x, accuracy, f = round) {
+  f(x / accuracy) * accuracy
 }
