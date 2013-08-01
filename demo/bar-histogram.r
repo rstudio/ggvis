@@ -37,6 +37,10 @@ by_cyl <- pipeline(mtcars, by_group("cyl"))
 gigvis(by_cyl, props(x ~ wt, fill ~ factor(cyl)),
   branch_histogram(binwidth = 1))
 
+gigvis(by_cyl, props(x ~ wt, stroke ~ factor(cyl)),
+  branch_freqpoly(binwidth = 1))
+
+
 # Bigger dataset
 data(diamonds, package = "ggplot2")
 gigvis(diamonds, props(x ~ table),

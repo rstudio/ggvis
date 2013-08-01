@@ -64,6 +64,21 @@ branch_histogram <- function(props = NULL, ...) {
   )
 }
 
+branch_freqpoly <- function(props = NULL, ...) {
+  if (is.null(props)) props <- props()
+  
+  default <- props(
+    x ~ x, 
+    y ~ count__
+  )
+  props <- merge_props(props, default)
+  
+  node(
+    data = transform_bin(...),
+    mark_line(props)
+  )
+}
+
 #' @S3method format transform_bin
 format.transform_bin <- function(x, ...) {
   paste0(" -> bin", param_string(x))
