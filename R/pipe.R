@@ -22,29 +22,10 @@ as.pipe <- function(x, ...) UseMethod("as.pipe")
 #' @S3method as.pipe pipe
 as.pipe.pipe <- function(x, ...) x
 
-#' @S3method as.pipe data.frame
-as.pipe.data.frame <- function(x, name = deparse(substitute(x)), ...) {
-  source_eager(x, name = name)
-}
-
-#' @S3method as.pipe NULL
-as.pipe.NULL <- function(x, ...) {
-  NULL
-}
-
-#' @S3method as.pipe character
-as.pipe.character <- function(x, ...) {
-  source_lazy(x)
-}
-
-#' @S3method as.pipe refMethodDef
-as.pipe.refMethodDef <- function(x, ...) {
-  source_reactive(x)
-}
-
-#' @S3method as.pipe function
-as.pipe.function <- function(x, ...) {
-  source_function(x)
+#' @S3method as.pipe default
+as.pipe.default <- function(x, name = NULL, ...) { 
+  if (is.null(name)) name <- deparse(substitute(x))
+  datasource(x, name = name)
 }
 
 #' @S3method print pipe
@@ -57,7 +38,6 @@ is_source <- function(x) UseMethod("is_source")
 
 #' @S3method is_source default
 is_source.default <- function(x) FALSE
-
 
 # Give an abbreviated identifier for the pipe
 pipe_id <- function(x, props) UseMethod("pipe_id")

@@ -81,6 +81,7 @@ constant_vars.split_df <- function(data) {
 }
 
 #' @S3method pipe_id transform
+#' @importFrom digest digest
 pipe_id.transform <- function(x, props) {
   # Hash the transform's settings, as well as props, since the props can affect
   # the result (e.g., transform_bin's output depends on the x mapping)

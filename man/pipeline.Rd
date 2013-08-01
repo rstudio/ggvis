@@ -27,20 +27,16 @@
   frames and strings).
 }
 \examples{
-# You can refer to data by value or by reference
-# If you refer to it by name, you need to provide R some help to figure
-# out itss name
 pipeline(mtcars)
 as.pipeline(mtcars)
-pipeline(mtcars = mtcars)
-pipeline("mtcars")
+pipeline(cars = mtcars)
 
-# A pipeline can contain multiple data sets - but in practice only
-# the last one will be used.
-pipeline("mtcars", mtcars)
+# A pipeline can contain multiple data sets, but only the last one is
+# returned
+pipeline(mtcars, sleep)
 
 # More useful pipelines combine data and transformations
-pipeline("mtcars", transform_bin())
-pipeline("mtcars", split_by("cyl"), transform_bin())
+pipeline(mtcars, transform_bin())
+pipeline(mtcars, by_group("cyl"), transform_bin())
 }
 

@@ -25,15 +25,15 @@ gigvis(
 )
 
 # Or using shorthand branch
-gigvis("mtcars", props(x ~ wt),
+gigvis(mtcars, props(x ~ wt),
   branch_histogram(binwidth = 1)
 )
-gigvis("mtcars", props(x ~ wt),
+gigvis(mtcars, props(x ~ wt),
   branch_histogram()
 )
 
 # Histogram, filled by cyl
-by_cyl <- pipeline("mtcars", by_group("cyl"))
+by_cyl <- pipeline(mtcars, by_group("cyl"))
 gigvis(by_cyl, props(x ~ wt, fill ~ factor(cyl)),
   branch_histogram(binwidth = 1))
 

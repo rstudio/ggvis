@@ -48,7 +48,7 @@ transform_bin(right = FALSE)
 sluice(transform_bin(10), props(x ~ disp), mtcars)
 sluice(pipeline(mtcars, by_group("cyl"), transform_bin(10)), props(x ~ disp))
 # Or
-pl <- pipeline("mtcars", transform_bin(10))
+pl <- pipeline(mtcars, transform_bin(10))
 sluice(pl, props(x ~ disp))
 }
 

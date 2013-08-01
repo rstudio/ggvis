@@ -30,6 +30,7 @@ connect.split_by_group <- function(x, props, source = NULL) {
 }
 
 #' @S3method pipe_id split
+#' @importFrom digest digest
 pipe_id.split <- function(x, props) {
   paste("split", digest(x, algo = "crc32"), sep = "_")
 }

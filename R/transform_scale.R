@@ -19,8 +19,8 @@ format.transform_scale <- function(x, ...) {
 
 #' @S3method compute transform_scale
 compute.transform_scale <- function(x, props, data) {
-  x_val <- prop_value(props$x, source)
-  y_val <- prop_value(props$y, source)
+  x_val <- prop_value(props$x, data)
+  y_val <- prop_value(props$y, data)
 
   assert_that(is.numeric(x_val))
   assert_that(is.numeric(y_val))

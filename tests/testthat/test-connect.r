@@ -6,10 +6,8 @@ asis <- props(x ~ x, y ~ y)
 
 test_that("sluicing data sources returns data frame", {
   sources <- list(
-    reactive = source_reactive(reactive(df)),
-    lazy = source_lazy("df"),
-    eager = source_eager(df),
-    fun = source_function(function() df)
+    reactive = datasource(reactive(df)),
+    eager = datasource(df)
   )
   
   for(nm in names(sources)) {
@@ -21,7 +19,7 @@ test_that("sluicing data sources returns data frame", {
 
 test_that("reactive source responds to changes", {
   v <- reactiveValues(n = 1)
-  src <- source_reactive(reactive(df[1:v$n, ]))
+  src <- datasource(reactive(df[1:v$n, ]))
   
   r <- connect(src, props())
   expect_equal(isolate(nrow(r())), 1L)

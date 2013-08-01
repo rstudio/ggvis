@@ -10,23 +10,23 @@
 #' @param x an object to test/coerce
 #' @export
 #' @examples
-#' # You can refer to data by value or by reference
-#' # If you refer to it by name, you need to provide R some help to figure
-#' # out itss name
 #' pipeline(mtcars)
 #' as.pipeline(mtcars)
-#' pipeline(mtcars = mtcars)
-#' pipeline("mtcars")
+#' pipeline(cars = mtcars)
 #'
-#' # A pipeline can contain multiple data sets - but in practice only
-#' # the last one will be used.
-#' pipeline("mtcars", mtcars)
+#' # A pipeline can contain multiple data sets, but only the last one is 
+#' # returned
+#' pipeline(mtcars, sleep)
 #'
 #' # More useful pipelines combine data and transformations
-#' pipeline("mtcars", transform_bin())
-#' pipeline("mtcars", split_by("cyl"), transform_bin())
+#' pipeline(mtcars, transform_bin())
+#' pipeline(mtcars, by_group("cyl"), transform_bin())
 pipeline <- function(..., .pipes = list()) {
-  input <- c(list(...), .pipes)
+  args <- list(...)
+  if (is.null(names(args))) {
+    names(args) <- vapply(dots(...), function(x) deparse(x), character(1))
+  }
+  input <- c(args, .pipes)
 
   names <- names(input) %||% rep(list(NULL), length(input))
   pipes <- trim_to_source(compact(Map(as.pipe, input, names)))
@@ -65,27 +65,15 @@ as.pipeline <- function(x, ...) {
 #' @S3method as.pipeline pipeline
 as.pipeline.pipeline <- function(x, ...) x
 
-#' @S3method as.pipeline data.frame
-as.pipeline.data.frame <- function(x, name = NULL, ...) {
-  if (is.null(name)) name <- deparse(substitute(x))
-  pipeline(source_eager(x, name = name))
-}
-#' @S3method as.pipeline list
-as.pipeline.list <- function(x, ...) {
-  pipes <- lapply(x, pipe, ...)
-  pipeline(.pipes = pipes)
-}
-#' @S3method as.pipeline character
-as.pipeline.character <- function(x, ...) pipeline(source_lazy(x))
-#' @S3method as.pipeline NULL
-as.pipeline.NULL <- function(x, ...) pipeline(NULL)
-#' @S3method as.pipeline refMethodDef
-as.pipeline.refMethodDef <- function(x, ...) pipeline(source_reactive(x))
-#' @S3method as.pipeline function
-as.pipeline.function <- function(x, ...) pipeline(source_function(x))
-
 #' @S3method as.pipeline pipe
 as.pipeline.pipe <- function(x, ...) pipeline(x)
+
+#' @S3method as.pipeline default
+as.pipeline.default <- function(x, name = NULL, ...) { 
+  if (is.null(name)) name <- deparse(substitute(x))
+  pipeline(datasource(x, name = name))
+}
+
 
 #' @S3method format pipeline
 format.pipeline <- function(x, ...) {

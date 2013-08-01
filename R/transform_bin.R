@@ -37,7 +37,7 @@
 #' sluice(transform_bin(10), props(x ~ disp), mtcars)
 #' sluice(pipeline(mtcars, by_group("cyl"), transform_bin(10)), props(x ~ disp))
 #' # Or
-#' pl <- pipeline("mtcars", transform_bin(10))
+#' pl <- pipeline(mtcars, transform_bin(10))
 #' sluice(pl, props(x ~ disp))
 transform_bin <- function(binwidth = guess(), origin = NULL, right = TRUE) {
   transform("bin",
