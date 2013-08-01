@@ -59,6 +59,7 @@ connect <- function(x, props, source = NULL, session = NULL) {
 
 #' @rdname connect
 #' @importFrom shiny isolate
+#' @export
 sluice <- function(x, props, source = NULL, session = NULL) {
   isolate(connect(x, props, source, session)())
 }

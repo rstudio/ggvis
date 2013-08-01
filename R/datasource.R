@@ -8,6 +8,7 @@
 #' datasource(mtcars)
 #' 
 #' # A simple example of a reactive data source
+#' library(shiny)
 #' v <- reactiveValues(n = 10)
 #' p <- pipeline(reactive(mtcars[1:v$n, ]))
 #' props <- props(x ~ wt, y ~ mpg)

@@ -39,11 +39,7 @@ variable(quote(x))
 variable(quote(1))
 variable(quote(x * y))
 
-v <- variable(quote(cyl))
-prop_value(v, mtcars)
-prop_vega(v, "x")
-
-v <- variable(quote(cyl), offset = -1, scale = FALSE)
-prop_vega(v, "y")
+variable(quote(cyl))
+variable(quote(cyl), offset = -1, scale = FALSE)
 }
 

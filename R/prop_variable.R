@@ -9,17 +9,14 @@
 #'
 #' @param x A quoted object
 #' @inheritParams constant
+#' @export
 #' @examples
 #' variable(quote(x))
 #' variable(quote(1))
 #' variable(quote(x * y))
 #'
-#' v <- variable(quote(cyl))
-#' prop_value(v, mtcars)
-#' prop_vega(v, "x")
-#' 
-#' v <- variable(quote(cyl), offset = -1, scale = FALSE)
-#' prop_vega(v, "y")
+#' variable(quote(cyl))
+#' variable(quote(cyl), offset = -1, scale = FALSE)
 variable <- function(x, scale = TRUE, offset = NULL, mult = NULL) {
   assert_that(is.quoted(x))
   assert_that(is.flag(scale) || is.string(scale))

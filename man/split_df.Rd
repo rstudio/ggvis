@@ -7,10 +7,4 @@
 \description{
   Create a data frame split up by specified variables
 }
-\examples{
-split_df(mtcars, NULL)
-split_df(mtcars, "cyl")
-split_df(mtcars, c("cyl", "vs"))
-split_df(split_df(mtcars, "cyl"), "vs")
-}
 
