@@ -5,7 +5,7 @@ test_that("props inherited from parent", {
     props = props(x = 1),
     node(
       props = props(y = 2),
-      mark_line(x = 3)
+      mark_line(props(x = 3))
     )
   )
   nodes <- flatten(p)
