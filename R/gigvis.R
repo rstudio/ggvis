@@ -5,16 +5,13 @@
 #' @param props a list of \code{\link{props}} defining default mark properties
 #'   for this node and all its children.
 #' @param ... children \code{node}s or \code{\link{marks}}.
-#' @param dynamic if \code{TRUE}, this printing this plot will generate a 
-#'   dynamic shiny app; if \code{FALSE}, creates a static html file. See
-#'   also \code{\link{save_spec}} to just output the vega spec
 #' @param scales a \code{\link{scales}} object, to override the default scales
 #' @param axes a list of \code{\link{axis}} specifications
 #' @param legends a list of \code{\link{axis}} specifications
 #' @export
 #' @import assertthat
-gigvis <- function(data = NULL, props = NULL, ..., dynamic = FALSE, 
-                   scales = NULL, axes = NULL, legends = NULL) {
+gigvis <- function(data = NULL, props = NULL, ..., scales = NULL, axes = NULL, 
+                   legends = NULL) {
   if (is.null(scales)) scales <- scales()
   stopifnot(is.scales(scales))
   
@@ -22,7 +19,6 @@ gigvis <- function(data = NULL, props = NULL, ..., dynamic = FALSE,
     list(
       data = as.pipeline(data), 
       props = props, 
-      dynamic = dynamic,
       scales = scales,
       axes = axes,
       legends = legends,
@@ -51,10 +47,12 @@ node <- function(..., data = NULL, props = NULL) {
 }
 
 #' @S3method print gigvis
-print.gigvis <- function(x, ...) {
+print.gigvis <- function(x, dynamic = NA, ...) {
   set_last_vis(x)
+
+  if (is.na(dynamic)) dynamic <- is.dynamic(x)
   
-  if (x$dynamic) {
+  if (dynamic) {
     view_dynamic(x)
   } else {
     view_static(x)

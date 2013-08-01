@@ -7,8 +7,7 @@ mtc1 <- reactive({
   mtcars[sample(nrow(mtcars), 10), ]
 })
 gigvis(mtc1, props(x ~ wt, y ~ mpg),
-  mark_symbol(),
-  dynamic = TRUE
+  mark_symbol()
 )
 
 # Rapidly changing dynamic example
@@ -23,7 +22,6 @@ mtc1 <- reactive({
 })
 gigvis(mtc1, props(x ~ x, y ~ y),
   mark_symbol(),
-  dynamic = TRUE,
   scales = scales(x = scale("x", domain = c(0, 1)))
 )
 
@@ -45,8 +43,7 @@ gigvis(data = NULL, props = props(x ~ wt, y ~ mpg),
   node(
     data = mtc2,
     mark_symbol(props(fill = "red", size = 40))
-  ),
-  dynamic = TRUE
+  )
 )
 
 # With a transform
@@ -59,6 +56,5 @@ gigvis(mtc1, props(x ~ wt, y ~ mpg),
   node(
     data = transform_smooth(method = "lm"),
     mark_line(props(stroke = "red"))
-  ),
-  dynamic = TRUE
+  )
 )

@@ -4,8 +4,8 @@
 \alias{node}
 \title{Create a gigvis object, or a node in a gigvis plot.}
 \usage{
-  gigvis(data = NULL, props = NULL, ..., dynamic = FALSE,
-    scales = NULL, axes = NULL, legends = NULL)
+  gigvis(data = NULL, props = NULL, ..., scales = NULL,
+    axes = NULL, legends = NULL)
 
   is.gigvis(x)
 
@@ -21,11 +21,6 @@
   children.}
 
   \item{...}{children \code{node}s or \code{\link{marks}}.}
-
-  \item{dynamic}{if \code{TRUE}, this printing this plot
-  will generate a dynamic shiny app; if \code{FALSE},
-  creates a static html file. See also
-  \code{\link{save_spec}} to just output the vega spec}
 
   \item{scales}{a \code{\link{scales}} object, to override
   the default scales}
