@@ -47,6 +47,9 @@ transform_bin <- function(binwidth = guess(), origin = NULL, right = TRUE) {
   )
 }
 
+
+#' @rdname transform_bin
+#' @export
 branch_histogram <- function(props = NULL, ...) {
   if (is.null(props)) props <- props()
   
@@ -64,6 +67,8 @@ branch_histogram <- function(props = NULL, ...) {
   )
 }
 
+#' @rdname transform_bin
+#' @export
 branch_freqpoly <- function(props = NULL, ...) {
   if (is.null(props)) props <- props()
   
