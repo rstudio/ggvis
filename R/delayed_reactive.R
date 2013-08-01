@@ -19,6 +19,7 @@ from_input <- function(id, default) {
   eval(call)
 }
 
+
 #' @S3method print delayed_reactive
 print.delayed_reactive <- function(x, ...) {
   cat("<delayed_reactive>\n")

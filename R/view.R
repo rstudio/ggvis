@@ -45,11 +45,11 @@ view_static <- function(gv, renderer = "canvas", launch = TRUE) {
 
 # This is used similarly to view_static, but view_dynamic can take functions
 # or (reactive expressions) as data instead of names in an environment.
+
+#' @importFrom shiny pageWithSidebar headerPanel sidebarPanel uiOutput
+#'   mainPanel tags observe runApp
 view_dynamic <- function(gv, envir = parent.frame(), controls = NULL,
                          renderer = "canvas", launch = TRUE, port = 8228) {
-
-  if (!require("shiny"))
-    stop("Can't proceed without shiny package")
 
   if (!(renderer %in% c("canvas", "svg")))
     stop("renderer must be 'canvas' or 'svg'")

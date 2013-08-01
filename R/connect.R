@@ -33,6 +33,7 @@
 #' sluice(p, asis)
 #'
 #' # Reactive pipeline
+#' library(shiny)
 #' v <- reactiveValues(add = 0, mult = 1)
 #' ts <- transform_scale(add = reactive(v$add), mult = reactive(v$mult))
 #' r <- connect(ts, asis, df)
@@ -53,14 +54,12 @@
 #' isolate(r())
 connect <- function(x, props, source = NULL, session = NULL) {
   stopifnot(is.gigvis_props(props))
-  needs_shiny()
-
   UseMethod("connect")
 }
 
 #' @rdname connect
+#' @importFrom shiny isolate
 sluice <- function(x, props, source = NULL, session = NULL) {
-  needs_shiny()
   isolate(connect(x, props, source, session)())
 }
 

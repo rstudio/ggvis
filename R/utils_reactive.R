@@ -10,12 +10,3 @@ as.reactive.default <- function(x, session = NULL, ...) reactive(x, ...)
 is.reactive <- function(x) {
   inherits(x, "refMethodDef")
 }
-
-needs_shiny <- function() {
-  if (suppressWarnings(require("shiny", quietly = TRUE))) {
-    return(invisible(TRUE))
-  }
-
-  stop("This functionality requires the shiny package.\n", 
-       "Please install it with `install.packages('shiny')`", call. = FALSE)
-}

@@ -48,6 +48,7 @@ p <- pipeline(df, transform_scale(mult = 2), transform_scale(mult = 2))
 sluice(p, asis)
 
 # Reactive pipeline
+library(shiny)
 v <- reactiveValues(add = 0, mult = 1)
 ts <- transform_scale(add = reactive(v$add), mult = reactive(v$mult))
 r <- connect(ts, asis, df)

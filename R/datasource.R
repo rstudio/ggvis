@@ -46,6 +46,7 @@ pipe_id.datasource <- function(x, props) paste0(x$name, "_", x$hash)
 # Connect methods --------------------------------------------------------------
 
 #' @S3method connect datasource
+#' @importFrom shiny reactive
 connect.datasource <- function(x, props, source = NULL, session = NULL) {
   reactive(x$env$data)
 }
