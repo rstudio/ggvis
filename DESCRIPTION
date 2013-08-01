@@ -19,7 +19,6 @@ Collate:
     'axis.R'
     'connect.R'
     'df_to_json.R'
-    'find_data.R'
     'full_seq.R'
     'gigvis.R'
     'gigvis_render.R'
