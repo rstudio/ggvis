@@ -3,14 +3,14 @@
 \alias{view_spec}
 \title{Tools to save and view static specs.}
 \usage{
-  save_spec(x, path, ...)
+  save_spec(path, x = last_vis(), ...)
 
   view_spec(path, ...)
 }
 \arguments{
-  \item{x}{a gigvis object}
-
   \item{path}{location to save spec to, or load spec from}
+
+  \item{x}{a gigvis object}
 
   \item{...}{other arguments passed to \code{as.vega}}
 }

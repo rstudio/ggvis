@@ -55,3 +55,4 @@ Collate:
     'view.R'
     'legend.R'
     'datasource.R'
+    'last_vis.R'

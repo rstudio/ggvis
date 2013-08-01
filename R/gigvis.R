@@ -18,7 +18,7 @@ gigvis <- function(data = NULL, props = NULL, ..., dynamic = FALSE,
   if (is.null(scales)) scales <- scales()
   stopifnot(is.scales(scales))
   
-  structure(
+  vis <- structure(
     list(
       data = as.pipeline(data), 
       props = props, 
@@ -29,6 +29,8 @@ gigvis <- function(data = NULL, props = NULL, ..., dynamic = FALSE,
       children = list(...)),
     class = c("gigvis", "gigvis_node")
   )
+  set_last_vis(vis)
+  vis
 }
 
 #' @export
@@ -50,6 +52,8 @@ node <- function(..., data = NULL, props = NULL) {
 
 #' @S3method print gigvis
 print.gigvis <- function(x, ...) {
+  set_last_vis(x)
+  
   if (x$dynamic) {
     view_dynamic(x)
   } else {
@@ -61,12 +65,12 @@ print.gigvis <- function(x, ...) {
 #' 
 #' These functions are mainly useful for testing.
 #' 
-#' @param x a gigvis object
 #' @param path location to save spec to, or load spec from
+#' @param x a gigvis object
 #' @param ... other arguments passed to \code{as.vega}
 #' @keywords internal
 #' @export
-save_spec <- function(x, path, ...) {
+save_spec <- function(path, x = last_vis(), ...) {
   assert_that(is.gigvis(x), is.string(path))
   
   json <- toJSON(as.vega(x, ...), pretty = TRUE)
