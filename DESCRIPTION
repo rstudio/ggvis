@@ -56,3 +56,5 @@ Collate:
     'view.R'
     'legend.R'
     'datasource.R'
+    'delayed_reactive.R'
+    'input_slider.R'

@@ -78,7 +78,7 @@ view_dynamic <- function(gv, envir = parent.frame(), controls = NULL,
   server <- function(input, output, session) {
 
     # Do the preprocessing steps for gigvis
-    spec <- as.vega(gv)
+    spec <- as.vega(gv, session = session)
     data_table <- attr(spec, "data_table")
 
     # Send the vega spec
