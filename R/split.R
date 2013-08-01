@@ -24,7 +24,7 @@ format.split_by_group <- function(x, ...) {
 }
 
 #' @S3method connect split_by_group
-connect.split_by_group <- function(x, props, source = NULL) {
+connect.split_by_group <- function(x, props, source = NULL, session = NULL) {
   source <- as.reactive(source)
   reactive(split_df(source(), x$variables))
 }
