@@ -1,13 +1,22 @@
 delayed_reactive <- function(fun, controls = NULL) { 
+  if (is.character(fun)) {
+    fun <- from_input(fun)
+  }
   stopifnot(is.function(fun))
 
   structure(list(fun = fun, controls = controls), class = "delayed_reactive")
 }
 
+
+from_input <- function(id) {
+  call <- substitute(function(session) session$input[[id]], list(id = id))
+  eval(call)
+}
+
 #' @S3method print delayed_reactive
 print.delayed_reactive <- function(x, ...) {
   cat("<delayed_reactive>\n")
-  cat(format(body(x$fun)))
+  print(body(x$fun))
 }
 
 #' @S3method as.reactive delayed_reactive
