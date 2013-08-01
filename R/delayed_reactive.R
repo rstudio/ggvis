@@ -7,6 +7,7 @@ delayed_reactive <- function(fun, controls = NULL) {
   structure(list(fun = fun, controls = controls), class = "delayed_reactive")
 }
 
+is.delayed_reactive <- function(x) inherits(x, "delayed_reactive")
 
 from_input <- function(id) {
   call <- substitute(function(session) session$input[[id]], list(id = id))

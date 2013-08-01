@@ -104,15 +104,24 @@ apply_transform <- function(transform, data, mapping) {
 
 #' @S3method connect transform
 connect.transform <- function(x, props, source = NULL, session = NULL) {
+  x <- advance_delayed_reactives(x, session)
+
   reactive({
-    x_now <- render_data(x)
+    x_now <- eval_reactives(x)
     if (is.function(source)) source <- source()
     
     compute(x_now, props, source)
   })
 }
 
-render_data <- function(x) {
+# Converts delayed reactives to actual reactives
+advance_delayed_reactives <- function(x, session) {
+  drs <- vapply(x, is.delayed_reactive, logical(1))
+  x[drs] <- lapply(x[drs], as.reactive, session = session)
+  x
+}
+
+eval_reactives <- function(x) {
   xnew <- lapply(x, function(x) {
     if (is.function(x)) {
       x()

@@ -28,7 +28,7 @@ flatten <- function(node, parent = NULL, session = NULL) {
     list(node)
   } else {
     # Otherwise, recurse through children
-    children <- lapply(node$children, flatten, parent = node)
+    children <- lapply(node$children, flatten, parent = node, session = session)
     unlist(children, recursive = FALSE)
   }
 }
