@@ -33,7 +33,7 @@ source_class.refMethodDef <- function(x) "datasource_reactive"
 source_class.default <- function(x) NULL
 
 #' @S3method format datasource
-format.datasource <- function(x) {
+format.datasource <- function(x, ...) {
   paste0("|-> ", x$name, " (", x$hash, ")")
 }
 

@@ -15,4 +15,4 @@ guess <- function() {
 is.guess <- function(x) inherits(x, "guess")
 
 #' @S3method toString guess
-toString.guess <- function(x) "guess()"
+toString.guess <- function(x, ...) "guess()"
