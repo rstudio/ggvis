@@ -36,13 +36,13 @@ default_scale <- function(prop, type, ...) {
 
 
 dscale_x_numeric  <- function(...) scale_quantitative(..., range = "width")
-dscale_x_ordinal  <- function(...) scale_ordinal(..., range = "width")
-dscale_x_nominal  <- function(...) scale_ordinal(..., range = "width")
+dscale_x_ordinal  <- function(...) scale_ordinal(..., range = "width", padding = 0.5)
+dscale_x_nominal  <- function(...) scale_ordinal(..., range = "width", padding = 0.5)
 dscale_x_datetime <- function(...) scale_time(..., range = "width")
 
 dscale_y_numeric  <- function(...) scale_quantitative(..., range = "height")
-dscale_y_ordinal  <- function(...) scale_ordinal(..., range = "height")
-dscale_y_nominal  <- function(...) scale_ordinal(..., range = "height")
+dscale_y_ordinal  <- function(...) scale_ordinal(..., range = "height", padding = 0.5)
+dscale_y_nominal  <- function(...) scale_ordinal(..., range = "height", padding = 0.5)
 dscale_y_datetime <- function(...) scale_time(..., range = "width")
 
 dscale_stroke_numeric  <- function(...) scale_quantitative(..., range = c("#132B43", "#56B1F7"))
