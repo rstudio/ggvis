@@ -95,9 +95,7 @@ bin.split_df <- function(x, x_var, ...) {
 #' @S3method bin data.frame
 bin.data.frame <- function(x, x_var, ...) {
   x_val <- prop_value(x_var, x)
-  binned <- bin(x_val, ...)
-  names(binned)[names(binned) == "x"] <- x_var
-  binned
+  bin(x_val, ...)
 }
 
 #' @S3method bin numeric
