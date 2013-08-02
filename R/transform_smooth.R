@@ -17,8 +17,25 @@
 transform_smooth <- function(method = guess(), formula = guess(), se = TRUE,
                              level = 0.95, n = 80L, na.rm = FALSE, ...) {
   transform("smooth", method = method, formula = formula, se = se,
-    level = level, n = n, na.rm = na.rm, dots = dots(...))
+    level = level, n = n, na.rm = na.rm, dots = list(...))
 }
+
+#' @S3method is.dynamic transform_smooth
+is.dynamic.transform_smooth <- function(x, ...) {
+  any_apply(x, is.dynamic) || any_apply(x$dots, is.dynamic)
+}
+
+#' @S3method controls transform_smooth
+controls.transform_smooth <- function(x) {
+  c(controls.list(x), controls.list(x$dots))
+}
+
+
+#' @S3method is.dynamic pipeline
+controls.pipeline <- function(x, ...) {
+  any_apply(x, is.dynamic)
+}
+
 
 branch_smooth <- function(props = NULL, ...) {
   if (is.null(props)) props <- props()
@@ -51,7 +68,6 @@ compute.transform_smooth <- function(x, props, data) {
     x$formula <- as.formula(formula)
     message("Guess transform_smooth(formula = ", formula, ")")
   }
-  x$method <- as.name(x$method)
 
   output <- smooth(data, x, x_var = props$x, y_var = props$y)
   preserve_constants(data, output)
@@ -66,7 +82,6 @@ smooth.split_df <- function(data, trans, x_var, y_var) {
 
 #' @S3method smooth data.frame
 smooth.data.frame <- function(data, trans, x_var, y_var) {
-  assert_that(is.name(trans$method))
   assert_that(is.formula(trans$formula))
   assert_that(is.flag(trans$se))
   assert_that(is.numeric(trans$level), length(trans$level) == 1, 
@@ -85,10 +100,9 @@ smooth.data.frame <- function(data, trans, x_var, y_var) {
   names(env$data) <- c(x_name, y_name)
 
   # Create model call and combine with ... captured earlier, evaluating in
-  call <- substitute(method(formula, data = data), trans)
-  call <- modify_call(call, trans$dots)
-  mod <- eval(call, env)
-
+  args <- c(list(trans$formula, data = quote(data)), trans$dots)
+  mod <- do.call(trans$method, args)
+  
   # Make prediction
   x_grid <- seq(min(env$data[[x_name]]), max(env$data[[x_name]]), length = trans$n)
   predict_df(mod, x_name, y_name, x_grid, trans$se, trans$level)

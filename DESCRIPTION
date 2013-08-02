@@ -61,3 +61,4 @@ Collate:
     'delayed_reactive.R'
     'input_slider.R'
     'is_dynamic.R'
+    'controls.R'
