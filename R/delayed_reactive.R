@@ -1,8 +1,9 @@
 #' @param fun Must always return a value - see \code{from_input} one way of
 #'   ensuring the function yields a value even before the reactiveValues have
 #'   be initialised for the first time by user input.
-delayed_reactive <- function(fun, controls = NULL) {
+delayed_reactive <- function(fun, controls = NULL, id = rand_id()) {
   stopifnot(is.function(fun))
+  attr(controls, "id") <- id
 
   structure(list(fun = fun, controls = controls), class = "delayed_reactive")
 }
