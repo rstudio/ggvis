@@ -60,5 +60,6 @@ Collate:
     'last_vis.R'
     'delayed_reactive.R'
     'input_slider.R'
+    'input_select.R'
     'is_dynamic.R'
     'controls.R'
