@@ -16,7 +16,7 @@ as.vega <- function(x, ...) {
 #' @param width,height width and height of plot, in pixels
 #' @param padding padding, as described by \code{\link{padding}}
 as.vega.gigvis <- function(x, width = 600, height = 400, padding = NULL,
-                           session = NULL) {
+                           session = NULL, dynamic = FALSE, ...) {
   if (is.null(padding)) padding <- padding()
 
   nodes <- flatten(x, session = session)
@@ -24,7 +24,7 @@ as.vega.gigvis <- function(x, width = 600, height = 400, padding = NULL,
   data_table <- active_props(data_table, nodes)
   
   data_names <- ls(data_table, all.names = TRUE)
-  if (x$dynamic) {
+  if (dynamic) {
     datasets <- lapply(data_names, function(name) {
       # Don't provide data now, just the name
       list(name = name)

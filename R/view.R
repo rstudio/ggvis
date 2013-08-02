@@ -18,7 +18,7 @@ view_static <- function(gv, renderer = "canvas", launch = TRUE) {
 
   copy_www_resources(temp_dir)
 
-  spec <- as.vega(gv)
+  spec <- as.vega(gv, dynamic = FALSE)
   vega_json <- toJSON(spec, pretty = TRUE)
 
   template <- paste(readLines(system.file('index.html', package='gigvis')),
@@ -78,7 +78,7 @@ view_dynamic <- function(gv, envir = parent.frame(), controls = NULL,
   server <- function(input, output, session) {
 
     # Do the preprocessing steps for gigvis
-    spec <- as.vega(gv, session = session)
+    spec <- as.vega(gv, session = session, dynamic = TRUE)
     data_table <- attr(spec, "data_table")
 
     # Send the vega spec
