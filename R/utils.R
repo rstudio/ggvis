@@ -83,7 +83,7 @@ is.quoted <- function(x) {
   is.atomic(x) || is.call(x) || is.name(x)
 }
 
-compact <- function(x) Filter(Negate(is.null), x)
+compact <- function(x) Filter(Negate(empty), x)
 
 param_string <- function(x, collapse = TRUE) {
   is_reactive <- vapply(x, is.reactive, logical(1))

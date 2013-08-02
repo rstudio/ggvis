@@ -12,8 +12,11 @@ input_slider <- function(min, max, label = "", value = min, ...,
                          id = rand_id("slider_")) {
   assert_that(is.string(label), is.string(id))
 
+  control <- sliderInput(id, label, value = value, min = min, max = max, ...)
+  attr(control, "id") <- id
+  
   delayed_reactive(
     from_input(id, value),
-    sliderInput(id, label, value = value, min = min, max = max, ...)
+    control
   )
 }
