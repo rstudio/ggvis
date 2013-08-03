@@ -6,7 +6,7 @@
   as.vega(x, ...)
 
   \method{as.vega}{gigvis} (x, width = 600, height = 400,
-    padding = NULL, session = NULL)
+    padding = NULL, session = NULL, dynamic = FALSE, ...)
 }
 \arguments{
   \item{x}{an object to convert to vega}

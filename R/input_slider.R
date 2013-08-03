@@ -1,6 +1,8 @@
 #' Create a placeholder for a slider input.
 #' 
 #' @importFrom shiny sliderInput
+#' @inheritParams shiny::sliderInput
+#' @family interactive input
 #' @export
 #' @examples
 #' input_slider(0, 100)

@@ -1,6 +1,8 @@
 #' Create a placeholder for a select input.
 #' 
 #' @importFrom shiny selectInput
+#' @inheritParams shiny::selectInput
+#' @family interactive input
 #' @export
 #' @examples
 #' input_select(0, 100)

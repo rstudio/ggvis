@@ -1,10 +1,28 @@
+#' Create a delayed reactive.
+#' 
+#' A delayed reactive allows us to specify reactive values outside of a shiny
+#' app. They are used to specify interactive behaviour 
+#' (e.g. \code{\link{input_slider}}) that is instantiated when the visualisation
+#' is launched.
+#' 
 #' @param fun Must always return a value - see \code{from_input} one way of
 #'   ensuring the function yields a value even before the reactiveValues have
-#'   be initialised for the first time by user input.
+#'   be initialised for the first time by user input. It is passed either no
+#'   arguments, or if it has a single argument called session, the shiny
+#'   session object (from which input and output can be extract)
+#' @param controls a control object
+#' @param id a unique identifier for this reactive - used to de-duplicate the
+#'  controls when the same delayed reactive is used in multiple places in a
+#'  visualisation
+#' @export
+#' @keywords internal
 delayed_reactive <- function(fun, controls = NULL, id = rand_id()) {
   stopifnot(is.function(fun))
-  attr(controls, "id") <- id
-
+  
+  if (!is.null(controls)) {
+    attr(controls, "id") <- id  
+  }
+  
   structure(list(fun = fun, controls = controls), class = "delayed_reactive")
 }
 
@@ -19,7 +37,6 @@ from_input <- function(id, default) {
 
   eval(call)
 }
-
 
 #' @S3method print delayed_reactive
 print.delayed_reactive <- function(x, ...) {
