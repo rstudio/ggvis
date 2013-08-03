@@ -108,21 +108,16 @@ connect.transform <- function(x, props, source = NULL, session = NULL) {
   })
 }
 
-# Converts delayed reactives to actual reactives
+# Convert delayed reactives to regular reactives
 advance_delayed_reactives <- function(x, session) {
   drs <- vapply(x, is.delayed_reactive, logical(1))
   x[drs] <- lapply(x[drs], as.reactive, session = session)
   x
 }
 
+# Convert reactives to values
 eval_reactives <- function(x) {
-  xnew <- lapply(x, function(x) {
-    if (is.function(x)) {
-      x()
-    } else {
-      x
-    }
-  })
-  class(xnew) <- class(x)
-  xnew
+  is_function <- vapply(x, is.function, logical(1))
+  x[is_function] <- lapply(x[is_function], function(f) f())
+  x
 }

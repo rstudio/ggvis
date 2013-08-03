@@ -30,12 +30,19 @@ controls.transform_smooth <- function(x) {
   c(controls.list(x), controls.list(x$dots))
 }
 
-
-#' @S3method is.dynamic pipeline
-controls.pipeline <- function(x, ...) {
-  any_apply(x, is.dynamic)
+#' @S3method connect transform_smooth
+connect.transform_smooth <- function(x, props, source = NULL, session = NULL) {
+  x <- advance_delayed_reactives(x, session)
+  x$dots <- advance_delayed_reactives(x$dots, session)
+  
+  reactive({
+    x_now <- eval_reactives(x)
+    x_now$dots <- eval_reactives(x$dots)
+    if (is.function(source)) source <- source()
+    
+    compute(x_now, props, source)
+  })
 }
-
 
 branch_smooth <- function(props = NULL, ...) {
   if (is.null(props)) props <- props()
