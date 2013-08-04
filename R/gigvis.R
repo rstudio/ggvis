@@ -4,30 +4,40 @@
 #'   to a pipeline using \code{\link{as.pipeline}}
 #' @param props a list of \code{\link{props}} defining default mark properties
 #'   for this node and all its children.
-#' @param ... children \code{node}s or \code{\link{marks}}.
-#' @param scales a \code{\link{scales}} object, to override the default scales
-#' @param axes a list of \code{\link{axis}} specifications
-#' @param legends a list of \code{\link{axis}} specifications
+#' @param ... components: \code{node}s,  \code{\link{marks}}, 
+#'   \code{\link{scales}}, \code{\link{axis}} or \code{\link{legend}} objects
 #' @export
 #' @import assertthat
-gigvis <- function(data = NULL, props = NULL, ..., scales = NULL, axes = NULL, 
-                   legends = NULL) {
-  if (is.null(scales)) scales <- scales()
-  stopifnot(is.scales(scales))
-  
+gigvis <- function(data = NULL, props = NULL, ...) {
+  args <- list(...)
+  classes <- vapply(args, function(x) last(class(x)), character(1))
+  components <- gigvis_components(...)
+
   vis <- structure(
     list(
       data = as.pipeline(data), 
       props = props, 
-      scales = scales,
-      axes = axes,
-      legends = legends,
-      children = list(...)),
+      scales = scales(.scales = components$scale),
+      axes = components$axis,
+      legends = components$legend,
+      children = components$node),
     class = c("gigvis", "gigvis_node")
   )
   set_last_vis(vis)
   vis
 }
+
+gigvis_components <- function(...) {
+  args <- list(...)
+  types <- vapply(args, component_type, character(1))
+  
+  split(args, types)
+}
+component_type <- function(x) UseMethod("component_type")
+component_type.gigvis_node <- function(x) "node"
+component_type.scale <- function(x) "scale"
+component_type.vega_legend <- function(x) "legend"
+component_type.vega_axis <- function(x) "axis"
 
 #' @export
 #' @rdname gigvis

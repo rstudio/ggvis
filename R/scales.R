@@ -5,8 +5,8 @@
 #' the objects.
 #'
 #' @export
-scales <- function(...) {
-  args <- list(...)
+scales <- function(..., .scales = list()) {
+  args <- c(list(...), .scales)
   stopifnot(all(vapply(args, is.scale, logical(1))))
 
   names(args) <- vapply(args, "name", FUN = `[[`, FUN.VALUE = character(1))

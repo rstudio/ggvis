@@ -2,7 +2,7 @@
 \alias{scales}
 \title{Create a gigvis_scales object}
 \usage{
-  scales(...)
+  scales(..., .scales = list())
 }
 \description{
   Given arguments which are scales object, return a list

@@ -4,8 +4,7 @@
 \alias{node}
 \title{Create a gigvis object, or a node in a gigvis plot.}
 \usage{
-  gigvis(data = NULL, props = NULL, ..., scales = NULL,
-    axes = NULL, legends = NULL)
+  gigvis(data = NULL, props = NULL, ...)
 
   is.gigvis(x)
 
@@ -20,15 +19,9 @@
   default mark properties for this node and all its
   children.}
 
-  \item{...}{children \code{node}s or \code{\link{marks}}.}
-
-  \item{scales}{a \code{\link{scales}} object, to override
-  the default scales}
-
-  \item{axes}{a list of \code{\link{axis}} specifications}
-
-  \item{legends}{a list of \code{\link{axis}}
-  specifications}
+  \item{...}{components: \code{node}s, \code{\link{marks}},
+  \code{\link{scales}}, \code{\link{axis}} or
+  \code{\link{legend}} objects}
 }
 \description{
   Create a gigvis object, or a node in a gigvis plot.

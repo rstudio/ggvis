@@ -6,10 +6,10 @@ gigvis(mtcars, props(x ~ wt, y ~ mpg, fill ~ cyl),
 
 gigvis(mtcars, props(x ~ wt, y ~ mpg, fill ~ cyl),
   mark_symbol(),
-  axes = list(axis("x", title = "Weight"))
+  axis("x", title = "Weight")
 )
 
 gigvis(mtcars, props(x ~ wt, y ~ mpg, fill ~ cyl),
   mark_symbol(),
-  legends = list(legend(fill = "fill", title = "Cylinders"))
+  legend(fill = "fill", title = "Cylinders")
 )
