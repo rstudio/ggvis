@@ -81,8 +81,6 @@ view_dynamic <- function(gv, envir = parent.frame(), controls = NULL,
     spec <- as.vega(gv, session = session, dynamic = TRUE)
     data_table <- attr(spec, "data_table")
 
-    controls <- controls(gv)
-
     # Send the vega spec
     spec_obs <- observe({
       session$sendCustomMessage("gigvis_vega_spec", list(
@@ -127,9 +125,12 @@ view_dynamic <- function(gv, envir = parent.frame(), controls = NULL,
     })
 
     # User interface elements (in the sidebar)
-    output$gigvis_ui <- renderUI({
-      tagList(controls)
-    })
+    controls <- controls(gv)
+    if (!empty(controls)) {
+      output$gigvis_ui <- renderUI({
+        tagList(controls)
+      })      
+    }
   }
 
   runApp(list(ui = ui, server = server))
