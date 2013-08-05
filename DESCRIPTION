@@ -63,3 +63,5 @@ Collate:
     'input_select.R'
     'is_dynamic.R'
     'controls.R'
+    'view_dynamic.R'
+    'view_static.R'
