@@ -13,21 +13,18 @@ renderGigvis <- function(expr, ..., env=parent.frame(), quoted=FALSE) {
   }
 }
 
+#' @importFrom shiny addResourcePath singleton tagList
+gigvisOutput <- function(id) {
+  addResourcePath("gigvis", system.file("www", package = "gigvis"))
 
-#' @export
-gigvisOutput <- function(outputId) {
-  assert_installed("shiny")
-
-  shiny::addResourcePath(
-    prefix = "gigvis",
-    directoryPath = system.file("www", package="gigvis"))
-
-  shiny::tagList(
-    shiny::singleton(shiny::tags$head(
-      shiny::tags$script(src = "gigvis/lib/d3.min.js"),
-      shiny::tags$script(src = "gigvis/lib/vega.min.js"),
-      shiny::tags$script(src = "gigvis/js/shiny-gigvis.js")
+  tagList(
+    singleton(tags$head(
+      tags$script(src = "gigvis/lib/jquery-1.9.1.js"),
+      tags$script(src = "gigvis/lib/d3.js"),
+      tags$script(src = "gigvis/lib/vega.js"),
+      tags$script(src = "gigvis/lib/QuadTree.js"),
+      tags$script(src = "gigvis/js/shiny-gigvis.js")
     )),
-    shiny::tags$div(id = outputId, class = "shiny-gigvis-output")
+    tags$div(id = id)
   )
 }

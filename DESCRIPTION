@@ -54,7 +54,6 @@ Collate:
     'utils.R'
     'utils_reactive.R'
     'vega.R'
-    'view.R'
     'legend.R'
     'datasource.R'
     'last_vis.R'
