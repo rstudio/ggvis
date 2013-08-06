@@ -14,3 +14,4 @@ LaTeX: pdfLaTeX
 
 BuildType: Package
 PackageInstallArgs: --no-multiarch
+PackageRoxygenize: rd,collate,namespace

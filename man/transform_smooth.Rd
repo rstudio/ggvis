@@ -1,9 +1,12 @@
 \name{transform_smooth}
+\alias{branch_smooth}
 \alias{transform_smooth}
 \title{Transformation: smooth the data}
 \usage{
   transform_smooth(method = guess(), formula = guess(),
     se = TRUE, level = 0.95, n = 80L, na.rm = FALSE, ...)
+
+  branch_smooth(props = NULL, ...)
 }
 \description{
   Transformation: smooth the data

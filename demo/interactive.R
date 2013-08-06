@@ -1,5 +1,4 @@
 library(gigvis)
-library(shiny)
 
 # Slider and select input in a transform
 gigvis(mtcars, props(x ~ wt, y ~ mpg),

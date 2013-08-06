@@ -1,5 +1,4 @@
 library(gigvis)
-library(shiny)
 
 # Basic dynamic example
 mtc1 <- reactive({
@@ -22,7 +21,7 @@ mtc1 <- reactive({
 })
 gigvis(mtc1, props(x ~ x, y ~ y),
   mark_symbol(),
-  scales = scales(x = scale("x", domain = c(0, 1)))
+  dscale_x_numeric(domain = c(0, 1))
 )
 
 

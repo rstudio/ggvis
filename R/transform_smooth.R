@@ -44,6 +44,8 @@ connect.transform_smooth <- function(x, props, source = NULL, session = NULL) {
   })
 }
 
+#' @rdname transform_smooth
+#' @export
 branch_smooth <- function(props = NULL, ...) {
   if (is.null(props)) props <- props()
   node(

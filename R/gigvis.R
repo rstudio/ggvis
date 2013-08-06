@@ -33,10 +33,15 @@ gigvis_components <- function(...) {
   
   split(args, types)
 }
+
 component_type <- function(x) UseMethod("component_type")
+#' @S3method component_type gigvis_node
 component_type.gigvis_node <- function(x) "node"
+#' @S3method component_type scale
 component_type.scale <- function(x) "scale"
+#' @S3method component_type vega_legend
 component_type.vega_legend <- function(x) "legend"
+#' @S3method component_type vega_axis
 component_type.vega_axis <- function(x) "axis"
 
 #' @export
