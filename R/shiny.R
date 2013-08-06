@@ -1,19 +1,7 @@
-#' @export
-renderGigvis <- function(expr, ..., env=parent.frame(), quoted=FALSE) {
-  assert_installed("shiny")
-
-  func <- shiny::exprToFunction(expr, env, quoted)
-
-  function() {
-    data <- func()
-    if (is.null(data))
-      data <- list()
-
-    return(list(spec = data))
-  }
-}
-
+#' Add a Gigvis plot to the UI of a Shiny app
+#'
 #' @importFrom shiny addResourcePath singleton tagList
+#' @export
 gigvisOutput <- function(id) {
   addResourcePath("gigvis", system.file("www", package = "gigvis"))
 
@@ -27,4 +15,56 @@ gigvisOutput <- function(id) {
     )),
     tags$div(id = id)
   )
+}
+
+#' Set up Shiny observers for a dynamic gigvis plot
+#'
+#' @export
+observeGigvis <- function(gv, id, session) {
+  spec <- as.vega(gv, session = session, dynamic = TRUE)
+
+  observe_spec(spec, id, session)
+  observe_data(attr(spec, "data_table"), id, session)
+}
+
+# Create an observer for the vega spec
+observe_spec <- function(spec, id, session) {
+  obs <- observe({
+    session$sendCustomMessage("gigvis_vega_spec", list(
+      plotId = id,
+      spec = spec
+    ))
+  })
+  session$onSessionEnded(function() {
+    obs$suspend()
+  })
+}
+
+# Create observers for the data objects
+observe_data <- function(data_table, id, session) {
+  # Send each of the data objects
+  for (name in ls(data_table, all.names = TRUE)) {
+    # The datasets list contains named objects. The names are synthetic IDs
+    # that are present in the vega spec. The values can be a variety of things,
+    # see the if/else clauses below.
+    local({
+      # Have to do everything in a local so that these variables are not shared
+      # between the different iterations
+      data_name <- name
+
+      obs <- observe({
+        data_reactive <- get(data_name, data_table)
+        data <- data_reactive()
+
+        session$sendCustomMessage("gigvis_data", list(
+          plot = id,
+          name = data_name,
+          value = as.vega(data, data_name)
+        ))
+      })
+      session$onSessionEnded(function() {
+        obs$suspend()
+      })
+    })
+  }
 }

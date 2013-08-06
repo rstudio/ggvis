@@ -27,20 +27,8 @@ view_dynamic <- function(gv, envir = parent.frame(), controls = NULL,
   )
 
   server <- function(input, output, session) {
-
-    # Do the preprocessing steps for gigvis
-    spec <- as.vega(gv, session = session, dynamic = TRUE)
-    data_table <- attr(spec, "data_table")
-
-    # Send the vega spec
-    observe_spec(spec, plot_id, session)
-    observe_data(data_table, plot_id, session)
-
-    # Stop the app when the quit button is clicked
-    observe({
-      if (is.null(input$quit)) return()
-      if (input$quit > 0) stopApp()
-    })
+    # Set up observers for the spec and the data
+    observeGigvis(gv, plot_id, session)
 
     # User interface elements (in the sidebar)
     controls <- controls(gv)
@@ -49,48 +37,13 @@ view_dynamic <- function(gv, envir = parent.frame(), controls = NULL,
         tagList(controls)
       })      
     }
+
+    # Stop the app when the quit button is clicked
+    observe({
+      if (is.null(input$quit)) return()
+      if (input$quit > 0) stopApp()
+    })
   }
 
   runApp(list(ui = ui, server = server))
-}
-
-
-observe_spec <- function(spec, plot_id, session) {
-  obs <- observe({
-    session$sendCustomMessage("gigvis_vega_spec", list(
-      plotId = plot_id,
-      spec = spec
-    ))
-  })
-  session$onSessionEnded(function() {
-    obs$suspend()
-  })
-}
-
-observe_data <- function(data_table, plot_id, session) {
-  # Send each of the data objects
-  for (name in ls(data_table, all.names = TRUE)) {
-    # The datasets list contains named objects. The names are synthetic IDs
-    # that are present in the vega spec. The values can be a variety of things,
-    # see the if/else clauses below.
-    local({
-      # Have to do everything in a local so that these variables are not shared
-      # between the different iterations
-      data_name <- name
-
-      obs <- observe({
-        data_reactive <- get(data_name, data_table)
-        data <- data_reactive()
-
-        session$sendCustomMessage("gigvis_data", list(
-          plot = plot_id,
-          name = data_name,
-          value = as.vega(data, data_name)
-        ))
-      })
-      session$onSessionEnded(function() {
-        obs$suspend()
-      })
-    })
-  }
 }
