@@ -68,3 +68,30 @@ observe_data <- function(data_table, id, session) {
     })
   }
 }
+
+#' Render the controls for a gigvis object in a Shiny app
+#'
+#' @examples
+#' \dontrun{
+#' # In server.r
+#' gv <- gigvis(mtcars, props(x ~ wt, y ~ mpg),
+#'   mark_symbol(),
+#'   branch_smooth(
+#'     n = input_slider(2, 80, "Interpolation points", value = 5, step = 1),
+#'     method = input_select(c("Linear" = "lm", "LOESS" = "loess"))
+#'   )
+#' )
+#'
+#' output$controls <- renderControls(gv)
+#' }
+#' @export
+renderControls <- function(gv) {
+  renderUI({
+    controls <- controls(gv)
+    if (empty(controls)) {
+      NULL
+    } else {
+      tagList(controls)
+    }
+  })
+}
