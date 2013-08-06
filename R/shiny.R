@@ -20,8 +20,8 @@ gigvisOutput <- function(id) {
 #' Set up Shiny observers for a dynamic gigvis plot
 #'
 #' @export
-observeGigvis <- function(gv, id, session) {
-  spec <- as.vega(gv, session = session, dynamic = TRUE)
+observeGigvis <- function(gv, id, session, ...) {
+  spec <- as.vega(gv, session = session, dynamic = TRUE, ...)
 
   observe_spec(spec, id, session)
   observe_data(attr(spec, "data_table"), id, session)
