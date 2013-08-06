@@ -14,8 +14,10 @@ input_slider <- function(min, max, value = min, step = NULL, round = FALSE,
 
   assert_that(is.string(label), is.string(id))
 
-  control <- sliderInput(id, label, min = min, max = max, value = value,
-    step = step, round = round, format = format, locale = locale, ticks = ticks)
+  control <- function() {
+    sliderInput(id, label, min = min, max = max, value = value, step = step,
+      round = round, format = format, locale = locale, ticks = ticks)
+  }
   
   delayed_reactive(from_input(id, value), control, id = id)
 }

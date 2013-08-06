@@ -18,12 +18,9 @@
 #' @keywords internal
 delayed_reactive <- function(fun, controls = NULL, id = rand_id()) {
   stopifnot(is.function(fun))
-  
-  if (!is.null(controls)) {
-    attr(controls, "id") <- id  
-  }
-  
-  structure(list(fun = fun, controls = controls), class = "delayed_reactive")
+
+  structure(list(fun = fun, controls = controls, id = id),
+    class = "delayed_reactive")
 }
 
 is.delayed_reactive <- function(x) inherits(x, "delayed_reactive")

@@ -1,3 +1,4 @@
+# Extract a UI control from an object
 controls <- function(x, ...) UseMethod("controls")
 
 # Assumes that controls have id status set - delayed reactive will do this
@@ -9,8 +10,7 @@ controls.gigvis_node <- function(x, ...) {
   c_controls <- unlist(lapply(x$children, controls), recursive = FALSE)
   
   all <- compact(c(t_controls, p_controls, c_controls))
-  ids <- vapply(all, function(x) attr(x, "id"), character(1))
-  all[!duplicated(ids)]
+  all[!duplicated(names(all))]
 }
 
 #' @S3method controls list
@@ -26,7 +26,7 @@ controls.transform <- controls.list
 #' @S3method controls delayed_reactive
 controls.delayed_reactive <- function(x, ...) {
   # Assuming each reactive only provides one control
-  list(x$controls)
+  setNames(list(x$controls()), x$id)
 }
 
 #' @S3method controls default
