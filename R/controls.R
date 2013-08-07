@@ -1,10 +1,10 @@
 # Extract a UI control from an object
-controls <- function(x, ...) UseMethod("controls")
+controls <- function(x, session = NULL, ...) UseMethod("controls")
 
 # Assumes that controls have id status set - delayed reactive will do this
 
 #' @S3method controls gigvis_node
-controls.gigvis_node <- function(x, ...) {
+controls.gigvis_node <- function(x, session = NULL, ...) {
   t_controls <- unlist(lapply(x$data, controls), recursive = FALSE)
   p_controls <- unlist(lapply(x$props, controls), recursive = FALSE)
   c_controls <- unlist(lapply(x$children, controls), recursive = FALSE)
@@ -14,7 +14,7 @@ controls.gigvis_node <- function(x, ...) {
 }
 
 #' @S3method controls list
-controls.list <- function(x, ...) {
+controls.list <- function(x, session = NULL, ...) {
   dr <- vapply(x, is.delayed_reactive, logical(1))
   unlist(lapply(x[dr], controls), recursive = FALSE, use.names = FALSE)
 }
@@ -24,10 +24,10 @@ controls.gigvis_props <- controls.list
 controls.transform <- controls.list
 
 #' @S3method controls delayed_reactive
-controls.delayed_reactive <- function(x, ...) {
+controls.delayed_reactive <- function(x, session = NULL, ...) {
   # Assuming each reactive only provides one control
-  setNames(list(x$controls()), x$id)
+  setNames(list(x$controls(session = session)), x$id)
 }
 
 #' @S3method controls default
-controls.default <- function(x, ...) NULL
+controls.default <- function(x, session = NULL, ...) NULL

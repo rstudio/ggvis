@@ -2,7 +2,7 @@
 \alias{renderControls}
 \title{Render the controls for a gigvis object in a Shiny app}
 \usage{
-  renderControls(gv)
+  renderControls(gv, session = NULL)
 }
 \description{
   Render the controls for a gigvis object in a Shiny app

@@ -12,7 +12,7 @@ input_select <- function(choices, selected = NULL, multiple = FALSE,
                          label = "", id = rand_id("select_")) {
   assert_that(is.string(label), is.string(id))
 
-  control <- function() {
+  control <- function(session) {
     selectInput(id, label, choices = choices, selected = selected,
       multiple = multiple)
   }

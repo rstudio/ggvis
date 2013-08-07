@@ -14,7 +14,7 @@ input_slider <- function(min, max, value = min, step = NULL, round = FALSE,
 
   assert_that(is.string(label), is.string(id))
 
-  control <- function() {
+  control <- function(session) {
     sliderInput(id, label, min = min, max = max, value = value, step = step,
       round = round, format = format, locale = locale, ticks = ticks)
   }

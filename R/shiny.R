@@ -85,9 +85,9 @@ observe_data <- function(data_table, id, session) {
 #' output$controls <- renderControls(gv)
 #' }
 #' @export
-renderControls <- function(gv) {
+renderControls <- function(gv, session = NULL) {
   renderUI({
-    controls <- controls(gv)
+    controls <- controls(gv, session)
     if (empty(controls)) {
       NULL
     } else {
