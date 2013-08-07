@@ -15,14 +15,14 @@ view_dynamic <- function(gv, envir = parent.frame(), controls = NULL,
   ui <- pageWithSidebar(
     headerPanel("Gigvis plot"),
     sidebarPanel(
-      uiOutput("gigvis_ui")
-    ),
-    mainPanel(
-      gigvisOutput(plot_id),
+      uiOutput("gigvis_ui"),
 
       # Add an actionButton that quits the app and closes the browser window
       tags$button(id="quit", type="button", class="btn action-button",
         onclick = "window.close()", "Quit")
+    ),
+    mainPanel(
+      gigvisOutput(plot_id)
     )
   )
 
