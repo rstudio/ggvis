@@ -46,8 +46,9 @@ Shiny.addCustomMessageHandler("gigvis_vega_spec", function(message) {
   var spec = message.spec;
 
   vg.parse.spec(spec, function(chart) {
-    var chart = chart({ el: "#" + plotId, renderer: "canvas" });
-    $("#" + plotId).data("gigvis-chart", chart);
+    var selector = ".gigvis-output#" + plotId;
+    var chart = chart({ el: selector, renderer: "canvas" });
+    $(selector).data("gigvis-chart", chart);
     gigvisInit(plotId);
   });
 });

@@ -8,6 +8,7 @@ gigvisOutput <- function(id) {
   tagList(
     singleton(tags$head(
       tags$script(src = "gigvis/lib/jquery-1.9.1.js"),
+      tags$script(src = "gigvis/lib/jquery.ui.resizable.js"),
       tags$script(src = "gigvis/lib/d3.js"),
       tags$script(src = "gigvis/lib/vega.js"),
       tags$script(src = "gigvis/lib/QuadTree.js"),
