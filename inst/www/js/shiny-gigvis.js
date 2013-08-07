@@ -55,7 +55,7 @@ Shiny.addCustomMessageHandler("gigvis_vega_spec", function(message) {
 
 var allPlots = {};
 window.gigvisInit = function(plotId) {
-  var chart = $("#" + plotId).data("gigvis-chart");
+  var chart = $(".gigvis-output#" + plotId).data("gigvis-chart");
   allPlots[plotId] = chart;
 
   if (pendingData[plotId]) {

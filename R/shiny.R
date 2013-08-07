@@ -13,7 +13,7 @@ gigvisOutput <- function(id) {
       tags$script(src = "gigvis/lib/QuadTree.js"),
       tags$script(src = "gigvis/js/shiny-gigvis.js")
     )),
-    tags$div(id = id)
+    tags$div(id = id, class = "gigvis-output")
   )
 }
 
