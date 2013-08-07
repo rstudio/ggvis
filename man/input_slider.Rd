@@ -5,7 +5,7 @@
   input_slider(min, max, value = min, step = NULL,
     round = FALSE, format = "#,##0.#####", locale = "us",
     ticks = TRUE, animate = FALSE, label = "",
-    id = rand_id("slider_"))
+    id = rand_id("slider_"), wrapfun = NULL)
 }
 \arguments{
   \item{min}{The minimum value (inclusive) that can be
