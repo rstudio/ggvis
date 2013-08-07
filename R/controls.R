@@ -5,10 +5,10 @@ controls <- function(x, session = NULL, ...) UseMethod("controls")
 
 #' @S3method controls gigvis_node
 controls.gigvis_node <- function(x, session = NULL, ...) {
-  t_controls <- unlist(lapply(x$data, controls), recursive = FALSE)
-  p_controls <- unlist(lapply(x$props, controls), recursive = FALSE)
-  c_controls <- unlist(lapply(x$children, controls), recursive = FALSE)
-  
+  t_controls <- unlist(unname(lapply(x$data, controls)), recursive = FALSE)
+  p_controls <- unlist(unname(lapply(x$props, controls)), recursive = FALSE)
+  c_controls <- unlist(unname(lapply(x$children, controls)), recursive = FALSE)
+
   all <- compact(c(t_controls, p_controls, c_controls))
   all[!duplicated(names(all))]
 }
@@ -16,7 +16,10 @@ controls.gigvis_node <- function(x, session = NULL, ...) {
 #' @S3method controls list
 controls.list <- function(x, session = NULL, ...) {
   dr <- vapply(x, is.delayed_reactive, logical(1))
-  unlist(lapply(x[dr], controls), recursive = FALSE, use.names = FALSE)
+  # Remove top-level name (method, n, etc), but preserve second-level name,
+  # which is the id of the input.
+  ctrls <- lapply(x[dr], controls)
+  unlist(unname(ctrls), recursive = FALSE, use.names = TRUE)
 }
 #' @S3method controls gigvis_props
 controls.gigvis_props <- controls.list
