@@ -13,6 +13,8 @@ gigvisOutput <- function(id) {
       tags$script(src = "gigvis/lib/vega.js"),
       tags$script(src = "gigvis/lib/QuadTree.js"),
       tags$script(src = "gigvis/js/shiny-gigvis.js"),
+      tags$link(rel = "stylesheet", type = "text/css",
+                href = "gigvis/css/gigvis.css"),
       tags$link(rel = "stylesheet",
                 type = "text/css",
                 href = "gigvis/lib/jquery-ui-1.10.3.custom/css/smoothness/jquery-ui-1.10.3.custom.css")

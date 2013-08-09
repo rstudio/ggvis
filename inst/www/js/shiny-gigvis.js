@@ -60,6 +60,8 @@ $(function(){ //DOM Ready
 
       // When done resizing, update with new width and height
       $el.resizable({
+        helper: "ui-resizable-helper",
+        grid: [10, 10],
         stop: function() {
           var padding = chart.padding();
           chart.width($el.width() - padding.left - padding.right);
