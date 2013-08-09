@@ -14,7 +14,7 @@ To install:
 ```R
 library(devtools)
 install_github(c("assertthat", "testthat"))
-install_github("gigvis", "rstudio")
+install_github(c("shiny", "gigvis"), "rstudio")
 ```
 
 Currently, gigvis also needs the development version of httpuv, which can't
