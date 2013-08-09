@@ -28,7 +28,9 @@ git submodule update --init
 R CMD INSTALL .
 ```
 
-Then check out the various demos in the `demos/` directory.
+Then check out the various demos in the `demos/` directory. Get started with
+`demos/scatterplot.r` and then check out the the coolest demos, 
+`demos/interactive.r` and `demos/tourr.r`.
 
 ## Compared to ggplot2
 
@@ -38,7 +40,7 @@ and many of the interfaces are likely to change as we learn more about what
 works well.
 
 * Basic naming conversions: layer -> node, geom -> mark, stat -> transform, 
-  aes -> props.
+  aes -> props, ggplot2 -> gigvis, geom + stat -> branch.
 
 * Facetting is not currently supported, and when it is supported, it's more
   like to resemble [embedded plots](http://vita.had.co.nz/papers/embedded-plots.html)
