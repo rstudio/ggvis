@@ -64,3 +64,4 @@ Collate:
     'controls.R'
     'view_dynamic.R'
     'view_static.R'
+    'zzz.r'
