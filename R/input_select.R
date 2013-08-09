@@ -9,7 +9,8 @@
 #' input_select(0, 100, "binwidth")
 #' input_select(0, 100, value = 50)
 input_select <- function(choices, selected = NULL, multiple = FALSE,
-                         label = "", id = rand_id("select_")) {
+                         label = "", id = rand_id("select_"),
+                         wrapfun = identity) {
   assert_that(is.string(label), is.string(id))
 
   control <- function(session) {
@@ -24,5 +25,5 @@ input_select <- function(choices, selected = NULL, multiple = FALSE,
     value <- choices[selected]
   }
 
-  delayed_reactive(from_input(id, value), control, id = id)
+  delayed_reactive(from_input(id, value, wrapfun), control, id = id)
 }

@@ -3,7 +3,7 @@
 \title{Create a placeholder for a select input.}
 \usage{
   input_select(choices, selected = NULL, multiple = FALSE,
-    label = "", id = rand_id("select_"))
+    label = "", id = rand_id("select_"), wrapfun = NULL)
 }
 \arguments{
   \item{choices}{List of values to select from. If elements
