@@ -1,3 +1,7 @@
+/*jshint forin:true, noarg:true, noempty:true, eqeqeq:true, bitwise:true,
+    strict:false, undef:true, unused:true, browser:true, jquery:true, maxerr:50,
+    curly:false, multistr:true */
+/*global Shiny, vg*/
 $(function(){ //DOM Ready
 
   var gigvisOutputBinding = new Shiny.OutputBinding();
@@ -35,7 +39,7 @@ $(function(){ //DOM Ready
     } else {
       // The plot doesn't exist, save it for when the plot arrives
       if (!pendingData[plotId])
-        pendingData[plotId] = {}
+        pendingData[plotId] = {};
       pendingData[plotId][name] = value;
     }
   });
@@ -49,7 +53,7 @@ $(function(){ //DOM Ready
     vg.parse.spec(spec, function(chart) {
       var selector = ".gigvis-output#" + plotId;
       var $el = $(selector);
-      var chart = chart({ el: selector, renderer: "canvas" });
+      chart = chart({ el: selector, renderer: "canvas" });
       $el.data("gigvis-chart", chart);
       gigvisInit(plotId);
 
@@ -90,5 +94,5 @@ $(function(){ //DOM Ready
 
       updateGigvisDivSize(plotId);
     }
-  };
+  }
 });
