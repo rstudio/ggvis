@@ -21,21 +21,23 @@ $(function(){ //DOM Ready
 
 var pendingData = {};
 Shiny.addCustomMessageHandler("gigvis_data", function(message) {
-  var plot = message.plot;
+  var plotId = message.plotId;
   var name = message.name;
   var value = message.value[0].values;
 
-  if (allPlots[plot]) {
+  if (allPlots[plotId]) {
     // If the plot exists already, feed it the data
     var dataset = {};
     dataset[name] = value;
-    allPlots[plot].data(dataset);
-    allPlots[plot].update();
+    allPlots[plotId].data(dataset);
+    allPlots[plotId].update();
+
+    updateGigvisDivSize(plotId);
   } else {
     // The plot doesn't exist, save it for when the plot arrives
-    if (!pendingData[plot])
-      pendingData[plot] = {}
-    pendingData[plot][name] = value;
+    if (!pendingData[plotId])
+      pendingData[plotId] = {}
+    pendingData[plotId][name] = value;
   }
 });
 
@@ -84,5 +86,7 @@ window.gigvisInit = function(plotId) {
     chart.data(pendingData[plotId]);
     chart.update();
     delete pendingData[plotId];
+
+    updateGigvisDivSize(plotId);
   }
 };

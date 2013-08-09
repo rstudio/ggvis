@@ -61,7 +61,7 @@ observe_data <- function(data_table, id, session) {
         data <- data_reactive()
 
         session$sendCustomMessage("gigvis_data", list(
-          plot = id,
+          plotId = id,
           name = data_name,
           value = as.vega(data, data_name)
         ))
