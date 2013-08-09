@@ -27,9 +27,15 @@ is.delayed_reactive <- function(x) inherits(x, "delayed_reactive")
 
 # Returns a function that takes a session object and returns
 # session$input[[id]], or, if it's not present, a default value.
-from_input <- function(id, default) {
+# @param id The id of something in the input object, like input[["foo"]].
+# @param default A default value that is returned when session$input[[id]] is null.
+# @param wrapfun A function that takes the raw input$foo value as input, and
+#   returns a value. This is useful when the raw input value needs to be
+#   massaged before passing it on to the next stage of processing.
+from_input <- function(id, default, wrapfun = identity) {
+
   call <- substitute(function(session) {
-      session$input[[id]] %||% default
+    wrapfun(session$input[[id]] %||% default)
   }, list(id = id, default = default))
 
   eval(call)
