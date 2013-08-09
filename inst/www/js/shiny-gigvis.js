@@ -49,11 +49,12 @@ $(function(){ //DOM Ready
   Shiny.addCustomMessageHandler("gigvis_vega_spec", function(message) {
     var plotId = message.plotId;
     var spec = message.spec;
+    var renderer = message.renderer;
 
     vg.parse.spec(spec, function(chart) {
       var selector = ".gigvis-output#" + plotId;
       var $el = $(selector);
-      chart = chart({ el: selector, renderer: "canvas" });
+      chart = chart({ el: selector, renderer: renderer });
       $el.data("gigvis-chart", chart);
       gigvisInit(plotId);
 

@@ -28,7 +28,7 @@ view_dynamic <- function(gv, envir = parent.frame(), controls = NULL,
 
   server <- function(input, output, session) {
     # Set up observers for the spec and the data
-    observeGigvis(gv, plot_id, session)
+    observeGigvis(gv, plot_id, session, renderer)
 
     # User interface elements (in the sidebar)
     output$gigvis_ui <- renderControls(gv)
