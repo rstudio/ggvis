@@ -2,11 +2,16 @@
 #'
 #' This is a type of \code{\link{pipe}}.
 #'
+#' @param type A string representing type of transform.
+#' @param dots A list of arguments to pass to the underlying statistical
+#'   transformation function.
+#' @param ... Other arguments to pass to the specific transform.
+#'
 #' @export
 #' @keywords internal
-transform <- function(type, ...) {
+transform <- function(type, ..., dots = list()) {
   type <- c(paste0("transform_", type), "transform")
-  pipe(type, ...)
+  pipe(type, ..., dots = dots)
 }
 
 #' Compute the transformation.
