@@ -20,30 +20,6 @@ transform_smooth <- function(method = guess(), formula = guess(), se = TRUE,
     level = level, n = n, na.rm = na.rm, dots = list(...))
 }
 
-#' @S3method is.dynamic transform_smooth
-is.dynamic.transform_smooth <- function(x, ...) {
-  any_apply(x, is.dynamic) || any_apply(x$dots, is.dynamic)
-}
-
-#' @S3method controls transform_smooth
-controls.transform_smooth <- function(x) {
-  c(controls.list(x), controls.list(x$dots))
-}
-
-#' @S3method connect transform_smooth
-connect.transform_smooth <- function(x, props, source = NULL, session = NULL) {
-  x <- advance_delayed_reactives(x, session)
-  x$dots <- advance_delayed_reactives(x$dots, session)
-  
-  reactive({
-    x_now <- eval_reactives(x)
-    x_now$dots <- eval_reactives(x$dots)
-    if (is.function(source)) source <- source()
-    
-    compute(x_now, props, source)
-  })
-}
-
 #' @rdname transform_smooth
 #' @export
 branch_smooth <- function(props = NULL, ...) {

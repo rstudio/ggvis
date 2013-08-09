@@ -20,7 +20,9 @@ is.dynamic.props <- is.dynamic.pipeline
 is.dynamic.datasource_reactive <- function(x) TRUE
 
 #' @S3method is.dynamic transform
-is.dynamic.transform <- is.dynamic.pipeline
+is.dynamic.transform <- function(x, ...) {
+  any_apply(x, is.dynamic) || any_apply(x$dots, is.dynamic)
+}
 
 #' @S3method is.dynamic refMethodDef
 is.dynamic.refMethodDef <- function(x) TRUE

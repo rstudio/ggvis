@@ -104,9 +104,11 @@ transform_type <- function(transform) {
 #' @S3method connect transform
 connect.transform <- function(x, props, source = NULL, session = NULL) {
   x <- advance_delayed_reactives(x, session)
+  x$dots <- advance_delayed_reactives(x$dots, session)
 
   reactive({
     x_now <- eval_reactives(x)
+    x_now$dots <- eval_reactives(x$dots)
     if (is.function(source)) source <- source()
     
     compute(x_now, props, source)
