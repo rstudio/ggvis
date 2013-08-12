@@ -32,13 +32,5 @@ split_df.split_df <- function(data, split) {
 #' @export
 is.split_df <- function(x) inherits(x, "split_df")
 
-# A wrapper around lapply, which takes a split_df, applies a function to the
-# pieces, and returns a split_df.
-split_df_apply <- function(X, FUN, ...) {
-  assert_that(is.split_df(X))
-  structure(lapply(X, FUN, ...), class = "split_df",
-    variables = attr(X, "variables"))
-}
-
 #' @S3method split_vars split_df
 split_vars.split_df <- function(x) attr(x, "variables")

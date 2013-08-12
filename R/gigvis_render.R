@@ -92,5 +92,6 @@ apply_props.data.frame <- function(data, props) {
 
 #' @S3method apply_props split_df
 apply_props.split_df <- function(data, props) {
-  split_df_apply(data, apply_props, props)
+  data[] <- lapply(data, apply_props, props)
+  data
 }

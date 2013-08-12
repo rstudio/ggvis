@@ -109,7 +109,8 @@ bin <- function(data, ...) UseMethod("bin")
 
 #' @S3method bin split_df
 bin.split_df <- function(x, x_var, ...) {
-  split_df_apply(x, bin, x_var = x_var, ...)
+  x[] <- lapply(x, bin, x_var = x_var, ...)
+  x
 }
 
 #' @S3method bin data.frame
