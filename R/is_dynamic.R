@@ -24,8 +24,8 @@ is.dynamic.transform <- function(x, ...) {
   any_apply(x, is.dynamic) || any_apply(x$dots, is.dynamic)
 }
 
-#' @S3method is.dynamic refMethodDef
-is.dynamic.refMethodDef <- function(x) TRUE
+#' @S3method is.dynamic reactive
+is.dynamic.reactive <- function(x) TRUE
 
 #' @S3method is.dynamic delayed_reactive
 is.dynamic.delayed_reactive <- function(x) TRUE

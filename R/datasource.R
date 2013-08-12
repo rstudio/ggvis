@@ -28,8 +28,8 @@ datasource <- function(data, name = deparse(substitute(data))) {
 }
 
 source_class <- function(x) UseMethod("source_class")
-#' @S3method source_class refMethodDef
-source_class.refMethodDef <- function(x) "datasource_reactive"
+#' @S3method source_class reactive
+source_class.reactive <- function(x) "datasource_reactive"
 #' @S3method source_class default
 source_class.default <- function(x) NULL
 
