@@ -14,18 +14,7 @@ To install:
 ```R
 library(devtools)
 install_github(c("assertthat", "testthat"))
-install_github(c("shiny", "gigvis"), "rstudio")
-```
-
-Currently, gigvis also needs the development version of httpuv, which can't
-be install with `install_github`. Instead, run the following lines from the 
-command line:
-
-```R
-git clone https://github.com/rstudio/httpuv
-cd httpuv
-git submodule update --init
-R CMD INSTALL .
+install_github(c("httpuv", "shiny", "gigvis"), "rstudio")
 ```
 
 Then check out the various demos in the `demos/` directory. Get started with
