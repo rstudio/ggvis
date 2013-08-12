@@ -31,7 +31,7 @@ view_dynamic <- function(gv, envir = parent.frame(), controls = NULL,
     observeGigvis(gv, plot_id, session, renderer)
 
     # User interface elements (in the sidebar)
-    output$gigvis_ui <- renderControls(gv)
+    output$gigvis_ui <- renderControls(gv, session)
 
     # Stop the app when the quit button is clicked
     observe({
