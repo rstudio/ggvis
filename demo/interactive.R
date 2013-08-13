@@ -36,3 +36,12 @@ gigvis(mtcars, props(x ~ wt, y ~ mpg,
                       constant = TRUE, scale = FALSE)),
   mark_symbol()
 )
+
+gigvis(mtcars, props(
+    x ~ wt, 
+    y ~ mpg,
+    size = prop_reactive(input_slider(10, 1000, 100), constant = TRUE, scale = FALSE),
+    opacity = prop_reactive(input_slider(0, 1, 1), constant = TRUE, scale = FALSE)
+  ),
+  mark_symbol()
+)
