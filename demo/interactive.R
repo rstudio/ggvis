@@ -29,3 +29,10 @@ gigvis(mtcars, props(x ~ wt, y ~ mpg),
     )
   )
 )
+
+# Reactive properties
+gigvis(mtcars, props(x ~ wt, y ~ mpg,
+  fill = prop_reactive(input_select(c("red", "blue")),
+                      constant = TRUE, scale = FALSE)),
+  mark_symbol()
+)
