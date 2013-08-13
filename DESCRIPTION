@@ -65,3 +65,4 @@ Collate:
     'view_dynamic.R'
     'view_static.R'
     'zzz.r'
+    'prop_reactive.R'

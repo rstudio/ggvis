@@ -1,5 +1,7 @@
 flatten <- function(node, parent = NULL, session = NULL) {
-  
+
+  node$props <- advance_delayed_reactives(node$props)
+
   # Inherit behaviour from parent
   node$dynamic <- node$dynamic %||% parent$dynamic
   node$props <- merge_props(parent$props, node$props)

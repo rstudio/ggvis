@@ -13,8 +13,8 @@ is.dynamic.gigvis_node <- function(x) {
 is.dynamic.pipeline <- function(x, ...) {
   any_apply(x, is.dynamic)
 }
-#' @S3method is.dynamic props
-is.dynamic.props <- is.dynamic.pipeline
+#' @S3method is.dynamic gigvis_props
+is.dynamic.gigvis_props <- is.dynamic.pipeline
 
 #' @S3method is.dynamic datasource_reactive
 is.dynamic.datasource_reactive <- function(x) TRUE
@@ -29,6 +29,9 @@ is.dynamic.reactive <- function(x) TRUE
 
 #' @S3method is.dynamic delayed_reactive
 is.dynamic.delayed_reactive <- function(x) TRUE
+
+#' @S3method is.dynamic prop_reactive
+is.dynamic.prop_reactive <- function(x) TRUE
 
 #' @S3method is.dynamic default
 is.dynamic.default <- function(x) FALSE

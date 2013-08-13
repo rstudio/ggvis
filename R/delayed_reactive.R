@@ -55,3 +55,49 @@ as.reactive.delayed_reactive <- function(x, session = NULL, ...) {
     reactive(x$fun())
   }
 }
+
+
+# Convert delayed reactives to regular reactives
+advance_delayed_reactives <- function(x, session) {
+  UseMethod("advance_delayed_reactives")
+}
+
+#' @S3method advance_delayed_reactives default
+advance_delayed_reactives.default <- function(x, session) x
+
+#' @S3method advance_delayed_reactives NULL
+advance_delayed_reactives.NULL <- function(x, session) NULL
+
+#' @S3method advance_delayed_reactives list
+advance_delayed_reactives.list <- function(x, session) {
+  drs <- vapply(x, is.delayed_reactive, logical(1))
+  x[drs] <- lapply(x[drs], as.reactive, session = session)
+  x
+}
+#' @S3method advance_delayed_reactives transform
+advance_delayed_reactives.transform <- advance_delayed_reactives.list
+
+#' @importFrom shiny is.reactive
+#' @S3method advance_delayed_reactives prop_reactive
+advance_delayed_reactives.prop_reactive <- function(x, session) {
+  if (is.reactive(x$value)) {
+    stop("Delayed reactive has already been advanced.")
+  }
+
+  x$value <- as.reactive(x$dr)
+  x
+}
+
+#' @S3method advance_delayed_reactives gigvis_props
+advance_delayed_reactives.gigvis_props <- function(x, session) {
+  x[] <- lapply(x, advance_delayed_reactives, session = session)
+  x
+}
+
+
+# Convert reactives to values
+eval_reactives <- function(x) {
+  is_function <- vapply(x, is.function, logical(1))
+  x[is_function] <- lapply(x[is_function], function(f) f())
+  x
+}
