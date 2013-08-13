@@ -32,69 +32,77 @@
 #' @param type A variable type, as returned by \code{\link{prop_type}}.
 #'   One of datetime, numeric, ordinal, nominal, logical.
 #' @param ... other arguments passed to the scale function
+#' @param name Use to override the default scale name - this is useful if you
+#'   want to (god forbid) create a secondary y scale, or more usefully create
+#'   multiple stroke or fill scales.
 #' @export
 #' @examples
 #' default_scale("x", "numeric")
 #' default_scale("fillOpacity", "ordinal")
 #' default_scale("stroke", "nominal")
-default_scale <- function(prop, type, ...) { 
+default_scale <- function(prop, type, ..., name = NULL) { 
   assert_that(is.string(prop), is.string(type))
   if (type == "NULL") return()
   
   scale <- prop_to_scale(prop)
   
-  # This is an interim design choice making it clear that user can not
-  # modify the default scales.
-  env <- asNamespace("gigvis")
-  
-  f_name <- paste("dscale", scale, type, sep = "_")
-  if (!exists(f_name, mode = "function", envir = env)) {
+  default <- scale_defaults[[paste0(scale, "_", type)]]
+  if (is.null(default)) {
     stop("Don't know how to make default scale for ", prop, 
       " with variable of type ", type, call. = FALSE)
   }
   
-  f <- get(f_name, mode = "function", envir = env)
-  f(name = scale, ...)
+  f <- match.fun(default$scale)
+  supplied <- list(name = name %||% scale, ...)
+  do.call(f, merge_vectors(default$values, supplied))
 }
 #' @export
 #' @rdname default_scale
 dscale <- default_scale
 
-dscale_x_numeric  <- function(name = "x", ...) scale_quantitative(name, ..., range = "width")
-dscale_x_ordinal  <- function(name = "x", ...) scale_ordinal(name, ..., range = "width", padding = 0.5)
-dscale_x_nominal  <- function(name = "x", ...) scale_ordinal(name, ..., range = "width", padding = 0.5)
-dscale_x_datetime <- function(name = "x", ...) scale_time(name, ..., range = "width")
+proptype_to_scale <- function(x) {
+  unname(c(
+    "numeric" = "scale_quantitative",
+    "ordinal" = "scale_ordinal",
+    "nominal" = "scale_ordinal",
+    "logical" = "scale_ordinal",
+    "datetime" = "scale_time"
+  )[x])
+}
 
-dscale_y_numeric  <- function(name = "y", ...) scale_quantitative(name, ..., range = "height")
-dscale_y_ordinal  <- function(name = "y",...) scale_ordinal(name, ..., range = "height", padding = 0.5)
-dscale_y_nominal  <- function(name = "y",...) scale_ordinal(name, ..., range = "height", padding = 0.5)
-dscale_y_datetime <- function(name = "y",...) scale_time(name, ..., range = "width")
+scale_defaults <- new.env(parent = emptyenv())
+add_scale_defaults <- function(scale, types, ...) {
+  defaults <- list(...)
+  
+  for (type in types) {
+    name <- paste0(scale, "_", type)
+    scale_defaults[[name]] <- list(
+      scale = proptype_to_scale(type),
+      values = defaults
+    )
+  }
+  invisible()
+}
 
-dscale_stroke_numeric  <- function(...) scale_quantitative(..., range = c("#132B43", "#56B1F7"))
-dscale_stroke_ordinal  <- function(...) scale_ordinal(..., range = c("#132B43", "#56B1F7"))
-dscale_stroke_nominal <- function(...) scale_ordinal(..., range = "category10")
+add_scale_defaults("x", c("numeric", "datetime"), range = "width")
+add_scale_defaults("y", c("ordinal", "nominal"), range = "width", padding = 0.5)
 
+add_scale_defaults("y", c("numeric", "datetime"), range = "height")
+add_scale_defaults("y", c("ordinal", "nominal"), range = "height", padding = 0.5)
+
+add_scale_defaults("stroke", c("numeric", "ordinal"), range = c("#132B43", "#56B1F7"))
+add_scale_defaults("stroke", "nominal", range = "category10")
+add_scale_defaults("fill", c("numeric", "ordinal"), range = c("#132B43", "#56B1F7"))
 # Fill colours should really be a little more saturated
-dscale_fill_numeric  <- function(...) scale_quantitative(..., range = c("#132B43", "#56B1F7"))
-dscale_fill_ordinal  <- function(...) scale_ordinal(..., range = c("#132B43", "#56B1F7"))
-dscale_fill_nominal <- function(...) scale_ordinal(..., range = "category10")
+add_scale_defaults("fill", "nominal", range = "category10")
 
-dscale_shape_nominal <- function(...) scale_ordinal(..., range = "shapes")
+add_scale_defaults("shape", "nominal", range = "shapes")
 
-dscale_size_numeric <- function(...) scale_quantitative(..., range = c(1, 20))
-dscale_size_ordinal <- function(...) scale_ordinal(..., range = c(1, 20))
-
-dscale_fontSize_numeric <- function(...) scale_quantitative(..., range = c(10, 20))
-dscale_fontSize_ordinal <- function(...) scale_ordinal(..., range = c(10, 20))
-
-dscale_opacity_numeric <- function(...) scale_quantitative(..., range = c(0, 1))
-dscale_opacity_ordinal <- function(...) scale_ordinal(..., range = c(0, 1))
-
-dscale_angle_numeric <- function(...) scale_quantitative(..., range = c(0, 2 * pi))
-dscale_angle_ordinal <- function(...) scale_ordinal(..., range = c(0, 2 * pi))
-
-dscale_radius_numeric <- function(...) scale_quantitative(..., range = c(0, 50))
-dscale_radius_ordinal <- function(...) scale_ordinal(..., range = c(0, 50))
+add_scale_defaults("size", c("numeric", "ordinal"), range = c(1, 20))
+add_scale_defaults("fontSize", c("numeric", "ordinal"), range = c(10, 20))
+add_scale_defaults("opacity", c("numeric", "ordinal"), range = c(0, 1))
+add_scale_defaults("angle", c("numeric", "ordinal"), range = c(0, 2 * pi))
+add_scale_defaults("radius", c("numeric", "ordinal"), range = c(0, 50))
 
 #' Convert the name of a property to the name of it's default scale.
 #' 

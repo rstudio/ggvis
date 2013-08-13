@@ -3,9 +3,9 @@
 \alias{dscale}
 \title{Create a default scale for a given property and variable type.}
 \usage{
-  default_scale(prop, type, ...)
+  default_scale(prop, type, ..., name = NULL)
 
-  dscale(prop, type, ...)
+  dscale(prop, type, ..., name = NULL)
 }
 \arguments{
   \item{prop}{A vega property name, converted into a scale
@@ -16,6 +16,11 @@
   ordinal, nominal, logical.}
 
   \item{...}{other arguments passed to the scale function}
+
+  \item{name}{Use to override the default scale name - this
+  is useful if you want to (god forbid) create a secondary
+  y scale, or more usefully create multiple stroke or fill
+  scales.}
 }
 \description{
   Default scales depend on both the property (e.g. fill, x,
