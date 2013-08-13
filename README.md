@@ -17,9 +17,9 @@ install_github(c("assertthat", "testthat"))
 install_github(c("httpuv", "shiny", "gigvis"), "rstudio")
 ```
 
-Then check out the various demos in the `demos/` directory. Get started with
-`demos/scatterplot.r` and then check out the the coolest demos, 
-`demos/interactive.r` and `demos/tourr.r`.
+Then check out the various demos in the `demo/` directory. Get started with
+`demo/scatterplot.r` and then check out the the coolest demos, 
+`demo/interactive.r` and `demo/tourr.r`.
 
 ## Compared to ggplot2
 
