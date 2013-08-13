@@ -17,6 +17,6 @@ proj_data <- reactive({
 
 gigvis(proj_data, props(x ~ X1, y ~ X2, fill ~ species), 
   mark_symbol(), 
-  dscale_x_numeric(domain = c(-1, 1)),
-  dscale_y_numeric(domain = c(-1, 1))
+  dscale("x", "numeric", domain = c(-1, 1)),
+  dscale("y", "numeric", domain = c(-1, 1))
 )

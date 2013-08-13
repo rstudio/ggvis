@@ -1,8 +1,11 @@
 \name{default_scale}
 \alias{default_scale}
+\alias{dscale}
 \title{Create a default scale for a given property and variable type.}
 \usage{
   default_scale(prop, type, ...)
+
+  dscale(prop, type, ...)
 }
 \arguments{
   \item{prop}{A vega property name, converted into a scale
@@ -18,7 +21,8 @@
   opacity) and the type of variable (e.g. numeric, nominal,
   ordinal). For this reason \code{default_scale} implements
   a crude S3-like double dispatch mechanism, looking for a
-  function called \code{dscale_prop_type}.
+  function called \code{dscale_prop_type}. \code{dscale} is
+  a short-hand useful for interactive exploration.
 }
 \examples{
 default_scale("x", "numeric")

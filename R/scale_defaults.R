@@ -3,7 +3,8 @@
 #' Default scales depend on both the property (e.g. fill, x, opacity) and
 #' the type of variable (e.g. numeric, nominal, ordinal). For this reason
 #' \code{default_scale} implements a crude S3-like double dispatch mechanism,
-#' looking for a function called \code{dscale_prop_type}.
+#' looking for a function called \code{dscale_prop_type}. \code{dscale} is a 
+#' short-hand useful for interactive exploration.
 #' 
 #' @param prop A vega property name, converted into a scale name by
 #'   \code{\link{prop_to_scale}}
@@ -33,7 +34,9 @@ default_scale <- function(prop, type, ...) {
   f <- get(f_name, mode = "function", envir = env)
   f(name = scale, ...)
 }
-
+#' @export
+#' @rdname default_scale
+dscale <- default_scale
 
 dscale_x_numeric  <- function(name = "x", ...) scale_quantitative(name, ..., range = "width")
 dscale_x_ordinal  <- function(name = "x", ...) scale_ordinal(name, ..., range = "width", padding = 0.5)
