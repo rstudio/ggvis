@@ -84,7 +84,7 @@ advance_delayed_reactives.prop_reactive <- function(x, session) {
     stop("Delayed reactive has already been advanced.")
   }
 
-  x$value <- as.reactive(x$dr)
+  x$value <- as.reactive(x$dr, session)
   x
 }
 
