@@ -44,6 +44,8 @@ First, the type of scale is selected based on the \code{type}}{
   ordinal, nominal, logical: \code{\link{scale_ordinal}}
   \item numeric: \code{\link{scale_quantitative}} }
 
+  (see \code{\link{proptype_to_scale}} for more details)
+
   then the range is selected based on the combination of
   the \code{type} and the \code{prop} - for example, you
   get a different range of colours depending on whether the
@@ -60,6 +62,10 @@ First, the type of scale is selected based on the \code{type}}{
   map continuous values to discrete shapes. On the other
   hand, I may have just forgotten to add the appropriate
   default :/.
+
+  You can add your own defaults (or override existing) by
+  calling \code{\link{add_default_scale}}: just be aware
+  that this is a global setting.
 }
 \examples{
 default_scale("x", "numeric")

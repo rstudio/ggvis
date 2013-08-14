@@ -16,6 +16,8 @@
 #'   \item numeric: \code{\link{scale_quantitative}}
 #' }
 #' 
+#' (see \code{\link{proptype_to_scale}} for more details)
+#' 
 #' then the range is selected based on the combination of the \code{type}
 #' and the \code{prop} - for example, you get a different range of colours
 #' depending on whether the data is numeric, ordinal, or nominal. Some scales
@@ -28,6 +30,9 @@
 #' no default for a numeric shape scale, because there's no obvious way to
 #' map continuous values to discrete shapes. On the other hand, I may have
 #' just forgotten to add the appropriate default :/.
+#' 
+#' You can add your own defaults (or override existing) by calling
+#' \code{\link{add_default_scale}}: just be aware that this is a global setting.
 #' 
 #' @param prop A vega property name.
 #' @param type A variable type, as returned by \code{\link{prop_type}}.
@@ -71,50 +76,6 @@ default_scale <- function(prop, type, ..., name = NULL) {
 #' @rdname default_scale
 dscale <- default_scale
 
-proptype_to_scale <- function(x) {
-  unname(c(
-    "numeric" = "scale_quantitative",
-    "ordinal" = "scale_ordinal",
-    "nominal" = "scale_ordinal",
-    "logical" = "scale_ordinal",
-    "datetime" = "scale_time"
-  )[x])
-}
-
-scale_defaults <- new.env(parent = emptyenv())
-add_scale_defaults <- function(scale, types, ...) {
-  defaults <- list(...)
-  
-  for (type in types) {
-    name <- paste0(scale, "_", type)
-    scale_defaults[[name]] <- list(
-      scale = proptype_to_scale(type),
-      values = defaults
-    )
-  }
-  invisible()
-}
-
-add_scale_defaults("x", c("numeric", "datetime"), range = "width")
-add_scale_defaults("y", c("ordinal", "nominal"), range = "width", padding = 0.5)
-
-add_scale_defaults("y", c("numeric", "datetime"), range = "height")
-add_scale_defaults("y", c("ordinal", "nominal"), range = "height", padding = 0.5)
-
-add_scale_defaults("stroke", c("numeric", "ordinal"), range = c("#132B43", "#56B1F7"))
-add_scale_defaults("stroke", "nominal", range = "category10")
-add_scale_defaults("fill", c("numeric", "ordinal"), range = c("#132B43", "#56B1F7"))
-# Fill colours should really be a little more saturated
-add_scale_defaults("fill", "nominal", range = "category10")
-
-add_scale_defaults("shape", "nominal", range = "shapes")
-
-add_scale_defaults("size", c("numeric", "ordinal"), range = c(1, 20))
-add_scale_defaults("fontSize", c("numeric", "ordinal"), range = c(10, 20))
-add_scale_defaults("opacity", c("numeric", "ordinal"), range = c(0, 1))
-add_scale_defaults("angle", c("numeric", "ordinal"), range = c(0, 2 * pi))
-add_scale_defaults("radius", c("numeric", "ordinal"), range = c(0, 50))
-
 #' Convert the name of a property to the name of it's default scale.
 #' 
 #' This is mainly used to ensure that similar properties share the same
@@ -146,3 +107,78 @@ prop_to_scale <- function(prop) {
   prop[!is.na(matches)] <- simplify[prop[!is.na(matches)]]
   prop
 }
+
+#' Convert the type of a property to the type of it's default scale.
+#' 
+#' @param type property type: numeric, ordinal, nominal, logical or datetime.
+#' @keywords internal
+#' @export
+proptype_to_scale <- function(type) {
+  unname(c(
+    "numeric" = "scale_quantitative",
+    "ordinal" = "scale_ordinal",
+    "nominal" = "scale_ordinal",
+    "logical" = "scale_ordinal",
+    "datetime" = "scale_time"
+  )[type])
+}
+
+scale_defaults <- new.env(parent = emptyenv())
+
+#' Add new default scale properties.
+#' 
+#' You can use this function to add new defaults
+#' 
+#' @param scale scale name
+#' @param types a vector of property types, converted to scale types by
+#'   \code{\link{proptype_to_scale}}
+#' @param ... other arguments to be passed onto the scale function
+#' @export
+#' @keywords internal
+#' @examples
+#' \dontrun{
+#' # Add a default size scale for nominal variable types: this is probably
+#' # a bad idea since sizes are ordered but nominal variables are not. On 
+#' # the other hand, many factors should probably actually be ordered factors.
+#' add_scale_defaults("size", "nominal", range = c(1, 20))
+#' }
+add_scale_defaults <- function(scale, types, ...) {
+  defaults <- list(...)
+  
+  for (type in types) {
+    name <- paste0(scale, "_", type)
+    scale_defaults[[name]] <- list(
+      scale = proptype_to_scale(type),
+      values = defaults
+    )
+  }
+  invisible()
+}
+
+# Position scales
+add_scale_defaults("x", c("numeric", "datetime"), range = "width")
+add_scale_defaults("y", c("ordinal", "nominal"), range = "width", padding = 0.5)
+
+add_scale_defaults("y", c("numeric", "datetime"), range = "height")
+add_scale_defaults("y", c("ordinal", "nominal"), range = "height", padding = 0.5)
+
+# Colour scales
+add_scale_defaults("stroke", c("numeric", "ordinal"), range = c("#132B43", "#56B1F7"))
+add_scale_defaults("stroke", "nominal", range = "category10")
+# Fill colours should really be a little more saturated
+add_scale_defaults("fill", c("numeric", "ordinal"), range = c("#132B43", "#56B1F7"))
+add_scale_defaults("fill", "nominal", range = "category10")
+
+# Other nominal properties
+add_scale_defaults("shape", "nominal", range = "shapes")
+
+# Other ordinal properties
+add_scale_defaults("size", c("numeric", "ordinal"), range = c(1, 20))
+
+add_scale_defaults("fontSize", c("numeric", "ordinal"), range = c(10, 20))
+
+add_scale_defaults("opacity", c("numeric", "ordinal"), range = c(0, 1))
+
+add_scale_defaults("angle", c("numeric", "ordinal"), range = c(0, 2 * pi))
+
+add_scale_defaults("radius", c("numeric", "ordinal"), range = c(0, 50))
