@@ -1,8 +1,13 @@
+var_range <- function(id, label, variable) {
+  rng <- range(variable, na.rm = TRUE)
+  sliderInput(id, label, rng[1], rng[2], rng)
+}
+
 shinyUI(pageWithSidebar(
   headerPanel("Zooming demo"),
   sidebarPanel(
-    sliderInput("x_domain", "X", min(mtcars$disp), max(mtcars$disp), range(mtcars$disp)),
-    sliderInput("y_domain", "Y", min(mtcars$mpg), max(mtcars$mpg), range(mtcars$mpg))
+    var_range("x_domain", "X", mtcars$disp),
+    var_range("y_domain", "Y", mtcars$mpg)
   ),
   mainPanel(
     gigvisOutput("zoom")
