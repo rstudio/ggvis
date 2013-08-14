@@ -25,20 +25,26 @@ gigvisOutput <- function(id) {
 
 #' Set up Shiny observers for a dynamic gigvis plot
 #'
+#' @param r_gv A reactive expression which returns a gigvis object.
+#' @param id The ID of the plot on the web page.
+#' @param session A Shiny session object.
+#' @param renderer The renderer type ("canvas" or "svg")
+#' @param ... Other arguments passed to \code{as.vega}.
+#'
 #' @export
-observeGigvis <- function(gv, id, session, renderer = "canvas", ...) {
-  spec <- as.vega(gv, session = session, dynamic = TRUE, ...)
+observeGigvis <- function(r_gv, id, session, renderer = "canvas", ...) {
+  r_spec <- reactive(as.vega(r_gv(), session = session, dynamic = TRUE, ...))
 
-  observe_spec(spec, id, session, renderer)
-  observe_data(attr(spec, "data_table"), id, session)
+  observe_spec(r_spec, id, session, renderer)
+  observe_data(r_spec, id, session)
 }
 
-# Create an observer for the vega spec
-observe_spec <- function(spec, id, session, renderer) {
+# Create an observer for a reactive vega spec
+observe_spec <- function(r_spec, id, session, renderer) {
   obs <- observe({
     session$sendCustomMessage("gigvis_vega_spec", list(
       plotId = id,
-      spec = spec,
+      spec = r_spec(),
       renderer = renderer
     ))
   })
@@ -47,33 +53,37 @@ observe_spec <- function(spec, id, session, renderer) {
   })
 }
 
-# Create observers for the data objects
-observe_data <- function(data_table, id, session) {
-  # Send each of the data objects
-  for (name in ls(data_table, all.names = TRUE)) {
-    # The datasets list contains named objects. The names are synthetic IDs
-    # that are present in the vega spec. The values can be a variety of things,
-    # see the if/else clauses below.
-    local({
-      # Have to do everything in a local so that these variables are not shared
-      # between the different iterations
-      data_name <- name
+# Create observers for the data objects attached to a reactive vega spec
+observe_data <- function(r_spec, id, session) {
+  observe({
+    data_table <- attr(r_spec(), "data_table")
 
-      obs <- observe({
-        data_reactive <- get(data_name, data_table)
-        data <- data_reactive()
+    # Send each of the data objects
+    for (name in ls(data_table, all.names = TRUE)) {
+      # The datasets list contains named objects. The names are synthetic IDs
+      # that are present in the vega spec. The values can be a variety of things,
+      # see the if/else clauses below.
+      local({
+        # Have to do everything in a local so that these variables are not shared
+        # between the different iterations
+        data_name <- name
 
-        session$sendCustomMessage("gigvis_data", list(
-          plotId = id,
-          name = data_name,
-          value = as.vega(data, data_name)
-        ))
+        obs <- observe({
+          data_reactive <- get(data_name, data_table)
+          data <- data_reactive()
+
+          session$sendCustomMessage("gigvis_data", list(
+            plotId = id,
+            name = data_name,
+            value = as.vega(data, data_name)
+          ))
+        })
+        session$onSessionEnded(function() {
+          obs$suspend()
+        })
       })
-      session$onSessionEnded(function() {
-        obs$suspend()
-      })
-    })
-  }
+    }
+  })
 }
 
 #' Render the controls for a gigvis object in a Shiny app
