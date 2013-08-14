@@ -7,7 +7,5 @@ shinyServer(function(input, output, session) {
     )
   })
   
-  # Set up observers for the spec
-  spec <- as.vega(isolate(gv()), session = session, dynamic = TRUE)
-  observe_spec(spec, "zoom", session, "canvas")
+  observeGigvis(gv, "zoom", session)
 })
