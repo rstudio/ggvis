@@ -18,7 +18,9 @@
 #' 
 #' then the range is selected based on the combination of the \code{type}
 #' and the \code{prop} - for example, you get a different range of colours
-#' depending on whether the data is numeric, ordinal, or nominal.
+#' depending on whether the data is numeric, ordinal, or nominal. Some scales
+#' also set other properties - for example, nominal/ordinal position scales 
+#' also add some padding so that points are spaced away from plot edges.
 #' 
 #' Not all combinations have an existing default scale - if you use a 
 #' combination that does not have an existing combination, it may suggest
@@ -27,19 +29,28 @@
 #' map continuous values to discrete shapes. On the other hand, I may have
 #' just forgotten to add the appropriate default :/.
 #' 
-#' @param prop A vega property name, converted into a scale name by
-#'   \code{\link{prop_to_scale}}
+#' @param prop A vega property name.
 #' @param type A variable type, as returned by \code{\link{prop_type}}.
 #'   One of datetime, numeric, ordinal, nominal, logical.
-#' @param ... other arguments passed to the scale function
-#' @param name Use to override the default scale name - this is useful if you
-#'   want to (god forbid) create a secondary y scale, or more usefully create
-#'   multiple stroke or fill scales.
+#' @param ... other arguments passed to the scale function. See the help for
+#'   \code{\link{scale_quantitative}}, \code{\link{scale_ordinal}} and 
+#'   \code{\link{scale_time}} for more details. For example, you might supply
+#'   \code{trans = "log"} to create a log scale.
+#' @param name If \code{NULL}, the default, the scale name is computed by 
+#'   calling \code{\link{prop_to_scale}(prop)}. This ensures that by default 
+#'   properties like \code{y} and \code{y2}, or \code{opacity}, 
+#'   \code{fillOpacity} and \code{strokeOpacity} all share the same scale. 
+#'   Set this to a custom name to override that behaviour, or to create 
+#'   multiple scales for stroke or fill, or (god forbid) a secondary y scale.
 #' @export
 #' @examples
 #' default_scale("x", "numeric")
 #' default_scale("fillOpacity", "ordinal")
 #' default_scale("stroke", "nominal")
+#' 
+#' # You can also supply additional arguments or override the defaults
+#' default_scale("x", "numeric", trans = "log")
+#' default_scale("stroke", "nominal", range = c("red", "blue"))
 default_scale <- function(prop, type, ..., name = NULL) { 
   assert_that(is.string(prop), is.string(type))
   if (type == "NULL") return()

@@ -8,19 +8,26 @@
   dscale(prop, type, ..., name = NULL)
 }
 \arguments{
-  \item{prop}{A vega property name, converted into a scale
-  name by \code{\link{prop_to_scale}}}
+  \item{prop}{A vega property name.}
 
   \item{type}{A variable type, as returned by
   \code{\link{prop_type}}.  One of datetime, numeric,
   ordinal, nominal, logical.}
 
-  \item{...}{other arguments passed to the scale function}
+  \item{...}{other arguments passed to the scale function.
+  See the help for \code{\link{scale_quantitative}},
+  \code{\link{scale_ordinal}} and \code{\link{scale_time}}
+  for more details. For example, you might supply
+  \code{trans = "log"} to create a log scale.}
 
-  \item{name}{Use to override the default scale name - this
-  is useful if you want to (god forbid) create a secondary
-  y scale, or more usefully create multiple stroke or fill
-  scales.}
+  \item{name}{If \code{NULL}, the default, the scale name
+  is computed by calling \code{\link{prop_to_scale}(prop)}.
+  This ensures that by default properties like \code{y} and
+  \code{y2}, or \code{opacity}, \code{fillOpacity} and
+  \code{strokeOpacity} all share the same scale.  Set this
+  to a custom name to override that behaviour, or to create
+  multiple scales for stroke or fill, or (god forbid) a
+  secondary y scale.}
 }
 \description{
   Default scales depend on both the property (e.g. fill, x,
@@ -40,7 +47,10 @@ First, the type of scale is selected based on the \code{type}}{
   then the range is selected based on the combination of
   the \code{type} and the \code{prop} - for example, you
   get a different range of colours depending on whether the
-  data is numeric, ordinal, or nominal.
+  data is numeric, ordinal, or nominal. Some scales also
+  set other properties - for example, nominal/ordinal
+  position scales also add some padding so that points are
+  spaced away from plot edges.
 
   Not all combinations have an existing default scale - if
   you use a combination that does not have an existing
@@ -55,5 +65,9 @@ First, the type of scale is selected based on the \code{type}}{
 default_scale("x", "numeric")
 default_scale("fillOpacity", "ordinal")
 default_scale("stroke", "nominal")
+
+# You can also supply additional arguments or override the defaults
+default_scale("x", "numeric", trans = "log")
+default_scale("stroke", "nominal", range = c("red", "blue"))
 }
 
