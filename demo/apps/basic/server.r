@@ -1,20 +1,15 @@
 shinyServer(function(input, output, session) {
 
-  # Create the gigvis object
-  mtc <- reactive({
-    if (is.null(input$obs)) return(mtcars)
-    mtcars[sample(nrow(mtcars), input$obs), ]
-  })
+  # Create a slider that's used for two different plots
+  span_slider <- input_slider(min = 0.2, max = 1, value = 0.5, step = 0.1,
+    label = "LOESS span")
 
+
+  # Create the gigvis object
   gv <- reactive({
-    gigvis(mtc, props(x ~ wt, y ~ mpg),
+    gigvis(mtcars, props(x ~ wt, y ~ mpg),
       mark_symbol(),
-      branch_smooth(
-        n = input_slider(min = 2, max = 80, value = 5, step = 1,
-                         label = "Interpolation points"),
-        method = input_select(c("Linear" = "lm", "LOESS" = "loess"),
-                              label = "Smooth method")
-      )
+      branch_smooth(span = span_slider)
     )
   })
 
@@ -25,13 +20,17 @@ shinyServer(function(input, output, session) {
   output$gigvis_ui <- renderControls(gv, session)
 
 
-  # A second plot, without controls
+  # A second plot
   gv2 <- reactive({
-    gigvis(mtc, props(x ~ wt, y ~ mpg, fill ~ factor(cyl)),
-      mark_symbol()
+    gigvis(mtcars,
+      props(x ~ wt, y ~ hp),
+      mark_symbol(),
+      branch_smooth(span = span_slider)
     )
   })
   observeGigvis(gv2, "plot2", session, width = 250, height = 250)
+
+  # Second plot shares controls with first, so no need to renderControls for it
 
 
   # Stop the app when the quit button is clicked

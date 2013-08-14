@@ -1,8 +1,6 @@
 shinyUI(pageWithSidebar(
   headerPanel("Gigvis plot"),
   sidebarPanel(
-    sliderInput("obs", "Number of points",
-      value = 5, min = 1, max = nrow(mtcars), step = 1),
     uiOutput("gigvis_ui")
   ),
   mainPanel(
