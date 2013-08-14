@@ -6,15 +6,17 @@ shinyServer(function(input, output, session) {
     mtcars[sample(nrow(mtcars), input$obs), ]
   })
 
-  gv <- gigvis(mtc, props(x ~ wt, y ~ mpg),
-    mark_symbol(),
-    branch_smooth(
-      n = input_slider(min = 2, max = 80, value = 5, step = 1,
-                       label = "Interpolation points"),
-      method = input_select(c("Linear" = "lm", "LOESS" = "loess"),
-                            label = "Smooth method")
+  gv <- reactive({
+    gigvis(mtc, props(x ~ wt, y ~ mpg),
+      mark_symbol(),
+      branch_smooth(
+        n = input_slider(min = 2, max = 80, value = 5, step = 1,
+                         label = "Interpolation points"),
+        method = input_select(c("Linear" = "lm", "LOESS" = "loess"),
+                              label = "Smooth method")
+      )
     )
-  )
+  })
 
   # Set up observers for the spec and the data
   observeGigvis(gv, "plot1", session)
@@ -24,9 +26,11 @@ shinyServer(function(input, output, session) {
 
 
   # A second plot, without controls
-  gv2 <- gigvis(mtc, props(x ~ wt, y ~ mpg, fill ~ factor(cyl)),
-    mark_symbol()
-  )
+  gv2 <- reactive({
+    gigvis(mtc, props(x ~ wt, y ~ mpg, fill ~ factor(cyl)),
+      mark_symbol()
+    )
+  })
   observeGigvis(gv2, "plot2", session, width = 250, height = 250)
 
 

@@ -27,11 +27,12 @@ view_dynamic <- function(gv, envir = parent.frame(), controls = NULL,
   )
 
   server <- function(input, output, session) {
+    r_gv <- reactive(gv)
     # Set up observers for the spec and the data
-    observeGigvis(gv, plot_id, session, renderer)
+    observeGigvis(r_gv, plot_id, session, renderer)
 
     # User interface elements (in the sidebar)
-    output$gigvis_ui <- renderControls(gv, session)
+    output$gigvis_ui <- renderControls(r_gv, session)
 
     # Stop the app when the quit button is clicked
     observe({
