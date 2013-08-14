@@ -22,7 +22,7 @@ gigvis(mtcars, props(x ~ wt, y ~ mpg),
   branch_smooth(
     n = input_select(
       choices = c("Two", "Six", "Eighty"),
-      wrapfun = function(value) {
+      map = function(value) {
         switch(value, Two = 2, Six = 6, Eighty = 80)
       },
       label = "Number of points"

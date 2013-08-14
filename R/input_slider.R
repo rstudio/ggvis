@@ -11,7 +11,7 @@
 input_slider <- function(min, max, value = min, step = NULL, round = FALSE,
                          format = "#,##0.#####", locale = "us", ticks = TRUE,
                          animate = FALSE, label = "", id = rand_id("slider_"),
-                         wrapfun = identity) {
+                         map = identity) {
 
   assert_that(is.string(label), is.string(id))
 
@@ -20,5 +20,5 @@ input_slider <- function(min, max, value = min, step = NULL, round = FALSE,
       round = round, format = format, locale = locale, ticks = ticks)
   }
 
-  delayed_reactive(from_input(id, value, wrapfun), control, id = id)
+  delayed_reactive(from_input(id, value, map), control, id = id)
 }
