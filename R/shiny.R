@@ -33,6 +33,10 @@ gigvisOutput <- function(id) {
 #'
 #' @export
 observeGigvis <- function(r_gv, id, session, renderer = "canvas", ...) {
+  if (!is.reactive(r_gv)) {
+    stop("observeGigvis requires a reactive expression that returns a gigvis object",
+      call. = FALSE)
+  }
   r_spec <- reactive(as.vega(r_gv(), session = session, dynamic = TRUE, ...))
 
   observe_spec(r_spec, id, session, renderer)
