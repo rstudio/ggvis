@@ -30,18 +30,56 @@ gigvis(mtcars, props(x ~ wt, y ~ mpg),
   )
 )
 
-# Reactive properties
-gigvis(mtcars, props(x ~ wt, y ~ mpg,
-  fill = prop_reactive(input_select(c("red", "blue")),
-                      constant = TRUE, scale = FALSE)),
+# Reactive properties -------------------------------------------------------
+# Constant values, raw (not on a scale)
+gigvis(mtcars,
+  props(
+    x ~ wt,
+    y ~ mpg,
+    fill = prop_reactive(input_select(c("red", "blue"), label = "Color"),
+                         constant = TRUE, scale = FALSE),
+    size = prop_reactive(input_slider(10, 1000, 100, label = "Size"),
+                         constant = TRUE, scale = FALSE),
+    opacity = prop_reactive(input_slider(0, 1, 1, label = "Opacity"),
+                            constant = TRUE, scale = FALSE)
+
+  ),
   mark_symbol()
 )
 
-gigvis(mtcars, props(
-    x ~ wt, 
+
+# Constant values, on a scale
+gigvis(mtcars,
+  props(
+    x ~ wt,
     y ~ mpg,
-    size = prop_reactive(input_slider(10, 1000, 100), constant = TRUE, scale = FALSE),
-    opacity = prop_reactive(input_slider(0, 1, 1), constant = TRUE, scale = FALSE)
+    fill = prop_reactive(input_select(c("a", "b")),
+                         constant = TRUE, scale = TRUE)
+  ),
+  mark_symbol()
+)
+
+# Variable values, raw (not on a scale)
+mtc <- mtcars
+mtc$colour1 <- c("red", "black")
+mtc$colour2 <- c("blue", "gray")
+gigvis(mtc,
+  props(
+    x ~ wt,
+    y ~ mpg,
+    fill = prop_reactive(input_select(c("colour1", "colour2")),
+                         constant = FALSE, scale = FALSE)
+  ),
+  mark_symbol()
+)
+
+# Variable values
+gigvis(mtcars,
+  props(
+    x ~ wt,
+    y ~ mpg,
+    fill = prop_reactive(input_select(c("mpg", "wt")),
+                         constant = FALSE, scale = TRUE)
   ),
   mark_symbol()
 )
