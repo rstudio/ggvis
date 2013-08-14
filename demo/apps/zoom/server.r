@@ -2,8 +2,8 @@ shinyServer(function(input, output, session) {
   gv <- reactive({
     gigvis(mtcars, props(x ~ disp, y ~ mpg),
       mark_symbol(),
-      dscale("x", "numeric", range = c(input$xmin, input$xmax)),
-      dscale("y", "numeric", range = c(input$ymin, input$ymax))
+      dscale("x", "numeric", domain = c(input$xmin, input$xmax), nice = FALSE),
+      dscale("y", "numeric", domain = c(input$ymin, input$ymax), nice = FALSE)
     )
   })
   
