@@ -110,7 +110,7 @@ connect.transform <- function(x, props, source = NULL, session = NULL) {
     x_now <- eval_reactives(x)
     x_now$dots <- eval_reactives(x$dots)
     if (is.function(source)) source <- source()
-    
+
     compute(x_now, props, source)
   })
 }

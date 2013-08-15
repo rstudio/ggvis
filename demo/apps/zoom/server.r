@@ -6,6 +6,6 @@ shinyServer(function(input, output, session) {
       dscale("y", "numeric", domain = input$y_domain, nice = FALSE, clamp = TRUE)
     )
   })
-  
+
   observeGigvis(gv, "zoom", session)
 })

@@ -1,9 +1,9 @@
 # Given a gigvis object, return all needed vega scales, with correct
 # domain values set.
 find_scales <- function(x, nodes, data_table) {
-  
-  scales <- x$scales  
-  
+
+  scales <- x$scales
+
   # Loop through each node, recording the usage of each scale
   scale_types <- list()
   scale_uses <- list()
@@ -13,17 +13,17 @@ find_scales <- function(x, nodes, data_table) {
       prop <- node$props[[prop_n]]
       scale <- prop_scale(prop, prop_to_scale(prop_n))
       if (is.na(scale)) next
-      
+
       type <- prop_type(data, prop, TRUE)
       scale_types[[scale]] <- c(scale_types[[scale]], type)
-      
+
       use <- prop_domain(prop, node$pipeline_id)
       if (!is.null(use)) {
-        scale_uses[[scale]] <- c(scale_uses[[scale]], list(use))        
+        scale_uses[[scale]] <- c(scale_uses[[scale]], list(use))
       }
     }
   }
-  
+
   # Add in scales not already specified in spec
   needed <- setdiff(names(scale_types), names(scales))
   for (scale_n in needed) {
@@ -36,6 +36,6 @@ find_scales <- function(x, nodes, data_table) {
     if (!is.null(scales[[scale_n]]$domain)) next
     scales[[scale_n]]$domain <- list(fields = scale_uses[[scale_n]])
   }
-  
+
   unclass(scales)
 }

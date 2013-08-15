@@ -1,14 +1,14 @@
 #' Split data by group
 #'
-#' @param ... Variables to split on.  These are coerced to 
+#' @param ... Variables to split on.  These are coerced to
 #' \code{\link{prop_var}} objects with \code{as.prop_var}.
-#' 
+#'
 #' @export
 #' @examples
 #' by_group("cyl")
 #' by_group(quote(cyl))
 #' by_group(prop_var(quote(cyl)))
-#' 
+#'
 #' pl <- pipeline(mtcars, by_group("cyl"), transform_bin())
 #' sluice(pl, props(x ~ disp))
 by_group <- function(...) {

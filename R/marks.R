@@ -2,12 +2,12 @@
 #'
 #' These functions create mark objects, corresponding to vega marks. Marks
 #' are leaves in the plot tree, and control the details of the final rendering.
-#' Marks are equivalent to the basic geoms in ggplot2 (e.g. point, line, 
-#' polygon), where gigvis branches correspond to combinations of geoms and 
+#' Marks are equivalent to the basic geoms in ggplot2 (e.g. point, line,
+#' polygon), where gigvis branches correspond to combinations of geoms and
 #' statistical transforms.
-#' 
+#'
 #' @section Properties:
-#' 
+#'
 #' You can set the following mark properties:
 #'
 #' \itemize{
@@ -54,16 +54,16 @@
 #' \item  fontWeight [text] The font weight (e.g., bold).
 #' \item  fontStyle [text] The font style (e.g., italic).
 #' }
-#' 
-#' To each property, you can assign any property object (\code{\link{prop}}) 
+#'
+#' To each property, you can assign any property object (\code{\link{prop}})
 #' either locally (i.e. in the mark), or in a parent \code{\link{node}}.
 #' There are many available property types to choose from:
 #' \code{\link{prop_var}} and \code{\link{prop_const}} are the most commonly
 #' used.
 #' @name marks
-#' @param props A \code{\link{props}} object, named according to the 
+#' @param props A \code{\link{props}} object, named according to the
 #'   properties listed below.
-#' @param data An optional dataset, if you want to override the usual data 
+#' @param data An optional dataset, if you want to override the usual data
 #'   inheritance for this mark.
 NULL
 

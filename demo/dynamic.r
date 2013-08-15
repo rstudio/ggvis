@@ -14,7 +14,7 @@ df <- data.frame(x = runif(20), y = runif(20))
 # Basic dynamic example
 mtc1 <- reactive({
   invalidateLater(20, NULL);
-  
+
   df$x <<- df$x + runif(20, -0.05, 0.05)
   df$y <<- df$y + runif(20, -0.05, 0.05)
   df

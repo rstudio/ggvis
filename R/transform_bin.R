@@ -54,15 +54,15 @@ transform_bin <- function(binwidth = guess(), origin = NULL, right = TRUE) {
 #' @param ... other arguments passed on to the underlying transform function
 branch_histogram <- function(props = NULL, ...) {
   if (is.null(props)) props <- props()
-  
+
   default <- props(
-    x ~ xmin__, 
-    x2 ~ xmax__, 
+    x ~ xmin__,
+    x2 ~ xmax__,
     y ~ count__,
     y2 = prop_const(0, scale = TRUE)
   )
   props <- merge_props(props, default)
-  
+
   node(
     data = transform_bin(...),
     mark_rect(props)
@@ -74,13 +74,13 @@ branch_histogram <- function(props = NULL, ...) {
 #' @inheritParams branch_histogram
 branch_freqpoly <- function(props = NULL, ...) {
   if (is.null(props)) props <- props()
-  
+
   default <- props(
-    x ~ x, 
+    x ~ x,
     y ~ count__
   )
   props <- merge_props(props, default)
-  
+
   node(
     data = transform_bin(...),
     mark_line(props)
@@ -104,7 +104,7 @@ compute.transform_bin <- function(x, props, data) {
 
   output <- bin(data, x_var = props$x,
     binwidth = x$binwidth, origin = x$origin, right = x$right)
-  
+
   preserve_constants(data, output)
 }
 
@@ -127,7 +127,7 @@ bin.numeric <- function(x, weight = NULL, binwidth = 1, origin = NULL, right = T
   stopifnot(is.numeric(binwidth) && length(binwidth) == 1)
   stopifnot(is.null(origin) || (is.numeric(origin) && length(origin) == 1))
   stopifnot(is.flag(right))
-  
+
   if (length(na.omit(x)) == 0)  return(data.frame())
 
   if (is.null(weight))  weight <- rep(1, length(x))

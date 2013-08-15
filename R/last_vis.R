@@ -1,9 +1,9 @@
 last_vis_e <- new.env(parent = emptyenv())
 
 #' Retrieve the last visualisation created by gigvis.
-#' 
+#'
 #' Visualisations are saved whenever they are created or plotted.
-#' 
+#'
 #' @export
 #' @examples
 #' gigvis(mtcars, props(x ~ mpg, y ~ cyl), mark_symbol())

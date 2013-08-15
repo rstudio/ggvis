@@ -75,7 +75,7 @@ gigvis(data = NULL, props = props(x ~ wt, y ~ mpg),
   mark_symbol(props(fill = "red", size = 40), "mtc2")
 )
 
-# Scatter plot with one set of points with `cyl` mapped to stroke, 
+# Scatter plot with one set of points with `cyl` mapped to stroke,
 # and another set with `am` mapped to fill
 gigvis(mtcars, props(x ~ wt, y ~ mpg),
   mark_symbol(props(stroke ~ factor(cyl), fill = NA)),

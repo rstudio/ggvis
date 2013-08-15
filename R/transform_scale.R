@@ -26,6 +26,6 @@ compute.transform_scale <- function(x, props, data) {
   assert_that(is.numeric(y_val))
   assert_that(is.numeric(x$add), length(x$add) == 1)
   assert_that(is.numeric(x$mult), length(x$mult) == 1)
-  
+
   data.frame(x = x_val * x$mult + x$add, y = y_val)
 }

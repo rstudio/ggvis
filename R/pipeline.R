@@ -14,7 +14,7 @@
 #' as.pipeline(mtcars)
 #' pipeline(cars = mtcars)
 #'
-#' # A pipeline can contain multiple data sets, but only the last one is 
+#' # A pipeline can contain multiple data sets, but only the last one is
 #' # returned
 #' pipeline(mtcars, sleep)
 #'
@@ -69,7 +69,7 @@ as.pipeline.pipeline <- function(x, ...) x
 as.pipeline.pipe <- function(x, ...) pipeline(x)
 
 #' @S3method as.pipeline default
-as.pipeline.default <- function(x, name = NULL, ...) { 
+as.pipeline.default <- function(x, name = NULL, ...) {
   if (is.null(name)) name <- deparse(substitute(x))
   pipeline(datasource(x, name = name))
 }

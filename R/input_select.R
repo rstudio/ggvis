@@ -1,5 +1,5 @@
 #' Create a placeholder for a select input.
-#' 
+#'
 #' @importFrom shiny selectInput
 #' @inheritParams shiny::selectInput
 #' @param id a unique identifying name for this control - only one control

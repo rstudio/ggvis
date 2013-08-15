@@ -1,9 +1,9 @@
 #' Transformation: smooth the data
 #'
-#' \code{transform_smooth} is a data transformation that can be passed into a 
+#' \code{transform_smooth} is a data transformation that can be passed into a
 #' node. \code{branch_smooth} creates a node that transforms the data and then
 #' displays it with \code{\link{mark_line}}.
-#' 
+#'
 #' @section Ouput:
 #'
 #' \code{transform_smooth} creates a data frame with columns:
@@ -22,7 +22,7 @@
 #' }
 #'
 #' @param method Model fitting function to use - it must support R's standard
-#'   modelling interface, taking a formula and data frame as input, and 
+#'   modelling interface, taking a formula and data frame as input, and
 #'   returning predictions with \code{\link{predict}}. If not supplied, will
 #'   use \code{\link{loess}} for <= 1000 points, otherwise it will use
 #'   \code{\link[mgcv]{gam}}. Other modelling functions that will work include
@@ -30,8 +30,8 @@
 #' @param formula Formula passed to modelling function. Can only use \code{y}
 #'   and \code{x} variables.  If not specified, defaults to \code{y ~ s(x)}
 #'   for \code{method = gam}, \code{y ~ x} otherwise.
-#' @param se include standard errors in output? Requires approprate method of 
-#'   \code{predictdf}, since the interface for returning predictions with 
+#' @param se include standard errors in output? Requires approprate method of
+#'   \code{predictdf}, since the interface for returning predictions with
 #'   standard errors is not consistent acrossing modelling frameworks.
 #' @param level the confidence level of the standard errors.
 #' @param n the number of grid points to use in the prediction
@@ -46,7 +46,7 @@
 #' sluice(transform_smooth(n = 5L), props(x ~ disp, y ~ mpg), mtcars)
 #' # Or
 #' pl <- pipeline(
-#'   mtcars, 
+#'   mtcars,
 #'   by_group(prop_var(quote(cyl))),
 #'   transform_smooth(n = 5L, method = "lm")
 #' )
@@ -108,7 +108,7 @@ smooth.split_df <- function(data, trans, x_var, y_var) {
 smooth.data.frame <- function(data, trans, x_var, y_var) {
   assert_that(is.formula(trans$formula))
   assert_that(is.flag(trans$se))
-  assert_that(is.numeric(trans$level), length(trans$level) == 1, 
+  assert_that(is.numeric(trans$level), length(trans$level) == 1,
               trans$level >= 0, trans$level <= 1)
   assert_that(length(trans$n) == 1, trans$n >= 0)
   assert_that(is.flag(trans$na.rm))
@@ -126,7 +126,7 @@ smooth.data.frame <- function(data, trans, x_var, y_var) {
   # Create model call and combine with ... captured earlier, evaluating in
   args <- c(list(trans$formula, data = quote(data)), trans$dots)
   mod <- do.call(trans$method, args)
-  
+
   # Make prediction
   x_grid <- seq(min(env$data[[x_name]]), max(env$data[[x_name]]), length = trans$n)
   predict_df(mod, x_name, y_name, x_grid, trans$se, trans$level)

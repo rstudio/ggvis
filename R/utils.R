@@ -89,7 +89,7 @@ empty <- function(x) length(x) == 0
 quickdf <- function(list) {
   class(list) <- "data.frame"
   attr(list, "row.names") <- c(NA_integer_, -length(list[[1]]))
-  
+
   list
 }
 

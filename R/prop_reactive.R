@@ -40,7 +40,7 @@ is.prop_reactive <- function(x) inherits(x, "prop_reactive")
 #' @S3method prop_value prop_reactive
 prop_value.prop_reactive <- function(x, data, processed = FALSE) {
   val <- x$value()
-  
+
   if (x$constant) {
     rep(val, nrow(data))
   } else {

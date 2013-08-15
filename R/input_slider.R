@@ -1,5 +1,5 @@
 #' Create a placeholder for a slider input.
-#' 
+#'
 #' @importFrom shiny sliderInput
 #' @inheritParams shiny::sliderInput
 #' @inheritParams input_select

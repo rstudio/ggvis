@@ -1,5 +1,5 @@
 #' Determine if an object is dynamic (i.e. needs to be run in a shiny app)
-#' 
+#'
 #' @export
 #' @keywords internal
 is.dynamic <- function(x) UseMethod("is.dynamic")

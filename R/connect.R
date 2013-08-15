@@ -7,11 +7,11 @@
 #'
 #' Every element in a pipeline recieves the same set of properties: this
 #' generally means that for more complicated transformations you will need
-#' to create multiple branches. 
+#' to create multiple branches.
 #'
 #' @param x a pipeline or pipe
 #' @param properties a \code{\link{props}} object
-#' @param source the data source to start the pipeline. This is used when 
+#' @param source the data source to start the pipeline. This is used when
 #'   the output from one pipeline into the input of another. Methods must check
 #'   if is a reactive object and deal with appropriately.
 #' @param session the session object, for if this is called within a Shiny
@@ -40,11 +40,11 @@
 #' isolate(r())
 #' v$add <- 2
 #' isolate(r())
-#' 
+#'
 #' # Reactive pipeline with reactive data
 #' v <- reactiveValues(add = 0, mult = 1, n = 5)
 #' p <- pipeline(
-#'    reactive(df[1:v$n, , ]), 
+#'    reactive(df[1:v$n, , ]),
 #'    transform_scale(add = reactive(v$add), mult = reactive(v$mult))
 #' )
 #' r <- connect(p, asis)

@@ -1,8 +1,8 @@
 #' Coerce an gigvis object to a vega list.
-#' 
+#'
 #' This generic function powers the coercion of gigvis objects to vega
 #' compatible data structures.
-#' 
+#'
 #' @param x an object to convert to vega
 #' @return a list. When converted to JSON, will be the type of structure
 #'   that vega expects.
@@ -25,7 +25,7 @@ as.vega.gigvis <- function(x, width = 600, height = 400, padding = NULL,
   nodes <- flatten(x, session = session)
   data_table <- extract_data(nodes)
   data_table <- active_props(data_table, nodes)
-  
+
   data_names <- ls(data_table, all.names = TRUE)
   if (dynamic) {
     datasets <- lapply(data_names, function(name) {
@@ -38,11 +38,11 @@ as.vega.gigvis <- function(x, width = 600, height = 400, padding = NULL,
       as.vega(data, name)
     }), recursive = FALSE)
   }
-  
+
   scales <- find_scales(x, nodes, data_table)
   axes <- add_default_axes(x$axes, scales)
   legends <- add_default_legends(x$legends, scales)
-  
+
   spec <- list(
     data = datasets,
     scales = unname(scales),
@@ -65,11 +65,11 @@ as.vega.mark <- function(mark) {
   defaults <- default_mark_properties(mark)
   props <- merge_props(defaults, mark$props)
   check_mark_props(mark, names(props))
-  
+
   # HW: It seems less than ideal to have to inspect the data here, but
   # I'm not sure how else we can figure it out.
   split <- is.split_df(isolate(mark$pipeline()))
-  
+
   if (split) {
     list(
       type = "group",
@@ -88,13 +88,13 @@ as.vega.mark <- function(mark) {
       from = list(data = mark$pipeline_id)
     )
   }
-  
+
 }
 
 #' @S3method as.vega gigvis_props
 as.vega.gigvis_props <- function(x, default_scales = NULL) {
   if (empty(x)) return(NULL)
-  
+
   default_scales <- default_scales %||% prop_to_scale(names(x))
   Map(prop_vega, x, default_scales)
 }
@@ -106,7 +106,7 @@ as.vega.vega_axis <- function(x) {
   } else {
     x$properties <- lapply(x$properties, as.vega)
   }
-  
+
   unclass(x)
 }
 #' @S3method as.vega vega_legend
@@ -123,7 +123,7 @@ as.vega.data.frame <- function(x, name, ...) {
 #' @S3method as.vega split_df
 as.vega.split_df <- function(x, name, ...) {
   data <- lapply(x, function(x) list(children = df_to_json(x)))
-  
+
   list(
     list(
       name = paste0(name, "_tree"),

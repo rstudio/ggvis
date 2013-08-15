@@ -20,7 +20,7 @@
 prop_var <- function(x, scale = TRUE, offset = NULL, mult = NULL) {
   assert_that(is.quoted(x))
   assert_that(is.flag(scale) || is.string(scale))
-  
+
   prop("prop_var",
     x = x, scale = scale, offset = offset, mult = mult)
 }
@@ -56,7 +56,7 @@ prop_name.prop_var <- function(x) {
     # a string to so that an expression with same text as a var will have a
     # different hash, e.g., the expression wt/mpg vs. the variable `wt/mpg`.
     safe_vega_var(paste0("[e]", deparse(var)))
-    
+
   } else {
     # var is a constant
     ""
@@ -77,9 +77,9 @@ prop_scale.prop_var <- function(x, default_scale) {
 #' @S3method prop_domain prop_var
 prop_domain.prop_var <- function(x, data) {
   list(
-    data = data, 
+    data = data,
     field = paste0("data.", prop_name(x))
-  )  
+  )
 }
 
 #' @S3method prop_vega prop_var

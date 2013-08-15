@@ -1,5 +1,5 @@
 #' S3 property class
-#' 
+#'
 #' @keywords internal
 #' @export
 prop <- function(subclass, ...) {
@@ -15,7 +15,7 @@ prop_value <- function(x, data, processed) {
   UseMethod("prop_value")
 }
 
-# The name of the property: used for naming the variable it produces in the 
+# The name of the property: used for naming the variable it produces in the
 # vega data frame
 prop_name <- function(x) {
   UseMethod("prop_name")
@@ -95,7 +95,7 @@ prop_range.split_df <- function(data, var, na.rm = TRUE) {
 }
 
 #' Property domain.
-#' 
+#'
 #' @param x property to dispatch on
 #' @param data name of data set
 prop_domain <- function(x, data) {

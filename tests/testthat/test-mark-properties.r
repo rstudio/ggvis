@@ -11,7 +11,7 @@ test_that("check_mark_props returns helpful suggestion for single incorrect", {
 })
 
 test_that("check_mark_props doesn't give suggestion if really wrong", {
-  expect_that(check_mark_props(mark_symbol(), "asdfasdfdsa"), 
+  expect_that(check_mark_props(mark_symbol(), "asdfasdfdsa"),
               not(throws_error("Did you mean")))
 })
 

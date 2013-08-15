@@ -21,8 +21,8 @@ test_that("all reactive parts of transform_dynamic found", {
   t1 <- transform_smooth(n = input_slider(10, 100))
   t2 <- transform_smooth(span = input_slider(0.1, 1))
   t3 <- transform_smooth(span = input_slider(0.1, 1), n = input_slider(10, 100))
-  
-  expect_true(is.dynamic(t1))  
+
+  expect_true(is.dynamic(t1))
   expect_true(is.dynamic(t2))
   expect_true(is.dynamic(t3))
 })
