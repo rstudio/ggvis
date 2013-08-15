@@ -34,21 +34,23 @@
 \description{
   Create a gigvis object, or a node in a gigvis plot.
 }
-\section{Hierarchy
+\section{Hierarchy}{
+  A gigvis plot has a hierarchical structure, where each
+  node inherits data and properties from its parent. This
+  is somewhat similar to ggplot2, but ggplot2 plots only
+  had a single layer of hierarchy - with gigvis, you can
+  have multiple levels, making it easier to avoid
+  redundancy, both in your specification and in
+  computation.
 
-A gigvis plot has a hierarchical structure, where each node inherits
-data and properties from its parent. This is somewhat similar to ggplot2,
-but ggplot2 plots only had a single layer of hierarchy - with gigvis, you
-can have multiple levels, making it easier to avoid redundancy, both in
-your specification and in computation.
-
-For example, take a linear model. You often want to display both the
-predictions and the standard error from a linear model. In ggplot2, you
-had to use \code{geom_smooth()}, which was a special geom that combined a
-line and a ribbon. With gigvis, you can do it yourself by using two marks
-nested inside a node}{
-  (and in fact, this is exactly how
-  \code{\link{branch_smooth}}) works.
+  For example, take a linear model. You often want to
+  display both the predictions and the standard error from
+  a linear model. In ggplot2, you had to use
+  \code{geom_smooth()}, which was a special geom that
+  combined a line and a ribbon. With gigvis, you can do it
+  yourself by using two marks nested inside a node: (and in
+  fact, this is exactly how \code{\link{branch_smooth}})
+  works.
 
   \code{ gigvis(mtcars, props(x ~ disp, y ~ mpg), node(data
   = transform_smooth(), mark_area(props(y ~ y_min, y2 ~

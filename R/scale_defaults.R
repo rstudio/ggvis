@@ -6,7 +6,7 @@
 #' looking for a function called \code{dscale_prop_type}. \code{dscale} is a 
 #' short-hand useful for interactive exploration.
 #' 
-#' @section Scale selection
+#' @section Scale selection:
 #' 
 #' First, the type of scale is selected based on the \code{type}:
 #' 

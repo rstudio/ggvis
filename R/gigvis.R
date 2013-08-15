@@ -1,6 +1,6 @@
 #' Create a gigvis object, or a node in a gigvis plot.
 #'
-#' @section Hierarchy
+#' @section Hierarchy:
 #' 
 #' A gigvis plot has a hierarchical structure, where each node inherits
 #' data and properties from its parent. This is somewhat similar to ggplot2,

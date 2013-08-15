@@ -36,9 +36,10 @@
   function called \code{dscale_prop_type}. \code{dscale} is
   a short-hand useful for interactive exploration.
 }
-\section{Scale selection
+\section{Scale selection}{
+  First, the type of scale is selected based on the
+  \code{type}:
 
-First, the type of scale is selected based on the \code{type}}{
   \itemize{ \item datetime: \code{\link{scale_time}} \item
   ordinal, nominal, logical: \code{\link{scale_ordinal}}
   \item numeric: \code{\link{scale_quantitative}} }

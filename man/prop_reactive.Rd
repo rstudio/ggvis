@@ -11,6 +11,8 @@
 \arguments{
   \item{x}{A delayed reactive object}
 
+  \item{constant}{is it constant or variable}
+
   \item{scale}{Should the value be scaled? \code{FALSE},
   the default, then the value will be left as is. If
   \code{TRUE}, the default scale for that property will be

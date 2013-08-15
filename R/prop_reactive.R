@@ -2,6 +2,7 @@
 #'
 #' @param x A delayed reactive object
 #' @inheritParams prop_var
+#' @param constant is it constant or variable
 #' @export
 #' @examples
 #' prop_reactive(input_select(c("red", "blue")), TRUE, FALSE)
