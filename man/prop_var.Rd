@@ -1,11 +1,11 @@
-\name{variable}
-\alias{is.variable}
-\alias{variable}
+\name{prop_var}
+\alias{is.prop_var}
+\alias{prop_var}
 \title{Property: variable}
 \usage{
-  variable(x, scale = TRUE, offset = NULL, mult = NULL)
+  prop_var(x, scale = TRUE, offset = NULL, mult = NULL)
 
-  is.variable(x)
+  is.prop_var(x)
 }
 \arguments{
   \item{x}{A quoted object}
@@ -35,11 +35,11 @@
   immediately.
 }
 \examples{
-variable(quote(x))
-variable(quote(1))
-variable(quote(x * y))
+prop_var(quote(x))
+prop_var(quote(1))
+prop_var(quote(x * y))
 
-variable(quote(cyl))
-variable(quote(cyl), offset = -1, scale = FALSE)
+prop_var(quote(cyl))
+prop_var(quote(cyl), offset = -1, scale = FALSE)
 }
 

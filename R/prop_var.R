@@ -8,44 +8,44 @@
 #' that it captures local values immediately.
 #'
 #' @param x A quoted object
-#' @inheritParams constant
+#' @inheritParams prop_const
 #' @export
 #' @examples
-#' variable(quote(x))
-#' variable(quote(1))
-#' variable(quote(x * y))
+#' prop_var(quote(x))
+#' prop_var(quote(1))
+#' prop_var(quote(x * y))
 #'
-#' variable(quote(cyl))
-#' variable(quote(cyl), offset = -1, scale = FALSE)
-variable <- function(x, scale = TRUE, offset = NULL, mult = NULL) {
+#' prop_var(quote(cyl))
+#' prop_var(quote(cyl), offset = -1, scale = FALSE)
+prop_var <- function(x, scale = TRUE, offset = NULL, mult = NULL) {
   assert_that(is.quoted(x))
   assert_that(is.flag(scale) || is.string(scale))
   
-  prop("variable",
+  prop("prop_var",
     x = x, scale = scale, offset = offset, mult = mult)
 }
 
-#' @S3method format variable
-format.variable <- function(x, ...) {
+#' @S3method format prop_var
+format.prop_var <- function(x, ...) {
   paste0("<variable> ", deparse(x[[1]]))
 }
 
-#' @S3method print variable
-print.variable <- function(x, ...) cat(format(x, ...), "\n", sep = "")
+#' @S3method print prop_var
+print.prop_var <- function(x, ...) cat(format(x, ...), "\n", sep = "")
 
-#' @rdname variable
-is.variable <- function(x) inherits(x, "variable")
+#' @rdname prop_var
+is.prop_var <- function(x) inherits(x, "prop_var")
 
-#' @S3method prop_value variable
-prop_value.variable <- function(x, data, processed = FALSE) {
+#' @S3method prop_value prop_var
+prop_value.prop_var <- function(x, data, processed = FALSE) {
   if (processed)
     data[[prop_name(x)]]
   else
     eval(x[[1]], data, baseenv())
 }
 
-#' @S3method prop_name variable
-prop_name.variable <- function(x) {
+#' @S3method prop_name prop_var
+prop_name.prop_var <- function(x) {
   var <- x[[1]]
 
   if (is.symbol(var)) {
@@ -63,8 +63,8 @@ prop_name.variable <- function(x) {
   }
 }
 
-#' @S3method prop_scale variable
-prop_scale.variable <- function(x, default_scale) {
+#' @S3method prop_scale prop_var
+prop_scale.prop_var <- function(x, default_scale) {
   if (isTRUE(x$scale)) {
     default_scale
   } else if (is.character(x$scale)) {
@@ -74,16 +74,16 @@ prop_scale.variable <- function(x, default_scale) {
   }
 }
 
-#' @S3method prop_domain variable
-prop_domain.variable <- function(x, data) {
+#' @S3method prop_domain prop_var
+prop_domain.prop_var <- function(x, data) {
   list(
     data = data, 
     field = paste0("data.", prop_name(x))
   )  
 }
 
-#' @S3method prop_vega variable
-prop_vega.variable <- function(x, default_scale) {
+#' @S3method prop_vega prop_var
+prop_vega.prop_var <- function(x, default_scale) {
   scale <- prop_scale(x, default_scale)
   compact(list(
     field = paste0("data.", prop_name(x)),
@@ -93,24 +93,24 @@ prop_vega.variable <- function(x, default_scale) {
   ))
 }
 
-# Given a variable object, return a string representation of the value
+# Given a prop_var object, return a string representation of the value
 # @examples
 # p <- props(x ~ mpg, y = 10)
-# as.character.variable(p$x)
-#' @S3method as.character variable
-as.character.variable <- function(x, ...) {
-  if (!is.variable(x)) {
-    stop("x is not a variable object", call. = FALSE)
+# as.character.prop_var(p$x)
+#' @S3method as.character prop_var
+as.character.prop_var <- function(x, ...) {
+  if (!is.prop_var(x)) {
+    stop("x is not a prop_var object", call. = FALSE)
   }
   deparse(x[[1]])
 }
 
-as.variable <- function(x) UseMethod("as.variable")
-#' @S3method as.variable character
-as.variable.character <- function(x) variable(as.name(x))
-#' @S3method as.variable name
-as.variable.name <- function(x) variable(x)
-#' @S3method as.variable call
-as.variable.call <- function(x) variable(x)
-#' @S3method as.variable variable
-as.variable.variable <- function(x) x
+as.prop_var <- function(x) UseMethod("as.prop_var")
+#' @S3method as.prop_var character
+as.prop_var.character <- function(x) prop_var(as.name(x))
+#' @S3method as.prop_var name
+as.prop_var.name <- function(x) prop_var(x)
+#' @S3method as.prop_var call
+as.prop_var.call <- function(x) prop_var(x)
+#' @S3method as.prop_var prop_var
+as.prop_var.prop_var <- function(x) x

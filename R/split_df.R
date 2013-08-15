@@ -11,7 +11,7 @@ split_df <- function(data, split) {
 split_df.data.frame <- function(data, split) {
   if (is.null(split)) return(data)
 
-  stopifnot(all(vapply(split, is.variable, logical(1))))
+  stopifnot(all(vapply(split, is.prop_var, logical(1))))
 
   split_values <- lapply(split, prop_value, data, processed = FALSE)
   pieces <- unname(split(data, split_values, drop = TRUE))
@@ -22,7 +22,7 @@ split_df.data.frame <- function(data, split) {
 split_df.split_df <- function(data, split) {
   if (is.null(split)) return(data)
 
-  stopifnot(all(vapply(split, is.variable, logical(1))))
+  stopifnot(all(vapply(split, is.prop_var, logical(1))))
 
   splits <- lapply(data, function(x) split_df(x, split))
   pieces <- unlist(splits, recursive = FALSE, use.names = FALSE)

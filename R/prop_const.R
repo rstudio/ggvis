@@ -17,11 +17,11 @@
 #'   multipliers.
 #' @export
 #' @examples
-#' constant("red")
-#' constant("red", scale = TRUE)
-#' constant("red", scale = "alarm")
-#' constant(offset = -4)
-constant <- function(value = NULL, scale = FALSE, mult = NULL, offset = NULL) {
+#' prop_const("red")
+#' prop_const("red", scale = TRUE)
+#' prop_const("red", scale = "alarm")
+#' prop_const(offset = -4)
+prop_const <- function(value = NULL, scale = FALSE, mult = NULL, offset = NULL) {
   if (!is.null(value)) stopifnot(is.atomic(value), length(value) == 1)
   stopifnot(is.logical(scale) || is.character(scale), length(scale) == 1)
   if (!is.null(mult)) stopifnot(is.numeric(mult), length(mult) == 1)
@@ -29,11 +29,11 @@ constant <- function(value = NULL, scale = FALSE, mult = NULL, offset = NULL) {
 
   structure(
     list(value = value, scale = scale, mult = mult, offset = offset),
-    class = c("constant", "prop"))
+    class = c("prop_const", "prop"))
 }
 
-#' @S3method format constant
-format.constant <- function(x, ...) {
+#' @S3method format prop_const
+format.prop_const <- function(x, ...) {
   if (identical(x$scale, TRUE)) {
     scale <- " [auto]"
   } else if (is.character(x$scale)) {
@@ -47,21 +47,21 @@ format.constant <- function(x, ...) {
     if (length(params) > 0) paste0(" * ", names(params), " ", params, collapse = "\n")
   )
 }
-#' @S3method print constant
-print.constant  <- function(x, ...) cat(format(x, ...), "\n", sep = "")
+#' @S3method print prop_const
+print.prop_const  <- function(x, ...) cat(format(x, ...), "\n", sep = "")
 
-#' @S3method prop_value constant
-prop_value.constant <- function(x, data, processed = FALSE) {
+#' @S3method prop_value prop_const
+prop_value.prop_const <- function(x, data, processed = FALSE) {
   x$value
 }
 
-#' @S3method prop_name constant
-prop_name.constant <- function(x, data) {
+#' @S3method prop_name prop_const
+prop_name.prop_const <- function(x, data) {
   ""
 }
 
-#' @S3method prop_scale constant
-prop_scale.constant <- function(x, default_scale) {
+#' @S3method prop_scale prop_const
+prop_scale.prop_const <- function(x, default_scale) {
   if (isTRUE(x$scale)) {
     default_scale
   } else if (is.character(x$scale)) {
@@ -71,8 +71,8 @@ prop_scale.constant <- function(x, default_scale) {
   }
 }
 
-#' @S3method prop_vega constant
-prop_vega.constant <- function(x, default_scale) {
+#' @S3method prop_vega prop_const
+prop_vega.prop_const <- function(x, default_scale) {
   scale <- prop_scale(x, default_scale)
   compact(list(
     value = x$value,
@@ -82,10 +82,10 @@ prop_vega.constant <- function(x, default_scale) {
   ))
 }
 
-#' @S3method prop_domain constant
+#' @S3method prop_domain prop_const
 # FIXME: for scaled constants, this should really insert a literal value in
 #   to the domain, but it's not obvious how to do that in vega currently.
-prop_domain.constant <- function(x, data) {
+prop_domain.prop_const <- function(x, data) {
   NULL
 }
 

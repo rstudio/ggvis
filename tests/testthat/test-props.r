@@ -1,8 +1,8 @@
 context("props")
 
 test_that("property names for variables", {
-  # pname(wt) is equivalent to prop_name(variable(quote(wt)))
-  pname <- function(x) prop_name(variable(substitute(x)))
+  # pname(wt) is equivalent to prop_name(prop_var(quote(wt)))
+  pname <- function(x) prop_name(prop_var(substitute(x)))
 
   # Regular variable names are simply converted to string
   expect_identical(pname(wt), "wt")
@@ -28,11 +28,11 @@ test_that("property values for variables", {
   names(dat)[3] <- "b-a"
 
   # Column named `b-a`
-  expect_identical(prop_value(variable(quote(`b-a`)), dat), 7:9)
+  expect_identical(prop_value(prop_var(quote(`b-a`)), dat), 7:9)
 
   # Expression b-a
-  expect_equal(prop_value(variable(quote(b-a)), dat), c(3, 3, 3))
+  expect_equal(prop_value(prop_var(quote(b-a)), dat), c(3, 3, 3))
 
-  # Constant value in a variable()
-  expect_equal(prop_value(variable(10), dat), 10)
+  # Constant value in a prop_var()
+  expect_equal(prop_value(prop_var(10), dat), 10)
 })

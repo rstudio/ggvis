@@ -1,7 +1,7 @@
 #' Property: reactive
 #'
 #' @param x A delayed reactive object
-#' @inheritParams variable
+#' @inheritParams prop_var
 #' @export
 #' @examples
 #' prop_reactive(input_select(c("red", "blue")), TRUE, FALSE)
@@ -53,13 +53,13 @@ prop_name.prop_reactive <- function(x) {
 }
 
 #' @S3method prop_scale prop_reactive
-prop_scale.prop_reactive <- prop_scale.variable
+prop_scale.prop_reactive <- prop_scale.prop_var
 
 #' @S3method prop_domain prop_reactive
-prop_domain.prop_reactive <- prop_domain.variable
+prop_domain.prop_reactive <- prop_domain.prop_var
 
 #' @S3method prop_vega prop_reactive
-prop_vega.prop_reactive <- prop_vega.variable
+prop_vega.prop_reactive <- prop_vega.prop_var
 
 # Given a prop_reactive object, return a string representation of the value
 # @examples

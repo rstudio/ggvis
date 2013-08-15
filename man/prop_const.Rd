@@ -1,8 +1,8 @@
-\name{constant}
-\alias{constant}
+\name{prop_const}
+\alias{prop_const}
 \title{Property: constant}
 \usage{
-  constant(value = NULL, scale = FALSE, mult = NULL,
+  prop_const(value = NULL, scale = FALSE, mult = NULL,
     offset = NULL)
 }
 \arguments{
@@ -30,9 +30,9 @@
   Use a constant value for a mark property.
 }
 \examples{
-constant("red")
-constant("red", scale = TRUE)
-constant("red", scale = "alarm")
-constant(offset = -4)
+prop_const("red")
+prop_const("red", scale = TRUE)
+prop_const("red", scale = "alarm")
+prop_const(offset = -4)
 }
 

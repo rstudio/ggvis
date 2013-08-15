@@ -26,13 +26,13 @@ gigvis(mtcars, props(x ~ wt, y ~ mpg, fill ~ factor(cyl)),
 # Use unscaled constant: 10 refers to 10 pixels from top
 gigvis(mtcars, props(x ~ wt),
   mark_symbol(props(y ~ mpg)),
-  mark_symbol(props(y = constant(10), fill = "red"))
+  mark_symbol(props(y = prop_const(10), fill = "red"))
 )
 
 # Use scaled constant: 10 refers to data space
 gigvis(mtcars, props(x ~ wt),
   mark_symbol(props(y ~ mpg)),
-  mark_symbol(props(y = constant(10, scale = TRUE), fill = "red"))
+  mark_symbol(props(y = prop_const(10, scale = TRUE), fill = "red"))
 )
 
 # Line and point graph
@@ -63,7 +63,7 @@ gigvis(mtcars, props(x ~ wt, y ~ mpg),
 # Two y scales
 gigvis(mtcars, props(x ~ wt, y ~ mpg),
   mark_symbol(),
-  mark_symbol(props(fill = "red", y = variable(quote(qsec), scale = "yq"))),
+  mark_symbol(props(fill = "red", y = prop_var(quote(qsec), scale = "yq"))),
   scales = scales(scale_quantitative("yq", range = "height"))
 )
 

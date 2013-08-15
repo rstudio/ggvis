@@ -26,7 +26,7 @@ props <- function(..., inherit = TRUE) {
 
   # Anything else that's not already a prop gets turned into a constant
   is_constant <- !vapply(pieces, is.prop, logical(1))
-  pieces[is_constant] <- lapply(pieces[is_constant], constant)
+  pieces[is_constant] <- lapply(pieces[is_constant], prop_const)
 
   structure(
     pieces,
@@ -48,7 +48,7 @@ mapped_props <- function(p) {
   if (!is.gigvis_props(p)) {
     stop("p is not a gigvis_props object", call. = FALSE)
   }
-  p[vapply(p, is.variable, logical(1))]
+  p[vapply(p, is.prop_var, logical(1))]
 }
 
 is.gigvis_props <- function(x) inherits(x, "gigvis_props")
@@ -79,7 +79,7 @@ parse_component <- function(x) {
   if (is.atomic(x[[3]])) {
     value <- constant(x[[3]], scale = TRUE)
   } else {
-    value <- variable(x[[3]])  
+    value <- prop_var(x[[3]])
   }
 
 

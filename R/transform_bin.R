@@ -57,7 +57,7 @@ branch_histogram <- function(props = NULL, ...) {
     x ~ xmin__, 
     x2 ~ xmax__, 
     y ~ count__,
-    y2 = constant(0, scale = TRUE)
+    y2 = prop_const(0, scale = TRUE)
   )
   props <- merge_props(props, default)
   
