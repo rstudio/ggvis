@@ -1,6 +1,6 @@
-# gigvis
+# ggvis
 
-The goal of gigvis is to makes it easy to describe interactive web graphics in 
+The goal of ggvis is to makes it easy to describe interactive web graphics in 
 R. It fuses the ideas of [ggplot2](http://github.com/hadley/ggplot2) and 
 [shiny](http://github.com/rstudio/shiny), rendering graphics on the web with
 [vega](https://github.com/trifacta/vega) (so can draw on the canvas or using
@@ -14,7 +14,7 @@ To install:
 ```R
 library(devtools)
 install_github(c("assertthat", "testthat"))
-install_github(c("httpuv", "shiny", "gigvis"), "rstudio")
+install_github(c("httpuv", "shiny", "ggvis"), "rstudio")
 ```
 
 Then check out the various demos in the `demo/` directory. Get started with
@@ -25,5 +25,5 @@ Then check out the various demos in the `demo/` directory. Get started with
 
 As well as the function level documentation, there are some vignettes (in 
 `vignettes/`) that describe broader topics.  Once you've installed the package
-you can list all vignettes with `vignette(package = "gigvis")`.
+you can list all vignettes with `vignette(package = "ggvis")`.
 
