@@ -8,7 +8,7 @@ gigvisOutput <- function(id) {
   tagList(
     singleton(tags$head(
       tags$script(src = "gigvis/lib/jquery-1.9.1.js"),
-      tags$script(src = "gigvis/lib/jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.js"),
+      tags$script(src = "gigvis/lib/jquery-ui/js/jquery-ui-1.10.3.custom.js"),
       tags$script(src = "gigvis/lib/d3.js"),
       tags$script(src = "gigvis/lib/vega.js"),
       tags$script(src = "gigvis/lib/QuadTree.js"),
@@ -17,7 +17,7 @@ gigvisOutput <- function(id) {
                 href = "gigvis/css/gigvis.css"),
       tags$link(rel = "stylesheet",
                 type = "text/css",
-                href = "gigvis/lib/jquery-ui-1.10.3.custom/css/smoothness/jquery-ui-1.10.3.custom.css")
+                href = "gigvis/lib/jquery-ui/css/smoothness/jquery-ui-1.10.3.custom.css")
     )),
     tags$div(id = id, class = "gigvis-output")
   )
