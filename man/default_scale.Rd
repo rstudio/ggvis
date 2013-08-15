@@ -64,7 +64,7 @@ First, the type of scale is selected based on the \code{type}}{
   default :/.
 
   You can add your own defaults (or override existing) by
-  calling \code{\link{add_default_scale}}: just be aware
+  calling \code{\link{add_scale_defaults}}: just be aware
   that this is a global setting.
 }
 \examples{

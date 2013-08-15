@@ -32,7 +32,7 @@
 #' just forgotten to add the appropriate default :/.
 #' 
 #' You can add your own defaults (or override existing) by calling
-#' \code{\link{add_default_scale}}: just be aware that this is a global setting.
+#' \code{\link{add_scale_defaults}}: just be aware that this is a global setting.
 #' 
 #' @param prop A vega property name.
 #' @param type A variable type, as returned by \code{\link{prop_type}}.
