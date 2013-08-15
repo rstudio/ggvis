@@ -1,0 +1,10 @@
+bar-histogram Bar plots and histograms
+scatterplot   Basic scatterplots
+lines          Line plots
+smooth        Plots with overlaid smoothers
+
+guides        Controlling axes and legends
+
+dynamic       Dynamic plots using reactive data sources 
+tourr         A dynamic plot displaying a simple grand tour
+interactive   Simple interactive examples
