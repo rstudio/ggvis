@@ -1,10 +1,15 @@
-# This is used similarly to view_static, but view_dynamic can take functions
-# or (reactive expressions) as data instead of names in an environment.
-
+#' Generate a dynamic shiny app with the embedded gigvis graph
+#'
+#' @inheritParams view_static
+#' @param port the port on which to start the shiny app
+#' @keywords internal
+#' @export
+#' @importFrom RJSONIO toJSON
+#' @importFrom whisker whisker.render
 #' @importFrom shiny pageWithSidebar headerPanel sidebarPanel uiOutput
 #'   mainPanel tags observe runApp stopApp renderUI
-view_dynamic <- function(gv, envir = parent.frame(), controls = NULL,
-                         renderer = "canvas", launch = TRUE, port = 8228) {
+#' @keywords internal
+view_dynamic <- function(gv, renderer = "canvas", launch = TRUE, port = 8228) {
 
   if (!(renderer %in% c("canvas", "svg")))
     stop("renderer must be 'canvas' or 'svg'")

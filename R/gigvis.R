@@ -110,9 +110,9 @@ print.gigvis <- function(x, dynamic = NA, ...) {
   if (is.na(dynamic)) dynamic <- is.dynamic(x)
   
   if (dynamic) {
-    view_dynamic(x)
+    view_dynamic(x, ...)
   } else {
-    view_static(x)
+    view_static(x, ...)
   }
 }
 

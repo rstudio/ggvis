@@ -16,4 +16,5 @@
 \description{
   Generate a static web page with the embedded gigvis graph
 }
+\keyword{internal}
 

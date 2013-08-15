@@ -8,6 +8,7 @@
 #' @export
 #' @importFrom RJSONIO toJSON
 #' @importFrom whisker whisker.render
+#' @keywords internal
 view_static <- function(gv, renderer = "canvas", launch = TRUE) {
 
   if (!(renderer %in% c("canvas", "svg")))
