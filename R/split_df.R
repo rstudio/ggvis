@@ -33,6 +33,8 @@ split_df.split_df <- function(data, split) {
 }
 
 #' @export
+#' @rdname split_df
+#' @param x object to test for split_df-ness
 is.split_df <- function(x) inherits(x, "split_df")
 
 #' @S3method split_vars split_df

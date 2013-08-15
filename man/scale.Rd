@@ -1,9 +1,12 @@
 \name{scale}
+\alias{is.scale}
 \alias{scale}
 \title{Create a new vega scale object}
 \usage{
   scale(name, type = NULL, domain = NULL, range = NULL,
     reverse = FALSE, round = FALSE, ..., subclass = NULL)
+
+  is.scale(x)
 }
 \arguments{
   \item{name}{name of the scale.}
@@ -38,6 +41,8 @@
 
   \item{subclass}{Class name for subclass.  Will have
   \code{scale_} prepended.}
+
+  \item{x}{object to test for scale-ness}
 }
 \description{
   Usually you would not call this function directly, but

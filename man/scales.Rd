@@ -1,12 +1,17 @@
 \name{scales}
+\alias{is.scales}
 \alias{scales}
 \title{Create a gigvis_scales object}
 \usage{
   scales(..., .scales = list())
+
+  is.scales(x)
 }
 \arguments{
   \item{...,.scales}{scales to combine into a single scales
   object}
+
+  \item{x}{object to test for scales-ness}
 }
 \description{
   Given arguments which are scales object, return a list

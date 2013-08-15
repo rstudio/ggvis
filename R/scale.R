@@ -79,6 +79,8 @@ named_list <- function(names, ...) {
 }
 
 #' @export
+#' @rdname scale
+#' @param x object to test for scale-ness
 is.scale <- function(x) inherits(x, "scale")
 
 #' @S3method format scale

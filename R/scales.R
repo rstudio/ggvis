@@ -17,6 +17,8 @@ scales <- function(..., .scales = list()) {
 }
 
 #' @export
+#' @rdname scales
+#' @param x object to test for scales-ness
 is.scales <- function(x) inherits(x, "gigvis_scales")
 
 #' @S3method format gigvis_scales
