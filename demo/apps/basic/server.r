@@ -18,8 +18,8 @@ shinyServer(function(input, output, session) {
   })
 
   # Set up observers for the spec and the data
-  observeGigvis(gv, "plot1", session)
-  observeGigvis(gv2, "plot2", session, width = 250, height = 250)
+  observeGgvis(gv, "plot1", session)
+  observeGgvis(gv2, "plot2", session, width = 250, height = 250)
 
   # User interface elements (in the sidebar)
   output$gigvis_ui <- renderControls(gv, session)

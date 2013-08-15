@@ -1,4 +1,4 @@
-#' Add a Gigvis plot to the UI of a Shiny app
+#' Add a Ggvis plot to the UI of a Shiny app
 #'
 #' @importFrom shiny addResourcePath singleton tagList
 #' @keywords internal
@@ -34,9 +34,9 @@ gigvisOutput <- function(id) {
 #' @param ... Other arguments passed to \code{as.vega}.
 #'
 #' @export
-observeGigvis <- function(r_gv, id, session, renderer = "canvas", ...) {
+observeGgvis <- function(r_gv, id, session, renderer = "canvas", ...) {
   if (!is.reactive(r_gv)) {
-    stop("observeGigvis requires a reactive expression that returns a gigvis object",
+    stop("observeGgvis requires a reactive expression that returns a gigvis object",
       call. = FALSE)
   }
   r_spec <- reactive(as.vega(r_gv(), session = session, dynamic = TRUE, ...))

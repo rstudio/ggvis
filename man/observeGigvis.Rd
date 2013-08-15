@@ -1,8 +1,8 @@
-\name{observeGigvis}
-\alias{observeGigvis}
+\name{observeGgvis}
+\alias{observeGgvis}
 \title{Set up Shiny observers for a dynamic gigvis plot}
 \usage{
-  observeGigvis(r_gv, id, session, renderer = "canvas",
+  observeGgvis(r_gv, id, session, renderer = "canvas",
     ...)
 }
 \arguments{

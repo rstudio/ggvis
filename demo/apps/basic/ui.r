@@ -1,5 +1,5 @@
 shinyUI(pageWithSidebar(
-  headerPanel("Gigvis plot"),
+  headerPanel("Ggvis plot"),
   sidebarPanel(
     uiOutput("gigvis_ui")
   ),

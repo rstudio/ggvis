@@ -1,6 +1,6 @@
 \name{gigvisOutput}
 \alias{gigvisOutput}
-\title{Add a Gigvis plot to the UI of a Shiny app}
+\title{Add a Ggvis plot to the UI of a Shiny app}
 \usage{
   gigvisOutput(id)
 }
@@ -9,7 +9,7 @@
   gigvis plot}
 }
 \description{
-  Add a Gigvis plot to the UI of a Shiny app
+  Add a Ggvis plot to the UI of a Shiny app
 }
 \keyword{internal}
 

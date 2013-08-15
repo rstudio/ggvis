@@ -18,7 +18,7 @@ view_dynamic <- function(gv, renderer = "canvas", launch = TRUE, port = 8228) {
 
   # Make our resources available
   ui <- pageWithSidebar(
-    headerPanel("Gigvis plot"),
+    headerPanel("Ggvis plot"),
     sidebarPanel(
       uiOutput("gigvis_ui"),
 
@@ -34,7 +34,7 @@ view_dynamic <- function(gv, renderer = "canvas", launch = TRUE, port = 8228) {
   server <- function(input, output, session) {
     r_gv <- reactive(gv)
     # Set up observers for the spec and the data
-    observeGigvis(r_gv, plot_id, session, renderer)
+    observeGgvis(r_gv, plot_id, session, renderer)
 
     # User interface elements (in the sidebar)
     output$gigvis_ui <- renderControls(r_gv, session)

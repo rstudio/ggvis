@@ -10,7 +10,7 @@ opts_chunk$set(comment = "#", error = TRUE, tidy = FALSE)
 
 # Interactivity
 
-Gigvis interactivity is built on top of the functional reactivty programming 
+Ggvis interactivity is built on top of the functional reactivty programming 
 model of shiny. You don't need to understand this model to add simple 
 interactivity, but if you want to understand how it works, or to add more 
 complicated interactions combining multiple controls or multiple plots, you'll 
@@ -32,7 +32,7 @@ This tutorial is divided into two parts:
 
 ## Basic interactive controls
 
-Gigvis provides a set of basic interactive controls:
+Ggvis provides a set of basic interactive controls:
 
 * `input_slider()`: a slider, or double-ended range slider
 * `input_select()`: create a drop-down text box
@@ -105,7 +105,7 @@ main differences:
 ## Shiny apps
 
 If you know how to create a shiny app already, adding a gigvis plot is easy. In
-`server.r`, create a reactive gigvis object, and call `observeGigvis()`. The 
+`server.r`, create a reactive gigvis object, and call `observeGgvis()`. The 
 first argument is the plot object, the second is the plot id (needs to match
 with `ui.r`, and the third argument is the session object).
 
@@ -116,7 +116,7 @@ gv <- reactive({
   )
 })
 
-observeGigvis(gv, "my_plot", session)
+observeGgvis(gv, "my_plot", session)
 ```
 
 Create `ui.r` as usual, using `gigvisOutput()` to place the gigvis plot on the 

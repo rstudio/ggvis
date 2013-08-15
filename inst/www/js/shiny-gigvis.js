@@ -35,7 +35,7 @@ $(function(){ //DOM Ready
       allPlots[plotId].data(dataset);
       allPlots[plotId].update();
 
-      updateGigvisDivSize(plotId);
+      updateGgvisDivSize(plotId);
     } else {
       // The plot doesn't exist, save it for when the plot arrives
       if (!pendingData[plotId])
@@ -75,7 +75,7 @@ $(function(){ //DOM Ready
 
   // Sets height and width of wrapper div to contain the plot area.
   // This is so that the resize handle will be put in the right spot.
-  function updateGigvisDivSize(plotId) {
+  function updateGgvisDivSize(plotId) {
     var $el = $(".gigvis-output#" + plotId);
     var $plotarea = $el.find("div.vega > .marks");
 
@@ -95,7 +95,7 @@ $(function(){ //DOM Ready
       chart.update();
       delete pendingData[plotId];
 
-      updateGigvisDivSize(plotId);
+      updateGgvisDivSize(plotId);
     }
   }
 });
