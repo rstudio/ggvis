@@ -6,6 +6,15 @@
     label = "", id = rand_id("select_"), map = identity)
 }
 \arguments{
+  \item{id}{a unique identifying name for this control -
+  only one control for a given name will be displayed on a
+  page}
+
+  \item{map}{a function with a singe argument that takes
+  the value returned from the input control and converts it
+  to an argument useful for ggvis.  Defaults to
+  \code{identity}, leaving the output unchanged.}
+
   \item{choices}{List of values to select from. If elements
   of the list are named then that name rather than the
   value is displayed to the user.}

@@ -2,6 +2,7 @@
 #' 
 #' @importFrom shiny sliderInput
 #' @inheritParams shiny::sliderInput
+#' @inheritParams input_select
 #' @family interactive input
 #' @export
 #' @examples

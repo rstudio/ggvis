@@ -12,6 +12,7 @@ guess <- function() {
 
 #' @export
 #' @rdname guess
+#' @param x object to test for guess-ness
 is.guess <- function(x) inherits(x, "guess")
 
 #' @S3method toString guess

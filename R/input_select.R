@@ -2,6 +2,11 @@
 #' 
 #' @importFrom shiny selectInput
 #' @inheritParams shiny::selectInput
+#' @param id a unique identifying name for this control - only one control
+#'   for a given name will be displayed on a page
+#' @param map a function with a singe argument that takes the value returned
+#'   from the input control and converts it to an argument useful for ggvis.
+#'   Defaults to \code{identity}, leaving the output unchanged.
 #' @family interactive input
 #' @export
 #' @examples

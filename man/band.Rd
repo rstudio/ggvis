@@ -8,6 +8,8 @@
   is.band(x)
 }
 \arguments{
+  \item{x}{object to for band-ness}
+
   \item{offset}{A simple additive offset to bias the final
   value, equivalent to (value + offset). Offsets are added
   after any scale transformation and multipliers.}

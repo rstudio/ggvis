@@ -2,7 +2,7 @@
 \alias{last_vis}
 \title{Retrieve the last visualisation created by gigvis.}
 \usage{
-  last_vis(x)
+  last_vis()
 }
 \description{
   Visualisations are saved whenever they are created or

@@ -1,6 +1,8 @@
 #' Add a Gigvis plot to the UI of a Shiny app
 #'
 #' @importFrom shiny addResourcePath singleton tagList
+#' @keywords internal
+#' @param id unique identifier to use for div tag containing gigvis plot
 #' @export
 gigvisOutput <- function(id) {
   addResourcePath("gigvis", system.file("www", package = "gigvis"))

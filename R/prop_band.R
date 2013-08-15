@@ -17,6 +17,7 @@ format.band <- function(x, ...) {
 print.band <- function(x, ...) cat(format(x, ...), "\n", sep = "")
 
 #' @rdname band
+#' @param x object to for band-ness
 is.band <- function(x) inherits(x, "band")
 
 #' @S3method prop_value band

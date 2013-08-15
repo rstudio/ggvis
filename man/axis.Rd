@@ -33,7 +33,7 @@
   Vega uses D3's format pattern:
   \url{https://github.com/mbostock/d3/wiki/Formatting}}
 
-  \item{ticky}{A desired number of ticks. The resulting
+  \item{ticks}{A desired number of ticks. The resulting
   number may be different so that values are "nice"
   (multiples of 2, 5, 10) and lie within the underlying
   scale's range.}

@@ -23,6 +23,13 @@
 
   mark_text(props = NULL, data = NULL)
 }
+\arguments{
+  \item{properties}{A \code{\link{props}} object, named
+  according to the properties listed below.}
+
+  \item{data}{An optional dataset, if you want to override
+  the usual data inheritance for this mark.}
+}
 \description{
   These functions create mark objects, corresponding to
   vega marks. Marks are leaves in the plot tree, and
