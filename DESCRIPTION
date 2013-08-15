@@ -15,7 +15,9 @@ Imports:
     digest,
     shiny (>= 0.6.0.99)
 Suggests:
-    testthat (>= 0.7.1.99)
+    testthat (>= 0.7.1.99),
+    knitr
+VignetteBuilder: knitr
 License: GPL-2
 Collate:
     'axis.R'
