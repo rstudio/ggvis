@@ -1,11 +1,11 @@
-library(gigvis)
+library(ggvis)
 
 # Basic dynamic example
 mtc1 <- reactive({
   invalidateLater(2000, NULL);
   mtcars[sample(nrow(mtcars), 10), ]
 })
-gigvis(mtc1, props(x ~ wt, y ~ mpg),
+ggvis(mtc1, props(x ~ wt, y ~ mpg),
   mark_symbol()
 )
 
@@ -19,7 +19,7 @@ mtc1 <- reactive({
   df$y <<- df$y + runif(20, -0.05, 0.05)
   df
 })
-gigvis(mtc1, props(x ~ x, y ~ y),
+ggvis(mtc1, props(x ~ x, y ~ y),
   mark_symbol(),
   dscale_x_numeric(domain = c(0, 1))
 )
@@ -34,7 +34,7 @@ mtc2 <- reactive({
   invalidateLater(2000, NULL);
   mtcars[sample(nrow(mtcars), 10), ]
 })
-gigvis(data = NULL, props = props(x ~ wt, y ~ mpg),
+ggvis(data = NULL, props = props(x ~ wt, y ~ mpg),
   node(
     data = mtc1,
     mark_symbol(props(stroke = "black", fill = "black"))
@@ -50,7 +50,7 @@ mtc1 <- reactive({
   invalidateLater(2000, NULL);
   mtcars[sample(nrow(mtcars), 10), ]
 })
-gigvis(mtc1, props(x ~ wt, y ~ mpg),
+ggvis(mtc1, props(x ~ wt, y ~ mpg),
   mark_symbol(),
   node(
     data = transform_smooth(method = "lm"),

@@ -1,14 +1,14 @@
-// We'll stick everything on "gigvis" global variable.
-window.gigvis = window.gigvis || {};  // If already defined, just extend it
+// We'll stick everything on "ggvis" global variable.
+window.ggvis = window.ggvis || {};  // If already defined, just extend it
 
 // This is where we'll store charts. Key = name, value = vega view
-gigvis.charts = {};
+ggvis.charts = {};
 
 
 // Socket communications
 
 var pendingSendQueue = [];
-var socket = gigvis.socket = new WebSocket('ws://' + window.location.host);
+var socket = ggvis.socket = new WebSocket('ws://' + window.location.host);
 socket.onopen = function() {
   pendingSendQueue.forEach(function(msg) {
     socket.send(msg);
@@ -35,9 +35,9 @@ function getItems(view) {
   return view.model().scene().items[0].items[0].items;
 }
 
-// Register a chart with the gigvis system
-gigvis.addChart = function(name, view) {
-  gigvis.charts[name] = view;
+// Register a chart with the ggvis system
+ggvis.addChart = function(name, view) {
+  ggvis.charts[name] = view;
 
   // Hook up brushing/linking event handlers
   subscribe(view);
@@ -53,11 +53,11 @@ gigvis.addChart = function(name, view) {
 
 // Run the iterator over every registered chart.
 // The iterator can take up to two parameters: view, and name
-gigvis.eachChart = function(iterator) {
-  var charts = gigvis.charts;
+ggvis.eachChart = function(iterator) {
+  var charts = ggvis.charts;
   for (var name in charts) {
     if (charts.hasOwnProperty(name))
-      if (iterator(gigvis.charts[name], name) === false)
+      if (iterator(ggvis.charts[name], name) === false)
         break;
   }
 };
@@ -113,13 +113,13 @@ function mouseOffset(e) {
 function subscribe(view) {
   var $el = $(view._el);
   // Hook up handlers
-  $el.on('mousedown.gigvis', function (event, item) {
+  $el.on('mousedown.ggvis', function (event, item) {
     startBrushing(removePadding(mouseOffset(event)));
   });
-  $el.on('mouseup.gigvis', function (event, item) {
+  $el.on('mouseup.ggvis', function (event, item) {
     stopBrushing();
   });
-  $el.on('mousemove.gigvis', function (event, item) {
+  $el.on('mousemove.ggvis', function (event, item) {
     brushTo(removePadding(mouseOffset(event)));
   });
 
@@ -138,7 +138,7 @@ function subscribe(view) {
 
   function startBrushing(point) {
     // Clear all brushes and highlights
-    gigvis.eachChart(function (view) {
+    ggvis.eachChart(function (view) {
       view.data({
         brush: [
           {x: 0, y: 0, width: 0, height: 0}
@@ -185,7 +185,7 @@ function subscribe(view) {
     }
 
     // Now perform highlighting on each chart
-    gigvis.eachChart(function (view) {
+    ggvis.eachChart(function (view) {
       selectKeys(view, matchingKeys);
     });
   }

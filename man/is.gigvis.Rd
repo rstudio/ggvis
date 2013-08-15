@@ -1,14 +1,14 @@
-\name{is.gigvis}
-\alias{is.gigvis}
-\title{Is an object a gigvis object?}
+\name{is.ggvis}
+\alias{is.ggvis}
+\title{Is an object a ggvis object?}
 \usage{
-  is.gigvis(x)
+  is.ggvis(x)
 }
 \arguments{
   \item{x}{an object to test}
 }
 \description{
-  Is an object a gigvis object?
+  Is an object a ggvis object?
 }
 \keyword{internal}
 

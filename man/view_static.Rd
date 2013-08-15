@@ -1,11 +1,11 @@
 \name{view_static}
 \alias{view_static}
-\title{Generate a static web page with the embedded gigvis graph}
+\title{Generate a static web page with the embedded ggvis graph}
 \usage{
   view_static(gv, renderer = "canvas", launch = TRUE)
 }
 \arguments{
-  \item{gv}{A gigvis object.}
+  \item{gv}{A ggvis object.}
 
   \item{renderer}{The renderer to use in the browser. Can
   be \code{"canvas"} (the default) or \code{"svg"}.}
@@ -14,7 +14,7 @@
   browser.}
 }
 \description{
-  Generate a static web page with the embedded gigvis graph
+  Generate a static web page with the embedded ggvis graph
 }
 \keyword{internal}
 

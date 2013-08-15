@@ -53,7 +53,7 @@
 #' v$n <- 10
 #' isolate(r())
 connect <- function(x, props, source = NULL, session = NULL) {
-  stopifnot(is.gigvis_props(props))
+  stopifnot(is.ggvis_props(props))
   UseMethod("connect")
 }
 

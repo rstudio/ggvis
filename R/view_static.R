@@ -1,6 +1,6 @@
-#' Generate a static web page with the embedded gigvis graph
+#' Generate a static web page with the embedded ggvis graph
 #'
-#' @param gv A gigvis object.
+#' @param gv A ggvis object.
 #' @param renderer The renderer to use in the browser. Can be \code{"canvas"}
 #'   (the default) or \code{"svg"}.
 #' @param launch If \code{TRUE}, launch this web page in a browser.
@@ -14,7 +14,7 @@ view_static <- function(gv, renderer = "canvas", launch = TRUE) {
   if (!(renderer %in% c("canvas", "svg")))
     stop("renderer must be 'canvas' or 'svg'")
 
-  temp_dir <- tempfile(pattern = "gigvis")
+  temp_dir <- tempfile(pattern = "ggvis")
   dir.create(temp_dir)
 
   copy_www_resources(temp_dir)
@@ -22,7 +22,7 @@ view_static <- function(gv, renderer = "canvas", launch = TRUE) {
   spec <- as.vega(gv, dynamic = FALSE)
   vega_json <- toJSON(spec, pretty = TRUE)
 
-  template <- paste(readLines(system.file('index.html', package='gigvis')),
+  template <- paste(readLines(system.file('index.html', package='ggvis')),
     collapse='\n')
 
   js <- paste0(
@@ -45,7 +45,7 @@ view_static <- function(gv, renderer = "canvas", launch = TRUE) {
 }
 
 
-#' Generate an PNG file from a gigvis object
+#' Generate an PNG file from a ggvis object
 #'
 #' This requires that the program \code{vg2png} is installed. This is part of
 #' \code{vega} node.js module.
@@ -53,7 +53,7 @@ view_static <- function(gv, renderer = "canvas", launch = TRUE) {
 #' @seealso \url{https://github.com/trifacta/vega} for information on installing
 #'   \code{vg2png}.
 #'
-#' @param gv A gigvis object.
+#' @param gv A ggvis object.
 #' @param envir The environment in which to evaluate \code{gv}.
 #' @param file Output file name. If NULL, defaults to "plot.png".
 #' @export
@@ -61,7 +61,7 @@ vega_png <- function(gv, envir = parent.frame(), file = NULL) {
   vega_file(gv, envir, file = file, type = "png")
 }
 
-#' Generate a SVG file from a gigvis object
+#' Generate a SVG file from a ggvis object
 #'
 #' This requires that the program \code{vg2png} is installed. This is part of
 #' \code{vega} node.js module.
@@ -69,7 +69,7 @@ vega_png <- function(gv, envir = parent.frame(), file = NULL) {
 #' @seealso \url{https://github.com/trifacta/vega} for information on installing
 #'   \code{vg2svg}.
 #'
-#' @param gv A gigvis object.
+#' @param gv A ggvis object.
 #' @param envir The environment in which to evaluate \code{gv}.
 #' @param file Output file name. If NULL, defaults to "plot.svg".
 #' @export
@@ -77,9 +77,9 @@ vega_svg <- function(gv, envir = parent.frame(), file = NULL) {
   vega_file(gv, envir, file = file, type = "svg")
 }
 
-# Generate an output image file from a gigvis object
+# Generate an output image file from a ggvis object
 #
-# @param gv A gigvis object.
+# @param gv A ggvis object.
 # @param envir The environment in which to evaluate \code{gv}.
 # @param file Output file name. If NULL, defaults to "plot.png".
 # @param type Output file type.
@@ -90,7 +90,7 @@ vega_file <- function(gv, envir = parent.frame(), file = NULL,
 
   if (is.null(file))  file <- paste0("plot.", type)
 
-  temp_dir <- tempfile(pattern = "gigvis")
+  temp_dir <- tempfile(pattern = "ggvis")
   dir.create(temp_dir)
 
   # Try to find the external program that generates the images
@@ -121,7 +121,7 @@ copy_www_resources <- function(destdir) {
   )
 
   lapply(files, function(file) {
-    src <- system.file("www", file, package = "gigvis")
+    src <- system.file("www", file, package = "ggvis")
 
     destfile <- file.path(destdir, file)
     parent_dir <- dirname(destfile)

@@ -1,6 +1,6 @@
 \name{renderControls}
 \alias{renderControls}
-\title{Render the controls for a gigvis object in a Shiny app}
+\title{Render the controls for a ggvis object in a Shiny app}
 \usage{
   renderControls(r_gv, session = NULL)
 }
@@ -11,13 +11,13 @@
   function}
 }
 \description{
-  Render the controls for a gigvis object in a Shiny app
+  Render the controls for a ggvis object in a Shiny app
 }
 \examples{
 \dontrun{
 # In server.r
 gv <- reactive({
-  gigvis(mtcars, props(x ~ wt, y ~ mpg),
+  ggvis(mtcars, props(x ~ wt, y ~ mpg),
     mark_symbol(),
     branch_smooth(
       n = input_slider(2, 80, "Interpolation points", value = 5, step = 1),

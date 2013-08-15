@@ -1,15 +1,15 @@
 <!--
 %\VignetteEngine{knitr}
-%\VignetteIndexEntry{gigvis vs vega/d3}
+%\VignetteIndexEntry{ggvis vs vega/d3}
 -->
 
-# gigvis vs vega/d3
+# ggvis vs vega/d3
 
-While gigvis is built on top of vega, which in turn borrows many ideas from d3,
+While ggvis is built on top of vega, which in turn borrows many ideas from d3,
 it is designed more for data exploration than data presentation. This means that
-gigvis makes many more assumptions about what you're trying to do: this allows
+ggvis makes many more assumptions about what you're trying to do: this allows
 it to be much more concise, at some cost of generality.
 
-The main difference to vega is that gigvis provides a tree like structure 
+The main difference to vega is that ggvis provides a tree like structure 
 allowing properties and data to be specified once and then inherited by 
 children. 

@@ -24,7 +24,7 @@ This tutorial is divided into two parts:
   common interactive needs and you don't need to know anything about shiny to
   use them.
 
-* Embedding gigvis in shiny: alternatively, you can embed a gigvis plot into a
+* Embedding ggvis in shiny: alternatively, you can embed a ggvis plot into a
   regular shiny app. This gives you complete freedom to make any component of 
   the plot interactive, to display multiple plots on one page, and to freely
   arrange controls. On the downside, you'll need more code, and you'll need at
@@ -52,7 +52,7 @@ These choices basically mean that you can control the data stored in a vega
 spec, but you can not change the spec itself. This is a reasonable limitation
 for creating interactive exploratory graphics - if you need to change something
 fundamental about the graphic itself, you can always create a new one in R.
-If you want more flexiblity, you can always embed a gigvis in a regular shiny
+If you want more flexiblity, you can always embed a ggvis in a regular shiny
 app.
 
 ### Mapping a slider to a property
@@ -77,11 +77,11 @@ control the size of the red and black points independently.
 
 ```{r, eval = FALSE}
 slider <- input_slider(100, 1000)
-gigvis(mtcars, props(x ~ wt, y ~ mpg), 
+ggvis(mtcars, props(x ~ wt, y ~ mpg), 
   mark_symbol(props(size = prop_reactive(slider, constant = TRUE, scale = FALSE))),
   mark_symbol(props(fill = "red", opacity = 0.5, size = prop_reactive(slider, constant = TRUE, scale = FALSE))))
 
-gigvis(mtcars, props(x ~ wt, y ~ mpg), 
+ggvis(mtcars, props(x ~ wt, y ~ mpg), 
   mark_symbol(props(size = prop_reactive(input_slider(100, 1000), constant = TRUE, scale = FALSE))),
   mark_symbol(props(fill = "red", size = prop_reactive(input_slider(100, 1000), constant = TRUE, scale = FALSE))))
 ```
@@ -97,21 +97,21 @@ main differences:
   plot for yourself, you usually remember what the controls do; and each control
   is assigned a random `id` so you don't need to think one up.
 
-* gigvis interactive controls are not created in a reactive context, so they
+* ggvis interactive controls are not created in a reactive context, so they
   can not return reactives. Instead, they return delayed reactives, which are
   activated and connected together when the plot is displayed.
 
 
 ## Shiny apps
 
-If you know how to create a shiny app already, adding a gigvis plot is easy. In
-`server.r`, create a reactive gigvis object, and call `observeGgvis()`. The 
+If you know how to create a shiny app already, adding a ggvis plot is easy. In
+`server.r`, create a reactive ggvis object, and call `observeGgvis()`. The 
 first argument is the plot object, the second is the plot id (needs to match
 with `ui.r`, and the third argument is the session object).
 
 ```{r, eval = FALSE}
 gv <- reactive({
-  gigvis(mtcars, props(x ~ disp, y ~ mpg, size = input$size),
+  ggvis(mtcars, props(x ~ disp, y ~ mpg, size = input$size),
     mark_symbol()
   )
 })
@@ -119,7 +119,7 @@ gv <- reactive({
 observeGgvis(gv, "my_plot", session)
 ```
 
-Create `ui.r` as usual, using `gigvisOutput()` to place the gigvis plot on the 
+Create `ui.r` as usual, using `ggvisOutput()` to place the ggvis plot on the 
 page.
 
 ```{r, eval = FALSE}
@@ -128,7 +128,7 @@ shinyUI(pageWithSidebar(
     sliderInput("size", "Area", 10, 1000),
   ),
   mainPanel(
-    gigvisOutput("my_plot")
+    ggvisOutput("my_plot")
   )
 ))
 ```

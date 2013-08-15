@@ -1,20 +1,20 @@
-library(gigvis)
+library(ggvis)
 
 # Bar graph with continuous x
-gigvis(pressure,
+ggvis(pressure,
   props = props(x ~ temperature, y ~ pressure),
   mark_rect(props(y2 = prop_const(0, scale = TRUE), width = 15))
 )
 
 # Bar graph with ordinal x
-gigvis(pressure,
+ggvis(pressure,
   props = props(x ~ temperature, y ~ pressure),
   mark_rect(props(y2 = prop_const(0, scale = TRUE), width = band())),
   scales = scales(scale_ordinal("x", range = "width", padding = 0, points = FALSE))
 )
 
 # Histogram, fully specified
-gigvis(
+ggvis(
   data = pipeline(mtcars, transform_bin(binwidth = 1)),
   props = props(x ~ wt),
   node(
@@ -25,25 +25,25 @@ gigvis(
 )
 
 # Or using shorthand branch
-gigvis(mtcars, props(x ~ wt),
+ggvis(mtcars, props(x ~ wt),
   branch_histogram(binwidth = 1)
 )
-gigvis(mtcars, props(x ~ wt),
+ggvis(mtcars, props(x ~ wt),
   branch_histogram()
 )
 
 # Histogram, filled by cyl
 by_cyl <- pipeline(mtcars, by_group("cyl"))
-gigvis(by_cyl, props(x ~ wt, fill ~ factor(cyl)),
+ggvis(by_cyl, props(x ~ wt, fill ~ factor(cyl)),
   branch_histogram(binwidth = 1))
 
-gigvis(by_cyl, props(x ~ wt, stroke ~ factor(cyl)),
+ggvis(by_cyl, props(x ~ wt, stroke ~ factor(cyl)),
   branch_freqpoly(binwidth = 1))
 
 
 # Bigger dataset
 data(diamonds, package = "ggplot2")
-gigvis(diamonds, props(x ~ table),
+ggvis(diamonds, props(x ~ table),
   branch_histogram()
 )
 

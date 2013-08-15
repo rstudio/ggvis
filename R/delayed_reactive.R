@@ -88,8 +88,8 @@ advance_delayed_reactives.prop_reactive <- function(x, session) {
   x
 }
 
-#' @S3method advance_delayed_reactives gigvis_props
-advance_delayed_reactives.gigvis_props <- function(x, session) {
+#' @S3method advance_delayed_reactives ggvis_props
+advance_delayed_reactives.ggvis_props <- function(x, session) {
   x[] <- lapply(x, advance_delayed_reactives, session = session)
   x
 }

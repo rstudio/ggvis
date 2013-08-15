@@ -4,8 +4,8 @@
 #' @keywords internal
 is.dynamic <- function(x) UseMethod("is.dynamic")
 
-#' @S3method is.dynamic gigvis_node
-is.dynamic.gigvis_node <- function(x) {
+#' @S3method is.dynamic ggvis_node
+is.dynamic.ggvis_node <- function(x) {
   is.dynamic(x$data) || is.dynamic(x$props) || any_apply(x$children, is.dynamic)
 }
 
@@ -13,8 +13,8 @@ is.dynamic.gigvis_node <- function(x) {
 is.dynamic.pipeline <- function(x, ...) {
   any_apply(x, is.dynamic)
 }
-#' @S3method is.dynamic gigvis_props
-is.dynamic.gigvis_props <- is.dynamic.pipeline
+#' @S3method is.dynamic ggvis_props
+is.dynamic.ggvis_props <- is.dynamic.pipeline
 
 #' @S3method is.dynamic datasource_reactive
 is.dynamic.datasource_reactive <- function(x) TRUE

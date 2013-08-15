@@ -20,7 +20,7 @@
 }
 \description{
   This creates an S3 object that represents pipeline of
-  data tranformations. The data argument to a gigvis
+  data tranformations. The data argument to a ggvis
   branch, must always be a data pipeline: to ensure this
   \code{as.pipeline} is also called on the input,
   automatically converting simpler expressions (like data

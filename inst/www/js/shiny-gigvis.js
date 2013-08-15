@@ -4,10 +4,10 @@
 /*global Shiny, vg*/
 $(function(){ //DOM Ready
 
-  var gigvisOutputBinding = new Shiny.OutputBinding();
-  $.extend(gigvisOutputBinding, {
+  var ggvisOutputBinding = new Shiny.OutputBinding();
+  $.extend(ggvisOutputBinding, {
     find: function(scope) {
-      return $(scope).find('.shiny-gigvis-output');
+      return $(scope).find('.shiny-ggvis-output');
     },
     onValueError: function(el, err) {
       Shiny.unbindAll(el);
@@ -19,11 +19,11 @@ $(function(){ //DOM Ready
       });
     }
   });
-  Shiny.outputBindings.register(gigvisOutputBinding, 'shiny.gigvisOutput');
+  Shiny.outputBindings.register(ggvisOutputBinding, 'shiny.ggvisOutput');
 
 
   var pendingData = {};
-  Shiny.addCustomMessageHandler("gigvis_data", function(message) {
+  Shiny.addCustomMessageHandler("ggvis_data", function(message) {
     var plotId = message.plotId;
     var name = message.name;
     var value = message.value[0].values;
@@ -46,17 +46,17 @@ $(function(){ //DOM Ready
 
 
   // Receive a vega spec and parse it
-  Shiny.addCustomMessageHandler("gigvis_vega_spec", function(message) {
+  Shiny.addCustomMessageHandler("ggvis_vega_spec", function(message) {
     var plotId = message.plotId;
     var spec = message.spec;
     var renderer = message.renderer;
 
     vg.parse.spec(spec, function(chart) {
-      var selector = ".gigvis-output#" + plotId;
+      var selector = ".ggvis-output#" + plotId;
       var $el = $(selector);
       chart = chart({ el: selector, renderer: renderer });
-      $el.data("gigvis-chart", chart);
-      gigvisInit(plotId);
+      $el.data("ggvis-chart", chart);
+      ggvisInit(plotId);
 
       // When done resizing, update with new width and height
       $el.resizable({
@@ -76,7 +76,7 @@ $(function(){ //DOM Ready
   // Sets height and width of wrapper div to contain the plot area.
   // This is so that the resize handle will be put in the right spot.
   function updateGgvisDivSize(plotId) {
-    var $el = $(".gigvis-output#" + plotId);
+    var $el = $(".ggvis-output#" + plotId);
     var $plotarea = $el.find("div.vega > .marks");
 
     $el.width($plotarea.width());
@@ -85,8 +85,8 @@ $(function(){ //DOM Ready
 
 
   var allPlots = {};
-  function gigvisInit(plotId) {
-    var chart = $(".gigvis-output#" + plotId).data("gigvis-chart");
+  function ggvisInit(plotId) {
+    var chart = $(".ggvis-output#" + plotId).data("ggvis-chart");
     allPlots[plotId] = chart;
 
     if (pendingData[plotId]) {

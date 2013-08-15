@@ -3,8 +3,8 @@ controls <- function(x, session = NULL, ...) UseMethod("controls")
 
 # Assumes that controls have id status set - delayed reactive will do this
 
-#' @S3method controls gigvis_node
-controls.gigvis_node <- function(x, session = NULL, ...) {
+#' @S3method controls ggvis_node
+controls.ggvis_node <- function(x, session = NULL, ...) {
   t_controls <- unlist(unname(lapply(x$data, controls)), recursive = FALSE)
   p_controls <- unlist(unname(lapply(x$props, controls)), recursive = FALSE)
   c_controls <- unlist(unname(lapply(x$children, controls)), recursive = FALSE)
@@ -21,8 +21,8 @@ controls.list <- function(x, session = NULL, ...) {
   ctrls <- lapply(x[dr], controls)
   unlist(unname(ctrls), recursive = FALSE, use.names = TRUE)
 }
-#' @S3method controls gigvis_props
-controls.gigvis_props <- controls.list
+#' @S3method controls ggvis_props
+controls.ggvis_props <- controls.list
 #' @S3method controls prop_reactive
 controls.prop_reactive <- controls.list
 

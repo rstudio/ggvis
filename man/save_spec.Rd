@@ -10,7 +10,7 @@
 \arguments{
   \item{path}{location to save spec to, or load spec from}
 
-  \item{x}{a gigvis object}
+  \item{x}{a ggvis object}
 
   \item{...}{other arguments passed to \code{as.vega}}
 }

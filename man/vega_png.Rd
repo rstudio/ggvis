@@ -1,11 +1,11 @@
 \name{vega_png}
 \alias{vega_png}
-\title{Generate an PNG file from a gigvis object}
+\title{Generate an PNG file from a ggvis object}
 \usage{
   vega_png(gv, envir = parent.frame(), file = NULL)
 }
 \arguments{
-  \item{gv}{A gigvis object.}
+  \item{gv}{A ggvis object.}
 
   \item{envir}{The environment in which to evaluate
   \code{gv}.}

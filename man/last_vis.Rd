@@ -1,6 +1,6 @@
 \name{last_vis}
 \alias{last_vis}
-\title{Retrieve the last visualisation created by gigvis.}
+\title{Retrieve the last visualisation created by ggvis.}
 \usage{
   last_vis()
 }
@@ -9,7 +9,7 @@
   plotted.
 }
 \examples{
-gigvis(mtcars, props(x ~ mpg, y ~ cyl), mark_symbol())
+ggvis(mtcars, props(x ~ mpg, y ~ cyl), mark_symbol())
 str(last_vis())
 }
 

@@ -1,5 +1,5 @@
 library(tourr)
-library(gigvis)
+library(ggvis)
 library(shiny)
 
 aps <- 2
@@ -15,7 +15,7 @@ proj_data <- reactive({
   data.frame(center(mat %*% step$proj), species = flea$species)
 })
 
-gigvis(proj_data, props(x ~ X1, y ~ X2, fill ~ species),
+ggvis(proj_data, props(x ~ X1, y ~ X2, fill ~ species),
   mark_symbol(),
   dscale("x", "numeric", domain = c(-1, 1)),
   dscale("y", "numeric", domain = c(-1, 1))

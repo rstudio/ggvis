@@ -1,7 +1,7 @@
-library(gigvis)
+library(ggvis)
 
 # Slider and select input in a transform
-gigvis(mtcars, props(x ~ wt, y ~ mpg),
+ggvis(mtcars, props(x ~ wt, y ~ mpg),
   mark_symbol(),
   branch_smooth(
     n = input_slider(2, 80, value = 5, step = 1, label = "Interpolation points"),
@@ -9,7 +9,7 @@ gigvis(mtcars, props(x ~ wt, y ~ mpg),
   )
 )
 
-gigvis(mtcars, props(x ~ wt, y ~ mpg),
+ggvis(mtcars, props(x ~ wt, y ~ mpg),
   mark_symbol(),
   branch_smooth(
     method = "loess", formula = mpg ~ wt,
@@ -17,7 +17,7 @@ gigvis(mtcars, props(x ~ wt, y ~ mpg),
 )
 
 # Example with value wrapper function
-gigvis(mtcars, props(x ~ wt, y ~ mpg),
+ggvis(mtcars, props(x ~ wt, y ~ mpg),
   mark_symbol(),
   branch_smooth(
     n = input_select(
@@ -32,7 +32,7 @@ gigvis(mtcars, props(x ~ wt, y ~ mpg),
 
 # Reactive properties -------------------------------------------------------
 # Constant values, raw (not on a scale)
-gigvis(mtcars,
+ggvis(mtcars,
   props(
     x ~ wt,
     y ~ mpg,
@@ -49,7 +49,7 @@ gigvis(mtcars,
 
 
 # Constant values, on a scale
-gigvis(mtcars,
+ggvis(mtcars,
   props(
     x ~ wt,
     y ~ mpg,
@@ -69,7 +69,7 @@ gigvis(mtcars,
 mtc <- mtcars
 mtc$colour1 <- c("red", "black")
 mtc$colour2 <- c("blue", "gray")
-gigvis(mtc,
+ggvis(mtc,
   props(
     x ~ wt,
     y ~ mpg,
@@ -80,7 +80,7 @@ gigvis(mtc,
 )
 
 # Variable values
-gigvis(mtcars,
+ggvis(mtcars,
   props(
     x ~ wt,
     y ~ mpg,

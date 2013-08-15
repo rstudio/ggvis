@@ -3,15 +3,15 @@ shinyServer(function(input, output, session) {
   span_slider <- input_slider(min = 0.2, max = 1, value = 0.5, step = 0.05,
     label = "Loess span")
 
-  # Create the gigvis objects
+  # Create the ggvis objects
   gv <- reactive({
-    gigvis(mtcars, props(x ~ wt, y ~ mpg),
+    ggvis(mtcars, props(x ~ wt, y ~ mpg),
       mark_symbol(),
       branch_smooth(span = span_slider)
     )
   })
   gv2 <- reactive({
-    gigvis(mtcars, props(x ~ wt, y ~ hp),
+    ggvis(mtcars, props(x ~ wt, y ~ hp),
       mark_symbol(),
       branch_smooth(span = span_slider)
     )
@@ -22,7 +22,7 @@ shinyServer(function(input, output, session) {
   observeGgvis(gv2, "plot2", session, width = 250, height = 250)
 
   # User interface elements (in the sidebar)
-  output$gigvis_ui <- renderControls(gv, session)
+  output$ggvis_ui <- renderControls(gv, session)
 
   # Stop the app when the quit button is clicked
   observe({

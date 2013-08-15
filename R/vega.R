@@ -1,6 +1,6 @@
-#' Coerce an gigvis object to a vega list.
+#' Coerce an ggvis object to a vega list.
 #'
-#' This generic function powers the coercion of gigvis objects to vega
+#' This generic function powers the coercion of ggvis objects to vega
 #' compatible data structures.
 #'
 #' @param x an object to convert to vega
@@ -11,14 +11,14 @@ as.vega <- function(x, ...) {
   UseMethod("as.vega", x)
 }
 
-#' @method as.vega gigvis
+#' @method as.vega ggvis
 #' @export
 #' @rdname as.vega
 #' @param width,height width and height of plot, in pixels
 #' @param padding padding, as described by \code{\link{padding}}
 #' @param session a session object from shiny
 #' @param dynamic whether to generate dynamic or static spec
-as.vega.gigvis <- function(x, width = 600, height = 400, padding = NULL,
+as.vega.ggvis <- function(x, width = 600, height = 400, padding = NULL,
                            session = NULL, dynamic = FALSE, ...) {
   if (is.null(padding)) padding <- padding()
 
@@ -57,7 +57,7 @@ as.vega.gigvis <- function(x, width = 600, height = 400, padding = NULL,
   structure(spec, data_table = data_table)
 }
 
-# Given a gigvis mark object and set of scales, output a vega mark object
+# Given a ggvis mark object and set of scales, output a vega mark object
 #' @S3method as.vega mark
 as.vega.mark <- function(mark) {
   # Keep only the vega-specific fields, then remove the class, drop nulls,
@@ -91,8 +91,8 @@ as.vega.mark <- function(mark) {
 
 }
 
-#' @S3method as.vega gigvis_props
-as.vega.gigvis_props <- function(x, default_scales = NULL) {
+#' @S3method as.vega ggvis_props
+as.vega.ggvis_props <- function(x, default_scales = NULL) {
   if (empty(x)) return(NULL)
 
   default_scales <- default_scales %||% prop_to_scale(names(x))

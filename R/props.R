@@ -31,29 +31,29 @@ props <- function(..., inherit = TRUE) {
   structure(
     pieces,
     inherit = inherit,
-    class = "gigvis_props"
+    class = "ggvis_props"
   )
 }
 
-#' @S3method format gigvis_props
-format.gigvis_props <- function(x, ...) {
+#' @S3method format ggvis_props
+format.ggvis_props <- function(x, ...) {
   labels <- lapply(x, format, ...)
   paste0("* ", names(x), ": ", labels, collapse = "\n")
 }
-#' @S3method print gigvis_props
-print.gigvis_props <- function(x, ...) cat(format(x, ...))
+#' @S3method print ggvis_props
+print.ggvis_props <- function(x, ...) cat(format(x, ...))
 
 # Return a list of properties that are mapped (not set)
 mapped_props <- function(p) {
-  if (!is.gigvis_props(p)) {
-    stop("p is not a gigvis_props object", call. = FALSE)
+  if (!is.ggvis_props(p)) {
+    stop("p is not a ggvis_props object", call. = FALSE)
   }
   p[vapply(p, is.prop_var, logical(1))]
 }
 
-is.gigvis_props <- function(x) inherits(x, "gigvis_props")
+is.ggvis_props <- function(x) inherits(x, "ggvis_props")
 
-# Merge two gigvis_props objects
+# Merge two ggvis_props objects
 #
 # merge_props(props(x ~ x))
 # merge_props(props(x ~ x), props(x ~ y))
@@ -62,11 +62,11 @@ is.gigvis_props <- function(x) inherits(x, "gigvis_props")
 merge_props <- function(parent = NULL, child = NULL) {
   if (is.null(parent)) return(child)
   if (is.null(child)) return(parent)
-  stopifnot(is.gigvis_props(parent), is.gigvis_props(child))
+  stopifnot(is.ggvis_props(parent), is.ggvis_props(child))
 
   if (identical(attr(child, "inherit"), FALSE)) return(child)
 
-  structure(merge_vectors(parent, child), class = "gigvis_props")
+  structure(merge_vectors(parent, child), class = "ggvis_props")
 }
 
 parse_component <- function(x) {

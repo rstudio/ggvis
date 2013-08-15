@@ -1,4 +1,4 @@
-Package: gigvis
+Package: ggvis
 Title: Interactive grammar of graphics
 Description: gigivs implements a interactive grammar of graphics, taking the
     best parts of ggplot2, combining them with shiny's reactive framework and
@@ -24,8 +24,8 @@ Collate:
     'connect.R'
     'df_to_json.R'
     'full_seq.R'
-    'gigvis.R'
-    'gigvis_render.R'
+    'ggvis.R'
+    'ggvis_render.R'
     'guess.R'
     'mark.R'
     'marks.R'

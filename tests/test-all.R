@@ -1,4 +1,4 @@
 library(testthat)
-library(gigvis)
+library(ggvis)
 
-test_check("gigvis")
+test_check("ggvis")

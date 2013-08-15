@@ -1,4 +1,4 @@
-#' Generate a dynamic shiny app with the embedded gigvis graph
+#' Generate a dynamic shiny app with the embedded ggvis graph
 #'
 #' @inheritParams view_static
 #' @param port the port on which to start the shiny app
@@ -20,14 +20,14 @@ view_dynamic <- function(gv, renderer = "canvas", launch = TRUE, port = 8228) {
   ui <- pageWithSidebar(
     headerPanel("Ggvis plot"),
     sidebarPanel(
-      uiOutput("gigvis_ui"),
+      uiOutput("ggvis_ui"),
 
       # Add an actionButton that quits the app and closes the browser window
       tags$button(id="quit", type="button", class="btn action-button",
         onclick = "window.close()", "Quit")
     ),
     mainPanel(
-      gigvisOutput(plot_id)
+      ggvisOutput(plot_id)
     )
   )
 
@@ -37,7 +37,7 @@ view_dynamic <- function(gv, renderer = "canvas", launch = TRUE, port = 8228) {
     observeGgvis(r_gv, plot_id, session, renderer)
 
     # User interface elements (in the sidebar)
-    output$gigvis_ui <- renderControls(r_gv, session)
+    output$ggvis_ui <- renderControls(r_gv, session)
 
     # Stop the app when the quit button is clicked
     observe({

@@ -2,32 +2,32 @@
 #'
 #' @importFrom shiny addResourcePath singleton tagList
 #' @keywords internal
-#' @param id unique identifier to use for div tag containing gigvis plot
+#' @param id unique identifier to use for div tag containing ggvis plot
 #' @export
-gigvisOutput <- function(id) {
-  addResourcePath("gigvis", system.file("www", package = "gigvis"))
+ggvisOutput <- function(id) {
+  addResourcePath("ggvis", system.file("www", package = "ggvis"))
 
   tagList(
     singleton(tags$head(
-      tags$script(src = "gigvis/lib/jquery-1.9.1.js"),
-      tags$script(src = "gigvis/lib/jquery-ui/js/jquery-ui-1.10.3.custom.js"),
-      tags$script(src = "gigvis/lib/d3.js"),
-      tags$script(src = "gigvis/lib/vega.js"),
-      tags$script(src = "gigvis/lib/QuadTree.js"),
-      tags$script(src = "gigvis/js/shiny-gigvis.js"),
+      tags$script(src = "ggvis/lib/jquery-1.9.1.js"),
+      tags$script(src = "ggvis/lib/jquery-ui/js/jquery-ui-1.10.3.custom.js"),
+      tags$script(src = "ggvis/lib/d3.js"),
+      tags$script(src = "ggvis/lib/vega.js"),
+      tags$script(src = "ggvis/lib/QuadTree.js"),
+      tags$script(src = "ggvis/js/shiny-ggvis.js"),
       tags$link(rel = "stylesheet", type = "text/css",
-                href = "gigvis/css/gigvis.css"),
+                href = "ggvis/css/ggvis.css"),
       tags$link(rel = "stylesheet",
                 type = "text/css",
-                href = "gigvis/lib/jquery-ui/css/smoothness/jquery-ui-1.10.3.custom.css")
+                href = "ggvis/lib/jquery-ui/css/smoothness/jquery-ui-1.10.3.custom.css")
     )),
-    tags$div(id = id, class = "gigvis-output")
+    tags$div(id = id, class = "ggvis-output")
   )
 }
 
-#' Set up Shiny observers for a dynamic gigvis plot
+#' Set up Shiny observers for a dynamic ggvis plot
 #'
-#' @param r_gv A reactive expression which returns a gigvis object.
+#' @param r_gv A reactive expression which returns a ggvis object.
 #' @param id The ID of the plot on the web page.
 #' @param session A Shiny session object.
 #' @param renderer The renderer type ("canvas" or "svg")
@@ -36,7 +36,7 @@ gigvisOutput <- function(id) {
 #' @export
 observeGgvis <- function(r_gv, id, session, renderer = "canvas", ...) {
   if (!is.reactive(r_gv)) {
-    stop("observeGgvis requires a reactive expression that returns a gigvis object",
+    stop("observeGgvis requires a reactive expression that returns a ggvis object",
       call. = FALSE)
   }
   r_spec <- reactive(as.vega(r_gv(), session = session, dynamic = TRUE, ...))
@@ -48,7 +48,7 @@ observeGgvis <- function(r_gv, id, session, renderer = "canvas", ...) {
 # Create an observer for a reactive vega spec
 observe_spec <- function(r_spec, id, session, renderer) {
   obs <- observe({
-    session$sendCustomMessage("gigvis_vega_spec", list(
+    session$sendCustomMessage("ggvis_vega_spec", list(
       plotId = id,
       spec = r_spec(),
       renderer = renderer
@@ -78,7 +78,7 @@ observe_data <- function(r_spec, id, session) {
           data_reactive <- get(data_name, data_table)
           data <- data_reactive()
 
-          session$sendCustomMessage("gigvis_data", list(
+          session$sendCustomMessage("ggvis_data", list(
             plotId = id,
             name = data_name,
             value = as.vega(data, data_name)
@@ -92,7 +92,7 @@ observe_data <- function(r_spec, id, session) {
   })
 }
 
-#' Render the controls for a gigvis object in a Shiny app
+#' Render the controls for a ggvis object in a Shiny app
 #'
 #' @param r_gv a ggvis object wrapped in a reactive
 #' @param session the session argument from the shiny server function
@@ -100,7 +100,7 @@ observe_data <- function(r_spec, id, session) {
 #' \dontrun{
 #' # In server.r
 #' gv <- reactive({
-#'   gigvis(mtcars, props(x ~ wt, y ~ mpg),
+#'   ggvis(mtcars, props(x ~ wt, y ~ mpg),
 #'     mark_symbol(),
 #'     branch_smooth(
 #'       n = input_slider(2, 80, "Interpolation points", value = 5, step = 1),

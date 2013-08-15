@@ -2,7 +2,7 @@
 #'
 #' This object is used by all \code{\link{marks}} - you should not have to call
 #' it directly, unless you are creating a new R mark object to represent a
-#' vega mark that is not currently available in gigvis.
+#' vega mark that is not currently available in ggvis.
 #'
 #' @param type vega mark list
 #' @param props list of properties
@@ -16,7 +16,7 @@ mark <- function(type, props, data = NULL) {
       data = as.pipeline(data),
       props = props
     )),
-    class = c(paste0("mark_", type), "mark", "gigvis_node")
+    class = c(paste0("mark_", type), "mark", "ggvis_node")
   )
 
   check_mark_props(m, names(m$props))

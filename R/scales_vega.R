@@ -1,4 +1,4 @@
-# Given a gigvis object, return all needed vega scales, with correct
+# Given a ggvis object, return all needed vega scales, with correct
 # domain values set.
 find_scales <- function(x, nodes, data_table) {
 

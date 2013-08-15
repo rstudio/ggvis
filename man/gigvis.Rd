@@ -1,9 +1,9 @@
-\name{gigvis}
-\alias{gigvis}
+\name{ggvis}
+\alias{ggvis}
 \alias{node}
-\title{Create a gigvis object, or a node in a gigvis plot.}
+\title{Create a ggvis object, or a node in a ggvis plot.}
 \usage{
-  gigvis(data = NULL, props = NULL, ...)
+  ggvis(data = NULL, props = NULL, ...)
 
   node(..., data = NULL, props = NULL)
 }
@@ -26,19 +26,19 @@
   other nodes and marks.}
 }
 \value{
-  a \code{gigvis_node} object. Will display the plot when
+  a \code{ggvis_node} object. Will display the plot when
   printed; see \code{\link{save_spec}},
   \code{\link{view_static}} and \code{\link{view_dynamic}}
   for other options.
 }
 \description{
-  Create a gigvis object, or a node in a gigvis plot.
+  Create a ggvis object, or a node in a ggvis plot.
 }
 \section{Hierarchy}{
-  A gigvis plot has a hierarchical structure, where each
+  A ggvis plot has a hierarchical structure, where each
   node inherits data and properties from its parent. This
   is somewhat similar to ggplot2, but ggplot2 plots only
-  had a single layer of hierarchy - with gigvis, you can
+  had a single layer of hierarchy - with ggvis, you can
   have multiple levels, making it easier to avoid
   redundancy, both in your specification and in
   computation.
@@ -47,12 +47,12 @@
   display both the predictions and the standard error from
   a linear model. In ggplot2, you had to use
   \code{geom_smooth()}, which was a special geom that
-  combined a line and a ribbon. With gigvis, you can do it
+  combined a line and a ribbon. With ggvis, you can do it
   yourself by using two marks nested inside a node: (and in
   fact, this is exactly how \code{\link{branch_smooth}})
   works.
 
-  \code{ gigvis(mtcars, props(x ~ disp, y ~ mpg), node(data
+  \code{ ggvis(mtcars, props(x ~ disp, y ~ mpg), node(data
   = transform_smooth(), mark_area(props(y ~ y_min, y2 ~
   y_max, fill = "#eee")), mark_line() ), mark_symbol() ) }
 }

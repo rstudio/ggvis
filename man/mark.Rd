@@ -18,7 +18,7 @@
   This object is used by all \code{\link{marks}} - you
   should not have to call it directly, unless you are
   creating a new R mark object to represent a vega mark
-  that is not currently available in gigvis.
+  that is not currently available in ggvis.
 }
 \keyword{internal}
 
