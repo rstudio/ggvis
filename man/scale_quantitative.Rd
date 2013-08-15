@@ -8,6 +8,10 @@
     reverse = FALSE, round = FALSE)
 }
 \arguments{
+  \item{trans}{A scale transformation: one of "linear",
+  "log", "pow", "sqrt", "quantile", "quantize",
+  "threshold"}
+
   \item{exponent}{Sets the exponent of the scale
   transformation. For pow transform only.}
 
@@ -24,6 +28,22 @@
   ignored for non-quantitative scales.}
 
   \item{name}{name of the scale.}
+
+  \item{domain}{The domain of the scale, representing the
+  set of data values.  For ordinal scales, a character
+  vector; for quantitative scales, a numeric vector of
+  length two. Either value (but not both) may be missing,
+  in which case \code{domainMin} or \code{domainMax} is
+  set.}
+
+  \item{range}{The range of the scale, representing the set
+  of visual values.  For numeric values, the range can take
+  the form of a two-element array with minimum and maximum
+  values. For ordinal data, the range may by an array of
+  desired output values, which are mapped to elements in
+  the specified domain. The following range literals are
+  also available: "width", "height", "shapes",
+  "category10", "category20".}
 
   \item{reverse}{If true, flips the scale range.}
 

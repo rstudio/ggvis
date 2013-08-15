@@ -50,6 +50,8 @@ transform_bin <- function(binwidth = guess(), origin = NULL, right = TRUE) {
 
 #' @rdname transform_bin
 #' @export
+#' @param props a \code{\link{props}} object describing a property mapping
+#' @param ... other arguments passed on to the underlying transform function
 branch_histogram <- function(props = NULL, ...) {
   if (is.null(props)) props <- props()
   
@@ -69,6 +71,7 @@ branch_histogram <- function(props = NULL, ...) {
 
 #' @rdname transform_bin
 #' @export
+#' @inheritParams branch_histogram
 branch_freqpoly <- function(props = NULL, ...) {
   if (is.null(props)) props <- props()
   

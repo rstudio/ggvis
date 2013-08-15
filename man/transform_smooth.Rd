@@ -38,6 +38,12 @@
   \item{na.rm}{If \code{TRUE} missing values will be
   silently removed, otherwise they will be removed with a
   warning.}
+
+  \item{...}{other arguments passed on to the underlying
+  transform function}
+
+  \item{props}{a \code{\link{props}} object describing a
+  property mapping}
 }
 \description{
   \code{transform_smooth} is a data transformation that can

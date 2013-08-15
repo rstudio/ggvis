@@ -4,6 +4,12 @@
 \usage{
   renderControls(r_gv, session = NULL)
 }
+\arguments{
+  \item{r_gv}{a ggvis object wrapped in a reactive}
+
+  \item{session}{the session argument from the shiny server
+  function}
+}
 \description{
   Render the controls for a gigvis object in a Shiny app
 }

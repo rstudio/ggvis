@@ -1,6 +1,8 @@
 #' Quantitative scale
 #' 
 #' @inheritParams scale
+#' @param trans A scale transformation: one of "linear", "log", "pow", "sqrt", 
+#'   "quantile", "quantize", "threshold"
 #' @param exponent Sets the exponent of the scale transformation. For pow 
 #'   transform only.
 #' @param clamp  If \code{TRUE}, values that exceed the data domain are clamped 

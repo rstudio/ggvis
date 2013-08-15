@@ -59,6 +59,7 @@ transform_smooth <- function(method = guess(), formula = guess(), se = TRUE,
 
 #' @rdname transform_smooth
 #' @export
+#' @inheritParams branch_histogram
 branch_smooth <- function(props = NULL, ...) {
   if (is.null(props)) props <- props()
   node(

@@ -1,6 +1,9 @@
 #' Create a data frame split up by specified variables
 #'
 #' @export
+#' @param data a data frame
+#' @param split a list of properties
+#' @keywords internal
 split_df <- function(data, split) {
   if (is.null(data)) return(data)
 

@@ -10,8 +10,7 @@
 \arguments{
   \item{prop}{A vega property name.}
 
-  \item{type}{A variable type, as returned by
-  \code{\link{prop_type}}.  One of datetime, numeric,
+  \item{type}{A variable type.  One of datetime, numeric,
   ordinal, nominal, logical.}
 
   \item{...}{other arguments passed to the scale function.

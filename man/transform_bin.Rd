@@ -22,6 +22,12 @@
 
   \item{right}{Should bins be right-open, left-closed, or
   right-closed, left-open}
+
+  \item{props}{a \code{\link{props}} object describing a
+  property mapping}
+
+  \item{...}{other arguments passed on to the underlying
+  transform function}
 }
 \description{
   Transformation: bin continuous variable.

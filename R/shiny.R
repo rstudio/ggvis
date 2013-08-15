@@ -94,6 +94,8 @@ observe_data <- function(r_spec, id, session) {
 
 #' Render the controls for a gigvis object in a Shiny app
 #'
+#' @param r_gv a ggvis object wrapped in a reactive
+#' @param session the session argument from the shiny server function
 #' @examples
 #' \dontrun{
 #' # In server.r

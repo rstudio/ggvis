@@ -35,8 +35,8 @@
 #' \code{\link{add_scale_defaults}}: just be aware that this is a global setting.
 #' 
 #' @param prop A vega property name.
-#' @param type A variable type, as returned by \code{\link{prop_type}}.
-#'   One of datetime, numeric, ordinal, nominal, logical.
+#' @param type A variable type.  One of datetime, numeric, ordinal, nominal, 
+#'   logical.
 #' @param ... other arguments passed to the scale function. See the help for
 #'   \code{\link{scale_quantitative}}, \code{\link{scale_ordinal}} and 
 #'   \code{\link{scale_time}} for more details. For example, you might supply

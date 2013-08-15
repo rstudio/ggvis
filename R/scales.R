@@ -5,6 +5,8 @@
 #' the objects.
 #'
 #' @export
+#' @param ...,.scales scales to combine into a single scales object
+#' @keywords internal
 scales <- function(..., .scales = list()) {
   args <- c(list(...), .scales)
   stopifnot(all(vapply(args, is.scale, logical(1))))

@@ -24,7 +24,7 @@
   mark_text(props = NULL, data = NULL)
 }
 \arguments{
-  \item{properties}{A \code{\link{props}} object, named
+  \item{props}{A \code{\link{props}} object, named
   according to the properties listed below.}
 
   \item{data}{An optional dataset, if you want to override

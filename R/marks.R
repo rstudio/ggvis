@@ -61,7 +61,7 @@
 #' \code{\link{prop_var}} and \code{\link{prop_const}} are the most commonly
 #' used.
 #' @name marks
-#' @param properties A \code{\link{props}} object, named according to the 
+#' @param props A \code{\link{props}} object, named according to the 
 #'   properties listed below.
 #' @param data An optional dataset, if you want to override the usual data 
 #'   inheritance for this mark.

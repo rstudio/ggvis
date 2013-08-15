@@ -3,6 +3,10 @@
 #' @inheritParams scale
 #' @param clamp  If true, values that exceed the data domain are clamped to 
 #'   either the minimum or maximum range value.
+#' @param nice If specified, modifies the scale domain to use a more 
+#'   human-friendly value range. Should be a string indicating the desired time 
+#'   interval; legal values are "second", "minute", "hour", "day", "week", 
+#'   "month", or "year"
 #' @param utc if \code{TRUE}, uses UTC times.
 #' @seealso \url{https://github.com/trifacta/vega/wiki/Scales#time-scale-properties}
 #' @family vega scales
