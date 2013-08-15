@@ -6,6 +6,7 @@
 #' @param x an object to convert to vega
 #' @return a list. When converted to JSON, will be the type of structure
 #'   that vega expects.
+#' @keywords internal
 as.vega <- function(x, ...) {
   UseMethod("as.vega", x)
 }
@@ -15,6 +16,8 @@ as.vega <- function(x, ...) {
 #' @rdname as.vega
 #' @param width,height width and height of plot, in pixels
 #' @param padding padding, as described by \code{\link{padding}}
+#' @param session a session object from shiny
+#' @param dynamic whether to generate dynamic or static spec
 as.vega.gigvis <- function(x, width = 600, height = 400, padding = NULL,
                            session = NULL, dynamic = FALSE, ...) {
   if (is.null(padding)) padding <- padding()

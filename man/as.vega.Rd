@@ -15,6 +15,11 @@
 
   \item{padding}{padding, as described by
   \code{\link{padding}}}
+
+  \item{session}{a session object from shiny}
+
+  \item{dynamic}{whether to generate dynamic or static
+  spec}
 }
 \value{
   a list. When converted to JSON, will be the type of
@@ -24,4 +29,5 @@
   This generic function powers the coercion of gigvis
   objects to vega compatible data structures.
 }
+\keyword{internal}
 
