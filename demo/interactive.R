@@ -53,8 +53,14 @@ gigvis(mtcars,
   props(
     x ~ wt,
     y ~ mpg,
-    fill = prop_reactive(input_select(c("a", "b")),
-                         constant = TRUE, scale = TRUE)
+    fill = prop_reactive(input_select(c("Set A" = "A", "Set B" = "B"),
+        label = "Dynamically-generated column",
+        map = function(value) {
+          switch(value,
+            "A" = c("One", "Two"),
+            "B" = c("First", "Second", "Third", "Fourth"))
+        }),
+      constant = TRUE, scale = TRUE)
   ),
   mark_symbol()
 )
