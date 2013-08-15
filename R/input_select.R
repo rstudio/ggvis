@@ -10,9 +10,9 @@
 #' @family interactive input
 #' @export
 #' @examples
-#' input_select(0, 100)
-#' input_select(0, 100, "binwidth")
-#' input_select(0, 100, value = 50)
+#' input_select(c("a", "b", "c"))
+#' input_select(c("a", "b", "c"), multiple = TRUE)
+#' input_select(c("a", "b", "c"), selected = "c")
 input_select <- function(choices, selected = NULL, multiple = FALSE,
                          label = "", id = rand_id("select_"),
                          map = identity) {

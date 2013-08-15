@@ -77,7 +77,7 @@ parse_component <- function(x) {
 
   name <- as.character(x[[2]])
   if (is.atomic(x[[3]])) {
-    value <- constant(x[[3]], scale = TRUE)
+    value <- prop_const(x[[3]], scale = TRUE)
   } else {
     value <- prop_var(x[[3]])
   }
