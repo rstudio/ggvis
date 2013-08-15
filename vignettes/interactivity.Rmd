@@ -3,7 +3,10 @@
 %\VignetteIndexEntry{Interactivity}
 -->
 
-
+```{r, echo = FALSE}
+library(knitr)
+opts_chunk$set(comment = "#", error = TRUE, tidy = FALSE)
+```
 
 # Interactivity
 
@@ -34,10 +37,23 @@ Gigvis provides a set of basic interactive controls:
 * `input_slider()`: a slider, or double-ended range slider
 * `input_select()`: create a drop-down text box
 
+All inputs start with `input_` (so you can always use tab completion to see a 
+complete list). The arguments differ for each type, but share common arguments
+`label`, an informative text label displayed next to the control, and `map`,
+a function that enables you to remap the output of the input to something 
+appropriate for your graphic.
+
 which can be used in a limited number of places:
 
 * as arguments to transforms: `transform_smooth(span = input_slider(0, 1))`
 * or as properties: `props(size = prop_reactive(input_slider(10, 1000)))`
+
+These choices basically mean that you can control the data stored in a vega
+spec, but you can not change the spec itself. This is a reasonable limitation
+for creating interactive exploratory graphics - if you need to change something
+fundamental about the graphic itself, you can always create a new one in R.
+If you want more flexiblity, you can always embed a gigvis in a regular shiny
+app.
 
 ### Mapping a slider to a property
 
@@ -59,8 +75,7 @@ used for both layers - it controls the size of both the red and the black
 points. In the second plot, you get two independent sliders which allow you to
 control the size of the red and black points independently.
 
-
-```r
+```{r, eval = FALSE}
 slider <- input_slider(100, 1000)
 gigvis(mtcars, props(x ~ wt, y ~ mpg), 
   mark_symbol(props(size = prop_reactive(slider, constant = TRUE, scale = FALSE))),
@@ -69,9 +84,7 @@ gigvis(mtcars, props(x ~ wt, y ~ mpg),
 gigvis(mtcars, props(x ~ wt, y ~ mpg), 
   mark_symbol(props(size = prop_reactive(input_slider(100, 1000), constant = TRUE, scale = FALSE))),
   mark_symbol(props(fill = "red", size = prop_reactive(input_slider(100, 1000), constant = TRUE, scale = FALSE))))
-
 ```
-
 
 ### Compared to shiny
 
@@ -96,8 +109,7 @@ If you know how to create a shiny app already, adding a gigvis plot is easy. In
 first argument is the plot object, the second is the plot id (needs to match
 with `ui.r`, and the third argument is the session object).
 
-
-```r
+```{r, eval = FALSE}
 gv <- reactive({
   gigvis(mtcars, props(x ~ disp, y ~ mpg, size = input$size),
     mark_symbol()
@@ -107,12 +119,10 @@ gv <- reactive({
 observeGigvis(gv, "my_plot", session)
 ```
 
-
 Create `ui.r` as usual, using `gigvisOutput()` to place the gigvis plot on the 
 page.
 
-
-```r
+```{r, eval = FALSE}
 shinyUI(pageWithSidebar(
   sidebarPanel(
     sliderInput("size", "Area", 10, 1000),
@@ -122,4 +132,3 @@ shinyUI(pageWithSidebar(
   )
 ))
 ```
-
