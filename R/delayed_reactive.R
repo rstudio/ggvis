@@ -78,11 +78,10 @@ advance_delayed_reactives.list <- function(x, session) {
 advance_delayed_reactives.transform <- advance_delayed_reactives.list
 
 #' @importFrom shiny is.reactive
-#' @S3method advance_delayed_reactives prop_reactive
-advance_delayed_reactives.prop_reactive <- function(x, session) {
-  if (is.reactive(x$value)) {
-    stop("Delayed reactive has already been advanced.")
-  }
+#' @S3method advance_delayed_reactives prop
+advance_delayed_reactives.prop <- function(x, session) {
+  if (!x$reactive) return(x)
+  if (is.reactive(x$value)) stop("Delayed reactive has already been advanced.")
 
   x$value <- as.reactive(x$dr, session)
   x

@@ -34,8 +34,6 @@ Collate:
     'pipeline.R'
     'prop.R'
     'prop_band.R'
-    'prop_const.R'
-    'prop_var.R'
     'props.R'
     'range.R'
     'scale.R'
@@ -67,4 +65,3 @@ Collate:
     'view_dynamic.R'
     'view_static.R'
     'zzz.r'
-    'prop_reactive.R'

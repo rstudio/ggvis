@@ -3,7 +3,8 @@
 \alias{prop}
 \title{S3 property class}
 \usage{
-  prop(subclass, ...)
+  prop(x, constant = NULL, scale = NULL, offset = NULL,
+    mult = NULL)
 
   is.prop(x)
 }

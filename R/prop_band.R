@@ -3,7 +3,6 @@
 #' Bands are used to set the width or height on categorical scales.
 #'
 #' @export
-#' @inheritParams prop_const
 band <- function(offset = NULL, mult = NULL) {
   prop("band", offset = offset, mult = mult)
 }

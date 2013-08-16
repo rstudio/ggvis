@@ -6,7 +6,7 @@
 }
 \arguments{
   \item{...}{Variables to split on.  These are coerced to
-  \code{\link{prop_var}} objects with \code{as.prop_var}.}
+  variable \code{\link{prop}} objects with \code{as.prop}.}
 }
 \description{
   Split data by group
@@ -14,7 +14,7 @@
 \examples{
 by_group("cyl")
 by_group(quote(cyl))
-by_group(prop_var(quote(cyl)))
+by_group(prop(quote(cyl)))
 
 pl <- pipeline(mtcars, by_group("cyl"), transform_bin())
 sluice(pl, props(x ~ disp))
