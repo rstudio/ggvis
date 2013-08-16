@@ -7,8 +7,9 @@ prop <- function(x, constant = NULL, scale = NULL,
 
   # TODO: detect constant/variable for reactives
   constant <- constant %||% !is.quoted(x)
-  if (constant) scale <- scale %||% FALSE
-  else          scale <- scale %||% TRUE
+
+  # Constant scales default to FALSE; variable scales default to TRUE
+  scale <- scale %||% !constant
 
   reactive <- is.delayed_reactive(x)
   dr <- NULL
@@ -77,7 +78,7 @@ prop_name <- function(x) {
   var <- x$value
 
   if (is.symbol(var)) {
-    safe_vega_var(as.character(var))
+    as.character(var)
 
   } else if (is.language(var)) {
     # var is calculated from an expression; get a unique, JS-safe name. Prepend
@@ -86,8 +87,7 @@ prop_name <- function(x) {
     safe_vega_var(paste0("[e]", deparse(var)))
     
   } else {
-    # var is a constant
-    ""
+    stop("Unknown type for var", call. = FALSE)
   }
 }
 
