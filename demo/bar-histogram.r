@@ -3,23 +3,23 @@ library(ggvis)
 # Bar graph with continuous x
 ggvis(pressure,
   props = props(x ~ temperature, y ~ pressure),
-  mark_rect(props(y2 = prop_const(0, scale = TRUE), width = 15))
+  mark_rect(props(y2 = prop(0, scale = TRUE), width = 15))
 )
 
 # Bar graph with ordinal x
 ggvis(pressure,
-  props = props(x ~ temperature, y ~ pressure),
-  mark_rect(props(y2 = prop_const(0, scale = TRUE), width = band())),
-  scales = scales(scale_ordinal("x", range = "width", padding = 0, points = FALSE))
+  props(x ~ temperature, y ~ pressure),
+  dscale("x", "nominal", range = "width", padding = 0, points = FALSE),
+  mark_rect(props(y2 = prop(0, scale = TRUE), width = band()))
 )
 
 # Histogram, fully specified
 ggvis(
   data = pipeline(mtcars, transform_bin(binwidth = 1)),
-  props = props(x ~ wt),
+  props(x ~ wt),
   node(
-    props = props(x ~ xmin__, x2 ~ xmax__, y ~ count__,
-      y2 = prop_const(0, scale = TRUE)),
+    props(x ~ xmin__, x2 ~ xmax__, y ~ count__,
+          y2 = prop(0, constant = TRUE, scale = TRUE)),
     mark_rect()
   )
 )

@@ -26,25 +26,25 @@ ggvis(mtcars, props(x ~ wt, y ~ mpg, fill ~ factor(cyl)),
 # Use unscaled constant: 10 refers to 10 pixels from top
 ggvis(mtcars, props(x ~ wt),
   mark_symbol(props(y ~ mpg)),
-  mark_symbol(props(y = prop_const(10), fill = "red"))
+  mark_symbol(props(y = prop(10), fill = "red"))
 )
 
 # Use scaled constant: 10 refers to data space
 ggvis(mtcars, props(x ~ wt),
   mark_symbol(props(y ~ mpg)),
-  mark_symbol(props(y = prop_const(10, scale = TRUE), fill = "red"))
+  mark_symbol(props(y = prop(10, scale = TRUE), fill = "red"))
 )
 
 # Line and point graph
 ggvis(mtcars, props(x ~ wt, y ~ mpg),
   mark_line(),
-  mark_symbol(fill = "red")
+  mark_symbol(props(fill = "red"))
 )
 
 # Two marks
 ggvis(mtcars, props(x ~ wt, y ~ mpg),
   mark_symbol(),
-  mark_symbol(fill = "red", size = 25)
+  mark_symbol(props(fill = "red", size = 25))
 )
 
 # Multiple nested nodes
@@ -63,7 +63,7 @@ ggvis(mtcars, props(x ~ wt, y ~ mpg),
 # Two y scales
 ggvis(mtcars, props(x ~ wt, y ~ mpg),
   mark_symbol(),
-  mark_symbol(props(fill = "red", y = prop_var(quote(qsec), scale = "yq"))),
+  mark_symbol(props(fill = "red", y = prop(quote(qsec), scale = "yq"))),
   scales = scales(scale_quantitative("yq", range = "height"))
 )
 
@@ -71,8 +71,8 @@ ggvis(mtcars, props(x ~ wt, y ~ mpg),
 mtc1 <- mtcars[1:10, ]
 mtc2 <- mtcars[11:20, ]
 ggvis(data = NULL, props = props(x ~ wt, y ~ mpg),
-  mark_symbol(props(stroke = "black", fill = "black"), "mtc1"),
-  mark_symbol(props(fill = "red", size = 40), "mtc2")
+  mark_symbol(props(stroke = "black", fill = "black"), mtc1),
+  mark_symbol(props(fill = "red", size = 40), mtc2)
 )
 
 # Scatter plot with one set of points with `cyl` mapped to stroke,

@@ -36,13 +36,12 @@ ggvis(mtcars,
   props(
     x ~ wt,
     y ~ mpg,
-    fill = prop_reactive(input_select(c("red", "blue"), label = "Color"),
-                         constant = TRUE, scale = FALSE),
-    size = prop_reactive(input_slider(10, 1000, 100, label = "Size"),
-                         constant = TRUE, scale = FALSE),
-    opacity = prop_reactive(input_slider(0, 1, 1, label = "Opacity"),
-                            constant = TRUE, scale = FALSE)
-
+    fill = prop(input_select(c("red", "blue"), label = "Color"),
+                constant = TRUE, scale = FALSE),
+    size = prop(input_slider(10, 1000, 100, label = "Size"),
+                constant = TRUE, scale = FALSE),
+    opacity = prop(input_slider(0, 1, 1, label = "Opacity"),
+                   constant = TRUE, scale = FALSE)
   ),
   mark_symbol()
 )
@@ -53,7 +52,8 @@ ggvis(mtcars,
   props(
     x ~ wt,
     y ~ mpg,
-    fill = prop_reactive(input_select(c("Set A" = "A", "Set B" = "B"),
+    fill = prop(
+      input_select(c("Set A" = "A", "Set B" = "B"),
         label = "Dynamically-generated column",
         map = function(value) {
           switch(value,
@@ -73,8 +73,8 @@ ggvis(mtc,
   props(
     x ~ wt,
     y ~ mpg,
-    fill = prop_reactive(input_select(c("colour1", "colour2")),
-                         constant = FALSE, scale = FALSE)
+    fill = prop(input_select(c("colour1", "colour2")),
+                constant = FALSE, scale = FALSE)
   ),
   mark_symbol()
 )
@@ -84,8 +84,8 @@ ggvis(mtcars,
   props(
     x ~ wt,
     y ~ mpg,
-    fill = prop_reactive(input_select(c("mpg", "wt")),
-                         constant = FALSE, scale = TRUE)
+    fill = prop(input_select(c("mpg", "wt")),
+                constant = FALSE, scale = TRUE)
   ),
   mark_symbol()
 )

@@ -21,7 +21,7 @@ mtc1 <- reactive({
 })
 ggvis(mtc1, props(x ~ x, y ~ y),
   mark_symbol(),
-  dscale_x_numeric(domain = c(0, 1))
+  dscale("x", "numeric", domain = c(0, 1))
 )
 
 
