@@ -2,8 +2,7 @@
 \alias{observeGgvis}
 \title{Set up Shiny observers for a dynamic ggvis plot}
 \usage{
-  observeGgvis(r_gv, id, session, renderer = "canvas",
-    ...)
+  observeGgvis(r_gv, id, session, renderer = "canvas", ...)
 }
 \arguments{
   \item{r_gv}{A reactive expression which returns a ggvis
