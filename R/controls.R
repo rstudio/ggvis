@@ -23,8 +23,8 @@ controls.list <- function(x, session = NULL, ...) {
 }
 #' @S3method controls ggvis_props
 controls.ggvis_props <- controls.list
-#' @S3method controls prop_reactive
-controls.prop_reactive <- controls.list
+#' @S3method controls prop
+controls.prop <- controls.list
 
 #' @S3method controls transform
 controls.transform <- function(x) {

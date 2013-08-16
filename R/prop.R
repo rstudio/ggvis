@@ -54,11 +54,15 @@ prop_value <- function(x, data, processed = FALSE) {
 
   if (x$constant) {
     rep(val, nrow(data))
+
+  } else if (x$reactive) {
+    data[[val]]
+
   } else {
     if (processed) {
       data[[prop_name(x)]]
     } else {
-      eval(x$value, data, baseenv())
+      eval(val, data, baseenv())
     }
   }
 }
@@ -132,7 +136,7 @@ prop_domain <- function(x, data) {
 }
 
 
-# Given a prop_reactive object, return a string representation of the value
+# Given a prop object, return a string representation of the value
 # @examples
 # p <- props(x ~ mpg, y = 10)
 # as.character(p$x)

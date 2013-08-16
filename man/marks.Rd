@@ -85,9 +85,6 @@
 
   To each property, you can assign any property object
   (\code{\link{prop}}) either locally (i.e. in the mark),
-  or in a parent \code{\link{node}}. There are many
-  available property types to choose from:
-  \code{\link{prop_var}} and \code{\link{prop_const}} are
-  the most commonly used.
+  or in a parent \code{\link{node}}.
 }
 

@@ -30,8 +30,8 @@ is.dynamic.reactive <- function(x) TRUE
 #' @S3method is.dynamic delayed_reactive
 is.dynamic.delayed_reactive <- function(x) TRUE
 
-#' @S3method is.dynamic prop_reactive
-is.dynamic.prop_reactive <- function(x) TRUE
+#' @S3method is.dynamic prop
+is.dynamic.prop <- function(x) x$reactive
 
 #' @S3method is.dynamic default
 is.dynamic.default <- function(x) FALSE
