@@ -25,7 +25,6 @@ Collate:
     'df_to_json.R'
     'full_seq.R'
     'ggvis.R'
-    'ggvis_render.R'
     'guess.R'
     'mark.R'
     'marks.R'
@@ -65,3 +64,4 @@ Collate:
     'view_dynamic.R'
     'view_static.R'
     'zzz.r'
+    'flatten.R'
