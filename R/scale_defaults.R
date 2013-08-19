@@ -157,7 +157,7 @@ add_scale_defaults <- function(scale, types, ...) {
 
 # Position scales
 add_scale_defaults("x", c("numeric", "datetime"), range = "width")
-add_scale_defaults("y", c("ordinal", "nominal"), range = "width", padding = 0.5)
+add_scale_defaults("x", c("ordinal", "nominal"), range = "width", padding = 0.5)
 
 add_scale_defaults("y", c("numeric", "datetime"), range = "height")
 add_scale_defaults("y", c("ordinal", "nominal"), range = "height", padding = 0.5)
