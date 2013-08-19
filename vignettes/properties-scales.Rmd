@@ -194,4 +194,23 @@ ggvis(mtcars, props(y ~ mpg),
 )
 ```
 
+You could also force ggplot2 to use the same scale for properties that would
+otherwise use different scales. I'm not sure of a useful example of this, 
+except to force `stroke` and `fill` to use the same scale:
+
+```R
+df <- data.frame(x = 1:5, y = 1:5, a = runif(5), b = -runif(5))
+p <- props(x ~ x, y ~ y, stroke ~ a, fill ~ b, strokeWidth = 5, size = 1000)
+ggvis(df, p, mark_symbol(),
+  legend(fill = "stroke", properties = list(legend = props(y = 50)))
+)
+
+p2 <- props(x ~ x, y ~ y, stroke ~ a, fill = prop(quote(b), scale = "stroke"), 
+  strokeWidth = 5, size = 1000)
+ggvis(df, p2, mark_symbol())
+```
+
+In this case we don't need to manually add the correct scale, because ggvis
+has detected it for us automatically.
+
 [dual-axis]: https://www.lri.fr/~isenberg/publications/papers/Isenberg_2011_ASO.pdf
