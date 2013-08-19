@@ -6,7 +6,8 @@ prop <- function(x, constant = NULL, scale = NULL,
                  offset = NULL, mult = NULL) {
 
   # TODO: detect constant/variable for reactives
-  constant <- constant %||% !is.quoted(x)
+  # Atomic values and reactives default to constant = TRUE
+  constant <- constant %||% (is.atomic(x) || is.reactive(x))
 
   # Constant scales default to FALSE; variable scales default to TRUE
   scale <- scale %||% !constant
