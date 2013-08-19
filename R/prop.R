@@ -127,7 +127,7 @@ prop_vega <- function(x, default_scale) {
 prop_domain <- function(x, data) {
   # FIXME: for scaled constants, this should really insert a literal value in
   #   to the domain, but it's not obvious how to do that in vega currently.
-  if (x$constant) return(NULL)
+  if (x$constant && !x$reactive) return(NULL)
 
   list(
     data = data,
