@@ -173,7 +173,7 @@ add_scale_defaults("fill", "nominal", range = "category10")
 add_scale_defaults("shape", "nominal", range = "shapes")
 
 # Other ordinal properties
-add_scale_defaults("size", c("numeric", "ordinal"), range = c(1, 20))
+add_scale_defaults("size", c("numeric", "ordinal"), range = c(20, 100))
 
 add_scale_defaults("fontSize", c("numeric", "ordinal"), range = c(10, 20))
 
