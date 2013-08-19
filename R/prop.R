@@ -111,7 +111,7 @@ prop_vega <- function(x, default_scale) {
     offset = x$offset
   )
 
-  if (x$constant) {
+  if (x$constant && !x$reactive) {
     pv$value <- x$value
   } else {
     pv$field <- paste0("data.", prop_name(x))
