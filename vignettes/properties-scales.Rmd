@@ -189,8 +189,8 @@ ggvis(mtcars, props(y ~ mpg),
   mark_symbol(props(x = prop(quote(wt), scale = "xwt"), stroke = "blue")),
   dscale("x", "numeric", name = "xdisp"),
   dscale("x", "numeric", name = "xwt"),
-  axis("x", "xdisp", orient = "bottom"),
-  axis("x", "xwt", orient = "bottom", properties = list(labels = props(fill = "blue")))
+  guide_axis("x", "xdisp", orient = "bottom"),
+  guide_axis("x", "xwt", orient = "bottom", properties = list(labels = props(fill = "blue")))
 )
 ```
 
@@ -202,7 +202,7 @@ except to force `stroke` and `fill` to use the same scale:
 df <- data.frame(x = 1:5, y = 1:5, a = runif(5), b = -runif(5))
 p <- props(x ~ x, y ~ y, stroke ~ a, fill ~ b, strokeWidth = 5, size = 1000)
 ggvis(df, p, mark_symbol(),
-  legend(fill = "stroke", properties = list(legend = props(y = 50)))
+  guide_legend(fill = "stroke", properties = list(legend = props(y = 50)))
 )
 
 p2 <- props(x ~ x, y ~ y, stroke ~ a, fill = prop(quote(b), scale = "stroke"), 

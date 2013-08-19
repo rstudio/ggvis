@@ -20,7 +20,6 @@ Suggests:
 VignetteBuilder: knitr
 License: GPL-2
 Collate:
-    'axis.R'
     'connect.R'
     'df_to_json.R'
     'full_seq.R'
@@ -53,7 +52,6 @@ Collate:
     'utils.R'
     'utils_reactive.R'
     'vega.R'
-    'legend.R'
     'datasource.R'
     'last_vis.R'
     'delayed_reactive.R'
@@ -65,3 +63,5 @@ Collate:
     'view_static.R'
     'zzz.r'
     'flatten.R'
+    'guide_axis.R'
+    'guide_legend.R'

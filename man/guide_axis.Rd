@@ -1,11 +1,11 @@
-\name{axis}
-\alias{axis}
+\name{guide_axis}
+\alias{guide_axis}
 \title{Generate a vega axis specification}
 \usage{
-  axis(type, scale = type, orient = NULL, title = NULL,
-    title_offset = 0, format = NULL, ticks = NULL,
-    values = NULL, subdivide = NULL, tick_padding = NULL,
-    tick_size_major = NULL,
+  guide_axis(type, scale = type, orient = NULL,
+    title = NULL, title_offset = 0, format = NULL,
+    ticks = NULL, values = NULL, subdivide = NULL,
+    tick_padding = NULL, tick_size_major = NULL,
     tick_size_minor = tick_size_major,
     tick_size_end = tick_size_major, offset = NULL,
     layer = "back", grid = TRUE, properties = list())
@@ -71,7 +71,7 @@
   Generate a vega axis specification
 }
 \examples{
-axis("x")
-axis("x", properties = list(ticks = props(stroke = "red")))
+guide_axis("x")
+guide_axis("x", properties = list(ticks = props(stroke = "red")))
 }
 

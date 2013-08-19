@@ -1,8 +1,8 @@
-\name{legend}
-\alias{legend}
+\name{guide_legend}
+\alias{guide_legend}
 \title{Generate a vega legend specification}
 \usage{
-  legend(size = NULL, shape = NULL, fill = NULL,
+  guide_legend(size = NULL, shape = NULL, fill = NULL,
     stroke = NULL, orient = "right", title = NULL,
     format = NULL, values = NULL, properties = NULL)
 }
@@ -31,6 +31,6 @@
   Generate a vega legend specification
 }
 \examples{
-legend(size = "size")
+guide_legend(size = "size")
 }
 

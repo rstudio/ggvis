@@ -6,10 +6,10 @@ ggvis(mtcars, props(x ~ wt, y ~ mpg, fill ~ cyl),
 
 ggvis(mtcars, props(x ~ wt, y ~ mpg, fill ~ cyl),
   mark_symbol(),
-  axis("x", title = "Weight")
+  guide_axis("x", title = "Weight")
 )
 
 ggvis(mtcars, props(x ~ wt, y ~ mpg, fill ~ cyl),
   mark_symbol(),
-  legend(fill = "fill", title = "Cylinders")
+  guide_legend(fill = "fill", title = "Cylinders")
 )

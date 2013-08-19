@@ -14,8 +14,8 @@
 #'   of \code{\link{props}}.
 #' @export
 #' @examples
-#' legend(size = "size")
-legend <- function(size = NULL, shape = NULL, fill = NULL, stroke = NULL,
+#' guide_legend(size = "size")
+guide_legend <- function(size = NULL, shape = NULL, fill = NULL, stroke = NULL,
                    orient = "right", title = NULL, format = NULL, values = NULL,
                    properties = NULL) {
 
@@ -36,7 +36,7 @@ add_default_legends <- function(legends, scales) {
 
   for (scale in missing) {
     args <- setNames(list(scale), scales[[scale]]$name)
-    legends[[scale]] <- do.call(legend, args)
+    legends[[scale]] <- do.call(guide_legend, args)
   }
 
   unname(legends)

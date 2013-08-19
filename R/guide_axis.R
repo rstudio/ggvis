@@ -33,9 +33,9 @@
 #'   \code{\link{props}}.
 #' @export
 #' @examples
-#' axis("x")
-#' axis("x", properties = list(ticks = props(stroke = "red")))
-axis <- function(type, scale = type, orient = NULL, title = NULL,
+#' guide_axis("x")
+#' guide_axis("x", properties = list(ticks = props(stroke = "red")))
+guide_axis <- function(type, scale = type, orient = NULL, title = NULL,
                  title_offset = 0, format = NULL, ticks = NULL,
                  values = NULL, subdivide = NULL, tick_padding = NULL,
                  tick_size_major = NULL, tick_size_minor = tick_size_major,
@@ -70,7 +70,7 @@ add_default_axes <- function(axes, scales) {
   missing <- setdiff(intersect(names(scales), c("x", "y")), present)
 
   for (scale in missing) {
-    axes[[scale]] <- axis(scale)
+    axes[[scale]] <- guide_axis(scale)
   }
 
   unname(axes)
