@@ -56,10 +56,10 @@ guide_axis <- function(type, scale = type, orient = NULL, title = NULL,
 
   structure(compact(list(
       type = type, scale = scale, orient = orient, title = title,
-      title_offset = title_offset, format = format, ticks = ticks,
-      values = values, subdivide = subdivide, tick_padding = tick_padding,
-      tick_size_major = tick_size_major, tick_size_minor = tick_size_minor,
-      tick_size_end = tick_size_end, offset = offset, layer = layer,
+      titleOffset = title_offset, format = format, ticks = ticks,
+      values = values, subdivide = subdivide, tickPadding = tick_padding,
+      tickSizeMajor = tick_size_major, tickSizeMinor = tick_size_minor,
+      tickSizeEnd = tick_size_end, offset = offset, layer = layer,
       grid = grid, properties = properties
   )), class = "vega_axis")
 }
