@@ -19,6 +19,8 @@ prop <- function(x, constant = NULL, scale = NULL,
     x <- function() stop("Delayed reactive has not yet been advanced!")
   }
 
+  if (constant && !reactive) assert_that(length(x) == 1)
+
   structure(
     list(value = x,
       dr = dr,
