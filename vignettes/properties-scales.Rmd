@@ -145,6 +145,33 @@ gigvis(mtcars, props(x = prop(vars, constant = FALSE), y ~ mpg),
   mark_symbol())
 ```
 
+### Special evaluation and variables
+
+`prop()` doesn't do any special evaluation which means that you if you want a
+non-constant scale, you need to supply a quoted expression:
+
+```R
+prop(quote(x))
+var <- quote(x)
+prop(var)
+```
+
+If you have the name of a variable as a string, you can convert it a name with
+`as.name()`:
+
+```R
+var <- "mpg"
+prop(as.name(var))
+```
+
+If you have an R expression as a string, `parse()` it then extract the first
+element of the result:
+
+```R
+expr <- "mpg / wt"
+prop(parse(text = expr)[[1]])
+```
+
 ## Properties -> scales
 
 Each (scaled) property is associated with a scale. The default scale associated
