@@ -16,10 +16,13 @@ input_slider <- function(min, max, value = min, step = NULL, round = FALSE,
 
   assert_that(is.string(label), is.string(id))
 
-  control <- function(session) {
-    sliderInput(id, label, min = min, max = max, value = value, step = step,
+  controls <- list(id, label, min = min, max = max, value = value, step = step,
       round = round, format = format, locale = locale, ticks = ticks)
-  }
 
-  delayed_reactive(from_input(id, value, map), control, id = id)
+  delayed_reactive("input_slider", from_input(id, value, map), controls, id = id)
+}
+
+#' @S3method controls input_slider
+controls.input_slider <- function(x, session = NULL) {
+  setNames(list(do.call(sliderInput, x$controls)), x$id)
 }

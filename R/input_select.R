@@ -18,10 +18,8 @@ input_select <- function(choices, selected = NULL, multiple = FALSE,
                          map = identity) {
   assert_that(is.string(label), is.string(id))
 
-  control <- function(session) {
-    selectInput(id, label, choices = choices, selected = selected,
+  controls <- list(id, label, choices = choices, selected = selected,
       multiple = multiple)
-  }
 
   if (is.null(selected)) {
     if (multiple) value <- ""
@@ -30,5 +28,11 @@ input_select <- function(choices, selected = NULL, multiple = FALSE,
     value <- choices[selected]
   }
 
-  delayed_reactive(from_input(id, value, map), control, id = id)
+  delayed_reactive("input_select", from_input(id, value, map), controls,
+    id = id)
+}
+
+#' @S3method controls input_select
+controls.input_select <- function(x, session = NULL) {
+  setNames(list(do.call(selectInput, x$controls)), x$id)
 }

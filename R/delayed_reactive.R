@@ -5,6 +5,9 @@
 #' (e.g. \code{\link{input_slider}}) that is instantiated when the visualisation
 #' is launched.
 #'
+#' @param class The name of a class to be used in addition to
+#'   "delayed_reactive". This is useful for functions that generate controls
+#'   from the object.
 #' @param fun Must always return a value - see \code{from_input} one way of
 #'   ensuring the function yields a value even before the reactiveValues have
 #'   be initialised for the first time by user input. It is passed either no
@@ -16,11 +19,12 @@
 #'  visualisation
 #' @export
 #' @keywords internal
-delayed_reactive <- function(fun, controls = NULL, id = rand_id()) {
+delayed_reactive <- function(class = NULL, fun, controls = NULL,
+                             id = rand_id()) {
   stopifnot(is.function(fun))
 
   structure(list(fun = fun, controls = controls, id = id),
-    class = "delayed_reactive")
+    class = c(class, "delayed_reactive"))
 }
 
 is.delayed_reactive <- function(x) inherits(x, "delayed_reactive")
