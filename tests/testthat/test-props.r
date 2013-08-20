@@ -1,18 +1,18 @@
 context("props")
 
 test_that("property names for variables", {
-  # pname(wt) is equivalent to prop_name(prop_var(quote(wt)))
-  pname <- function(x) prop_name(prop_var(substitute(x)))
+  # pname(wt) is equivalent to prop_name(prop(quote(wt)))
+  pname <- function(x) prop_name(prop(substitute(x)))
 
   # Regular variable names are simply converted to string
   expect_identical(pname(wt), "wt")
 
   # Variable names with special characters are made vega-safe
-  expect_identical(pname(`wt/mpg`), paste0("wt/mpg"))
-  expect_identical(pname(`wt.mpg`), paste0("wt\\.mpg"))
+  expect_identical(pname(`wt/mpg`), "wt/mpg")
+  expect_identical(pname(`wt.mpg`), "wt.mpg")
 
   # Expressions are made js-safe, with a hash
-  expect_identical(pname(wt/mpg), paste0("[e]wt/mpg"))
+  expect_identical(pname(wt/mpg), "[e]wt/mpg")
 
   # Expressions and weird column names don't result in same name
   expect_false(pname(wt/mpg) == pname(`wt/mpg`))
@@ -28,11 +28,11 @@ test_that("property values for variables", {
   names(dat)[3] <- "b-a"
 
   # Column named `b-a`
-  expect_identical(prop_value(prop_var(quote(`b-a`)), dat), 7:9)
+  expect_identical(prop_value(prop(quote(`b-a`)), dat), 7:9)
 
   # Expression b-a
-  expect_equal(prop_value(prop_var(quote(b-a)), dat), c(3, 3, 3))
+  expect_equal(prop_value(prop(quote(b-a)), dat), c(3, 3, 3))
 
-  # Constant value in a prop_var()
-  expect_equal(prop_value(prop_var(10), dat), 10)
+  # Constant prop
+  expect_equal(prop_value(prop(10), dat), rep(10, 3))
 })
