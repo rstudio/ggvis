@@ -1,7 +1,13 @@
 <!--
 %\VignetteEngine{knitr}
-%\VignetteIndexEntry{Data hierarchy}
+%\VignetteIndexEntry{Marks}
 -->
+
+```{r, echo = FALSE}
+library(knitr)
+library(ggvis)
+opts_chunk$set(comment = "#", error = TRUE, tidy = FALSE, eval = FALSE)
+```
 
 # Marks
 
@@ -21,6 +27,9 @@ that have very similar ggplot2 equivalents:
 * `mark_symbol` = `geom_point`
 * `mark_text` = `geom_text`
 
+All marks start with `mark_` so that you can always use tab autocomplete to 
+remind yourself of the options.
+
 There are two marks that have no equivalent in ggplot2:
 
 * `mark_arc` which allows you to draw arcs. You could accomplish something
@@ -33,15 +42,151 @@ There are two marks that have no equivalent in ggplot2:
   a compelling use-case for `mark_image`, let us know so we can consider 
   how to better support it.
 
-(If you're familiar with vega, you may wonder where the group mark is - it's 
-not currently supported but will be part of a future major release that will add
-support for facetting/subplots)
+There are two vega marks that are not currently implemented in ggvis:
 
-# Conversion from ggplot2
+* Support for the group mark will be added in future major release that will 
+  add support for facetting/subplots)
 
-The following table sketches out a conversions 
+* I can't currently see any use for the path mark, which takes svg path
+  specifications as input.
 
-(note that all the transformation functions might not be present yet)
+## Creating a mark
+
+All marks take two optional arguments which are only needed if you want to 
+override the values inherited from parent:
+
+* `props`, a `props()` object used to add any custom override for this layer
+* `data`, an optional dataset to override the data inherited from the parent
+
+For example, the following two plots are equivalent. In the first one, the 
+data and props are defined at the top level and inherited by the mark, and in 
+the second, they are defined in the mark itself. Note that the order of the 
+argumetns to `ggvis()` and the mark function are different: this is because 
+you'll usually set the data in top-level plot object, and usually only override
+props in the mark.
+
+```{r}
+ggvis(mtcars, props(x ~ wt, y ~ mpg, stroke = "red"), 
+  mark_symbol())
+
+ggvis(, , mark_symbol(props(x ~ wt, y ~ mpg, stroke = "red"), mtcars))
+```
+
+In terms of the data hierarchy, marks are leaves: they can not have any 
+children. See the data hierarchy vignette for more details.
+
+## Mark details
+
+The following sections describe particular details related to individual marks.
+
+### `mark_rect`
+
+If you have an ordinal scale, set width and/or height to `prop_band()` to 
+occupy the complete band corresponding to that categorical value.
+
+```{r}
+data(diamonds, package = "ggplot2")
+library(plyr)
+counts <- count(diamonds, c("cut", "color"))
+
+ggvis(counts, props(x ~ cut, y ~ colour, fill ~ freq),
+  mark_rect(props(width ~ prop_band(), y ~ prop_band()))
+```
+
+### `mark_line`
+
+`mark_line` produces lines if fill is empty, and polygons if it's set to a 
+value.
+
+```{r}
+df <- data.frame(x = c(1, 1, 2, 2), y = c(2, 1, 1, 2))
+ggvis(df, props(x ~ x, y ~ y), mark_line())
+# Add a fill colour to make it a polygon
+ggvis(df, props(x ~ x, y ~ y, fill = "red"), mark_line())
+```
+
+You can not currently set the component of lines to different colours: 
+track progress at https://github.com/trifacta/vega/issues/122.
+
+To create a line that spans the complete range of the plot, use `prop_group()`:
+
+```{r}
+ggvis(
+  mark_symbol(props(x ~ disp, y ~ wt), mtcars),
+  mark_line(props(y ~ mean(mtcars$wt), x = 0, x2 = prop_group()))
+  mark_line(props(x ~ mean(mtcars$disp), y = 0, y2 = prop_group()))
+)
+```
+
+Note that this won't work because `prop_group()` hasn't been written yet: track 
+progress at https://github.com/rstudio/ggvis/issues/38.
+
+### `mark_area`
+
+You need to set two of `y`, `y2` and `height`:
+
+```{r}
+df <- data.frame(x = 1:10, y = (1:10) ^ 2)
+ggvis(df, props(x ~ x, y ~ y, y2 ~ 0), mark_area())
+  
+# Set height in pixels
+ggvis(df, props(x ~ x, y ~ y, height = 20), mark_area())
+```
+
+Height is only suitable for constant, because it does not have an obvious scale
+associated with it. You could force height to use the `y` scale.
+
+```{r}
+ggvis(df, props(x ~ x, y ~ y, height = prop(80, scale = "y")), mark_area())
+```
+
+If you want to set the height in data units, you need to
+compute the offsets yourself:
+
+```{r}
+ggvis(df, props(x ~ x, y ~ y - 2, y2 ~ y + 2), mark_area())
+```
+
+## Grouping
+
+In ggplot2, grouping was a special aesthetic; in ggvis, grouping is a data 
+transformation: use `by_group()` to split your data up into pieces given a 
+specified variable:
+
+```{r}
+ggvis(mtcars, props(x ~ wt, y ~ mpg),
+  mark_symbol(),
+  mark_line(data = by_group("cyl"))
+)
+```
+
+## Branches
+
+In ggvis marks strictly represent drawing; a branch combines a mark with a
+transformation, and often a set of default props. For example:
+
+* `branch_histogram` = `mark_rect` + `transform_bin`
+* `branch_freqpoly` = `mark_line` + `transform_bin`
+* `branch_smooth` = (`mark_line` + `mark_area`) + `transform_bin`
+
+All branches start with `branch_` and the source will typically be simple so is 
+worth reading:
+
+```{r, eval = TRUE}
+branch_smooth
+branch_histogram
+```
+
+If you find yourself using a set of marks commonly, it might be worth writing
+your own branch function. Typically, the first argument should be `props` and
+`...` should be passed on to the tranform function.
+
+## Conversion from ggplot2
+
+The following list provides a conversion from ggplot2 geoms to vega marks. 
+However, because ggvis currently provides few transformations, many translations
+don't currently exists - but they are on the roadmap and will be added over 
+time.
 
 * `geom_abline`
 * `geom_area` = `mark_area` with `props(y ~ 0)`
