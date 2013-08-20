@@ -38,6 +38,10 @@ input_select(c("a", "b", "c"), multiple = TRUE)
 input_select(c("a", "b", "c"), selected = "c")
 }
 \seealso{
-  Other interactive input: \code{\link{input_slider}}
+  Other interactive input: \code{\link{input_checkbox}},
+  \code{\link{input_checkboxgroup}},
+  \code{\link{input_numeric}},
+  \code{\link{input_radiobuttons}},
+  \code{\link{input_slider}}, \code{\link{input_text}}
 }
 

@@ -66,6 +66,10 @@ input_slider(0, 100, label = "binwidth")
 input_slider(0, 100, value = 50)
 }
 \seealso{
-  Other interactive input: \code{\link{input_select}}
+  Other interactive input: \code{\link{input_checkbox}},
+  \code{\link{input_checkboxgroup}},
+  \code{\link{input_numeric}},
+  \code{\link{input_radiobuttons}},
+  \code{\link{input_select}}, \code{\link{input_text}}
 }
 

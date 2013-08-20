@@ -16,17 +16,79 @@ ggvis(mtcars, props(x ~ wt, y ~ mpg),
     span = input_slider(0.2, 1, label = "span"))
 )
 
-# Example with value wrapper function
+# Example with value map function
 ggvis(mtcars, props(x ~ wt, y ~ mpg),
   mark_symbol(),
   branch_smooth(
     n = input_select(
       choices = c("Two", "Six", "Eighty"),
-      map = function(value) {
-        switch(value, Two = 2, Six = 6, Eighty = 80)
-      },
+      map = function(value) switch(value, Two = 2, Six = 6, Eighty = 80),
       label = "Number of points"
     )
+  )
+)
+
+# Checkbox input
+ggvis(mtcars, props(x ~ wt, y ~ mpg),
+  mark_symbol(
+    props(opacity = input_checkbox(label = "Semi-transparent",
+                                   map = function(val) ifelse(val, .3, 1)))
+  ),
+  branch_smooth(
+    method = input_checkbox(label = "LOESS (curve) model fit",
+                            map = function(val) ifelse(val, "loess", "lm")))
+)
+
+# Text input
+ggvis(mtcars, props(x ~ wt, y ~ mpg),
+  mark_symbol(
+    props(fill = prop(input_text(label = "Point color", value = "red"),
+                      constant = TRUE, scale = FALSE))
+  ),
+  branch_smooth(
+    method = input_text(label = "Model type", value = "loess")
+  )
+)
+
+# Numeric input
+ggvis(mtcars, props(x ~ wt, y ~ mpg),
+  mark_symbol(
+    props(size = prop(input_numeric(value = 25, label = "Point size"),
+                      constant = TRUE, scale = FALSE))
+  ),
+  branch_smooth(
+    n = input_numeric(value = 5, label = "Interpolation points")
+  )
+)
+
+# Radio buttons
+ggvis(mtcars, props(x ~ wt, y ~ mpg),
+  mark_symbol(),
+  branch_smooth(
+    method = input_radiobuttons(choices = c("LOESS" = "loess", "Linear" = "lm"),
+                                label = "Model type"),
+    props(stroke = prop(input_radiobuttons(
+        choices = c("Red" = "red", "Black" = "black"), label = "Line color"),
+      constant = TRUE, scale = FALSE)
+    )
+  )
+)
+
+# Checkbox group
+ggvis(mtcars, props(x ~ wt, y ~ mpg),
+  mark_symbol(
+    props(fill = input_checkboxgroup(
+      choices = c("Red" = "r", "Green" = "g", "Blue" = "b"),
+      label = "Point color components",
+      map = function(val) {
+        # Build a RGB color string
+        str = "#"
+        str <- paste0(str, if ("r" %in% val) "f0" else "00")
+        str <- paste0(str, if ("g" %in% val) "f0" else "00")
+        str <- paste0(str, if ("b" %in% val) "f0" else "00")
+        str
+      }
+    ))
   )
 )
 
