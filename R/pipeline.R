@@ -27,6 +27,7 @@ pipeline <- function(..., .pipes = list()) {
     names(args) <- vapply(dots(...), function(x) deparse(x), character(1))
   }
   input <- c(args, .pipes)
+  if (length(input) == 0) return()
 
   names <- names(input) %||% rep(list(NULL), length(input))
   pipes <- trim_to_source(compact(Map(as.pipe, input, names)))

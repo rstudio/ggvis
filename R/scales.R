@@ -9,6 +9,7 @@
 #' @keywords internal
 scales <- function(..., .scales = list()) {
   args <- c(list(...), .scales)
+  if (length(args) == 0) return(NULL)
   stopifnot(all(vapply(args, is.scale, logical(1))))
 
   names(args) <- vapply(args, "name", FUN = `[[`, FUN.VALUE = character(1))

@@ -3,27 +3,15 @@
 \alias{node}
 \title{Create a ggvis object, or a node in a ggvis plot.}
 \usage{
-  ggvis(data = NULL, props = NULL, ...)
+  ggvis(...)
 
-  node(..., data = NULL, props = NULL)
+  node(...)
 }
 \arguments{
-  \item{data}{A data \code{\link{pipeline}}, or anything
-  that can be coerced to a pipeline using
-  \code{\link{as.pipeline}}. Typically this will be a data
-  frame, but some transforms will accept other types of
-  objects, and you can also supply a
-  \code{\link[shiny]{reactive}} whose value changes over
-  time.}
-
-  \item{props}{a list of \code{\link{props}} defining
-  default mark properties for this node and all its
-  children.}
-
-  \item{...}{components: \code{node}s, \code{\link{marks}},
-  \code{\link{scales}}, \code{\link{axis}} or
-  \code{\link{legend}} objects.  A node can only contain
-  other nodes and marks.}
+  \item{...}{components: data, \code{\link{props}},
+  \code{node}s, \code{\link{marks}}, \code{\link{scales}},
+  \code{\link{axis}} or \code{\link{legend}} objects. A
+  node can only contain other nodes and marks.}
 }
 \value{
   a \code{ggvis_node} object. Will display the plot when

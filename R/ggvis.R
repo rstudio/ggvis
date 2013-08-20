@@ -25,76 +25,60 @@
 #' )
 #' }
 #'
-#' @param data A data \code{\link{pipeline}}, or anything that can be coerced
-#'   to a pipeline using \code{\link{as.pipeline}}. Typically this will be
-#'   a data frame, but some transforms will accept other types of objects,
-#'   and you can also supply a \code{\link[shiny]{reactive}} whose value changes
-#'   over time.
-#' @param props a list of \code{\link{props}} defining default mark properties
-#'   for this node and all its children.
-#' @param ... components: \code{node}s,  \code{\link{marks}},
-#'   \code{\link{scales}}, \code{\link{axis}} or \code{\link{legend}} objects.
-#'   A node can only contain other nodes and marks.
+#' @param ... components: data, \code{\link{props}}, \code{node}s,
+#'   \code{\link{marks}}, \code{\link{scales}}, \code{\link{axis}} or 
+#'   \code{\link{legend}} objects. A node can only contain other nodes and 
+#'   marks.
 #' @return a \code{ggvis_node} object. Will display the plot when printed;
 #'   see \code{\link{save_spec}}, \code{\link{view_static}} and
 #'   \code{\link{view_dynamic}} for other options.
 #' @export
 #' @import assertthat
-ggvis <- function(data = NULL, props = NULL, ...) {
-  args <- list(...)
-  components <- ggvis_components(...)
-
-  vis <- structure(
-    list(
-      data = as.pipeline(data),
-      props = props,
-      scales = scales(.scales = components$scale),
-      axes = components$axis,
-      legends = components$legend,
-      children = components$node),
-    class = c("ggvis", "ggvis_node")
-  )
+ggvis <- function(...) {
+  vis <- ggvis_node("ggvis", ...)
   set_last_vis(vis)
   vis
 }
 
 #' @export
 #' @rdname ggvis
-node <- function(..., data = NULL, props = NULL) {
-  components <- ggvis_components(...)
+node <- function(...) {
+  node <- ggvis_node(character(), ...)
 
-  incorrect <- setdiff(names(components), "node")
+  incorrect <- setdiff(names(node), c("children", "data", "props"))
   if (length(incorrect) > 0) {
-    stop("Nodes may only contain other nodes, not scales, legends or axis",
+    stop("Nodes may only contain other nodes, not scales, legends or axes",
       call. = FALSE)
   }
-
-  structure(
-    list(
-      data = as.pipeline(data),
-      props = props,
-      children = components$node
-    ),
-    class = "ggvis_node"
-  )
+  
+  node
 }
 
-ggvis_components <- function(...) {
+ggvis_node <- function(subclass = character(), ...) {
   args <- list(...)
   types <- vapply(args, component_type, character(1))
 
-  split(args, types)
+  components <- split(args, types)
+  components$props <- Reduce(merge_props, components$props)
+  components$data <- pipeline(.pipes = components$data)
+  components$scale <- scales(.scales = components$scale)
+  
+  structure(components, class = c(subclass, "ggvis_node"))
 }
 
 component_type <- function(x) UseMethod("component_type")
 #' @S3method component_type ggvis_node
-component_type.ggvis_node <- function(x) "node"
+component_type.ggvis_node <- function(x) "children"
 #' @S3method component_type scale
-component_type.scale <- function(x) "scale"
+component_type.scale <- function(x) "scales"
 #' @S3method component_type vega_legend
-component_type.vega_legend <- function(x) "legend"
+component_type.vega_legend <- function(x) "legends"
 #' @S3method component_type vega_axis
-component_type.vega_axis <- function(x) "axis"
+component_type.vega_axis <- function(x) "axes"
+#' @S3method component_type ggvis_props
+component_type.ggvis_props <- function(x) "props"
+#' @S3method component_type default
+component_type.default <- function(x) "data"
 
 #' Is an object a ggvis object?
 #'
