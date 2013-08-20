@@ -128,16 +128,27 @@ You need to set two of `y`, `y2` and `height`:
 ```{r}
 df <- data.frame(x = 1:10, y = (1:10) ^ 2)
 ggvis(df, props(x ~ x, y ~ y, y2 ~ 0), mark_area())
-  
+
 # Set height in pixels
 ggvis(df, props(x ~ x, y ~ y, height = 20), mark_area())
 ```
 
 Height is only suitable for constant, because it does not have an obvious scale
-associated with it. You could force height to use the `y` scale.
+associated with it. You could force height to use the `y` scale, but that 
+doesn't work - the area hangs below the y line, and increasing the value of
+height makes the area narrower! What's going on is that the underlying graphics
+device has (0, 0) in the top-left corner, and so the y-scale is upside down. As
+you increase height, it's mapped like a y variable so bigger values are further
+away.
 
 ```{r}
 ggvis(df, props(x ~ x, y ~ y, height = prop(80, scale = "y")), mark_area())
+  
+df <- data.frame(x = 1:10, y = (1:10) ^ 2)
+ggvis(df, props(x ~ x, y ~ y), 
+  mark_area(props(height = prop(input_slider(0, 100), scale = "y"))),
+  mark_line(props(stroke = "red", strokeWidth = 10))
+)
 ```
 
 If you want to set the height in data units, you need to
