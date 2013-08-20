@@ -126,8 +126,8 @@ default_mark_properties.mark_arc <- function(mark) {
 mark_area <- function(props = NULL, data = NULL) mark("area", props = props, data = data)
 #' @S3method valid_mark_properties mark_area
 valid_mark_properties.mark_area <- function(mark) {
-  c("x", "y", "y2", "opacity", "fill", "fillOpacity", "stroke", "strokeWidth",
-    "strokeOpacity", "interpolate", "tension")
+  c("x", "y", "y2", "height", "opacity", "fill", "fillOpacity", "stroke", 
+    "strokeWidth", "strokeOpacity", "interpolate", "tension")
 }
 #' @S3method default_mark_properties mark_area
 default_mark_properties.mark_area <- function(mark) {
