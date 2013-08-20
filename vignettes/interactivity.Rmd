@@ -5,57 +5,120 @@
 
 ```{r, echo = FALSE}
 library(knitr)
-opts_chunk$set(comment = "#", error = TRUE, tidy = FALSE)
+opts_chunk$set(comment = "#", error = TRUE, tidy = FALSE, eval = FALSE)
 ```
 
 # Interactivity
 
-Ggvis interactivity is built on top of the functional reactivty programming 
-model of shiny. You don't need to understand this model to add simple 
-interactivity, but if you want to understand how it works, or to add more 
-complicated interactions combining multiple controls or multiple plots, you'll 
-need to learn the basics of 
-[basics of shiny](http://rstudio.github.io/shiny/tutorial/).
+Ggvis interactivity is built on top of shiny's reactive programming 
+model. It's possible to use ggvis without understanding how shiny works,
+but you'll be limited to relatively simple interactions. The first part of
+this vignette describes __basic interactive controls__, which provide a quick 
+and easy way to add basic interactivity to a plot. They are not very flexible, 
+but they cover the most common interactive needs and you don't need to know 
+anything about shiny to use them.
 
-This tutorial is divided into two parts:
-
-* Basic interactive controls: these provide a quick and easy way to add basic
-  interactivity to a plot. They are not very flexible, but they cover the most
-  common interactive needs and you don't need to know anything about shiny to
-  use them.
-
-* Embedding ggvis in shiny: alternatively, you can embed a ggvis plot into a
-  regular shiny app. This gives you complete freedom to make any component of 
-  the plot interactive, to display multiple plots on one page, and to freely
-  arrange controls. On the downside, you'll need more code, and you'll need at
-  least a basic understand of shiny.
+The second part of this vignette shows you how to __embedding a ggvis in a shiny
+app__.  This gives you complete freedom to make any component of the plot 
+interactive, to display multiple plots on one page, and to freely arrange 
+controls. The downside is that you'll need more code, and you'll need at
+least a basic understanding of shiny. If you're not already familiar with
+how shiny works, I recommend that you first read through the 
+[shiny tutorial](http://rstudio.github.io/shiny/tutorial/)
 
 ## Basic interactive controls
 
-Ggvis provides a set of basic interactive controls:
+A plot with basic interactive controls looks very similar to a static plot.
+You just replace constant values with functions that produce interactive 
+controls like `input_slider()`:
 
-* `input_slider()`: a slider, or double-ended range slider
+```{r}
+ggvis(mtcars, props(x ~ wt, y ~ mpg),
+  mark_symbol(props(size = input_slider(100, 1000)),
+  branch_smooth(span = input_slider(0.5, 1, 1))))
+)
+```
+
+As well as `input_slider()`, which produces a slider (or a double-ended range 
+slider), there are a number of other interactive controls:
+
+* `input_checkbox()`: a check-box
+* `input_checkboxgroup()`: a group of check boxes
+* `input_numeric()`: a spin box
+* `input_radiobuttons()`: pick one from a set options
 * `input_select()`: create a drop-down text box
+* `input_text()`: arbitrary text input
 
-All inputs start with `input_` (so you can always use tab completion to see a 
-complete list). The arguments differ for each type, but share common arguments
-`label`, an informative text label displayed next to the control, and `map`,
-a function that enables you to remap the output of the input to something 
-appropriate for your graphic.
+Note that all interactive inputs start with `input_` so that you can always use 
+tab completion to remind you of the options.
 
-which can be used in a limited number of places:
+### Arguments
 
-* as arguments to transforms: `transform_smooth(span = input_slider(0, 1))`
-* or as properties: `props(size = prop_reactive(input_slider(10, 1000)))`
+The arguments differ slightly depending on the type of input, and are documented
+in the individual function documentation. All input sliders share three common 
+arguments:
 
-These choices basically mean that you can control the data stored in a vega
-spec, but you can not change the spec itself. This is a reasonable limitation
-for creating interactive exploratory graphics - if you need to change something
-fundamental about the graphic itself, you can always create a new one in R.
-If you want more flexiblity, you can always embed a ggvis in a regular shiny
-app.
+* `label`: an informative text label displayed next to the control
 
-### Mapping a slider to a property
+* `id`: a unique identifier for the control - this is randomly assigned and 
+   you should only need to override in exceptional circumstances.
+
+* `map`: a function that enables you to remap the output of the input to 
+  something appropriate for your graphic.
+
+`map` is the most commonly argument used as it allows you to translate the value
+recieved from the input to something that's meaningful for your plot. For 
+example, many parameters of statistical models are best expressed on a log 
+scale. You can use `map` in conjunction with an slider to make multiple orders
+of magnitude easily accessible from a single slider.
+
+```{r}
+input_slider(-5, 5, label = "lambda", map = function(x) 10 ^ x)
+```
+
+### Multiple outputs
+
+There are two ways to have an interactive input control multiple settings on
+the plot.  
+
+1.  Use the regular property inheritance structure:
+
+    ```{r}
+    ggvis(mtcars, props(x ~ wt, y ~ mpg, stroke = input_slider(10, 1000)),
+      mark_symbol(),
+      mark_line(props(strokeWidth = 5))
+    )
+    ```
+
+2. Create the input and assign it to a variable:
+
+    ```{r}
+    slider <- input_slider(10, 100)
+    ggvis(mtcars, props(x ~ wt, y ~ mpg),
+      mark_line(props(strokeWidth = slider)),
+      mark_symbol(props(size = slider, fill = "red"))
+    )
+    ```  
+    
+    This is a little more typing, but is more flexible.
+  
+Compare the following two plots. In the first plot, one slider is created and 
+used for both layers - it controls the size of both the red and the black 
+points. In the second plot, you get two independent sliders which allow you to
+control the size of the red and black points independently.
+
+```{r}
+slider <- input_slider(100, 1000)
+ggvis(mtcars, props(x ~ wt, y ~ mpg), 
+  mark_symbol(props(size = slider)),
+  mark_symbol(props(fill = "red", opacity = 0.5, size = slider)))
+
+ggvis(mtcars, props(x ~ wt, y ~ mpg), 
+  mark_symbol(props(size = input_slider(100, 1000))),
+  mark_symbol(props(fill = "red", size = input_slider(100, 1000))))
+```
+
+### Property mappings
 
 When you map a slider to a property, you have four basic options:
 
@@ -64,27 +127,33 @@ When you map a slider to a property, you have four basic options:
 * variable, unscaled
 * variable, scaled
 
-### Reusing the same control in multiple places
+If you just assign the input in `props()`, like `props(size = input_slider())`, 
+you'll get a constant, unscaled property. To gain more control you can use 
+`prop()`: `props(size = prop(input_slider()))`.
 
-Note that `input_*` functions yield an object which you can save to a variable. 
-If you do that, the same control will be reused in multiple places, so you can
-simultaenously control multiple values.
+You'll need to do this if you want to:
 
-Compare the following two plots. In the first plot, one slider is created and 
-used for both layers - it controls the size of both the red and the black 
-points. In the second plot, you get two independent sliders which allow you to
-control the size of the red and black points independently.
+* select a variable to plot based on a dropdown: 
+  `prop(x = input_select(c("disp", "wt")), constant = FALSE)`
+  
+* annotate the plot in the data space:
+  `prop(x = input_slider(min(mpg$wt), max(mpg$wt)), scale = TRUE)`
 
-```{r, eval = FALSE}
-slider <- input_slider(100, 1000)
-ggvis(mtcars, props(x ~ wt, y ~ mpg), 
-  mark_symbol(props(size = prop_reactive(slider, constant = TRUE, scale = FALSE))),
-  mark_symbol(props(fill = "red", opacity = 0.5, size = prop_reactive(slider, constant = TRUE, scale = FALSE))))
+You can read more about these options in the __properties and scales__ vignette.
 
-ggvis(mtcars, props(x ~ wt, y ~ mpg), 
-  mark_symbol(props(size = prop_reactive(input_slider(100, 1000), constant = TRUE, scale = FALSE))),
-  mark_symbol(props(fill = "red", size = prop_reactive(input_slider(100, 1000), constant = TRUE, scale = FALSE))))
-```
+### Limitations
+
+Currently, interactive inputs can only be used in two places:
+
+* as arguments to transforms: `transform_smooth(span = input_slider(0, 1))`
+* as properties: `props(size = prop_reactive(input_slider(10, 1000)))`
+
+This means that interactive inputs can only modify the data, not the underlying 
+plot specification. In other words, with only basic interactivity there's no 
+way to add or remove layers, or switch between different datasets. This is a 
+reasonable limitation because if you're doing exploration you can always create 
+a new ggvis with R code, or if you're polishing a plot for presentation, you 
+can embed it in a shiny app and gain full control over the plot.
 
 ### Compared to shiny
 
@@ -97,10 +166,9 @@ main differences:
   plot for yourself, you usually remember what the controls do; and each control
   is assigned a random `id` so you don't need to think one up.
 
-* ggvis interactive controls are not created in a reactive context, so they
+* interactive input are not necessarily created in a reactive context, so they
   can not return reactives. Instead, they return delayed reactives, which are
   activated and connected together when the plot is displayed.
-
 
 ## Shiny apps
 
@@ -109,7 +177,7 @@ If you know how to create a shiny app already, adding a ggvis plot is easy. In
 first argument is the plot object, the second is the plot id (needs to match
 with `ui.r`, and the third argument is the session object).
 
-```{r, eval = FALSE}
+```{r}
 gv <- reactive({
   ggvis(mtcars, props(x ~ disp, y ~ mpg, size = input$size),
     mark_symbol()
@@ -122,7 +190,7 @@ observeGgvis(gv, "my_plot", session)
 Create `ui.r` as usual, using `ggvisOutput()` to place the ggvis plot on the 
 page.
 
-```{r, eval = FALSE}
+```{r}
 shinyUI(pageWithSidebar(
   sidebarPanel(
     sliderInput("size", "Area", 10, 1000),
@@ -132,3 +200,5 @@ shinyUI(pageWithSidebar(
   )
 ))
 ```
+
+There are a couple of examples in the `demo/apps` directory.
