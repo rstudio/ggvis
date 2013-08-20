@@ -13,3 +13,10 @@ it to be much more concise, at some cost of generality.
 The main difference to vega is that ggvis provides a tree like structure 
 allowing properties and data to be specified once and then inherited by 
 children. 
+
+Vega plays a similar role to ggvis that grid does to ggplot2. That means that
+you shouldn't have to know anything about vega to use ggvis effectively, and
+you shouldn't have to refer to the vega docs to solve common problems. However,
+some knowledge of how vega works is likely to be necessary when you start
+doing more complex layouts or when you start pushing the limits of the ggvis
+DSL.
