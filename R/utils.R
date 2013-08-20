@@ -68,9 +68,11 @@ compact <- function(x) Filter(Negate(empty), x)
 
 param_string <- function(x, collapse = TRUE) {
   is_reactive <- vapply(x, is.reactive, logical(1))
+  is_env <- vapply(x, is.environment, logical(1))
   is_string <- vapply(x, is.character, logical(1))
 
   x[is_reactive] <- "<reactive>"
+  x[is_env] <- vapply(x[is_env], format, character(1))
   values <- vapply(x, toString, character(1))
   values[is_string] <- paste0("'", encodeString(values[is_string]), "'")
 
