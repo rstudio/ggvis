@@ -1,0 +1,82 @@
+<!--
+%\VignetteEngine{knitr}
+%\VignetteIndexEntry{Data hierarchy}
+-->
+
+# Marks
+
+The ggvis mark is responsible for the drawing of the data. Each type of mark 
+effectively represents a different type of geometric object, and so in some
+sense they are the equivalent of geoms in ggplot2. However, there are a far
+fewer marks than geoms because marks tend to be more capable, and because they
+never perform any statistical transformation.
+
+`ggvis` exposes 
+[five vega marks](https://github.com/trifacta/vega/wiki/Marks#color-references)
+that have very similar ggplot2 equivalents:
+
+* `mark_area` = `geom_ribbon`, `geom_area`
+* `mark_line` = `geom_path`, `geom_line` 
+* `mark_rect` = `geom_rect`, `geom_bar`, `geom_tile`
+* `mark_symbol` = `geom_point`
+* `mark_text` = `geom_text`
+
+There are two marks that have no equivalent in ggplot2:
+
+* `mark_arc` which allows you to draw arcs. You could accomplish something
+  similar in ggplot2 with `geom_rect()` with `coord_polar()` but it was
+  relatively inflexible and required contorting your brain a bit.
+  
+* `mark_image` allows you to place arbitrary images on a plot. There is 
+  currently little additional support for this in ggvis, so you'll need to 
+  make sure the images are publicly available somewhere. If you've found
+  a compelling use-case for `mark_image`, let us know so we can consider 
+  how to better support it.
+
+(If you're familiar with vega, you may wonder where the group mark is - it's 
+not currently supported but will be part of a future major release that will add
+support for facetting/subplots)
+
+# Conversion from ggplot2
+
+The following table sketches out a conversions 
+
+(note that all the transformation functions might not be present yet)
+
+* `geom_abline`
+* `geom_area` = `mark_area` with `props(y ~ 0)`
+* `geom_bar` = `mark_rect` with `props(y ~ 0, width = band())`
+* `geom_bin2d` = `mark_rect` + `transform_bin2d`
+* `geom_blank`
+* `geom_boxplot`
+* `geom_contour`
+* `geom_crossbar`
+* `geom_density` = `mark_line` + `transform_density`
+* `geom_density2d`
+* `geom_dotplot`
+* `geom_errorbar` 
+* `geom_errorbarh`
+* `geom_freqpoly`
+* `geom_hex`
+* `geom_histogram` = `branch_histogram` = `mark_bar` + `transform_bin`
+* `geom_hline` =  = `mark_line` + `props(x2 ~ proo_group("width"))`.
+* `geom_jitter`
+* `geom_line` = `mark_line` + `transform_sort`
+* `geom_linerange`
+* `geom_map`
+* `geom_path` = `mark_line`
+* `geom_point` = `mark_symbol`
+* `geom_pointrange` 
+* `geom_polygon` = `mark_line`
+* `geom_quantile` = `mark_line` + `transform_quantreg`
+* `geom_raster`
+* `geom_rect` = `mark_rect`
+* `geom_ribbon` = `mark_area`
+* `geom_rug`
+* `geom_segment`
+* `geom_smooth` = `branch_smooth` = `mark_area` + `mark_line` + `transform_smooth`
+* `geom_step` = `mark_line` + `transform_step`
+* `geom_text` = `mark_text`
+* `geom_tile` = `mark_rect` + `props(width ~ prop_band(), height ~ prob_band())`
+* `geom_violin`
+* `geom_vline` = `mark_line` + `props(y2 ~ prop_group("height"))`
