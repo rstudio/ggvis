@@ -24,7 +24,6 @@ ggvis(mtc1, props(x ~ x, y ~ y),
   dscale("x", "numeric", domain = c(0, 1))
 )
 
-
 # Two separate data sets, equal in the tree
 mtc1 <- reactive({
   invalidateLater(2000, NULL);
@@ -34,13 +33,14 @@ mtc2 <- reactive({
   invalidateLater(2000, NULL);
   mtcars[sample(nrow(mtcars), 10), ]
 })
-ggvis(data = NULL, props = props(x ~ wt, y ~ mpg),
+ggvis(
+  props(x ~ wt, y ~ mpg),
   node(
-    data = mtc1,
+    mtc1,
     mark_symbol(props(stroke = "black", fill = "black"))
   ),
   node(
-    data = mtc2,
+    mtc2,
     mark_symbol(props(fill = "red", size = 40))
   )
 )

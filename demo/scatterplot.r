@@ -70,7 +70,8 @@ ggvis(mtcars, props(x ~ wt, y ~ mpg),
 # Two separate data sets, equal in the tree
 mtc1 <- mtcars[1:10, ]
 mtc2 <- mtcars[11:20, ]
-ggvis(data = NULL, props = props(x ~ wt, y ~ mpg),
+ggvis(
+  props(x ~ wt, y ~ mpg),
   mark_symbol(props(stroke = "black", fill = "black"), mtc1),
   mark_symbol(props(fill = "red", size = 40), mtc2)
 )

@@ -2,7 +2,7 @@ library(ggvis)
 
 # Bar graph with continuous x
 ggvis(pressure,
-  props = props(x ~ temperature, y ~ pressure),
+  props(x ~ temperature, y ~ pressure),
   mark_rect(props(y2 = prop(0, scale = TRUE), width = 15))
 )
 
