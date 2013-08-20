@@ -72,15 +72,15 @@ In gigvis, we can make it a little more clear that we have one marked based on
 survivors dataset and two marks based on the cities dataset.
 
 ```R
-ggvis(props = props(long, lat), 
+ggvis(props(long, lat), 
   node(
-    data = survivors, 
-    props = props(size ~ survivors, colour ~ direction, group ~ group),
+    survivors, 
+    props(size ~ survivors, colour ~ direction, group ~ group),
     mark_symbol()),
   node(
-    data = cities,
+    cities,
     mark_symbol()
     mark_text(props(label ~ city))
   )
 )
-
+```

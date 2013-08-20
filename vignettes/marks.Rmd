@@ -69,7 +69,7 @@ props in the mark.
 ggvis(mtcars, props(x ~ wt, y ~ mpg, stroke = "red"), 
   mark_symbol())
 
-ggvis(, , mark_symbol(props(x ~ wt, y ~ mpg, stroke = "red"), mtcars))
+ggvis(mark_symbol(props(x ~ wt, y ~ mpg, stroke = "red"), mtcars))
 ```
 
 In terms of the data hierarchy, marks are leaves: they can not have any 

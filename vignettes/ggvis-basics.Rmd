@@ -1,0 +1,56 @@
+<!--
+%\VignetteEngine{knitr}
+%\VignetteIndexEntry{ggvis basics}
+-->
+
+```{r, echo = FALSE}
+library(knitr)
+library(ggvis)
+opts_chunk$set(comment = "#", error = TRUE, tidy = FALSE, eval = FALSE)
+```
+
+# ggvis basics
+
+Every ggvis graphic starts with a call to `ggvis()`. Every ggvis plot must 
+contain one or more:
+
+* data sets
+* property mapping
+* mark
+
+A basic plot looks like this:
+
+```{r}
+ggvis(mtcars, props(x ~ wt, y ~ mpg), mark_symbol())
+```
+
+The order of the arguments doesn't matter, so the following specifications 
+will create the same plot. However, it's customary to arrange arguments in the 
+order: data, prop, mark.
+
+```{r}
+ggvis(mark_symbol(), mtcars, props(x ~ wt, y ~ mpg))
+ggvis(props(x ~ wt, y ~ mpg), mtcars, mark_symbol())
+```
+
+There are also other optional components that you can include:
+
+* `scales`, to control the mapping between data and visual properties. 
+  These are described in the "properties and scales" vignette.
+
+* `legends` and `axes` to control the appearance of the guides produced by
+  the scales.  See the "axes and legends" vignette for more details.
+  
+* `nodes` to create a richer hierarchy of data and marks. See the "data 
+  hierarchy" vignette to learn how this works.
+
+Other vignettes describe:
+
+* how to add __interactivity__, using basic interactive inputs or by embedding
+  in a shiny app
+  
+* the full details of the __marks__
+
+* how ggvis compares to __ggplot2__
+
+* __vega__, the rendering engine used by ggvis
