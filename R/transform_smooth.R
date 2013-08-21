@@ -47,7 +47,7 @@
 #' # Or
 #' pl <- pipeline(
 #'   mtcars,
-#'   by_group(prop(quote(cyl))),
+#'   by_group(quote(cyl)),
 #'   transform_smooth(n = 5L, method = "lm")
 #' )
 #' sluice(pl, props(x ~ disp, y ~ mpg))
