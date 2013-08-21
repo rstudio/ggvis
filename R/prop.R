@@ -9,6 +9,9 @@ prop <- function(x, constant = NULL, scale = NULL, offset = NULL, mult = NULL,
   # Atomic values and reactives default to constant = TRUE
   constant <- constant %||% (is.atomic(x) || is.delayed_reactive(x))
 
+  # Constants don't need to capture environment
+  if (constant) env <- NULL
+
   # Constant scales default to FALSE; variable scales default to TRUE
   scale <- scale %||% !constant
 

@@ -49,7 +49,7 @@ test_that("prop captures environment for evaluation", {
   expect_identical(prop_value(prop(quote(b)), dat), 3:4)
 
   # Variable in calling environment
-  expect_identical(prop_value(prop(quote(d)), dat), 21:22)
+  expect_identical(prop_value(prop(quote(d)), dat), 13:14)
 
   # Column from data with variable in calling environment
   expect_identical(prop_value(prop(quote(b+d)), dat), 3:4 + 13:14)
@@ -63,7 +63,26 @@ test_that("prop captures environment for evaluation", {
   env$d <- 23:24
 
   # Variable in env
-  expect_identical(prop_value(prop(quote(d), env = env), dat), 13:14)
+  expect_identical(prop_value(prop(quote(d), env = env), dat), 23:24)
   # Column from data, even though a var in env has same name
   expect_identical(prop_value(prop(quote(b), env = env), dat), 3:4)
+})
+
+test_that("props uses environment in formulas", {
+  dat <- data.frame(a = 1:2, b = 3:4)
+  val <- 11:12
+
+  # Create a formula that captures the function environment
+  gen_formula <- function() {
+    val <- 21:22
+    x ~ val
+  }
+
+  p <- props(w ~ val, gen_formula(), y ~ 5, z = 6)
+
+  # Should get val from this environment, where w~val was defined
+  expect_identical(prop_value(p$w, dat), 11:12)
+
+  # Should get val from gen_formula environment, where x~val was defined
+  expect_identical(prop_value(p$x, dat), 21:22)
 })

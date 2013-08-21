@@ -79,7 +79,7 @@ parse_component <- function(x) {
   if (is.atomic(x[[3]])) {
     value <- prop(x[[3]], constant = TRUE, scale = TRUE)
   } else {
-    value <- prop(x[[3]], constant = FALSE)
+    value <- prop(x[[3]], constant = FALSE, env = environment(x))
   }
 
 

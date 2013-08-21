@@ -90,3 +90,14 @@ ggvis(by_cyl, props(x ~ wt, y ~ mpg),
   mark_symbol(props(fill ~ factor(am), size = 25))
 )
 
+
+# Use expression in a prop
+ggvis(pressure, props(x ~ temperature, y ~ log(pressure)),
+  mark_symbol()
+)
+
+# Use variable from the calling environment
+y_min <- min(log(pressure$pressure))
+ggvis(pressure, props(x ~ temperature, y ~ log(pressure) - y_min),
+  mark_symbol()
+)
