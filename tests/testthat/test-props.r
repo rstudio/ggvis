@@ -36,3 +36,34 @@ test_that("property values for variables", {
   # Constant prop
   expect_equal(prop_value(prop(10), dat), rep(10, 3))
 })
+
+test_that("prop captures environment for evaluation", {
+  dat <- data.frame(a = 1:2, b = 3:4, c = 5:6)
+  b <- 11:12
+  d <- 13:14
+
+  # Column from data
+  expect_identical(prop_value(prop(quote(a)), dat), 1:2)
+
+  # Column from data, even though a var in the calling env has same name
+  expect_identical(prop_value(prop(quote(b)), dat), 3:4)
+
+  # Variable in calling environment
+  expect_identical(prop_value(prop(quote(d)), dat), 21:22)
+
+  # Column from data with variable in calling environment
+  expect_identical(prop_value(prop(quote(b+d)), dat), 3:4 + 13:14)
+
+  # Column from data with variable in calling environment
+  expect_identical(prop_value(prop(quote(b+d)), dat), 3:4 + 13:14)
+
+
+  # Create new environment for storing variables
+  env <- new.env()
+  env$d <- 23:24
+
+  # Variable in env
+  expect_identical(prop_value(prop(quote(d), env = env), dat), 13:14)
+  # Column from data, even though a var in env has same name
+  expect_identical(prop_value(prop(quote(b), env = env), dat), 3:4)
+})

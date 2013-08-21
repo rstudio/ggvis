@@ -4,7 +4,7 @@
 \title{S3 property class}
 \usage{
   prop(x, constant = NULL, scale = NULL, offset = NULL,
-    mult = NULL)
+    mult = NULL, env = parent.frame())
 
   is.prop(x)
 }

@@ -2,8 +2,8 @@
 #'
 #' @keywords internal
 #' @export
-prop <- function(x, constant = NULL, scale = NULL,
-                 offset = NULL, mult = NULL) {
+prop <- function(x, constant = NULL, scale = NULL, offset = NULL, mult = NULL,
+                 env = parent.frame()) {
 
   # TODO: detect constant/variable for reactives
   # Atomic values and reactives default to constant = TRUE
@@ -28,7 +28,8 @@ prop <- function(x, constant = NULL, scale = NULL,
       scale = scale,
       reactive = reactive,
       offset = offset,
-      mult = mult
+      mult = mult,
+      env = env
     ),
     class = c("prop")
   )
@@ -56,7 +57,7 @@ prop_value <- function(x, data, processed = FALSE) {
     if (processed) {
       data[[prop_name(x)]]
     } else {
-      eval(val, data, baseenv())
+      eval(val, envir = data, enclos = x$env)
     }
   }
 }
