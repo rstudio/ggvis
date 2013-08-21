@@ -10,6 +10,6 @@ shinyUI(pageWithSidebar(
     var_range("y_domain", "Y", mtcars$mpg)
   ),
   mainPanel(
-    ggvisOutput("zoom")
+    ggvis_output("zoom")
   )
 ))

@@ -1,8 +1,8 @@
-\name{ggvisOutput}
-\alias{ggvisOutput}
+\name{ggvis_output}
+\alias{ggvis_output}
 \title{Add a Ggvis plot to the UI of a Shiny app}
 \usage{
-  ggvisOutput(id)
+  ggvis_output(id)
 }
 \arguments{
   \item{id}{unique identifier to use for div tag containing

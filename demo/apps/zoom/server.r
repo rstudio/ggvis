@@ -7,5 +7,5 @@ shinyServer(function(input, output, session) {
     )
   })
 
-  observeGgvis(gv, "zoom", session)
+  observe_ggvis(gv, "zoom", session)
 })

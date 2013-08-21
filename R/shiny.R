@@ -4,7 +4,7 @@
 #' @keywords internal
 #' @param id unique identifier to use for div tag containing ggvis plot
 #' @export
-ggvisOutput <- function(id) {
+ggvis_output <- function(id) {
   addResourcePath("ggvis", system.file("www", package = "ggvis"))
 
   tagList(
@@ -34,9 +34,9 @@ ggvisOutput <- function(id) {
 #' @param ... Other arguments passed to \code{as.vega}.
 #'
 #' @export
-observeGgvis <- function(r_gv, id, session, renderer = "canvas", ...) {
+observe_ggvis <- function(r_gv, id, session, renderer = "canvas", ...) {
   if (!is.reactive(r_gv)) {
-    stop("observeGgvis requires a reactive expression that returns a ggvis object",
+    stop("observe_ggvis requires a reactive expression that returns a ggvis object",
       call. = FALSE)
   }
   r_spec <- reactive(as.vega(r_gv(), session = session, dynamic = TRUE, ...))

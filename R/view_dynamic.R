@@ -27,14 +27,14 @@ view_dynamic <- function(gv, renderer = "canvas", launch = TRUE, port = 8228) {
         onclick = "window.close()", "Quit")
     ),
     mainPanel(
-      ggvisOutput(plot_id)
+      ggvis_output(plot_id)
     )
   )
 
   server <- function(input, output, session) {
     r_gv <- reactive(gv)
     # Set up observers for the spec and the data
-    observeGgvis(r_gv, plot_id, session, renderer)
+    observe_ggvis(r_gv, plot_id, session, renderer)
 
     # User interface elements (in the sidebar)
     output$ggvis_ui <- renderControls(r_gv, session)
