@@ -5,6 +5,21 @@ dots <- function(...) {
   eval(substitute(alist(...)))
 }
 
+dot_names <- function(...) {
+  args <- dots(...)
+  
+  nms <- names(args) %||% rep("", length(args))
+  missing <- nms == ""
+  if (all(!missing)) return(args)
+  
+  deparse2 <- function(x) paste(deparse(x, 500L), collapse = "")
+  defaults <- vapply(args[missing], deparse2, character(1), USE.NAMES = FALSE)
+  
+  nms[missing] <- defaults
+  nms
+}
+
+
 "%||%" <- function(a, b) if (!is.null(a)) a else b
 
 # Given a vector or list, drop all the NULL items in it

@@ -35,7 +35,7 @@
 #' @export
 #' @import assertthat
 ggvis <- function(...) {
-  vis <- ggvis_node("ggvis", ...)
+  vis <- ggvis_node(subclass = "ggvis", ...)
   set_last_vis(vis)
   vis
 }
@@ -43,7 +43,7 @@ ggvis <- function(...) {
 #' @export
 #' @rdname ggvis
 node <- function(...) {
-  node <- ggvis_node(character(), ...)
+  node <- ggvis_node(...)
 
   incorrect <- setdiff(names(node), c("children", "data", "props"))
   if (length(incorrect) > 0) {
@@ -54,13 +54,23 @@ node <- function(...) {
   node
 }
 
-ggvis_node <- function(subclass = character(), ...) {
-  args <- list(...)
+ggvis_node <- function(..., subclass = character()) {
+  args <- unname(list(...))
   types <- vapply(args, component_type, character(1))
 
   components <- split(args, types)
   components$props <- Reduce(merge_props, components$props)
-  components$data <- pipeline(.pipes = components$data)
+  if (length(components$data) > 0) {
+    # Capture names from ...
+    names <- dot_names(...)[types == "data"]
+    # Convert each component to a pipeline, preserving original names
+    pls <- Map(as.pipeline, components$data, name = names)
+    # Collapse into single pipeline
+    pl <- structure(unlist(pls, recursive = FALSE), class = "pipeline")    
+    # Trim any redundant sources
+    components$data <- trim_to_source(pl)
+  }
+  
   components$scale <- scales(.scales = components$scale)
   
   structure(components, class = c(subclass, "ggvis_node"))
