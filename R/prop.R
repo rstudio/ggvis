@@ -144,32 +144,38 @@ as.character.prop <- function(x, ...) {
 #' @S3method format prop
 format.prop <- function(x, ...) {
   if (x$reactive) {
-    paste0("<reactive> ", x$dr$id)
-
+    prefix <- paste0("<reactive> ", x$dr$id)
   } else if (x$constant) {
-    if (identical(x$scale, TRUE)) {
-      scale <- " [auto]"
-    } else if (is.character(x$scale)) {
-      scale <- paste0(" [", x$scale, "]")
-    } else {
-      scale <- ""
-    }
-    params <- param_string(compact(x[c("mult", "offset")]), collapse = FALSE)
-
-    paste0("<const> ", x$value, scale, "\n",
-      if (length(params) > 0) paste0(" * ", names(params), " ", params, collapse = "\n")
-    )
-
+    prefix <- paste0("<constant> ", x$value)
   } else {
-    paste0("<variable> ", deparse(x$value))
+    prefix <- paste0("<variable> ", paste0(deparse(x$value), collapse = ""))
   }
-
+  
+  if (identical(x$scale, TRUE)) {
+    scale <- "auto"
+  } else if (identical(x$scale, FALSE)) {
+    scale <- "none"
+  } else {
+    scale <- x$scale
+  }
+  
+  if (!is.null(x$offset)) {
+    offset <- paste0(" ", if (x$offset > 0) "+" else "-", " ", abs(x$offset)) 
+  } else {
+    offset <- ""
+  }
+  
+  if (!is.null(x$mult)) {
+    mult <- paste0(" * ", x$mult)
+  } else {
+    mult <- ""
+  }
+  
+  paste0(prefix, offset, mult, " (scale: ", scale, ")")
 }
 
 #' @S3method print prop
 print.prop <- function(x, ...) cat(format(x, ...), "\n", sep = "")
-
-
 
 is_constant <- function(x) {
   if (!is.prop(x)) stop("x must be a prop object.", call. = FALSE)
