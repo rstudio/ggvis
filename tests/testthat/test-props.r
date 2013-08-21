@@ -9,13 +9,14 @@ test_that("property names for variables", {
 
   # Variable names with special characters are made vega-safe
   expect_identical(pname(`wt/mpg`), "wt/mpg")
-  expect_identical(pname(`wt.mpg`), "wt.mpg")
+  expect_identical(pname(`wt.mpg`), "wt\\.mpg")
 
-  # Expressions are made js-safe, with a hash
-  expect_identical(pname(wt/mpg), "[e]wt/mpg")
+  # Expressions are kept as is
+  expect_identical(pname(wt/mpg), "wt/mpg")
 
-  # Expressions and weird column names don't result in same name
-  expect_false(pname(wt/mpg) == pname(`wt/mpg`))
+  # Expressions and weird column names will produce same name
+  # (but this is very unlikely)
+  expect_true(pname(wt/mpg) == pname(`wt/mpg`))
 
   # Constants have no variable name
   expect_identical(pname(10), "")

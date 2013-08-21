@@ -4,24 +4,24 @@
 			"name" : "df_5d6dccca750b57e8b95a60db154cdb8e",
 			"values" : [
 				{
-					"[e]factor(x)" : "1",
-					"[e]x/y" : 0.2
+					"factor(x)" : "1",
+					"x/y" : 0.2
 				},
 				{
-					"[e]factor(x)" : "2",
-					"[e]x/y" : 0.5
+					"factor(x)" : "2",
+					"x/y" : 0.5
 				},
 				{
-					"[e]factor(x)" : "3",
-					"[e]x/y" : 1
+					"factor(x)" : "3",
+					"x/y" : 1
 				},
 				{
-					"[e]factor(x)" : "4",
-					"[e]x/y" : 2
+					"factor(x)" : "4",
+					"x/y" : 2
 				},
 				{
-					"[e]factor(x)" : "5",
-					"[e]x/y" : 5
+					"factor(x)" : "5",
+					"x/y" : 5
 				}
 			]
 		}
@@ -40,7 +40,7 @@
 				"fields" : [
 					{
 						"data" : "df_5d6dccca750b57e8b95a60db154cdb8e",
-						"field" : "data.[e]factor(x)"
+						"field" : "data.factor(x)"
 					}
 				]
 			}
@@ -58,7 +58,7 @@
 				"fields" : [
 					{
 						"data" : "df_5d6dccca750b57e8b95a60db154cdb8e",
-						"field" : "data.[e]x/y"
+						"field" : "data.x/y"
 					}
 				]
 			}
@@ -74,11 +74,11 @@
 					},
 					"x" : {
 						"scale" : "x",
-						"field" : "data.[e]factor(x)"
+						"field" : "data.factor(x)"
 					},
 					"y" : {
 						"scale" : "y",
-						"field" : "data.[e]x/y"
+						"field" : "data.x/y"
 					}
 				}
 			},

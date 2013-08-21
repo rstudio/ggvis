@@ -73,19 +73,9 @@ prop_name <- function(x) {
 
   # If we got here, it's a non-reactive variable
   var <- x$value
-
-  if (is.symbol(var)) {
-    as.character(var)
-
-  } else if (is.language(var)) {
-    # var is calculated from an expression; get a unique, JS-safe name. Prepend
-    # a string to so that an expression with same text as a var will have a
-    # different hash, e.g., the expression wt/mpg vs. the variable `wt/mpg`.
-    safe_vega_var(paste0("[e]", deparse(var)))
-    
-  } else {
-    stop("Unknown type for var", call. = FALSE)
-  }
+  if (!is.quoted(var)) stop("Unknown type for var", call. = FALSE)
+  
+  safe_vega_var(var)
 }
 
 # The scale (if any) that this property needs
