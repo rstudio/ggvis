@@ -161,9 +161,9 @@ by supplying the name of multiple scales to one legend:
   
 ```R
 mtcars$cyl <- ordered(mtcars$cyl)
-ggvis(mtcars, props(x ~ mpg, y ~ wt, size ~ cyl, stroke ~ cyl), 
+ggvis(mtcars, props(x ~ mpg, y ~ wt, size ~ cyl, fill ~ cyl), 
   mark_symbol())
-ggvis(mtcars, props(x ~ mpg, y ~ wt, size ~ cyl, stroke ~ cyl), 
+ggvis(mtcars, props(x ~ mpg, y ~ wt, size ~ cyl, fill ~ cyl), 
   mark_symbol(),
-  guide_legend(size = "size", stroke = "stroke"))
+  guide_legend(size = "size", fill = "fill"))
 ```
