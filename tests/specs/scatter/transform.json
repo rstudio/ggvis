@@ -1,0 +1,112 @@
+{
+	"data" : [
+		{
+			"name" : "df_5d6dccca750b57e8b95a60db154cdb8e",
+			"values" : [
+				{
+					"[e]factor(x)" : "1",
+					"[e]x/y" : 0.2
+				},
+				{
+					"[e]factor(x)" : "2",
+					"[e]x/y" : 0.5
+				},
+				{
+					"[e]factor(x)" : "3",
+					"[e]x/y" : 1
+				},
+				{
+					"[e]factor(x)" : "4",
+					"[e]x/y" : 2
+				},
+				{
+					"[e]factor(x)" : "5",
+					"[e]x/y" : 5
+				}
+			]
+		}
+	],
+	"scales" : [
+		{
+			"name" : "x",
+			"type" : "ordinal",
+			"reverse" : false,
+			"round" : false,
+			"points" : true,
+			"padding" : 0.5,
+			"sort" : true,
+			"range" : "width",
+			"domain" : {
+				"fields" : [
+					{
+						"data" : "df_5d6dccca750b57e8b95a60db154cdb8e",
+						"field" : "data.[e]factor(x)"
+					}
+				]
+			}
+		},
+		{
+			"name" : "y",
+			"type" : "linear",
+			"reverse" : false,
+			"round" : false,
+			"clamp" : false,
+			"nice" : true,
+			"zero" : false,
+			"range" : "height",
+			"domain" : {
+				"fields" : [
+					{
+						"data" : "df_5d6dccca750b57e8b95a60db154cdb8e",
+						"field" : "data.[e]x/y"
+					}
+				]
+			}
+		}
+	],
+	"marks" : [
+		{
+			"type" : "symbol",
+			"properties" : {
+				"update" : {
+					"fill" : {
+						"value" : "#000000"
+					},
+					"x" : {
+						"scale" : "x",
+						"field" : "data.[e]factor(x)"
+					},
+					"y" : {
+						"scale" : "y",
+						"field" : "data.[e]x/y"
+					}
+				}
+			},
+			"from" : {
+				"data" : "df_5d6dccca750b57e8b95a60db154cdb8e"
+			}
+		}
+	],
+	"width" : 600,
+	"height" : 400,
+	"legends" : [],
+	"axes" : [
+		{
+			"type" : "x",
+			"scale" : "x",
+			"orient" : "bottom",
+			"titleOffset" : 0,
+			"layer" : "back",
+			"grid" : true
+		},
+		{
+			"type" : "y",
+			"scale" : "y",
+			"orient" : "left",
+			"titleOffset" : 0,
+			"layer" : "back",
+			"grid" : true
+		}
+	],
+	"padding" : null
+}
