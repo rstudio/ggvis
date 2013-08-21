@@ -116,7 +116,7 @@ prop_to_scale <- function(prop) {
 proptype_to_scale <- function(type) {
   unname(c(
     "numeric" = "scale_quantitative",
-    "ordinal" = "scale_ordinal",
+    "ordinal" = "scale_quantitative",
     "nominal" = "scale_ordinal",
     "logical" = "scale_ordinal",
     "datetime" = "scale_time"
