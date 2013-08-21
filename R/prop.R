@@ -38,16 +38,6 @@ prop <- function(x, constant = NULL, scale = NULL,
 #' @rdname prop
 is.prop <- function(x) inherits(x, "prop")
 
-as.prop <- function(x) UseMethod("as.prop")
-#' @S3method as.prop character
-as.prop.character <- function(x) prop_var(as.name(x))
-#' @S3method as.prop name
-as.prop.name <- function(x) prop_var(x)
-#' @S3method as.prop call
-as.prop.call <- function(x) prop_var(x)
-#' @S3method as.prop prop
-as.prop.prop <- function(x) x
-
 # Given a property and a dataset, get the value of the property.
 prop_value <- function(x, data, processed = FALSE) {
   if (x$reactive) {
