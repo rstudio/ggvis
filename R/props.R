@@ -77,7 +77,11 @@ props <- function(..., inherit = TRUE) {
 #' @S3method format ggvis_props
 format.ggvis_props <- function(x, ...) {
   labels <- lapply(x, format, ...)
-  paste0("* ", names(x), ": ", labels, collapse = "\n")
+  if (length(labels) > 0) {
+    paste0("* ", names(x), ": ", labels, collapse = "\n")  
+  } else {
+    "props()"
+  }
 }
 #' @S3method print ggvis_props
 print.ggvis_props <- function(x, ...) cat(format(x, ...))
