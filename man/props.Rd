@@ -1,8 +1,11 @@
 \name{props}
+\alias{is.ggvis_props}
 \alias{props}
 \title{Manage a list of properties.}
 \usage{
   props(..., inherit = TRUE)
+
+  is.ggvis_props(x)
 }
 \arguments{
   \item{...}{A set of name-value pairs. The name should be
@@ -11,6 +14,8 @@
   \item{inherit}{If \code{TRUE}, the defaults, will inherit
   from properties from the parent node. If \code{FALSE}, it
   will start from nothing.}
+
+  \item{x}{an object to test for props-ness.}
 }
 \description{
   \code{props()} provides a tool for concise creation of

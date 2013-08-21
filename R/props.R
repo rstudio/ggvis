@@ -86,6 +86,9 @@ format.ggvis_props <- function(x, ...) {
 #' @S3method print ggvis_props
 print.ggvis_props <- function(x, ...) cat(format(x, ...))
 
+#' @rdname props
+#' @export
+#' @param x an object to test for props-ness.
 is.ggvis_props <- function(x) inherits(x, "ggvis_props")
 
 # Merge two ggvis_props objects
