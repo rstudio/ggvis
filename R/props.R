@@ -86,14 +86,6 @@ format.ggvis_props <- function(x, ...) {
 #' @S3method print ggvis_props
 print.ggvis_props <- function(x, ...) cat(format(x, ...))
 
-# Return a list of properties that are mapped (not set)
-mapped_props <- function(p) {
-  if (!is.ggvis_props(p)) {
-    stop("p is not a ggvis_props object", call. = FALSE)
-  }
-  p[vapply(p, is_variable, logical(1))]
-}
-
 is.ggvis_props <- function(x) inherits(x, "ggvis_props")
 
 # Merge two ggvis_props objects
