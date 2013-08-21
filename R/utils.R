@@ -64,7 +64,13 @@ is.quoted <- function(x) {
   is.call(x) || is.name(x)
 }
 
-compact <- function(x) Filter(Negate(empty), x)
+# Drop all empty items from a list - except environments, which stay even if
+# they are empty.
+compact <- function(x) {
+  non_empty <- !vapply(x, empty, logical(1))
+  env <- vapply(x, is.environment, logical(1))
+  x[non_empty | env]
+}
 
 param_string <- function(x, collapse = TRUE) {
   is_reactive <- vapply(x, is.reactive, logical(1))

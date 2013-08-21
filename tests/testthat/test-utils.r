@@ -39,3 +39,23 @@ test_that("all_same behaves as expected", {
   # Zero-length vector
   expect_identical(all_same(character()), TRUE)
 })
+
+
+test_that("empty and compact behave as expected", {
+  expect_true(empty(character(0)))
+  expect_true(empty(logical(0)))
+  expect_true(empty(list()))
+  expect_true(empty(new.env()))
+
+  expect_false(empty(100))
+  expect_false(empty(list(40)))
+  e <- new.env()
+  e$x <- 10
+  expect_false(empty(e))
+
+
+  # Compact drops empty vectors and lists, but keeps environments even if empty
+  ne <- new.env()
+  x <- list(a = 1, b = list(), c = character(0), e = e, ne = ne)
+  expect_identical(compact(x), list(a = 1, e = e, ne = ne))
+})
