@@ -7,15 +7,15 @@
 #' @examples
 #' by_group("cyl")
 #' by_group(quote(cyl))
-#' by_group(prop(quote(cyl)))
 #'
 #' pl <- pipeline(mtcars, by_group("cyl"), transform_bin())
 #' sluice(pl, props(x ~ disp))
-by_group <- function(...) {
-  variables <- list(...)
-  variables <- lapply(variables, as.prop, constant = FALSE)
+by_group <- function(..., env = parent.frame()) {
+  vars <- list(...)
+  is_char <- vapply(vars, is.character, logical(1))
+  vars[is_char] <- lapply(vars[is_char], as.name)
 
-  pipe(c("split_by_group", "split"), variables = variables)
+  pipe(c("split_by_group", "split"), variables = vars, env = env)
 }
 
 #' @S3method format split_by_group
@@ -26,7 +26,7 @@ format.split_by_group <- function(x, ...) {
 #' @S3method connect split_by_group
 connect.split_by_group <- function(x, props, source = NULL, session = NULL) {
   source <- as.reactive(source)
-  reactive(split_df(source(), x$variables))
+  reactive(split_df(source(), x$variables, env = x$env))
 }
 
 #' @S3method pipe_id split
