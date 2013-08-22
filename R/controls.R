@@ -15,10 +15,10 @@ controls.ggvis_node <- function(x, session = NULL, ...) {
 
 #' @S3method controls list
 controls.list <- function(x, session = NULL, ...) {
-  dr <- vapply(x, is.delayed_reactive, logical(1))
+  inp <- vapply(x, is.input, logical(1))
   # Remove top-level name (method, n, etc), but preserve second-level name,
   # which is the id of the input.
-  ctrls <- lapply(x[dr], controls, session)
+  ctrls <- lapply(x[inp], controls, session)
   unlist(unname(ctrls), recursive = FALSE, use.names = TRUE)
 }
 #' @S3method controls ggvis_props
@@ -29,12 +29,6 @@ controls.prop <- controls.list
 #' @S3method controls transform
 controls.transform <- function(x) {
   c(controls.list(x), controls.list(x$dots))
-}
-
-#' @S3method controls delayed_reactive
-controls.delayed_reactive <- function(x, session = NULL, ...) {
-  # Assuming each reactive only provides one control
-  setNames(list(controls(x, session = session)), x$id)
 }
 
 #' @S3method controls default

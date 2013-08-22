@@ -103,8 +103,8 @@ transform_type <- function(transform) {
 
 #' @S3method connect transform
 connect.transform <- function(x, props, source = NULL, session = NULL) {
-  x <- advance_delayed_reactives(x, session)
-  x$dots <- advance_delayed_reactives(x$dots, session)
+  x <- init_inputs(x, session)
+  x$dots <- init_inputs(x$dots, session)
 
   reactive({
     x_now <- eval_reactives(x)
@@ -113,18 +113,4 @@ connect.transform <- function(x, props, source = NULL, session = NULL) {
 
     compute(x_now, props, source)
   })
-}
-
-# Convert delayed reactives to regular reactives
-advance_delayed_reactives <- function(x, session) {
-  drs <- vapply(x, is.delayed_reactive, logical(1))
-  x[drs] <- lapply(x[drs], as.reactive, session = session)
-  x
-}
-
-# Convert reactives to values
-eval_reactives <- function(x) {
-  is_function <- vapply(x, is.function, logical(1))
-  x[is_function] <- lapply(x[is_function], function(f) f())
-  x
 }

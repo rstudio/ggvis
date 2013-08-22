@@ -1,14 +1,16 @@
-\name{delayed_reactive}
-\alias{delayed_reactive}
-\title{Create a delayed reactive.}
+\name{input}
+\alias{input}
+\alias{is.input}
+\title{Create an interactive input.}
 \usage{
-  delayed_reactive(class = NULL, fun, controls = NULL,
-    id = rand_id())
+  input(subclass, fun, controls = NULL, id = rand_id())
+
+  is.input(x)
 }
 \arguments{
   \item{class}{The name of a class to be used in addition
-  to "delayed_reactive". This is useful for functions that
-  generate controls from the object.}
+  to "input". This is useful for functions that generate
+  controls from the object.}
 
   \item{fun}{Must always return a value - see
   \code{from_input} one way of ensuring the function yields
@@ -21,14 +23,16 @@
   \item{controls}{a control object}
 
   \item{id}{a unique identifier for this reactive - used to
-  de-duplicate the controls when the same delayed reactive
+  de-duplicate the controls when the same interactive input
   is used in multiple places in a visualisation}
+
+  \item{x}{object to test for "input"-ness}
 }
 \description{
-  A delayed reactive allows us to specify reactive values
-  outside of a shiny app. They are used to specify
-  interactive behaviour (e.g. \code{\link{input_slider}})
-  that is instantiated when the visualisation is launched.
+  An interactive input represents a reactive value bound to
+  a UI control. Interactive inputs were previously called
+  delayed reactives because they represent an reactive
+  value that would be created when the plot was drawn.
 }
 \keyword{internal}
 

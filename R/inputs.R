@@ -28,8 +28,7 @@ input_select <- function(choices, selected = NULL, multiple = FALSE,
     value <- choices[selected]
   }
 
-  delayed_reactive("input_select", from_input(id, value, map), controls,
-    id = id)
+  input("input_select", from_input(id, value, map), controls, id = id)
 }
 
 #' @S3method controls input_select
@@ -59,7 +58,7 @@ input_slider <- function(min, max, value = min, step = NULL, round = FALSE,
   controls <- list(id, label, min = min, max = max, value = value, step = step,
       round = round, format = format, locale = locale, ticks = ticks)
 
-  delayed_reactive("input_slider", from_input(id, value, map), controls, id = id)
+  input("input_slider", from_input(id, value, map), controls, id = id)
 }
 
 #' @S3method controls input_slider
@@ -95,8 +94,7 @@ input_checkbox <- function(value = FALSE, label = "", id = rand_id("checkbox_"),
 
   controls <- list(id, label, value = value)
 
-  delayed_reactive("input_checkbox", from_input(id, value, map), controls,
-    id = id)
+  input("input_checkbox", from_input(id, value, map), controls, id = id)
 }
 
 #' @S3method controls input_checkbox
@@ -127,8 +125,7 @@ input_text <- function(value, label = "", id = rand_id("text_"),
 
   controls <- list(id, label, value = value)
 
-  delayed_reactive("input_text", from_input(id, value, map), controls,
-    id = id)
+  input("input_text", from_input(id, value, map), controls, id = id)
 }
 
 #' @S3method controls input_text
@@ -159,8 +156,7 @@ input_numeric <- function(value, label = "", id = rand_id("text_"),
 
   controls <- list(id, label, value = value)
 
-  delayed_reactive("input_numeric", from_input(id, value, map), controls,
-    id = id)
+  input("input_numeric", from_input(id, value, map), controls, id = id)
 }
 
 #' @S3method controls input_numeric
@@ -202,8 +198,7 @@ input_radiobuttons <- function(choices, selected = NULL, label = "",
     value <- choices[selected]
   }
 
-  delayed_reactive("input_radiobuttons", from_input(id, value, map), controls,
-    id = id)
+  input("input_radiobuttons", from_input(id, value, map), controls, id = id)
 }
 
 #' @S3method controls input_radiobuttons
@@ -232,8 +227,7 @@ input_checkboxgroup <- function(choices, selected = NULL, label = "",
     value <- choices[selected]
   }
 
-  delayed_reactive("input_checkboxgroup", from_input(id, value, map), controls,
-    id = id)
+  input("input_checkboxgroup", from_input(id, value, map), controls, id = id)
 }
 
 #' @S3method controls input_checkboxgroup

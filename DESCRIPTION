@@ -54,7 +54,6 @@ Collate:
     'vega.R'
     'datasource.R'
     'last_vis.R'
-    'delayed_reactive.R'
     'is_dynamic.R'
     'controls.R'
     'view_dynamic.R'
@@ -64,3 +63,4 @@ Collate:
     'guide_axis.R'
     'guide_legend.R'
     'inputs.R'
+    'input.R'

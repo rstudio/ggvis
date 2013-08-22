@@ -27,8 +27,8 @@ is.dynamic.transform <- function(x, ...) {
 #' @S3method is.dynamic reactive
 is.dynamic.reactive <- function(x) TRUE
 
-#' @S3method is.dynamic delayed_reactive
-is.dynamic.delayed_reactive <- function(x) TRUE
+#' @S3method is.dynamic input
+is.dynamic.input <- function(x) TRUE
 
 #' @S3method is.dynamic prop
 is.dynamic.prop <- function(x) x$type == "reactive"

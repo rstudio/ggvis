@@ -44,7 +44,7 @@ prop <- function(x, scale = NULL, offset = NULL, mult = NULL,
     dr <- NULL
     scale <- scale %||% FALSE
 
-  } else if (is.delayed_reactive(x)) {
+  } else if (is.input(x)) {
     type <- "reactive"
     dr <- x
     x <- function() stop("Delayed reactive has not yet been advanced!")
