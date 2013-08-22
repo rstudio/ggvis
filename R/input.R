@@ -52,10 +52,18 @@ controls.input <- function(x, session = NULL) {
   setNames(list(control), x$id)
 }
 
+#' @S3method format input
+format.input <- function(x, ...) {
+  control <- as.call(c(as.name(x$control_f), x$control_args))
+  control_s <- paste0(deparse(control), collapse = "\n")
+  
+  paste0("<input> ", x$id, "\n",
+    control_s, "\n")
+}
+
 #' @S3method print input
 print.input <- function(x, ...) {
-  cat("<input>\n")
-  print(body(x$fun))
+  cat(format(x), "\n", sep = "")
 }
 
 #' @S3method as.reactive input
