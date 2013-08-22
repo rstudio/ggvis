@@ -3,7 +3,7 @@
 \title{Create a placeholder for a text input.}
 \usage{
   input_text(value, label = "", id = rand_id("text_"),
-    map = identity)
+    map = identity, scale = FALSE)
 }
 \arguments{
   \item{value}{Initial value}
@@ -18,6 +18,9 @@
   the value returned from the input control and converts it
   to an argument useful for ggvis.  Defaults to
   \code{identity}, leaving the output unchanged.}
+
+  \item{scale}{default scale value when this input is used
+  in a prop}
 }
 \description{
   Create a placeholder for a text input.

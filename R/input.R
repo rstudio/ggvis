@@ -15,11 +15,13 @@
 #' @param id a unique identifier for this interactive input - used to 
 #'  de-duplicate the controls when the same input is used in multiple places 
 #'  in a visualisation
+#' @param scale default scale value when this input is used in a prop
 #' @param control_f The name of a function used to create an html control.
 #' @export
 #' @keywords internal
 input <- function(subclass, control_args = list(), value = NULL, 
-                  map = identity, id = rand_id(), control_f = NULL) {
+                  map = identity, id = rand_id(), scale = FALSE,
+                  control_f = NULL) {
   if (missing(subclass)) {
     stop("Input is a virtual class: you must provide a subclass name")
   }
@@ -29,14 +31,16 @@ input <- function(subclass, control_args = list(), value = NULL,
   }
   
   assert_that(is.string(subclass), is.string(control_f), 
-    is.list(control_args), is.function(map), is.string(id))
+    is.list(control_args), is.function(map), is.string(id),
+    is.string(scale) || is.flag(scale))
 
   structure(list(
       control_f = control_f, 
       control_args = control_args, 
       default = value,
       map = map, 
-      id = id
+      id = id,
+      scale = scale
     ), class = c(paste0("input_", subclass), "input")
   )
 }

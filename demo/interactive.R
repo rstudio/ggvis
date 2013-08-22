@@ -139,7 +139,7 @@ ggvis(mtcars,
   props(
     x ~ wt,
     y ~ mpg,
-    fill = prop(input_select(c("mpg", "wt"), map = as.name), scale = TRUE)
+    fill = input_select(c("mpg", "wt"), map = as.name, scale = TRUE)
   ),
   mark_symbol()
 )

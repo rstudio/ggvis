@@ -3,7 +3,8 @@
 \title{Create a placeholder for a checkbox input.}
 \usage{
   input_checkbox(value = FALSE, label = "",
-    id = rand_id("checkbox_"), map = identity)
+    id = rand_id("checkbox_"), map = identity,
+    scale = FALSE)
 }
 \arguments{
   \item{value}{Initial value (\code{TRUE} or
@@ -19,6 +20,9 @@
   the value returned from the input control and converts it
   to an argument useful for ggvis.  Defaults to
   \code{identity}, leaving the output unchanged.}
+
+  \item{scale}{default scale value when this input is used
+  in a prop}
 }
 \description{
   Create a placeholder for a checkbox input.

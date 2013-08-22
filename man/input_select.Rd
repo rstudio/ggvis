@@ -3,7 +3,8 @@
 \title{Create a placeholder for a select input.}
 \usage{
   input_select(choices, selected = NULL, multiple = FALSE,
-    label = "", id = rand_id("select_"), map = identity)
+    label = "", id = rand_id("select_"), map = identity,
+    scale = FALSE)
 }
 \arguments{
   \item{choices}{List of values to select from. If elements
@@ -28,6 +29,9 @@
   the value returned from the input control and converts it
   to an argument useful for ggvis.  Defaults to
   \code{identity}, leaving the output unchanged.}
+
+  \item{scale}{default scale value when this input is used
+  in a prop}
 }
 \description{
   Create a placeholder for a select input.

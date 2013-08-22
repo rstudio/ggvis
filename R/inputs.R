@@ -11,7 +11,7 @@
 #' input_select(c("a", "b", "c"), selected = "c")
 input_select <- function(choices, selected = NULL, multiple = FALSE,
                          label = "", id = rand_id("select_"),
-                         map = identity) {
+                         map = identity, scale = FALSE) {
   assert_that(is.string(label), is.string(id))
 
   args <- list(id, label, choices = choices, selected = selected,
@@ -24,7 +24,7 @@ input_select <- function(choices, selected = NULL, multiple = FALSE,
     value <- choices[selected]
   }
   
-  input("select", args, value, map, id)
+  input("select", args, value, map, id, scale)
 }
 
 #' Create a placeholder for a slider input.
@@ -41,14 +41,14 @@ input_select <- function(choices, selected = NULL, multiple = FALSE,
 input_slider <- function(min, max, value = min, step = NULL, round = FALSE,
                          format = "#,##0.#####", locale = "us", ticks = TRUE,
                          animate = FALSE, label = "", id = rand_id("slider_"),
-                         map = identity) {
+                         map = identity, scale = FALSE) {
 
   assert_that(is.string(label), is.string(id))
 
   args <- list(id, label, min = min, max = max, value = value, step = step,
       round = round, format = format, locale = locale, ticks = ticks)
 
-  input("slider", args, value, map, id)
+  input("slider", args, value, map, id, scale)
 }
 
 #' Create a placeholder for a checkbox input.
@@ -72,8 +72,9 @@ input_slider <- function(min, max, value = min, step = NULL, round = FALSE,
 #'   method = input_checkbox(label = "LOESS (curve) model fit",
 #'                           map = function(val) ifelse(val, "loess", "lm"))
 #' )
-input_checkbox <- function(value = FALSE, label = "", id = rand_id("checkbox_"),
-                           map = identity) {
+input_checkbox <- function(value = FALSE, label = "", 
+                           id = rand_id("checkbox_"), map = identity, 
+                           scale = FALSE) {
 
   assert_that(is.string(label), is.string(id))
 
@@ -97,12 +98,12 @@ input_checkbox <- function(value = FALSE, label = "", id = rand_id("checkbox_"),
 #'   )
 #' )
 input_text <- function(value, label = "", id = rand_id("text_"),
-                       map = identity) {
+                       map = identity, scale = FALSE) {
 
   assert_that(is.string(label), is.string(id), is.string(value))
 
   args <- list(id, label, value = value)
-  input("text", args, value, map, id)
+  input("text", args, value, map, id, scale)
 }
 
 
@@ -122,13 +123,13 @@ input_text <- function(value, label = "", id = rand_id("text_"),
 #'   )
 #' )
 input_numeric <- function(value, label = "", id = rand_id("text_"),
-                          map = identity) {
+                          map = identity, scale = FALSE) {
 
   assert_that(is.string(label), is.string(id), is.numeric(value))
 
   args <- list(id, label, value = value)
 
-  input("numeric", args, value, map, id)
+  input("numeric", args, value, map, id, scale)
 }
 
 #' Create a placeholder for a radio button input.
@@ -152,7 +153,8 @@ input_numeric <- function(value, label = "", id = rand_id("text_"),
 #'               selected = "LOESS",
 #'               label = "Model type"))
 input_radiobuttons <- function(choices, selected = NULL, label = "",
-                               id = rand_id("radio_"), map = identity) {
+                               id = rand_id("radio_"), map = identity, 
+                               scale = FALSE) {
 
   assert_that(is.string(label), is.string(id))
 
@@ -164,7 +166,8 @@ input_radiobuttons <- function(choices, selected = NULL, label = "",
     value <- choices[selected]
   }
 
-  input("radio_buttons", args, value, map, id, control_f = "radioButtons")
+  input("radio_buttons", args, value, map, id, scale, 
+    control_f = "radioButtons")
 }
 
 #' Create a placeholder for a checkbox group input.
@@ -175,7 +178,8 @@ input_radiobuttons <- function(choices, selected = NULL, label = "",
 #' @family interactive input
 #' @export
 input_checkboxgroup <- function(choices, selected = NULL, label = "",
-                                id = rand_id("radio_"), map = identity) {
+                                id = rand_id("radio_"), map = identity,
+                                scale = FALSE) {
 
   assert_that(is.string(label), is.string(id))
 
@@ -187,5 +191,5 @@ input_checkboxgroup <- function(choices, selected = NULL, label = "",
     value <- choices[selected]
   }
 
-  input("checkbox_group", args, value, map, id)
+  input("checkbox_group", args, value, map, id, scale)
 }

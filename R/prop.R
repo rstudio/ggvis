@@ -10,7 +10,8 @@
 #'   reactive (which can be either variable or constant).
 #' @param scale If \code{TRUE} uses the default scale associated with property;
 #'   If \code{FALSE}, does not scale the value. Otherwise supply a string to
-#'   select a custom scale. 
+#'   select a custom scale. If \code{x} is an interactive input, then this
+#'   defaults to the scale parameter of the input.
 #' @param offset,mult Additive and multiplicate pixel offset used to adjust 
 #'   scaled values. These are useful if you want to place labels offset from
 #'   points.
@@ -48,7 +49,7 @@ prop <- function(x, scale = NULL, offset = NULL, mult = NULL,
     type <- "reactive"
     dr <- x
     x <- function() stop("Delayed reactive has not yet been advanced!")
-    scale <- scale %||% FALSE
+    scale <- scale %||% dr$scale %||% FALSE
 
   } else if (is.quoted(x)) {
     type <- "variable"

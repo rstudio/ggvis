@@ -17,7 +17,8 @@
   \item{scale}{If \code{TRUE} uses the default scale
   associated with property; If \code{FALSE}, does not scale
   the value. Otherwise supply a string to select a custom
-  scale.}
+  scale. If \code{x} is an interactive input, then this
+  defaults to the scale parameter of the input.}
 
   \item{offset,mult}{Additive and multiplicate pixel offset
   used to adjust scaled values. These are useful if you
