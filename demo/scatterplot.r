@@ -64,7 +64,7 @@ ggvis(mtcars, props(x ~ wt, y ~ mpg),
 ggvis(mtcars, props(x ~ wt, y ~ mpg),
   mark_symbol(),
   mark_symbol(props(fill = "red", y = prop(quote(qsec), scale = "yq"))),
-  scales = scales(scale_quantitative("yq", range = "height"))
+  dscale("y", "numeric", name = "yq")
 )
 
 # Two separate data sets, equal in the tree
