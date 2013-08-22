@@ -22,6 +22,7 @@
 #' pipeline(mtcars, transform_bin())
 #' pipeline(mtcars, by_group("cyl"), transform_bin())
 pipeline <- function(..., .pipes = list()) {
+  check_empty_args()
   args <- list(...)
   if (is.null(names(args))) {
     names(args) <- vapply(dots(...), function(x) deparse(x), character(1))

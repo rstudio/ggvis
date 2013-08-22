@@ -57,6 +57,7 @@
 #' default_scale("x", "numeric", trans = "log")
 #' default_scale("stroke", "nominal", range = c("red", "blue"))
 default_scale <- function(prop, type, ..., name = NULL) {
+  check_empty_args()
   assert_that(is.string(prop), is.string(type))
   if (type == "NULL") return()
 

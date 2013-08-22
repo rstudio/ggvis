@@ -52,6 +52,7 @@
 #' # Use any other prop settings
 #' props(x = prop("old", scale = TRUE, offset = -1))
 props <- function(..., inherit = TRUE) {
+  check_empty_args()
   pieces <- compact(list(...))
 
   # Pull apart formulae in to name and value

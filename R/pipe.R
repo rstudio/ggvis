@@ -5,6 +5,7 @@
 #' @keywords internal
 #' @export
 pipe <- function(type, ...) {
+  check_empty_args()
   structure(
     compact(list(...)),
     class = c(type, "pipe")

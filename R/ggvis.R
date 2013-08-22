@@ -35,6 +35,7 @@
 #' @export
 #' @import assertthat
 ggvis <- function(...) {
+  check_empty_args()
   vis <- ggvis_node(subclass = "ggvis", ...)
   set_last_vis(vis)
   vis
@@ -43,6 +44,7 @@ ggvis <- function(...) {
 #' @export
 #' @rdname ggvis
 node <- function(...) {
+  check_empty_args()
   node <- ggvis_node(...)
 
   incorrect <- setdiff(names(node), c("children", "data", "props"))

@@ -126,3 +126,22 @@ quickdf <- function(list) {
 rand_id <- function(prefix = "") {
   paste0(prefix, floor(runif(1, 1e8, 1e9-1)))
 }
+
+is_missing <- function(x) identical(x, quote(expr = ))
+
+# Check if the calling function had missing arguments when it was called, and
+# throw an informative error if so. This happens when there are extra commas in
+# the call, as in f(a, 2, ).
+check_empty_args <- function() {
+  call <- sys.call(-1)
+  args <- as.list(call[-1])
+
+  missing <- vapply(args, is_missing, logical(1))
+
+  if (!any(missing)) return(invisible(TRUE))
+
+  stop("Extra comma at position", if (sum(missing) > 1) "s", " ",
+    paste0(which(missing), collapse = ", "),
+    " in call to ", as.character(call[[1]]), "()",
+    call. = FALSE)
+}
