@@ -117,8 +117,7 @@ controls.input_checkbox <- function(x, session = NULL) {
 #'
 #' ggvis(mtcars, props(x ~ wt, y ~ mpg),
 #'   mark_symbol(
-#'     props(fill = prop(input_text(label = "Point color", value = "red"),
-#'                       constant = TRUE, scale = FALSE))
+#'     props(fill = input_text(label = "Point color", value = "red"))
 #'   )
 #' )
 input_text <- function(value, label = "", id = rand_id("text_"),
@@ -150,8 +149,7 @@ controls.input_text <- function(x, session = NULL) {
 #'
 #' ggvis(mtcars, props(x ~ wt, y ~ mpg),
 #'   mark_symbol(
-#'     props(size = prop(input_numeric(label = "Point size", value = 25),
-#'                       constant = TRUE, scale = FALSE))
+#'     props(size = prop(input_numeric(label = "Point size", value = 25))
 #'   )
 #' )
 input_numeric <- function(value, label = "", id = rand_id("text_"),

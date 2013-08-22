@@ -129,7 +129,7 @@ ggvis(mtc,
   props(
     x ~ wt,
     y ~ mpg,
-    fill = prop(input_select(c("colour1", "colour2"), map = as.name), scale = FALSE)
+    fill = input_select(c("colour1", "colour2"), map = as.name)
   ),
   mark_symbol()
 )

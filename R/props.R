@@ -12,13 +12,13 @@
 #' uses the following heuristics to when creating the prop:
 #'
 #' \itemize{
-#'  \item atomic vectors, e.g. \code{x = 1}: constant = TRUE, scaled = FALSE
-#'  \item an interative input, e.g. \code{x = input_slide}: 
-#'     reactive = TRUE, constant = TRUE, scaled = FALSE
+#'  \item atomic vectors, e.g. \code{x = 1}: scaled = FALSE
+#'  \item an interative input, e.g. \code{x = input_slider}:
+#'     scaled = FALSE
 #'  \item a formula containing a single value, e.g. \code{x ~ 1}: 
-#'     constant = TRUE, scaled = TRUE
+#'     scaled = TRUE
 #'  \item a formula containing a name or expression, \code{x ~ mpg}:
-#'     constant = FALSE, scaled = TRUE
+#'     scaled = TRUE
 #' }
 #'
 #' @section Non-standard evaluation:
