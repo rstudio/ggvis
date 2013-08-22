@@ -39,29 +39,30 @@
 prop <- function(x, scale = NULL, offset = NULL, mult = NULL,
                  env = parent.frame()) {
 
-  # Atomic values are treated as constant; everything else is treated as variable
-  constant <- is.atomic(x)
-  # Constants don't need to capture environment
-  if (constant) {
-    env <- NULL
+  if (is.atomic(x)) {
+    type <- "constant"
     assert_that(length(x) == 1)
-  }
+    # Constants don't need to capture environment
+    env <- NULL
+    dr <- NULL
+    scale <- scale %||% FALSE
 
-  # Constant scales default to FALSE; variable scales default to TRUE
-  scale <- scale %||% !constant
-
-  dr <- NULL
-  reactive <- is.delayed_reactive(x)
-  if (reactive) {
+  } else if (is.delayed_reactive(x)) {
+    type <- "reactive"
     dr <- x
     x <- function() stop("Delayed reactive has not yet been advanced!")
+    scale <- scale %||% FALSE
+
+  } else {
+    type <- "variable"
+    dr <- NULL
+    scale <- scale %||% TRUE
   }
 
   structure(
     list(value = x,
       dr = dr,
-      constant = constant,
-      reactive = reactive,
+      type = type,
       scale = scale,
       offset = offset,
       mult = mult,
@@ -77,11 +78,11 @@ is.prop <- function(x) inherits(x, "prop")
 
 # Given a property and a dataset, get the value of the property.
 prop_value <- function(x, data, processed = FALSE) {
-  if (x$constant) return(rep(x$value, nrow(data)))
   if (processed) return(data[[prop_name(x)]])
+  if (x$type == "constant") return(rep(x$value, nrow(data)))
 
   # Get the expression to evaluate
-  if (x$reactive) {
+  if (x$type == "reactive") {
     expr <- x$value()
   } else {
     expr <- x$value
@@ -103,10 +104,10 @@ prop_value <- function(x, data, processed = FALSE) {
 # The name of the property: used for naming the variable it produces in the
 # vega data frame
 prop_name <- function(x) {
-  if (x$constant) return("")
-  if (x$reactive) return(x$dr$id)
+  if (x$type == "constant") return("")
+  if (x$type == "reactive") return(x$dr$id)
 
-  # If we got here, it's a non-reactive variable
+  # If we got here, type is variable
   var <- x$value
   if (!is.quoted(var)) stop("Unknown type for var", call. = FALSE)
   
@@ -133,7 +134,7 @@ prop_vega <- function(x, default_scale) {
     offset = x$offset
   )
 
-  if (x$constant) {
+  if (x$type == "constant") {
     pv$value <- x$value
   } else {
     pv$field <- paste0("data.", prop_name(x))
@@ -149,7 +150,7 @@ prop_vega <- function(x, default_scale) {
 prop_domain <- function(x, data) {
   # FIXME: for scaled constants, this should really insert a literal value in
   #   to the domain, but it's not obvious how to do that in vega currently.
-  if (x$constant) return(NULL)
+  if (x$type == "constant") return(NULL)
 
   list(
     data = data,
@@ -167,9 +168,9 @@ prop_domain <- function(x, data) {
 # as.character.prop(p$x)
 #' @S3method as.character prop
 as.character.prop <- function(x, ...) {
-  if (x$constant) {
+  if (x$type == "constant") {
     as.character(x$value)
-  } else if (x$reactive) {
+  } else if (x$type == "reactive") {
     x$dr$id
   } else {
     deparse(x$value)
@@ -178,9 +179,9 @@ as.character.prop <- function(x, ...) {
 
 #' @S3method format prop
 format.prop <- function(x, ...) {
-  if (x$constant) {
+  if (x$type == "constant") {
     prefix <- paste0("<constant> ", x$value)
-  } else if (x$reactive) {
+  } else if (x$type == "reactive") {
     prefix <- paste0("<reactive> ", x$dr$id)
   } else {
     prefix <- paste0("<variable> ", paste0(deparse(x$value), collapse = ""))
