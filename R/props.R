@@ -12,13 +12,13 @@
 #' uses the following heuristics to when creating the prop:
 #'
 #' \itemize{
-#'  \item atomic vectors, e.g. \code{x = 1}: constant = TRUE, scaled = FALSE
-#'  \item an interative input, e.g. \code{x = input_slide}: 
-#'     reactive = TRUE, constant = TRUE, scaled = FALSE
+#'  \item atomic vectors, e.g. \code{x = 1}: scaled = FALSE
+#'  \item an interative input, e.g. \code{x = input_slider}:
+#'     scaled = FALSE
 #'  \item a formula containing a single value, e.g. \code{x ~ 1}: 
-#'     constant = TRUE, scaled = TRUE
+#'     scaled = TRUE
 #'  \item a formula containing a name or expression, \code{x ~ mpg}:
-#'     constant = FALSE, scaled = TRUE
+#'     scaled = TRUE
 #' }
 #'
 #' @section Non-standard evaluation:
@@ -65,7 +65,7 @@ props <- function(..., inherit = TRUE) {
 
   # Anything else that's not already a prop gets turned into a constant
   constants <- !vapply(pieces, is.prop, logical(1))
-  pieces[constants] <- lapply(pieces[constants], prop, constant = TRUE)
+  pieces[constants] <- lapply(pieces[constants], prop)
 
   structure(
     pieces,
@@ -115,9 +115,9 @@ parse_component <- function(x) {
 
   name <- as.character(x[[2]])
   if (is.atomic(x[[3]])) {
-    value <- prop(x[[3]], constant = TRUE, scale = TRUE)
+    value <- prop(x[[3]], scale = TRUE)
   } else {
-    value <- prop(x[[3]], constant = FALSE, env = environment(x))
+    value <- prop(x[[3]], scale = TRUE, env = environment(x))
   }
 
 

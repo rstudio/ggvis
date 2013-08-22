@@ -18,8 +18,7 @@ input_text(label = "Point color", value = "red")
 
 ggvis(mtcars, props(x ~ wt, y ~ mpg),
   mark_symbol(
-    props(fill = prop(input_text(label = "Point color", value = "red"),
-                      constant = TRUE, scale = FALSE))
+    props(fill = input_text(label = "Point color", value = "red"))
   )
 )
 }

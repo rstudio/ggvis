@@ -18,8 +18,7 @@ ggvis(
   data = pipeline(mtcars, transform_bin(binwidth = 1)),
   props(x ~ wt),
   node(
-    props(x ~ xmin__, x2 ~ xmax__, y ~ count__,
-          y2 = prop(0, constant = TRUE, scale = TRUE)),
+    props(x ~ xmin__, x2 ~ xmax__, y ~ count__, y2 ~ 0),
     mark_rect()
   )
 )

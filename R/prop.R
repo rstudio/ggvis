@@ -36,34 +36,34 @@
 #' 
 #' # Don't scale variable (i.e. it already makes sense in the visual space)
 #' prop(quote(colour), scale = FALSE)
-prop <- function(x, constant = NULL, scale = NULL, offset = NULL, mult = NULL,
+prop <- function(x, scale = NULL, offset = NULL, mult = NULL,
                  env = parent.frame()) {
 
-  # TODO: detect constant/variable for reactives
-  # Atomic values and reactives default to constant = TRUE
-  constant <- constant %||% (is.atomic(x) || is.delayed_reactive(x))
+  if (is.atomic(x)) {
+    type <- "constant"
+    assert_that(length(x) == 1)
+    # Constants don't need to capture environment
+    env <- NULL
+    dr <- NULL
+    scale <- scale %||% FALSE
 
-  # Constants don't need to capture environment
-  if (constant) env <- NULL
-
-  # Constant scales default to FALSE; variable scales default to TRUE
-  scale <- scale %||% !constant
-
-  reactive <- is.delayed_reactive(x)
-  dr <- NULL
-  if (reactive) {
+  } else if (is.delayed_reactive(x)) {
+    type <- "reactive"
     dr <- x
     x <- function() stop("Delayed reactive has not yet been advanced!")
-  }
+    scale <- scale %||% FALSE
 
-  if (constant && !reactive) assert_that(length(x) == 1)
+  } else {
+    type <- "variable"
+    dr <- NULL
+    scale <- scale %||% TRUE
+  }
 
   structure(
     list(value = x,
       dr = dr,
-      constant = constant,
+      type = type,
       scale = scale,
-      reactive = reactive,
       offset = offset,
       mult = mult,
       env = env
@@ -78,34 +78,35 @@ is.prop <- function(x) inherits(x, "prop")
 
 # Given a property and a dataset, get the value of the property.
 prop_value <- function(x, data, processed = FALSE) {
-  if (x$reactive) {
-    val <- x$value()
+  if (processed) return(data[[prop_name(x)]])
+  if (x$type == "constant") return(rep(x$value, nrow(data)))
+
+  # Get the expression to evaluate
+  if (x$type == "reactive") {
+    expr <- x$value()
   } else {
-    val <- x$value
+    expr <- x$value
   }
 
-  if (x$constant) {
-    rep(val, nrow(data))
+  # Calculate a "column"
+  col <- eval(expr, envir = data, enclos = x$env)
 
-  } else if (x$reactive) {
-    data[[val]]
-
-  } else {
-    if (processed) {
-      data[[prop_name(x)]]
-    } else {
-      eval(val, envir = data, enclos = x$env)
-    }
+  if (!(length(col) == 1 || length(col) == nrow(data))) {
+    stop("Length of calculated column '", prop_name(x), "' (", length(col),
+      ") is not equal to 1 or the number of rows in data (", nrow(data), ").",
+      call. = FALSE)
   }
+
+  rep_len(col, nrow(data))
 }
 
 # The name of the property: used for naming the variable it produces in the
 # vega data frame
 prop_name <- function(x) {
-  if (x$reactive) return(x$dr$id)
-  if (x$constant) return("")
+  if (x$type == "constant") return("")
+  if (x$type == "reactive") return(x$dr$id)
 
-  # If we got here, it's a non-reactive variable
+  # If we got here, type is variable
   var <- x$value
   if (!is.quoted(var)) stop("Unknown type for var", call. = FALSE)
   
@@ -132,7 +133,7 @@ prop_vega <- function(x, default_scale) {
     offset = x$offset
   )
 
-  if (x$constant && !x$reactive) {
+  if (x$type == "constant") {
     pv$value <- x$value
   } else {
     pv$field <- paste0("data.", prop_name(x))
@@ -148,7 +149,7 @@ prop_vega <- function(x, default_scale) {
 prop_domain <- function(x, data) {
   # FIXME: for scaled constants, this should really insert a literal value in
   #   to the domain, but it's not obvious how to do that in vega currently.
-  if (x$constant && !x$reactive) return(NULL)
+  if (x$type == "constant") return(NULL)
 
   list(
     data = data,
@@ -166,10 +167,10 @@ prop_domain <- function(x, data) {
 # as.character.prop(p$x)
 #' @S3method as.character prop
 as.character.prop <- function(x, ...) {
-  if (x$reactive) {
-    x$dr$id
-  } else if (x$constant) {
+  if (x$type == "constant") {
     as.character(x$value)
+  } else if (x$type == "reactive") {
+    x$dr$id
   } else {
     deparse(x$value)
   }
@@ -177,10 +178,10 @@ as.character.prop <- function(x, ...) {
 
 #' @S3method format prop
 format.prop <- function(x, ...) {
-  if (x$reactive) {
-    prefix <- paste0("<reactive> ", x$dr$id)
-  } else if (x$constant) {
+  if (x$type == "constant") {
     prefix <- paste0("<constant> ", x$value)
+  } else if (x$type == "reactive") {
+    prefix <- paste0("<reactive> ", x$dr$id)
   } else {
     prefix <- paste0("<variable> ", paste0(deparse(x$value), collapse = ""))
   }

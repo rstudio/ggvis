@@ -18,8 +18,7 @@ input_numeric(label = "Point size", value = 25)
 
 ggvis(mtcars, props(x ~ wt, y ~ mpg),
   mark_symbol(
-    props(size = prop(input_numeric(label = "Point size", value = 25),
-                      constant = TRUE, scale = FALSE))
+    props(size = prop(input_numeric(label = "Point size", value = 25))
   )
 )
 }

@@ -42,8 +42,7 @@ ggvis(mtcars, props(x ~ wt, y ~ mpg),
 # Text input
 ggvis(mtcars, props(x ~ wt, y ~ mpg),
   mark_symbol(
-    props(fill = prop(input_text(label = "Point color", value = "red"),
-                      constant = TRUE, scale = FALSE))
+    props(fill = input_text(label = "Point color", value = "red"))
   ),
   branch_smooth(
     method = input_text(label = "Model type", value = "loess")
@@ -53,8 +52,7 @@ ggvis(mtcars, props(x ~ wt, y ~ mpg),
 # Numeric input
 ggvis(mtcars, props(x ~ wt, y ~ mpg),
   mark_symbol(
-    props(size = prop(input_numeric(value = 25, label = "Point size"),
-                      constant = TRUE, scale = FALSE))
+    props(size = input_numeric(value = 25, label = "Point size"))
   ),
   branch_smooth(
     n = input_numeric(value = 5, label = "Interpolation points")
@@ -68,8 +66,7 @@ ggvis(mtcars, props(x ~ wt, y ~ mpg),
     method = input_radiobuttons(choices = c("LOESS" = "loess", "Linear" = "lm"),
                                 label = "Model type"),
     props(stroke = prop(input_radiobuttons(
-        choices = c("Red" = "red", "Black" = "black"), label = "Line color"),
-      constant = TRUE, scale = FALSE)
+        choices = c("Red" = "red", "Black" = "black"), label = "Line color"))
     )
   )
 )
@@ -98,12 +95,9 @@ ggvis(mtcars,
   props(
     x ~ wt,
     y ~ mpg,
-    fill = prop(input_select(c("red", "blue"), label = "Color"),
-                constant = TRUE, scale = FALSE),
-    size = prop(input_slider(10, 1000, 100, label = "Size"),
-                constant = TRUE, scale = FALSE),
-    opacity = prop(input_slider(0, 1, 1, label = "Opacity"),
-                   constant = TRUE, scale = FALSE)
+    fill = prop(input_select(c("red", "blue"), label = "Color")),
+    size = prop(input_slider(10, 1000, 100, label = "Size")),
+    opacity = prop(input_slider(0, 1, 1, label = "Opacity"))
   ),
   mark_symbol()
 )
@@ -122,7 +116,7 @@ ggvis(mtcars,
             "A" = c("One", "Two"),
             "B" = c("First", "Second", "Third", "Fourth"))
         }),
-      constant = TRUE, scale = TRUE)
+      scale = TRUE)
   ),
   mark_symbol()
 )
@@ -135,8 +129,7 @@ ggvis(mtc,
   props(
     x ~ wt,
     y ~ mpg,
-    fill = prop(input_select(c("colour1", "colour2")),
-                constant = FALSE, scale = FALSE)
+    fill = input_select(c("colour1", "colour2"), map = as.name)
   ),
   mark_symbol()
 )
@@ -146,8 +139,7 @@ ggvis(mtcars,
   props(
     x ~ wt,
     y ~ mpg,
-    fill = prop(input_select(c("mpg", "wt")),
-                constant = FALSE, scale = TRUE)
+    fill = prop(input_select(c("mpg", "wt"), map = as.name), scale = TRUE)
   ),
   mark_symbol()
 )
