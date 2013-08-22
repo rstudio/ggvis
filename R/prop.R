@@ -50,10 +50,13 @@ prop <- function(x, scale = NULL, offset = NULL, mult = NULL,
     x <- function() stop("Delayed reactive has not yet been advanced!")
     scale <- scale %||% FALSE
 
-  } else {
+  } else if (is.quoted(x)) {
     type <- "variable"
     dr <- NULL
     scale <- scale %||% TRUE
+
+  } else {
+    stop("Unknown input to prop", call = FALSE)
   }
 
   structure(
@@ -100,14 +103,10 @@ prop_value <- function(x, data, processed = FALSE) {
 # The name of the property: used for naming the variable it produces in the
 # vega data frame
 prop_name <- function(x) {
-  if (x$type == "constant") return("")
-  if (x$type == "reactive") return(x$dr$id)
-
-  # If we got here, type is variable
-  var <- x$value
-  if (!is.quoted(var)) stop("Unknown type for var", call. = FALSE)
-  
-  safe_vega_var(var)
+  switch(x$type,
+    constant = "",
+    reactive = x$dr$id, 
+    variable = safe_vega_var(x$value))
 }
 
 # The scale (if any) that this property needs
@@ -164,25 +163,15 @@ prop_domain <- function(x, data) {
 # as.character.prop(p$x)
 #' @S3method as.character prop
 as.character.prop <- function(x, ...) {
-  if (x$type == "constant") {
-    as.character(x$value)
-  } else if (x$type == "reactive") {
-    x$dr$id
-  } else {
-    deparse(x$value)
-  }
+  switch(x$type,
+    constant = as.character(x$value),
+    reactive = x$dr$id,
+    variable = deparse(x$value)
+  )
 }
 
 #' @S3method format prop
 format.prop <- function(x, ...) {
-  if (x$type == "constant") {
-    prefix <- paste0("<constant> ", x$value)
-  } else if (x$type == "reactive") {
-    prefix <- paste0("<reactive> ", x$dr$id)
-  } else {
-    prefix <- paste0("<variable> ", paste0(deparse(x$value), collapse = ""))
-  }
-  
   if (identical(x$scale, TRUE)) {
     scale <- "auto"
   } else if (identical(x$scale, FALSE)) {
@@ -203,7 +192,8 @@ format.prop <- function(x, ...) {
     mult <- ""
   }
   
-  paste0(prefix, offset, mult, " (scale: ", scale, ")")
+  paste0("<", x$type, "> ", as.character(x), offset, mult, 
+    " (scale: ", scale, ")")
 }
 
 #' @S3method print prop

@@ -48,7 +48,7 @@
 #' # Set to a constant value in the data space
 #' props(x ~ 1, y ~ 1)
 #' # Use an interactive slider
-#' props(opacity ~ input_slider(0, 1))
+#' props(opacity = input_slider(0, 1))
 #' # Use any other prop settings
 #' props(x = prop("old", scale = TRUE, offset = -1))
 props <- function(..., inherit = TRUE) {
