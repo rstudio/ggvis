@@ -3,28 +3,32 @@
 \alias{is.input}
 \title{Create an interactive input.}
 \usage{
-  input(subclass, fun, controls = NULL, id = rand_id())
+  input(subclass, control_args = list(), value = NULL,
+    map = identity, id = rand_id(), control_f = NULL)
 
   is.input(x)
 }
 \arguments{
-  \item{class}{The name of a class to be used in addition
-  to "input". This is useful for functions that generate
-  controls from the object.}
+  \item{subclass}{The name of a class to be used in
+  addition to "input". Automatically prefixed with
+  "input_"}
 
-  \item{fun}{Must always return a value - see
-  \code{from_input} one way of ensuring the function yields
-  a value even before the reactiveValues have be
-  initialised for the first time by user input. It is
-  passed either no arguments, or if it has a single
-  argument called session, the shiny session object (from
-  which input and output can be extract)}
+  \item{control_args}{a list of arguments passed to
+  \code{control_f}}
 
-  \item{controls}{a control object}
+  \item{value}{the default value of the input}
 
-  \item{id}{a unique identifier for this reactive - used to
-  de-duplicate the controls when the same interactive input
+  \item{map}{a function with a singe argument that takes
+  the value returned from the input control and converts it
+  to an argument useful for ggvis.  Defaults to
+  \code{identity}, leaving the output unchanged.}
+
+  \item{id}{a unique identifier for this interactive input
+  - used to de-duplicate the controls when the same input
   is used in multiple places in a visualisation}
+
+  \item{control_f}{The name of a function used to create an
+  html control.}
 
   \item{x}{object to test for "input"-ness}
 }

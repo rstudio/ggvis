@@ -5,25 +5,40 @@
 #' represent an reactive value that would be created when the plot was
 #' drawn.
 #'
-#' @param class The name of a class to be used in addition to
-#'   "input". This is useful for functions that generate controls
-#'   from the object.
-#' @param fun Must always return a value - see \code{from_input} one way of
-#'   ensuring the function yields a value even before the reactiveValues have
-#'   be initialised for the first time by user input. It is passed either no
-#'   arguments, or if it has a single argument called session, the shiny
-#'   session object (from which input and output can be extract)
-#' @param controls a control object
-#' @param id a unique identifier for this reactive - used to de-duplicate the
-#'  controls when the same interactive input is used in multiple places in a
-#'  visualisation
+#' @param subclass The name of a class to be used in addition to
+#'   "input". Automatically prefixed with "input_"
+#' @param control_args a list of arguments passed to \code{control_f}
+#' @param value the default value of the input
+#' @param map a function with a singe argument that takes the value returned
+#'   from the input control and converts it to an argument useful for ggvis.
+#'   Defaults to \code{identity}, leaving the output unchanged.
+#' @param id a unique identifier for this interactive input - used to 
+#'  de-duplicate the controls when the same input is used in multiple places 
+#'  in a visualisation
+#' @param control_f The name of a function used to create an html control.
 #' @export
 #' @keywords internal
-input <- function(subclass, fun, controls = NULL, id = rand_id()) {
-  stopifnot(is.function(fun))
+input <- function(subclass, control_args = list(), value = NULL, 
+                  map = identity, id = rand_id(), control_f = NULL) {
+  if (missing(subclass)) {
+    stop("Input is a virtual class: you must provide a subclass name")
+  }
+  
+  if (is.null(control_f)) {
+    control_f <- camelCase(paste0(subclass, "Input"))
+  }
+  
+  assert_that(is.string(subclass), is.string(control_f), 
+    is.list(control_args), is.function(map), is.string(id))
 
-  structure(list(fun = fun, controls = controls, id = id),
-    class = c(subclass, "input"))
+  structure(list(
+      control_f = control_f, 
+      control_args = control_args, 
+      default = value,
+      map = map, 
+      id = id
+    ), class = c(paste0("input_", subclass), "input")
+  )
 }
 
 #' @export
@@ -31,20 +46,10 @@ input <- function(subclass, fun, controls = NULL, id = rand_id()) {
 #' @param x object to test for "input"-ness
 is.input <- function(x) inherits(x, "input")
 
-# Returns a function that takes a session object and returns
-# session$input[[id]], or, if it's not present, a default value.
-# @param id The id of something in the input object, like input[["foo"]].
-# @param default A default value that is returned when session$input[[id]] is null.
-# @param map A function that takes the raw input$foo value as input, and
-#   returns a value. This is useful when the raw input value needs to be
-#   massaged before passing it on to the next stage of processing.
-from_input <- function(id, default, map = identity) {
-
-  call <- substitute(function(session) {
-    map(session$input[[id]] %||% default)
-  }, list(id = id, default = default))
-
-  eval(call)
+#' @S3method controls input
+controls.input <- function(x, session = NULL) {
+  control <- do.call(x$control_f, x$control_args)
+  setNames(list(control), x$id)
 }
 
 #' @S3method print input
@@ -55,13 +60,30 @@ print.input <- function(x, ...) {
 
 #' @S3method as.reactive input
 as.reactive.input <- function(x, session = NULL, ...) {
-  if ("session" %in% names(formals(x$fun))) {
-    reactive(x$fun(session = session))
+  f <- from_input(x$id, x$default, x$map)
+    
+  if ("session" %in% names(formals(f))) {
+    reactive(f(session = session))
   } else {
-    reactive(x$fun())
+    reactive(f())
   }
 }
 
+# Returns a function that takes a session object and returns
+# session$input[[id]], or, if it's not present, a default value.
+# @param id The id of something in the input object, like input[["foo"]].
+# @param default A default value that is returned when session$input[[id]] is null.
+# @param map A function that takes the raw input$foo value as input, and
+#   returns a value. This is useful when the raw input value needs to be
+#   massaged before passing it on to the next stage of processing.
+from_input <- function(id, default, map = identity) {
+  
+  call <- substitute(function(session) {
+    map(session$input[[id]] %||% default)
+  }, list(id = id, default = default))
+  
+  eval(call)
+}
 
 # Convert delayed reactives to regular reactives
 init_inputs <- function(x, session) {

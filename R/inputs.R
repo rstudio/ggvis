@@ -2,11 +2,7 @@
 #'
 #' @importFrom shiny selectInput
 #' @inheritParams shiny::selectInput
-#' @param id a unique identifying name for this control - only one control
-#'   for a given name will be displayed on a page
-#' @param map a function with a singe argument that takes the value returned
-#'   from the input control and converts it to an argument useful for ggvis.
-#'   Defaults to \code{identity}, leaving the output unchanged.
+#' @inheritParams input
 #' @family interactive input
 #' @export
 #' @examples
@@ -18,7 +14,7 @@ input_select <- function(choices, selected = NULL, multiple = FALSE,
                          map = identity) {
   assert_that(is.string(label), is.string(id))
 
-  controls <- list(id, label, choices = choices, selected = selected,
+  args <- list(id, label, choices = choices, selected = selected,
       multiple = multiple)
 
   if (is.null(selected)) {
@@ -27,21 +23,15 @@ input_select <- function(choices, selected = NULL, multiple = FALSE,
   } else {
     value <- choices[selected]
   }
-
-  input("input_select", from_input(id, value, map), controls, id = id)
+  
+  input("select", args, value, map, id)
 }
-
-#' @S3method controls input_select
-controls.input_select <- function(x, session = NULL) {
-  setNames(list(do.call(selectInput, x$controls)), x$id)
-}
-
 
 #' Create a placeholder for a slider input.
 #'
 #' @importFrom shiny sliderInput
 #' @inheritParams shiny::sliderInput
-#' @inheritParams input_select
+#' @inheritParams input
 #' @family interactive input
 #' @export
 #' @examples
@@ -55,22 +45,17 @@ input_slider <- function(min, max, value = min, step = NULL, round = FALSE,
 
   assert_that(is.string(label), is.string(id))
 
-  controls <- list(id, label, min = min, max = max, value = value, step = step,
+  args <- list(id, label, min = min, max = max, value = value, step = step,
       round = round, format = format, locale = locale, ticks = ticks)
 
-  input("input_slider", from_input(id, value, map), controls, id = id)
-}
-
-#' @S3method controls input_slider
-controls.input_slider <- function(x, session = NULL) {
-  setNames(list(do.call(sliderInput, x$controls)), x$id)
+  input("slider", args, value, map, id)
 }
 
 #' Create a placeholder for a checkbox input.
 #'
 #' @importFrom shiny checkboxInput
 #' @inheritParams shiny::checkboxInput
-#' @inheritParams input_checkbox
+#' @inheritParams input
 #' @family interactive input
 #' @export
 #' @examples
@@ -92,22 +77,15 @@ input_checkbox <- function(value = FALSE, label = "", id = rand_id("checkbox_"),
 
   assert_that(is.string(label), is.string(id))
 
-  controls <- list(id, label, value = value)
-
-  input("input_checkbox", from_input(id, value, map), controls, id = id)
+  args <- list(id, label, value = value)
+  input("checkbox", args, value, map, id)
 }
-
-#' @S3method controls input_checkbox
-controls.input_checkbox <- function(x, session = NULL) {
-  setNames(list(do.call(checkboxInput, x$controls)), x$id)
-}
-
 
 #' Create a placeholder for a text input.
 #'
 #' @importFrom shiny textInput
 #' @inheritParams shiny::textInput
-#' @inheritParams input_text
+#' @inheritParams input
 #' @family interactive input
 #' @export
 #' @examples
@@ -123,14 +101,8 @@ input_text <- function(value, label = "", id = rand_id("text_"),
 
   assert_that(is.string(label), is.string(id), is.string(value))
 
-  controls <- list(id, label, value = value)
-
-  input("input_text", from_input(id, value, map), controls, id = id)
-}
-
-#' @S3method controls input_text
-controls.input_text <- function(x, session = NULL) {
-  setNames(list(do.call(textInput, x$controls)), x$id)
+  args <- list(id, label, value = value)
+  input("text", args, value, map, id)
 }
 
 
@@ -138,7 +110,7 @@ controls.input_text <- function(x, session = NULL) {
 #'
 #' @importFrom shiny numericInput
 #' @inheritParams shiny::numericInput
-#' @inheritParams input_numeric
+#' @inheritParams input
 #' @family interactive input
 #' @export
 #' @examples
@@ -154,22 +126,16 @@ input_numeric <- function(value, label = "", id = rand_id("text_"),
 
   assert_that(is.string(label), is.string(id), is.numeric(value))
 
-  controls <- list(id, label, value = value)
+  args <- list(id, label, value = value)
 
-  input("input_numeric", from_input(id, value, map), controls, id = id)
+  input("numeric", args, value, map, id)
 }
-
-#' @S3method controls input_numeric
-controls.input_numeric <- function(x, session = NULL) {
-  setNames(list(do.call(numericInput, x$controls)), x$id)
-}
-
 
 #' Create a placeholder for a radio button input.
 #'
 #' @importFrom shiny radioButtons
 #' @inheritParams shiny::radioButtons
-#' @inheritParams input_radiobuttons
+#' @inheritParams input
 #' @family interactive input
 #' @export
 #' @examples
@@ -190,7 +156,7 @@ input_radiobuttons <- function(choices, selected = NULL, label = "",
 
   assert_that(is.string(label), is.string(id))
 
-  controls <- list(id, label, choices = choices, selected = selected)
+  args <- list(id, label, choices = choices, selected = selected)
 
   if (is.null(selected)) {
     value <- choices[1]
@@ -198,20 +164,14 @@ input_radiobuttons <- function(choices, selected = NULL, label = "",
     value <- choices[selected]
   }
 
-  input("input_radiobuttons", from_input(id, value, map), controls, id = id)
+  input("radio_buttons", args, value, map, id, control_f = "radioButtons")
 }
-
-#' @S3method controls input_radiobuttons
-controls.input_radiobuttons <- function(x, session = NULL) {
-  setNames(list(do.call(radioButtons, x$controls)), x$id)
-}
-
 
 #' Create a placeholder for a checkbox group input.
 #'
 #' @importFrom shiny checkboxGroupInput
 #' @inheritParams shiny::checkboxGroupInput
-#' @inheritParams input_checkboxgroup
+#' @inheritParams input
 #' @family interactive input
 #' @export
 input_checkboxgroup <- function(choices, selected = NULL, label = "",
@@ -219,7 +179,7 @@ input_checkboxgroup <- function(choices, selected = NULL, label = "",
 
   assert_that(is.string(label), is.string(id))
 
-  controls <- list(id, label, choices = choices, selected = selected)
+  args <- list(id, label, choices = choices, selected = selected)
 
   if (is.null(selected)) {
     value <- character(0)
@@ -227,10 +187,5 @@ input_checkboxgroup <- function(choices, selected = NULL, label = "",
     value <- choices[selected]
   }
 
-  input("input_checkboxgroup", from_input(id, value, map), controls, id = id)
-}
-
-#' @S3method controls input_checkboxgroup
-controls.input_checkboxgroup <- function(x, session = NULL) {
-  setNames(list(do.call(checkboxGroupInput, x$controls)), x$id)
+  input("checkbox_group", args, value, map, id)
 }

@@ -64,3 +64,4 @@ Collate:
     'guide_legend.R'
     'inputs.R'
     'input.R'
+    'utils_names.R'
