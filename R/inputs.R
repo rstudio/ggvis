@@ -119,7 +119,7 @@ input_text <- function(value, label = "", id = rand_id("text_"),
 #'
 #' ggvis(mtcars, props(x ~ wt, y ~ mpg),
 #'   mark_symbol(
-#'     props(size = prop(input_numeric(label = "Point size", value = 25))
+#'     props(size = input_numeric(label = "Point size", value = 25)
 #'   )
 #' )
 input_numeric <- function(value, label = "", id = rand_id("text_"),

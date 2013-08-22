@@ -26,13 +26,13 @@ ggvis(mtcars, props(x ~ wt, y ~ mpg, fill ~ factor(cyl)),
 # Use unscaled constant: 10 refers to 10 pixels from top
 ggvis(mtcars, props(x ~ wt),
   mark_symbol(props(y ~ mpg)),
-  mark_symbol(props(y = prop(10), fill = "red"))
+  mark_symbol(props(y = 10, fill = "red"))
 )
 
 # Use scaled constant: 10 refers to data space
 ggvis(mtcars, props(x ~ wt),
   mark_symbol(props(y ~ mpg)),
-  mark_symbol(props(y = prop(10, scale = TRUE), fill = "red"))
+  mark_symbol(props(y ~ 10, fill = "red"))
 )
 
 # Line and point graph

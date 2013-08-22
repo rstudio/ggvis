@@ -160,7 +160,7 @@ prop_domain <- function(x, data) {
 # p <- props(x ~ mpg, y = 10)
 # as.character(p$x)
 #
-# p <- props(x = prop(input_select(c("red", "blue")), TRUE, FALSE), y = 10)
+# p <- props(x = input_select(c("red", "blue")), y = 10)
 # as.character.prop(p$x)
 #' @S3method as.character prop
 as.character.prop <- function(x, ...) {

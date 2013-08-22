@@ -3,14 +3,14 @@ library(ggvis)
 # Bar graph with continuous x
 ggvis(pressure,
   props(x ~ temperature, y ~ pressure),
-  mark_rect(props(y2 = prop(0, scale = TRUE), width = 15))
+  mark_rect(props(y2 ~ 0, width = 15))
 )
 
 # Bar graph with ordinal x
 ggvis(pressure,
   props(x ~ temperature, y ~ pressure),
   dscale("x", "nominal", range = "width", padding = 0, points = FALSE),
-  mark_rect(props(y2 = prop(0, scale = TRUE), width = band()))
+  mark_rect(props(y2 ~ 0, width = band()))
 )
 
 # Histogram, fully specified

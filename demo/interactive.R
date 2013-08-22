@@ -63,10 +63,10 @@ ggvis(mtcars, props(x ~ wt, y ~ mpg),
 ggvis(mtcars, props(x ~ wt, y ~ mpg),
   mark_symbol(),
   branch_smooth(
-    method = input_radiobuttons(choices = c("LOESS" = "loess", "Linear" = "lm"),
-                                label = "Model type"),
-    props(stroke = prop(input_radiobuttons(
-        choices = c("Red" = "red", "Black" = "black"), label = "Line color"))
+    method = input_radiobuttons(c("LOESS" = "loess", "Linear" = "lm"),
+      label = "Model type"),
+    props(stroke = input_radiobuttons(c("Red" = "red", "Black" = "black"),
+      label = "Line color")
     )
   )
 )
@@ -78,12 +78,7 @@ ggvis(mtcars, props(x ~ wt, y ~ mpg),
       choices = c("Red" = "r", "Green" = "g", "Blue" = "b"),
       label = "Point color components",
       map = function(val) {
-        # Build a RGB color string
-        str = "#"
-        str <- paste0(str, if ("r" %in% val) "f0" else "00")
-        str <- paste0(str, if ("g" %in% val) "f0" else "00")
-        str <- paste0(str, if ("b" %in% val) "f0" else "00")
-        str
+        rgb(0.8 * "r" %in% val, 0.8 * "g" %in% val, 0.8 * "b" %in% val)
       }
     ))
   )
@@ -95,29 +90,26 @@ ggvis(mtcars,
   props(
     x ~ wt,
     y ~ mpg,
-    fill = prop(input_select(c("red", "blue"), label = "Color")),
-    size = prop(input_slider(10, 1000, 100, label = "Size")),
-    opacity = prop(input_slider(0, 1, 1, label = "Opacity"))
+    fill = input_select(c("red", "blue"), label = "Color"),
+    size = input_slider(10, 1000, 100, label = "Size"),
+    opacity = input_slider(0, 1, 1, label = "Opacity")
   ),
   mark_symbol()
 )
 
 
 # Constant values, on a scale
+new_vals <- input_select(c("Set A" = "A", "Set B" = "B"),
+  label = "Dynamically-generated column",
+  map = function(value) {
+    vals <- switch(value,
+      "A" = rep(c("One", "Two")),
+      "B" = c("First", "Second", "Third", "Fourth"))
+    rep(vals, length = nrow(mtcars))
+  }, scale = TRUE)
+
 ggvis(mtcars,
-  props(
-    x ~ wt,
-    y ~ mpg,
-    fill = prop(
-      input_select(c("Set A" = "A", "Set B" = "B"),
-        label = "Dynamically-generated column",
-        map = function(value) {
-          switch(value,
-            "A" = c("One", "Two"),
-            "B" = c("First", "Second", "Third", "Fourth"))
-        }),
-      scale = TRUE)
-  ),
+  props(x ~ wt, y ~ mpg, fill = new_vals),
   mark_symbol()
 )
 
