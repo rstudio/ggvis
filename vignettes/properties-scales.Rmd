@@ -52,14 +52,9 @@ mark_line(props(x ~ wt, y ~ mpg, stroke = "red", size = 5))
 
 To distinguish between variables that you are _mapping_, and values that you
 are _setting_, you use `~` or `=` respectively. The `~` is an indication that
-props isn't using the value of the variable `wt`, but it's name. 
+props isn't using the value of the variable `wt`, but its name. 
 
-(This obviously requires a little non-standard evaluation - if you want to 
-create mappings given the names of variables as a string (e.g `x <- "mpg")
-you'll need to use the more explicit `prop()` function described below.)
-
-It's also possible to "map" a constant, which effectively adds a new column to
-the data containing a constant value, and then maps the variable to that. 
+It's also possible provide a scaled constant instead of a raw constant.
 That's useful when you want to label different layers in a plot:
 
 ```R
@@ -76,7 +71,6 @@ of vega. See https://github.com/rstudio/ggvis/issues/29 for progress.)
 Trying to set a property to a variable won't work `props(x = wt)`, unless there
 is a variable called `wt` defined in the local environment, in which case its
 value will be used as constant.
-
 
 ### Valid properties
 
@@ -105,55 +99,45 @@ print(p)
 
 ### Capture of local variables
 
-(Currently doesn't work)
+Variable properties can refer to both variables in the dataset and variables in
+the local environment:
+
+```{r}
+df <- data.frame(x = 1:10)
+f <- function(n) {
+  ggvis(df, props(x ~ x, y ~ x ^ n), mark_line())
+}
+f(1)
+f(2)
+```
+
+Technically, ggvis uses the environment captured by the formula when it is 
+created, which may be important if you're generating formulas in one function
+and using them in another. You can always override the environment by calling
+`prop()` and supplying the `env` argument.
+
 
 ## `prop()`
 
-A prop has three key properties:
+A prop has two key properties:
 
-* constant/variable: if constant, the value is used as is. If variable, it is
-  evaluated in the context of the data frame. 
+* value: which can be a constant, the name of a variable (or an expression
+  involving one or more variables), or an interactive input. An interactive
+  input must yield either a constant, or an variable name/expression.
 
-* scaled/unscaled: if scaled, a vega scale is in charge of converting the data
+* the scale: if scaled, a vega scale is in charge of converting the data
   value to something that makes sense as a visual property. If unscaled, the
-  value is used as is. Unscaled is the equivalent of using `scale_identity` in
-  ggplot2. Scaled defaults to 
+  value is used as is. 
   
-* reactive/static: automatically detected from the input. If it's a delayed
-  reactive, it will be re-evaluted multiple times during the life-time of the
-  plot, as the underlying input changes.
+  Unscaled is the equivalent of using `scale_identity` in ggplot2.
 
-This gives rise to eight possible combinations:
+Type        | Scaled | Common use | In props
+------- ----|--------|-------------------------
+constant    | yes    | Pixel location, or exact colour | `x = 1`
+constant    | yes    | Annotation position in data space | `x ~ 1`
+variable    | no     | Variable already contains visual values | `x ~ I(colour)`
+variable    | no     | Map variable to property | `x ~ mpg`
 
-Reactive | Variable | Scaled | Common use | In props
----------|----------|--------|-------------------------
-FALSE    | FALSE    | FALSE  | Pixel location, or exact colour | `x = 1`
-FALSE    | FALSE    | TRUE   | Annotation position in data space | `x ~ 1`
-FALSE    | TRUE     | FALSE  | Variable already contains visual values | 
-FALSE    | TRUE     | TRUE   | Map variable to property | `x ~ mpg`
-TRUE     | FALSE    | FALSE  | Choose pixel location or color | `x = input_slider()`
-TRUE     | FALSE    | TRUE   | Choose position in data space |
-TRUE     | TRUE     | FALSE  | Choose visual variable to display
-TRUE     | TRUE     | TRUE   | Choose variable to display |
-
-`props()` uses the heuristics to avoid you having to explicit set these values
-for the most common uses. It uses the following heuristics to set:
-
-* `~`: `scaled = TRUE`, `reactive = FALSE`. `constant = TRUE` if the RHS of the 
-  formula is an atomic vector, `FALSE` if LHS is a call or name. 
-
-* `=`: `scaled = FALSE`. `reactive = TRUE` if input is a delayed reactive,
-  otherwise `FALSE`, `scaled = !reactive`
-
-If you need to do something different you can explicitly create the `prop()` 
-object.  For example, if you want to make a non-constant scaled reactive, you
-could do:
-
-```R
-vars <- input_select(c("disp", "wt"))
-gigvis(mtcars, props(x = prop(vars, constant = FALSE), y ~ mpg), 
-  mark_symbol())
-```
 
 ### Special evaluation and variables
 
