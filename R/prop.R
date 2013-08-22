@@ -212,13 +212,6 @@ format.prop <- function(x, ...) {
 #' @S3method print prop
 print.prop <- function(x, ...) cat(format(x, ...), "\n", sep = "")
 
-is_constant <- function(x) {
-  if (!is.prop(x)) stop("x must be a prop object.", call. = FALSE)
-  x$constant
-}
-is_variable <- function(x) !is_constant(x)
-
-
 
 # Determine the variable type given a data frame and property.
 #
