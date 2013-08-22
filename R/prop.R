@@ -91,13 +91,12 @@ prop_value <- function(x, data, processed = FALSE) {
   # Calculate a "column"
   col <- eval(expr, envir = data, enclos = x$env)
 
-  if (nrow(data) %% length(col) != 0) {
-    stop("Number of rows in data, ", nrow(data),
-         " is not an integer multiple of the length of calculated column '",
-      prop_name(x), "', ", length(col), ".", call. = FALSE)
+  if (!(length(col) == 1 || length(col) == nrow(data))) {
+    stop("Length of calculated column '", prop_name(x), "' (", length(col),
+      ") is not equal to 1 or the number of rows in data (", nrow(data), ").",
+      call. = FALSE)
   }
 
-  # Rep the calculated column if needed
   rep_len(col, nrow(data))
 }
 
