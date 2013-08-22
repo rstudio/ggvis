@@ -8,9 +8,6 @@
 #' @param x The value of the property. This can be an atomic vector 
 #'   (a constant), a name or quoted call (a variable), or a delayed
 #'   reactive (which can be either variable or constant).
-#' @param constant A logical flag needed if \code{x} is a delayed reactive:
-#'   does it provide a constant value or a variable to be evaluated in the
-#'   context of the data.
 #' @param scale If \code{TRUE} uses the default scale associated with property;
 #'   If \code{FALSE}, does not scale the value. Otherwise supply a string to
 #'   select a custom scale. 
