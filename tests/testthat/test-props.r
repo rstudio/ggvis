@@ -36,6 +36,12 @@ test_that("property values for variables", {
 
   # Constant prop
   expect_equal(prop_value(prop(10), dat), rep(10, 3))
+
+  # Expression which returns a single value; value should be replicated
+  expect_equal(prop_value(prop(quote(min(a))), dat), c(1, 1, 1))
+
+  # Expression which returns # of values that doesn't divide into # of rows
+  expect_error(prop_value(prop(quote(range(a))), dat))
 })
 
 test_that("prop captures environment for evaluation", {

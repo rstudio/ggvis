@@ -98,12 +98,9 @@ ggvis(mtcars,
   props(
     x ~ wt,
     y ~ mpg,
-    fill = prop(input_select(c("red", "blue"), label = "Color"),
-                constant = TRUE, scale = FALSE),
-    size = prop(input_slider(10, 1000, 100, label = "Size"),
-                constant = TRUE, scale = FALSE),
-    opacity = prop(input_slider(0, 1, 1, label = "Opacity"),
-                   constant = TRUE, scale = FALSE)
+    fill = prop(input_select(c("red", "blue"), label = "Color"), scale = FALSE),
+    size = prop(input_slider(10, 1000, 100, label = "Size"), scale = FALSE),
+    opacity = prop(input_slider(0, 1, 1, label = "Opacity"), scale = FALSE)
   ),
   mark_symbol()
 )
@@ -122,7 +119,7 @@ ggvis(mtcars,
             "A" = c("One", "Two"),
             "B" = c("First", "Second", "Third", "Fourth"))
         }),
-      constant = TRUE, scale = TRUE)
+      scale = TRUE)
   ),
   mark_symbol()
 )
@@ -135,8 +132,7 @@ ggvis(mtc,
   props(
     x ~ wt,
     y ~ mpg,
-    fill = prop(input_select(c("colour1", "colour2")),
-                constant = FALSE, scale = FALSE)
+    fill = prop(input_select(c("colour1", "colour2"), map = as.name), scale = FALSE)
   ),
   mark_symbol()
 )
@@ -146,8 +142,7 @@ ggvis(mtcars,
   props(
     x ~ wt,
     y ~ mpg,
-    fill = prop(input_select(c("mpg", "wt")),
-                constant = FALSE, scale = TRUE)
+    fill = prop(input_select(c("mpg", "wt"), map = as.name), scale = TRUE)
   ),
   mark_symbol()
 )

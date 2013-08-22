@@ -65,7 +65,7 @@ props <- function(..., inherit = TRUE) {
 
   # Anything else that's not already a prop gets turned into a constant
   constants <- !vapply(pieces, is.prop, logical(1))
-  pieces[constants] <- lapply(pieces[constants], prop, constant = TRUE)
+  pieces[constants] <- lapply(pieces[constants], prop)
 
   structure(
     pieces,
@@ -115,9 +115,9 @@ parse_component <- function(x) {
 
   name <- as.character(x[[2]])
   if (is.atomic(x[[3]])) {
-    value <- prop(x[[3]], constant = TRUE, scale = TRUE)
+    value <- prop(x[[3]], scale = TRUE)
   } else {
-    value <- prop(x[[3]], constant = FALSE, env = environment(x))
+    value <- prop(x[[3]], scale = TRUE, env = environment(x))
   }
 
 
