@@ -78,8 +78,7 @@ prop <- function(x, scale = NULL, offset = NULL, mult = NULL,
 is.prop <- function(x) inherits(x, "prop")
 
 # Given a property and a dataset, get the value of the property.
-prop_value <- function(x, data, processed = FALSE) {
-  if (processed) return(data[[prop_name(x)]])
+prop_value <- function(x, data) {
   if (x$type == "constant") return(rep(x$value, nrow(data)))
 
   # Get the expression to evaluate
@@ -210,42 +209,21 @@ print.prop <- function(x, ...) cat(format(x, ...), "\n", sep = "")
 prop_type <- function(data, prop, processed = FALSE) {
   UseMethod("prop_type")
 }
-
 #' @S3method prop_type split_df
 prop_type.split_df <- function(data, prop, processed = FALSE) {
-  types <- vapply(data, prop_type, prop = prop, processed = processed,
-    FUN.VALUE = character(1))
-  if (!all_same(types)) {
-    stop("Inconsistent types", call. = FALSE)
-  }
-  types[1]
+  prop_type(data[[1]], prop, processed = processed)
 }
 #' @S3method prop_type data.frame
 prop_type.data.frame <- function(data, prop, processed = FALSE) {
-  prop_type(prop_value(prop, data, processed))
+  if (processed) {
+    value <- data[[prop_name(prop)]]
+  } else {
+    value <- prop_value(prop, data, processed)
+  }
+  
+  vector_type(value)
 }
-#' @S3method prop_type POSIXt
-prop_type.POSIXt <- function(data, prop) "datetime"
-#' @S3method prop_type Date
-prop_type.Date <- function(data, prop) "datetime"
-#' @S3method prop_type numeric
-prop_type.numeric <- function(data, prop) "numeric"
-#' @S3method prop_type integer
-prop_type.integer <- function(data, prop) "numeric"
-#' @S3method prop_type character
-prop_type.character <- function(data, prop) "nominal"
-#' @S3method prop_type logical
-prop_type.logical <- function(data, prop) "logical"
-#' @S3method prop_type factor
-prop_type.factor <- function(data, prop) "nominal"
-#' @S3method prop_type ordered
-prop_type.ordered <- function(data, prop) "ordinal"
-#' @S3method prop_type NULL
-prop_type.NULL <- function(data, prop) "NULL"
-#' @S3method prop_type default
-prop_type.default <- function(data, prop) {
-  stop("Unknown variable type: ", paste0(class(data), collapse = "/"))
-}
+
 
 #' Determine the numeric range of a variable
 #'

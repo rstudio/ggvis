@@ -65,3 +65,4 @@ Collate:
     'inputs.R'
     'input.R'
     'utils_names.R'
+    'vector_type.R'

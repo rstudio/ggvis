@@ -14,7 +14,7 @@ find_scales <- function(x, nodes, data_table) {
       scale <- prop_scale(prop, prop_to_scale(prop_n))
       if (is.na(scale)) next
 
-      type <- prop_type(data, prop, TRUE)
+      type <- prop_type(data, prop, processed = TRUE)
       scale_types[[scale]] <- c(scale_types[[scale]], type)
 
       use <- prop_domain(prop, node$pipeline_id)

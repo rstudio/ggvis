@@ -20,7 +20,7 @@ print.band <- function(x, ...) cat(format(x, ...), "\n", sep = "")
 is.band <- function(x) inherits(x, "band")
 
 #' @S3method prop_value band
-prop_value.band <- function(x, data, processed = FALSE) {
+prop_value.band <- function(x, data) {
   NULL
 }
 
