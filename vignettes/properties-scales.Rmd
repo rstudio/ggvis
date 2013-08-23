@@ -23,36 +23,46 @@ In this chapter, you will learn:
 * the `prop()` function, which is more verbose, but gives you full control
   over all options
   
-* how properties are associated with scales, and how you can override 
-  those choices
+* what scales do, how properties and scales are connected, how you can 
+  override the defaults.
 
 Note that unlike ggplot2, scales do not control the appearance of their guides:
-see the axes and legends vignette for how to customise the display of those 
-components.
+see the axes and legends vignette for how to customise their display.
 
 ## The `props()` wrapper
 
-### Getting started
-
-`props()` has a similar purpose to ggplot2's `aes()` - it associates variables
-in your datasets, with visual properties in the graphic. However, `props()` 
-has been design a little differently to `aes()`, because as well as including
-all the mappings between variables and properties, it also includes fixed 
-values. For example, in ggplot2, you might say:
+Every ggvis mark is associated with a set of properties that governs how it is displayed. These properties can be constant values (like 5, "blue", or "square"), or mapped to variables in your dataset. ggplot2 syntax made a distinction between mapping variables and setting constants. For example, in ggplot2, you might say:
 
 ```R
 geom_point(aes(x = wt, y = mpg), colour = "red", size = 5)
 ```
 
-but in ggvis, you say:
+But it ggvis, everything is a property:
 
 ```R
 mark_line(props(x ~ wt, y ~ mpg, stroke = "red", size = 5))
 ```
 
-To distinguish between variables that you are _mapping_, and values that you
-are _setting_, you use `~` or `=` respectively. The `~` is an indication that
-props isn't using the value of the variable `wt`, but its name. 
+This introduces `props()`, a convenient function for creating property objects and binding them to property names. The next chapter shows you how to create the property objects by hand, giving you more control over the specification at the cost of some extra typing.
+
+### Setting vs mapping
+
+Props distinguishes between setting values to constants and mapping values to a variable based on whether you use `~` (mapping) or `=` (setting). The syntax is designed to remind you that, like a linear model, the properties specification isn't using the value of the variable `wt`, but its name. 
+
+* `props(x ~ displ, y ~ mpg)`: map x to engine displacement and y to miles 
+  per gallon
+
+* `props(stroke = "red", fill = "blue")`: set the stroke colour to red and the
+  fill colour to blue.
+
+* `props(x ~ displ, y = 10)`: map the x-position to displacement and set
+  the y position to 10 pixels.
+
+Those examples follow a common pattern: `=` is always used with a scalar, and `~` is always used with the name of the variable. What if you try the opposite?
+
+* `props(x ~ 0)`: sets the x position to the value 0
+
+* `props(x = wt)`: is an error, because 
 
 It's also possible provide a scaled constant instead of a raw constant.
 That's useful when you want to label different layers in a plot:
@@ -60,7 +70,7 @@ That's useful when you want to label different layers in a plot:
 ```R
 ggvis(mtcars, props(x ~ wt, y ~ mpg), 
   mark_symbol(),
-  branch_smooth(props(stroke = "lm"), method = lm),
+  branch_smooth(props(stroke = "lm"), method = "lm"),
   branch_smooth(props(stroke = "loess"))
 )
 ```
