@@ -1,7 +1,42 @@
-#' Add a Ggvis plot to the UI of a Shiny app
+#' Connect a ggvis graphic to a shiny app.
+#' 
+#' It's easiest to learn by example: there are two shiny apps in 
+#' \code{demo/apps/} that you can learn from.
+#' 
+#' @details
+#' There are two required components and one optional component:
+#' 
+#' \itemize{
+#'   \item Use \code{ggvis_output} in \code{ui.r} to insert a placeholder 
+#'   (a div with id) for a ggvis graphic.
 #'
+#'   \item Use \code{observe_ggvis} in \code{server.r} to insert a ggvis object
+#'   into a shiny app and set up the observers to notify the client side 
+#'   whenever the plot data or spec changes.
+#' 
+#'   \item If the plot uses interactive inputs, use \code{renderControls} to
+#'   insert those controls into the ui.
+#' }
+#' @examples
+#' \dontrun{
+#' # In server.r
+#' gv <- reactive({
+#'   ggvis(mtcars, props(x ~ wt, y ~ mpg),
+#'     mark_symbol(),
+#'     branch_smooth(
+#'       n = input_slider(2, 80, "Interpolation points", value = 5, step = 1),
+#'       method = input_select(c("Linear" = "lm", "LOESS" = "loess"))
+#'     )
+#'   )
+#' })
+#'
+#' output$controls <- renderControls(gv)
+#' }
+#' @name shiny
+NULL
+
+#' @rdname shiny
 #' @importFrom shiny addResourcePath singleton tagList
-#' @keywords internal
 #' @param id unique identifier to use for div tag containing ggvis plot
 #' @export
 ggvis_output <- function(id) {
@@ -25,14 +60,12 @@ ggvis_output <- function(id) {
   )
 }
 
-#' Set up Shiny observers for a dynamic ggvis plot
-#'
+#' @rdname shiny
 #' @param r_gv A reactive expression which returns a ggvis object.
 #' @param id The ID of the plot on the web page.
 #' @param session A Shiny session object.
 #' @param renderer The renderer type ("canvas" or "svg")
 #' @param ... Other arguments passed to \code{as.vega}.
-#'
 #' @export
 observe_ggvis <- function(r_gv, id, session, renderer = "canvas", ...) {
   if (!is.reactive(r_gv)) {
@@ -105,25 +138,9 @@ observe_data <- function(r_spec, id, session) {
   })
 }
 
-#' Render the controls for a ggvis object in a Shiny app
-#'
+#' @rdname shiny
 #' @param r_gv a ggvis object wrapped in a reactive
 #' @param session the session argument from the shiny server function
-#' @examples
-#' \dontrun{
-#' # In server.r
-#' gv <- reactive({
-#'   ggvis(mtcars, props(x ~ wt, y ~ mpg),
-#'     mark_symbol(),
-#'     branch_smooth(
-#'       n = input_slider(2, 80, "Interpolation points", value = 5, step = 1),
-#'       method = input_select(c("Linear" = "lm", "LOESS" = "loess"))
-#'     )
-#'   )
-#' })
-#'
-#' output$controls <- renderControls(gv)
-#' }
 #' @export
 renderControls <- function(r_gv, session = NULL) {
   renderUI({
