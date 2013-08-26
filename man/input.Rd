@@ -1,7 +1,7 @@
 \name{input}
 \alias{input}
 \alias{is.input}
-\title{Create an interactive input.}
+\title{Create a new interactive input object.}
 \usage{
   input(subclass, control_args = list(), value = NULL,
     map = identity, id = rand_id(), scale = FALSE,
@@ -44,9 +44,9 @@
 }
 \details{
   This function is designed to be used by authors of new
-  types of interactive inputs. If you are a ggvis, use one
-  of the more specific input functions starting with the
-  \code{input_} prefix.
+  types of interactive inputs. If you are a ggvis user,
+  please use one of the more specific input functions
+  starting with the \code{input_}.
 }
 \keyword{internal}
 

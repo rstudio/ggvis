@@ -1,8 +1,11 @@
-#' S3 mark object.
+#' Create a new mark object.
 #'
-#' This object is used by all \code{\link{marks}} - you should not have to call
-#' it directly, unless you are creating a new R mark object to represent a
-#' vega mark that is not currently available in ggvis.
+#' A mark object is a close mapping to a vega mark object. Vega marks
+#' are documented in \url{https://github.com/trifacta/vega/wiki/Marks}.
+#' 
+#' This function is designed to be used by authors of new types of mark.
+#' If you are a ggvis user, please use one of the more specific mark
+#' functions starting with the \code{mark_}.
 #'
 #' @param type vega mark list
 #' @param props list of properties

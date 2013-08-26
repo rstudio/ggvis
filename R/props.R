@@ -3,8 +3,7 @@
 #' \code{props()} provides a tool for concise creation of \code{prop} objects
 #' using a set of conventions designed to capture the most common use cases.
 #' If you need something less common, you'll need to use \code{\link{prop}} to
-#' access all possible options. See the \link{marks} documentation to see
-#' what properties the marks understand.
+#' access all possible options.
 #' 
 #' @section Heuristics:
 #' 
@@ -35,6 +34,7 @@
 #' If you have the name of a variable in a string, see the
 #' props vignette for how to create the needed property mapping.
 #' 
+#' @template properties
 #' @param ... A set of name-value pairs. The name should be a valid vega
 #'   property.
 #' @param inherit If \code{TRUE}, the defaults, will inherit from properties

@@ -1,7 +1,7 @@
 \name{mark}
 \alias{is.mark}
 \alias{mark}
-\title{S3 mark object.}
+\title{Create a new mark object.}
 \usage{
   mark(type, props, data = NULL)
 
@@ -15,6 +15,11 @@
   \item{data}{optional data pipeline}
 }
 \description{
+  A mark object is a close mapping to a vega mark object.
+  Vega marks are documented on
+  \url{https://github.com/trifacta/vega/wiki/Marks}.
+}
+\details{
   This object is used by all \code{\link{marks}} - you
   should not have to call it directly, unless you are
   creating a new R mark object to represent a vega mark

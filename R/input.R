@@ -1,4 +1,4 @@
-#' Create an interactive input.
+#' Create a new interactive input object.
 #'
 #' An interactive input represents a reactive value bound to a UI control.
 #' Interactive inputs were previously called delayed reactives because they
@@ -6,8 +6,8 @@
 #' drawn. 
 #' 
 #' This function is designed to be used by authors of new types of interactive
-#' inputs. If you are a ggvis, use one of the more specific input functions
-#' starting with the \code{input_} prefix.
+#' inputs. If you are a ggvis user, please use one of the more specific input
+#' functions starting with the \code{input_}.
 #'
 #' @param subclass The name of a class to be used in addition to
 #'   "input". Automatically prefixed with "input_"

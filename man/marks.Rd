@@ -38,6 +38,10 @@
   line, polygon), where ggvis branches correspond to
   combinations of geoms and statistical transforms.
 }
+\details{
+  Note that by supplying a fill property to
+  \code{mark_line} will produce a filled property.
+}
 \section{Properties}{
   You can set the following mark properties:
 
@@ -86,5 +90,8 @@
   To each property, you can assign any property object
   (\code{\link{prop}}) either locally (i.e. in the mark),
   or in a parent \code{\link{node}}.
+}
+\seealso{
+  The "marks" vignette.
 }
 
