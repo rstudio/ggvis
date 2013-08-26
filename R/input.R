@@ -3,7 +3,11 @@
 #' An interactive input represents a reactive value bound to a UI control.
 #' Interactive inputs were previously called delayed reactives because they
 #' represent an reactive value that would be created when the plot was
-#' drawn.
+#' drawn. 
+#' 
+#' This function is designed to be used by authors of new types of interactive
+#' inputs. If you are a ggvis, use one of the more specific input functions
+#' starting with the \code{input_} prefix.
 #'
 #' @param subclass The name of a class to be used in addition to
 #'   "input". Automatically prefixed with "input_"

@@ -42,5 +42,11 @@
   delayed reactives because they represent an reactive
   value that would be created when the plot was drawn.
 }
+\details{
+  This function is designed to be used by authors of new
+  types of interactive inputs. If you are a ggvis, use one
+  of the more specific input functions starting with the
+  \code{input_} prefix.
+}
 \keyword{internal}
 

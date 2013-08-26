@@ -1,6 +1,6 @@
 \name{input_slider}
 \alias{input_slider}
-\title{Create a placeholder for a slider input.}
+\title{Create an interactive slider.}
 \usage{
   input_slider(min, max, value = min, step = NULL,
     round = FALSE, format = "#,##0.#####", locale = "us",
@@ -61,12 +61,18 @@
   in a prop}
 }
 \description{
-  Create a placeholder for a slider input.
+  Create an interactive slider.
 }
 \examples{
 input_slider(0, 100)
 input_slider(0, 100, label = "binwidth")
 input_slider(0, 100, value = 50)
+
+# Supply two values to value to make a double-ended sliders
+input_slider(0, 100, c(25, 75))
+
+# You can use map to transform the outputs
+input_slider(-5, 5, label = "Log scale", map = function(x) 10 ^ x)
 }
 \seealso{
   Other interactive input: \code{\link{input_checkbox}},

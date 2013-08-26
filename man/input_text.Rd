@@ -1,8 +1,12 @@
 \name{input_text}
+\alias{input_numeric}
 \alias{input_text}
-\title{Create a placeholder for a text input.}
+\title{Create an interactive text or numeric input box.}
 \usage{
   input_text(value, label = "", id = rand_id("text_"),
+    map = identity, scale = FALSE)
+
+  input_numeric(value, label = "", id = rand_id("text_"),
     map = identity, scale = FALSE)
 }
 \arguments{
@@ -23,7 +27,9 @@
   in a prop}
 }
 \description{
-  Create a placeholder for a text input.
+  \code{input_numeric} only allows numbers and comes with a
+  spin box control. \code{input_text} allows any type of
+  input.
 }
 \examples{
 input_text(label = "Point color", value = "red")
@@ -33,11 +39,18 @@ ggvis(mtcars, props(x ~ wt, y ~ mpg),
     props(fill = input_text(label = "Point color", value = "red"))
   )
 )
+
+input_numeric(label = "Point size", value = 25)
+
+ggvis(mtcars, props(x ~ wt, y ~ mpg),
+  mark_symbol(
+    props(size = input_numeric(label = "Point size", value = 25)
+  )
+)
 }
 \seealso{
   Other interactive input: \code{\link{input_checkbox}},
   \code{\link{input_checkboxgroup}},
-  \code{\link{input_numeric}},
   \code{\link{input_radiobuttons}},
   \code{\link{input_select}}, \code{\link{input_slider}}
 }

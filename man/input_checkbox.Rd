@@ -1,6 +1,6 @@
 \name{input_checkbox}
 \alias{input_checkbox}
-\title{Create a placeholder for a checkbox input.}
+\title{Create an interactive checkbox.}
 \usage{
   input_checkbox(value = FALSE, label = "",
     id = rand_id("checkbox_"), map = identity,
@@ -25,7 +25,7 @@
   in a prop}
 }
 \description{
-  Create a placeholder for a checkbox input.
+  Create an interactive checkbox.
 }
 \examples{
 input_checkbox(label = "Confidence interval")
@@ -33,13 +33,11 @@ input_checkbox(label = "Confidence interval", value = TRUE)
 
 # Used in a branch_smooth
 branch_smooth(se = input_checkbox(label = "Confidence interval"))
-branch_smooth(se = input_checkbox(label = "Confidence interval", value = FALSE))
 
 # Used with a map function, to convert the boolean to another type of value
-branch_smooth(
-  method = input_checkbox(label = "LOESS (curve) model fit",
-                          map = function(val) ifelse(val, "loess", "lm"))
-)
+model_type <- input_checkbox(label = "Use flexible curve",
+  map = function(val) if(val) "loess" else "lm")
+branch_smooth(method = model_type)
 }
 \seealso{
   Other interactive input:
