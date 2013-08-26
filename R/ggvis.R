@@ -73,7 +73,7 @@ ggvis_node <- function(..., subclass = character()) {
     components$data <- trim_to_source(pl)
   }
   
-  components$scale <- scales(.scales = components$scale)
+  components$scales <- scales(.scales = components$scale)
   
   structure(components, class = c(subclass, "ggvis_node"))
 }
