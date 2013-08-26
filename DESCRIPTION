@@ -33,7 +33,6 @@ Collate:
     'prop.R'
     'prop_band.R'
     'props.R'
-    'range.R'
     'scale.R'
     'scale_defaults.R'
     'scale_ordinal.R'
