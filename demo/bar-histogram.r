@@ -32,7 +32,7 @@ ggvis(mtcars, props(x ~ wt),
 )
 
 # Histogram, filled by cyl
-by_cyl <- pipeline(mtcars, by_group("cyl"))
+by_cyl <- pipeline(mtcars, by_group(cyl))
 ggvis(by_cyl, props(x ~ wt, fill ~ factor(cyl)),
   branch_histogram(binwidth = 1))
 

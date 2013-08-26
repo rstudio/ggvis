@@ -27,7 +27,7 @@
 #'
 #' # More useful pipelines combine data and transformations
 #' pipeline(mtcars, transform_bin())
-#' pipeline(mtcars, by_group("cyl"), transform_bin())
+#' pipeline(mtcars, by_group(cyl), transform_bin())
 pipeline <- function(..., .pipes = list()) {
   check_empty_args()
   args <- list(...)

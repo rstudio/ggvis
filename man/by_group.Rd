@@ -2,29 +2,39 @@
 \alias{by_group}
 \title{Visualise data by group.}
 \usage{
-  by_group(..., env = parent.frame())
+  by_group(..., .vars = list(), .env = parent.frame())
 }
 \arguments{
-  \item{...}{Variables to split on. These can either be
-  strings (for variable names) or quoted expressions (for
-  more complicated transformations)}
+  \item{...}{Unquoted variable names or expressions
+  describe how to split up the dataset.}
+
+  \item{.vars}{a list of quoted expressions.}
+
+  \item{.env}{environment in which to evalute expressions.
+  In ordinary use, the default is adequate.}
 }
 \description{
   Use \code{by_group} to split up a dataset into multiple
   pieces, and have each piece rendered by the same mark.
 }
-\details{
-  The interface for this function is highly likely to
-  change prior to the initial release of ggvis.
-}
 \examples{
-by_group("cyl")
-by_group(quote(cyl))
-by_group(quote(vs + am))
+by_group(cyl)
+by_group(vs, am)
+by_group(vs + am)
 
 # One line
 ggvis(mtcars, props(x ~ disp, y ~ mpg), mark_line())
 # One line for each level of cyl
 ggvis(mtcars, by_group("cyl"), props(x ~ disp, y ~ mpg), mark_line())
+
+# Special evaluation -------------------
+
+# If you have previously quoted variables, use .vars
+v <- quote(cyl)
+by_group(.vars = list(v))
+
+# If you have the name of a variable as a string, use as.name
+var <- "cyl"
+by_group(.vars = list(as.name(var)))
 }
 

@@ -84,7 +84,7 @@ ggvis(mtcars, props(x ~ wt, y ~ mpg),
 )
 
 # Same as previous, but also with (useless) grouping in the nodes
-by_cyl <- pipeline(mtcars, by_group("cyl"))
+by_cyl <- pipeline(mtcars, by_group(cyl))
 ggvis(by_cyl, props(x ~ wt, y ~ mpg),
   mark_symbol(props(stroke ~ factor(cyl), fill = NA)),
   mark_symbol(props(fill ~ factor(am), size = 25))

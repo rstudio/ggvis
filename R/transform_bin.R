@@ -35,7 +35,7 @@
 #' # You can see the results of a transformation by creating your own pipeline
 #' # and flowing data through it
 #' sluice(transform_bin(10), props(x ~ disp), mtcars)
-#' sluice(pipeline(mtcars, by_group("cyl"), transform_bin(10)), props(x ~ disp))
+#' sluice(pipeline(mtcars, by_group(cyl), transform_bin(10)), props(x ~ disp))
 #' # Or
 #' pl <- pipeline(mtcars, transform_bin(10))
 #' sluice(pl, props(x ~ disp))

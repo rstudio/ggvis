@@ -31,14 +31,14 @@ ggvis(mtcars, props(x ~ wt, y ~ mpg),
 )
 
 # Scatter plot with linear model for each level of cyl
-by_cyl <- pipeline(mtcars, by_group("cyl"))
+by_cyl <- pipeline(mtcars, by_group(cyl))
 ggvis(by_cyl, props(x ~ wt, y ~ mpg, stroke ~ factor(cyl)),
   mark_symbol(),
   branch_smooth(method = "lm")
 )
 
 # Scatter plot with linear model for each level of cyl, but only points coloured
-by_cyl <- pipeline(mtcars, by_group("cyl"))
+by_cyl <- pipeline(mtcars, by_group(cyl))
 ggvis(by_cyl, props(x ~ wt, y ~ mpg),
   mark_symbol(props(stroke ~ factor(cyl))),
   branch_smooth(method = "lm")

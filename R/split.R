@@ -2,28 +2,36 @@
 #'
 #' Use \code{by_group} to split up a dataset into multiple pieces, and have
 #' each piece rendered by the same mark.
-#'
-#' The interface for this function is highly likely to change prior to the 
-#' initial release of ggvis.
-#'
-#' @param ... Variables to split on. These can either be strings (for variable
-#' names) or quoted expressions (for more complicated transformations)
+#' 
+#' @param ... Unquoted variable names or expressions describe how to split
+#'   up the dataset.
+#' @param .vars a list of quoted expressions.
+#' @param .env environment in which to evalute expressions. In ordinary use,
+#'   the default is adequate.
 #' @export
 #' @examples
-#' by_group("cyl")
-#' by_group(quote(cyl))
-#' by_group(quote(vs + am))
+#' by_group(cyl)
+#' by_group(vs, am)
+#' by_group(vs + am)
 #'
 #' # One line
 #' ggvis(mtcars, props(x ~ disp, y ~ mpg), mark_line())
 #' # One line for each level of cyl
 #' ggvis(mtcars, by_group("cyl"), props(x ~ disp, y ~ mpg), mark_line())
-by_group <- function(..., env = parent.frame()) {
-  vars <- list(...)
-  is_char <- vapply(vars, is.character, logical(1))
-  vars[is_char] <- lapply(vars[is_char], as.name)
+#' 
+#' # Special evaluation -------------------
+#' 
+#' # If you have previously quoted variables, use .vars
+#' v <- quote(cyl)
+#' by_group(.vars = list(v))
+#' 
+#' # If you have the name of a variable as a string, use as.name
+#' var <- "cyl"
+#' by_group(.vars = list(as.name(var)))
+by_group <- function(..., .vars = list(), .env = parent.frame()) {
+  vars <- unname(c(dots(...), .vars))
 
-  pipe(c("split_by_group", "split"), variables = vars, env = env)
+  pipe(c("split_by_group", "split"), variables = vars, env = .env)
 }
 
 #' @S3method format split_by_group
