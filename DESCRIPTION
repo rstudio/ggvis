@@ -39,7 +39,6 @@ Collate:
     'scale_quantitative.R'
     'scale_time.R'
     'scales.R'
-    'scales_vega.R'
     'shiny.R'
     'split.R'
     'split_df.R'

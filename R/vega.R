@@ -39,7 +39,7 @@ as.vega.ggvis <- function(x, width = 600, height = 400, padding = NULL,
     }), recursive = FALSE)
   }
 
-  scales <- find_scales(x, nodes, data_table)
+  scales <- add_default_scales(x, nodes, data_table)
   axes <- add_default_axes(x$axes, scales)
   legends <- add_default_legends(x$legends, scales)
 
