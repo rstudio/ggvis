@@ -43,7 +43,6 @@ Collate:
     'split_df.R'
     'transform.R'
     'transform_bin.R'
-    'transform_identity.R'
     'transform_scale.R'
     'transform_smooth.R'
     'utils.R'
