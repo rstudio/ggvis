@@ -22,9 +22,7 @@
   \code{prop} objects using a set of conventions designed
   to capture the most common use cases. If you need
   something less common, you'll need to use
-  \code{\link{prop}} to access all possible options. See
-  the \link{marks} documentation to see what properties the
-  marks understand.
+  \code{\link{prop}} to access all possible options.
 }
 \section{Heuristics}{
   If the values are not already objects of class

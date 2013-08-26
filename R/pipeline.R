@@ -1,14 +1,21 @@
-#' A data pipeline.
+#' Create a new "pipeline" object.
 #'
-#' This creates an S3 object that represents pipeline of data tranformations.
-#' The data argument to a ggvis branch, must always be a data pipeline: to
-#' ensure this \code{as.pipeline} is also called on the input, automatically
-#' converting simpler expressions (like data frames and strings).
-#'
+#' A pipeline represents a sequence of data transformations, and is the key
+#' data structure that underlies the data hierarchy. The most important method
+#' for a pipeline is \code{\link{connect}}, which connects together the 
+#' multiple pipelines that underlying a ggvis graphic to create a reactive
+#' pipeline which is automatically updated when the underlying data changes.
+#' 
+#' This function allows you to explicitly connect a series of 
+#' \code{\link{pipe}} objects into a pipeline. You should never need to call
+#' it explicitly as \code{\link{ggvis}} and \code{\link{node}} automatically
+#' create a pipeline using \code{as.pipeline}.
+#' 
 #' @param ... a list of pipes
 #' @param .pipes if you already have the pipes in a list, use this argument.
 #' @param x an object to test/coerce
 #' @export
+#' @keywords internal
 #' @examples
 #' pipeline(mtcars)
 #' as.pipeline(mtcars)

@@ -2,7 +2,7 @@
 \alias{as.pipeline}
 \alias{is.pipeline}
 \alias{pipeline}
-\title{A data pipeline.}
+\title{Create a new "pipeline" object.}
 \usage{
   pipeline(..., .pipes = list())
 
@@ -19,12 +19,20 @@
   \item{x}{an object to test/coerce}
 }
 \description{
-  This creates an S3 object that represents pipeline of
-  data tranformations. The data argument to a ggvis branch,
-  must always be a data pipeline: to ensure this
-  \code{as.pipeline} is also called on the input,
-  automatically converting simpler expressions (like data
-  frames and strings).
+  A pipeline represents a sequence of data transformations,
+  and is the key data structure that underlies the data
+  hierarchy. The most important method for a pipeline is
+  \code{\link{connect}}, which connects together the
+  multiple pipelines that underlying a ggvis graphic to
+  create a reactive pipeline which is automatically updated
+  when the underlying data changes.
+}
+\details{
+  This function allows you to explicitly connect a series
+  of \code{\link{pipe}} objects into a pipeline. You should
+  never need to call it explicitly as \code{\link{ggvis}}
+  and \code{\link{node}} automatically create a pipeline
+  using \code{as.pipeline}.
 }
 \examples{
 pipeline(mtcars)
@@ -39,4 +47,5 @@ pipeline(mtcars, sleep)
 pipeline(mtcars, transform_bin())
 pipeline(mtcars, by_group("cyl"), transform_bin())
 }
+\keyword{internal}
 

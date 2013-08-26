@@ -1,7 +1,7 @@
 \name{input}
 \alias{input}
 \alias{is.input}
-\title{Create a new interactive input object.}
+\title{Create a new interactive "input" object.}
 \usage{
   input(subclass, control_args = list(), value = NULL,
     map = identity, id = rand_id(), scale = FALSE,

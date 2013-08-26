@@ -1,6 +1,12 @@
-#' S3 class: pipe
+#' Create new "pipe" object.
 #'
-#' This function is used to create pipe classes and subclasses.
+#' A pipe object represents a component in a \code{\link{pipeline}}. Pipes
+#' provide a declarative specification of interactive behaviour, and define
+#' the behaviour of each component in the data hierarchy.
+#' 
+#' This function is designed to be used by authors of new types of pipes.
+#' If you are a ggvis user, please use an existing pipe: a data frame,
+#' a transform, a mark, or a branch.
 #'
 #' @keywords internal
 #' @export

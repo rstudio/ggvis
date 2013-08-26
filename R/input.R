@@ -1,4 +1,4 @@
-#' Create a new interactive input object.
+#' Create a new interactive "input" object.
 #'
 #' An interactive input represents a reactive value bound to a UI control.
 #' Interactive inputs were previously called delayed reactives because they
