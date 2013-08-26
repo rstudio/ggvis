@@ -218,7 +218,7 @@ prop_type.data.frame <- function(data, prop, processed = FALSE) {
   if (processed) {
     value <- data[[prop_name(prop)]]
   } else {
-    value <- prop_value(prop, data, processed)
+    value <- prop_value(prop, data)
   }
   
   vector_type(value)
