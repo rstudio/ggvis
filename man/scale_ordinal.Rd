@@ -1,6 +1,6 @@
 \name{scale_ordinal}
 \alias{scale_ordinal}
-\title{Ordinal scale}
+\title{Create an ordinal scale.}
 \usage{
   scale_ordinal(name, points = TRUE, padding = NULL,
     sort = TRUE, domain = NULL, range = NULL,
@@ -55,11 +55,22 @@
   grid.}
 }
 \description{
-  Ordinal scale
+  A ordinal scale controls the mapping of ordinal and
+  nominal variables to visual properties.
+}
+\details{
+  Generally, you should create new scales with
+  \code{\link{dscale}} because that will automatically set
+  the range to a reasonable default, and it will
+  automatically pick the correct type of scale given the
+  variable type.
 }
 \examples{
 scale_ordinal("x")
-scale_ordinal("x", padding = 0.5, sort = TRUE, points = FALSE)
+dscale("x", "nominal")
+
+scale_ordinal("x", padding = 0.5, points = FALSE)
+dscale("x", "nominal", points = FALSE)
 }
 \seealso{
   \url{https://github.com/trifacta/vega/wiki/Scales#ordinal-scale-properties}

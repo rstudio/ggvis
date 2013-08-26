@@ -1,4 +1,11 @@
-#' Date time scale.
+#' Create a date/time scale.
+#'
+#' A date/time scale controls the mapping of date and time variables to
+#' visual properties. 
+#' 
+#' Generally, you should create new scales with \code{\link{dscale}} because 
+#' that will automatically set the range to a reasonable default, and it will
+#' automatically pick the correct type of scale given the variable type.
 #'
 #' @inheritParams scale
 #' @param clamp  If true, values that exceed the data domain are clamped to
@@ -13,7 +20,10 @@
 #' @export
 #' @examples
 #' scale_time("x", nice = "year")
-#' scale_time("x", utc = TRUE)
+#' dscale("x", "datetime", nice = "year")
+#' 
+#' scale_time("y", utc = TRUE)
+#' dscale("y", "datetime", utc = TRUE)
 scale_time <- function(name, utc = FALSE, clamp = FALSE, nice = NULL,
                        domain = NULL, range = NULL, reverse = FALSE,
                        round = FALSE) {

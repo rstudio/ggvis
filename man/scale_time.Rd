@@ -1,6 +1,6 @@
 \name{scale_time}
 \alias{scale_time}
-\title{Date time scale.}
+\title{Create a date/time scale.}
 \usage{
   scale_time(name, utc = FALSE, clamp = FALSE, nice = NULL,
     domain = NULL, range = NULL, reverse = FALSE,
@@ -44,11 +44,22 @@
   grid.}
 }
 \description{
-  Date time scale.
+  A date/time scale controls the mapping of date and time
+  variables to visual properties.
+}
+\details{
+  Generally, you should create new scales with
+  \code{\link{dscale}} because that will automatically set
+  the range to a reasonable default, and it will
+  automatically pick the correct type of scale given the
+  variable type.
 }
 \examples{
 scale_time("x", nice = "year")
-scale_time("x", utc = TRUE)
+dscale("x", "datetime", nice = "year")
+
+scale_time("y", utc = TRUE)
+dscale("y", "datetime", utc = TRUE)
 }
 \seealso{
   \url{https://github.com/trifacta/vega/wiki/Scales#time-scale-properties}

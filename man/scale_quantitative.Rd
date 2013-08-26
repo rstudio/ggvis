@@ -1,6 +1,6 @@
 \name{scale_quantitative}
 \alias{scale_quantitative}
-\title{Quantitative scale}
+\title{Create a quantitative scale}
 \usage{
   scale_quantitative(name, trans = "linear",
     exponent = NULL, clamp = FALSE, nice = TRUE,
@@ -52,12 +52,25 @@
   grid.}
 }
 \description{
-  Quantitative scale
+  A quantitative scale controls the mapping of continuous
+  variables to visual properties.
+}
+\details{
+  Generally, you should create new scales with
+  \code{\link{dscale}} because that will automatically set
+  the range to a reasonable default, and it will
+  automatically pick the correct type of scale given the
+  variable type.
 }
 \examples{
 scale_quantitative("y")
+dscale("y", "numeric")
+
 scale_quantitative("y", "pow", 0.5)
+dscale("y", "numeric", trans = pow, exp = 0.5)
+
 scale_quantitative("x", clamp = TRUE, nice = FALSE, zero = TRUE)
+dscale("x", "numeric", clamp = TRUE, nice = FALSE, zero = TRUE)
 }
 \seealso{
   \url{https://github.com/trifacta/vega/wiki/Scales#quantitative-scale-properties}
