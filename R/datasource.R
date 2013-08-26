@@ -1,8 +1,16 @@
 #' Create a new data source.
 #'
+#' A data source implements a pointer (using a environment and a promise)
+#' to an existing data frame or other data source in R. Most of the time you
+#' should not need to call this function directly - just supply an object
+#' to \code{\link{ggvis}} and \code{datasource} will be automatically called.
+#' You may want to call this function directly in order to control the 
+#' datasource name used when printing and in the vega plot specification.
+#'
 #' @param data a data frame
 #' @param name the name of the data frame (used in error messages etc.)
 #' @export
+#' @keywords internal
 #' @importFrom digest digest
 #' @examples
 #' datasource(mtcars)
