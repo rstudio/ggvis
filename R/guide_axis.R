@@ -1,5 +1,16 @@
 #' Generate a vega axis specification
 #'
+#' Axis specifications allow you to either override the default axes, 
+#' or additional axes. 
+#' 
+#' More information about axes can be found in the "axes and legends" vignettes.
+#'
+#' @section Compared to ggplot2:
+#' 
+#' In ggplot2, axis (and legend) properties are part of the scales 
+#' specification. In vega, they are separate, which allows the specification
+#' of multiple axes, and more flexible linkage between scales and axes. 
+#'
 #' @param type The type of axis. Either x or y.
 #' @param scale The name of the scale backing the axis component. Defaults to
 #'   the scale type - you will need to specify if you want (e.g.) a scale
@@ -31,6 +42,8 @@
 #' @param properties Optional mark property definitions for custom axis styling.
 #'   Should be a named list (ticks, majorTicks, minorTicks, labels and axis) of
 #'   \code{\link{props}}.
+#' @seealso Vega axis documentation: 
+#'   \url{https://github.com/trifacta/vega/wiki/Axes}
 #' @export
 #' @examples
 #' guide_axis("x")

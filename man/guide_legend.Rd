@@ -28,7 +28,18 @@
   \code{\link{props}}.}
 }
 \description{
-  Generate a vega legend specification
+  Axis specifications allow you to either override the
+  default legends, or supply additional legends.
+}
+\details{
+  More information about axes can be found in the "axes and
+  legends" vignettes.
+}
+\section{Compared to ggplot2}{
+  In ggplot2, legend (and axis) properties are part of the
+  scales specification. In vega, they are separate, which
+  allows the specification of multiple legends, and more
+  flexible linkage between scales and legends.
 }
 \examples{
 guide_legend(size = "size")

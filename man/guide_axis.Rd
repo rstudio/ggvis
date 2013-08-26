@@ -68,10 +68,25 @@
   \code{\link{props}}.}
 }
 \description{
-  Generate a vega axis specification
+  Axis specifications allow you to either override the
+  default axes, or additional axes.
+}
+\details{
+  More information about axes can be found in the "axes and
+  legends" vignettes.
+}
+\section{Compared to ggplot2}{
+  In ggplot2, axis (and legend) properties are part of the
+  scales specification. In vega, they are separate, which
+  allows the specification of multiple axes, and more
+  flexible linkage between scales and axes.
 }
 \examples{
 guide_axis("x")
 guide_axis("x", properties = list(ticks = props(stroke = "red")))
+}
+\seealso{
+  Vega axis documentation:
+  \url{https://github.com/trifacta/vega/wiki/Axes}
 }
 
