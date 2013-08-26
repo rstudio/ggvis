@@ -1,7 +1,7 @@
 \name{scales}
 \alias{is.scales}
 \alias{scales}
-\title{Create a "ggvis_scales" object.}
+\title{Create a "scales" object.}
 \usage{
   scales(..., .scales = list())
 

@@ -1,4 +1,4 @@
-#' Create a "ggvis_scales" object.
+#' Create a "scales" object.
 #'
 #' A scales object is used to manage multiple scales, essentially converting
 #' a unnamed list into a named list.
@@ -13,21 +13,21 @@ scales <- function(..., .scales = list()) {
 
   names(args) <- vapply(args, "name", FUN = `[[`, FUN.VALUE = character(1))
 
-  structure(args, class = "ggvis_scales")
+  structure(args, class = "scales")
 }
 
 #' @export
 #' @rdname scales
 #' @param x object to test for scales-ness
-is.scales <- function(x) inherits(x, "ggvis_scales")
+is.scales <- function(x) inherits(x, "scales")
 
-#' @S3method format ggvis_scales
-format.ggvis_scales <- function(x, ...) {
+#' @S3method format scales
+format.scales <- function(x, ...) {
   paste("*", vapply(x, format, character(1)), collapse = "\n")
 }
 
-#' @S3method print ggvis_scales
-print.ggvis_scales <- function(x, ...) cat(format(x, ...), "\n", sep = "")
+#' @S3method print scales
+print.scales <- function(x, ...) cat(format(x, ...), "\n", sep = "")
 
 # Merge two ggvis scales objects
 #
@@ -40,5 +40,5 @@ merge_scales <- function(parent = NULL, child = NULL) {
   if (is.null(child)) return(parent)
   stopifnot(is.scales(parent), is.scales(child))
 
-  structure(merge_vectors(parent, child), class = "ggvis_scales")
+  structure(merge_vectors(parent, child), class = "scales")
 }
