@@ -1,11 +1,28 @@
-#' S3 class: transform
+#' Create a new "transform" object.
 #'
-#' This is a type of \code{\link{pipe}}.
+#' A transform object is a \code{\link{pipe}} that represents a data 
+#' transformation.
+#' 
+#' This function is designed to be used by authors of new types of transform
+#' If you are a ggvis user, please use one of the more specific transform
+#' functions starting with the \code{transform_}.
+#' 
+#' @section Important methods:
+#' 
+#' An transform subclass should provide methods for:
+#' 
+#' \itemize{
+#'   \item \code{\link{compute}}: this method should check props, perform
+#'     the transformation, typically by dispatching to another S3 generic based
+#'     on the type of input, and then add back in constant variables with
+#'     \code{preserve_constants}.
+#' }
 #'
 #' @param type A string representing type of transform.
 #' @param dots A list of arguments to pass to the underlying statistical
 #'   transformation function.
 #' @param ... Other arguments to pass to the specific transform.
+#' @family core classes
 #'
 #' @export
 #' @keywords internal
@@ -31,18 +48,18 @@ compute <- function(x, props, data) UseMethod("compute")
 check_prop <- function(trans, props, data, prop_name, types = NULL) {
   name <- class(trans)[[1]]
   prop <- props[[prop_name]]
-
+  
   if (is.null(prop)) {
     stop(name, "() needs ", prop_name, " property", call. = FALSE)
   }
   if (is.null(types)) return(invisible(TRUE))
-
+  
   type <- prop_type(data, prop)
   if (!(type %in% types)) {
     stop(name, "() needs ", prop_name, " property to be of type ",
       paste(types, collapse = "/"), call. = FALSE)
   }
-
+  
   invisible(TRUE)
 }
 
@@ -53,20 +70,20 @@ preserve_constants.data.frame <- function(input, output) {
   is_constant <- constant_vars(input)
   constants <- input[1, is_constant, drop = FALSE]
   rownames(constants) <- NULL
-
+  
   merge_df(constants, output)
 }
 
 #' @S3method preserve_constants split_df
 preserve_constants.split_df <- function(input, output) {
   is_constant <- constant_vars(input)
-
+  
   preserve <- function(input, output) {
     constants <- input[1, is_constant, drop = FALSE]
     rownames(constants) <- NULL
     merge_df(constants, output)
   }
-
+  
   structure(Map(preserve, input, output), class = "split_df",
     variables = attr(input, "variables"))
 }
@@ -79,7 +96,7 @@ constant_vars.data.frame <- function(data) {
 #' @S3method constant_vars split_df
 constant_vars.split_df <- function(data) {
   n <- length(data)
-
+  
   vec <- unlist(lapply(data, constant_vars), use.names = FALSE)
   mat <- matrix(vec, nrow = n, byrow = TRUE)
   colSums(mat) == n
@@ -105,12 +122,12 @@ transform_type <- function(transform) {
 connect.transform <- function(x, props, source = NULL, session = NULL) {
   x <- init_inputs(x, session)
   x$dots <- init_inputs(x$dots, session)
-
+  
   reactive({
     x_now <- eval_reactives(x)
     x_now$dots <- eval_reactives(x$dots)
     if (is.function(source)) source <- source()
-
+    
     compute(x_now, props, source)
   })
 }
