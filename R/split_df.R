@@ -1,4 +1,12 @@
-#' Create a data frame split up by specified variables
+#' Create a "split_df" object.
+#' 
+#' An split_df object represents a data frame that has been split into multiple
+#' pieces according to the value of some variable (or variables, or functions 
+#' of variables).
+#' 
+#' This function is designed to create \code{split_df} objects by hand:
+#' generally, users of ggvis should create these objects with the helper 
+#' \code{\link{by_group}} function.
 #'
 #' @export
 #' @param data A data frame.
