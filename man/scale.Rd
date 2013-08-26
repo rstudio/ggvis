@@ -1,7 +1,7 @@
 \name{scale}
 \alias{is.scale}
 \alias{scale}
-\title{Create a new vega scale object}
+\title{Create a new "scale" object.}
 \usage{
   scale(name, type = NULL, domain = NULL, range = NULL,
     reverse = FALSE, round = FALSE, ..., subclass = NULL)
@@ -45,8 +45,15 @@
   \item{x}{object to test for scale-ness}
 }
 \description{
-  Usually you would not call this function directly, but
-  would instead call one of the subclasses.
+  A scale object is a close mapping to a vega mark object.
+  Vega scales are documented in
+  \url{https://github.com/trifacta/vega/wiki/Scales}.
+}
+\details{
+  This function is designed to be used by authors of new
+  types of scale. If you are a ggvis user, please use one
+  of the more specific scale functions starting with the
+  \code{scale_}.
 }
 \examples{
 scale("x", "linear")

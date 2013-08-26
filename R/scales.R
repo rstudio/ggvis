@@ -1,8 +1,7 @@
-#' Create a ggvis_scales object
+#' Create a "ggvis_scales" object.
 #'
-#' Given arguments which are scales object, return a list with those objects,
-#' where the entries also have names that are the same as the "name" field of
-#' the objects.
+#' A scales object is used to manage multiple scales, essentially converting
+#' a unnamed list into a named list.
 #'
 #' @export
 #' @param ...,.scales scales to combine into a single scales object
