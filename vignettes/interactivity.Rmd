@@ -4,6 +4,7 @@
 -->
 
 ```{r, echo = FALSE}
+library(ggvis)
 library(knitr)
 opts_chunk$set(comment = "#", error = TRUE, tidy = FALSE, eval = FALSE)
 ```
@@ -35,7 +36,7 @@ controls like `input_slider()`:
 ```{r}
 ggvis(mtcars, props(x ~ wt, y ~ mpg),
   mark_symbol(props(size = input_slider(100, 1000)),
-  branch_smooth(span = input_slider(0.5, 1, 1))))
+  branch_smooth(span = input_slider(0.5, 1, 1)))
 )
 ```
 

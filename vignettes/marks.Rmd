@@ -90,7 +90,7 @@ library(plyr)
 counts <- count(diamonds, c("cut", "color"))
 
 ggvis(counts, props(x ~ cut, y ~ colour, fill ~ freq),
-  mark_rect(props(width ~ prop_band(), y ~ prop_band()))
+  mark_rect(props(width ~ prop_band(), y ~ prop_band())))
 ```
 
 ### `mark_line`
@@ -113,7 +113,7 @@ To create a line that spans the complete range of the plot, use `prop_group()`:
 ```{r}
 ggvis(
   mark_symbol(props(x ~ disp, y ~ wt), mtcars),
-  mark_line(props(y ~ mean(mtcars$wt), x = 0, x2 = prop_group()))
+  mark_line(props(y ~ mean(mtcars$wt), x = 0, x2 = prop_group())),
   mark_line(props(x ~ mean(mtcars$disp), y = 0, y2 = prop_group()))
 )
 ```
