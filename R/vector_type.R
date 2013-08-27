@@ -1,3 +1,13 @@
+#' Determine the "type" of a vector
+#' 
+#' The \code{vector_type} collapses down the class of base vectors into
+#' something useful more for visualisation, yielding one of "datetime",
+#' "numeric", "ordinal", "nominal" or "logical".
+#' 
+#' @param x a vector
+#' @export
+#' @seealso \code{default_scale}, which uses this when picking the default 
+#'   scale.
 vector_type <- function(x) UseMethod("vector_type")
 
 #' @S3method vector_type POSIXt
