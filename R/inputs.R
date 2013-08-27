@@ -80,7 +80,7 @@ input_checkbox <- function(value = FALSE, label = "",
 #'
 #' ggvis(mtcars, props(x ~ wt, y ~ mpg),
 #'   mark_symbol(
-#'     props(size = input_numeric(label = "Point size", value = 25)
+#'     props(size = input_numeric(label = "Point size", value = 25))
 #'   )
 #' )
 input_text <- function(value, label = "", id = rand_id("text_"),

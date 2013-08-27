@@ -26,7 +26,7 @@
 #' dscale("y", "numeric")
 #' 
 #' scale_quantitative("y", "pow", 0.5)
-#' dscale("y", "numeric", trans = pow, exp = 0.5)
+#' dscale("y", "numeric", trans = "pow", exp = 0.5)
 #'
 #' scale_quantitative("x", clamp = TRUE, nice = FALSE, zero = TRUE)
 #' dscale("x", "numeric", clamp = TRUE, nice = FALSE, zero = TRUE)

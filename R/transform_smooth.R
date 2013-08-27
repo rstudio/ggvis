@@ -65,11 +65,11 @@
 #'
 #' # You can also combine other data transformations like splitting
 #' ggvis(mtcars, props(x ~ wt, y ~ mpg, stroke ~ cyl), by_group(cyl),
-#'    branch_smooth(method = lm))
+#'    branch_smooth(method = "lm"))
 #' 
 #' # You can see the results of a transformation by creating your own pipeline
 #' # and sluicing data through it
-#' sluice(pipeline(mtcars, transform_smooth(n = 5L)), props(x ~ disp, y ~ mpg)
+#' sluice(pipeline(mtcars, transform_smooth(n = 5L)), props(x ~ disp, y ~ mpg))
 transform_smooth <- function(method = guess(), formula = guess(), se = TRUE,
                              level = 0.95, n = 80L, na.rm = FALSE, ...) {  
   
@@ -86,7 +86,7 @@ branch_smooth <- function(props = NULL, ..., se = TRUE) {
   
   node(
     transform_smooth(..., se = se),
-    if (se) mark_area(se_props, props),
+    if (!identical(se, FALSE)) mark_area(se_props, props),
     mark_line(line_props, props)
   )
 }
@@ -160,7 +160,7 @@ predict_df.lm <- function(model, x_grid, se, level) {
   
   if (se) {
     fit <- as.data.frame(pred$fit)
-    names(fit) <- c("y__", "y_lower__", "y_upper__")
+    names(fit) <- c("y", "y_lower__", "y_upper__")
     grid <- cbind(grid, fit, se = pred$se)
   } else {
     grid$y <- as.vector(pred)

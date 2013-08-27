@@ -93,10 +93,10 @@ ggvis(mtcars, props(x ~ wt, y ~ mpg),
 
 # You can also combine other data transformations like splitting
 ggvis(mtcars, props(x ~ wt, y ~ mpg, stroke ~ cyl), by_group(cyl),
-   branch_smooth(method = lm))
+   branch_smooth(method = "lm"))
 
 # You can see the results of a transformation by creating your own pipeline
 # and sluicing data through it
-sluice(pipeline(mtcars, transform_smooth(n = 5L)), props(x ~ disp, y ~ mpg)
+sluice(pipeline(mtcars, transform_smooth(n = 5L)), props(x ~ disp, y ~ mpg))
 }
 

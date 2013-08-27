@@ -107,7 +107,7 @@ safe_vega_var <- function(x) {
   if (is.name(x)) {
     x <- as.character(x)
   } else if (is.quoted(x)) {
-    x <- paste0(deparse(x, width = 500), collapse = "")
+    x <- paste0(deparse(x, width.cutoff = 500), collapse = "")
   }
   
   gsub(".", "\\.", x, fixed = TRUE)
