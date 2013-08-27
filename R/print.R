@@ -20,7 +20,7 @@
 print.ggvis <- function(x, dynamic = NA, ...) {
   set_last_vis(x)
   
-  if (is.na(dynamic)) dynamic <- is.dynamic(x)
+  if (is.na(dynamic)) dynamic <- is.dynamic(x) && interactive()
   
   if (dynamic) {
     view_dynamic(x, ...)
