@@ -1,3 +1,4 @@
+man-roxygen
 ^.*\.Rproj$
 ^\.Rproj\.user$
 bench
