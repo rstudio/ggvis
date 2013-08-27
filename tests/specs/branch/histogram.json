@@ -1,0 +1,142 @@
+{
+	"data" : [
+		{
+			"name" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6fbin_cdcd553e",
+			"values" : [
+				{
+					"xmin__" : 0,
+					"xmax__" : 1,
+					"count__" : 0
+				},
+				{
+					"xmin__" : 1,
+					"xmax__" : 2,
+					"count__" : 4
+				},
+				{
+					"xmin__" : 2,
+					"xmax__" : 3,
+					"count__" : 8
+				},
+				{
+					"xmin__" : 3,
+					"xmax__" : 4,
+					"count__" : 16
+				},
+				{
+					"xmin__" : 4,
+					"xmax__" : 5,
+					"count__" : 1
+				},
+				{
+					"xmin__" : 5,
+					"xmax__" : 6,
+					"count__" : 3
+				},
+				{
+					"xmin__" : 6,
+					"xmax__" : 7,
+					"count__" : 0
+				}
+			]
+		}
+	],
+	"scales" : [
+		{
+			"name" : "x",
+			"type" : "linear",
+			"reverse" : false,
+			"round" : false,
+			"clamp" : false,
+			"nice" : true,
+			"zero" : false,
+			"range" : "width",
+			"domain" : {
+				"fields" : [
+					{
+						"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6fbin_cdcd553e",
+						"field" : "data.xmin__"
+					},
+					{
+						"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6fbin_cdcd553e",
+						"field" : "data.xmax__"
+					}
+				]
+			}
+		},
+		{
+			"name" : "y",
+			"type" : "linear",
+			"reverse" : false,
+			"round" : false,
+			"clamp" : false,
+			"nice" : true,
+			"zero" : false,
+			"range" : "height",
+			"domain" : {
+				"fields" : [
+					{
+						"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6fbin_cdcd553e",
+						"field" : "data.count__"
+					}
+				]
+			}
+		}
+	],
+	"marks" : [
+		{
+			"type" : "rect",
+			"properties" : {
+				"update" : {
+					"stroke" : {
+						"value" : "#000000"
+					},
+					"fill" : {
+						"value" : "#333333"
+					},
+					"x" : {
+						"scale" : "x",
+						"field" : "data.xmin__"
+					},
+					"x2" : {
+						"scale" : "x",
+						"field" : "data.xmax__"
+					},
+					"y" : {
+						"scale" : "y",
+						"field" : "data.count__"
+					},
+					"y2" : {
+						"scale" : "y",
+						"value" : 0
+					}
+				}
+			},
+			"from" : {
+				"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6fbin_cdcd553e"
+			}
+		}
+	],
+	"width" : 600,
+	"height" : 400,
+	"legends" : [],
+	"axes" : [
+		{
+			"type" : "x",
+			"scale" : "x",
+			"orient" : "bottom",
+			"titleOffset" : 0,
+			"layer" : "back",
+			"grid" : true
+		},
+		{
+			"type" : "y",
+			"scale" : "y",
+			"orient" : "left",
+			"titleOffset" : 0,
+			"layer" : "back",
+			"grid" : true
+		}
+	],
+	"padding" : null
+}

@@ -1,0 +1,220 @@
+{
+	"data" : [
+		{
+			"name" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_94ae4423bin_fffbbd9f_tree",
+			"format" : {
+				"type" : "treejson"
+			},
+			"values" : {
+				"children" : [
+					{
+						"children" : [
+							{
+								"cyl" : 4,
+								"x" : 0.5,
+								"count__" : 0
+							},
+							{
+								"cyl" : 4,
+								"x" : 1.5,
+								"count__" : 4
+							},
+							{
+								"cyl" : 4,
+								"x" : 2.5,
+								"count__" : 5
+							},
+							{
+								"cyl" : 4,
+								"x" : 3.5,
+								"count__" : 2
+							},
+							{
+								"cyl" : 4,
+								"x" : 4.5,
+								"count__" : 0
+							}
+						]
+					},
+					{
+						"children" : [
+							{
+								"cyl" : 6,
+								"x" : 1.5,
+								"count__" : 0
+							},
+							{
+								"cyl" : 6,
+								"x" : 2.5,
+								"count__" : 3
+							},
+							{
+								"cyl" : 6,
+								"x" : 3.5,
+								"count__" : 4
+							},
+							{
+								"cyl" : 6,
+								"x" : 4.5,
+								"count__" : 0
+							}
+						]
+					},
+					{
+						"children" : [
+							{
+								"cyl" : 8,
+								"x" : 2.5,
+								"count__" : 0
+							},
+							{
+								"cyl" : 8,
+								"x" : 3.5,
+								"count__" : 10
+							},
+							{
+								"cyl" : 8,
+								"x" : 4.5,
+								"count__" : 1
+							},
+							{
+								"cyl" : 8,
+								"x" : 5.5,
+								"count__" : 3
+							},
+							{
+								"cyl" : 8,
+								"x" : 6.5,
+								"count__" : 0
+							}
+						]
+					}
+				]
+			}
+		},
+		{
+			"name" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_94ae4423bin_fffbbd9f",
+			"source" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_94ae4423bin_fffbbd9f_tree",
+			"transform" : [
+				{
+					"type" : "flatten"
+				}
+			]
+		}
+	],
+	"scales" : [
+		{
+			"name" : "stroke",
+			"type" : "linear",
+			"reverse" : false,
+			"round" : false,
+			"clamp" : false,
+			"nice" : true,
+			"zero" : false,
+			"range" : [
+				"#132B43",
+				"#56B1F7"
+			],
+			"domain" : {
+				"fields" : [
+					{
+						"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_94ae4423bin_fffbbd9f",
+						"field" : "data.cyl"
+					}
+				]
+			}
+		},
+		{
+			"name" : "x",
+			"type" : "linear",
+			"reverse" : false,
+			"round" : false,
+			"clamp" : false,
+			"nice" : true,
+			"zero" : false,
+			"range" : "width",
+			"domain" : {
+				"fields" : [
+					{
+						"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_94ae4423bin_fffbbd9f",
+						"field" : "data.x"
+					}
+				]
+			}
+		},
+		{
+			"name" : "y",
+			"type" : "linear",
+			"reverse" : false,
+			"round" : false,
+			"clamp" : false,
+			"nice" : true,
+			"zero" : false,
+			"range" : "height",
+			"domain" : {
+				"fields" : [
+					{
+						"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_94ae4423bin_fffbbd9f",
+						"field" : "data.count__"
+					}
+				]
+			}
+		}
+	],
+	"marks" : [
+		{
+			"type" : "group",
+			"from" : {
+				"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_94ae4423bin_fffbbd9f_tree"
+			},
+			"marks" : [
+				{
+					"type" : "line",
+					"properties" : {
+						"update" : {
+							"stroke" : {
+								"scale" : "stroke",
+								"field" : "data.cyl"
+							},
+							"x" : {
+								"scale" : "x",
+								"field" : "data.x"
+							},
+							"y" : {
+								"scale" : "y",
+								"field" : "data.count__"
+							}
+						}
+					}
+				}
+			]
+		}
+	],
+	"width" : 600,
+	"height" : 400,
+	"legends" : [
+		{
+			"stroke" : "stroke",
+			"orient" : "right"
+		}
+	],
+	"axes" : [
+		{
+			"type" : "x",
+			"scale" : "x",
+			"orient" : "bottom",
+			"titleOffset" : 0,
+			"layer" : "back",
+			"grid" : true
+		},
+		{
+			"type" : "y",
+			"scale" : "y",
+			"orient" : "left",
+			"titleOffset" : 0,
+			"layer" : "back",
+			"grid" : true
+		}
+	],
+	"padding" : null
+}
