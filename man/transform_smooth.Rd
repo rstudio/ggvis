@@ -6,7 +6,7 @@
   transform_smooth(method = guess(), formula = guess(),
     se = TRUE, level = 0.95, n = 80L, na.rm = FALSE, ...)
 
-  branch_smooth(props = NULL, ...)
+  branch_smooth(props = NULL, se = TRUE, ...)
 }
 \arguments{
   \item{method}{Model fitting function to use - it must
@@ -71,9 +71,10 @@
 
   If standard errors are requested, it will also contain:
 
-  \itemize{ \item \code{y_lower} and \code{y_upper}: upper
-  and lower bounds of confidence interval \item \code{se}:
-  the standard error (width of the confidence interval) }
+  \itemize{ \item \code{y_lower__} and \code{y_upper__}:
+  upper and lower bounds of confidence interval \item
+  \code{se__}: the standard error (width of the confidence
+  interval) }
 }
 \examples{
 ggvis(mtcars, props(x ~ wt, y ~ mpg), mark_symbol(), branch_smooth())
@@ -85,8 +86,8 @@ ggvis(mtcars, props(x ~ wt, y ~ mpg), mark_symbol(),
 ggvis(mtcars, props(x ~ wt, y ~ mpg),
   mark_symbol(),
   node(transform_smooth(),
-    mark_area(props(y ~ y_min, y2 ~ y_max, fillOpacity = 0.2)),
-    mark_line()
+    mark_area(props(x ~ x, y ~ y_lower__, y2 ~ y_upper__, fillOpacity = 0.2)),
+    mark_line(props(x ~ x, y ~ y))
   )
 )
 

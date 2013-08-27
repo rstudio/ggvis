@@ -26,9 +26,9 @@
 #' If standard errors are requested, it will also contain:
 #'
 #' \itemize{
-#'  \item \code{y_lower} and \code{y_upper}: upper and lower bounds of 
+#'  \item \code{y_lower__} and \code{y_upper__}: upper and lower bounds of 
 #'    confidence interval
-#'  \item \code{se}: the standard error (width of the confidence interval)
+#'  \item \code{se__}: the standard error (width of the confidence interval)
 #' }
 #'
 #' @param method Model fitting function to use - it must support R's standard
@@ -58,8 +58,8 @@
 #' ggvis(mtcars, props(x ~ wt, y ~ mpg), 
 #'   mark_symbol(), 
 #'   node(transform_smooth(), 
-#'     mark_area(props(y ~ y_min, y2 ~ y_max, fillOpacity = 0.2)),
-#'     mark_line()
+#'     mark_area(props(x ~ x, y ~ y_lower__, y2 ~ y_upper__, fillOpacity = 0.2)),
+#'     mark_line(props(x ~ x, y ~ y))
 #'   )
 #' )
 #'
@@ -71,13 +71,7 @@
 #' # and sluicing data through it
 #' sluice(pipeline(mtcars, transform_smooth(n = 5L)), props(x ~ disp, y ~ mpg)
 transform_smooth <- function(method = guess(), formula = guess(), se = TRUE,
-                             level = 0.95, n = 80L, na.rm = FALSE, ...) {
-  if (!is.guess(method)) assert_that(is.string(method))
-  if (!is.guess(formula)) assert_that(is.string(formula))
-  assert_that(is.flag(se), 
-    is.numeric(level) && length(level) == 1,
-    is.numeric(n) && length(n) == 1,
-    is.flag(na.rm))
+                             level = 0.95, n = 80L, na.rm = FALSE, ...) {  
   
   transform("smooth", method = method, formula = formula, se = se,
     level = level, n = n, na.rm = na.rm, dots = list(...))
@@ -86,11 +80,14 @@ transform_smooth <- function(method = guess(), formula = guess(), se = TRUE,
 #' @rdname transform_smooth
 #' @export
 #' @inheritParams branch_histogram
-branch_smooth <- function(props = NULL, ...) {
-  if (is.null(props)) props <- props()
+branch_smooth <- function(props = NULL, se = TRUE, ...) {
+  line_props <- props(x ~ x, y ~ y)
+  se_props <- props(x ~ x, y ~ y_lower__, y2 ~ y_upper__, fillOpacity = 0.2)
+  
   node(
-    data = transform_smooth(...),
-    mark_line(props)
+    transform_smooth(..., se = se),
+    if (se) mark_area(se_props, props),
+    mark_line(line_props, props)
   )
 }
 
@@ -109,13 +106,9 @@ compute.transform_smooth <- function(x, props, data) {
     message("Guess transform_smooth(method = '", x$method, "')")
   }
   if (is.guess(x$formula)) {
-    if (x$method == "gam")
-      formula <- sprintf("%s ~ s(%s)", props$y, props$x)
-    else
-      formula <- sprintf("%s ~ %s", props$y, props$x)
-
-    x$formula <- as.formula(formula)
-    message("Guess transform_smooth(formula = ", formula, ")")
+    x$formula <- if (x$method == "gam") y ~ s(x) else y ~ x
+    environment(x$formula) <- globalenv()
+    message("Guess transform_smooth(formula = ", deparse(x$formula), ")")
   }
   
   output <- smooth(data, x, x_var = props$x, y_var = props$y)
@@ -139,62 +132,57 @@ smooth.data.frame <- function(data, trans, x_var, y_var) {
   assert_that(length(trans$n) == 1, trans$n >= 0)
   assert_that(is.flag(trans$na.rm))
 
-  x_name <- prop_name(x_var)
-  y_name <- prop_name(y_var)
-
-  env <- new.env(parent = globalenv())
+  env <- new.env(parent = environment(trans$formula))
   env$data <- data.frame(
-    prop_value(x_var, data),
-    prop_value(y_var, data)
+    x = prop_value(x_var, data),
+    y = prop_value(y_var, data)
   )
-  names(env$data) <- c(x_name, y_name)
 
-  # Create model call and combine with ... captured earlier, evaluating in
-  args <- c(list(trans$formula, data = quote(data)), trans$dots)
-  mod <- do.call(trans$method, args)
+  # Create model call and combine with ... captured earlier
+  call <- c(list(as.name(trans$method), trans$formula, data = quote(data)),
+    trans$dots)
+  model <- eval(as.call(call), env)
 
   # Make prediction
-  x_grid <- seq(min(env$data[[x_name]]), max(env$data[[x_name]]), length = trans$n)
-  predict_df(mod, x_name, y_name, x_grid, trans$se, trans$level)
+  x_grid <- seq(min(env$data$x), max(env$data$x), length = trans$n)
+  predict_df(model, x_grid, trans$se, trans$level)
 }
 
 # Helper function to create data frame of predictions -------------------------
 
-predict_df <- function(model, x_name, y_name, x_grid, se, level) UseMethod("predict_df")
+predict_df <- function(model, x_grid, se = se, level = level) UseMethod("predict_df")
 
 #' @S3method predict_df lm
-predict_df.lm <- function(model, x_name, y_name, x_grid, se, level) {
-  dat <- data.frame(x_grid)
-  names(dat) <- x_name
-  pred <- predict(model, newdata = dat, se = se,
+predict_df.lm <- function(model, x_grid, se, level) {
+  grid <- data.frame(x = x_grid)
+  pred <- predict(model, newdata = grid, se = se,
     level = level, interval = if(se) "confidence" else "none")
-
+  
   if (se) {
     fit <- as.data.frame(pred$fit)
-    names(fit) <- c(y_name, "y_min", "y_max")
-    dat <- cbind(dat, fit, se = pred$se)
+    names(fit) <- c("y__", "y_lower__", "y_upper__")
+    grid <- cbind(grid, fit, se = pred$se)
   } else {
-    dat[[y_name]] <- as.vector(pred)
+    grid$y <- as.vector(pred)
   }
-  dat
+  grid
 }
 
 #' @S3method predict_df loess
-predict_df.loess <- function(model, x_name, y_name, x_grid, se, level) {
-  dat <- data.frame(x_grid)
-  names(dat) <- x_name
-  pred <- predict(model, newdata = dat, se = se)
+predict_df.loess <- function(model, x_grid, se, level) {
+  grid <- data.frame(x = x_grid)
+  pred <- predict(model, newdata = grid, se = se)
 
   if (se) {
-    dat[[y_name]] <- pred$fit
+    grid$y <- pred$fit
     ci <- pred$se.fit * qt(level / 2 + .5, pred$df)
-    dat$y_min <- dat[[y_name]] - ci
-    dat$y_max <- dat[[y_name]] + ci
-    dat$se <- pred$se.fit
+    grid$y_lower__ <- grid$y - ci
+    grid$y_upper__ <- grid$y + ci
+    grid$se__ <- pred$se.fit
   } else {
-    dat[[y_name]] <- as.vector(pred)
+    grid$y <- as.vector(pred)
   }
-  dat
+  grid
 }
 
 # Helper function to determin maximum number of rows ---------------------------
