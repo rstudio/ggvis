@@ -4,7 +4,7 @@
 \alias{transform_bin}
 \title{Transformation: bin continuous variable.}
 \usage{
-  transform_bin(binwidth = guess(), origin = NULL,
+  transform_bin(..., binwidth = guess(), origin = NULL,
     right = TRUE)
 
   branch_histogram(...)
@@ -24,6 +24,9 @@
 
   \item{right}{Should bins be right-open, left-closed, or
   right-closed, left-open}
+
+  \item{...}{Ignored: all transforms must use named
+  arguments.}
 
   \item{props}{a \code{\link{props}} object describing a
   property mapping}

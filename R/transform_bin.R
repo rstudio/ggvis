@@ -34,6 +34,7 @@
 #'   the default, will use the smallest value in the dataset.
 #' @param right Should bins be right-open, left-closed, or
 #'   right-closed, left-open
+#' @param ... Ignored: all transforms must use named arguments.
 #' @export
 #' @examples
 #' # Create histograms and frequency polygons with branches
@@ -59,7 +60,7 @@
 #' # Or
 #' pl <- pipeline(mtcars, transform_bin(10))
 #' sluice(pl, props(x ~ disp))
-transform_bin <- function(binwidth = guess(), origin = NULL, right = TRUE) {
+transform_bin <- function(..., binwidth = guess(), origin = NULL, right = TRUE) {
   transform("bin",
     binwidth = binwidth,
     origin = origin,
@@ -74,7 +75,7 @@ transform_bin <- function(binwidth = guess(), origin = NULL, right = TRUE) {
 #'   arguments are passed on to the branch.
 branch_histogram <- function(...) {
   branch(
-    build_transform("bin", ...),
+    transform_bin(...),
     branch(
       props(x ~ xmin__, x2 ~ xmax__, y ~ count__, y2 ~ 0),  
       mark_rect(),
@@ -89,7 +90,7 @@ branch_histogram <- function(...) {
 #' @inheritParams branch_histogram
 branch_freqpoly <- function(...) {
   branch(
-    build_transform("bin", ...),
+    transform_bin(...),
     branch(
       props(x ~ x, y ~ count__),  
       mark_line(),

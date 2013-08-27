@@ -3,8 +3,9 @@
 \alias{transform_smooth}
 \title{Transformation: smooth the data}
 \usage{
-  transform_smooth(method = guess(), formula = guess(),
-    se = TRUE, level = 0.95, n = 80L, na.rm = FALSE, ...)
+  transform_smooth(..., method = guess(),
+    formula = guess(), se = TRUE, level = 0.95, n = 80L,
+    na.rm = FALSE)
 
   branch_smooth(..., se = TRUE)
 }
@@ -38,6 +39,9 @@
   \item{na.rm}{If \code{TRUE} missing values will be
   silently removed, otherwise they will be removed with a
   warning.}
+
+  \item{...}{Named arguments for model function, unnamed
+  arguments will be dropped.}
 
   \item{...}{Named arguments are passed on to the
   transform, unnamed arguments are passed on to the

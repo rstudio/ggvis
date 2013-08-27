@@ -47,6 +47,8 @@
 #' @param n the number of grid points to use in the prediction
 #' @param na.rm If \code{TRUE} missing values will be silently removed,
 #'   otherwise they will be removed with a warning.
+#' @param ... Named arguments for model function, unnamed arguments will
+#'   be dropped.
 #' @export
 #' @examples
 #' ggvis(mtcars, props(x ~ wt, y ~ mpg), mark_symbol(), branch_smooth())
@@ -70,11 +72,16 @@
 #' # You can see the results of a transformation by creating your own pipeline
 #' # and sluicing data through it
 #' sluice(pipeline(mtcars, transform_smooth(n = 5L)), props(x ~ disp, y ~ mpg))
-transform_smooth <- function(method = guess(), formula = guess(), se = TRUE,
-                             level = 0.95, n = 80L, na.rm = FALSE, ...) {  
+transform_smooth <- function(..., method = guess(), formula = guess(), se = TRUE,
+                             level = 0.95, n = 80L, na.rm = FALSE) {  
+  
+  # Drop unnamed arguments
+  dots <- list(...)
+  nms <- names(dots) %||% rep("", length(dots))
+  dots <- dots[nms != ""]
   
   transform("smooth", method = method, formula = formula, se = se,
-    level = level, n = n, na.rm = na.rm, dots = list(...))
+    level = level, n = n, na.rm = na.rm, dots = dots)
 }
 
 #' @rdname transform_smooth
@@ -87,7 +94,7 @@ branch_smooth <- function(..., se = TRUE) {
   
   comps <- parse_components(..., drop_named = TRUE)
   branch(
-    build_transform(name = "smooth", ..., se = se),
+    transform_smooth(..., se = se),
     branch(
       comps$data,
       comps$marks,
