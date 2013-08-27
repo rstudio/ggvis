@@ -62,7 +62,6 @@ ggvis_output <- function(id) {
 
 #' @rdname shiny
 #' @param r_gv A reactive expression which returns a ggvis object.
-#' @param id The ID of the plot on the web page.
 #' @param session A Shiny session object.
 #' @param renderer The renderer type ("canvas" or "svg")
 #' @param ... Other arguments passed to \code{as.vega}.
@@ -139,8 +138,6 @@ observe_data <- function(r_spec, id, session) {
 }
 
 #' @rdname shiny
-#' @param r_gv a ggvis object wrapped in a reactive
-#' @param session the session argument from the shiny server function
 #' @export
 renderControls <- function(r_gv, session = NULL) {
   renderUI({

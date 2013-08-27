@@ -19,18 +19,11 @@
   \item{r_gv}{A reactive expression which returns a ggvis
   object.}
 
-  \item{id}{The ID of the plot on the web page.}
-
   \item{session}{A Shiny session object.}
 
   \item{renderer}{The renderer type ("canvas" or "svg")}
 
   \item{...}{Other arguments passed to \code{as.vega}.}
-
-  \item{r_gv}{a ggvis object wrapped in a reactive}
-
-  \item{session}{the session argument from the shiny server
-  function}
 }
 \description{
   It's easiest to learn by example: there are two shiny
