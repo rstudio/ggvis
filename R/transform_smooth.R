@@ -79,15 +79,21 @@ transform_smooth <- function(method = guess(), formula = guess(), se = TRUE,
 
 #' @rdname transform_smooth
 #' @export
-#' @inheritParams branch_histogram
-branch_smooth <- function(props = NULL, ..., se = TRUE) {
+#' @param ... Named arguments are passed on to the transform, unnamed
+#'   arguments are passed on to the branch.
+branch_smooth <- function(..., se = TRUE) {
   line_props <- props(x ~ x, y ~ y)
   se_props <- props(x ~ x, y ~ y_lower__, y2 ~ y_upper__, fillOpacity = 0.2)
   
+  comps <- parse_components(..., drop_named = TRUE)
   branch(
-    transform_smooth(..., se = se),
-    if (!identical(se, FALSE)) mark_area(se_props, props),
-    mark_line(line_props, props)
+    build_transform(name = "smooth", ..., se = se),
+    branch(
+      comps$data,
+      comps$marks,
+      if (!identical(se, FALSE)) mark_area(se_props),
+      mark_line(merge_props(line_props, comps$props))
+    )
   )
 }
 

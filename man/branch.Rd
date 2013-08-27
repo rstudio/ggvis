@@ -3,13 +3,20 @@
 \alias{is.branch}
 \title{Create a new branch.}
 \usage{
-  branch(...)
+  branch(..., drop_named = FALSE)
 
   is.branch(x)
 }
 \arguments{
   \item{...}{components: data, \code{\link{props}},
   \code{branch}es, or \code{\link{marks}}}
+
+  \item{drop_unnamed}{if \code{FALSE}, the default, will
+  throw an error if any of the arguments in \code{...} are
+  named. If \code{TRUE} it will silently drop them - this
+  is primarily useful for \code{branch_} functions which
+  send named arguments to the transform, and unnamed
+  arguments to the branch.}
 
   \item{x}{object to test for "branch"-ness}
 }

@@ -31,11 +31,16 @@
 #' }
 #' @param ... components: data, \code{\link{props}}, \code{branch}es,
 #'   or \code{\link{marks}}
+#' @param drop_unnamed if \code{FALSE}, the default, will throw an error if
+#'   any of the arguments in \code{...} are named. If \code{TRUE} it will
+#'   silently drop them - this is primarily useful for \code{branch_} functions
+#'   which send named arguments to the transform, and unnamed arguments to the
+#'   branch.
 #' @export
-branch <- function(...) {
+branch <- function(..., drop_named = FALSE) {
   check_empty_args()
   
-  comp <- parse_components(...)
+  comp <- parse_components(..., drop_named = drop_named)
   check_branch_components(comp)
   class(comp) <- "branch"
 
@@ -55,8 +60,20 @@ check_branch_components <- function(x) {
   }
 }
 
-parse_components <- function(...) {
-  args <- unname(list(...))
+parse_components <- function(..., drop_named = FALSE) {
+  args <- list(...)
+  nms <- names(args) %||% rep("", length(args))
+  named <- nms != ""
+  
+  if (any(named)) {
+    if (drop_named) {
+      args <- args[!named]
+    } else {
+      stop("Inputs to ggvis/branch should not be named", call. = FALSE)
+    }
+  }
+  names(args) <- NULL
+
   types <- vapply(args, component_type, character(1))
   
   components <- split(args, types)

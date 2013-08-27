@@ -15,7 +15,7 @@ ggvis(pressure,
 
 # Histogram, fully specified
 ggvis(
-  data = pipeline(mtcars, transform_bin(binwidth = 1)),
+  pipeline(mtcars, transform_bin(binwidth = 1)),
   props(x ~ wt),
   branch(
     props(x ~ xmin__, x2 ~ xmax__, y ~ count__, y2 ~ 0),

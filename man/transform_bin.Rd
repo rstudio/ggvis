@@ -7,9 +7,9 @@
   transform_bin(binwidth = guess(), origin = NULL,
     right = TRUE)
 
-  branch_histogram(props = NULL, ...)
+  branch_histogram(...)
 
-  branch_freqpoly(props = NULL, ...)
+  branch_freqpoly(...)
 }
 \arguments{
   \item{binwidth}{The width of the bins. The default is
@@ -28,8 +28,9 @@
   \item{props}{a \code{\link{props}} object describing a
   property mapping}
 
-  \item{...}{other arguments passed on to the underlying
-  transform function}
+  \item{...}{Named arguments are passed on to the
+  transform, unnamed arguments are passed on to the
+  branch.}
 }
 \description{
   \code{transform_bin} is a data transformation that

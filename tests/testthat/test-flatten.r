@@ -1,10 +1,10 @@
 context("Flatten")
 
 test_that("props inherited from parent", {
-  p <- ggvis(data = data.frame(),
-    props = props(x = 1),
+  p <- ggvis(data.frame(),
+    props(x = 1),
     branch(
-      props = props(y = 2),
+      props(y = 2),
       mark_line(props(x = 3))
     )
   )
@@ -20,7 +20,7 @@ test_that("props inherited from parent", {
 
 test_that("data flows through pipeline", {
   df <- data.frame(x = 1, y = 2)
-  p <- ggvis(data = df, props = props(x ~ x, y ~ y),
+  p <- ggvis(df, props(x ~ x, y ~ y),
     branch(branch(branch(branch(branch(mark_line()))))))
   nodes <- flatten(p)
 

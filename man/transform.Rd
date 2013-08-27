@@ -1,8 +1,11 @@
 \name{transform}
+\alias{build_transform}
 \alias{transform}
 \title{Create a new "transform" object.}
 \usage{
   transform(type, ..., dots = list())
+
+  build_transform(name, ..., .env = parent.frame())
 }
 \arguments{
   \item{type}{A string representing type of transform.}
@@ -12,10 +15,15 @@
 
   \item{...}{Other arguments to pass to the specific
   transform.}
+
+  \item{name}{Name of transform class to create.}
 }
 \description{
   A transform object is a \code{\link{pipe}} that
-  represents a data transformation.
+  represents a data transformation. \code{build_transform}
+  provides an alternative way to create transformation
+  objects: it ignores unnamed arguments, making it suitable
+  for use inside \code{branch_} functions.
 }
 \details{
   This function is designed to be used by authors of new

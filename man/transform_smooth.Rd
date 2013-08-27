@@ -6,7 +6,7 @@
   transform_smooth(method = guess(), formula = guess(),
     se = TRUE, level = 0.95, n = 80L, na.rm = FALSE, ...)
 
-  branch_smooth(props = NULL, ..., se = TRUE)
+  branch_smooth(..., se = TRUE)
 }
 \arguments{
   \item{method}{Model fitting function to use - it must
@@ -39,11 +39,9 @@
   silently removed, otherwise they will be removed with a
   warning.}
 
-  \item{...}{other arguments passed on to the underlying
-  transform function}
-
-  \item{props}{a \code{\link{props}} object describing a
-  property mapping}
+  \item{...}{Named arguments are passed on to the
+  transform, unnamed arguments are passed on to the
+  branch.}
 }
 \description{
   \code{transform_smooth} is a data transformation that

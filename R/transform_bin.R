@@ -70,25 +70,32 @@ transform_bin <- function(binwidth = guess(), origin = NULL, right = TRUE) {
 #' @rdname transform_bin
 #' @export
 #' @param props a \code{\link{props}} object describing a property mapping
-#' @param ... other arguments passed on to the underlying transform function
-branch_histogram <- function(props = NULL, ...) {
-  default_props <- props(x ~ xmin__, x2 ~ xmax__, y ~ count__, y2 ~ 0)
-
+#' @param ... Named arguments are passed on to the transform, unnamed
+#'   arguments are passed on to the branch.
+branch_histogram <- function(...) {
   branch(
-    transform_bin(...),
-    mark_rect(default_props, props)
+    build_transform("bin", ...),
+    branch(
+      props(x ~ xmin__, x2 ~ xmax__, y ~ count__, y2 ~ 0),  
+      mark_rect(),
+      ...,
+      drop_named = TRUE
+    )
   )
 }
 
 #' @rdname transform_bin
 #' @export
 #' @inheritParams branch_histogram
-branch_freqpoly <- function(props = NULL, ...) {
-  default_props <- props(x ~ x, y ~ count__)
-  
+branch_freqpoly <- function(...) {
   branch(
-    transform_bin(...),
-    mark_line(default_props, props)
+    build_transform("bin", ...),
+    branch(
+      props(x ~ x, y ~ count__),  
+      mark_line(),
+      ...,
+      drop_named = TRUE
+    )
   )
 }
 

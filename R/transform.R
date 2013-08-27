@@ -1,7 +1,9 @@
 #' Create a new "transform" object.
 #'
 #' A transform object is a \code{\link{pipe}} that represents a data 
-#' transformation.
+#' transformation. \code{build_transform} provides an alternative way to
+#' create transformation objects: it ignores unnamed arguments, making it 
+#' suitable for use inside \code{branch_} functions.
 #' 
 #' This function is designed to be used by authors of new types of transform
 #' If you are a ggvis user, please use one of the more specific transform
@@ -29,6 +31,22 @@
 transform <- function(type, ..., dots = list()) {
   type <- c(paste0("transform_", type), "transform")
   pipe(type, ..., dots = dots)
+}
+
+#' @param name Name of transform class to create.
+#' @export
+#' @rdname transform
+build_transform <- function(name, ..., .env = parent.frame()) {
+  trans <- as.name(paste0("transform_", name))
+  
+  args <- dots(...)
+  
+  # Drop named arguments
+  nms <- names(args) %||% rep("", length(args))
+  args <- args[nms != ""]
+  
+  call <- as.call(c(trans, args))
+  eval(call, .env)
 }
 
 #' Compute the transformation.
