@@ -79,7 +79,7 @@
 \examples{
 ggvis(mtcars, props(x ~ wt, y ~ mpg), mark_symbol(), branch_smooth())
 ggvis(mtcars, props(x ~ wt, y ~ mpg), mark_symbol(),
-  branch_smooth(method = "lm", se = F))
+  branch_smooth(method = "lm", se = FALSE))
 
 # These are equivalent to combining transform_smooth with mark_line and
 # mark_area
