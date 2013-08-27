@@ -33,7 +33,7 @@ print.ggvis <- function(x, dynamic = NA, ...) {
 #' @export
 #' @importFrom RJSONIO toJSON
 #' @importFrom whisker whisker.render
-view_static <- function(x, renderer = "canvas", launch = TRUE) {
+view_static <- function(x, renderer = "canvas", launch = interactive()) {
   
   if (!(renderer %in% c("canvas", "svg")))
     stop("renderer must be 'canvas' or 'svg'")
@@ -65,7 +65,8 @@ view_static <- function(x, renderer = "canvas", launch = TRUE) {
   writeLines(whisker.render(template, list(head = '', body = body)),
     con = html_file)
   
-  browseURL(html_file)
+  if (launch) browseURL(html_file)
+  invisible(html_file)
 }
 
 copy_www_resources <- function(destdir) {
@@ -131,5 +132,10 @@ view_dynamic <- function(x, renderer = "canvas", launch = TRUE, port = 8228) {
     })
   }
   
-  runApp(list(ui = ui, server = server))
+  app <- list(ui = ui, server = server)
+  if (launch) {
+    runApp(app)
+  } else {
+    app
+  }
 }

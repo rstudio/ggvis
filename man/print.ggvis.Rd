@@ -6,7 +6,8 @@
 \usage{
   \method{print}{ggvis} (x, dynamic = NA, ...)
 
-  view_static(x, renderer = "canvas", launch = TRUE)
+  view_static(x, renderer = "canvas",
+    launch = interactive())
 
   view_dynamic(x, renderer = "canvas", launch = TRUE,
     port = 8228)
