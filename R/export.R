@@ -1,33 +1,22 @@
-#' Generate an PNG file from a ggvis object
+#' Export a PNG or SVG from a ggvis object
 #'
-#' This requires that the program \code{vg2png} is installed. This is part of
-#' \code{vega} node.js module.
+#' This requires that the external program \code{vg2png} is installed. This is 
+#' part of \code{vega} node.js module.
 #'
 #' @seealso \url{https://github.com/trifacta/vega} for information on installing
-#'   \code{vg2png}.
-#'
-#' @param gv A ggvis object.
+#'   \code{vg2png} and \code{vg2svg}
+#' @param x A ggvis object.
 #' @param envir The environment in which to evaluate \code{gv}.
-#' @param file Output file name. If NULL, defaults to "plot.png".
+#' @param file Output file name. If NULL, defaults to "plot.svg" or "plot.png".
 #' @export
-vega_png <- function(gv, envir = parent.frame(), file = NULL) {
-  vega_file(gv, envir, file = file, type = "png")
+export_png <- function(x, envir = parent.frame(), file = NULL) {
+  vega_file(x, envir, file = file, type = "png")
 }
 
-#' Generate a SVG file from a ggvis object
-#'
-#' This requires that the program \code{vg2png} is installed. This is part of
-#' \code{vega} node.js module.
-#'
-#' @seealso \url{https://github.com/trifacta/vega} for information on installing
-#'   \code{vg2svg}.
-#'
-#' @param gv A ggvis object.
-#' @param envir The environment in which to evaluate \code{gv}.
-#' @param file Output file name. If NULL, defaults to "plot.svg".
+#' @rdname export_png
 #' @export
-vega_svg <- function(gv, envir = parent.frame(), file = NULL) {
-  vega_file(gv, envir, file = file, type = "svg")
+export_svg <- function(x, envir = parent.frame(), file = NULL) {
+  vega_file(x, envir, file = file, type = "svg")
 }
 
 # Generate an output image file from a ggvis object
