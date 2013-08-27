@@ -6,7 +6,7 @@
   transform_smooth(method = guess(), formula = guess(),
     se = TRUE, level = 0.95, n = 80L, na.rm = FALSE, ...)
 
-  branch_smooth(props = NULL, se = TRUE, ...)
+  branch_smooth(props = NULL, ..., se = TRUE)
 }
 \arguments{
   \item{method}{Model fitting function to use - it must

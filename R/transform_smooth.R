@@ -80,7 +80,7 @@ transform_smooth <- function(method = guess(), formula = guess(), se = TRUE,
 #' @rdname transform_smooth
 #' @export
 #' @inheritParams branch_histogram
-branch_smooth <- function(props = NULL, se = TRUE, ...) {
+branch_smooth <- function(props = NULL, ..., se = TRUE) {
   line_props <- props(x ~ x, y ~ y)
   se_props <- props(x ~ x, y ~ y_lower__, y2 ~ y_upper__, fillOpacity = 0.2)
   
