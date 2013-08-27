@@ -14,11 +14,13 @@
 \arguments{
   \item{binwidth}{The width of the bins. The default is
   \code{guess()}, which yields 30 bins that cover the range
-  of the data.}
+  of the data. You should always override this value,
+  exploring multiple widths to find the best to illustrate
+  the stories in your data.}
 
   \item{origin}{The initial position of the left-most bin.
-  If \code{NULL}, the the default, will using the smallest
-  value in the dataset}
+  If \code{NULL}, the the default, will use the smallest
+  value in the dataset.}
 
   \item{right}{Should bins be right-open, left-closed, or
   right-closed, left-open}
@@ -30,35 +32,55 @@
   transform function}
 }
 \description{
-  Transformation: bin continuous variable.
+  \code{transform_bin} is a data transformation that
+  reduces a one-d vector of positions to a data frame of
+  binned counts. \code{branch_histogram} combines
+  \code{transform_bin} with \code{mark_rect} to create a
+  histogram, and \code{branch_freqpoly} combines
+  \code{transform_bin} with \code{mark_line} to create a
+  frequency polygon.
 }
 \section{Input}{
   The data that \code{transform_bin} is applied to, must
   have methods for \code{prop_type}, \code{prop_range} and
   \code{bin}. Currently, this implies that the input data
   must be a data frame.
-}
 
-\section{Properties}{
-  It must have an \code{x} property, and that property must
-  be numeric.
+  \code{transform_bin} requires the following properties:
+
+  \itemize{ \item \code{x}, numeric, the values to bin and
+  count }
 }
 
 \section{Ouput}{
   \code{transform_bin} creates a data frame with columns:
 
-  \itemize{ \item \code{count__} \item \code{x} \item
-  \code{xmin__} \item \code{xmax__} \item \code{width__} }
+  \itemize{ \item \code{count__}: the number of points
+  \item \code{x}: mid-point of bin \item \code{xmin__}:
+  left boundary of bin \item \code{xmax__}: right boundary
+  of bin \item \code{width__}: width of bin }
 }
 \examples{
-transform_bin()
-transform_bin(binwidth = 10, origin = 1)
-transform_bin(right = FALSE)
+# Create histograms and frequency polygons with branches
+ggvis(mtcars, props(x ~ mpg), branch_histogram())
+ggvis(mtcars, props(x ~ mpg), branch_histogram(binwidth = 2))
+ggvis(mtcars, props(x ~ mpg), branch_freqpoly(binwidth = 2))
+
+# These are equivalent to combining transform_bin with the corresponding
+# mark
+ggvis(mtcars, props(x ~ mpg), transform_bin(binwidth = 2),
+  mark_rect(props(x ~ xmin__, x2 ~ xmax__, y ~ count__, y2 ~ 0)),
+  mark_line(props(x ~ x, y ~ count__, stroke = "red", strokeWidth = 4))
+)
+
+# You can also combine other data transformations like splitting
+ggvis(mtcars, props(x ~ mpg, stroke ~ cyl, strokeWidth = 4), by_group(cyl),
+   branch_freqpoly(binwidth = 2))
 
 # You can see the results of a transformation by creating your own pipeline
 # and flowing data through it
-sluice(transform_bin(10), props(x ~ disp), mtcars)
-sluice(pipeline(mtcars, by_group(cyl), transform_bin(10)), props(x ~ disp))
+sluice(pipeline(mtcars, transform_bin(2)), props(x ~ mpg))
+sluice(pipeline(mtcars, by_group(cyl), transform_bin(2)), props(x ~ disp))
 # Or
 pl <- pipeline(mtcars, transform_bin(10))
 sluice(pl, props(x ~ disp))
