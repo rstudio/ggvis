@@ -7,6 +7,9 @@
 library(knitr)
 library(ggvis)
 opts_chunk$set(comment = "#", error = TRUE, tidy = FALSE, eval = FALSE)
+opts_knit$set(
+  stop_on_error = 0L
+)
 ```
 
 # Properties and scales

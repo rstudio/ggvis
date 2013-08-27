@@ -5,6 +5,7 @@
 
 ```{r, echo = FALSE}
 library(knitr)
+library(ggvis)
 opts_chunk$set(comment = "#", error = TRUE, tidy = FALSE)
 ```
 
@@ -73,7 +74,7 @@ this datastructure. Slucing the pipeline performs those transformations:
 ```{r}
 b1 <- pipeline(df, transform_bin(binwidth = 3))
 b1
-b2 <- pipeline(df, by_group("grp"))
+b2 <- pipeline(df, by_group(grp))
 b2
 
 sluice(b1, props(x ~ x))
@@ -83,7 +84,7 @@ sluice(b2, props(x ~ x))
 Finally, `c` combines the operation of `b1` and `b2`, first splitting the data into pieces, then summarising each group with binned counts:
 
 ```{r}
-c <- pipeline(df, by_group("grp"), transform_bin(binwidth = 3))
+c <- pipeline(df, by_group(grp), transform_bin(binwidth = 3))
 c
 sluice(c, props(x ~ x))
 ```
@@ -92,7 +93,7 @@ Note that pipeline will automatically remove redundancies from a pipeline:
 
 ```{r}
 pipeline(mtcars, sleep)
-pipeline(mtcars, by_group("cyl"), sleep)
+pipeline(mtcars, by_group(cyl), sleep)
 ```
 
 ## Combining props
@@ -106,9 +107,9 @@ layer.  In ggvis, that's now a property of `props()`: `props(inherit = FALSE)`.
 To see how ggvis combines properties, you can use the `merge_props` function:
 
 ```{r}
-merge_props(props(x ~ x), props(y ~ y))
-merge_props(props(x ~ a), props(x ~ b))
-merge_props(props(x ~ a, y ~ a), props(x ~ b, inherit = FALSE))
+ggvis:::merge_props(props(x ~ x), props(y ~ y))
+ggvis:::merge_props(props(x ~ a), props(x ~ b))
+ggvis:::merge_props(props(x ~ a, y ~ a), props(x ~ b, inherit = FALSE))
 ```
 
 There is currently no way to remove a prop inherited from the parent. See
