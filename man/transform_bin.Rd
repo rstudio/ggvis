@@ -41,12 +41,8 @@
   frequency polygon.
 }
 \section{Input}{
-  The data that \code{transform_bin} is applied to, must
-  have methods for \code{prop_type}, \code{prop_range} and
-  \code{bin}. Currently, this implies that the input data
-  must be a data frame.
-
-  \code{transform_bin} requires the following properties:
+  Currently \code{transform_bin} only works with data
+  frames and requires the following properties:
 
   \itemize{ \item \code{x}, numeric, the values to bin and
   count }

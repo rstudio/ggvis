@@ -1,24 +1,34 @@
 #' Transformation: smooth the data
 #'
-#' \code{transform_smooth} is a data transformation that can be passed into a
-#' node. \code{branch_smooth} creates a node that transforms the data and then
-#' displays it with \code{\link{mark_line}}.
+#' \code{transform_smooth} is a data transformation that fits a model to a 2d
+#' dataset and computes predictions and standard errors. \code{branch_smooth}
+#' combines \code{transform_smooth} with \code{mark_line} and \code{mark_area} 
+#' to display a smooth line and its standard errror.
 #'
+#' @section Input:
+#' Currently \code{transform_bin} only works with data frames and requires the
+#' following properties:
+#' 
+#' \itemize{
+#'   \item \code{x}, numeric, horizontal position
+#'   \item \code{y}, numeric, vertical position
+#' }
+#' 
 #' @section Ouput:
 #'
 #' \code{transform_smooth} creates a data frame with columns:
 #'
 #' \itemize{
-#'  \item \code{x}
-#'  \item \code{y}
+#'  \item \code{x}: regularly spaced grid of \code{n} locations
+#'  \item \code{y}: predicted value from smooth
 #' }
 #'
 #' If standard errors are requested, it will also contain:
 #'
 #' \itemize{
-#'  \item \code{y_lower}
-#'  \item \code{y_upper}
-#'  \item \code{se}
+#'  \item \code{y_lower} and \code{y_upper}: upper and lower bounds of 
+#'    confidence interval
+#'  \item \code{se}: the standard error (width of the confidence interval)
 #' }
 #'
 #' @param method Model fitting function to use - it must support R's standard
@@ -39,20 +49,36 @@
 #'   otherwise they will be removed with a warning.
 #' @export
 #' @examples
-#' transform_smooth()
-#' sluice(transform_smooth(), props(x ~ mpg, y ~ disp), mtcars)
-#' # You can see the results of a transformation by creating your own pipeline
-#' # and flowing data through it
-#' sluice(transform_smooth(n = 5L), props(x ~ disp, y ~ mpg), mtcars)
-#' # Or
-#' pl <- pipeline(
-#'   mtcars,
-#'   by_group(cyl),
-#'   transform_smooth(n = 5L, method = "lm")
+#' ggvis(mtcars, props(x ~ wt, y ~ mpg), mark_symbol(), branch_smooth())
+#' ggvis(mtcars, props(x ~ wt, y ~ mpg), mark_symbol(), 
+#'   branch_smooth(method = "lm", se = F))
+#' 
+#' # These are equivalent to combining transform_smooth with mark_line and
+#' # mark_area
+#' ggvis(mtcars, props(x ~ wt, y ~ mpg), 
+#'   mark_symbol(), 
+#'   node(transform_smooth(), 
+#'     mark_area(props(y ~ y_min, y2 ~ y_max, fillOpacity = 0.2)),
+#'     mark_line()
+#'   )
 #' )
-#' sluice(pl, props(x ~ disp, y ~ mpg))
+#'
+#' # You can also combine other data transformations like splitting
+#' ggvis(mtcars, props(x ~ wt, y ~ mpg, stroke ~ cyl), by_group(cyl),
+#'    branch_smooth(method = lm))
+#' 
+#' # You can see the results of a transformation by creating your own pipeline
+#' # and sluicing data through it
+#' sluice(pipeline(mtcars, transform_smooth(n = 5L)), props(x ~ disp, y ~ mpg)
 transform_smooth <- function(method = guess(), formula = guess(), se = TRUE,
                              level = 0.95, n = 80L, na.rm = FALSE, ...) {
+  if (!is.guess(method)) assert_that(is.string(method))
+  if (!is.guess(formula)) assert_that(is.string(formula))
+  assert_that(is.flag(se), 
+    is.numeric(level) && length(level) == 1,
+    is.numeric(n) && length(n) == 1,
+    is.flag(na.rm))
+  
   transform("smooth", method = method, formula = formula, se = se,
     level = level, n = n, na.rm = na.rm, dots = list(...))
 }
@@ -91,7 +117,7 @@ compute.transform_smooth <- function(x, props, data) {
     x$formula <- as.formula(formula)
     message("Guess transform_smooth(formula = ", formula, ")")
   }
-
+  
   output <- smooth(data, x, x_var = props$x, y_var = props$y)
   preserve_constants(data, output)
 }
