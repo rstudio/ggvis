@@ -99,19 +99,6 @@ component_type.default <- function(x) "data"
 #' @keywords internal
 is.ggvis <- function(x) inherits(x, "ggvis")
 
-#' @S3method print ggvis
-print.ggvis <- function(x, dynamic = NA, ...) {
-  set_last_vis(x)
-
-  if (is.na(dynamic)) dynamic <- is.dynamic(x)
-
-  if (dynamic) {
-    view_dynamic(x, ...)
-  } else {
-    view_static(x, ...)
-  }
-}
-
 #' Tools to save and view static specs.
 #'
 #' These functions are mainly useful for testing.
