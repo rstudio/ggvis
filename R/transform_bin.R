@@ -72,19 +72,11 @@ transform_bin <- function(binwidth = guess(), origin = NULL, right = TRUE) {
 #' @param props a \code{\link{props}} object describing a property mapping
 #' @param ... other arguments passed on to the underlying transform function
 branch_histogram <- function(props = NULL, ...) {
-  if (is.null(props)) props <- props()
-
-  default <- props(
-    x ~ xmin__,
-    x2 ~ xmax__,
-    y ~ count__,
-    y2 ~ 0
-  )
-  props <- merge_props(default, props)
+  default_props <- props(x ~ xmin__, x2 ~ xmax__, y ~ count__, y2 ~ 0)
 
   node(
-    data = transform_bin(...),
-    mark_rect(props)
+    transform_bin(...),
+    mark_rect(default_props, props)
   )
 }
 
@@ -92,17 +84,11 @@ branch_histogram <- function(props = NULL, ...) {
 #' @export
 #' @inheritParams branch_histogram
 branch_freqpoly <- function(props = NULL, ...) {
-  if (is.null(props)) props <- props()
-
-  default <- props(
-    x ~ x,
-    y ~ count__
-  )
-  props <- merge_props(default, props)
-
+  default_props <- props(x ~ x, y ~ count__)
+  
   node(
-    data = transform_bin(...),
-    mark_line(props)
+    transform_bin(...),
+    mark_line(default_props, props)
   )
 }
 
