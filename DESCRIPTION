@@ -63,3 +63,4 @@ Collate:
     'by_group.R'
     'export.R'
     'print.R'
+    'branch.R'

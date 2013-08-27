@@ -3,9 +3,9 @@ library(ggvis)
 # Scatter plot with loess model line
 ggvis(mtcars, props(x ~ wt, y ~ mpg),
   mark_symbol(props(fill = NA, stroke = "black")),
-  node(
+  branch(
     data = transform_smooth(se = F),
-    node(
+    branch(
       mark_line(props(stroke = "red"))
     )
   )

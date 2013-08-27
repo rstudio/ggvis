@@ -74,7 +74,7 @@ transform_bin <- function(binwidth = guess(), origin = NULL, right = TRUE) {
 branch_histogram <- function(props = NULL, ...) {
   default_props <- props(x ~ xmin__, x2 ~ xmax__, y ~ count__, y2 ~ 0)
 
-  node(
+  branch(
     transform_bin(...),
     mark_rect(default_props, props)
   )
@@ -86,7 +86,7 @@ branch_histogram <- function(props = NULL, ...) {
 branch_freqpoly <- function(props = NULL, ...) {
   default_props <- props(x ~ x, y ~ count__)
   
-  node(
+  branch(
     transform_bin(...),
     mark_line(default_props, props)
   )

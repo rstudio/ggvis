@@ -3,7 +3,7 @@ context("Flatten")
 test_that("props inherited from parent", {
   p <- ggvis(data = data.frame(),
     props = props(x = 1),
-    node(
+    branch(
       props = props(y = 2),
       mark_line(props(x = 3))
     )
@@ -21,7 +21,7 @@ test_that("props inherited from parent", {
 test_that("data flows through pipeline", {
   df <- data.frame(x = 1, y = 2)
   p <- ggvis(data = df, props = props(x ~ x, y ~ y),
-    node(node(node(node(node(mark_line()))))))
+    branch(branch(branch(branch(branch(mark_line()))))))
   nodes <- flatten(p)
 
   expect_equal(length(nodes), 1)
@@ -32,7 +32,7 @@ test_that("data flows through pipeline", {
 
 test_that("no data is an error", {
   p <- ggvis(NULL, props(x ~ x, y ~ y),
-    node(node(node(node(node(mark_line()))))))
+    branch(branch(branch(branch(branch(mark_line()))))))
   expect_error(flatten(p), "parent has no data")
 })
 

@@ -35,11 +35,11 @@ mtc2 <- reactive({
 })
 ggvis(
   props(x ~ wt, y ~ mpg),
-  node(
+  branch(
     mtc1,
     mark_symbol(props(stroke = "black", fill = "black"))
   ),
-  node(
+  branch(
     mtc2,
     mark_symbol(props(fill = "red", size = 40))
   )
@@ -52,7 +52,7 @@ mtc1 <- reactive({
 })
 ggvis(mtc1, props(x ~ wt, y ~ mpg),
   mark_symbol(),
-  node(
+  branch(
     data = transform_smooth(method = "lm"),
     mark_line(props(stroke = "red"))
   )

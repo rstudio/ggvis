@@ -17,7 +17,7 @@ ggvis(pressure,
 ggvis(
   data = pipeline(mtcars, transform_bin(binwidth = 1)),
   props(x ~ wt),
-  node(
+  branch(
     props(x ~ xmin__, x2 ~ xmax__, y ~ count__, y2 ~ 0),
     mark_rect()
   )

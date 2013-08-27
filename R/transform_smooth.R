@@ -57,7 +57,7 @@
 #' # mark_area
 #' ggvis(mtcars, props(x ~ wt, y ~ mpg), 
 #'   mark_symbol(), 
-#'   node(transform_smooth(), 
+#'   branch(transform_smooth(), 
 #'     mark_area(props(x ~ x, y ~ y_lower__, y2 ~ y_upper__, fillOpacity = 0.2)),
 #'     mark_line(props(x ~ x, y ~ y))
 #'   )
@@ -84,7 +84,7 @@ branch_smooth <- function(props = NULL, ..., se = TRUE) {
   line_props <- props(x ~ x, y ~ y)
   se_props <- props(x ~ x, y ~ y_lower__, y2 ~ y_upper__, fillOpacity = 0.2)
   
-  node(
+  branch(
     transform_smooth(..., se = se),
     if (!identical(se, FALSE)) mark_area(se_props, props),
     mark_line(line_props, props)

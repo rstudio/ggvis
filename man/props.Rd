@@ -12,8 +12,8 @@
   a valid vega property.}
 
   \item{inherit}{If \code{TRUE}, the defaults, will inherit
-  from properties from the parent node. If \code{FALSE}, it
-  will start from nothing.}
+  from properties from the parent branch If \code{FALSE},
+  it will start from nothing.}
 
   \item{x}{an object to test for props-ness.}
 }
@@ -101,7 +101,7 @@
 
   To each property, you can assign any property object
   (\code{\link{prop}}) either locally (i.e. in the mark),
-  or in a parent \code{\link{node}}.
+  or in a parent \code{\link{branch}}.
 }
 \examples{
 # Set to constant values

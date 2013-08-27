@@ -38,7 +38,7 @@
 #' @param ... A set of name-value pairs. The name should be a valid vega
 #'   property.
 #' @param inherit If \code{TRUE}, the defaults, will inherit from properties
-#'   from the parent node. If \code{FALSE}, it will start from nothing.
+#'   from the parent branch If \code{FALSE}, it will start from nothing.
 #' @export
 #' @examples
 #' # Set to constant values

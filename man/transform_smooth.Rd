@@ -85,7 +85,7 @@ ggvis(mtcars, props(x ~ wt, y ~ mpg), mark_symbol(),
 # mark_area
 ggvis(mtcars, props(x ~ wt, y ~ mpg),
   mark_symbol(),
-  node(transform_smooth(),
+  branch(transform_smooth(),
     mark_area(props(x ~ x, y ~ y_lower__, y2 ~ y_upper__, fillOpacity = 0.2)),
     mark_line(props(x ~ x, y ~ y))
   )

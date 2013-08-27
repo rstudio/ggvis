@@ -1,4 +1,4 @@
-#' Create a new "mark" object.
+  #' Create a new "mark" object.
 #'
 #' A mark object is a close mapping to a vega mark object. Vega marks
 #' are documented in \url{https://github.com/trifacta/vega/wiki/Marks}.
@@ -19,7 +19,7 @@ mark <- function(type, props, data = NULL) {
       data = as.pipeline(data),
       props = props
     )),
-    class = c(paste0("mark_", type), "mark", "ggvis_node")
+    class = c(paste0("mark_", type), "mark", "branch")
   )
 
   check_mark_props(m, names(m$props))

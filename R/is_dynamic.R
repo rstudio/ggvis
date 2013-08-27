@@ -4,8 +4,8 @@
 #' @keywords internal
 is.dynamic <- function(x) UseMethod("is.dynamic")
 
-#' @S3method is.dynamic ggvis_node
-is.dynamic.ggvis_node <- function(x) {
+#' @S3method is.dynamic branch
+is.dynamic.branch <- function(x) {
   is.dynamic(x$data) || is.dynamic(x$props) || any_apply(x$children, is.dynamic)
 }
 
