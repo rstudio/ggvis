@@ -4,10 +4,10 @@
 \title{Create an interactive text or numeric input box.}
 \usage{
   input_text(value, label = "", id = rand_id("text_"),
-    map = identity, scale = FALSE)
+    map = identity)
 
   input_numeric(value, label = "", id = rand_id("text_"),
-    map = identity, scale = FALSE)
+    map = identity)
 }
 \arguments{
   \item{value}{Initial value}
@@ -22,9 +22,6 @@
   the value returned from the input control and converts it
   to an argument useful for ggvis.  Defaults to
   \code{identity}, leaving the output unchanged.}
-
-  \item{scale}{default scale value when this input is used
-  in a prop}
 }
 \description{
   \code{input_numeric} only allows numbers and comes with a

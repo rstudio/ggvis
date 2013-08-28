@@ -5,7 +5,7 @@
   input_slider(min, max, value = min, step = NULL,
     round = FALSE, format = "#,##0.#####", locale = "us",
     ticks = TRUE, animate = FALSE, label = "",
-    id = rand_id("slider_"), map = identity, scale = FALSE)
+    id = rand_id("slider_"), map = identity)
 }
 \arguments{
   \item{min}{The minimum value (inclusive) that can be
@@ -58,9 +58,6 @@
   the value returned from the input control and converts it
   to an argument useful for ggvis.  Defaults to
   \code{identity}, leaving the output unchanged.}
-
-  \item{scale}{default scale value when this input is used
-  in a prop}
 }
 \description{
   Create an interactive slider.

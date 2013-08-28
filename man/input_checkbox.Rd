@@ -3,8 +3,7 @@
 \title{Create an interactive checkbox.}
 \usage{
   input_checkbox(value = FALSE, label = "",
-    id = rand_id("checkbox_"), map = identity,
-    scale = FALSE)
+    id = rand_id("checkbox_"), map = identity)
 }
 \arguments{
   \item{value}{Initial value (\code{TRUE} or
@@ -20,9 +19,6 @@
   the value returned from the input control and converts it
   to an argument useful for ggvis.  Defaults to
   \code{identity}, leaving the output unchanged.}
-
-  \item{scale}{default scale value when this input is used
-  in a prop}
 }
 \description{
   Create an interactive checkbox.

@@ -5,14 +5,13 @@
 \title{Create interactive control to select one (or more options) from a list.}
 \usage{
   input_select(choices, selected = NULL, multiple = FALSE,
-    label = "", id = rand_id("select_"), map = identity,
-    scale = FALSE)
+    label = "", id = rand_id("select_"), map = identity)
 
   input_radiobuttons(choices, selected = NULL, label = "",
-    id = rand_id("radio_"), map = identity, scale = FALSE)
+    id = rand_id("radio_"), map = identity)
 
   input_checkboxgroup(choices, selected = NULL, label = "",
-    id = rand_id("radio_"), map = identity, scale = FALSE)
+    id = rand_id("radio_"), map = identity)
 }
 \arguments{
   \item{choices}{List of values to select from. If elements
@@ -37,9 +36,6 @@
   the value returned from the input control and converts it
   to an argument useful for ggvis.  Defaults to
   \code{identity}, leaving the output unchanged.}
-
-  \item{scale}{default scale value when this input is used
-  in a prop}
 }
 \description{
   \itemize{ \item \code{input_radiobuttons} only ever

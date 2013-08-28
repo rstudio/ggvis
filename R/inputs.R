@@ -18,14 +18,14 @@
 input_slider <- function(min, max, value = min, step = NULL, round = FALSE,
                          format = "#,##0.#####", locale = "us", ticks = TRUE,
                          animate = FALSE, label = "", id = rand_id("slider_"),
-                         map = identity, scale = FALSE) {
+                         map = identity) {
 
   assert_that(is.string(label), is.string(id))
 
   args <- list(id, label, min = min, max = max, value = value, step = step,
       round = round, format = format, locale = locale, ticks = ticks)
 
-  input("slider", args, value, map, id, scale)
+  input("slider", args, value, map, id)
 }
 
 #' Create an interactive checkbox.
@@ -48,8 +48,7 @@ input_slider <- function(min, max, value = min, step = NULL, round = FALSE,
 #'   map = function(val) if(val) "loess" else "lm")
 #' branch_smooth(method = model_type)
 input_checkbox <- function(value = FALSE, label = "", 
-                           id = rand_id("checkbox_"), map = identity, 
-                           scale = FALSE) {
+                           id = rand_id("checkbox_"), map = identity) {
 
   assert_that(is.string(label), is.string(id))
 
@@ -76,25 +75,25 @@ input_checkbox <- function(value = FALSE, label = "",
 #' ggvis(mtcars, props(x = ~ wt, y = ~ mpg), 
 #'   mark_symbol(props(size := size_num)))
 input_text <- function(value, label = "", id = rand_id("text_"),
-                       map = identity, scale = FALSE) {
+                       map = identity) {
 
   assert_that(is.string(label), is.string(id), is.string(value))
 
   args <- list(id, label, value = value)
-  input("text", args, value, map, id, scale)
+  input("text", args, value, map, id)
 }
 
 #' @rdname input_text
 #' @export
 #' @importFrom shiny numericInput
 input_numeric <- function(value, label = "", id = rand_id("text_"),
-                          map = identity, scale = FALSE) {
+                          map = identity) {
 
   assert_that(is.string(label), is.string(id), is.numeric(value))
 
   args <- list(id, label, value = value)
 
-  input("numeric", args, value, map, id, scale)
+  input("numeric", args, value, map, id)
 }
 
 #' Create interactive control to select one (or more options) from a list.
@@ -136,7 +135,7 @@ input_numeric <- function(value, label = "", id = rand_id("text_"),
 #'               label = "Model type"))
 input_select <- function(choices, selected = NULL, multiple = FALSE,
   label = "", id = rand_id("select_"),
-  map = identity, scale = FALSE) {
+  map = identity) {
   assert_that(is.string(label), is.string(id))
   
   args <- list(id, label, choices = choices, selected = selected,
@@ -149,15 +148,14 @@ input_select <- function(choices, selected = NULL, multiple = FALSE,
     value <- choices[selected]
   }
   
-  input("select", args, value, map, id, scale)
+  input("select", args, value, map, id)
 }
 
 #' @rdname input_select
 #' @export
 #' @importFrom shiny radioButtons
 input_radiobuttons <- function(choices, selected = NULL, label = "",
-                               id = rand_id("radio_"), map = identity, 
-                               scale = FALSE) {
+                               id = rand_id("radio_"), map = identity) {
 
   assert_that(is.string(label), is.string(id))
 
@@ -169,7 +167,7 @@ input_radiobuttons <- function(choices, selected = NULL, label = "",
     value <- choices[selected]
   }
 
-  input("radio_buttons", args, value, map, id, scale, 
+  input("radio_buttons", args, value, map, id, 
     control_f = "radioButtons")
 }
 
@@ -177,8 +175,7 @@ input_radiobuttons <- function(choices, selected = NULL, label = "",
 #' @export
 #' @importFrom shiny checkboxGroupInput
 input_checkboxgroup <- function(choices, selected = NULL, label = "",
-                                id = rand_id("radio_"), map = identity,
-                                scale = FALSE) {
+                                id = rand_id("radio_"), map = identity) {
 
   assert_that(is.string(label), is.string(id))
 
@@ -190,5 +187,5 @@ input_checkboxgroup <- function(choices, selected = NULL, label = "",
     value <- choices[selected]
   }
 
-  input("checkbox_group", args, value, map, id, scale)
+  input("checkbox_group", args, value, map, id)
 }

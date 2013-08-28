@@ -61,7 +61,7 @@ prop <- function(x, scale = NULL, offset = NULL, mult = NULL,
     type <- "reactive"
     dr <- x
     x <- function() stop("Delayed reactive has not yet been advanced!")
-    scale <- scale %||% dr$scale %||% FALSE
+    scale <- scale %||% FALSE
   } else if (is.quoted(x)) {
     type <- "variable"
     dr <- NULL
