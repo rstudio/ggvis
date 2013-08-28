@@ -32,7 +32,7 @@ pipeline <- function(..., .pipes = list()) {
   check_empty_args()
   args <- list(...)
   if (is.null(names(args))) {
-    names(args) <- vapply(dots(...), function(x) deparse(x), character(1))
+    names(args) <- vapply(dots(...), deparse2, character(1))
   }
   input <- c(args, .pipes)
   if (length(input) == 0) return()
@@ -79,7 +79,7 @@ as.pipeline.pipe <- function(x, ...) pipeline(x)
 
 #' @S3method as.pipeline default
 as.pipeline.default <- function(x, name = NULL, ...) {
-  if (is.null(name)) name <- deparse(substitute(x))
+  if (is.null(name)) name <- deparse2(substitute(x))
   pipeline(datasource(x, name = name))
 }
 

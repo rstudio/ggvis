@@ -12,13 +12,13 @@ dot_names <- function(...) {
   missing <- nms == ""
   if (all(!missing)) return(args)
   
-  deparse2 <- function(x) paste(deparse(x, 500L), collapse = "")
   defaults <- vapply(args[missing], deparse2, character(1), USE.NAMES = FALSE)
   
   nms[missing] <- defaults
   nms
 }
 
+deparse2 <- function(x) paste(deparse(x, 500L), collapse = "")
 
 "%||%" <- function(a, b) if (!is.null(a)) a else b
 
@@ -107,7 +107,7 @@ safe_vega_var <- function(x) {
   if (is.name(x)) {
     x <- as.character(x)
   } else if (is.quoted(x)) {
-    x <- paste0(deparse(x, width.cutoff = 500), collapse = "")
+    x <- deparse2(x)
   }
   
   gsub(".", "\\.", x, fixed = TRUE)

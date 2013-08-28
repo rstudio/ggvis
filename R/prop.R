@@ -174,7 +174,7 @@ as.character.prop <- function(x, ...) {
   switch(x$type,
     constant = as.character(x$value),
     reactive = x$dr$id,
-    variable = deparse(x$value)
+    variable = deparse2(x$value)
   )
 }
 

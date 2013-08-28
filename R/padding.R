@@ -36,5 +36,5 @@ is_padding <- function(x) {
     is.numeric(x) || (x %in% c("auto", "strict")))
 }
 on_failure(is_padding) <- function(call, env) {
-  paste0(deparse(call$x), " is not a single number, 'auto', or 'strict'.")
+  paste0(deparse2(call$x), " is not a single number, 'auto', or 'strict'.")
 }

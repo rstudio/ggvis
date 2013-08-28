@@ -25,7 +25,7 @@
 #'
 #' v$n <- 5
 #' sluice(p, props)
-datasource <- function(data, name = deparse(substitute(data))) {
+datasource <- function(data, name = deparse2(substitute(data))) {
   if (is.null(data)) return(NULL)
 
   structure(list(

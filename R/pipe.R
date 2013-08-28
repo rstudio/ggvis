@@ -31,7 +31,7 @@ as.pipe.pipe <- function(x, ...) x
 
 #' @S3method as.pipe default
 as.pipe.default <- function(x, name = NULL, ...) {
-  if (is.null(name)) name <- deparse(substitute(x))
+  if (is.null(name)) name <- deparse2(substitute(x))
   datasource(x, name = name)
 }
 
