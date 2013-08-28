@@ -22,25 +22,32 @@ $(function(){ //DOM Ready
   Shiny.outputBindings.register(ggvisOutputBinding, 'shiny.ggvisOutput');
 
 
-  var pendingData = {};
+  var ggv = window.ggv = {
+    pendingData: {},  // data objects that have been received but not yet used
+    plots: {},        // all vega chart objects on the page
+    specs: {},        // all specs
+    renderer: null
+  };
+
   Shiny.addCustomMessageHandler("ggvis_data", function(message) {
     var plotId = message.plotId;
     var name = message.name;
     var value = message.value[0].values;
 
-    if (allPlots[plotId]) {
+    if (ggv.plots[plotId]) {
       // If the plot exists already, feed it the data
       var dataset = {};
       dataset[name] = value;
-      allPlots[plotId].data(dataset);
-      allPlots[plotId].update();
+      ggv.plots[plotId].data(dataset);
+      ggv.plots[plotId].update();
 
-      updateGgvisDivSize(plotId);
+      ggv.updateGgvisDivSize(plotId);
     } else {
-      // The plot doesn't exist, save it for when the plot arrives
-      if (!pendingData[plotId])
-        pendingData[plotId] = {};
-      pendingData[plotId][name] = value;
+      // The plot doesn't exist, save the data for when the plot arrives
+      if (!ggv.pendingData[plotId])
+        ggv.pendingData[plotId] = {};
+
+      ggv.pendingData[plotId][name] = value;
     }
   });
 
@@ -49,14 +56,33 @@ $(function(){ //DOM Ready
   Shiny.addCustomMessageHandler("ggvis_vega_spec", function(message) {
     var plotId = message.plotId;
     var spec = message.spec;
-    var renderer = message.renderer;
+
+    // If no renderer already selected, set it here
+    if (!ggv.renderer) {
+      ggv.renderer = message.renderer || "canvas";
+      ggv.setRendererChooser(ggv.renderer);
+    }
+
+    // Save the spec
+    ggv.specs[plotId] = spec;
 
     vg.parse.spec(spec, function(chart) {
       var selector = ".ggvis-output#" + plotId;
       var $el = $(selector);
-      chart = chart({ el: selector, renderer: renderer });
+
+      chart = chart({ el: selector, renderer: ggv.renderer });
+      // Save the chart object
+      ggv.plots[plotId] = chart;
       $el.data("ggvis-chart", chart);
-      ggvisInit(plotId);
+
+      // If the data arrived earlier, use it.
+      if (ggv.data[plotId]) {
+        chart.data(ggv.pendingData[plotId]);
+        delete ggv.pendingData[plotId];
+      }
+
+      chart.update();
+      ggv.updateGgvisDivSize(plotId);
 
       // When done resizing, update with new width and height
       $el.resizable({
@@ -75,45 +101,51 @@ $(function(){ //DOM Ready
 
   // Sets height and width of wrapper div to contain the plot area.
   // This is so that the resize handle will be put in the right spot.
-  function updateGgvisDivSize(plotId) {
+  ggv.updateGgvisDivSize = function(plotId) {
     var $el = $(".ggvis-output#" + plotId);
     var $plotarea = $el.find("div.vega > .marks");
 
     $el.width($plotarea.width());
     $el.height($plotarea.height());
-  }
+  };
 
+  // Given the name of a plot and an <a> element, set the href of that element
+  // to the canvas content of the plot converted to PNG. This will set the href
+  // when the link is clicked; the download happens when it is released.
+  ggv.setGgvisDownloadHref = function(plotId, el) {
+    var canvas = $("#" + plotId + ".ggvis-output canvas")[0];
+    var imageUrl = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+    el.setAttribute("href", imageUrl);
+  };
 
-  var allPlots = {};
-  function ggvisInit(plotId) {
-    var chart = $(".ggvis-output#" + plotId).data("ggvis-chart");
-    allPlots[plotId] = chart;
+  // Change the renderer and update all plots
+  ggv.setRenderer = function(renderer) {
+    ggv.renderer = renderer;
 
-    if (pendingData[plotId]) {
-      // The data arrived earlier; use it.
-      chart.data(pendingData[plotId]);
-      chart.update();
-      delete pendingData[plotId];
-
-      updateGgvisDivSize(plotId);
+    for (var plotId in ggv.specs) {
+      if (ggv.specs.hasOwnProperty(plotId))
+        ggv.plots[plotId].renderer(renderer).update();
     }
-  }
+  };
 
+  // Set the value of the renderer selector, if present
+  ggv.setRendererChooser = function(renderer) {
+    var $el = $("#ggvis_renderer");
+    if ($el) {
+      $el.val(renderer);
+    }
+  };
 
   // Attach event handlers to buttons
   $("button#quit").on("click", function() { window.close(); });
 
   $("a#ggvis_download").on("click", function() {
     var plotId = $(this).data("plot-id");
-    setGgvisDownloadHref(plotId, this);
+    ggv.setGgvisDownloadHref(plotId, this);
   });
 
-  // Given the name of a plot and an <a> element, set the href of that element
-  // to the canvas content of the plot converted to PNG. This will set the href
-  // when the link is clicked; the download happens when it is released.
-  function setGgvisDownloadHref(plotId, el) {
-    var canvas = $("#" + plotId + ".ggvis-output canvas")[0];
-    var imageUrl = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
-    el.setAttribute("href", imageUrl);
-  }
+  $("#ggvis_renderer").on("change", function() {
+    ggv.setRenderer(this.value);
+  });
+
 });

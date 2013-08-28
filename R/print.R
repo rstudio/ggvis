@@ -109,12 +109,19 @@ view_dynamic <- function(x, renderer = "canvas", launch = TRUE, port = 8228) {
       uiOutput("ggvis_ui"),
       
       div(
+        tags$label("Renderer:", `for` ="ggvis_renderer"),
+        tags$select(id = "ggvis_renderer",
+          tags$option(value = "canvas", "Canvas"),
+          tags$option(value = "svg", "SVG")
+      ),
+      div(
         # Add an actionButton that quits the app and closes the browser window
         tags$button(id="quit", type="button", class="btn action-button", "Quit"),
         # Add PNG download button
         tags$a(id = "ggvis_download", download = paste0(plot_id, ".png"),
           class = "btn", style = "float:right;",
           `data-plot-id` = plot_id, "Download")
+        )
       )
     ),
     mainPanel(
