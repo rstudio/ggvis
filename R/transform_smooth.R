@@ -88,8 +88,9 @@ transform_smooth <- function(..., method = guess(), formula = guess(), se = TRUE
 #' @param ... Named arguments are passed on to the transform, unnamed
 #'   arguments are passed on to the branch.
 branch_smooth <- function(..., se = TRUE) {
-  line_props <- props(x ~ x, y ~ y)
-  se_props <- props(x ~ x, y ~ y_lower__, y2 ~ y_upper__, fillOpacity = 0.2)
+  line_props <- props(x = ~ x, y = ~ y)
+  se_props <- props(x = ~ x, y = ~ y_lower__, y2 = ~ y_upper__, 
+    fillOpacity := 0.2)
   
   comps <- parse_components(..., drop_named = TRUE)
   branch(

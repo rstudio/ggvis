@@ -43,7 +43,7 @@ valid_mark_properties.mark_symbol <- function(mark) {
 }
 #' @S3method default_mark_properties mark_symbol
 default_mark_properties.mark_symbol <- function(mark) {
-  props(fill = "#000000")
+  props(fill := "#000000")
 }
 
 
@@ -57,7 +57,7 @@ valid_mark_properties.mark_image <- function(mark) {
 }
 #' @S3method default_mark_properties mark_image
 default_mark_properties.mark_image <- function(mark) {
-  props(fill = "#000000")
+  props(fill := "#000000")
 }
 
 
@@ -71,7 +71,7 @@ valid_mark_properties.mark_arc <- function(mark) {
 }
 #' @S3method default_mark_properties mark_arc
 default_mark_properties.mark_arc <- function(mark) {
-  props(fill = "#333333")
+  props(fill := "#333333")
 }
 
 
@@ -85,7 +85,7 @@ valid_mark_properties.mark_area <- function(mark) {
 }
 #' @S3method default_mark_properties mark_area
 default_mark_properties.mark_area <- function(mark) {
-  props(fill = "#333333")
+  props(fill := "#333333")
 }
 
 
@@ -99,7 +99,7 @@ valid_mark_properties.mark_line <- function(mark) {
 }
 #' @S3method default_mark_properties mark_line
 default_mark_properties.mark_line <- function(mark) {
-  props(stroke = "#000000")
+  props(stroke := "#000000")
 }
 
 #' @export
@@ -112,7 +112,7 @@ valid_mark_properties.mark_rect <- function(mark) {
 }
 #' @S3method default_mark_properties mark_rect
 default_mark_properties.mark_rect <- function(mark) {
-  props(stroke = "#000000", fill = "#333333")
+  props(stroke := "#000000", fill := "#333333")
 }
 
 #' @export
@@ -126,5 +126,5 @@ valid_mark_properties.mark_text <- function(mark) {
 }
 #' @S3method default_mark_properties mark_text
 default_mark_properties.mark_text <- function(mark) {
-  props(fill = "#333333")
+  props(fill := "#333333")
 }

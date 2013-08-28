@@ -77,7 +77,7 @@ branch_histogram <- function(...) {
   branch(
     transform_bin(...),
     branch(
-      props(x ~ xmin__, x2 ~ xmax__, y ~ count__, y2 ~ 0),  
+      props(x = ~ xmin__, x2 = ~ xmax__, y = ~ count__, y2 = 0),  
       mark_rect(),
       ...,
       drop_named = TRUE
@@ -92,7 +92,7 @@ branch_freqpoly <- function(...) {
   branch(
     transform_bin(...),
     branch(
-      props(x ~ x, y ~ count__),  
+      props(x = ~ x, y = ~ count__),  
       mark_line(),
       ...,
       drop_named = TRUE

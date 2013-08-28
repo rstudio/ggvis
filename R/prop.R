@@ -45,6 +45,7 @@ prop <- function(x, scale = NULL, offset = NULL, mult = NULL,
   # If x is a formula, then we should use on the rhs, and it must be scaled
   if (is.formula(x)) {
     if (length(x) != 2) stop("Formulas must be single sided")
+    env <- environment(x)
     x <- x[[2]]
   }
   

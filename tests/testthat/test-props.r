@@ -82,10 +82,10 @@ test_that("props uses environment in formulas", {
   # Create a formula that captures the function environment
   gen_formula <- function() {
     val <- 21:22
-    x ~ val
+    ~ val
   }
 
-  p <- props(w ~ val, gen_formula(), y ~ 5, z = 6)
+  p <- props(w = ~ val, x := gen_formula(), y := 5, z := 6)
 
   # Should get val from this environment, where w~val was defined
   expect_identical(prop_value(p$w, dat), 11:12)
