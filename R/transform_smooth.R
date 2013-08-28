@@ -77,8 +77,7 @@ transform_smooth <- function(..., method = guess(), formula = guess(), se = TRUE
   
   # Drop unnamed arguments
   dots <- list(...)
-  nms <- names(dots) %||% rep("", length(dots))
-  dots <- dots[nms != ""]
+  dots <- dots[named(dots)]
   
   transform("smooth", method = method, formula = formula, se = se,
     level = level, n = n, na.rm = na.rm, dots = dots)

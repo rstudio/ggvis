@@ -62,8 +62,7 @@ check_branch_components <- function(x) {
 
 parse_components <- function(..., drop_named = FALSE) {
   args <- list(...)
-  nms <- names(args) %||% rep("", length(args))
-  named <- nms != ""
+  named <- named(args)
   
   if (any(named)) {
     if (drop_named) {

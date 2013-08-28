@@ -7,8 +7,7 @@ dots <- function(...) {
 
 dot_names <- function(...) {
   args <- dots(...)
-  
-  nms <- names(args) %||% rep("", length(args))
+  nms <- names2(args)
   missing <- nms == ""
   if (all(!missing)) return(args)
   
@@ -19,6 +18,9 @@ dot_names <- function(...) {
 }
 
 deparse2 <- function(x) paste(deparse(x, 500L), collapse = "")
+
+names2 <- function(x) names(x) %||% rep("", length(x))
+named <- function(x) names2(x) != ""
 
 "%||%" <- function(a, b) if (!is.null(a)) a else b
 
