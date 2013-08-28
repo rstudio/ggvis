@@ -11,8 +11,9 @@
 \arguments{
   \item{x}{The value of the property. This can be an atomic
   vector (a constant), a name or quoted call (a variable),
-  or a delayed reactive (which can be either variable or
-  constant).}
+  a single-sided formula (a constant or variable depending
+  on its contents), or a delayed reactive (which can be
+  either variable or constant).}
 
   \item{scale}{If \code{TRUE} uses the default scale
   associated with property; If \code{FALSE}, does not scale
@@ -38,6 +39,8 @@
 \examples{
 prop(1)
 prop(quote(cyl))
+prop(~ cyl)
+prop(input_slider(0, 100))
 
 # If you have a variable name as a string
 var <- "cyl"
