@@ -40,39 +40,52 @@
 #' @param inherit If \code{TRUE}, the defaults, will inherit from properties
 #'   from the parent branch If \code{FALSE}, it will start from nothing.
 #' @export
+#' @aliases ":="
 #' @examples
 #' # Set to constant values
-#' props(x = 1, y = 2)
+#' props(x := 1, y := 2)
 #' # Map to variables in the dataset
-#' props(x ~ mpg, y ~ cyl)
+#' props(x = ~ mpg, y = ~ cyl)
 #' # Set to a constant value in the data space
-#' props(x ~ 1, y ~ 1)
+#' props(x = 1, y = 1)
 #' # Use an interactive slider
-#' props(opacity = input_slider(0, 1))
-#' # Use any other prop settings
+#' props(opacity := input_slider(0, 1))
+#' 
+#' # To control other settings (like custom scales, mult and offset)
+#' # use a prop object
 #' props(x = prop("old", scale = TRUE, offset = -1))
 props <- function(..., inherit = TRUE) {
   check_empty_args()
-  pieces <- compact(list(...))
+  args <- dots(...)
+  env <- parent.frame()
+  
+  # If named, use regular evaluation and scale
+  scaled <- lapply(args[named(args)], function(x) {
+    val <- eval(x, env)
+    prop(val, scale = TRUE)
+  })
+  
+  # If unnamed, check that it uses := and don't scale
+  unscaled <- lapply(args[!named(args)], function(x) {
+    check_unscaled_form(x)
 
-  # Pull apart formulae in to name and value
-  is_formula <- vapply(pieces, is.formula, logical(1))
-  formulae <- pieces[is_formula]
-  parsed <- lapply(formulae, parse_component)
-  names <- lapply(parsed, "[[", "name")
-  values <- lapply(parsed, "[[", "value")
-  pieces[is_formula] <- values
-  names(pieces)[is_formula] <- names
-
-  # Anything else that's not already a prop gets turned into a constant
-  constants <- !vapply(pieces, is.prop, logical(1))
-  pieces[constants] <- lapply(pieces[constants], prop)
+    val <- eval(x[[3]], env)
+    prop(val, scale = FALSE)
+  })
+  names(unscaled) <- vapply(args[!named(args)], function(x) as.character(x[[2]]),
+    character(1))
 
   structure(
-    pieces,
+    c(scaled, unscaled),
     inherit = inherit,
     class = "ggvis_props"
   )
+}
+
+check_unscaled_form <- function(x) {
+  if (!is.call(x) || !identical(x[[1]], quote(`:=`))) {
+    stop("Arguments to props must use either := or =", call. = FALSE)
+  }
 }
 
 #' @S3method format ggvis_props
@@ -106,23 +119,6 @@ merge_props <- function(parent = NULL, child = NULL) {
   if (identical(attr(child, "inherit"), FALSE)) return(child)
 
   structure(merge_vectors(parent, child), class = "ggvis_props")
-}
-
-parse_component <- function(x) {
-  stopifnot(is.formula(x))
-  if (length(x) != 3) {
-    stop(x, " not in form name ~ value", call. = FALSE)
-  }
-
-  name <- as.character(x[[2]])
-  if (is.atomic(x[[3]])) {
-    value <- prop(x[[3]], scale = TRUE)
-  } else {
-    value <- prop(x[[3]], scale = TRUE, env = environment(x))
-  }
-
-
-  list(name = name, value = value)
 }
 
 is.formula <- function(x) inherits(x, "formula")
