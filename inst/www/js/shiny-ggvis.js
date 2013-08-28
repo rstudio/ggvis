@@ -113,8 +113,22 @@ $(function(){ //DOM Ready
   // to the canvas content of the plot converted to PNG. This will set the href
   // when the link is clicked; the download happens when it is released.
   ggv.setGgvisDownloadHref = function(plotId, el) {
-    var canvas = $("#" + plotId + ".ggvis-output canvas")[0];
-    var imageUrl = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+    var plot = $("#" + plotId + ".ggvis-output .marks")[0];
+    var imageUrl;
+
+    if (ggv.renderer === "svg") {
+      // Extract the svg code and add needed xmlns attribute
+      var svg = $(plot).clone().attr("xmlns", "http://www.w3.org/2000/svg");
+      // Convert to string
+      svg = $('<div>').append(svg).html();
+      imageUrl = "data:image/octet-stream;base64,\n" + btoa(svg);
+
+    } else if (ggv.renderer === "canvas") {
+      imageUrl = plot.toDataURL("image/png").replace("image/png", "image/octet-stream");
+    }
+
+    // Set download filename and data URL
+    el.setAttribute("download", plotId + "." + ggv.renderer);
     el.setAttribute("href", imageUrl);
   };
 
