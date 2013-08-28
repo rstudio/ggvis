@@ -99,3 +99,13 @@ $(function(){ //DOM Ready
     }
   }
 });
+
+
+// Given the name of a plot and an <a> element, set the href of that element
+// to the canvas content of the plot converted to PNG. This will set the href
+// when the link is clicked; the download happens when it is released.
+function setGgvisDownloadHref(plotname, el) {
+  var canvas = $("#" + plotname + ".ggvis-output canvas")[0];
+  var imageUrl = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+  el.setAttribute("href", imageUrl);
+}

@@ -110,7 +110,12 @@ view_dynamic <- function(x, renderer = "canvas", launch = TRUE, port = 8228) {
       
       # Add an actionButton that quits the app and closes the browser window
       tags$button(id="quit", type="button", class="btn action-button",
-        onclick = "window.close()", "Quit")
+        onclick = "window.close()", "Quit"),
+      # Add PNG download button
+      tags$a(id = "ggvis_download", download = paste0(plot_id, ".png"),
+        class = "btn", style = "float:right;",
+        onclick = paste0("setGgvisDownloadHref('", plot_id, "', this);"),
+        "Download")
     ),
     mainPanel(
       ggvis_output(plot_id)
