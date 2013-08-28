@@ -1,4 +1,5 @@
 \name{props}
+\alias{":="}
 \alias{is.ggvis_props}
 \alias{props}
 \title{Manage a list of properties.}
@@ -105,14 +106,16 @@
 }
 \examples{
 # Set to constant values
-props(x = 1, y = 2)
+props(x := 1, y := 2)
 # Map to variables in the dataset
-props(x ~ mpg, y ~ cyl)
+props(x = ~ mpg, y = ~ cyl)
 # Set to a constant value in the data space
-props(x ~ 1, y ~ 1)
+props(x = 1, y = 1)
 # Use an interactive slider
-props(opacity = input_slider(0, 1))
-# Use any other prop settings
+props(opacity := input_slider(0, 1))
+
+# To control other settings (like custom scales, mult and offset)
+# use a prop object
 props(x = prop("old", scale = TRUE, offset = -1))
 }
 

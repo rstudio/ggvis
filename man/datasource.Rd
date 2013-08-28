@@ -2,7 +2,7 @@
 \alias{datasource}
 \title{Create a new data source.}
 \usage{
-  datasource(data, name = deparse(substitute(data)))
+  datasource(data, name = deparse2(substitute(data)))
 }
 \arguments{
   \item{data}{a data frame}
@@ -27,7 +27,7 @@ datasource(mtcars)
 library(shiny)
 v <- reactiveValues(n = 10)
 p <- pipeline(reactive(mtcars[1:v$n, ]))
-props <- props(x ~ wt, y ~ mpg)
+props <- props(x = ~ wt, y = ~ mpg)
 
 sluice(p, props)
 

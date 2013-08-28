@@ -51,27 +51,29 @@
 #'   be dropped.
 #' @export
 #' @examples
-#' ggvis(mtcars, props(x ~ wt, y ~ mpg), mark_symbol(), branch_smooth())
-#' ggvis(mtcars, props(x ~ wt, y ~ mpg), mark_symbol(), 
+#' ggvis(mtcars, props(x = ~ wt, y = ~ mpg), mark_symbol(), branch_smooth())
+#' ggvis(mtcars, props(x = ~ wt, y = ~ mpg), mark_symbol(), 
 #'   branch_smooth(method = "lm", se = FALSE))
 #' 
 #' # These are equivalent to combining transform_smooth with mark_line and
 #' # mark_area
-#' ggvis(mtcars, props(x ~ wt, y ~ mpg), 
+#' ggvis(mtcars, props(x = ~ wt, y = ~ mpg), 
 #'   mark_symbol(), 
 #'   branch(transform_smooth(), 
-#'     mark_area(props(x ~ x, y ~ y_lower__, y2 ~ y_upper__, fillOpacity = 0.2)),
-#'     mark_line(props(x ~ x, y ~ y))
+#'     mark_area(props(x = ~ x, y = ~ y_lower__, y2 = ~ y_upper__, 
+#'       fillOpacity := 0.2)),
+#'     mark_line(props(x = ~ x, y = ~ y))
 #'   )
 #' )
 #'
 #' # You can also combine other data transformations like splitting
-#' ggvis(mtcars, props(x ~ wt, y ~ mpg, stroke ~ cyl), by_group(cyl),
+#' ggvis(mtcars, props(x = ~ wt, y = ~ mpg, stroke = ~ cyl), by_group(cyl),
 #'    branch_smooth(method = "lm"))
 #' 
 #' # You can see the results of a transformation by creating your own pipeline
 #' # and sluicing data through it
-#' sluice(pipeline(mtcars, transform_smooth(n = 5L)), props(x ~ disp, y ~ mpg))
+#' sluice(pipeline(mtcars, transform_smooth(n = 5L)), 
+#'   props(x = ~ disp, y = ~ mpg))
 transform_smooth <- function(..., method = guess(), formula = guess(), se = TRUE,
                              level = 0.95, n = 80L, na.rm = FALSE) {  
   

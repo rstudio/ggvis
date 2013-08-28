@@ -68,21 +68,13 @@ input_checkbox <- function(value = FALSE, label = "",
 #' @family interactive input
 #' @export
 #' @examples
-#' input_text(label = "Point color", value = "red")
+#' fill_text <- input_text(label = "Point color", value = "red")
+#' ggvis(mtcars, props(x = ~ wt, y = ~ mpg), 
+#'   mark_symbol(props(fill := fill_text)))
 #'
-#' ggvis(mtcars, props(x ~ wt, y ~ mpg),
-#'   mark_symbol(
-#'     props(fill = input_text(label = "Point color", value = "red"))
-#'   )
-#' )
-#'
-#' input_numeric(label = "Point size", value = 25)
-#'
-#' ggvis(mtcars, props(x ~ wt, y ~ mpg),
-#'   mark_symbol(
-#'     props(size = input_numeric(label = "Point size", value = 25))
-#'   )
-#' )
+#' size_num <- input_numeric(label = "Point size", value = 25)
+#' ggvis(mtcars, props(x = ~ wt, y = ~ mpg), 
+#'   mark_symbol(props(size := size_num)))
 input_text <- function(value, label = "", id = rand_id("text_"),
                        map = identity, scale = FALSE) {
 

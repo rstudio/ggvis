@@ -107,10 +107,10 @@ is.ggvis_props <- function(x) inherits(x, "ggvis_props")
 
 # Merge two ggvis_props objects
 #
-# merge_props(props(x ~ x))
-# merge_props(props(x ~ x), props(x ~ y))
-# merge_props(props(x ~ x, y ~ 1), props(x ~ y))
-# merge_props(props(x ~ x, y ~ 1), props(x ~ y, inherit = FALSE))
+# merge_props(props(x = ~ x))
+# merge_props(props(x = ~ x), props(x = ~ y))
+# merge_props(props(x = ~ x, y = 1), props(x = ~ y))
+# merge_props(props(x = ~ x, y = 1), props(x = ~ y, inherit = FALSE))
 merge_props <- function(parent = NULL, child = NULL) {
   if (is.null(parent)) return(child)
   if (is.null(child)) return(parent)

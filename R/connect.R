@@ -20,7 +20,7 @@
 #' @keywords internal
 #' @examples
 #' df <- data.frame(x = 1:10, y = 1:10)
-#' asis <- props(x ~ x, y ~ y)
+#' asis <- props(x = ~ x, y = ~ y)
 #'
 #' sluice(transform_scale(), asis, df)
 #' sluice(transform_scale(mult = -1), asis, df)

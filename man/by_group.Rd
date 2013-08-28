@@ -23,9 +23,9 @@ by_group(vs, am)
 by_group(vs + am)
 
 # One line
-ggvis(mtcars, props(x ~ disp, y ~ mpg), mark_line())
+ggvis(mtcars, props(x = ~ disp, y = ~ mpg), mark_line())
 # One line for each level of cyl
-ggvis(mtcars, by_group(cyl), props(x ~ disp, y ~ mpg), mark_line())
+ggvis(mtcars, by_group(cyl), props(x = ~ disp, y = ~ mpg), mark_line())
 
 # Special evaluation -------------------
 
