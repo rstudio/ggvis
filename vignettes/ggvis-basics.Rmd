@@ -5,7 +5,7 @@
 
 ```{r, echo = FALSE}
 library(knitr)
-library(ggvis)
+suppressPackageStartupMessages(library(ggvis))
 opts_chunk$set(comment = "#", error = TRUE, tidy = FALSE, eval = FALSE)
 ```
 
@@ -21,7 +21,7 @@ contain one or more:
 A basic plot looks like this:
 
 ```{r}
-ggvis(mtcars, props(x ~ wt, y ~ mpg), mark_symbol())
+ggvis(mtcars, props(x = ~ wt, y = ~ mpg), mark_symbol())
 ```
 
 The order of the arguments doesn't matter, so the following specifications 
@@ -29,9 +29,72 @@ will create the same plot. However, it's customary to arrange arguments in the
 order: data, prop, mark.
 
 ```{r}
-ggvis(mark_symbol(), mtcars, props(x ~ wt, y ~ mpg))
-ggvis(props(x ~ wt, y ~ mpg), mtcars, mark_symbol())
+ggvis(mark_symbol(), mtcars, props(x = ~ wt, y = ~ mpg))
+ggvis(props(x = ~ wt, y = ~ mpg), mtcars, mark_symbol())
 ```
+
+## Data sets
+
+You bring the data and ggvis brings the plots. Unlike ggvis, ggplot2 will eventually support multiple types of data, not just data frames.
+
+You'll can also use transformation functions which take a dataset and modify it in some way.  See `transform_bin()` and `transform_smooth()` for examples.
+
+## Property mappings
+
+The first thing you really need to understand is how to map variables in your data to visual properties. In ggvis, you do that with `props()`, analogous to `aes()` in ggplot2. `props()` takes a sequence of name-value pairs:
+
+* `props(x = ~wt, y = ~mpg)`: map x position to the `wt` variable, y position to `mpg`
+
+* `props(x = ~factor(cyl), y = mpg / wt)`: map x position to `cyl` transformed to be a factor, and y to `mpg` standardised by `wt`
+
+Note the use of `~`: we're using to refer to variables in the dataset, not variables in the local environment.
+
+Unlike ggplot2, you also use `props()` to set constant values:
+
+* `props(x = ~wt, y = ~mpg, stroke := "red", fill := "blue")`: as well as mapping `wt` to x position and `mpg` to y position, also _set_ the stroke to red and the fill to blue.
+
+Note that to set values we use `:=` and not `=`.  This is because these are _raw_ values, values that are meaningful to the display system, not _data_ values, values that make sense to you. 
+
+This gives us four combinations:
+
+* `x = ~mpg`: map a variable
+* `x = 1`: map a constant value 
+* `x := ~mpg`: set a variable
+* `x := 1`: set a constant
+
+Most of the time you'll use either `x = ~mpg` or `fill := "red"`. But there are cases where the other options are useful, as you'll see in other vignettes.
+
+## Marks
+
+Marks do the actual drawing. 
+
+* `mark_symbol`, for drawing points (like `geom_point`)
+
+* `mark_line`, for drawing general paths and polygons (like `geom_path`, or if ordered, `geom_line`)
+
+* `mark_rect`, for drawing rectangles (like `geom_rect`, `geom_bar`, `geom_tile`)
+
+* `mark_area`, for filled areas (like `geom_area` and `geom_ribbon`)
+
+* `mark_text`, for text (like `geom_text`)
+
+* `mark_arc`, for drawing circular arcs
+
+The basic properties are:
+
+ * `x`, the x-coordinate, `x2` and `width` for marks with horizontal dimension
+ * `y`, the y-coordinate, `y2` and `height` for marks with vertical dimension
+ * `stroke` and `fill` colours
+ * `opacity` of both stroke and fill
+ 
+`mark_symbol` also understands:
+ 
+ * `size`: the area of the symbol (in pixels)
+ * `shape`: the shape of the symbol
+
+Plus a quite few more that only apply to `mark_text` or `mark_arc`. See `?props` for a full list. 
+
+## More details
 
 There are also other optional components that you can include:
 
