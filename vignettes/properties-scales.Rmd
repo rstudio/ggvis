@@ -5,7 +5,7 @@
 
 ```{r, echo = FALSE}
 library(knitr)
-library(ggvis)
+suppressPackageStartupMessages(library(ggvis))
 opts_chunk$set(comment = "#", error = TRUE, tidy = FALSE, eval = FALSE)
 opts_knit$set(
   stop_on_error = 0L
@@ -43,35 +43,33 @@ geom_point(aes(x = wt, y = mpg), colour = "red", size = 5)
 But it ggvis, everything is a property:
 
 ```R
-mark_line(props(x ~ wt, y ~ mpg, stroke = "red", size = 5))
+mark_line(props(x = ~ wt, y = ~ mpg, stroke := "red", size := 5))
 ```
 
-This introduces `props()`, a convenient function for creating property objects and binding them to property names. The next chapter shows you how to create the property objects by hand, giving you more control over the specification at the cost of some extra typing.
+This section introduces `props()`, a convenient function for creating property objects and binding them to property names. The next chapter shows you how to create the property objects by hand, giving you more control over the specification at the cost of some extra typing.
 
 ### Setting vs mapping
 
 Props distinguishes between setting values to constants and mapping values to a variable based on whether you use `~` (mapping) or `=` (setting). The syntax is designed to remind you that, like a linear model, the properties specification isn't using the value of the variable `wt`, but its name. 
 
-* `props(x ~ displ, y ~ mpg)`: map x to engine displacement and y to miles 
+* `props(x = ~displ, y = ~mpg)`: map x to engine displacement and y to miles 
   per gallon
 
-* `props(stroke = "red", fill = "blue")`: set the stroke colour to red and the
+* `props(stroke := "red", fill := "blue")`: set the stroke colour to red and the
   fill colour to blue.
 
-* `props(x ~ displ, y = 10)`: map the x-position to displacement and set
+* `props(x = ~displ, y := 10)`: map the x-position to displacement and set
   the y position to 10 pixels.
 
-Those examples follow a common pattern: `=` is always used with a scalar, and `~` is always used with the name of the variable. What if you try the opposite?
+Those examples follow a common pattern: `=` is always scaled, and `:=` is never scaled. `~` is always used with the name of the variable. What if you try the opposite?
 
-* `props(x ~ 0)`: sets the x position to the value 0
-
-* `props(x = wt)`: is an error, because 
+* `props(x = 0)`: sets the x position to the data value 0
 
 It's also possible provide a scaled constant instead of a raw constant.
 That's useful when you want to label different layers in a plot:
 
 ```R
-ggvis(mtcars, props(x ~ wt, y ~ mpg), 
+ggvis(mtcars, props(x = ~wt, y = ~mpg), 
   mark_symbol(),
   branch_smooth(props(stroke = "lm"), method = "lm"),
   branch_smooth(props(stroke = "loess"))
@@ -81,10 +79,6 @@ ggvis(mtcars, props(x ~ wt, y ~ mpg),
 (Note this isn't currently supported in ggvis because of a limitation 
 of vega. See https://github.com/rstudio/ggvis/issues/29 for progress.)
 
-Trying to set a property to a variable won't work `props(x = wt)`, unless there
-is a variable called `wt` defined in the local environment, in which case its
-value will be used as constant.
-
 ### Valid properties
 
 Not all marks support all properties. The complete list of all properties is 
@@ -92,7 +86,7 @@ available in `?marks`, and mark functions will check that you've supplied them
 valid properties, and will endeavour to provide you a helpful suggestion:
 
 ```{r}
-mark_line(props(strke ~ cyl))
+mark_line(props(strke = ~cyl))
 # Error: Unknown properties: strke.
 # Did you mean: stroke?
 ```
@@ -105,7 +99,7 @@ is rendered.
 
 ```{r}
 # No error on creation
-p <- ggvis(mtcars, props(x ~ disp, y ~ mpg, strke ~ cyl), mark_symbol())
+p <- ggvis(mtcars, props(x = ~disp, y = ~mpg, strke = ~cyl), mark_symbol())
 # Error when attempt to display it
 print(p)
 # Error message currently not informative: see 
@@ -120,7 +114,7 @@ the local environment:
 ```{r}
 df <- data.frame(x = 1:10)
 f <- function(n) {
-  ggvis(df, props(x ~ x, y ~ x ^ n), mark_line())
+  ggvis(df, props(x = ~x, y = ~x ^ n), mark_line())
 }
 f(1)
 f(2)
@@ -130,7 +124,6 @@ Technically, ggvis uses the environment captured by the formula when it is
 created, which may be important if you're generating formulas in one function
 and using them in another. You can always override the environment by calling
 `prop()` and supplying the `env` argument.
-
 
 ## `prop()`
 
@@ -148,21 +141,19 @@ A prop has two key properties:
 
 Type        | Scaled | Common use | In props
 ------- ----|--------|-------------------------
-constant    | yes    | Pixel location, or exact colour | `x = 1`
-constant    | yes    | Annotation position in data space | `x ~ 1`
-variable    | no     | Variable already contains visual values | `x ~ I(colour)`
-variable    | no     | Map variable to property | `x ~ mpg`
-
+variable    | yes    | Map variable to property | `x ~ mpg`
+variable    | no     | Variable already contains visual values | `x := ~colour`
+constant    | yes    | Annotation position in data space | `x = 1`
+constant    | no     | Pixel location, or exact colour | `x := 1`
 
 ### Special evaluation and variables
 
 `prop()` doesn't do any special evaluation which means that you if you want a
-non-constant scale, you need to supply a quoted expression:
+variable, you need to supply a quoted expression or a one-sided formula:
 
 ```R
 prop(quote(x))
-var <- quote(x)
-prop(var)
+prop(~ x)
 ```
 
 If you have the name of a variable as a string, you can convert it a name with
@@ -189,7 +180,7 @@ specification and are usually created with `dscale` (short for default scale):
 
 ```R
 # Override the default data limits:
-ggvis(mtcars, props(x ~ disp, y ~ wt), 
+ggvis(mtcars, props(x = ~disp, y = ~wt), 
   mark_symbol(),
   dscale("x", "numeric", domain = c(50, 500), nice = FALSE),
   dscale("y", "numeric", domain = c(0, 6), nice = FALSE)
@@ -279,11 +270,13 @@ data. There's no default scale for font, but you could create one yourself:
 df <- data.frame(x = runif(5), y = runif(5), 
   labels = c("a", "b", "b", "a", "b"))
 ggvis(df, 
-  props(x ~ x, y ~ y, text = prop(quote(labels), scale = F), font ~ labels, 
-    fontSize = 40), 
+  props(x = ~x, y = ~y, text := ~labels, font = ~labels, 
+    fontSize := 40), 
   mark_text(),
   scale_ordinal("font", range = c("Helvetica Neue", "Times New Roman")))
 ```
+
+Note the use of `text := ~labels`: we don't want to scale the labels - they already make sense in the visual space.
 
 ### Multiple scales for one property
 
@@ -293,13 +286,14 @@ chart (which is a bad idea - read [this paper][dual-axis] for more details).
 If you do this, you will also need to add a scale object.
 
 ```R
-ggvis(mtcars, props(y ~ mpg), 
-  mark_symbol(props(x = prop(quote(disp), scale = "xdisp"))),
-  mark_symbol(props(x = prop(quote(wt), scale = "xwt"), stroke = "blue")),
+ggvis(mtcars, props(y = ~mpg), 
+  mark_symbol(props(x = prop(~disp, scale = "xdisp"))),
+  mark_symbol(props(x = prop(~wt, scale = "xwt"), fill := "blue")),
   dscale("x", "numeric", name = "xdisp"),
   dscale("x", "numeric", name = "xwt"),
   guide_axis("x", "xdisp", orient = "bottom"),
-  guide_axis("x", "xwt", orient = "bottom", properties = list(labels = props(fill = "blue")))
+  guide_axis("x", "xwt", orient = "bottom", offset = 20, properties = 
+    list(labels = props(fill := "blue")))
 )
 ```
 
@@ -311,19 +305,18 @@ except to force `stroke` and `fill` to use the same scale:
 
 ```R
 df <- data.frame(x = 1:5, y = 1:5, a = runif(5), b = -runif(5))
-p <- props(x ~ x, y ~ y, stroke ~ a, fill ~ b, strokeWidth = 5, size = 1000)
+p <- props(x = ~x, y = ~y, stroke = ~a, fill = ~b, strokeWidth := 5, size := 1000)
 ggvis(df, p, mark_symbol(),
-  guide_legend(fill = "stroke", properties = list(legend = props(y = 50)))
+  guide_legend(fill = "stroke", properties = list(legend = props(y := 50)))
 )
 
-p2 <- props(x ~ x, y ~ y, stroke ~ a, fill = prop(quote(b), scale = "stroke"), 
-  strokeWidth = 5, size = 1000)
+p2 <- props(x = ~x, y = ~y, stroke = ~a, fill = prop(~b, scale = "stroke"), 
+  strokeWidth := 5, size := 1000)
 ggvis(df, p2, mark_symbol())
 ```
 
 In this case we don't need to manually add the correct scale, because ggvis
 has detected it for us automatically.
-
 
 ### Property values
 
