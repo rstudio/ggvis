@@ -81,7 +81,6 @@ $(function(){ //DOM Ready
         delete ggv.pendingData[plotId];
       }
 
-      chart.update();
       ggv.updateGgvisDivSize(plotId);
 
       // When done resizing, update with new width and height
@@ -95,6 +94,8 @@ $(function(){ //DOM Ready
           chart.update();
         }
       });
+
+      chart.update();
     });
   });
 
