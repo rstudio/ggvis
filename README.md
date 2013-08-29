@@ -19,7 +19,7 @@ To install:
 ```R
 library(devtools)
 install_github(c("assertthat", "testthat"))
-install_github(c("httpuv", "shiny", "ggvis"), "rstudio")
+install_github("ggvis", "rstudio")
 ```
 
 Then check out the various demos in the `demo/` directory. Get started with
@@ -29,6 +29,7 @@ Then check out the various demos in the `demo/` directory. Get started with
 ## Vignettes
 
 As well as the function level documentation, there are some vignettes (in 
-`vignettes/`) that describe broader topics.  Once you've installed the package
-you can list all vignettes with `vignette(package = "ggvis")`.
+`vignettes/`) that describe broader topics - start with `ggvis-basics`. 
+Once you've installed the package you can list all vignettes with 
+`vignette(package = "ggvis")`.
 
