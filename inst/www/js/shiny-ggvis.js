@@ -76,7 +76,7 @@ $(function(){ //DOM Ready
       $el.data("ggvis-chart", chart);
 
       // If the data arrived earlier, use it.
-      if (ggv.data[plotId]) {
+      if (ggv.pendingData[plotId]) {
         chart.data(ggv.pendingData[plotId]);
         delete ggv.pendingData[plotId];
       }
