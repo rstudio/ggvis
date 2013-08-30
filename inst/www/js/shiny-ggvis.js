@@ -61,6 +61,7 @@ $(function(){ //DOM Ready
     if (!ggv.renderer) {
       ggv.renderer = message.renderer || "canvas";
       ggv.setRendererChooser(ggv.renderer);
+      ggv.updateDownloadButtonText();
     }
 
     // Save the spec
@@ -113,7 +114,7 @@ $(function(){ //DOM Ready
   // Given the name of a plot and an <a> element, set the href of that element
   // to the canvas content of the plot converted to PNG. This will set the href
   // when the link is clicked; the download happens when it is released.
-  ggv.setGgvisDownloadHref = function(plotId, el) {
+  ggv.updateDownloadLink = function(plotId, el) {
     var plot = $("#" + plotId + ".ggvis-output .marks")[0];
     var imageUrl;
 
@@ -154,16 +155,28 @@ $(function(){ //DOM Ready
     }
   };
 
+  ggv.updateDownloadButtonText = function() {
+    var $el = $("#ggvis_download");
+    if ($el) {
+      var filetype = "";
+      if      (ggv.renderer === "svg")    filetype = "SVG";
+      else if (ggv.renderer === "canvas") filetype = "PNG";
+
+      $el.text("Download " + filetype);
+    }
+  };
+
   // Attach event handlers to buttons
   $("button#quit").on("click", function() { window.close(); });
 
-  $("a#ggvis_download").on("click", function() {
+  $("#ggvis_download").on("click", function() {
     var plotId = $(this).data("plot-id");
-    ggv.setGgvisDownloadHref(plotId, this);
+    ggv.updateDownloadLink(plotId, this);
   });
 
   $("#ggvis_renderer").on("change", function() {
     ggv.setRenderer(this.value);
+    ggv.updateDownloadButtonText();
   });
 
 });
