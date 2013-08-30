@@ -108,13 +108,13 @@ view_dynamic <- function(x, renderer = "canvas", launch = TRUE, port = 8228) {
     sidebarPanel(
       uiOutput("ggvis_ui"),
       
-      div(
+      tags$div(
         tags$label("Renderer:", `for` ="ggvis_renderer"),
         tags$select(id = "ggvis_renderer",
           tags$option(value = "canvas", "Canvas"),
           tags$option(value = "svg", "SVG")
       ),
-      div(
+      tags$div(
         # Add an actionButton that quits the app and closes the browser window
         tags$button(id="quit", type="button", class="btn action-button", "Quit"),
         # Add PNG download button
