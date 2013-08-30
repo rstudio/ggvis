@@ -129,7 +129,10 @@ $(function(){ //DOM Ready
     }
 
     // Set download filename and data URL
-    el.setAttribute("download", plotId + "." + ggv.renderer);
+    var ext = "";
+    if      (ggv.renderer === "svg")    ext = ".svg";
+    else if (ggv.renderer === "canvas") ext = ".png";
+    el.setAttribute("download", plotId + ext);
     el.setAttribute("href", imageUrl);
   };
 
