@@ -56,7 +56,7 @@
   standard errror.
 }
 \section{Input}{
-  Currently \code{transform_bin} only works with data
+  Currently \code{transform_smooth} only works with data
   frames and requires the following properties:
 
   \itemize{ \item \code{x}, numeric, horizontal position
