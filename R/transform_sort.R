@@ -36,20 +36,20 @@ compute.transform_sort <- function(x, props, data) {
          " not in the specified list of props.")
   }
 
-  output <- sort(data, var = props[x$var])
+  output <- compute_sort(data, var = props[x$var])
   preserve_constants(data, output)
 }
 
-sort <- function(data, vars) UseMethod("sort")
+compute_sort <- function(data, vars) UseMethod("compute_sort")
 
-#' @S3method sort split_df
-sort.split_df <- function(data, vars) {
-  data[] <- lapply(data, sort, vars = vars)
+#' @S3method compute_sort split_df
+compute_sort.split_df <- function(data, vars) {
+  data[] <- lapply(data, compute_sort, vars = vars)
   data
 }
 
-#' @S3method sort data.frame
-sort.data.frame <- function(data, vars) {
+#' @S3method compute_sort data.frame
+compute_sort.data.frame <- function(data, vars) {
   cols <- lapply(vars, prop_value, data)
   idx <- do.call(order, args = cols)
   data[idx, ]
