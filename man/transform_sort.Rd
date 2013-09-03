@@ -6,8 +6,8 @@
 }
 \arguments{
   \item{var}{The variables to sort on. This is the variable
-  name after mapping.  For example, with \code{props(x = ~
-  mpg)}, you would use \code{"x"}, not \code{"mpg"}.
+  name after mapping.  For example, with \code{props(x =
+  ~mpg)}, you would use \code{"x"}, not \code{"mpg"}.
   Multiple variables can be used, as in \code{c("x",
   "y")}.}
 
@@ -34,7 +34,7 @@
 # Compare the output from the unsorted vs. sorted data
 # Unsorted
 ggvis(mtcars,
-  props(x = ~ wt, y = ~ mpg),
+  props(x = ~wt, y = ~mpg),
   mark_line(),
   mark_symbol(props(fill := NA))
 )
@@ -42,7 +42,7 @@ ggvis(mtcars,
 # Sorted
 ggvis(mtcars,
   transform_sort(),
-  props(x = ~ wt, y = ~ mpg),
+  props(x = ~wt, y = ~mpg),
   mark_line(),
   mark_symbol(props(fill := NA))
 )
@@ -51,25 +51,25 @@ ggvis(mtcars,
 ggvis(mtcars,
   by_group(factor(cyl)),
   transform_sort(),
-  props(x = ~ wt, y = ~ mpg, stroke = ~ factor(cyl)),
+  props(x = ~wt, y = ~mpg, stroke = ~factor(cyl)),
   mark_line(),
   mark_symbol(props(fill := NA))
 )
 
 # Sort on mpg column
-sluice(pipeline(mtcars, transform_sort()), props(x = ~ mpg))
+sluice(pipeline(mtcars, transform_sort()), props(x = ~mpg))
 # Same effect, but this time mpg is mapped to y
-sluice(pipeline(mtcars, transform_sort(var = "y")), props(y = ~ mpg))
+sluice(pipeline(mtcars, transform_sort(var = "y")), props(y = ~mpg))
 
 # Sort on multiple columns
 sluice(pipeline(mtcars, transform_sort(var = c("x", "y"))),
-  props(x = ~ cyl, y = ~ mpg))
+  props(x = ~cyl, y = ~mpg))
 
 # Use `decreasing` argument, which passed along to order()
 sluice(pipeline(mtcars, transform_sort(var = "x", decreasing = TRUE)),
-  props(x = ~ mpg))
+  props(x = ~mpg))
 
 # Sort on a calculated column (mpg mod 10)
-sluice(pipeline(mtcars, transform_sort()), props(x = ~ mpg \%\% 10) )
+sluice(pipeline(mtcars, transform_sort()), props(x = ~mpg \%\% 10) )
 }
 
