@@ -19,6 +19,31 @@
 #'   function used for sorting. Unnamed arguments will be dropped.
 #' @examples
 #'
+#' # Compare the output from the unsorted vs. sorted data
+#' # Unsorted
+#' ggvis(mtcars,
+#'   props(x = ~ wt, y = ~ mpg),
+#'   mark_line(),
+#'   mark_symbol(props(fill := NA))
+#' )
+#'
+#' # Sorted
+#' ggvis(mtcars,
+#'   transform_sort(),
+#'   props(x = ~ wt, y = ~ mpg),
+#'   mark_line(),
+#'   mark_symbol(props(fill := NA))
+#' )
+#'
+#' # With grouping
+#' ggvis(mtcars,
+#'   by_group(factor(cyl)),
+#'   transform_sort(),
+#'   props(x = ~ wt, y = ~ mpg, stroke = ~ factor(cyl)),
+#'   mark_line(),
+#'   mark_symbol(props(fill := NA))
+#' )
+#'
 #' # Sort on mpg column
 #' sluice(pipeline(mtcars, transform_sort()), props(x = ~ mpg))
 #' # Same effect, but this time mpg is mapped to y
