@@ -115,7 +115,13 @@ safe_vega_var <- function(x) {
   gsub(".", "\\.", x, fixed = TRUE)
 }
 
-empty <- function(x) length(x) == 0
+empty <- function(x) UseMethod("empty")
+
+#' @S3method empty default
+empty.default <- function(x) length(x) == 0
+
+#' @S3method empty transform
+empty.transform <- function(x) FALSE
 
 quickdf <- function(list) {
   class(list) <- "data.frame"

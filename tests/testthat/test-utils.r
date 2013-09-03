@@ -41,11 +41,16 @@ test_that("all_same behaves as expected", {
 })
 
 
-test_that("empty and compact behave as expected", {
+test_that("empty behaves as expected", {
   expect_true(empty(character(0)))
   expect_true(empty(logical(0)))
   expect_true(empty(list()))
   expect_true(empty(new.env()))
+
+  # Named list with no elements
+  x <- list(a=1)
+  x$a <- NULL
+  expect_true(empty(x))
 
   expect_false(empty(100))
   expect_false(empty(list(40)))
@@ -53,7 +58,13 @@ test_that("empty and compact behave as expected", {
   e$x <- 10
   expect_false(empty(e))
 
+  # Transform objects aren't considered empty
+  x <- structure(structure(list(), class = "transform"))
+  expect_false(empty(x))
+})
 
+
+test_that("compact behaves as expected", {
   # Compact drops empty vectors and lists, but keeps environments even if empty
   ne <- new.env()
   x <- list(a = 1, b = list(), c = character(0), e = e, ne = ne)
