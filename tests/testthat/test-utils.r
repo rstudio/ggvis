@@ -66,6 +66,8 @@ test_that("empty behaves as expected", {
 
 test_that("compact behaves as expected", {
   # Compact drops empty vectors and lists, but keeps environments even if empty
+  e <- new.env()
+  e$x <- 10
   ne <- new.env()
   x <- list(a = 1, b = list(), c = character(0), e = e, ne = ne)
   expect_identical(compact(x), list(a = 1, e = e, ne = ne))
