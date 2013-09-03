@@ -1,9 +1,22 @@
 #' Transformation: sort the data
+#'
+#' \code{transform_sort} is a data transformation that sorts a data object based
+#' on one or more columns in the data.
+#'
+#' @section Input:
+#' \code{transform_sort} takes a data frame or a split_df as input.
+#'
+#' @section Ouput:
+#'
+#' \code{transform_bin} returns a sorted data frame or split_df with the same
+#'   columns as the input. In the case of a split_df, each of the data frames
+#'   contained within is sorted.
+#'
 #' @param var The variables to sort on. This is the variable name after mapping.
 #'   For example, with \code{props(x = ~ mpg)}, you would use \code{"x"}, not
 #'   \code{"mpg"}. Multiple variables can be used, as in \code{c("x", "y")}.
-#' @param ... Named arguments for sort function. Unnamed arguments will
-#'   be dropped.
+#' @param ... Named arguments, which are passed along to the \code{order()}
+#'   function used for sorting. Unnamed arguments will be dropped.
 #' @examples
 #'
 #' # Sort on mpg column
@@ -14,6 +27,14 @@
 #' # Sort on multiple columns
 #' sluice(pipeline(mtcars, transform_sort(var = c("x", "y"))),
 #'   props(x = ~ cyl, y = ~ mpg))
+#'
+#' # Use `decreasing` argument, which passed along to order()
+#' sluice(pipeline(mtcars, transform_sort(var = "x", decreasing = TRUE)),
+#'   props(x = ~ mpg))
+#'
+#' # Sort on a calculated column (mpg mod 10)
+#' sluice(pipeline(mtcars, transform_sort()), props(x = ~ mpg %% 10) )
+#'
 #' @export
 transform_sort <- function(..., var = "x") {
   # Drop unnamed arguments
@@ -36,21 +57,21 @@ compute.transform_sort <- function(x, props, data) {
          " not in the specified list of props.")
   }
 
-  output <- compute_sort(data, var = props[x$var])
+  output <- compute_sort(data, x, var = props[x$var])
   preserve_constants(data, output)
 }
 
-compute_sort <- function(data, vars) UseMethod("compute_sort")
+compute_sort <- function(data, trans, vars) UseMethod("compute_sort")
 
 #' @S3method compute_sort split_df
-compute_sort.split_df <- function(data, vars) {
-  data[] <- lapply(data, compute_sort, vars = vars)
+compute_sort.split_df <- function(data, trans, vars) {
+  data[] <- lapply(data, compute_sort, trans = trans, vars = vars)
   data
 }
 
 #' @S3method compute_sort data.frame
-compute_sort.data.frame <- function(data, vars) {
+compute_sort.data.frame <- function(data, trans, vars) {
   cols <- lapply(vars, prop_value, data)
-  idx <- do.call(order, args = cols)
+  idx <- do.call(order, args = c(cols, trans$dots))
   data[idx, ]
 }
