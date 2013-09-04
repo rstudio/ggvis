@@ -82,3 +82,19 @@ test_that("sluicing by_group uses environment for evaluation", {
   x <- sp(mtc, by_group(`ceiling(foo/4)`))
   expect_equal(length(x), 1)
 })
+
+test_that("auto_split splits on categorical variables", {
+  df <- data.frame(num = runif(6), dt = Sys.time() + 1:6,
+    fac = factor(letters[1:3]), char = LETTERS[1:2], logi = c(T, F),
+    stringsAsFactors = FALSE)
+
+  p <- props(a = ~num, b = ~dt, c = ~fac, d = ~char, e = ~logi)
+
+  manual <- sluice(pipeline(df, by_group(fac, char, logi)), p)
+  auto   <- sluice(pipeline(df, auto_split()), p)
+  expect_identical(manual, auto)
+})
+
+test_that("auto_split objects aren't considered empty", {
+  expect_false(empty(auto_split()))
+})

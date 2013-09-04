@@ -65,3 +65,4 @@ Collate:
     'print.R'
     'branch.R'
     'transform_sort.R'
+    'auto_split.R'

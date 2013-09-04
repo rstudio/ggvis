@@ -235,6 +235,16 @@ prop_type.data.frame <- function(data, prop, processed = FALSE) {
   vector_type(value)
 }
 
+# Continuous variables are not countable; categorical variables are.
+prop_countable<- function(data, prop, processed = FALSE) {
+  type <- prop_type(data, prop, processed)
+  if (type == "NULL") return(NULL)
+  else if (type %in% c("numeric", "datetime")) return(FALSE)
+  else if (type %in% c("ordinal", "nominal", "logical")) return(TRUE)
+  else {
+    stop("Don't know whether prop type '", type, "' is countable")
+  }
+}
 
 #' Determine the numeric range of a variable
 #'
