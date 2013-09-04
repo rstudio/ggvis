@@ -120,9 +120,6 @@ empty <- function(x) UseMethod("empty")
 #' @S3method empty default
 empty.default <- function(x) length(x) == 0
 
-#' @S3method empty transform
-empty.transform <- function(x) FALSE
-
 quickdf <- function(list) {
   class(list) <- "data.frame"
   attr(list, "row.names") <- c(NA_integer_, -length(list[[1]]))

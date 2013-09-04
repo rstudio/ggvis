@@ -1,6 +1,6 @@
 context("transform_sort")
 
-test_that("transform_sort", {
+test_that("transform_sort works as expected", {
   # Default var, x
   dat <- sluice(pipeline(mtcars, transform_sort()), props(x = ~mpg))
   expect_identical(dat, mtcars[order(mtcars$mpg), ])
@@ -18,4 +18,8 @@ test_that("transform_sort", {
   dat <- sluice(pipeline(mtcars, transform_sort(decreasing = TRUE)),
     props(x = ~mpg))
   expect_identical(dat, mtcars[order(mtcars$mpg, decreasing = TRUE), ])
+})
+
+test_that("transform_sort objects are not considered empty", {
+  expect_false(empty(transform_sort()))
 })

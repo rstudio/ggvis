@@ -57,10 +57,6 @@ test_that("empty behaves as expected", {
   e <- new.env()
   e$x <- 10
   expect_false(empty(e))
-
-  # Transform objects aren't considered empty
-  x <- structure(structure(list(), class = "transform"))
-  expect_false(empty(x))
 })
 
 
