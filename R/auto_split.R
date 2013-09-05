@@ -28,8 +28,8 @@ format.auto_split <- function(x, ...) {
 connect.auto_split <- function(x, props, source = NULL, session = NULL) {
   source <- as.reactive(source)
   reactive({
-    # Get the quoted expression from props which are both variable and
-    # countable; NUll for all others.
+    # Return the quoted expression from props which are both variable and
+    # countable; return NULL for all others.
     split_vars <- lapply(props,
       function(prop, data) {
         if (prop$type == "variable" && prop_countable(data, prop)) {
