@@ -24,17 +24,24 @@ transform_density <- function(..., adjust = 1, kernel = "gaussian",
 #' @param ... Named arguments are passed on to the transform, unnamed
 #'   arguments are passed on to the branch.
 branch_density <- function(area = TRUE, ...) {
-  line_props <- props(x = ~x, y = ~y)
-  area_props <- props(x = ~x, y = ~y, y2 = 0, fillOpacity := 0.2)
-
   comps <- parse_components(..., drop_named = TRUE)
+
+  line_props <- merge_props(props(x = ~x, y = ~y), comps$props)
+  area_props <- merge_props(props(x = ~x, y = ~y, y2 = 0, fillOpacity := 0.2),
+    comps$props)
+
+  # Line shouldn't get fill-related props, and area shouldn't get
+  # stroke-related props.
+  line_props <- line_props[setdiff(names(line_props), c("fill", "fillOpacity"))]
+  area_props <- area_props[setdiff(names(area_props), c("stroke", "strokeOpacity"))]
+
   branch(
     transform_density(...),
     branch(
       comps$data,
       comps$marks,
-      if (area) mark_area(merge_props(area_props, comps$props)),
-      mark_line(merge_props(line_props, comps$props))
+      if (area) mark_area(area_props),
+      mark_line(line_props)
     )
   )
 }
