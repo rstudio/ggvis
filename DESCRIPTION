@@ -66,3 +66,4 @@ Collate:
     'branch.R'
     'transform_sort.R'
     'auto_split.R'
+    'branch_misc.R'
