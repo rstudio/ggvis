@@ -1,3 +1,4 @@
+S3method("[",ggvis_props)
 S3method("[",pipeline)
 S3method(apply_props,data.frame)
 S3method(apply_props,split_df)
