@@ -67,3 +67,4 @@ Collate:
     'transform_sort.R'
     'auto_split.R'
     'branch_misc.R'
+    'transform_density.R'
