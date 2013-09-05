@@ -88,8 +88,9 @@ test_that("auto_split splits on categorical variables", {
     fac = factor(letters[1:3]), char = LETTERS[1:2], logi = c(T, F),
     stringsAsFactors = FALSE)
 
-  p <- props(a = ~num, b = ~dt, c = ~fac, d = ~char, e = ~logi)
+  p <- props(a = ~num, b = ~dt, c = ~fac, d = ~char, e = ~logi, f = "const")
 
+  # Should only split on categorical variables; not continuous vars, or constants
   manual <- sluice(pipeline(df, by_group(fac, char, logi)), p)
   auto   <- sluice(pipeline(df, auto_split()), p)
   expect_identical(manual, auto)

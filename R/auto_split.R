@@ -28,11 +28,21 @@ format.auto_split <- function(x, ...) {
 connect.auto_split <- function(x, props, source = NULL, session = NULL) {
   source <- as.reactive(source)
   reactive({
-    split_vars <- vapply(props, prop_countable, data = source(),
-      FUN.VALUE = logical(1))
+    # Get the quoted expression from props which are both variable and
+    # countable; NUll for all others.
+    split_vars <- lapply(props,
+      function(prop, data) {
+        if (prop$type == "variable" && prop_countable(data, prop)) {
+          prop$value
+        } else {
+          NULL
+        }
+      },
+      data = source()
+    )
 
-    # Get quoted expressions to split on
-    split_vars <- unname(lapply(props[split_vars], function(prop) prop$value))
+    # Remove names and NULLs
+    split_vars <- compact(unname(split_vars))
 
     split_df(source(), split_vars, env = x$env)
   })
