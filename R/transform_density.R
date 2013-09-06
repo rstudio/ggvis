@@ -47,7 +47,7 @@ transform_density <- function(..., adjust = 1, kernel = "gaussian",
 #' @param area Should there be a shaded region drawn under the curve?
 #' @param ... Named arguments are passed on to the transform, unnamed
 #'   arguments are passed on to the branch.
-branch_density <- function(area = TRUE, ...) {
+branch_density <- function(..., area = TRUE) {
   comps <- parse_components(..., drop_named = TRUE)
 
   line_props <- merge_props(props(x = ~x, y = ~y), comps$props)

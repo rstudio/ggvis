@@ -15,7 +15,7 @@
 #'   branch_line(),
 #'   mark_symbol()
 #' )
-branch_line <- function(props = NULL, sort = TRUE, ...) {
+branch_line <- function(..., sort = TRUE) {
   branch(
     auto_split(),
     if (sort) transform_sort(...),
