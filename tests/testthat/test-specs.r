@@ -1,4 +1,4 @@
-context("Specs")
+context("specs")
 
 specs <- dir("../specs", pattern = "\\.[rR]$", full.names = TRUE)
 for (spec in specs) {
