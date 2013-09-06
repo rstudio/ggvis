@@ -1,0 +1,140 @@
+{
+	"data" : [
+		{
+			"name" : "df_176991690869283a6ffde232ed9aa63c_sort_974b4956",
+			"values" : [
+				{
+					"x" : 0.012628,
+					"y" : 0.15491
+				},
+				{
+					"x" : 0.022078,
+					"y" : 0.6055
+				},
+				{
+					"x" : 0.060366,
+					"y" : 0.73296
+				},
+				{
+					"x" : 0.15001,
+					"y" : 0.57415
+				},
+				{
+					"x" : 0.19294,
+					"y" : 0.48988
+				},
+				{
+					"x" : 0.39672,
+					"y" : 0.87945
+				},
+				{
+					"x" : 0.48332,
+					"y" : 0.9252
+				},
+				{
+					"x" : 0.57503,
+					"y" : 0.87007
+				},
+				{
+					"x" : 0.59242,
+					"y" : 0.23952
+				},
+				{
+					"x" : 0.7068,
+					"y" : 0.0064791
+				},
+				{
+					"x" : 0.82535,
+					"y" : 0.1755
+				},
+				{
+					"x" : 0.83873,
+					"y" : 0.36204
+				}
+			]
+		}
+	],
+	"scales" : [
+		{
+			"name" : "x",
+			"type" : "linear",
+			"reverse" : false,
+			"round" : false,
+			"clamp" : false,
+			"nice" : true,
+			"zero" : false,
+			"range" : "width",
+			"domain" : {
+				"fields" : [
+					{
+						"data" : "df_176991690869283a6ffde232ed9aa63c_sort_974b4956",
+						"field" : "data.x"
+					}
+				]
+			}
+		},
+		{
+			"name" : "y",
+			"type" : "linear",
+			"reverse" : false,
+			"round" : false,
+			"clamp" : false,
+			"nice" : true,
+			"zero" : false,
+			"range" : "height",
+			"domain" : {
+				"fields" : [
+					{
+						"data" : "df_176991690869283a6ffde232ed9aa63c_sort_974b4956",
+						"field" : "data.y"
+					}
+				]
+			}
+		}
+	],
+	"marks" : [
+		{
+			"type" : "line",
+			"properties" : {
+				"update" : {
+					"stroke" : {
+						"value" : "#000000"
+					},
+					"x" : {
+						"scale" : "x",
+						"field" : "data.x"
+					},
+					"y" : {
+						"scale" : "y",
+						"field" : "data.y"
+					}
+				}
+			},
+			"from" : {
+				"data" : "df_176991690869283a6ffde232ed9aa63c_sort_974b4956"
+			}
+		}
+	],
+	"width" : 600,
+	"height" : 400,
+	"legends" : [],
+	"axes" : [
+		{
+			"type" : "x",
+			"scale" : "x",
+			"orient" : "bottom",
+			"titleOffset" : 0,
+			"layer" : "back",
+			"grid" : true
+		},
+		{
+			"type" : "y",
+			"scale" : "y",
+			"orient" : "left",
+			"titleOffset" : 0,
+			"layer" : "back",
+			"grid" : true
+		}
+	],
+	"padding" : null
+}
