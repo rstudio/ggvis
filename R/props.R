@@ -92,7 +92,11 @@ check_unscaled_form <- function(x) {
 format.ggvis_props <- function(x, ...) {
   labels <- lapply(x, format, ...)
   if (length(labels) > 0) {
-    paste0("* ", names(x), ": ", labels, collapse = "\n")  
+    inherit <- if (!attr(x, "inherit")) "\ninherit: FALSE" else ""
+    paste0(
+      paste0("* ", names(x), ": ", labels, collapse = "\n"),
+      inherit,
+      sep = "\n")
   } else {
     "props()"
   }
@@ -107,7 +111,7 @@ is.ggvis_props <- function(x) inherits(x, "ggvis_props")
 
 #' @S3method [ ggvis_props
 `[.ggvis_props` <- function(x, idx) {
-  structure(NextMethod(), inherit = x$inherit, class = "ggvis_props")
+  structure(NextMethod(), inherit = attr(x, "inherit"), class = "ggvis_props")
 }
 
 # Merge two ggvis_props objects
@@ -123,7 +127,8 @@ merge_props <- function(parent = NULL, child = NULL) {
 
   if (identical(attr(child, "inherit"), FALSE)) return(child)
 
-  structure(merge_vectors(parent, child), class = "ggvis_props")
+  structure(merge_vectors(parent, child), inherit = attr(parent, "inherit"),
+    class = "ggvis_props")
 }
 
 is.formula <- function(x) inherits(x, "formula")

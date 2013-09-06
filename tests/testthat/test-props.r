@@ -93,3 +93,17 @@ test_that("props uses environment in formulas", {
   # Should get val from gen_formula environment, where x~val was defined
   expect_identical(prop_value(p$x, dat), 21:22)
 })
+
+test_that("merging props", {
+  # Utility function: sort props by name
+  sortp <- function(p) p[sort(names(p))]
+
+  p_i  <- props(x=~a, z:="red")
+  q_i  <- props(y=~b, z:="blue")
+  q_ni <- props(y=~b, z:="blue", inherit=FALSE)
+
+  expect_equal(sortp(merge_props(p_i, q_i)), props(x=~a, y=~b, z:="blue"))
+  expect_equal(sortp(merge_props(p_i, q_ni)), q_ni)
+  expect_equal(sortp(merge_props(q_ni, p_i)),
+    props(x=~a, y=~b, z:="red", inherit = FALSE))
+})
