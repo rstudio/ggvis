@@ -1,18 +1,18 @@
 #' Transformation: density estimate
 #'
-#' \code{transform_density} is a data transformation that computes a kernel 
+#' \code{transform_density} is a data transformation that computes a kernel
 #' density estimate from a dataset. \code{branch_density} combines
-#' \code{transform_density} with \code{mark_line} and \code{mark_area} 
+#' \code{transform_density} with \code{mark_line} and \code{mark_area}
 #' to display a smooth line and its standard errror.
 #'
 #' @section Input:
 #' Currently \code{transform_density} only works with data frames and requires
 #' the following properties:
-#' 
+#'
 #' \itemize{
 #'   \item \code{x}, numeric, horizontal position
 #' }
-#' 
+#'
 #' @section Ouput:
 #'
 #' \code{transform_density} creates a data frame with columns:
@@ -32,6 +32,37 @@
 #' @param na.rm If \code{TRUE} missing values will be silently removed,
 #'   otherwise they will be removed with a warning.
 #' @export
+#' @examples
+#' # Basic density estimate
+#' ggvis(faithful, props(x = ~waiting), branch_density())
+#'
+#' # Smaller bandwidth
+#' ggvis(faithful, props(x = ~waiting, fill :="lightblue"),
+#'   branch_density(adjust = .25)
+#' )
+#'
+#' # Control stroke and fill
+#' ggvis(faithful, props(x = ~waiting),
+#'   branch_density(props(stroke := "#cc3333", strokeWidth := 3,
+#'     fill := "#666699", fillOpacity := 0.6))
+#' )
+#'
+#' # With groups
+#' ggvis(PlantGrowth, by_group(group),
+#'   props(x = ~weight, stroke = ~group, fill = ~group, fillOpacity := 0.2),
+#'   branch_density()
+#' )
+#'
+#' # Using various arguments: adjust na.rm, n, area, kernel
+#' mtc <- mtcars
+#' mtc$mpg[5:10] <- NA
+#' ggvis(mtc,
+#'   props(x = ~mpg, y = ~mpg),
+#'   branch_density(adjust = 0.3, n = 100, area = FALSE, kernel = "rectangular",
+#'     props(stroke := "#cc0000"))
+#' )
+#'
+#'
 transform_density <- function(..., adjust = 1, kernel = "gaussian",
                              trim = FALSE, n = 200L, na.rm = FALSE) {
   # Drop unnamed arguments
