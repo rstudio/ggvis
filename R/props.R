@@ -107,7 +107,7 @@ is.ggvis_props <- function(x) inherits(x, "ggvis_props")
 
 #' @S3method [ ggvis_props
 `[.ggvis_props` <- function(x, idx) {
-  structure(.subset(x, idx), inherit = x$inherit, class = "ggvis_props")
+  structure(NextMethod(), inherit = x$inherit, class = "ggvis_props")
 }
 
 # Merge two ggvis_props objects
