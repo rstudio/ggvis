@@ -16,9 +16,11 @@
 #'   mark_symbol()
 #' )
 branch_line <- function(..., sort = TRUE) {
+  comps <- parse_components(..., drop_named = TRUE)
+
   branch(
     auto_split(),
     if (sort) transform_sort(...),
-    mark_line(props)
+    mark_line(comps$props)
   )
 }
