@@ -108,7 +108,7 @@ prop_value <- function(x, data) {
       call. = FALSE)
   }
 
-  rep_len(col, nrow(data))
+  rep(col, length.out = nrow(data))
 }
 
 # The name of the property: used for naming the variable it produces in the
