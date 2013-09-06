@@ -1,4 +1,27 @@
 #' Transformation: density estimate
+#'
+#' \code{transform_density} is a data transformation that computes a kernel 
+#' density estimate from a dataset. \code{branch_density} combines
+#' \code{transform_density} with \code{mark_line} and \code{mark_area} 
+#' to display a smooth line and its standard errror.
+#'
+#' @section Input:
+#' Currently \code{transform_density} only works with data frames and requires
+#' the following properties:
+#' 
+#' \itemize{
+#'   \item \code{x}, numeric, horizontal position
+#' }
+#' 
+#' @section Ouput:
+#'
+#' \code{transform_density} creates a data frame with columns:
+#'
+#' \itemize{
+#'  \item \code{x}: regularly spaced grid of \code{n} locations
+#'  \item \code{y}: density estimate
+#' }
+#'
 #' @param adjust Bandwidth adjustment. See \code{\link{density}} for details.
 #' @param kernel Smoothing kernel. See \code{\link{density}} for details.
 #' @param trim If \code{TRUE}, the default, density estimates are trimmed to the
@@ -19,6 +42,7 @@ transform_density <- function(..., adjust = 1, kernel = "gaussian",
     na.rm = na.rm, dots = dots)
 }
 
+#' @rdname transform_density
 #' @export
 #' @param area Should there be a shaded region drawn under the curve?
 #' @param ... Named arguments are passed on to the transform, unnamed

@@ -1,9 +1,12 @@
 \name{transform_density}
+\alias{branch_density}
 \alias{transform_density}
 \title{Transformation: density estimate}
 \usage{
   transform_density(..., adjust = 1, kernel = "gaussian",
     trim = FALSE, n = 200L, na.rm = FALSE)
+
+  branch_density(area = TRUE, ...)
 }
 \arguments{
   \item{adjust}{Bandwidth adjustment. See
@@ -24,8 +27,33 @@
   \item{na.rm}{If \code{TRUE} missing values will be
   silently removed, otherwise they will be removed with a
   warning.}
+
+  \item{area}{Should there be a shaded region drawn under
+  the curve?}
+
+  \item{...}{Named arguments are passed on to the
+  transform, unnamed arguments are passed on to the
+  branch.}
 }
 \description{
-  Transformation: density estimate
+  \code{transform_density} is a data transformation that
+  computes a kernel density estimate from a dataset.
+  \code{branch_density} combines \code{transform_density}
+  with \code{mark_line} and \code{mark_area} to display a
+  smooth line and its standard errror.
+}
+\section{Input}{
+  Currently \code{transform_density} only works with data
+  frames and requires the following properties:
+
+  \itemize{ \item \code{x}, numeric, horizontal position }
+}
+
+\section{Ouput}{
+  \code{transform_density} creates a data frame with
+  columns:
+
+  \itemize{ \item \code{x}: regularly spaced grid of
+  \code{n} locations \item \code{y}: density estimate }
 }
 
