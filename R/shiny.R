@@ -49,6 +49,7 @@ ggvis_output <- function(id) {
       tags$script(src = "ggvis/lib/d3.js"),
       tags$script(src = "ggvis/lib/vega.js"),
       tags$script(src = "ggvis/lib/QuadTree.js"),
+      tags$script(src = "ggvis/js/ggvis.js"),
       tags$script(src = "ggvis/js/shiny-ggvis.js"),
       tags$link(rel = "stylesheet", type = "text/css",
                 href = "ggvis/css/ggvis.css"),

@@ -51,15 +51,12 @@ view_static <- function(x, renderer = "canvas", launch = interactive()) {
   
   js <- paste0(
     '<script type="text/javascript">
-      function parse(spec) {
-        vg.parse.spec(spec, function(chart) {
-          view = chart({el:"#vis", renderer: "', renderer, '"}).update();
-        });
-      }
-      parse(', vega_json, ');
+      // $(function(){ //DOM Ready
+      ggvis.parseSpec(', vega_json, ', "vis");
+      // });
     </script>')
   
-  body <- paste('<div id="vis"></div>', js, sep ='\n')
+  body <- paste('<div id="vis" class="ggvis-output"></div>', js, sep ='\n')
   
   html_file <- file.path(temp_dir, "plot.html")
   writeLines(whisker.render(template, list(head = '', body = body)),
@@ -74,18 +71,26 @@ copy_www_resources <- function(destdir) {
     "lib/jquery-1.9.1.js",
     "lib/d3.js",
     "lib/vega.js",
-    "lib/QuadTree.js"
+    "lib/QuadTree.js",
+    "lib/jquery-ui/js/jquery-ui-1.10.3.custom.js",
+    "lib/jquery-ui",
+    "js/ggvis.js",
+    "css/ggvis.css"
   )
   
   lapply(files, function(file) {
     src <- system.file("www", file, package = "ggvis")
-    
+
     destfile <- file.path(destdir, file)
     parent_dir <- dirname(destfile)
     if (!dir.exists(parent_dir))
-      dir.create(parent_dir)
-    
-    file.copy(src, destfile)
+      dir.create(parent_dir, recursive = TRUE)
+
+    if (file.info(src)$isdir) {
+      file.copy(src, dirname(destfile), recursive = TRUE)
+    } else {
+      file.copy(src, destfile)
+    }
   })
 }
 
@@ -104,7 +109,7 @@ view_dynamic <- function(x, renderer = "canvas", launch = TRUE, port = 8228) {
   
   # Make our resources available
   ui <- pageWithSidebar(
-    headerPanel("Ggvis plot"),
+    headerPanel("ggvis plot"),
     sidebarPanel(
       uiOutput("ggvis_ui"),
       
