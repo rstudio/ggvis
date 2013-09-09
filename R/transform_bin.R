@@ -131,7 +131,7 @@ bin.split_df <- function(x, x_var, ...) {
 
 #' @S3method bin data.frame
 bin.data.frame <- function(x, x_var, ...) {
-  x_val <- prop_value(x_var, x)
+  x_val <- remove_missing(prop_value(x_var, x), warn_na = !trans$na.rm)
   bin(x_val, ...)
 }
 

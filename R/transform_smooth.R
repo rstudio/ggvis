@@ -154,10 +154,10 @@ smooth.data.frame <- function(data, trans, x_var, y_var) {
   assert_that(is.flag(trans$na.rm))
 
   env <- new.env(parent = environment(trans$formula))
-  env$data <- data.frame(
+  env$data <- remove_missing(data.frame(
     x = prop_value(x_var, data),
     y = prop_value(y_var, data)
-  )
+  ))
 
   # Create model call and combine with ... captured earlier
   call <- c(list(as.name(trans$method), trans$formula, data = quote(data)),

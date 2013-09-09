@@ -129,13 +129,7 @@ compute_density.data.frame <- function(data, trans, x_var, y_var) {
   assert_that(length(trans$n) == 1, trans$n >= 0)
   assert_that(is.flag(trans$na.rm))
 
-  x_vals <- prop_value(x_var, data)
-
-  missing <- is.na(x_vals)
-  x_vals <- x_vals[!missing]
-  if (any(missing) && !trans$na.rm) {
-    warning("Removed ", sum(missing), " rows containing missing values.")
-  }
+  x_vals <- remove_missing(prop_value(x_var, data), warn_na = !trans$na.rm)
 
   # Build up argument list for density()
   args <- c(list(x_vals, adjust = trans$adjust, kernel = trans$kernel,

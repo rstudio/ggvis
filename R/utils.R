@@ -44,13 +44,6 @@ merge_vectors <- function(a, b) {
   x[!drop_idx]
 }
 
-merge_df <- function(a, b) {
-  if (is.null(a) || nrow(a) == 0 || ncol(a) == 0) return(b)
-  if (is.null(b) || nrow(b) == 0 || ncol(b) == 0) return(a)
-
-  cbind(a[setdiff(names(a), names(b))], b)
-}
-
 # Tests whether all elements in a vector are the same, respecting NA.
 # Returns TRUE for zero-length vectors
 all_same <- function(x) {
