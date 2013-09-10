@@ -27,8 +27,6 @@ ggvis.parseSpec = function(spec, plotId) {
       delete ggvis.pendingData[plotId];
     }
 
-    ggvis.updateGgvisDivSize(plotId);
-
     // When done resizing, update with new width and height
     $el.resizable({
       helper: "ui-resizable-helper",
@@ -42,6 +40,7 @@ ggvis.parseSpec = function(spec, plotId) {
     });
 
     chart.update();
+    ggvis.updateGgvisDivSize(plotId);
   });
 };
 
