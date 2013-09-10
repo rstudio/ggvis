@@ -1,2 +1,11 @@
+.vega {
+  -webkit-user-select: none;
+}
+.plots>div {
+  float: left;
+}
+
 /* Outline box when resizing a plot */
-.ui-resizable-helper { border: 1px dotted #999; }
+.ui-resizable-helper {
+  border: 1px dotted #999;
+}
