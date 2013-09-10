@@ -151,7 +151,7 @@ renderControls <- function(r_gv, session = NULL) {
   })
 }
 
-
+# Like Shiny's pageWithSidebar, but without the extra head code and wrappers
 divWithSidebar <- function(headerPanel, sidebarPanel, mainPanel) {
   div(
     class = "container-fluid",
