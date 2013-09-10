@@ -150,3 +150,17 @@ renderControls <- function(r_gv, session = NULL) {
     }
   })
 }
+
+
+divWithSidebar <- function(headerPanel, sidebarPanel, mainPanel) {
+  div(
+    class = "container-fluid",
+    div(class = "row-fluid",
+        headerPanel
+    ),
+    div(class = "row-fluid",
+        sidebarPanel,
+        mainPanel
+    )
+  )
+}

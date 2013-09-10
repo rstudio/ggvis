@@ -45,18 +45,39 @@ view_static <- function(x, renderer = "canvas", launch = interactive()) {
   
   spec <- as.vega(x, dynamic = FALSE)
   vega_json <- toJSON(spec, pretty = TRUE)
-  
+
+  plot_id <- "plot1"
+
   template <- paste(readLines(system.file('index.html', package='ggvis')),
     collapse='\n')
   
-  js <- paste0(
-    '<script type="text/javascript">
-      // $(function(){ //DOM Ready
-      ggvis.parseSpec(', vega_json, ', "vis");
-      // });
-    </script>')
-  
-  body <- paste('<div id="vis" class="ggvis-output"></div>', js, sep ='\n')
+  body <- divWithSidebar(
+    headerPanel("ggvis plot"),
+    sidebarPanel(
+      tags$div(
+        tags$label("Renderer:", `for` ="ggvis_renderer"),
+        tags$select(id = "ggvis_renderer",
+          tags$option(value = "canvas", "Canvas"),
+          tags$option(value = "svg", "SVG")
+      ),
+      tags$div(
+        # Add an actionButton that quits the app and closes the browser window
+        tags$button(id="quit", type="button", class="btn action-button", "Quit"),
+        # Add PNG download button
+        tags$a(id = "ggvis_download", class = "btn", style = "float:right;",
+          `data-plot-id` = plot_id, "Download")
+        )
+      )
+    ),
+    mainPanel(
+      div(id = plot_id, class = "ggvis-output"),
+      tags$script(type = "text/javascript",
+        paste0('ggvis.parseSpec(', vega_json, ', "', plot_id, '");')
+      )
+    )
+  )
+
+  body <- format(body)
   
   html_file <- file.path(temp_dir, "plot.html")
   writeLines(whisker.render(template, list(head = '', body = body)),
@@ -67,19 +88,9 @@ view_static <- function(x, renderer = "canvas", launch = interactive()) {
 }
 
 copy_www_resources <- function(destdir) {
-  files <- c(
-    "lib/jquery-1.9.1.js",
-    "lib/d3.js",
-    "lib/vega.js",
-    "lib/QuadTree.js",
-    "lib/jquery-ui/js/jquery-ui-1.10.3.custom.js",
-    "lib/jquery-ui",
-    "js/ggvis.js",
-    "css/ggvis.css"
-  )
-  
-  lapply(files, function(file) {
-    src <- system.file("www", file, package = "ggvis")
+  # Copies a file/dir from an installed package to the destdir (with path)
+  copy_www_file <- function(file, pkg) {
+    src <- system.file("www", file, package = pkg)
 
     destfile <- file.path(destdir, file)
     parent_dir <- dirname(destfile)
@@ -91,7 +102,26 @@ copy_www_resources <- function(destdir) {
     } else {
       file.copy(src, destfile)
     }
-  })
+  }
+
+  shiny_files <- c(
+    "shared/bootstrap/css/bootstrap.min.css",
+    "shared/bootstrap/js/bootstrap.min.js",
+    "shared/bootstrap/css/bootstrap-responsive.min.css"
+  )
+  ggvis_files <- c(
+    "lib/jquery-1.9.1.js",
+    "lib/d3.js",
+    "lib/vega.js",
+    "lib/QuadTree.js",
+    "lib/jquery-ui/js/jquery-ui-1.10.3.custom.js",
+    "lib/jquery-ui",
+    "js/ggvis.js",
+    "css/ggvis.css"
+  )
+
+  lapply(shiny_files, copy_www_file, pkg = "shiny")
+  lapply(ggvis_files, copy_www_file, pkg = "ggvis")
 }
 
 #' @rdname print.ggvis
