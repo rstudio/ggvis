@@ -33,7 +33,7 @@ print.ggvis <- function(x, dynamic = NA, ...) {
 #' @export
 #' @importFrom RJSONIO toJSON
 #' @importFrom whisker whisker.render
-view_static <- function(x, renderer = "canvas", launch = interactive()) {
+view_static <- function(x, renderer = "svg", launch = interactive()) {
   
   if (!(renderer %in% c("canvas", "svg")))
     stop("renderer must be 'canvas' or 'svg'")
@@ -78,7 +78,7 @@ view_static <- function(x, renderer = "canvas", launch = interactive()) {
           // Save the spec
           ggvis.specs["', plot_id, '"] = spec;
 
-          ggvis.renderer = "canvas";
+          ggvis.renderer = "', renderer, '";
           ggvis.setRendererChooser(ggvis.renderer);
           ggvis.updateDownloadButtonText();
 
@@ -141,7 +141,7 @@ copy_www_resources <- function(destdir) {
 #' @importFrom whisker whisker.render
 #' @importFrom shiny pageWithSidebar headerPanel sidebarPanel uiOutput
 #'   mainPanel tags observe runApp stopApp renderUI
-view_dynamic <- function(x, renderer = "canvas", launch = TRUE, port = 8228) {
+view_dynamic <- function(x, renderer = "svg", launch = TRUE, port = 8228) {
   
   if (!(renderer %in% c("canvas", "svg")))
     stop("renderer must be 'canvas' or 'svg'")
