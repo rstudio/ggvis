@@ -1,22 +1,26 @@
 library(ggvis)
 
-# Slider and select input in a transform
-ggvis(mtcars, props(x = ~ wt, y = ~ mpg),
+# Slider input in transform_smooth
+ggvis(mtcars, props(x = ~wt, y = ~mpg),
   mark_symbol(),
-  branch_smooth(
-    n = input_slider(2, 80, value = 5, step = 1, label = "Interpolation points"),
-    method = input_select(c("Linear" = "lm", "LOESS" = "loess"), label = "Method")
+  branch_smooth(method = "loess", formula = y ~ x,
+    span = input_slider(0.2, 1, step = 0.05, label = "span"))
+)
+
+# Slider and select input in transform_density
+ggvis(mtcars, props(x = ~wt),
+  branch_density(
+    adjust = input_slider(.1, 2, value = 1, step = .1, label = "Bandwidth adjustment"),
+    kernel = input_select(
+      c("Gaussian" = "gaussian", "Epanechnikov" = "epanechnikov",
+        "Rectangular" = "rectangular", "Triangular" = "triangular",
+        "Biweight" = "biweight", "Cosine" = "cosine", "Optcosine" = "optcosine"),
+      label = "Kernel")
   )
 )
 
-ggvis(mtcars, props(x = ~ wt, y = ~ mpg),
-  mark_symbol(),
-  branch_smooth(method = "loess", formula = y ~ x,
-    span = input_slider(0.2, 1, label = "span"))
-)
-
 # Example with value map function
-ggvis(mtcars, props(x = ~ wt, y = ~ mpg),
+ggvis(mtcars, props(x = ~wt, y = ~mpg),
   mark_symbol(),
   branch_smooth(
     n = input_select(
@@ -28,7 +32,7 @@ ggvis(mtcars, props(x = ~ wt, y = ~ mpg),
 )
 
 # Checkbox input
-ggvis(mtcars, props(x = ~ wt, y = ~ mpg),
+ggvis(mtcars, props(x = ~wt, y = ~mpg),
   mark_symbol(
     props(opacity := input_checkbox(label = "Semi-transparent",
                                    map = function(val) ifelse(val, .3, 1)))
@@ -39,7 +43,7 @@ ggvis(mtcars, props(x = ~ wt, y = ~ mpg),
 )
 
 # Text input
-ggvis(mtcars, props(x = ~ wt, y = ~ mpg),
+ggvis(mtcars, props(x = ~wt, y = ~mpg),
   mark_symbol(
     props(fill := input_text(label = "Point color", value = "red"))
   ),
@@ -49,7 +53,7 @@ ggvis(mtcars, props(x = ~ wt, y = ~ mpg),
 )
 
 # Numeric input
-ggvis(mtcars, props(x = ~ wt, y = ~ mpg),
+ggvis(mtcars, props(x = ~wt, y = ~mpg),
   mark_symbol(
     props(size := input_numeric(value = 25, label = "Point size"))
   ),
@@ -59,7 +63,7 @@ ggvis(mtcars, props(x = ~ wt, y = ~ mpg),
 )
 
 # Radio buttons
-ggvis(mtcars, props(x = ~ wt, y = ~ mpg),
+ggvis(mtcars, props(x = ~wt, y = ~mpg),
   mark_symbol(),
   branch_smooth(
     method = input_radiobuttons(c("LOESS" = "loess", "Linear" = "lm"),
@@ -71,7 +75,7 @@ ggvis(mtcars, props(x = ~ wt, y = ~ mpg),
 )
 
 # Checkbox group
-ggvis(mtcars, props(x = ~ wt, y = ~ mpg),
+ggvis(mtcars, props(x = ~wt, y = ~mpg),
   mark_symbol(
     props(fill := input_checkboxgroup(
       choices = c("Red" = "r", "Green" = "g", "Blue" = "b"),
@@ -87,8 +91,8 @@ ggvis(mtcars, props(x = ~ wt, y = ~ mpg),
 # Constant values, raw (not on a scale)
 ggvis(mtcars,
   props(
-    x = ~ wt,
-    y = ~ mpg,
+    x = ~wt,
+    y = ~mpg,
     fill := input_select(c("red", "blue"), label = "Color"),
     size := input_slider(10, 1000, 100, label = "Size"),
     opacity := input_slider(0, 1, 1, label = "Opacity")
@@ -108,7 +112,7 @@ new_vals <- input_select(c("Set A" = "A", "Set B" = "B"),
   })
 
 ggvis(mtcars,
-  props(x = ~ wt, y = ~ mpg, fill = new_vals),
+  props(x = ~wt, y = ~mpg, fill = new_vals),
   mark_symbol()
 )
 
@@ -118,8 +122,8 @@ mtc$colour1 <- c("red", "black")
 mtc$colour2 <- c("blue", "gray")
 ggvis(mtc,
   props(
-    x = ~ wt,
-    y = ~ mpg,
+    x = ~wt,
+    y = ~mpg,
     fill := input_select(c("colour1", "colour2"), map = as.name)
   ),
   mark_symbol()
@@ -128,8 +132,8 @@ ggvis(mtc,
 # Variable values
 ggvis(mtcars,
   props(
-    x = ~ wt,
-    y = ~ mpg,
+    x = ~wt,
+    y = ~mpg,
     fill = input_select(c("mpg", "wt"), map = as.name)
   ),
   mark_symbol()
