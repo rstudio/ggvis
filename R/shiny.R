@@ -164,3 +164,24 @@ divWithSidebar <- function(headerPanel, sidebarPanel, mainPanel) {
     )
   )
 }
+
+# Controls for choosing a renderer, downloading an image, and quitting
+ggvisControlGroup <- function(plot_id) {
+  tagList(
+    # Selector for canvas/SVG rendering
+    tags$div(
+      tags$label("Renderer:", `for` ="ggvis_renderer"),
+      tags$select(id = "ggvis_renderer",
+        tags$option(value = "canvas", "Canvas"),
+        tags$option(value = "svg", "SVG")
+      )
+    ),
+    tags$div(
+      # An actionButton that quits the app and closes the browser window
+      tags$button(id="quit", type="button", class="btn action-button", "Quit"),
+      # PNG/SVG download button
+      tags$a(id = "ggvis_download", class = "btn", style = "float:right;",
+        `data-plot-id` = plot_id, "Download")
+    )
+  )
+}

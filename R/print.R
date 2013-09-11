@@ -54,20 +54,7 @@ view_static <- function(x, renderer = "svg", launch = interactive()) {
   body <- divWithSidebar(
     headerPanel("ggvis plot"),
     sidebarPanel(
-      tags$div(
-        tags$label("Renderer:", `for` ="ggvis_renderer"),
-        tags$select(id = "ggvis_renderer",
-          tags$option(value = "canvas", "Canvas"),
-          tags$option(value = "svg", "SVG")
-      ),
-      tags$div(
-        # Add an actionButton that quits the app and closes the browser window
-        tags$button(id="quit", type="button", class="btn action-button", "Quit"),
-        # Add PNG download button
-        tags$a(id = "ggvis_download", class = "btn", style = "float:right;",
-          `data-plot-id` = plot_id, "Download")
-        )
-      )
+      ggvisControlGroup(plot_id)
     ),
     mainPanel(
       div(id = plot_id, class = "ggvis-output"),
@@ -153,21 +140,7 @@ view_dynamic <- function(x, renderer = "svg", launch = TRUE, port = 8228) {
     headerPanel("ggvis plot"),
     sidebarPanel(
       uiOutput("ggvis_ui"),
-      
-      tags$div(
-        tags$label("Renderer:", `for` ="ggvis_renderer"),
-        tags$select(id = "ggvis_renderer",
-          tags$option(value = "canvas", "Canvas"),
-          tags$option(value = "svg", "SVG")
-      ),
-      tags$div(
-        # Add an actionButton that quits the app and closes the browser window
-        tags$button(id="quit", type="button", class="btn action-button", "Quit"),
-        # Add PNG download button
-        tags$a(id = "ggvis_download", class = "btn", style = "float:right;",
-          `data-plot-id` = plot_id, "Download")
-        )
-      )
+      ggvisControlGroup(plot_id)
     ),
     mainPanel(
       ggvis_output(plot_id)
