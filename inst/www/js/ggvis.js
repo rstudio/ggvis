@@ -7,6 +7,7 @@ var ggvis = window.ggvis = window.ggvis || {};  // If already defined, just exte
 ggvis.pendingData = {};  // data objects that have been received but not yet used
 ggvis.charts = {};       // all vega chart objects on the page
 ggvis.specs = {};        // all specs
+ggvis.initialized = {};  // track whether each chart has been updated at least once
 ggvis.renderer = null;
 
 
@@ -39,8 +40,14 @@ ggvis.parseSpec = function(spec, plotId) {
       }
     });
 
-    chart.update();
-    ggvis.updateGgvisDivSize(plotId);
+    if (ggvis.data_ready(plotId)) {
+      opts = {};
+      if (ggvis.initialized[plotId]) opts.duration = 250;
+
+      chart.update(opts);
+      ggvis.updateGgvisDivSize(plotId);
+      ggvis.initialized[plotId] = true;
+    }
   });
 };
 
@@ -109,6 +116,26 @@ ggvis.updateDownloadButtonText = function() {
     $el.text("Download " + filetype);
   }
 };
+
+
+// Utility functions ----------------------------------------------------------
+
+// Returns true if all data objects for a spec have been registered, using
+// ggvis.charts[plotId].data(dataset)
+ggvis.data_ready = function(plotId) {
+  var existing_data = Object.keys(ggvis.charts[plotId].data());
+  var expected_data = ggvis.specs[plotId].data.map(function (x) {
+    return x.name ;
+  });
+
+  return ggvis.arrays_equal(existing_data, expected_data);
+};
+
+// Returns true if arrays have same contents (in any order), false otherwise.
+ggvis.arrays_equal = function(a, b) {
+  return $(a).not(b).length === 0 && $(b).not(a).length === 0;
+};
+
 
 
 $(function(){ //DOM Ready

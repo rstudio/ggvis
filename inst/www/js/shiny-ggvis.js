@@ -15,7 +15,7 @@ $(function(){ //DOM Ready
     },
     renderValue: function(el, data) {
       vg.parse.spec(data.spec, function(chart) {
-        chart({el: el}).update();
+        chart({el: el}).update({duration: 250});
       });
     }
   });
@@ -27,14 +27,22 @@ $(function(){ //DOM Ready
     var name = message.name;
     var value = message.value[0].values;
 
+
     if (ggvis.charts[plotId]) {
       // If the plot exists already, feed it the data
       var dataset = {};
       dataset[name] = value;
       ggvis.charts[plotId].data(dataset);
-      ggvis.charts[plotId].update();
 
-      ggvis.updateGgvisDivSize(plotId);
+      // If all data objects have been received, update.
+      if (ggvis.data_ready(plotId)) {
+        opts = {};
+        if (ggvis.initialized[plotId]) opts.duration = 250;
+
+        ggvis.charts[plotId].update(opts);
+        ggvis.updateGgvisDivSize(plotId);
+        ggvis.initialized[plotId] = true;
+      }
     } else {
       // The plot doesn't exist, save the data for when the plot arrives
       if (!ggvis.pendingData[plotId])
