@@ -21,34 +21,36 @@ $(function(){ //DOM Ready
   });
   Shiny.outputBindings.register(ggvisOutputBinding, 'shiny.ggvisOutput');
 
-
+  // Receive data object and dispatch to appropriate vega object
   Shiny.addCustomMessageHandler("ggvis_data", function(message) {
     var plotId = message.plotId;
     var name = message.name;
     var value = message.value[0].values;
 
+    var plot = ggvis.getPlot(plotId);
 
-    if (ggvis.charts[plotId]) {
+    if (plot.chart) {
       // If the plot exists already, feed it the data
       var dataset = {};
       dataset[name] = value;
-      ggvis.charts[plotId].data(dataset);
+      plot.chart.data(dataset);
 
       // If all data objects have been received, update.
-      if (ggvis.data_ready(plotId)) {
-        opts = {};
-        if (ggvis.initialized[plotId]) opts.duration = 250;
+      if (plot.data_ready()) {
+        var opts = {};
+        // Only use duration if plot already initialized (otherwise will error)
+        if (plot.initialized) opts.duration = 250;
 
-        ggvis.charts[plotId].update(opts);
-        ggvis.updateGgvisDivSize(plotId);
-        ggvis.initialized[plotId] = true;
+        plot.chart.update(opts);
+        plot.updateGgvisDivSize();
+        plot.initialized = true;
       }
     } else {
       // The plot doesn't exist, save the data for when the plot arrives
-      if (!ggvis.pendingData[plotId])
-        ggvis.pendingData[plotId] = {};
+      if (!plot.pendingData)
+        plot.pendingData = {};
 
-      ggvis.pendingData[plotId][name] = value;
+      plot.pendingData[name] = value;
     }
   });
 
@@ -65,10 +67,9 @@ $(function(){ //DOM Ready
       ggvis.updateDownloadButtonText();
     }
 
-    // Save the spec
-    ggvis.specs[plotId] = spec;
+    var plot = ggvis.getPlot(plotId);
 
-    ggvis.parseSpec(spec, plotId);
+    plot.parseSpec(spec, ggvis.renderer);
   });
 
 });

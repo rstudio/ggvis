@@ -4,62 +4,16 @@
 /*global vg*/
 var ggvis = window.ggvis = window.ggvis || {};  // If already defined, just extend it
 
-ggvis.pendingData = {};  // data objects that have been received but not yet used
-ggvis.charts = {};       // all vega chart objects on the page
-ggvis.specs = {};        // all specs
-ggvis.initialized = {};  // track whether each chart has been updated at least once
-ggvis.renderer = null;
+// Keep track of information about all plots: contains GgvisPlot objects
+ggvis.plots = {};
+ggvis.renderer = null; // "canvas" or "svg"
 
-
-ggvis.parseSpec = function(spec, plotId) {
-
-  vg.parse.spec(spec, function(chart) {
-    var selector = ".ggvis-output#" + plotId;
-    var $el = $(selector);
-
-    chart = chart({ el: selector, renderer: ggvis.renderer });
-    // Save the chart object
-    ggvis.charts[plotId] = chart;
-    $el.data("ggvis-chart", chart);
-
-    // If the data arrived earlier, use it.
-    if (ggvis.pendingData[plotId]) {
-      chart.data(ggvis.pendingData[plotId]);
-      delete ggvis.pendingData[plotId];
-    }
-
-    // When done resizing, update with new width and height
-    $el.resizable({
-      helper: "ui-resizable-helper",
-      grid: [10, 10],
-      stop: function() {
-        var padding = chart.padding();
-        chart.width($el.width() - padding.left - padding.right);
-        chart.height($el.height() - padding.top - padding.bottom);
-        chart.update();
-      }
-    });
-
-    if (ggvis.data_ready(plotId)) {
-      opts = {};
-      if (ggvis.initialized[plotId]) opts.duration = 250;
-
-      chart.update(opts);
-      ggvis.updateGgvisDivSize(plotId);
-      ggvis.initialized[plotId] = true;
-    }
-  });
-};
-
-
-// Sets height and width of wrapper div to contain the plot area.
-// This is so that the resize handle will be put in the right spot.
-ggvis.updateGgvisDivSize = function(plotId) {
-  var $el = $(".ggvis-output#" + plotId);
-  var $plotarea = $el.find("div.vega > .marks");
-
-  $el.width($plotarea.width());
-  $el.height($plotarea.height());
+ggvis.getPlot = function(plotId) {
+  // Get the GgvisPlot object (and create if needed)
+  if (!this.plots[plotId]) {
+    this.plots[plotId] = new GgvisPlot(plotId);
+  }
+  return this.plots[plotId];
 };
 
 // Given the name of a plot and an <a> element, set the href of that element
@@ -69,32 +23,32 @@ ggvis.updateDownloadLink = function(plotId, el) {
   var plot = $("#" + plotId + ".ggvis-output .marks")[0];
   var imageUrl;
 
-  if (ggvis.renderer === "svg") {
+  if (this.renderer === "svg") {
     // Extract the svg code and add needed xmlns attribute
     var svg = $(plot).clone().attr("xmlns", "http://www.w3.org/2000/svg");
     // Convert to string
     svg = $('<div>').append(svg).html();
     imageUrl = "data:image/octet-stream;base64,\n" + btoa(svg);
 
-  } else if (ggvis.renderer === "canvas") {
+  } else if (this.renderer === "canvas") {
     imageUrl = plot.toDataURL("image/png").replace("image/png", "image/octet-stream");
   }
 
   // Set download filename and data URL
   var ext = "";
-  if      (ggvis.renderer === "svg")    ext = ".svg";
-  else if (ggvis.renderer === "canvas") ext = ".png";
+  if      (this.renderer === "svg")    ext = ".svg";
+  else if (this.renderer === "canvas") ext = ".png";
   el.setAttribute("download", plotId + ext);
   el.setAttribute("href", imageUrl);
 };
 
 // Change the renderer and update all plots
 ggvis.setRenderer = function(renderer) {
-  ggvis.renderer = renderer;
+  this.renderer = renderer;
 
-  for (var plotId in ggvis.specs) {
-    if (ggvis.specs.hasOwnProperty(plotId))
-      ggvis.charts[plotId].renderer(renderer).update();
+  for (var plotId in this.plots) {
+    if (this.plots.hasOwnProperty(plotId))
+      this.plots[plotId].chart.renderer(renderer).update();
   }
 };
 
@@ -110,32 +64,94 @@ ggvis.updateDownloadButtonText = function() {
   var $el = $("#ggvis_download");
   if ($el) {
     var filetype = "";
-    if      (ggvis.renderer === "svg")    filetype = "SVG";
-    else if (ggvis.renderer === "canvas") filetype = "PNG";
+    if      (this.renderer === "svg")    filetype = "SVG";
+    else if (this.renderer === "canvas") filetype = "PNG";
 
     $el.text("Download " + filetype);
   }
 };
 
-
-// Utility functions ----------------------------------------------------------
-
-// Returns true if all data objects for a spec have been registered, using
-// ggvis.charts[plotId].data(dataset)
-ggvis.data_ready = function(plotId) {
-  var existing_data = Object.keys(ggvis.charts[plotId].data());
-  var expected_data = ggvis.specs[plotId].data.map(function (x) {
-    return x.name ;
-  });
-
-  return ggvis.arrays_equal(existing_data, expected_data);
+// GgvisPlot objects ----------------------------------------------------------
+// Constructor for GgvisPlot objects
+var GgvisPlot = function(plotId) {
+  this.plotId = plotId;
+  this.pendingData = {}; // Data objects that have been received but not yet used
+  this.chart = null;     // Vega chart object on the page
+  this.spec = null;      // Vega spec for this plot
+  this.initialized = false; // Has update() or enter() been run?
 };
 
-// Returns true if arrays have same contents (in any order), false otherwise.
-ggvis.arrays_equal = function(a, b) {
-  return $(a).not(b).length === 0 && $(b).not(a).length === 0;
-};
+GgvisPlot.prototype = {
+  parseSpec: function(spec, renderer) {
+    var self = this;
+    renderer = renderer || "svg";
+    this.spec = spec; // Save the spec
 
+    vg.parse.spec(spec, function(chart) {
+      var selector = ".ggvis-output#" + self.plotId;
+      var $el = $(selector);
+
+      chart = chart({ el: selector, renderer: renderer });
+      // Save the chart object
+      self.chart = chart;
+      $el.data("ggvis-chart", chart);
+
+      // If the data arrived earlier, use it.
+      if (self.pendingData) {
+        chart.data(self.pendingData);
+        delete self.pendingData;
+      }
+
+      // When done resizing, update with new width and height
+      $el.resizable({
+        helper: "ui-resizable-helper",
+        grid: [10, 10],
+        stop: function() {
+          var padding = chart.padding();
+          chart.width($el.width() - padding.left - padding.right);
+          chart.height($el.height() - padding.top - padding.bottom);
+          chart.update();
+        }
+      });
+
+      if (self.data_ready()) {
+        var opts = {};
+        // Only use duration if plot already initialized (otherwise will error)
+        if (self.initialized) opts.duration = 250;
+
+        chart.update(opts);
+        self.updateGgvisDivSize();
+        self.initialized = true;
+      }
+    });
+  },
+
+  // Sets height and width of wrapper div to contain the plot area.
+  // This is so that the resize handle will be put in the right spot.
+  updateGgvisDivSize: function() {
+    var $el = $(".ggvis-output#" + this.plotId);
+    var $plotarea = $el.find("div.vega > .marks");
+
+    $el.width($plotarea.width());
+    $el.height($plotarea.height());
+  },
+
+  // Returns true if all data objects for a spec have been registered, using
+  // this.chart.data(dataset)
+  data_ready: function() {
+    var existing_data = Object.keys(this.chart.data());
+    var expected_data = this.spec.data.map(function (x) {
+      return x.name ;
+    });
+
+    return this.arrays_equal(existing_data, expected_data);
+  },
+
+  // Returns true if arrays have same contents (in any order), false otherwise.
+  arrays_equal: function(a, b) {
+    return $(a).not(b).length === 0 && $(b).not(a).length === 0;
+  }
+};
 
 
 $(function(){ //DOM Ready

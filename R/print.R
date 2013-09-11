@@ -60,16 +60,14 @@ view_static <- function(x, renderer = "svg", launch = interactive()) {
       div(id = plot_id, class = "ggvis-output"),
       tags$script(type = "text/javascript",
         paste0('
-          spec = ', vega_json, ';
-
-          // Save the spec
-          ggvis.specs["', plot_id, '"] = spec;
+          var spec = ', vega_json, ';
+          var plot = ggvis.getPlot("', plot_id, '");
 
           ggvis.renderer = "', renderer, '";
           ggvis.setRendererChooser(ggvis.renderer);
           ggvis.updateDownloadButtonText();
 
-          ggvis.parseSpec(spec, "', plot_id, '");
+          plot.parseSpec(spec, "', renderer, '");
         ')
       )
     )
