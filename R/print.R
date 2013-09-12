@@ -50,7 +50,25 @@ view_static <- function(x, renderer = "svg", launch = interactive()) {
 
   template <- paste(readLines(system.file('index.html', package='ggvis')),
     collapse='\n')
-  
+
+  head <- tagList(
+    tags$script(src = "lib/jquery-1.9.1.js"),
+    tags$script(src = "lib/jquery-ui/js/jquery-ui-1.10.3.custom.js"),
+    tags$link(rel = "stylesheet", type = "text/css",
+      href = "shared/bootstrap/css/bootstrap.min.css"),
+    tags$link(rel = "stylesheet", type = "text/css",
+      href = "shared/bootstrap/css/bootstrap-responsive.min.css"),
+    tags$script(src = "shared/bootstrap/js/bootstrap.min.js"),
+    tags$script(charset = "utf-8", src = "lib/d3.js"),
+    tags$script(src = "lib/vega.js"),
+    tags$script(src = "lib/QuadTree.js"),
+    tags$script(src = "js/ggvis.js"),
+    tags$link(rel = "stylesheet", type = "text/css",
+      href = "css/ggvis.css"),
+    tags$link(rel = "stylesheet", type = "text/css",
+      href = "lib/jquery-ui/css/smoothness/jquery-ui-1.10.3.custom.css")
+  )
+
   body <- divWithSidebar(
     headerPanel("ggvis plot"),
     sidebarPanel(
@@ -76,7 +94,7 @@ view_static <- function(x, renderer = "svg", launch = interactive()) {
   body <- format(body)
   
   html_file <- file.path(temp_dir, "plot.html")
-  writeLines(whisker.render(template, list(head = '', body = body)),
+  writeLines(whisker.render(template, list(head = head, body = body)),
     con = html_file)
   
   if (launch) browseURL(html_file)
