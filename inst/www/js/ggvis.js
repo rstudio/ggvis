@@ -110,7 +110,7 @@ GgvisPlot.prototype = {
           var padding = chart.padding();
           chart.width($el.width() - padding.left - padding.right);
           chart.height($el.height() - padding.top - padding.bottom);
-          chart.update();
+          chart.update({duration: 250});
         }
       });
 
