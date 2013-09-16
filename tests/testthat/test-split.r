@@ -24,7 +24,7 @@ test_that("splitting by group", {
   }
 
   # Properties; will be used repeatedly
-  prop <- props(x = ~ wt, y = ~ mpg, stroke = ~ cyl)
+  prop <- props(x = ~wt, y = ~mpg, stroke = ~cyl)
 
 
   # Splitting by one variable
@@ -49,7 +49,7 @@ test_that("splitting by group", {
 
 test_that("sluicing by_group uses environment for evaluation", {
   sp <- function(data, group) {
-    sluice(pipeline(data, group), props(x = ~ wt, y = ~ mpg))
+    sluice(pipeline(data, group), props(x = ~wt, y = ~mpg))
   }
 
   x <- sp(mtcars, by_group(cyl))

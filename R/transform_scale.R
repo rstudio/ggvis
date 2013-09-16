@@ -7,7 +7,7 @@
 #' @examples
 #' neg <- transform_scale(mult = -1)
 #' neg
-#' compute(neg, props(x = ~ mpg, y = ~ disp), mtcars)
+#' compute(neg, props(x = ~mpg, y = ~disp), mtcars)
 transform_scale <- function(add = 0, mult = 1) {
   transform("scale", add = add, mult = mult)
 }

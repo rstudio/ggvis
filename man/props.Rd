@@ -108,7 +108,7 @@
 # Set to constant values
 props(x := 1, y := 2)
 # Map to variables in the dataset
-props(x = ~ mpg, y = ~ cyl)
+props(x = ~mpg, y = ~cyl)
 # Set to a constant value in the data space
 props(x = 1, y = 1)
 # Use an interactive slider

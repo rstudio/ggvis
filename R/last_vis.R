@@ -6,7 +6,7 @@ last_vis_e <- new.env(parent = emptyenv())
 #'
 #' @export
 #' @examples
-#' ggvis(mtcars, props(x = ~ mpg, y = ~ cyl), mark_symbol())
+#' ggvis(mtcars, props(x = ~mpg, y = ~cyl), mark_symbol())
 #' str(last_vis())
 last_vis <- function() last_vis_e$x
 

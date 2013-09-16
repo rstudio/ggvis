@@ -9,7 +9,7 @@
   plotted.
 }
 \examples{
-ggvis(mtcars, props(x = ~ mpg, y = ~ cyl), mark_symbol())
+ggvis(mtcars, props(x = ~mpg, y = ~cyl), mark_symbol())
 str(last_vis())
 }
 

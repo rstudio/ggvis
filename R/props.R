@@ -45,7 +45,7 @@
 #' # Set to constant values
 #' props(x := 1, y := 2)
 #' # Map to variables in the dataset
-#' props(x = ~ mpg, y = ~ cyl)
+#' props(x = ~mpg, y = ~cyl)
 #' # Set to a constant value in the data space
 #' props(x = 1, y = 1)
 #' # Use an interactive slider
@@ -116,10 +116,10 @@ is.ggvis_props <- function(x) inherits(x, "ggvis_props")
 
 # Merge two ggvis_props objects
 #
-# merge_props(props(x = ~ x))
-# merge_props(props(x = ~ x), props(x = ~ y))
-# merge_props(props(x = ~ x, y = 1), props(x = ~ y))
-# merge_props(props(x = ~ x, y = 1), props(x = ~ y, inherit = FALSE))
+# merge_props(props(x = ~x))
+# merge_props(props(x = ~x), props(x = ~y))
+# merge_props(props(x = ~x, y = 1), props(x = ~y))
+# merge_props(props(x = ~x, y = 1), props(x = ~y, inherit = FALSE))
 merge_props <- function(parent = NULL, child = NULL) {
   if (is.null(parent)) return(child)
   if (is.null(child)) return(parent)

@@ -43,7 +43,7 @@ test_that("pipeline objects are trimmed to sources", {
 })
 
 test_that("pipeline id", {
-  props <- props(x = ~ wt, y = ~ mpg)
+  props <- props(x = ~wt, y = ~mpg)
 
   p <- pipeline(mtcars)
   expect_identical(pipeline_id(p, props), "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f")

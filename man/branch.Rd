@@ -45,9 +45,9 @@
   in fact, this is exactly how \code{\link{branch_smooth}})
   works.
 
-  \code{ ggvis(mtcars, props(x = ~ disp, y = ~ mpg),
-  branch(transform_smooth(), mark_area(props(y = ~ y_min,
-  y2 = ~ y_max, fill := "#eee")), mark_line() ),
-  mark_symbol() ) }
+  \code{ ggvis(mtcars, props(x = ~disp, y = ~mpg),
+  branch(transform_smooth(), mark_area(props(y = ~y_min, y2
+  = ~y_max, fill := "#eee")), mark_line() ), mark_symbol()
+  ) }
 }
 

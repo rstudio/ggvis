@@ -19,7 +19,7 @@
 #' library(shiny)
 #' v <- reactiveValues(n = 10)
 #' p <- pipeline(reactive(mtcars[1:v$n, ]))
-#' props <- props(x = ~ wt, y = ~ mpg)
+#' props <- props(x = ~wt, y = ~mpg)
 #'
 #' sluice(p, props)
 #'

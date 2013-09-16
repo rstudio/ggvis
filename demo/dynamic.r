@@ -6,7 +6,7 @@ mtc1 <- reactive({
   invalidateLater(2000, NULL);
   mtcars[sample(nrow(mtcars), 10), ]
 })
-ggvis(mtc1, props(x = ~ wt, y = ~ mpg),
+ggvis(mtc1, props(x = ~wt, y = ~mpg),
   mark_symbol()
 )
 
@@ -20,7 +20,7 @@ mtc1 <- reactive({
   df$y <<- df$y + runif(20, -0.05, 0.05)
   df
 })
-ggvis(mtc1, props(x = ~ x, y = ~ y),
+ggvis(mtc1, props(x = ~x, y = ~y),
   mark_symbol(),
   dscale("x", "numeric", domain = c(0, 1))
 )
@@ -35,7 +35,7 @@ mtc2 <- reactive({
   mtcars[sample(nrow(mtcars), 10), ]
 })
 ggvis(
-  props(x = ~ wt, y = ~ mpg),
+  props(x = ~wt, y = ~mpg),
   branch(
     mtc1,
     mark_symbol(props(stroke := "black", fill := "black"))
@@ -51,7 +51,7 @@ mtc1 <- reactive({
   invalidateLater(1000, NULL);
   mtcars[sample(nrow(mtcars), 10), ]
 })
-ggvis(mtc1, props(x = ~ wt, y = ~ mpg),
+ggvis(mtc1, props(x = ~wt, y = ~mpg),
   mark_symbol(),
   branch_smooth()
 )

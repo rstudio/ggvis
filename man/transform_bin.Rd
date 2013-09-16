@@ -62,27 +62,27 @@
 }
 \examples{
 # Create histograms and frequency polygons with branches
-ggvis(mtcars, props(x = ~ mpg), branch_histogram())
-ggvis(mtcars, props(x = ~ mpg), branch_histogram(binwidth = 2))
-ggvis(mtcars, props(x = ~ mpg), branch_freqpoly(binwidth = 2))
+ggvis(mtcars, props(x = ~mpg), branch_histogram())
+ggvis(mtcars, props(x = ~mpg), branch_histogram(binwidth = 2))
+ggvis(mtcars, props(x = ~mpg), branch_freqpoly(binwidth = 2))
 
 # These are equivalent to combining transform_bin with the corresponding
 # mark
-ggvis(mtcars, props(x = ~ mpg), transform_bin(binwidth = 2),
-  mark_rect(props(x = ~ xmin__, x2 = ~ xmax__, y = ~ count__, y2 = 0)),
-  mark_line(props(x = ~ x, y = ~ count__, stroke := "red", strokeWidth := 4))
+ggvis(mtcars, props(x = ~mpg), transform_bin(binwidth = 2),
+  mark_rect(props(x = ~xmin__, x2 = ~xmax__, y = ~count__, y2 = 0)),
+  mark_line(props(x = ~x, y = ~count__, stroke := "red", strokeWidth := 4))
 )
 
 # You can also combine other data transformations like splitting
-ggvis(mtcars, props(x = ~ mpg, stroke = ~ cyl, strokeWidth = 4),
+ggvis(mtcars, props(x = ~mpg, stroke = ~cyl, strokeWidth = 4),
    by_group(cyl), branch_freqpoly(binwidth = 2))
 
 # You can see the results of a transformation by creating your own pipeline
 # and flowing data through it
-sluice(pipeline(mtcars, transform_bin(2)), props(x = ~ mpg))
-sluice(pipeline(mtcars, by_group(cyl), transform_bin(2)), props(x = ~ disp))
+sluice(pipeline(mtcars, transform_bin(2)), props(x = ~mpg))
+sluice(pipeline(mtcars, by_group(cyl), transform_bin(2)), props(x = ~disp))
 # Or
 pl <- pipeline(mtcars, transform_bin(10))
-sluice(pl, props(x = ~ disp))
+sluice(pl, props(x = ~disp))
 }
 

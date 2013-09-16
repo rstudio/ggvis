@@ -2,7 +2,7 @@ context("connect")
 
 library(shiny)
 df <- data.frame(x = 1:10, y = 1:10)
-asis <- props(x = ~ x, y = ~ y)
+asis <- props(x = ~x, y = ~y)
 
 test_that("sluicing data sources returns data frame", {
   sources <- list(
