@@ -4,7 +4,10 @@
 #'
 #' @export
 band <- function(offset = NULL, mult = NULL) {
-  prop("band", offset = offset, mult = mult)
+  structure(
+    list(type = "band", offset = offset, mult = mult),
+    class = c("band", "prop")
+  )
 }
 
 #' @S3method format band

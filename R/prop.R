@@ -89,7 +89,10 @@ prop <- function(x, scale = NULL, offset = NULL, mult = NULL,
 is.prop <- function(x) inherits(x, "prop")
 
 # Given a property and a dataset, get the value of the property.
-prop_value <- function(x, data) {
+prop_value <- function(x, data) UseMethod("prop_value")
+
+#' @S3method prop_value default
+prop_value.default <- function(x, data) {
   if (x$type == "constant") return(rep(x$value, nrow(data)))
 
   # Get the expression to evaluate
@@ -113,7 +116,10 @@ prop_value <- function(x, data) {
 
 # The name of the property: used for naming the variable it produces in the
 # vega data frame
-prop_name <- function(x) {
+prop_name <- function(x) UseMethod("prop_name")
+
+#' @S3method prop_name default
+prop_name.default <- function(x) {
   switch(x$type,
     constant = "",
     reactive = x$dr$id, 
@@ -121,7 +127,10 @@ prop_name <- function(x) {
 }
 
 # The scale (if any) that this property needs
-prop_scale <- function(x, default_scale) {
+prop_scale <- function(x, default_scale) UseMethod("prop_scale")
+
+#' @S3method prop_scale default
+prop_scale.default <- function(x, default_scale) {
   if (isTRUE(x$scale)) {
     default_scale
   } else if (is.character(x$scale)) {
@@ -132,7 +141,10 @@ prop_scale <- function(x, default_scale) {
 }
 
 # Generate a vega object for the individual mark.
-prop_vega <- function(x, default_scale) {
+prop_vega <- function(x, default_scale) UseMethod("prop_vega")
+
+#' @S3method prop_vega default
+prop_vega.default <- function(x, default_scale) {
   scale <- prop_scale(x, default_scale)
   pv <- list(
     scale = if (!is.na(scale)) scale,
@@ -153,7 +165,10 @@ prop_vega <- function(x, default_scale) {
 #'
 #' @param x property to dispatch on
 #' @param data name of data set
-prop_domain <- function(x, data) {
+prop_domain <- function(x, data) UseMethod("prop_domain")
+
+#' @S3method prop_domain default
+prop_domain.default <- function(x, data) {
   # FIXME: for scaled constants, this should really insert a literal value in
   #   to the domain, but it's not obvious how to do that in vega currently.
   if (x$type == "constant") return(NULL)
