@@ -1,15 +1,13 @@
 shinyUI(pageWithSidebar(
-  headerPanel("Ggvis plot"),
+  headerPanel("ggvis plot"),
   sidebarPanel(
-    uiOutput("ggvis_ui")
+    sliderInput("n", "Number of points", min = 1, max = nrow(mtcars),
+                value = 10, step = 1),
+    uiOutput("ggvis_ui"),
+    ggvisControlGroup("plot1")
   ),
   mainPanel(
-    # Placeholder for the plots
     ggvis_output("plot1"),
-    ggvis_output("plot2"),
-
-    # Add an actionButton that quits the app and closes the browser window
-    tags$button(id="quit", type="button", class="btn action-button",
-      onclick = "window.close()", "Quit")
+    tableOutput("mtc_table")
   )
 ))
