@@ -1,4 +1,5 @@
 library(ggvis)
+library(shiny)
 
 # Basic dynamic example
 mtc1 <- reactive({
@@ -53,4 +54,20 @@ mtc1 <- reactive({
 ggvis(mtc1, props(x = ~ wt, y = ~ mpg),
   mark_symbol(),
   branch_smooth()
+)
+
+
+# Data points moving from right to left
+# (currently transitions aren't quite right)
+set.seed(430)
+dat <- data.frame(time = 1:10, value = rnorm(10))
+ddat <- reactive({
+  invalidateLater(1000, NULL);
+  dat$time  <<- c(dat$time[-1], dat$time[length(dat$time)] + 1)
+  dat$value <<- c(dat$value[-1], rnorm(1))
+  dat
+})
+ggvis(ddat, props(x = ~time, y = ~value),
+  mark_symbol(),
+  mark_line()
 )
