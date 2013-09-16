@@ -36,7 +36,7 @@
 NULL
 
 #' @rdname shiny
-#' @importFrom shiny addResourcePath singleton tagList
+#' @importFrom shiny addResourcePath singleton tagList div
 #' @param id unique identifier to use for div tag containing ggvis plot
 #' @export
 ggvis_output <- function(id) {
