@@ -85,7 +85,8 @@ GgvisPlot.prototype = {
   parseSpec: function(spec, renderer) {
     var self = this;
     renderer = renderer || "svg";
-    this.spec = spec; // Save the spec
+    self.spec = spec; // Save the spec
+    self.initialized = false;
 
     vg.parse.spec(spec, function(chart) {
       var selector = ".ggvis-output#" + self.plotId;
@@ -115,11 +116,7 @@ GgvisPlot.prototype = {
       });
 
       if (self.data_ready()) {
-        var opts = {};
-        // Only use duration if plot already initialized (otherwise will error)
-        if (self.initialized) opts.duration = 250;
-
-        chart.update(opts);
+        chart.update();
         self.updateGgvisDivSize();
         self.initialized = true;
       }
