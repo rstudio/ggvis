@@ -116,7 +116,12 @@ as.vega.vega_legend <- as.vega.vega_axis
 as.vega.data.frame <- function(x, name, ...) {
   list(list(
     name = name,
-    values = df_to_json(x)
+    format = list(
+      type = "csv",
+      # Figure out correct vega parsers for non-string columns
+      parse = unlist(lapply(x, vega_data_parser))
+    ),
+    values = to_csv(x)
   ))
 }
 
@@ -129,7 +134,7 @@ as.vega.split_df <- function(x, name, ...) {
       name = paste0(name, "_tree"),
       format = list(type = "treejson"),
       values = list(children = data)
-    ),
+     ),
     list(
       name = name,
       source = paste0(name, "_tree"),

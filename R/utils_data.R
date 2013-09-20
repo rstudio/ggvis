@@ -83,3 +83,50 @@ finite.cases <- function(x) {
     rowSums(as.matrix(finite_cases)) == ncol(x)
   }
 }
+
+
+to_csv <- function(x, header = TRUE, ...) UseMethod("to_csv")
+
+#' @S3method to_csv data.frame
+to_csv.data.frame <- function(x, header = TRUE) {
+
+  format_vec <- function(vec) {
+    if (is.numeric(vec)) {
+      format(vec, digits = 5)
+    } else if (is.character(vec) || is.factor(vec)) {
+      quote_text(vec)
+    }
+  }
+
+  x <- lapply(x, format_vec)
+
+  # Collapse across rows, yielding each row of CSV text
+  rows <- do.call(paste, c(x, sep = ","))
+  rows <- paste0(rows, collapse = "\n")
+
+  if (header) {
+    rows <- paste(
+      paste(quote_text(names(x)), collapse = ","),
+      rows,
+      sep = "\n"
+    )
+  }
+
+  rows
+}
+
+#' @S3method to_csv split_df
+to_csv.split_df <- function(x, header = TRUE) {
+  headers <- logical(length(x))
+  # If we want a header, only add it for the first data frame in the split_df
+  if (header) headers[1] <- TRUE
+
+  paste(mapply(to_csv, x, header = headers), collapse = "\n")
+}
+
+# Replace \ with \\, " with \", and add " to start and end
+quote_text <- function(txt) {
+  txt <- gsub("\\\\", "\\\\\\\\", txt, fixed = TRUE)
+  txt <- gsub('"', '\\\\"', txt, fixed = TRUE)
+  paste0('"', txt, '"')
+}
