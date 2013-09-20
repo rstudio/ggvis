@@ -25,14 +25,16 @@ $(function(){ //DOM Ready
   Shiny.addCustomMessageHandler("ggvis_data", function(message) {
     var plotId = message.plotId;
     var name = message.name;
-    var value = message.value[0].values;
+    var data = message.value[0].values;
+    var format = message.value[0].format;
 
     var plot = ggvis.getPlot(plotId);
 
     if (plot.chart) {
       // If the plot exists already, feed it the data
       var dataset = {};
-      dataset[name] = value;
+
+      dataset[name] = vg.data.read(data, format);
       plot.chart.data(dataset);
 
       // If all data objects have been received, update.
@@ -50,7 +52,7 @@ $(function(){ //DOM Ready
       if (!plot.pendingData)
         plot.pendingData = {};
 
-      plot.pendingData[name] = value;
+      plot.pendingData[name] = data;
     }
   });
 
