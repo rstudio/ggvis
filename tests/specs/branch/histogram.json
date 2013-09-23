@@ -2,43 +2,15 @@
 	"data" : [
 		{
 			"name" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6fbin_a7ba68a4",
-			"values" : [
-				{
-					"xmin__" : 0,
-					"xmax__" : 1,
-					"count__" : 0
-				},
-				{
-					"xmin__" : 1,
-					"xmax__" : 2,
-					"count__" : 4
-				},
-				{
-					"xmin__" : 2,
-					"xmax__" : 3,
-					"count__" : 8
-				},
-				{
-					"xmin__" : 3,
-					"xmax__" : 4,
-					"count__" : 16
-				},
-				{
-					"xmin__" : 4,
-					"xmax__" : 5,
-					"count__" : 1
-				},
-				{
-					"xmin__" : 5,
-					"xmax__" : 6,
-					"count__" : 3
-				},
-				{
-					"xmin__" : 6,
-					"xmax__" : 7,
-					"count__" : 0
+			"format" : {
+				"type" : "csv",
+				"parse" : {
+					"xmin__" : "number",
+					"xmax__" : "number",
+					"count__" : "number"
 				}
-			]
+			},
+			"values" : "\"xmin__\",\"xmax__\",\"count__\"\n0,1, 0\n1,2, 4\n2,3, 8\n3,4,16\n4,5, 1\n5,6, 3\n6,7, 0"
 		}
 	],
 	"scales" : [

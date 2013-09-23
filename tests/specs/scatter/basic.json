@@ -2,23 +2,13 @@
 	"data" : [
 		{
 			"name" : "df_5d6dccca750b57e8b95a60db154cdb8e",
-			"values" : [
-				{
-					"x" : 1
-				},
-				{
-					"x" : 2
-				},
-				{
-					"x" : 3
-				},
-				{
-					"x" : 4
-				},
-				{
-					"x" : 5
+			"format" : {
+				"type" : "csv",
+				"parse" : {
+					"x" : "number"
 				}
-			]
+			},
+			"values" : "\"x\"\n1\n2\n3\n4\n5"
 		}
 	],
 	"scales" : [

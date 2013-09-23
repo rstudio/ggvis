@@ -2,28 +2,13 @@
 	"data" : [
 		{
 			"name" : "df_5d6dccca750b57e8b95a60db154cdb8e",
-			"values" : [
-				{
-					"factor(x)" : "1",
-					"x/y" : 0.2
-				},
-				{
-					"factor(x)" : "2",
-					"x/y" : 0.5
-				},
-				{
-					"factor(x)" : "3",
-					"x/y" : 1
-				},
-				{
-					"factor(x)" : "4",
-					"x/y" : 2
-				},
-				{
-					"factor(x)" : "5",
-					"x/y" : 5
+			"format" : {
+				"type" : "csv",
+				"parse" : {
+					"x/y" : "number"
 				}
-			]
+			},
+			"values" : "\"factor(x)\",\"x/y\"\n\"1\",0.2\n\"2\",0.5\n\"3\",1.0\n\"4\",2.0\n\"5\",5.0"
 		}
 	],
 	"scales" : [
