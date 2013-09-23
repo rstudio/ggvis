@@ -23,7 +23,8 @@ input_slider <- function(min, max, value = min, step = NULL, round = FALSE,
   assert_that(is.string(label), is.string(id))
 
   args <- list(id, label, min = min, max = max, value = value, step = step,
-      round = round, format = format, locale = locale, ticks = ticks)
+      round = round, format = format, locale = locale, ticks = ticks,
+      animate = animate)
 
   input("slider", args, value, map, id)
 }
