@@ -107,7 +107,7 @@ format.transform_bin <- function(x, ...) {
 
 #' @S3method compute transform_bin
 compute.transform_bin <- function(x, props, data) {
-  check_prop(x, props, data, "x", "numeric")
+  check_prop(x, props, data, "x.update", "numeric")
 
   if (is.guess(x$binwidth)) {
     x$binwidth <- diff(prop_range(data, props$x)) / 30

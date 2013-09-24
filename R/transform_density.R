@@ -108,9 +108,9 @@ format.transform_density <- function(x, ...) {
 
 #' @S3method compute transform_density
 compute.transform_density <- function(x, props, data) {
-  check_prop(x, props, data, "x", "numeric")
+  check_prop(x, props, data, "x.update", "numeric")
 
-  output <- compute_density(data, x, x_var = props$x, y_var = props$y)
+  output <- compute_density(data, x, x_var = props$x.update, y_var = props$y.update)
   preserve_constants(data, output)
 }
 

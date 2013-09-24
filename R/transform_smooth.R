@@ -119,8 +119,8 @@ format.transform_smooth <- function(x, ...) {
 
 #' @S3method compute transform_smooth
 compute.transform_smooth <- function(x, props, data) {
-  check_prop(x, props, data, "x", "numeric")
-  check_prop(x, props, data, "y", "numeric")
+  check_prop(x, props, data, "x.update", "numeric")
+  check_prop(x, props, data, "y.update", "numeric")
 
   if (is.guess(x$method)) {
     x$method <- if (max_rows(data) > 1000) "gam" else "loess"
@@ -132,7 +132,7 @@ compute.transform_smooth <- function(x, props, data) {
     message("Guess transform_smooth(formula = ", deparse(x$formula), ")")
   }
   
-  output <- smooth(data, x, x_var = props$x, y_var = props$y)
+  output <- smooth(data, x, x_var = props$x.update, y_var = props$y.update)
   preserve_constants(data, output)
 }
 
