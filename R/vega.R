@@ -77,14 +77,14 @@ as.vega.mark <- function(mark) {
       marks = list(
         list(
           type = mark$type,
-          properties = list(update = as.vega(props))
+          properties = as.vega(props)
         )
       )
     )
   } else {
     list(
       type = mark$type,
-      properties = list(update = as.vega(props)),
+      properties = as.vega(props),
       from = list(data = mark$pipeline_id)
     )
   }
@@ -93,10 +93,19 @@ as.vega.mark <- function(mark) {
 
 #' @S3method as.vega ggvis_props
 as.vega.ggvis_props <- function(x, default_scales = NULL) {
-  if (empty(x)) return(NULL)
+  x <- prop_sets(x)
 
-  default_scales <- default_scales %||% prop_to_scale(names(x))
-  Map(prop_vega, x, default_scales)
+  # Given a list of property sets (enter, update, etc.), return appropriate
+  # vega property set.
+  vega_prop_set <- function(x) {
+    if (empty(x)) return(NULL)
+
+    props <- trim_prop_attrib(names(x))
+    default_scales <- default_scales %||% prop_to_scale(props)
+    Map(prop_vega, x, default_scales)
+  }
+
+  lapply(x, vega_prop_set)
 }
 
 #' @S3method as.vega vega_axis

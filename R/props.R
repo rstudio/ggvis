@@ -75,8 +75,14 @@ props <- function(..., inherit = TRUE) {
   names(unscaled) <- vapply(args[!named(args)], function(x) as.character(x[[2]]),
     character(1))
 
+  # Append ".update" to any props that don't already have ".enter", ".exit",
+  # ".update", or ".hover".
+  all <- c(scaled, unscaled)
+  no_attrib <- !has_prop_attrib(names(all))
+  names(all)[no_attrib] <- paste0(names(all)[no_attrib], ".update")
+
   structure(
-    c(scaled, unscaled),
+    all,
     inherit = inherit,
     class = "ggvis_props"
   )

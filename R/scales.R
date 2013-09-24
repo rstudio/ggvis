@@ -56,7 +56,7 @@ add_default_scales <- function(x, nodes, data_table) {
     data <- isolate(data_table[[node$pipeline_id]]())
     for (prop_n in names(node$props)) {
       prop <- node$props[[prop_n]]
-      scale <- prop_scale(prop, prop_to_scale(prop_n))
+      scale <- prop_scale(prop, prop_to_scale(trim_prop_attrib(prop_n)))
       if (is.na(scale)) next
       
       type <- prop_type(data, prop, processed = TRUE)
