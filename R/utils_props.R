@@ -24,3 +24,14 @@ prop_sets <- function(props) {
 
   compact(x)
 }
+
+# Given a props object, trim the .update, .enter, etc, and drop all those which
+# are named in `drop`.
+# drop_props(
+#   props(x  = ~wt, x.enter = 0, stroke.enter := "black", stroke.hover := "red"),
+#   c("stroke", "strokeOpacity")
+# )
+drop_props <- function(props, drop) {
+  pnames <- trim_prop_attrib(names(props))
+  props[!(pnames %in% drop)]
+}

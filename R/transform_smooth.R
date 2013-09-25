@@ -98,8 +98,8 @@ branch_smooth <- function(..., se = TRUE) {
 
   # Line shouldn't get fill-related props, and se area shouldn't get
   # stroke-related props.
-  line_props <- line_props[setdiff(names(line_props), c("fill", "fillOpacity"))]
-  se_props <- se_props[setdiff(names(se_props), c("stroke", "strokeOpacity"))]
+  line_props <- drop_props(line_props, c("fill", "fillOpacity"))
+  se_props <- drop_props(se_props, c("stroke", "strokeOpacity"))
 
   branch(
     transform_smooth(..., se = se),

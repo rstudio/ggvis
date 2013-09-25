@@ -132,3 +132,15 @@ test_that("prop_sets splits up props properly", {
   expect_false(attr(ps$enter, "inherit"))
   expect_false(attr(ps$update, "inherit"))
 })
+
+test_that("drop_props", {
+  p <- props(x = ~wt, x.enter = 0, stroke.enter := "black", stroke.hover := "red")
+
+  expect_identical(
+    drop_props(p, c("stroke", "strokeOpacity")),
+    props(x = ~wt, x.enter = 0))
+
+  expect_identical(
+    drop_props(p, c("x", "stroke")),
+    props())
+})
