@@ -29,15 +29,15 @@ test_that("merge_vectors behaves as expected", {
 
 
 test_that("all_same behaves as expected", {
-  expect_identical(all_same(1:2), FALSE)
-  expect_identical(all_same(1), TRUE)
-  expect_identical(all_same(c(1, 1)), TRUE)
-  expect_identical(all_same(NA), TRUE)
-  expect_identical(all_same(c(NA, NA)), TRUE)
-  expect_identical(all_same(c(NA, 1)), FALSE)
+  expect_false(all_same(1:2))
+  expect_true(all_same(1))
+  expect_true(all_same(c(1, 1)))
+  expect_true(all_same(NA))
+  expect_true(all_same(c(NA, NA)))
+  expect_false(all_same(c(NA, 1)))
 
   # Zero-length vector
-  expect_identical(all_same(character()), TRUE)
+  expect_true(all_same(character()))
 })
 
 
