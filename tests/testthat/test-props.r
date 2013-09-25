@@ -107,3 +107,28 @@ test_that("merging props", {
   expect_equal(sortp(merge_props(q_ni, p_i)),
     props(x=~a, y=~b, z:="red", inherit = FALSE))
 })
+
+test_that("prop_sets splits up props properly", {
+  p <- props(x.update = ~wt, x.enter = 1, y = ~mpg, fill.hover := "red")
+  ps <- prop_sets(p)
+
+  expect_equal(names(ps), c("enter", "update", "hover"))
+  expect_equal(names(ps$enter), "x")
+  expect_equal(names(ps$update), c("x", "y"))
+  expect_equal(names(ps$hover), "fill")
+
+  expect_identical(ps$enter$x, prop(1, scale = TRUE))
+  expect_identical(ps$update$x, prop(quote(wt)))
+  expect_identical(ps$update$y, prop(quote(mpg)))
+  expect_identical(ps$hover$fill, prop("red"))
+
+  expect_true(attr(ps$enter, "inherit"))
+  expect_true(attr(ps$update, "inherit"))
+  expect_true(attr(ps$hover, "inherit"))
+
+  # value of inherit is passed along
+  p <- props(x = ~wt, x.enter = 1, inherit = FALSE)
+  ps <- prop_sets(p)
+  expect_false(attr(ps$enter, "inherit"))
+  expect_false(attr(ps$update, "inherit"))
+})
