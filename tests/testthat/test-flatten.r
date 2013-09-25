@@ -13,9 +13,9 @@ test_that("props inherited from parent", {
   expect_equal(length(nodes), 1)
   props <- nodes[[1]]$props
 
-  expect_equal(sort(names(props)), c("x", "y"))
-  expect_equal(props$x$value, 3)
-  expect_equal(props$y$value, 2)
+  expect_equal(sort(names(props)), c("x.update", "y.update"))
+  expect_equal(props$x.update$value, 3)
+  expect_equal(props$y.update$value, 2)
 })
 
 test_that("data flows through pipeline", {
