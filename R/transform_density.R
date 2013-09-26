@@ -88,7 +88,7 @@ branch_density <- function(..., area = TRUE) {
   # Line shouldn't get fill-related props, and area shouldn't get
   # stroke-related props.
   line_props <- drop_props(line_props, c("fill", "fillOpacity"))
-  se_props <- drop_props(se_props, c("stroke", "strokeOpacity"))
+  area_props <- drop_props(area_props, c("stroke", "strokeOpacity"))
 
   branch(
     transform_density(...),
