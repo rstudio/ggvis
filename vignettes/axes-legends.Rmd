@@ -9,10 +9,10 @@ When polishing graphics for production you often spend a lot of time getting the
 axes and legends looking exactly right. This vignette describes the ggvis 
 functions that allow you to control plot guides: axes and legends.
 
-In gigvis, axes and legends are related to scales, but are described separately.
+In ggvis, axes and legends are related to scales, but are described separately.
 This is different to ggplot2, where the scale objects controlled both the
 details of the mapping and how it should be displayed on the plot. This makes
-gigvis a little more verbose, but it also makes it more flexible.
+ggvis a little more verbose, but it also makes it more flexible.
 
 Currently, ggvis guides are a close map to their vega equivalents. For 
 reference, you may also want to read the vega documentation for the 
@@ -58,7 +58,7 @@ separately), the labels and axis. For legends, you can set properties of the
 title, label, symbols (for categorical scales), gradient (for continuous 
 scales), and legend.
 
-Currently, if you're using mulitple scales, you'll need to properties to make
+Currently, if you're using mulitple scales, you'll need to adjust properties to make
 sure that your legends don't overlap.
 
 ```R
