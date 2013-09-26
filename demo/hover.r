@@ -17,3 +17,15 @@ ggvis(pressure, props(x = ~temperature, y = ~pressure),
   mark_line(props(stroke.hover := "red", strokeWidth.hover := 4, strokeWidth := 2)),
   mark_symbol(props(size := 50, size.hover := 200))
 )
+
+# Hover with transform_smooth
+ggvis(mtcars, props(x = ~wt, y = ~mpg),
+  mark_symbol(),
+  branch_smooth(props(fill.hover := "red"))
+)
+
+# Opacity with transform_density
+ggvis(PlantGrowth, by_group(group),
+  props(x = ~weight, stroke = ~group, fill = ~group, fillOpacity := 0.2, fillOpacity.hover := .5),
+  branch_density()
+)
