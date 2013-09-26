@@ -98,8 +98,8 @@ branch_smooth <- function(..., se = TRUE) {
 
   # Line shouldn't get fill-related props, and se area shouldn't get
   # stroke-related props.
-  line_props <- line_props[setdiff(names(line_props), c("fill", "fillOpacity"))]
-  se_props <- se_props[setdiff(names(se_props), c("stroke", "strokeOpacity"))]
+  line_props <- drop_props(line_props, c("fill", "fillOpacity"))
+  se_props <- drop_props(se_props, c("stroke", "strokeOpacity"))
 
   branch(
     transform_smooth(..., se = se),
@@ -119,8 +119,8 @@ format.transform_smooth <- function(x, ...) {
 
 #' @S3method compute transform_smooth
 compute.transform_smooth <- function(x, props, data) {
-  check_prop(x, props, data, "x", "numeric")
-  check_prop(x, props, data, "y", "numeric")
+  check_prop(x, props, data, "x.update", "numeric")
+  check_prop(x, props, data, "y.update", "numeric")
 
   if (is.guess(x$method)) {
     x$method <- if (max_rows(data) > 1000) "gam" else "loess"
@@ -132,7 +132,7 @@ compute.transform_smooth <- function(x, props, data) {
     message("Guess transform_smooth(formula = ", deparse(x$formula), ")")
   }
   
-  output <- smooth(data, x, x_var = props$x, y_var = props$y)
+  output <- smooth(data, x, x_var = props$x.update, y_var = props$y.update)
   preserve_constants(data, output)
 }
 
