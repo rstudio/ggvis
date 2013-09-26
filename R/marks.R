@@ -43,7 +43,7 @@ valid_mark_properties.mark_symbol <- function(mark) {
 }
 #' @S3method default_mark_properties mark_symbol
 default_mark_properties.mark_symbol <- function(mark) {
-  props(fill := "#000000")
+  props(fill := "#000000", size := 100)
 }
 
 
