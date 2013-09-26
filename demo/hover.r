@@ -1,13 +1,13 @@
 library(ggvis)
 
 # Scatter plot with hovering
-ggvis(mtcars, props(x = ~wt, y = ~mpg, size := 100, size.hover := 200),
+ggvis(mtcars, props(x = ~wt, y = ~mpg, size.hover := 200),
   mark_symbol()
 )
 
 # Larger point and outline when hovering
 ggvis(mtcars, 
-  props(x = ~wt, y = ~mpg, size := 100, size.hover := 200,
+  props(x = ~wt, y = ~mpg, size.hover := 200,
         stroke := NA, stroke.hover := "red", strokeWidth := 3),
   mark_symbol()
 )
