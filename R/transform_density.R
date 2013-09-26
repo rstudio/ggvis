@@ -87,8 +87,8 @@ branch_density <- function(..., area = TRUE) {
 
   # Line shouldn't get fill-related props, and area shouldn't get
   # stroke-related props.
-  line_props <- line_props[setdiff(names(line_props), c("fill", "fillOpacity"))]
-  area_props <- area_props[setdiff(names(area_props), c("stroke", "strokeOpacity"))]
+  line_props <- drop_props(line_props, c("fill", "fillOpacity"))
+  se_props <- drop_props(se_props, c("stroke", "strokeOpacity"))
 
   branch(
     transform_density(...),
@@ -108,9 +108,9 @@ format.transform_density <- function(x, ...) {
 
 #' @S3method compute transform_density
 compute.transform_density <- function(x, props, data) {
-  check_prop(x, props, data, "x", "numeric")
+  check_prop(x, props, data, "x.update", "numeric")
 
-  output <- compute_density(data, x, x_var = props$x, y_var = props$y)
+  output <- compute_density(data, x, x_var = props$x.update, y_var = props$y.update)
   preserve_constants(data, output)
 }
 

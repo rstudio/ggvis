@@ -76,6 +76,9 @@
 			"type" : "symbol",
 			"properties" : {
 				"update" : {
+					"size" : {
+						"value" : 100
+					},
 					"x" : {
 						"scale" : "x",
 						"field" : "data.x"

@@ -69,3 +69,4 @@ Collate:
     'branch_misc.R'
     'transform_density.R'
     'utils_data.R'
+    'utils_props.R'
