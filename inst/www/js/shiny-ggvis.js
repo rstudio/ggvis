@@ -94,35 +94,26 @@ $(function(){ //DOM Ready
     }
   };
 
-  // Tooltip output binding
-  var ggvisTooltipOutputBinding = new Shiny.OutputBinding();
-  $.extend(ggvisTooltipOutputBinding, {
-    find: function(scope) {
-      return $(scope).find('.shiny-ggvis-tooltip-output');
-    },
-    onValueError: function(el, err) {
-      Shiny.unbindAll(el);
-      this.renderError(el, err);
-    },
-    renderValue: function(el, data) {
-      $el = $(el);
+  // Tooltip message handler
+  Shiny.addCustomMessageHandler('ggvis_tooltip', function(data) {
+    if (data.visible) {
+      // Remove any existing tooltips
+      $('.ggvis-tooltip').remove();
 
-      if (data) {
-        // Set the div's text
-        $el.html(data.text);
-        // Move the div to the right place and make it visible
-        $el.css({
-          left:  data.pagex,
-          top:   data.pagey,
-          display: "block"
-        });
+      // Add the tooltip div
+      var $el = $('<div id="ggvis-tooltip" class="ggvis-tooltip"></div>')
+        .appendTo('body');
 
-      } else {
-        $el.css({ display: "none" });
-      }
+      $el.html(data.html);
+      $el.css({
+        left:  data.pagex,
+        top:   data.pagey,
+        display: "block"
+      });
+
+    } else {
+      $('.ggvis-tooltip').remove();
     }
   });
-  Shiny.outputBindings.register(ggvisTooltipOutputBinding, 'shiny.ggvisTooltipOutput');
-
 
 });

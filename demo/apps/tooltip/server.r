@@ -17,25 +17,39 @@ shinyServer(function(input, output, session) {
   })
 
   # Print the object that was sent over
-  output$info <- renderPrint({
+  output$hover_data <- renderPrint({
     str(input$ggvis_hover)
   })
 
-  # Hover tooltip
-  output$ggvis_tooltip <- reactive({
+  observe({
     hover <- input$ggvis_hover
-    if (is.null(hover)) return(invisible())
 
-    list(
-      pagex = hover$pagex + 15,
-      pagey = hover$pagey,
-      text = format(div(
-        paste("wt:", hover$data$wt),
-        br(),
-        paste("mpg", hover$data$mpg)
-      ))
-    )
+    if (is.null(hover)) {
+      message <- list(visible = FALSE)
+
+    } else {
+      # If hovering over a point, `data` is a list with `wt` and `mpg`, but if
+      # hovering over an axis label or legend, `data` is an atomic vector, so
+      # we need to do these checks. An alternative is to use a try() block.
+      if (!is.null(hover$data) && exists('wt', hover$data) && exists('mpg', hover$data)) {
+        html <- format(div(
+          paste("Weight:", 1000*hover$data$wt, "lbs"),
+          br(),
+          paste("MPG:", hover$data$mpg)
+        ))
+      } else {
+        html <- format(div(hover$data))
+      }
+
+      message <- list(
+        visible = TRUE,
+        pagex = hover$pagex + 15,
+        pagey = hover$pagey,
+        html = html
+      )
+    }
+
+    session$sendCustomMessage('ggvis_tooltip', message)
   })
-  outputOptions(output, "ggvis_tooltip", suspendWhenHidden = FALSE)
 
 })

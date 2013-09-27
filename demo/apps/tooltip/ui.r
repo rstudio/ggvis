@@ -6,7 +6,7 @@ shinyUI(pageWithSidebar(
   ),
   mainPanel(
     ggvis_output("plot1"),
-    verbatimTextOutput("info"),
-    div(id = "ggvis_tooltip", class = "shiny-ggvis-tooltip-output", "")
+    h3("Hover data (sent from client to server)"),
+    verbatimTextOutput("hover_data")
   )
 ))

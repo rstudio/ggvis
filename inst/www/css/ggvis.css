@@ -11,7 +11,7 @@
 }
 
 /* Tooltip box */
-.shiny-ggvis-tooltip-output {
+.ggvis-tooltip {
   position: absolute;
   float: left;
   pointer-events: none;
