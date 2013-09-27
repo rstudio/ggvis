@@ -92,7 +92,7 @@ GgvisPlot.prototype = {
       var selector = ".ggvis-output#" + self.plotId;
       var $el = $(selector);
 
-      chart = chart({ el: selector, renderer: renderer });
+      chart = chart({ el: selector, renderer: renderer, hover: false });
       // Save the chart object
       self.chart = chart;
       $el.data("ggvis-chart", chart);
