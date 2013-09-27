@@ -81,7 +81,11 @@ $(function(){ //DOM Ready
   var tooltip = {
     mouseover: function(event, item) {
       this.update({ props:"hover", items:item, duration:100 });
-      Shiny.onInputChange("ggvis_hover", item.datum.data);
+      Shiny.onInputChange("ggvis_hover",
+        { data: item.datum.data,
+          pagex: event.pageX,
+          pagey: event.pageY }
+      );
     },
 
     mouseout: function(event, item) {
@@ -89,5 +93,36 @@ $(function(){ //DOM Ready
       Shiny.onInputChange("ggvis_hover", null);
     }
   };
+
+  // Tooltip output binding
+  var ggvisTooltipOutputBinding = new Shiny.OutputBinding();
+  $.extend(ggvisTooltipOutputBinding, {
+    find: function(scope) {
+      return $(scope).find('.shiny-ggvis-tooltip-output');
+    },
+    onValueError: function(el, err) {
+      Shiny.unbindAll(el);
+      this.renderError(el, err);
+    },
+    renderValue: function(el, data) {
+      $el = $(el);
+
+      if (data) {
+        // Set the div's text
+        $el.html(data.text);
+        // Move the div to the right place and make it visible
+        $el.css({
+          left:  data.pagex,
+          top:   data.pagey,
+          display: "block"
+        });
+
+      } else {
+        $el.css({ display: "none" });
+      }
+    }
+  });
+  Shiny.outputBindings.register(ggvisTooltipOutputBinding, 'shiny.ggvisTooltipOutput');
+
 
 });
