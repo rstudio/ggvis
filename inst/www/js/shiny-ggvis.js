@@ -44,8 +44,6 @@ $(function(){ //DOM Ready
         if (plot.initialized) opts.duration = 250;
 
         plot.chart.update(opts);
-        plot.chart.on("mouseover", tooltip.mouseover);
-        plot.chart.on("mouseout", tooltip.mouseout);
         plot.updateGgvisDivSize();
         plot.initialized = true;
       }
@@ -73,14 +71,15 @@ $(function(){ //DOM Ready
 
     var plot = ggvis.getPlot(plotId);
 
-    plot.parseSpec(spec, ggvis.renderer);
+    plot.parseSpec(spec, ggvis.renderer,
+      { mouseover: tooltip.mouseover, mouseout: tooltip.mouseout }
+    );
   });
 
 
   // Callback functions when hovering
   var tooltip = {
     mouseover: function(event, item) {
-      this.update({ props:"hover", items:item, duration:100 });
       Shiny.onInputChange("ggvis_hover",
         { data: item.datum.data,
           pagex: event.pageX,
@@ -89,7 +88,6 @@ $(function(){ //DOM Ready
     },
 
     mouseout: function(event, item) {
-      this.update({ props:"update", items:item, duration:100 });
       Shiny.onInputChange("ggvis_hover", null);
     }
   };

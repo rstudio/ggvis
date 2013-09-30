@@ -82,20 +82,45 @@ var GgvisPlot = function(plotId) {
 };
 
 GgvisPlot.prototype = {
-  parseSpec: function(spec, renderer) {
+  // opts is an optional object which can have entries:
+  // * mouseover: A callback for the "mouseover" event
+  // * mouseout: A callback for the "mouseout" event
+  // * hovertime: Number of milliseconds for a hover transition
+  parseSpec: function(spec, renderer, opts) {
     var self = this;
     renderer = renderer || "svg";
     self.spec = spec; // Save the spec
     self.initialized = false;
+    self.opts = opts || {};
 
     vg.parse.spec(spec, function(chart) {
       var selector = ".ggvis-output#" + self.plotId;
       var $el = $(selector);
 
-      chart = chart({ el: selector, renderer: renderer, hover: false });
+      // If hovertime is supplied, use that later in a custom callback,
+      // instead of the default hover behavior.
+      var hover = true;
+      if (self.opts.hovertime && self.opts.hovertime !== 0) hover = false;
+
+      chart = chart({ el: selector, renderer: renderer, hover: hover });
       // Save the chart object
       self.chart = chart;
       $el.data("ggvis-chart", chart);
+
+
+      // If hovertime is specified, set callbacks for hover behavior
+      if (self.opts.hovertime && self.opts.hovertime !== 0) {
+        chart.on("mouseover", function(event, item) {
+          this.update({ props:"hover", items:item, duration:self.opts.hovertime });
+        });
+        chart.on("mouseout", function(event, item) {
+          this.update({ props:"update", items:item, duration:self.opts.hovertime });
+        });
+      }
+
+      // If extra callbacks are specified for mouseover and out, add them.
+      if (self.opts.mouseover) chart.on("mouseover", self.opts.mouseover);
+      if (self.opts.mouseout)  chart.on("mouseout",  self.opts.mouseout);
 
       // If the data arrived earlier, use it.
       if (self.pendingData) {
