@@ -88,7 +88,7 @@ manip <- function(x, data, expr, env) UseMethod("manip")
 
 #' @S3method manip transform_subset
 manip.transform_subset <- function(x, data, expr, env) {
-  r <- vapply(conds, eval, env = data, enclos = env,
+  r <- vapply(expr, eval, env = data, enclos = env,
     FUN.VALUE = logical(nrow(data)))
   
   all <- rowSums(r, na.rm = TRUE) == ncol(r)
