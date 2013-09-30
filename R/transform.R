@@ -114,7 +114,7 @@ pipe_id.transform <- function(x, props) {
 # class "transform_smooth", then this returns "smooth".
 transform_type <- function(transform) {
   classes <- class(transform)
-  type <- classes[grep("^transform_", classes)]
+  type <- classes[grep("^transform_", classes)][1]
   sub("^transform_", "", type)
 }
 
