@@ -5,11 +5,17 @@ dots <- function(...) {
   eval(substitute(alist(...)))
 }
 
+named_dots <- function(...) {
+  args <- dots(...)
+  names(args) <- dot_names(...)
+  args
+}
+
 dot_names <- function(...) {
   args <- dots(...)
   nms <- names2(args)
   missing <- nms == ""
-  if (all(!missing)) return(args)
+  if (all(!missing)) return(nms)
   
   defaults <- vapply(args[missing], deparse2, character(1), USE.NAMES = FALSE)
   

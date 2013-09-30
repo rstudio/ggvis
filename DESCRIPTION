@@ -70,3 +70,4 @@ Collate:
     'transform_density.R'
     'utils_data.R'
     'utils_props.R'
+    'transform_manip.R'
