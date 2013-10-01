@@ -5,16 +5,11 @@
 \usage{
   as.vega(x, ...)
 
-  \method{as.vega}{ggvis} (x, width = 600, height = 400,
-    padding = NULL, session = NULL, dynamic = FALSE, ...)
+  \method{as.vega}{ggvis} (x, session = NULL,
+    dynamic = FALSE, ...)
 }
 \arguments{
   \item{x}{an object to convert to vega}
-
-  \item{width,height}{width and height of plot, in pixels}
-
-  \item{padding}{padding, as described by
-  \code{\link{padding}}}
 
   \item{session}{a session object from shiny}
 

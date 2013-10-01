@@ -3,6 +3,9 @@
 #' @param ... components: data, \code{\link{props}}, \code{\link{branch}}es,
 #'   \code{\link{marks}}, \code{\link{scales}}, \code{\link{axis}} or 
 #'   \code{\link{legend}} objects.
+#' @param width,height width and height of plot, in pixels
+#' @param padding padding, as described by \code{\link{padding}}
+#'
 #' @return a \code{branch} object. Will display the plot when printed;
 #'   see \code{\link{save_spec}}, \code{\link{view_static}} and
 #'   \code{\link{view_dynamic}} for other options.

@@ -14,14 +14,9 @@ as.vega <- function(x, ...) {
 #' @method as.vega ggvis
 #' @export
 #' @rdname as.vega
-#' @param width,height width and height of plot, in pixels
-#' @param padding padding, as described by \code{\link{padding}}
 #' @param session a session object from shiny
 #' @param dynamic whether to generate dynamic or static spec
-as.vega.ggvis <- function(x, width = 600, height = 400, padding = NULL,
-                           session = NULL, dynamic = FALSE, ...) {
-  if (is.null(padding)) padding <- padding()
-
+as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
   nodes <- flatten(x, session = session)
   data_table <- extract_data(nodes)
   data_table <- active_props(data_table, nodes)
@@ -42,16 +37,17 @@ as.vega.ggvis <- function(x, width = 600, height = 400, padding = NULL,
   scales <- add_default_scales(x, nodes, data_table)
   axes <- add_default_axes(x$axes, scales)
   legends <- add_default_legends(x$legends, scales)
+  size <- as.vega(x$size[[1]] %||% size())
 
   spec <- list(
     data = datasets,
     scales = unname(scales),
     marks = lapply(nodes, as.vega),
-    width = width,
-    height = height,
+    width = size$width,
+    height = size$height,
     legends = lapply(legends, as.vega),
     axes = lapply(axes, as.vega),
-    padding = as.vega(padding)
+    padding = as.vega(x$padding[[1]] %||% padding())
   )
 
   structure(spec, data_table = data_table)

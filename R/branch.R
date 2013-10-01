@@ -103,5 +103,9 @@ component_type.vega_legend <- function(x) "legends"
 component_type.vega_axis <- function(x) "axes"
 #' @S3method component_type ggvis_props
 component_type.ggvis_props <- function(x) "props"
+#' @S3method component_type ggvis_size
+component_type.ggvis_size <- function(x) "size"
+#' @S3method component_type padding
+component_type.padding <- function(x) "padding"
 #' @S3method component_type default
 component_type.default <- function(x) "data"
