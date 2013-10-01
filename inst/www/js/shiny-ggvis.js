@@ -72,25 +72,39 @@ $(function(){ //DOM Ready
     var plot = ggvis.getPlot(plotId);
 
     plot.parseSpec(spec, ggvis.renderer,
-      { mouseover: tooltip.mouseover, mouseout: tooltip.mouseout }
+      { mouseover: createMouseOverHandler(plotId),
+        mouseout: createMouseOutHandler(plotId) }
     );
   });
 
 
-  // Callback functions when hovering
-  var tooltip = {
-    mouseover: function(event, item) {
+  // Returns a mouseover handler with plotId
+  var createMouseOverHandler = function(plotId) {
+    return function(event, item) {
       Shiny.onInputChange("ggvis_hover",
-        { data: item.datum.data,
+        {
+          plot_id: plotId,
+          data: item.datum.data,
           pagex: event.pageX,
-          pagey: event.pageY }
+          pagey: event.pageY
+        }
       );
-    },
+    };
+  }
 
-    mouseout: function(event, item) {
-      Shiny.onInputChange("ggvis_hover", null);
-    }
-  };
+  // Returns a mouseout handler with plotId
+  var createMouseOutHandler = function(plotId) {
+    return function(event, item) {
+      Shiny.onInputChange("ggvis_hover",
+        {
+          plot_id: plotId,
+          data: null,
+          pagex: null,
+          pagey: null
+        }
+      );
+    };
+  }
 
   // Tooltip message handler
   Shiny.addCustomMessageHandler('ggvis_tooltip', function(data) {
