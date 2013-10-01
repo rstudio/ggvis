@@ -24,14 +24,16 @@ shinyServer(function(input, output, session) {
   observe({
     hover <- input$ggvis_hover
 
-    if (is.null(hover)) {
+    # Initially, hover is null. Later, after mousing out of a mark, hover$data
+    # exists, and is NULL.
+    if (is.null(hover) || is.null(hover$data)) {
       message <- list(visible = FALSE)
 
     } else {
       # If hovering over a point, `data` is a list with `wt` and `mpg`, but if
       # hovering over an axis label or legend, `data` is an atomic vector, so
       # we need to do these checks. An alternative is to use a try() block.
-      if (!is.null(hover$data) && exists('wt', hover$data) && exists('mpg', hover$data)) {
+      if (exists('wt', hover$data) && exists('mpg', hover$data)) {
         html <- format(div(
           paste("Weight:", 1000*hover$data$wt, "lbs"),
           br(),

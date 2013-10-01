@@ -13,20 +13,30 @@ shinyServer(function(input, output, session) {
   # Set up observers for the spec and the data
   observe_ggvis(hist_gv, "plot1", session, "svg")
 
+  # Store the subset of diamonds subset in a reactiveValues object
+  values <- reactiveValues(diamonds = diamonds)
 
   # Get subset of diamonds from first plot
-  diamonds_subset <- reactive({
+  observe({
     hover <- input$ggvis_hover
-    if (is.null(hover) || is.na(hover$data['xmin__'])) return(diamonds)
 
-    diamonds[diamonds$carat >= hover$data$xmin__ &
-             diamonds$carat <  hover$data$xmax__, ]
+    # These conditions means that we're not ready yet, or that we're not
+    # hovering over the right thing.
+    if (is.null(hover) || hover$plot_id != "plot1" || is.null(hover$data) ||
+        is.na(hover$data['xmin__'])) {
+      return()
+    }
+
+    # If we got this far, that means we're hovering over a bar in plot1.
+    # Push a subset of data into values$diamonds
+    values$diamonds <- diamonds[diamonds$carat >= hover$data$xmin__ &
+                                diamonds$carat <  hover$data$xmax__, ]
   })
 
   # Sub-histogram
   hist2_gv <- reactive({
     ggvis(
-      diamonds_subset(),
+      values$diamonds,
       props(x = ~carat),
       branch_histogram(
         props(fill.hover := "red"),
