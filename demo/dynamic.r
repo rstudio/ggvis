@@ -67,7 +67,7 @@ ddat <- reactive({
   dat$value <<- c(dat$value[-1], rnorm(1))
   dat
 })
-ggvis(ddat, props(x = ~time, y = ~value),
+ggvis(ddat, props(x = ~time, y = ~value, key := ~time),
   mark_symbol(),
   mark_line()
 )

@@ -60,6 +60,13 @@ as.vega.mark <- function(mark) {
   # and convert to proper format for vega properties.
   defaults <- default_mark_properties(mark)
   props <- merge_props(defaults, mark$props)
+
+  # Pull out key from props, if present
+  key <- props$key
+  if (!is.null(key)) {
+    props$key <- NULL
+  }
+
   check_mark_props(mark, names(props))
 
   # HW: It seems less than ideal to have to inspect the data here, but
@@ -67,7 +74,7 @@ as.vega.mark <- function(mark) {
   split <- is.split_df(isolate(mark$pipeline()))
 
   if (split) {
-    list(
+    m <- list(
       type = "group",
       from = list(data = paste0(mark$pipeline_id, "_tree")),
       marks = list(
@@ -78,13 +85,17 @@ as.vega.mark <- function(mark) {
       )
     )
   } else {
-    list(
+    m <- list(
       type = mark$type,
       properties = as.vega(props),
       from = list(data = mark$pipeline_id)
     )
   }
 
+  if (!is.null(key)) {
+    m$key <- paste0("data.", prop_name(key))
+  }
+  m
 }
 
 #' @S3method as.vega ggvis_props

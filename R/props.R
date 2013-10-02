@@ -64,7 +64,7 @@ props <- function(..., inherit = TRUE) {
     val <- eval(x, env)
     prop(val, scale = TRUE)
   })
-  
+
   # If unnamed, check that it uses := and don't scale
   unscaled <- lapply(args[!named(args)], function(x) {
     check_unscaled_form(x)
@@ -75,11 +75,21 @@ props <- function(..., inherit = TRUE) {
   names(unscaled) <- vapply(args[!named(args)], function(x) as.character(x[[2]]),
     character(1))
 
-  # Append ".update" to any props that don't already have ".enter", ".exit",
-  # ".update", or ".hover".
   all <- c(scaled, unscaled)
-  no_attrib <- !has_prop_attrib(names(all))
-  names(all)[no_attrib] <- paste0(names(all)[no_attrib], ".update")
+
+  if (!is.null(all$key)) {
+    if (all$key$scale) {
+      stop("The special prop 'key' must be unscaled. Use `key :=` instead of `key =`")
+    }
+    if (all$key$type == "constant") {
+      stop("The special prop 'key' cannot be a constant.")
+    }
+  }
+
+  # Append ".update" to any props that don't already have ".enter", ".exit",
+  # ".update", or ".hover". But don't modify a prop named "key".
+  needs_attrib <- !has_prop_attrib(names(all)) & names(all) != "key"
+  names(all)[needs_attrib] <- paste0(names(all)[needs_attrib], ".update")
 
   structure(
     all,
