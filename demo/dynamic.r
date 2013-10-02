@@ -60,14 +60,16 @@ ggvis(mtc1, props(x = ~wt, y = ~mpg),
 # Data points moving from right to left
 # (currently transitions aren't quite right)
 set.seed(430)
-dat <- data.frame(time = 1:10, value = rnorm(10))
+dat <- data.frame(time = 1:10, value = runif(10))
 ddat <- reactive({
-  invalidateLater(1000, NULL);
+  invalidateLater(2000, NULL);
   dat$time  <<- c(dat$time[-1], dat$time[length(dat$time)] + 1)
-  dat$value <<- c(dat$value[-1], rnorm(1))
+  dat$value <<- c(dat$value[-1], runif(1))
   dat
 })
-ggvis(ddat, props(x = ~time, y = ~value, key := ~time),
+ggvis(
+  ddat,
+  props(x = ~time, y = ~value, key := ~time),
   mark_symbol(),
   mark_line()
 )
