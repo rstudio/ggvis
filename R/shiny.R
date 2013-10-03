@@ -165,7 +165,11 @@ divWithSidebar <- function(headerPanel, sidebarPanel, mainPanel) {
   )
 }
 
-# Controls for choosing a renderer, downloading an image, and quitting
+#' Generate Shiny tags for ggvis controls
+#'
+#' Controls for choosing a renderer, downloading an image, and quitting.
+#' @param plot_id Plot ID
+#' @export
 ggvisControlGroup <- function(plot_id) {
   tagList(
     # Selector for canvas/SVG rendering
