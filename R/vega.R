@@ -130,6 +130,10 @@ as.vega.vega_legend <- as.vega.vega_axis
 
 #' @S3method as.vega data.frame
 as.vega.data.frame <- function(x, name, ...) {
+  # For CSV output, we need to unescape periods, which were turned into \. by
+  # prop_name().
+  names(x) <- gsub("\\.", ".", names(x), fixed = TRUE)
+
   list(list(
     name = name,
     format = list(
