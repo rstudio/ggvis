@@ -32,7 +32,7 @@ is.mark <- function(x) inherits(x, "mark")
 
 #' @importFrom utils adist
 check_mark_props <- function(mark, props) {
-  props <- trim_prop_attrib(props)
+  props <- trim_propset(props)
   valid <- valid_mark_properties(mark)
 
   invalid <- setdiff(props, valid)

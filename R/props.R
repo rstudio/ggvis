@@ -132,8 +132,8 @@ props <- function(..., inherit = TRUE) {
 
   # Append ".update" to any props that don't already have ".enter", ".exit",
   # ".update", or ".hover". But don't modify a prop named "key".
-  needs_attrib <- !has_prop_attrib(names(all)) & names(all) != "key"
-  names(all)[needs_attrib] <- paste0(names(all)[needs_attrib], ".update")
+  needs_propset <- !has_propset(names(all)) & names(all) != "key"
+  names(all)[needs_propset] <- paste0(names(all)[needs_propset], ".update")
 
   structure(
     all,

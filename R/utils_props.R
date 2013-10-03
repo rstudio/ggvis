@@ -1,11 +1,11 @@
 # Given a character vector like c("x", "x.update", "x.enter"), report which ones
 # have .update, .enter, etc.
-has_prop_attrib <- function(x) {
+has_propset <- function(x) {
   sub("^.*\\.", "", x) %in% c("enter", "exit", "update", "hover")
 }
 
-# Remove the trailing attribute from a prop name
-trim_prop_attrib <- function(x) {
+# Remove the trailing propset from a prop name
+trim_propset <- function(x) {
   sub("\\.(enter|exit|update|hover)$", "", x)
 }
 
@@ -18,7 +18,7 @@ prop_sets <- function(props) {
   x <- lapply(sets, function(set) {
     searchstr <- paste0("\\.", set, "$")
     matches <- props[grep(searchstr, names(props))]
-    names(matches) <- trim_prop_attrib(names(matches))
+    names(matches) <- trim_propsets(names(matches))
     matches
   })
 
