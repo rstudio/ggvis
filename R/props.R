@@ -33,7 +33,44 @@
 #' 
 #' If you have the name of a variable in a string, see the
 #' props vignette for how to create the needed property mapping.
+#'
+#' @section Enter, exit, hover, and update propsets
+#'
+#' There are four different sets of properties (propsets) that the marks
+#' can use. These can, for example, be used to change the appearance of a mark
+#' when the mouse cursor is hovering over it: when the mark is hovered over, it
+#' uses the hover propset, and when the mark isn't hovered over, it uses the 
+#' update propset.
+#'
+#' \itemize{
+#'   \item enter: This propset is used by marks when they are added to a plot.
+#'   \item update: This propset is used by marks after they have entered, and
+#'     also after they have been hovered over.
+#'   \item exit: This propset is used by marks as they are removed from a plot.
+#'   \item hover: This propset is used when the mouse cursor is over the mark.
+#' }
+#'
+#' You can specify the propset for a property, by putting a period and the
+#' propset after the property name. For example,
+#' \code{props(fill.update := "black", fill.hover := "red")} will make a mark
+#' have a black fill normally, and red fill when it is hovered over.
+#'
+#' The default propset is update, so if you run \code{props(fill := "red")},
+#' this is equivalent to \code{props(fill.update := "red")}.
 #' 
+#' In practice, the enter and exit propsets are useful only when the update has
+#' a duration (and is therefore not instantaneous). The update propset can be
+#' thought of as the "default" state.
+#'
+#' @section Key property
+#'
+#' In addition to the standard properties, there is a special optional property
+#' called \code{key}. This is useful for plots with dynamic data and smooth
+#' transitions: as the data changes, the key is used to tell the plot how the
+#' new data rows should be matched to the old data rows. Note that the key must
+#' be an unscaled value. Additionally, the key property doesn't have a propset,
+#' since it is independent of enter, update, exit, and hover events.
+#'
 #' @template properties
 #' @param ... A set of name-value pairs. The name should be a valid vega
 #'   property.
@@ -54,6 +91,13 @@
 #' # To control other settings (like custom scales, mult and offset)
 #' # use a prop object
 #' props(x = prop("old", scale = TRUE, offset = -1))
+#'
+#' # Red when hovered over, black otherwise (these are equivalent)
+#' props(fill := "black", fill.hover := "red")
+#' props(fill.update := "black", fill.hover := "red")
+#'
+#' # Use a column called id as the key (for dynamic data)
+#' props(key := ~id)
 props <- function(..., inherit = TRUE) {
   check_empty_args()
   args <- dots(...)
