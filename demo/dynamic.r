@@ -73,3 +73,30 @@ ggvis(
   mark_symbol(),
   mark_line()
 )
+
+
+# Bars moving from right to left
+set.seed(430)
+dat <- data.frame(time = 1:10, value = runif(10))
+ddat <- reactive({
+  invalidateLater(2000, NULL);
+  dat$time  <<- c(dat$time[-1], dat$time[length(dat$time)] + 1)
+  dat$value <<- c(dat$value[-1], runif(1))
+  dat
+})
+ggvis(
+  ddat,
+  props(
+    x = ~time, x.enter = ~time + 1, x.exit  = ~time - 1,
+    y = ~value, y.enter = 0, y.exit = 0,
+    y2 = 0, y2.enter = 0, y2.exit = 0,
+    fill := "#aaa",
+    fillOpacity := 1, fillOpacity.enter := 0, fillOpacity.exit := 0,
+    strokeOpacity := 1, strokeOpacity.enter := 0, strokeOpacity.exit := 0,
+    width = band(),
+    key := ~time
+  ),
+  dscale("y", "numeric", domain = 0:1),
+  dscale("x", "nominal", range = "width", padding = 0, points = FALSE),
+  mark_rect()
+)
