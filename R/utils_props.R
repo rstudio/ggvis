@@ -18,7 +18,7 @@ prop_sets <- function(props) {
   x <- lapply(sets, function(set) {
     searchstr <- paste0("\\.", set, "$")
     matches <- props[grep(searchstr, names(props))]
-    names(matches) <- trim_propsets(names(matches))
+    names(matches) <- trim_propset(names(matches))
     matches
   })
 
