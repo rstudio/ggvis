@@ -77,15 +77,10 @@ format.transform_sort <- function(x, ...) {
 #' @S3method compute transform_sort
 compute.transform_sort <- function(x, props, data) {
   prop_names <- paste0(x$var, ".update")
-  good_vars <- vapply(prop_names,
+  vapply(prop_names,
     function(prop_name) check_prop(x, props, data, prop_name),
     logical(1)
   )
-
-  if (!all(good_vars)) {
-    stop("Variable ", paste(x$var[!good_vars], collapse = ", "),
-         " not in the specified list of props.")
-  }
 
   output <- compute_sort(data, x, var = props[prop_names])
   preserve_constants(data, output)
