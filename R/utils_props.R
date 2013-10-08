@@ -32,6 +32,6 @@ prop_sets <- function(props) {
 #   c("stroke", "strokeOpacity")
 # )
 drop_props <- function(props, drop) {
-  pnames <- trim_prop_attrib(names(props))
+  pnames <- trim_propset(names(props))
   props[!(pnames %in% drop)]
 }
