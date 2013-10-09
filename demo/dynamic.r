@@ -100,3 +100,21 @@ ggvis(
   dscale("x", "nominal", range = "width", padding = 0, points = FALSE),
   mark_rect()
 )
+
+
+# Dynamic stacked bars
+dat <- data.frame(
+  g1 = rep(letters[1:4], 3),
+  g2 = rep(LETTERS[1:3], each = 4),
+  value = runif(12)
+)
+ddat <- reactive({
+  invalidateLater(3000, NULL)
+  dat$value <<- runif(12)
+  dat
+})
+ggvis(ddat, transform_stack(),
+  props(x = ~g1, y = ~value, fill = ~g2, fillOpacity := 0.5),
+  dscale("x", "nominal", range = "width", padding = 0, points = FALSE),
+  mark_rect(props(y = ~ymin__, y2 = ~ymax__, width = band()))
+)
