@@ -37,14 +37,12 @@ ggvis(diamonds, props(x = ~table),
 # Stacked histogram
 ggvis(
   diamonds, by_group(cut), props(x = ~table, fill = ~cut),
+  transform_bin(binwidth = 1),
   branch(
-    transform_bin(binwidth = 1),
+    props(x = ~xmin__, x2 = ~xmax__, y = ~count__, fillOpacity := 0.6),
     branch(
-      props(x = ~xmin__, x2 = ~xmax__, y = ~count__, fillOpacity := 0.6),
-      branch(
-        transform_stack(),
-        mark_rect(props(y = ~ymax__, y2 = ~ymin__))
-      )
+      transform_stack(),
+      mark_rect(props(y = ~ymax__, y2 = ~ymin__))
     )
   )
 )
