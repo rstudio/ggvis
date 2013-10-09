@@ -107,7 +107,7 @@ default_mark_properties.mark_line <- function(mark) {
 mark_rect <- function(props = NULL, data = NULL) mark("rect", props = props, data = data)
 #' @S3method valid_mark_properties mark_rect
 valid_mark_properties.mark_rect <- function(mark) {
-  c("x", "x2", "y", "y2", "width", "opacity", "fill", "fillOpacity", "stroke",
+  c("x", "x2", "y", "y2", "width", "height", "opacity", "fill", "fillOpacity", "stroke",
     "strokeWidth", "strokeOpacity")
 }
 #' @S3method default_mark_properties mark_rect
