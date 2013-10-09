@@ -22,8 +22,8 @@
 #'  Also, if you use \code{by_group}, it will result in the data being sorted
 #'  by the grouping variables.
 #'
-#' @param var The variable to stack. This is the variable name after mapping,
-#'   and must be either \code{"y"} (the default) or \code{"x"}.
+#' @param direction The direction to stack. This is a variable name after
+#'   mapping, and must be either \code{"y"} (the default) or \code{"x"}.
 #'   For example, with \code{props(y = ~mpg)}, you would use \code{"y"}, not
 #'   \code{"mpg"}.
 #' @examples
@@ -48,7 +48,7 @@
 #' )
 #'
 #' # Stacking in x direction instead of default y
-#' ggvis(hec, transform_stack(var = "x"),
+#' ggvis(hec, transform_stack(direction = "x"),
 #'   props(x = ~Freq, y = ~Hair, fill = ~Eye, fillOpacity := 0.5),
 #'   dscale("y", "nominal", range = "height", padding = 0, points = FALSE),
 #'   mark_rect(props(x = ~xmin__, x2 = ~xmax__, height = band()))
@@ -59,33 +59,28 @@
 #' sluice(pipeline(hec, transform_stack()), props(x = ~Hair, y = ~Freq))
 #'
 #' # Same effect, but this time stack x values at each y
-#' sluice(pipeline(hec, transform_stack(var = "x")), props(x = ~Freq, y = ~Hair))
+#' sluice(pipeline(hec, transform_stack(direction = "x")),
+#'   props(x = ~Freq, y = ~Hair))
 #'
 #' @export
-transform_stack <- function(var = "y") {
-  if (var != "y" && var != "x") {
-    stop("var for transform_stack must be 'x' or 'y'.")
+transform_stack <- function(direction = "y") {
+  if (length(direction) != 1) stop("direction must have 1 item, 'x' or 'y'")
+  if (direction != "y" && direction != "x") {
+    stop("direction for transform_stack must be 'x' or 'y'.")
   }
 
-  transform("stack", var = var)
+  transform("stack", direction = direction)
 }
 
 #' @S3method format transform_stack
 format.transform_stack <- function(x, ...) {
-  paste0(" -> stack()", param_string(x["var"]))
+  paste0(" -> stack()", param_string(x$direction))
 }
 
 #' @S3method compute transform_stack
 compute.transform_stack <- function(x, props, data) {
-  if (x$var == "x") {
-    stack_prop <- "x"
-    group_prop <- "y"
-  } else if (x$var == "y") {
-    stack_prop <- "y"
-    group_prop <- "x"
-  } else {
-    stop("var for transform_stack must be 'x' or 'y'.")
-  }
+  stack_prop <- x$direction
+  group_prop <- if (x$direction == "x") "y" else "x"
 
   stack_prop <- paste0(stack_prop, ".update")
   group_prop <- paste0(group_prop, ".update")
@@ -133,7 +128,7 @@ compute_stack.data.frame <- function(data, trans, stack_var, group_var) {
   ymin__ <- unsplit(ymin__, x)
 
   # Add the y lower and upper values to the data frame
-  if (trans$var == "y") {
+  if (trans$direction == "y") {
     cbind(data, ymin__, ymax__)
   } else {
     # If we were actually stacking along x, change names to use x instead

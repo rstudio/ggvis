@@ -34,7 +34,7 @@ ggvis(hec, transform_stack(),
 )
 
 # Stacking in x direction instead of default y
-ggvis(hec, transform_stack(dir = "x"),
+ggvis(hec, transform_stack(direction = "x"),
   props(x = ~Freq, y = ~Hair, fill = ~Eye, fillOpacity := 0.5),
   dscale("y", "nominal", range = "height", padding = 0, points = FALSE),
   mark_rect(props(x = ~xmin__, x2 = ~xmax__, height = band()))

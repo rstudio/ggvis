@@ -2,13 +2,14 @@
 \alias{transform_stack}
 \title{Transformation: stack the data}
 \usage{
-  transform_stack(var = "y")
+  transform_stack(direction = "y")
 }
 \arguments{
-  \item{var}{The variable to stack. This is the variable
-  name after mapping, and must be either \code{"y"} (the
-  default) or \code{"x"}.  For example, with \code{props(y
-  = ~mpg)}, you would use \code{"y"}, not \code{"mpg"}.}
+  \item{direction}{The direction to stack. This is a
+  variable name after mapping, and must be either
+  \code{"y"} (the default) or \code{"x"}.  For example,
+  with \code{props(y = ~mpg)}, you would use \code{"y"},
+  not \code{"mpg"}.}
 }
 \description{
   \code{transform_stack} is a data transformation that
@@ -59,7 +60,7 @@ ggvis(hec, transform_stack(),
 )
 
 # Stacking in x direction instead of default y
-ggvis(hec, transform_stack(var = "x"),
+ggvis(hec, transform_stack(direction = "x"),
   props(x = ~Freq, y = ~Hair, fill = ~Eye, fillOpacity := 0.5),
   dscale("y", "nominal", range = "height", padding = 0, points = FALSE),
   mark_rect(props(x = ~xmin__, x2 = ~xmax__, height = band()))
@@ -70,6 +71,7 @@ ggvis(hec, transform_stack(var = "x"),
 sluice(pipeline(hec, transform_stack()), props(x = ~Hair, y = ~Freq))
 
 # Same effect, but this time stack x values at each y
-sluice(pipeline(hec, transform_stack(var = "x")), props(x = ~Freq, y = ~Hair))
+sluice(pipeline(hec, transform_stack(direction = "x")),
+  props(x = ~Freq, y = ~Hair))
 }
 
