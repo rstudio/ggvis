@@ -19,7 +19,7 @@ To install:
 ```R
 library(devtools)
 install_github(c("assertthat", "testthat"))
-install_github("ggvis", "rstudio")
+install_github(c("httpuv", "shiny", "ggvis"), "rstudio")
 ```
 
 Then check out the various demos in the `demo/` directory. Get started with
