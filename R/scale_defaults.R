@@ -117,7 +117,7 @@ prop_to_scale <- function(prop) {
 proptype_to_scale <- function(type) {
   unname(c(
     "numeric" = "scale_quantitative",
-    "ordinal" = "scale_quantitative",
+    "ordinal" = "scale_ordinal",
     "nominal" = "scale_ordinal",
     "logical" = "scale_ordinal",
     "datetime" = "scale_time"
@@ -164,22 +164,22 @@ add_scale_defaults("y", c("numeric", "datetime"), range = "height")
 add_scale_defaults("y", c("ordinal", "nominal"), range = "height", padding = 0.5)
 
 # Colour scales
-add_scale_defaults("stroke", c("numeric", "ordinal"), range = c("#132B43", "#56B1F7"))
-add_scale_defaults("stroke", "nominal", range = "category10")
+add_scale_defaults("stroke", "nominal", range = c("#132B43", "#56B1F7"))
+add_scale_defaults("stroke", c("numeric", "ordinal"), range = "category10")
 # Fill colours should really be a little more saturated
-add_scale_defaults("fill", c("numeric", "ordinal"), range = c("#132B43", "#56B1F7"))
-add_scale_defaults("fill", "nominal", range = "category10")
+add_scale_defaults("fill", "numeric", range = c("#132B43", "#56B1F7"))
+add_scale_defaults("fill", c("nominal", "ordinal"), range = "category10")
 
 # Other nominal properties
 add_scale_defaults("shape", "nominal", range = "shapes")
 
-# Other ordinal properties
-add_scale_defaults("size", c("numeric", "ordinal"), range = c(20, 100))
+# Other numeric properties
+add_scale_defaults("size", "numeric", range = c(20, 100))
 
-add_scale_defaults("fontSize", c("numeric", "ordinal"), range = c(10, 20))
+add_scale_defaults("fontSize", "numeric", range = c(10, 20))
 
-add_scale_defaults("opacity", c("numeric", "ordinal"), range = c(0, 1))
+add_scale_defaults("opacity", "numeric", range = c(0, 1))
 
-add_scale_defaults("angle", c("numeric", "ordinal"), range = c(0, 2 * pi))
+add_scale_defaults("angle", "numeric", range = c(0, 2 * pi))
 
-add_scale_defaults("radius", c("numeric", "ordinal"), range = c(0, 50))
+add_scale_defaults("radius", "numeric", range = c(0, 50))
