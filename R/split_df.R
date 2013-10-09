@@ -10,8 +10,9 @@
 #'
 #' @export
 #' @param data A data frame.
-#' @param split A quoted expression which, when evaluated with \code{data} (and
-#'   optionally \code{env}), specifies the split groups.
+#' @param split A quoted expression or list of quoted expressions which, when
+#'   evaluated with \code{data} (and optionally \code{env}), specifies the split
+#'   groups.
 #' @param env An enclosing environment in which to evaluate \code{split}.
 #' @keywords internal
 split_df <- function(data, split, env = NULL) {
@@ -49,3 +50,8 @@ is.split_df <- function(x) inherits(x, "split_df")
 
 #' @S3method split_vars split_df
 split_vars.split_df <- function(x) attr(x, "variables")
+
+#' @S3method as.data.frame split_df
+as.data.frame.split_df <- function(x) {
+  do.call(rbind, x)
+}

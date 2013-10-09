@@ -10,9 +10,9 @@
 \arguments{
   \item{data}{A data frame.}
 
-  \item{split}{A quoted expression which, when evaluated
-  with \code{data} (and optionally \code{env}), specifies
-  the split groups.}
+  \item{split}{A quoted expression or list of quoted
+  expressions which, when evaluated with \code{data} (and
+  optionally \code{env}), specifies the split groups.}
 
   \item{env}{An enclosing environment in which to evaluate
   \code{split}.}

@@ -25,7 +25,7 @@
 }
 
 \section{Ouput}{
-  \code{transform_bin} returns a sorted data frame or
+  \code{transform_sort} returns a sorted data frame or
   split_df with the same columns as the input. In the case
   of a split_df, each of the data frames contained within
   is sorted.
