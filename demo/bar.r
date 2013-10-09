@@ -13,51 +13,29 @@ ggvis(pressure,
   mark_rect(props(y2 = 0, width = band()))
 )
 
-# Histogram, fully specified
-ggvis(
-  pipeline(mtcars, transform_bin(binwidth = 1)),
-  props(x = ~wt),
-  branch(
-    props(x = ~xmin__, x2 = ~xmax__, y = ~count__, y2 = 0),
-    mark_rect()
-  )
+
+# Hair and eye color data
+library(plyr)
+hec <- as.data.frame(HairEyeColor)
+hec <- ddply(hec, c("Hair", "Eye"), summarise, Freq = sum(Freq))
+
+# Without stacking - bars overlap
+ggvis(hec,
+  props(x = ~Hair, y = ~Freq, fill = ~Eye, fillOpacity := 0.5),
+  dscale("x", "nominal", range = "width", padding = 0, points = FALSE),
+  mark_rect(props(y2 = 0, width = band()))
 )
 
-# Or using shorthand branch
-ggvis(mtcars, props(x = ~wt),
-  branch_histogram(binwidth = 1)
-)
-ggvis(mtcars, props(x = ~wt),
-  branch_histogram()
-)
-
-# Histogram, filled by cyl
-by_cyl <- pipeline(mtcars, by_group(cyl))
-ggvis(by_cyl, props(x = ~wt, fill = ~factor(cyl)),
-  branch_histogram(binwidth = 1))
-
-ggvis(by_cyl, props(x = ~wt, stroke = ~factor(cyl)),
-  branch_freqpoly(binwidth = 1))
-
-
-# Bigger dataset
-data(diamonds, package = "ggplot2")
-ggvis(diamonds, props(x = ~table),
-  branch_histogram()
+# With stacking
+ggvis(hec, transform_stack(),
+  props(x = ~Hair, y = ~Freq, fill = ~Eye, fillOpacity := 0.5),
+  dscale("x", "nominal", range = "width", padding = 0, points = FALSE),
+  mark_rect(props(y = ~y_lower__, y2 = ~y_upper__, width = band()))
 )
 
-
-# Stacked histogram
-ggvis(
-  mtcars, by_group(cyl), props(x = ~wt, y = ~mpg, fill = ~factor(cyl)),
-  branch(
-    transform_bin(binwidth = 0.25),
-    branch(
-      props(x = ~xmin__, x2 = ~xmax__, y = ~count__, fillOpacity := 0.6),
-      branch(
-        transform_stack(),
-        mark_rect(props(y = ~y_upper__, y2 = ~y_lower__))
-      )
-    )
-  )
+# Stacking in x direction instead of default y
+ggvis(hec, transform_stack(var = "x"),
+  props(x = ~Freq, y = ~Hair, fill = ~Eye, fillOpacity := 0.5),
+  dscale("y", "nominal", range = "height", padding = 0, points = FALSE),
+  mark_rect(props(x = ~x_lower__, x2 = ~x_upper__, height = band()))
 )

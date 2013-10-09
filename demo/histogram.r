@@ -36,9 +36,9 @@ ggvis(diamonds, props(x = ~table),
 
 # Stacked histogram
 ggvis(
-  mtcars, by_group(cyl), props(x = ~wt, y = ~mpg, fill = ~factor(cyl)),
+  diamonds, by_group(cut), props(x = ~table, fill = ~cut),
   branch(
-    transform_bin(binwidth = 0.25),
+    transform_bin(binwidth = 1),
     branch(
       props(x = ~xmin__, x2 = ~xmax__, y = ~count__, fillOpacity := 0.6),
       branch(
