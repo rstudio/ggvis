@@ -97,7 +97,7 @@ view_static <- function(x, renderer = "svg", launch = interactive()) {
   writeLines(whisker.render(template, list(head = head, body = body)),
     con = html_file)
   
-  if (launch) browseURL(html_file)
+  if (launch) view_app(html_file)
   invisible(html_file)
 }
 
@@ -180,8 +180,18 @@ view_dynamic <- function(x, renderer = "svg", launch = TRUE, port = 8228) {
   
   app <- list(ui = ui, server = server)
   if (launch) {
-    runApp(app)
+    runApp(app, launch.browser = view_app)
   } else {
     app
   }
 }
+
+# Check for either a user-specified ggvis.viewapp function or for one provided
+# by the R front-end (RStudio >= v0.98.414 is known to do this, others may as
+# well). Fallback to utils::browseURL if there is no viewapp option provided.
+view_app <- function(url) {
+  viewer <- getOption("ggvis.viewapp", getOption("viewapp", browseURL))
+  viewer(url)
+}
+
+
