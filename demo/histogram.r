@@ -43,7 +43,7 @@ ggvis(
       props(x = ~xmin__, x2 = ~xmax__, y = ~count__, fillOpacity := 0.6),
       branch(
         transform_stack(),
-        mark_rect(props(y = ~y_upper__, y2 = ~y_lower__))
+        mark_rect(props(y = ~ymax__, y2 = ~ymin__))
       )
     )
   )

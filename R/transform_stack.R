@@ -10,8 +10,8 @@
 #' @section Ouput:
 #'
 #' \code{transform_stack} returns a sorted data frame or split_df with the same
-#'   columns as the input as well as columns named \code{y_lower__} and
-#'   \code{y_upper__} (or \code{x_lower__} and \code{x_upper__} if stacking x
+#'   columns as the input as well as columns named \code{ymin__} and
+#'   \code{ymax__} (or \code{xmin__} and \code{xmax__} if stacking x
 #'   values). These columns specify the upper and lower bounds of each stacked
 #'   object.
 #'
@@ -44,14 +44,14 @@
 #' ggvis(hec, transform_stack(),
 #'   props(x = ~Hair, y = ~Freq, fill = ~Eye, fillOpacity := 0.5),
 #'   dscale("x", "nominal", range = "width", padding = 0, points = FALSE),
-#'   mark_rect(props(y = ~y_lower__, y2 = ~y_upper__, width = band()))
+#'   mark_rect(props(y = ~ymin__, y2 = ~ymax__, width = band()))
 #' )
 #'
 #' # Stacking in x direction instead of default y
 #' ggvis(hec, transform_stack(var = "x"),
 #'   props(x = ~Freq, y = ~Hair, fill = ~Eye, fillOpacity := 0.5),
 #'   dscale("y", "nominal", range = "height", padding = 0, points = FALSE),
-#'   mark_rect(props(x = ~x_lower__, x2 = ~x_upper__, height = band()))
+#'   mark_rect(props(x = ~xmin__, x2 = ~xmax__, height = band()))
 #' )
 #'
 #'
@@ -125,18 +125,18 @@ compute_stack.data.frame <- function(data, trans, stack_var, group_var) {
   y_split <- split(y, x)
 
   # Stack y var at each x
-  y_upper__ <- lapply(y_split, cumsum)
-  y_lower__ <- lapply(y_upper__, function(x) c(0, x[-length(x)]))
+  ymax__ <- lapply(y_split, cumsum)
+  ymin__ <- lapply(ymax__, function(x) c(0, x[-length(x)]))
 
   # Convert back to vector
-  y_upper__ <- unsplit(y_upper__, x)
-  y_lower__ <- unsplit(y_lower__, x)
+  ymax__ <- unsplit(ymax__, x)
+  ymin__ <- unsplit(ymin__, x)
 
   # Add the y lower and upper values to the data frame
   if (trans$var == "y") {
-    cbind(data, y_lower__, y_upper__)
+    cbind(data, ymin__, ymax__)
   } else {
     # If we were actually stacking along x, change names to use x instead
-    cbind(data, x_lower__ = y_lower__, x_upper__ = y_upper__)
+    cbind(data, xmin__ = ymin__, xmax__ = ymax__)
   }
 }
