@@ -48,7 +48,7 @@ ggvis(
 
 # With a transform
 mtc1 <- reactive({
-  invalidateLater(1000, NULL);
+  invalidateLater(1000, NULL)
   mtcars[sample(nrow(mtcars), 10), ]
 })
 ggvis(mtc1, props(x = ~wt, y = ~mpg),
@@ -62,7 +62,7 @@ ggvis(mtc1, props(x = ~wt, y = ~mpg),
 set.seed(430)
 dat <- data.frame(time = 1:10, value = runif(10))
 ddat <- reactive({
-  invalidateLater(2000, NULL);
+  invalidateLater(2000, NULL)
   dat$time  <<- c(dat$time[-1], dat$time[length(dat$time)] + 1)
   dat$value <<- c(dat$value[-1], runif(1))
   dat
