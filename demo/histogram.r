@@ -1,18 +1,5 @@
 library(ggvis)
 
-# Bar graph with continuous x
-ggvis(pressure,
-  props(x = ~temperature, y = ~pressure),
-  mark_rect(props(y2 = 0, width := 15))
-)
-
-# Bar graph with ordinal x
-ggvis(pressure,
-  props(x = ~temperature, y = ~pressure),
-  dscale("x", "nominal", range = "width", padding = 0, points = FALSE),
-  mark_rect(props(y2 = 0, width = band()))
-)
-
 # Histogram, fully specified
 ggvis(
   pipeline(mtcars, transform_bin(binwidth = 1)),
@@ -46,3 +33,18 @@ ggvis(diamonds, props(x = ~table),
   branch_histogram()
 )
 
+
+# Stacked histogram
+ggvis(
+  mtcars, by_group(cyl), props(x = ~wt, y = ~mpg, fill = ~factor(cyl)),
+  branch(
+    transform_bin(binwidth = 0.25),
+    branch(
+      props(x = ~xmin__, x2 = ~xmax__, y = ~count__, fillOpacity := 0.6),
+      branch(
+        transform_stack(),
+        mark_rect(props(y = ~y_upper__, y2 = ~y_lower__))
+      )
+    )
+  )
+)
