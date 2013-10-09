@@ -6,9 +6,10 @@
 \usage{
   \method{print}{ggvis} (x, dynamic = NA, ...)
 
-  view_static(x, renderer = "svg", launch = interactive())
+  view_static(x, renderer = "canvas",
+    launch = interactive())
 
-  view_dynamic(x, renderer = "svg", launch = TRUE,
+  view_dynamic(x, renderer = "canvas", launch = TRUE,
     port = 8228)
 }
 \arguments{

@@ -33,7 +33,7 @@ print.ggvis <- function(x, dynamic = NA, ...) {
 #' @export
 #' @importFrom RJSONIO toJSON
 #' @importFrom whisker whisker.render
-view_static <- function(x, renderer = "svg", launch = interactive()) {
+view_static <- function(x, renderer = "canvas", launch = interactive()) {
   
   if (!(renderer %in% c("canvas", "svg")))
     stop("renderer must be 'canvas' or 'svg'")
@@ -144,7 +144,7 @@ copy_www_resources <- function(destdir) {
 #' @importFrom whisker whisker.render
 #' @importFrom shiny pageWithSidebar headerPanel sidebarPanel uiOutput
 #'   mainPanel tags observe runApp stopApp renderUI
-view_dynamic <- function(x, renderer = "svg", launch = TRUE, port = 8228) {
+view_dynamic <- function(x, renderer = "canvas", launch = TRUE, port = 8228) {
   
   if (!(renderer %in% c("canvas", "svg")))
     stop("renderer must be 'canvas' or 'svg'")
