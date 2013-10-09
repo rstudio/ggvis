@@ -11,21 +11,21 @@ test_that("transform_stack works as expected", {
   expect_equal(
     sluice(pipeline(dat, transform_stack()),
            props(x = ~g1, y = ~val)),
-    cbind(dat, y_lower__ = c(0,1,3,0,4,0,6,13), y_upper__ = c(1,3,6,4,9,6,13,21))
+    cbind(dat, ymin__ = c(0,1,3,0,4,0,6,13), ymax__ = c(1,3,6,4,9,6,13,21))
   )
 
   # Adding another var (fill) doesn't change stacking
   expect_equal(
     sluice(pipeline(dat, transform_stack()),
            props(x = ~g1, y = ~val, fill = ~factor(g2))),
-    cbind(dat, y_lower__ = c(0,1,3,0,4,0,6,13), y_upper__ = c(1,3,6,4,9,6,13,21))
+    cbind(dat, ymin__ = c(0,1,3,0,4,0,6,13), ymax__ = c(1,3,6,4,9,6,13,21))
   )
 
   # Stack x value at each y
   expect_equal(
-    sluice(pipeline(dat, transform_stack(var = "x")),
+    sluice(pipeline(dat, transform_stack(direction = "x")),
            props(y = ~g1, x = ~val)),
-    cbind(dat, x_lower__ = c(0,1,3,0,4,0,6,13), x_upper__ = c(1,3,6,4,9,6,13,21))
+    cbind(dat, xmin__ = c(0,1,3,0,4,0,6,13), xmax__ = c(1,3,6,4,9,6,13,21))
   )
 
   # With grouping
@@ -36,14 +36,14 @@ test_that("transform_stack works as expected", {
   # Convert back to data frame for easier testing of values
   res <- do.call(rbind, res)
   # Resulting data frame is same as previous, except sorted by grouping var g2
-  x <- cbind(dat, y_lower__ = c(0,1,3,0,4,0,6,13), y_upper__ = c(1,3,6,4,9,6,13,21))
+  x <- cbind(dat, ymin__ = c(0,1,3,0,4,0,6,13), ymax__ = c(1,3,6,4,9,6,13,21))
   x <- x[order(x$g2), ]
   expect_equal(res, x)
 
   # Expression for x and y, where x grouping doesn't match x values
   expect_equal(
     sluice(pipeline(dat, transform_stack()), props(x = ~g2 %% 2, y = ~val * 2)),
-    cbind(dat, y_lower__ = c(0,0,2,8,16,26,4,38), y_upper__ = c(2,4,8,16,26,38,18,54))
+    cbind(dat, ymin__ = c(0,0,2,8,16,26,4,38), ymax__ = c(2,4,8,16,26,38,18,54))
   )
 })
 
@@ -61,7 +61,7 @@ test_that("stacking unsorted data", {
   expect_equal(
     sluice(pipeline(dat, transform_stack()),
            props(x = ~g1, y = ~val, fill = ~g2)),
-    cbind(dat, y_lower__ = c(0,0,7,0,15,4,2,3), y_upper__ = c(7,4,15,2,21,9,3,6))
+    cbind(dat, ymin__ = c(0,0,7,0,15,4,2,3), ymax__ = c(7,4,15,2,21,9,3,6))
   )
 
   # With grouping, it automatically sorts on the grouping var (g2)
@@ -71,7 +71,7 @@ test_that("stacking unsorted data", {
   res <- do.call(rbind, res)
   # Resulting data frame is same as previous, except sorted by grouping var g2
   x <- dat[order(dat$g2), ]
-  x <- cbind(x, y_lower__ = c(0,0,0,6,1,13,4,3), y_upper__ = c(4,6,1,13,3,21,9,6))
+  x <- cbind(x, ymin__ = c(0,0,0,6,1,13,4,3), ymax__ = c(4,6,1,13,3,21,9,6))
   expect_equal(res, x)
 
   # No grouping, but with transform_sort in the pipeline - same order as previous

@@ -136,7 +136,10 @@
 			"round" : false,
 			"points" : true,
 			"sort" : true,
-			"range" : "category10",
+			"range" : [
+				"#132B43",
+				"#56B1F7"
+			],
 			"domain" : {
 				"fields" : [
 					{
