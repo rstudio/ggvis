@@ -8,16 +8,19 @@
 #' @param dynamic Uses \code{view_dynamic} if \code{TRUE}, \code{view_static} if
 #'   \code{FALSE}. The default picks automatically based on the presence of
 #'   reactives or interactive inputs.
-#' @param ... Other arguments passed on to \code{view_dynamic} and 
-#'   \code{view_static}
 #' @param renderer The renderer to use in the browser. Can be \code{"canvas"}
 #'   (the default) or \code{"svg"}.
+#' @param ... Other arguments passed on to \code{view_dynamic} and 
+#'   \code{view_static}
 #' @param launch If \code{TRUE}, launch this web page in a browser.
 #' @param port the port on which to start the shiny app
 #' @keywords internal
 #' @method print ggvis
 #' @export
-print.ggvis <- function(x, dynamic = NA, ...) {
+print.ggvis <- function(x, dynamic = NA, 
+                        renderer = getOption("ggvis.renderer", default="canvas"), 
+                        ...) {
+  
   set_last_vis(x)
   
   if (is.na(dynamic)) dynamic <- is.dynamic(x) && interactive()
@@ -33,7 +36,9 @@ print.ggvis <- function(x, dynamic = NA, ...) {
 #' @export
 #' @importFrom RJSONIO toJSON
 #' @importFrom whisker whisker.render
-view_static <- function(x, renderer = "canvas", launch = interactive()) {
+view_static <- function(x, 
+                        renderer = getOption("ggvis.renderer", default="canvas"), 
+                        launch = interactive()) {
   
   if (!(renderer %in% c("canvas", "svg")))
     stop("renderer must be 'canvas' or 'svg'")
@@ -144,7 +149,9 @@ copy_www_resources <- function(destdir) {
 #' @importFrom whisker whisker.render
 #' @importFrom shiny pageWithSidebar headerPanel sidebarPanel uiOutput
 #'   mainPanel tags observe runApp stopApp renderUI
-view_dynamic <- function(x, renderer = "canvas", launch = TRUE, port = 8228) {
+view_dynamic <- function(x, 
+                         renderer = getOption("ggvis.renderer", default="canvas"), 
+                         launch = TRUE, port = 8228) {
   
   if (!(renderer %in% c("canvas", "svg")))
     stop("renderer must be 'canvas' or 'svg'")
