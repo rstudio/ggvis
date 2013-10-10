@@ -4,13 +4,17 @@
 \alias{view_static}
 \title{View in a ggvis plot in the browser.}
 \usage{
-  \method{print}{ggvis} (x, dynamic = NA, ...)
+  \method{print}{ggvis} (x, dynamic = NA,
+    renderer = getOption("ggvis.renderer", default = "canvas"),
+    ...)
 
-  view_static(x, renderer = "canvas",
+  view_static(x,
+    renderer = getOption("ggvis.renderer", default = "canvas"),
     launch = interactive())
 
-  view_dynamic(x, renderer = "canvas", launch = TRUE,
-    port = 8228)
+  view_dynamic(x,
+    renderer = getOption("ggvis.renderer", default = "canvas"),
+    launch = TRUE, port = 8228)
 }
 \arguments{
   \item{x}{A ggvis object.}
@@ -20,11 +24,11 @@
   automatically based on the presence of reactives or
   interactive inputs.}
 
-  \item{...}{Other arguments passed on to
-  \code{view_dynamic} and \code{view_static}}
-
   \item{renderer}{The renderer to use in the browser. Can
   be \code{"canvas"} (the default) or \code{"svg"}.}
+
+  \item{...}{Other arguments passed on to
+  \code{view_dynamic} and \code{view_static}}
 
   \item{launch}{If \code{TRUE}, launch this web page in a
   browser.}
