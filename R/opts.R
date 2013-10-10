@@ -16,13 +16,13 @@
 #'   opts(width = 300, height = 200, padding = padding(10, 10, 10, 10)))
 #'
 #' @export
-opts <- function(width = NULL, height = NULL, size = NULL, resizable = NULL,
+opts <- function(width = NULL, height = NULL, auto_size = NULL, resizable = NULL,
                  padding = NULL, duration = NULL) {
   structure(
     compact(list(
       width = width,
       height = height,
-      size = size,
+      auto_size = auto_size,
       resizable = resizable,
       padding = padding,
       duration = duration
@@ -40,7 +40,7 @@ default_opts <- function() {
     list(
       width = 400,
       height = 400,
-      size = "fixed",
+      auto_size = "fixed",
       resizable = TRUE,
       padding = padding(),
       duration = 250

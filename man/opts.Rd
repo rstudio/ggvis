@@ -2,7 +2,7 @@
 \alias{opts}
 \title{Define size of plot.}
 \usage{
-  opts(width = NULL, height = NULL, size = NULL,
+  opts(width = NULL, height = NULL, auto_size = NULL,
     resizable = NULL, padding = NULL, duration = NULL)
 }
 \arguments{
