@@ -38,7 +38,7 @@ $(function(){ //DOM Ready
       plot.chart.data(dataset);
 
       // If all data objects have been received, update.
-      if (plot.data_ready()) {
+      if (plot.dataReady()) {
         var opts = {};
         // Only use duration if plot already initialized (otherwise will error)
         if (plot.initialized) opts.duration = 250;

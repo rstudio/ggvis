@@ -89,20 +89,23 @@ GgvisPlot.prototype = {
   parseSpec: function(spec, renderer, opts) {
     var self = this;
     renderer = renderer || "svg";
-    self.spec = spec; // Save the spec
+    self.spec = spec;
     self.initialized = false;
     self.opts = opts || {};
 
     vg.parse.spec(spec, function(chart) {
-      var selector = ".ggvis-output#" + self.plotId;
-      var $el = $(selector);
+      var $el = self.getDiv();
 
       // If hovertime is supplied, use that later in a custom callback,
       // instead of the default hover behavior.
       var hover = true;
       if (self.opts.hovertime && self.opts.hovertime !== 0) hover = false;
 
-      chart = chart({ el: selector, renderer: renderer, hover: hover });
+      chart = chart({
+        el: "div.ggvis-output#" + self.plotId,
+        renderer: renderer,
+        hover: hover
+      });
       // Save the chart object
       self.chart = chart;
       $el.data("ggvis-chart", chart);
@@ -123,24 +126,11 @@ GgvisPlot.prototype = {
       if (self.opts.mouseout)  chart.on("mouseout",  self.opts.mouseout);
 
       // If the data arrived earlier, use it.
-      if (self.pendingData) {
-        chart.data(self.pendingData);
-        delete self.pendingData;
-      }
+      self.loadPendingData();
 
-      // When done resizing, update with new width and height
-      $el.resizable({
-        helper: "ui-resizable-helper",
-        grid: [10, 10],
-        stop: function() {
-          var padding = chart.padding();
-          chart.width($el.width() - padding.left - padding.right);
-          chart.height($el.height() - padding.top - padding.bottom);
-          chart.update({duration: 250});
-        }
-      });
-
-      if (self.data_ready()) {
+      self.makeResizable(); 
+ 
+      if (self.dataReady()) {
         chart.update();
         self.updateGgvisDivSize();
         self.initialized = true;
@@ -148,29 +138,58 @@ GgvisPlot.prototype = {
     });
   },
 
+  // Get the ggvis-output wrapper div
+  getDiv: function() {
+    return $("div.ggvis-output#" + this.plotId);
+  },
+
   // Sets height and width of wrapper div to contain the plot area.
   // This is so that the resize handle will be put in the right spot.
   updateGgvisDivSize: function() {
-    var $el = $(".ggvis-output#" + this.plotId);
+    var $el = this.getDiv();
     var $plotarea = $el.find("div.vega > .marks");
 
     $el.width($plotarea.width());
     $el.height($plotarea.height());
   },
 
+  makeResizable: function() {
+    var $el = this.getDiv();
+    var chart = this.chart;
+
+    // When done resizing, update chart with new width and height
+    $el.resizable({
+      helper: "ui-resizable-helper",
+      grid: [10, 10],
+      stop: function() {
+        var padding = chart.padding();
+        chart.width($el.width() - padding.left - padding.right);
+        chart.height($el.height() - padding.top - padding.bottom);
+        chart.update({duration: 250});
+      }
+    });
+  },
+
+  loadPendingData: function() {
+    if (this.pendingData) {
+      this.chart.data(this.pendingData);
+      delete this.pendingData;
+    }
+  },
+
   // Returns true if all data objects for a spec have been registered, using
   // this.chart.data(dataset)
-  data_ready: function() {
+  dataReady: function() {
     var existing_data = Object.keys(this.chart.data());
     var expected_data = this.spec.data.map(function (x) {
       return x.name ;
     });
 
-    return this.arrays_equal(existing_data, expected_data);
+    return this.arraysEqual(existing_data, expected_data);
   },
 
   // Returns true if arrays have same contents (in any order), false otherwise.
-  arrays_equal: function(a, b) {
+  arraysEqual: function(a, b) {
     return $(a).not(b).length === 0 && $(b).not(a).length === 0;
   }
 };
