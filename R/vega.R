@@ -37,17 +37,18 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
   scales <- add_default_scales(x, nodes, data_table)
   axes <- add_default_axes(x$axes, scales)
   legends <- add_default_legends(x$legends, scales)
-  size <- as.vega(x$size[[1]] %||% size())
+  opts <- add_default_opts(x$opts[[1]] %||% opts())
 
   spec <- list(
     data = datasets,
     scales = unname(scales),
     marks = lapply(nodes, as.vega),
-    width = size$width,
-    height = size$height,
+    width = opts$width,
+    height = opts$height,
     legends = lapply(legends, as.vega),
     axes = lapply(axes, as.vega),
-    padding = as.vega(x$padding[[1]] %||% padding())
+    padding = as.vega(opts$padding),
+    ggvis_opts = as.vega(opts)
   )
 
   structure(spec, data_table = data_table)

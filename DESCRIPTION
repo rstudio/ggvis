@@ -27,7 +27,6 @@ Collate:
     'guess.R'
     'mark.R'
     'marks.R'
-    'padding.R'
     'pipe.R'
     'pipeline.R'
     'prop.R'
@@ -72,4 +71,4 @@ Collate:
     'branch_misc.R'
     'utils_data.R'
     'utils_props.R'
-    'size.R'
+    'opts.R'

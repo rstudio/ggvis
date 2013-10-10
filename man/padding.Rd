@@ -14,7 +14,7 @@
   Define padding.
 }
 \examples{
-padding()
-padding(10, 10, 10, 10)
+opts(padding = padding())
+opts(padding = padding(10, 10, 10, 10))
 }
 
