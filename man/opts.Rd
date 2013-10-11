@@ -3,7 +3,7 @@
 \title{Set options for a ggvis plot}
 \usage{
   opts(width = NULL, height = NULL, auto_size = NULL,
-    keep_aspect = TRUE, resizable = NULL, padding = NULL,
+    keep_aspect = NULL, resizable = NULL, padding = NULL,
     duration = NULL)
 }
 \arguments{
@@ -21,7 +21,7 @@
   \item{keep_aspect}{If the plot is auto-sized, should the
   aspect ratio be preserved? (This is only useful when
   \code{auto_size} is \code{TRUE}.)  The default value is
-  \code{TRUE}, or the value of
+  \code{FALSE}, or the value of
   \code{getOption("ggvis.keep_aspect")}, if it is set.}
 
   \item{resizable}{If TRUE, allow the user to resize the

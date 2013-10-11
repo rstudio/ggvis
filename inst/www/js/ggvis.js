@@ -93,7 +93,7 @@ GgvisPlot.prototype = {
     self.spec = spec;
     self.initialized = false;
     // Merge options passed to this function into options from the spec
-    self.opts = $.extend(self.spec.ggvis_opts, opts);
+    self.opts = $.extend(true, self.spec.ggvis_opts, opts);
 
     vg.parse.spec(spec, function(chart) {
       var $el = self.getDiv();
@@ -142,18 +142,31 @@ GgvisPlot.prototype = {
     return $("#" + this.plotId);
   },
 
-  // Set the height and width of the chart to the wrapper div
-  resizeToDiv: function(duration) {
+  // Set the width of the chart to the wrapper div. If keep_aspect is true,
+  // also set the height to maintain the aspect ratio.
+  resizeToDiv: function(duration, keep_aspect) {
     if (duration === undefined) duration = this.opts.duration;
     if (duration === undefined) duration = 0;
+    if (keep_aspect === undefined) keep_aspect = this.opts.keep_aspect;
+    if (keep_aspect === undefined) keep_aspect = false;
 
     var $el = this.getDiv();
     var chart = this.chart;
     var padding = chart.padding();
+    var ratio = this.opts.width/this.opts.height;
 
-    chart.width($el.width() - padding.left - padding.right);
-    // Chart height ends up 5 pixels too large, so compensate for this
-    chart.height($el.height() - padding.top - padding.bottom - 5);
+    var newWidth = $el.width() - padding.left - padding.right;
+    var newHeight;
+    if (keep_aspect) {
+      newHeight = newWidth / ratio;
+    } else {
+      newHeight = $el.height() - padding.top - padding.bottom;
+    }
+    // Chart height ends up 5 pixels too large, so compensate for it
+    newHeight -= 5;
+
+    chart.width(newWidth);
+    chart.height(newHeight);
     chart.update({ duration: duration });
   },
 

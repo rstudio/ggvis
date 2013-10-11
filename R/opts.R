@@ -9,7 +9,7 @@
 #'   \code{getOption("ggvis.auto_size")}, if it is set.
 #' @param keep_aspect If the plot is auto-sized, should the aspect ratio be
 #'   preserved? (This is only useful when \code{auto_size} is \code{TRUE}.)
-#'   The default value is \code{TRUE}, or the value of
+#'   The default value is \code{FALSE}, or the value of
 #'   \code{getOption("ggvis.keep_aspect")}, if it is set.
 #' @param resizable If TRUE, allow the user to resize the plot.
 #'   The default value is \code{TRUE}, or the value of
@@ -26,7 +26,7 @@
 #'
 #' @export
 opts <- function(width = NULL, height = NULL, auto_size = NULL,
-                 keep_aspect = TRUE, resizable = NULL, padding = NULL,
+                 keep_aspect = NULL, resizable = NULL, padding = NULL,
                  duration = NULL) {
   structure(
     compact(list(
@@ -52,7 +52,7 @@ default_opts <- function() {
       width = 400,
       height = 400,
       auto_size = getOption("ggvis.auto_size", TRUE),
-      keep_aspect = getOption("ggvis.keep_aspect", TRUE),
+      keep_aspect = getOption("ggvis.keep_aspect", FALSE),
       resizable = getOption("ggvis.resizable", TRUE),
       padding = padding(),
       duration = 250
