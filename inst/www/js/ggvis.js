@@ -79,6 +79,7 @@ var GgvisPlot = function(plotId) {
   this.chart = null;     // Vega chart object on the page
   this.spec = null;      // Vega spec for this plot
   this.initialized = false; // Has update() or enter() been run?
+  this.opts = {};
 };
 
 GgvisPlot.prototype = {
@@ -91,7 +92,8 @@ GgvisPlot.prototype = {
     renderer = renderer || "svg";
     self.spec = spec;
     self.initialized = false;
-    self.opts = opts || {};
+    // Merge options passed to this function into options from the spec
+    self.opts = $.extend(self.spec.ggvis_opts, opts);
 
     vg.parse.spec(spec, function(chart) {
       var $el = self.getDiv();
@@ -125,16 +127,13 @@ GgvisPlot.prototype = {
       if (self.opts.mouseover) chart.on("mouseover", self.opts.mouseover);
       if (self.opts.mouseout)  chart.on("mouseout",  self.opts.mouseout);
 
-      // If the data arrived earlier, use it.
-      self.loadPendingData();
+      if (self.opts.resizable) self.makeResizable();
+      if (self.opts.auto_size) self.makeAutoResizable();
 
-      self.makeResizable(); 
+      // If the data arrived earlier, use it.
+      if (this.pendingData) self.loadPendingData();
  
-      if (self.dataReady()) {
-        chart.update();
-        self.updateGgvisDivSize();
-        self.initialized = true;
-      }
+      if (self.dataReady()) self.initialize();
     });
   },
 
@@ -143,38 +142,58 @@ GgvisPlot.prototype = {
     return $("div.ggvis-output#" + this.plotId);
   },
 
-  // Sets height and width of wrapper div to contain the plot area.
-  // This is so that the resize handle will be put in the right spot.
-  updateGgvisDivSize: function() {
-    var $el = this.getDiv();
-    var $plotarea = $el.find("div.vega > .marks");
+  // Set the height and width of the chart to the wrapper div
+  resizeToDiv: function(duration) {
+    if (duration === undefined) duration = this.opts.duration;
+    if (duration === undefined) duration = 0;
 
-    $el.width($plotarea.width());
-    $el.height($plotarea.height());
-  },
-
-  makeResizable: function() {
     var $el = this.getDiv();
     var chart = this.chart;
+    var padding = chart.padding();
+
+    chart.width($el.width() - padding.left - padding.right);
+    chart.height($el.height() - padding.top - padding.bottom);
+    chart.update({ duration: duration });
+  },
+
+  // Run an update on the chart for the first time
+  initialize: function() {
+    // If chart hasn't been run yet, we need to run it once so that
+    // resizeToDiv will work properly (it needs the spec to have been run
+    // before it can figure out what the padding will be).
+    if (!this.initialized) this.chart.update({ duration: 0 });
+
+    this.resizeToDiv(0);
+    this.initialized = true;
+  },
+
+  // Make manually resizable (by dragging corner)
+  makeResizable: function() {
+    var $el = this.getDiv();
+    var self = this;
 
     // When done resizing, update chart with new width and height
     $el.resizable({
       helper: "ui-resizable-helper",
       grid: [10, 10],
-      stop: function() {
-        var padding = chart.padding();
-        chart.width($el.width() - padding.left - padding.right);
-        chart.height($el.height() - padding.top - padding.bottom);
-        chart.update({duration: 250});
-      }
+      stop: function() { self.resizeToDiv(); }
+    });
+  },
+
+  // Make the plot auto-resize to fit the window - debounce to 100ms
+  makeAutoResizable: function() {
+    var self = this;
+    var debounce_id = null;
+
+    $(window).resize(function() {
+      clearTimeout(debounce_id);
+      debounce_id = setTimeout(function() { self.resizeToDiv(); }, 100);
     });
   },
 
   loadPendingData: function() {
-    if (this.pendingData) {
-      this.chart.data(this.pendingData);
-      delete this.pendingData;
-    }
+    this.chart.data(this.pendingData);
+    delete this.pendingData;
   },
 
   // Returns true if all data objects for a spec have been registered, using

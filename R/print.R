@@ -75,7 +75,7 @@ view_static <- function(x,
   )
 
   body <- divWithSidebar(
-    headerPanel("ggvis plot"),
+    div(),
     sidebarPanel(
       ggvisControlGroup(plot_id)
     ),

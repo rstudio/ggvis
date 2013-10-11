@@ -37,20 +37,18 @@ $(function(){ //DOM Ready
       dataset[name] = vg.data.read(data, format);
       plot.chart.data(dataset);
 
-      // If all data objects have been received, update.
+      // If all data objects have been received, update
       if (plot.dataReady()) {
-        var opts = {};
-        // Only use duration if plot already initialized (otherwise will error)
-        if (plot.initialized) opts.duration = 250;
-
-        plot.chart.update(opts);
-        plot.updateGgvisDivSize();
-        plot.initialized = true;
+        if (!plot.initialized) {
+          plot.initialize()
+        } else {
+          plot.chart.update({ duration: plot.opts.duration });
+        }
       }
+
     } else {
       // The plot doesn't exist, save the data for when the plot arrives
-      if (!plot.pendingData)
-        plot.pendingData = {};
+      if (!plot.pendingData) plot.pendingData = {};
 
       plot.pendingData[name] = data;
     }

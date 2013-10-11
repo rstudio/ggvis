@@ -1,11 +1,12 @@
 #' Define size of plot.
 #'
 #' @param width,height Width and height of plot, in pixels.
-#' @param auto_size What do do with the width and height values, in relation to
-#'   the window size. If \code{"fixed"}, the plot size will be set to
-#'   \code{height} and \code{width}, regardless of window size. If
-#'   \code{"fit"}, the plot size will be sized to the window or to \code{width}
-#'   and \code{height}, whichever is smaller.
+#' @param auto_size Should the plot be resized according to the window size? If
+#'   FALSE, the plot size will be set to \code{height} and \code{width},
+#'   regardless of window size. If TRUE, the plot size will be sized to
+#'   the window or to \code{width} and \code{height}, whichever is smaller.
+#' @param keep_aspect If the plot is auto-sized, should the aspect ratio be
+#'   preserved? (Only useful when \code{auto_size} is \code{TRUE}.)
 #' @param resizable If TRUE, allow the user to resize the plot.
 #' @param padding A padding object specifying padding on the top, right, left,
 #'   and bottom. See \code{\link{padding}}.
@@ -16,13 +17,15 @@
 #'   opts(width = 300, height = 200, padding = padding(10, 10, 10, 10)))
 #'
 #' @export
-opts <- function(width = NULL, height = NULL, auto_size = NULL, resizable = NULL,
-                 padding = NULL, duration = NULL) {
+opts <- function(width = NULL, height = NULL, auto_size = NULL,
+                 keep_aspect = TRUE, resizable = NULL, padding = NULL,
+                 duration = NULL) {
   structure(
     compact(list(
       width = width,
       height = height,
       auto_size = auto_size,
+      keep_aspect = keep_aspect,
       resizable = resizable,
       padding = padding,
       duration = duration
@@ -40,7 +43,8 @@ default_opts <- function() {
     list(
       width = 400,
       height = 400,
-      auto_size = "fixed",
+      auto_size = TRUE,
+      keep_aspect = TRUE,
       resizable = TRUE,
       padding = padding(),
       duration = 250
