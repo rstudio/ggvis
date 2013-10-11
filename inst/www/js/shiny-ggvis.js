@@ -40,7 +40,7 @@ $(function(){ //DOM Ready
       // If all data objects have been received, update
       if (plot.dataReady()) {
         if (!plot.initialized) {
-          plot.initialize()
+          plot.initialUpdate()
         } else {
           plot.chart.update({ duration: plot.opts.duration });
         }

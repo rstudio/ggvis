@@ -133,7 +133,7 @@ GgvisPlot.prototype = {
       // If the data arrived earlier, use it.
       if (this.pendingData) self.loadPendingData();
  
-      if (self.dataReady()) self.initialize();
+      if (self.dataReady()) self.initialUpdate();
     });
   },
 
@@ -171,7 +171,7 @@ GgvisPlot.prototype = {
   },
 
   // Run an update on the chart for the first time
-  initialize: function() {
+  initialUpdate: function() {
     // If chart hasn't been run yet, we need to run it once so that
     // resizeToDiv will work properly (it needs the spec to have been run
     // before it can figure out what the padding will be).
