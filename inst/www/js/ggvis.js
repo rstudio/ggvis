@@ -104,7 +104,7 @@ GgvisPlot.prototype = {
       if (self.opts.hovertime && self.opts.hovertime !== 0) hover = false;
 
       chart = chart({
-        el: "div.ggvis-output#" + self.plotId,
+        el: "#" + self.plotId,
         renderer: renderer,
         hover: hover
       });
@@ -139,7 +139,7 @@ GgvisPlot.prototype = {
 
   // Get the ggvis-output wrapper div
   getDiv: function() {
-    return $("div.ggvis-output#" + this.plotId);
+    return $("#" + this.plotId);
   },
 
   // Set the height and width of the chart to the wrapper div
