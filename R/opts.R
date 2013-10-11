@@ -1,6 +1,6 @@
-#' Define size of plot.
+#' Set options for a ggvis plot
 #'
-#' @param width,height Width and height of plot, in pixels.
+#' @param width,height Width and height of plot, in pixels. Default is 400x400.
 #' @param auto_size Should the plot be resized according to the window size? If
 #'   FALSE, the plot size will be set to \code{height} and \code{width},
 #'   regardless of window size. If TRUE, the plot size will be sized to
@@ -18,6 +18,8 @@
 #'   and bottom. See \code{\link{padding}}.
 #' @param duration Duration of transitions, in milliseconds.
 #'
+#' @seealso \code{link{getOption}} and \code{link{options}}, for getting and
+#'   setting global options.
 #' @examples
 #' ggvis(mtcars, props(x = ~wt, y = ~mpg), mark_symbol(),
 #'   opts(width = 300, height = 200, padding = padding(10, 10, 10, 10)))
