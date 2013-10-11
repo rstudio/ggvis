@@ -152,7 +152,8 @@ GgvisPlot.prototype = {
     var padding = chart.padding();
 
     chart.width($el.width() - padding.left - padding.right);
-    chart.height($el.height() - padding.top - padding.bottom);
+    // Chart height ends up 5 pixels too large, so compensate for this
+    chart.height($el.height() - padding.top - padding.bottom - 5);
     chart.update({ duration: duration });
   },
 
