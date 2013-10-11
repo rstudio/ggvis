@@ -160,7 +160,7 @@ view_dynamic <- function(x,
   
   # Make our resources available
   ui <- pageWithSidebar(
-    headerPanel("ggvis plot"),
+    div(),
     sidebarPanel(
       uiOutput("ggvis_ui"),
       ggvisControlGroup(plot_id)
