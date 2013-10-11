@@ -127,8 +127,8 @@ GgvisPlot.prototype = {
       if (self.opts.mouseover) chart.on("mouseover", self.opts.mouseover);
       if (self.opts.mouseout)  chart.on("mouseout",  self.opts.mouseout);
 
-      if (self.opts.resizable) self.makeResizable();
-      if (self.opts.auto_size) self.makeAutoResizable();
+      if (self.opts.resizable) self.enableResizable();
+      if (self.opts.auto_width) self.enableAutoWidth();
 
       // If the data arrived earlier, use it.
       if (this.pendingData) self.loadPendingData();
@@ -182,7 +182,7 @@ GgvisPlot.prototype = {
   },
 
   // Make manually resizable (by dragging corner)
-  makeResizable: function() {
+  enableResizable: function() {
     var $el = this.getDiv();
     var self = this;
 
@@ -194,8 +194,8 @@ GgvisPlot.prototype = {
     });
   },
 
-  // Make the plot auto-resize to fit the window - debounce to 100ms
-  makeAutoResizable: function() {
+  // Make the plot auto-resize to fit available width - debounce to 100ms
+  enableAutoWidth: function() {
     var self = this;
     var debounce_id = null;
 
