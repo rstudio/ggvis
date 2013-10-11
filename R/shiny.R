@@ -64,27 +64,25 @@ ggvis_output <- function(id) {
 #' @rdname shiny
 #' @param r_gv A reactive expression which returns a ggvis object.
 #' @param session A Shiny session object.
-#' @param renderer The renderer type ("canvas" or "svg")
 #' @param ... Other arguments passed to \code{as.vega}.
 #' @export
-observe_ggvis <- function(r_gv, id, session, renderer = "canvas", ...) {
+observe_ggvis <- function(r_gv, id, session, ...) {
   if (!is.reactive(r_gv)) {
     stop("observe_ggvis requires a reactive expression that returns a ggvis object",
       call. = FALSE)
   }
   r_spec <- reactive(as.vega(r_gv(), session = session, dynamic = TRUE, ...))
 
-  observe_spec(r_spec, id, session, renderer)
+  observe_spec(r_spec, id, session)
   observe_data(r_spec, id, session)
 }
 
 # Create an observer for a reactive vega spec
-observe_spec <- function(r_spec, id, session, renderer) {
+observe_spec <- function(r_spec, id, session) {
   obs <- observe({
     session$sendCustomMessage("ggvis_vega_spec", list(
       plotId = id,
-      spec = r_spec(),
-      renderer = renderer
+      spec = r_spec()
     ))
   })
   session$onSessionEnded(function() {

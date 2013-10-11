@@ -17,6 +17,8 @@
 #' @param padding A padding object specifying padding on the top, right, left,
 #'   and bottom. See \code{\link{padding}}.
 #' @param duration Duration of transitions, in milliseconds.
+#' @param renderer The renderer to use in the browser. Can be \code{"canvas"}
+#'   (the default) or \code{"svg"}.
 #'
 #' @seealso \code{link{getOption}} and \code{link{options}}, for getting and
 #'   setting global options.
@@ -27,7 +29,7 @@
 #' @export
 opts <- function(width = NULL, height = NULL, auto_width = NULL,
                  keep_aspect = NULL, resizable = NULL, padding = NULL,
-                 duration = NULL) {
+                 duration = NULL, renderer = NULL) {
   structure(
     compact(list(
       width = width,
@@ -36,7 +38,8 @@ opts <- function(width = NULL, height = NULL, auto_width = NULL,
       keep_aspect = keep_aspect,
       resizable = resizable,
       padding = padding,
-      duration = duration
+      duration = duration,
+      renderer = renderer
     )),
     class = "ggvis_opts"
   )
@@ -55,7 +58,8 @@ default_opts <- function() {
       keep_aspect = getOption("ggvis.keep_aspect", FALSE),
       resizable = getOption("ggvis.resizable", TRUE),
       padding = padding(),
-      duration = 250
+      duration = 250,
+      renderer = getOption("ggvis.renderer", "canvas")
     ),
     class = "ggvis_opts"
   )

@@ -4,9 +4,7 @@
 \alias{view_static}
 \title{View in a ggvis plot in the browser.}
 \usage{
-  \method{print}{ggvis} (x, dynamic = NA,
-    renderer = getOption("ggvis.renderer", default = "canvas"),
-    ...)
+  \method{print}{ggvis} (x, dynamic = NA, ...)
 
   view_static(x,
     renderer = getOption("ggvis.renderer", default = "canvas"),
@@ -23,9 +21,6 @@
   \code{view_static} if \code{FALSE}. The default picks
   automatically based on the presence of reactives or
   interactive inputs.}
-
-  \item{renderer}{The renderer to use in the browser. Can
-  be \code{"canvas"} (the default) or \code{"svg"}.}
 
   \item{...}{Other arguments passed on to
   \code{view_dynamic} and \code{view_static}}

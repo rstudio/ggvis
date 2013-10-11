@@ -59,17 +59,9 @@ $(function(){ //DOM Ready
   Shiny.addCustomMessageHandler("ggvis_vega_spec", function(message) {
     var plotId = message.plotId;
     var spec = message.spec;
-
-    // If no renderer already selected, set it here
-    if (!ggvis.renderer) {
-      ggvis.renderer = message.renderer || "canvas";
-      ggvis.setRendererChooser(ggvis.renderer);
-      ggvis.updateDownloadButtonText();
-    }
-
     var plot = ggvis.getPlot(plotId);
 
-    plot.parseSpec(spec, ggvis.renderer,
+    plot.parseSpec(spec,
       { mouseover: createMouseOverHandler(plotId),
         mouseout: createMouseOutHandler(plotId) }
     );

@@ -42,13 +42,23 @@ ggvis.updateDownloadLink = function(plotId, el) {
   el.setAttribute("href", imageUrl);
 };
 
-// Change the renderer and update all plots
-ggvis.setRenderer = function(renderer) {
-  this.renderer = renderer;
+// Set the renderer for all plots (unless updatePlots is false), and update
+// the renderer selector and download button if present.
+ggvis.setRenderer = function(renderer, updatePlots) {
+  if (updatePlots === undefined) updatePlots = true;
 
+  this.renderer = renderer;
+  if (updatePlots) this.setPlotRenderers(renderer);
+  this.setRendererChooser(renderer);
+  this.updateDownloadButtonText(renderer);
+}
+
+// Change the renderer for all plots
+ggvis.setPlotRenderers = function(renderer) {
   for (var plotId in this.plots) {
-    if (this.plots.hasOwnProperty(plotId))
+    if (this.plots.hasOwnProperty(plotId)) {
       this.plots[plotId].chart.renderer(renderer).update();
+    }
   }
 };
 
@@ -60,12 +70,12 @@ ggvis.setRendererChooser = function(renderer) {
   }
 };
 
-ggvis.updateDownloadButtonText = function() {
+ggvis.updateDownloadButtonText = function(renderer) {
   var $el = $("#ggvis_download");
   if ($el) {
     var filetype = "";
-    if      (this.renderer === "svg")    filetype = "SVG";
-    else if (this.renderer === "canvas") filetype = "PNG";
+    if      (renderer === "svg")    filetype = "SVG";
+    else if (renderer === "canvas") filetype = "PNG";
 
     $el.text("Download " + filetype);
   }
@@ -87,9 +97,8 @@ GgvisPlot.prototype = {
   // * mouseover: A callback for the "mouseover" event
   // * mouseout: A callback for the "mouseout" event
   // * hovertime: Number of milliseconds for a hover transition
-  parseSpec: function(spec, renderer, opts) {
+  parseSpec: function(spec, opts) {
     var self = this;
-    renderer = renderer || "svg";
     self.spec = spec;
     self.initialized = false;
     // Merge options passed to this function into options from the spec
@@ -105,13 +114,17 @@ GgvisPlot.prototype = {
 
       chart = chart({
         el: "#" + self.plotId,
-        renderer: renderer,
+        renderer: self.opts.renderer || "canvas",
         hover: hover
       });
       // Save the chart object
       self.chart = chart;
       $el.data("ggvis-chart", chart);
 
+      // If the overall renderer option hasn't been set, set it
+      if(ggvis.renderer === null) {
+        ggvis.setRenderer(self.opts.renderer, false);
+      }
 
       // If hovertime is specified, set callbacks for hover behavior
       if (self.opts.hovertime && self.opts.hovertime !== 0) {
@@ -249,7 +262,6 @@ $(function(){ //DOM Ready
   if ($el) {
     $el.on("change", function() {
       ggvis.setRenderer(this.value);
-      ggvis.updateDownloadButtonText();
     });
   }
 });

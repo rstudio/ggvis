@@ -7,8 +7,7 @@
 \usage{
   ggvis_output(id)
 
-  observe_ggvis(r_gv, id, session, renderer = "canvas",
-    ...)
+  observe_ggvis(r_gv, id, session, ...)
 
   renderControls(r_gv, session = NULL)
 }
@@ -20,8 +19,6 @@
   object.}
 
   \item{session}{A Shiny session object.}
-
-  \item{renderer}{The renderer type ("canvas" or "svg")}
 
   \item{...}{Other arguments passed to \code{as.vega}.}
 }
