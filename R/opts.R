@@ -5,9 +5,15 @@
 #'   FALSE, the plot size will be set to \code{height} and \code{width},
 #'   regardless of window size. If TRUE, the plot size will be sized to
 #'   the window or to \code{width} and \code{height}, whichever is smaller.
+#'   The default value is \code{TRUE}, or the value of
+#'   \code{getOption("ggvis.auto_size")}, if it is set.
 #' @param keep_aspect If the plot is auto-sized, should the aspect ratio be
-#'   preserved? (Only useful when \code{auto_size} is \code{TRUE}.)
+#'   preserved? (This is only useful when \code{auto_size} is \code{TRUE}.)
+#'   The default value is \code{TRUE}, or the value of
+#'   \code{getOption("ggvis.keep_aspect")}, if it is set.
 #' @param resizable If TRUE, allow the user to resize the plot.
+#'   The default value is \code{TRUE}, or the value of
+#'   \code{getOption("ggvis.resizable")}, if it is set.
 #' @param padding A padding object specifying padding on the top, right, left,
 #'   and bottom. See \code{\link{padding}}.
 #' @param duration Duration of transitions, in milliseconds.
@@ -43,9 +49,9 @@ default_opts <- function() {
     list(
       width = 400,
       height = 400,
-      auto_size = TRUE,
-      keep_aspect = TRUE,
-      resizable = TRUE,
+      auto_size = getOption("ggvis.auto_size", TRUE),
+      keep_aspect = getOption("ggvis.keep_aspect", TRUE),
+      resizable = getOption("ggvis.resizable", TRUE),
       padding = padding(),
       duration = 250
     ),
