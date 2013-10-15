@@ -149,17 +149,61 @@ renderControls <- function(r_gv, session = NULL) {
   })
 }
 
-# Like Shiny's pageWithSidebar, but without the extra head code and wrappers
-divWithSidebar <- function(headerPanel, sidebarPanel, mainPanel) {
-  div(
+
+#' Create a page with a sidebar
+#'
+#' This creates a page with a sidebar, where the sidebar moves to the bottom
+#' when the width goes below a particular value.
+#'
+#' @param sidebarPanel The \code{\link{sidebarBottomPanel}} containing input
+#'   controls.
+#' @param mainPanel The \code{\link{mainTopPanel}} containing the main content.
+#' @param shiny_headers Should Shiny headers be embedded in the page? This
+#'   should be TRUE for interactive/dynamic pages, FALSE for static pages.
+#' @importFrom shiny bootstrapPage
+#' @export
+#' @examples
+#' sidebarBottomPage
+sidebarBottomPage <- function(sidebarPanel, mainPanel, shiny_headers = TRUE) {
+  content <- div(
     class = "container-fluid",
     div(class = "row-fluid",
-        headerPanel
-    ),
-    div(class = "row-fluid",
-        sidebarPanel,
-        mainPanel
+      mainPanel,
+      sidebarPanel
     )
+  )
+
+  if (shiny_headers) {
+    bootstrapPage(content)
+  } else {
+    content
+  }
+}
+
+#' Create a sidebar panel which moves to the bottom
+#'
+#' This is to be used with \code{link{sidebarBottomPage}}.
+#'
+#' @param ... UI elements to include in the sidebar.
+#' @export
+sidebarBottomPanel <- function(...) {
+  div(class = "span4 sidebar-bottom",
+    tags$form(class = "well",
+      ...
+    )
+  )
+}
+
+
+#' Create a main panel which moves to the top
+#'
+#' This is to be used with \code{link{sidebarBottomPage}}.
+#'
+#' @param ... UI elements to include in the main panel.
+#' @export
+mainTopPanel <- function(...) {
+  div(class = "span8 main-top",
+    ...
   )
 }
 

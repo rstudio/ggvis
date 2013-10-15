@@ -70,12 +70,11 @@ view_static <- function(x,
       href = "lib/jquery-ui/css/smoothness/jquery-ui-1.10.3.custom.css")
   )
 
-  body <- divWithSidebar(
-    div(),
-    sidebarPanel(
+  body <- sidebarBottomPage(
+    sidebarBottomPanel(
       ggvisControlGroup(plot_id)
     ),
-    mainPanel(
+    mainTopPanel(
       div(id = plot_id, class = "ggvis-output"),
       tags$script(type = "text/javascript",
         paste0('
@@ -84,7 +83,8 @@ view_static <- function(x,
           plot.parseSpec(spec);
         ')
       )
-    )
+    ),
+    shiny_headers = FALSE
   )
 
   body <- format(body)
@@ -150,13 +150,12 @@ view_dynamic <- function(x,
   plot_id <- "plot1"
   
   # Make our resources available
-  ui <- pageWithSidebar(
-    div(),
-    sidebarPanel(
+  ui <- sidebarBottomPage(
+    sidebarBottomPanel(
       uiOutput("ggvis_ui"),
       ggvisControlGroup(plot_id)
     ),
-    mainPanel(
+    mainTopPanel(
       ggvis_output(plot_id)
     )
   )
