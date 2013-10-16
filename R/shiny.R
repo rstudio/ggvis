@@ -211,7 +211,7 @@ mainTopPanel <- function(...) {
 #'
 #' Controls for choosing a renderer, downloading an image, and quitting.
 #' @param plot_id Plot ID
-#' @importFrom shiny withTags
+#' @importFrom shiny withTags HTML
 #' @export
 ggvisControlGroup <- function(plot_id) {
   withTags(
