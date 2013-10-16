@@ -216,7 +216,7 @@ mainTopPanel <- function(...) {
 ggvisControlGroup <- function(plot_id) {
   withTags(
     tagList(
-      div(class = "btn-group dropup",
+      div(id = "ggvis_control_button", class = "btn-group",
         button(class = "btn btn-mini dropdown-toggle",
                type = "button",
                `data-toggle` = "dropdown",
@@ -248,22 +248,40 @@ ggvisControlGroup <- function(plot_id) {
         )
       ),
 
-      script(type = "text/javascript", "
-        // Select the appropriate renderer button when clicked
-        $('body').on('click', '#ggvis_renderer_buttons .btn', function(e) {
-          ggvis.setRendererChooser(this.textContent.toLowerCase());
+      script(type = "text/javascript", HTML("
+        $(function() {
 
-          // Don't close the dropdown
-          e.stopPropagation();
-        });
+          // Set the direction that the control menu opens (up or down) based
+          // on window width.
+          function setDropdownDirection() {
+            if ($(this).width() < 768) {
+              $('#ggvis_control_button').addClass('dropup');
+            } else {
+              $('#ggvis_control_button').removeClass('dropup');
+            }
+          }
 
-        // Don't close the dropdown when objects in it are clicked (by default
-        // the dropdown menu closes when anything inside is clicked).
-        $('body').on('click', '#ggvis_control.dropdown-menu', function(e) {
-          e.stopPropagation();
+          setDropdownDirection();
+
+          $(window).on('resize', setDropdownDirection);
+
+          // Select the appropriate renderer button when clicked
+          $('body').on('click', '#ggvis_renderer_buttons .btn', function(e) {
+            ggvis.setRendererChooser(this.textContent.toLowerCase());
+
+            // Don't close the dropdown
+            e.stopPropagation();
+          });
+
+          // Don't close the dropdown when objects in it are clicked (by default
+          // the dropdown menu closes when anything inside is clicked).
+          $('body').on('click', '#ggvis_control.dropdown-menu', function(e) {
+            e.stopPropagation();
+          });
+
         });
         "
-      )
+      ))
     )
   )
 }
