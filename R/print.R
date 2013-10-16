@@ -116,6 +116,7 @@ copy_www_resources <- function(destdir) {
 
   shiny_files <- c(
     "shared/bootstrap/css/bootstrap.min.css",
+    "shared/bootstrap/img/glyphicons-halflings.png",
     "shared/bootstrap/js/bootstrap.min.js",
     "shared/bootstrap/css/bootstrap-responsive.min.css"
   )

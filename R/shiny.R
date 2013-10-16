@@ -211,23 +211,59 @@ mainTopPanel <- function(...) {
 #'
 #' Controls for choosing a renderer, downloading an image, and quitting.
 #' @param plot_id Plot ID
+#' @importFrom shiny withTags
 #' @export
 ggvisControlGroup <- function(plot_id) {
-  tagList(
-    # Selector for canvas/SVG rendering
-    tags$div(
-      tags$label("Renderer:", `for` ="ggvis_renderer"),
-      tags$select(id = "ggvis_renderer", class = "input-medium",
-        tags$option(value = "canvas", "Canvas"),
-        tags$option(value = "svg", "SVG")
+  withTags(
+    tagList(
+      div(class = "btn-group dropup",
+        button(class = "btn btn-mini dropdown-toggle",
+               type = "button",
+               `data-toggle` = "dropdown",
+          i(class = "icon-cog", " "),
+          span(class = "caret")
+        ),
+
+        ul(id = "ggvis_control", class = "dropdown-menu ",
+          li(
+            div(class = "dropdown-item",
+              "Renderer: ",
+              span(id = "ggvis_renderer_buttons",
+                   class = "btn-group",
+                   style = "vertical-align: middle;",
+                label(id = "ggvis_renderer_canvas", class = "btn btn-mini", "Canvas"),
+                label(id = "ggvis_renderer_svg", class = "btn btn-mini", "SVG")
+              )
+            )
+          ),
+          li(class = "divider"),
+          li(
+            a(id = "ggvis_download", `data-plot-id` = plot_id, "Download")
+          ),
+          li(class = "divider"),
+          li(
+            # An actionButton that quits the app and closes the browser window
+            a(id = "quit", class = "action-button", "Quit")
+          )
+        )
       ),
-      # PNG/SVG download button
-      tags$a(id = "ggvis_download", class = "btn", style = "float:right;",
-        `data-plot-id` = plot_id, "Download")
-    ),
-    tags$div(
-      # An actionButton that quits the app and closes the browser window
-      tags$button(id="quit", type="button", class="btn action-button", "Quit")
+
+      script(type = "text/javascript", "
+        // Select the appropriate renderer button when clicked
+        $('body').on('click', '#ggvis_renderer_buttons .btn', function(e) {
+          ggvis.setRendererChooser(this.textContent.toLowerCase());
+
+          // Don't close the dropdown
+          e.stopPropagation();
+        });
+
+        // Don't close the dropdown when objects in it are clicked (by default
+        // the dropdown menu closes when anything inside is clicked).
+        $('body').on('click', '#ggvis_control.dropdown-menu', function(e) {
+          e.stopPropagation();
+        });
+        "
+      )
     )
   )
 }

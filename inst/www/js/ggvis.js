@@ -44,6 +44,7 @@ ggvis.updateDownloadLink = function(plotId, el) {
 
 // Set the renderer for all plots (unless updatePlots is false), and update
 // the renderer selector and download button if present.
+// renderer is either "canvas" or "svg"
 ggvis.setRenderer = function(renderer, updatePlots) {
   if (updatePlots === undefined) updatePlots = true;
 
@@ -64,10 +65,11 @@ ggvis.setPlotRenderers = function(renderer) {
 
 // Set the value of the renderer selector, if present
 ggvis.setRendererChooser = function(renderer) {
-  var $el = $("#ggvis_renderer");
-  if ($el) {
-    $el.val(renderer);
-  }
+  var $el = $("#ggvis_renderer_" + renderer);
+
+  // Toggle the renderer buttons when clicked
+  $el.addClass('active');
+  $el.siblings().removeClass('active');
 };
 
 ggvis.updateDownloadButtonText = function(renderer) {
@@ -245,7 +247,7 @@ $(function(){ //DOM Ready
   var $el;
 
   // Attach event handlers to buttons
-  $el = $("button#quit");
+  $el = $("#quit");
   if ($el) {
     $el.on("click", function() { window.close(); });
   }
@@ -258,10 +260,10 @@ $(function(){ //DOM Ready
     });
   }
 
-  $el = $("#ggvis_renderer");
+  $el = $("#ggvis_renderer_buttons .btn");
   if ($el) {
-    $el.on("change", function() {
-      ggvis.setRenderer(this.value);
+    $el.on("click", function() {
+      ggvis.setRenderer(this.textContent.toLowerCase())
     });
   }
 });

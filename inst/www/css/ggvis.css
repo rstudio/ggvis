@@ -48,3 +48,15 @@
         margin-left:0;
     }
 }
+
+/* For items in a dropdown menu that aren't links, make sure they display
+   same as links. */
+.dropdown-menu .dropdown-item {
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: normal;
+  line-height: 20px;
+  color: #333;
+  white-space: nowrap;
+}
