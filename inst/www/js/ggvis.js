@@ -52,7 +52,7 @@ ggvis.setRenderer = function(renderer, updatePlots) {
   if (updatePlots) this.setPlotRenderers(renderer);
   this.setRendererChooser(renderer);
   this.updateDownloadButtonText(renderer);
-}
+};
 
 // Change the renderer for all plots
 ggvis.setPlotRenderers = function(renderer) {
@@ -263,7 +263,7 @@ $(function(){ //DOM Ready
   $el = $("#ggvis_renderer_buttons .btn");
   if ($el) {
     $el.on("click", function() {
-      ggvis.setRenderer(this.textContent.toLowerCase())
+      ggvis.setRenderer(this.textContent.toLowerCase());
     });
   }
 });
