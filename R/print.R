@@ -70,12 +70,9 @@ view_static <- function(x,
       href = "lib/jquery-ui/css/smoothness/jquery-ui-1.10.3.custom.css")
   )
 
-  body <- sidebarBottomPage(
-    sidebarBottomPanel(
-      ggvisControlGroup(plot_id)
-    ),
-    mainTopPanel(
-      div(id = plot_id, class = "ggvis-output"),
+  body <- bootstrapPage(
+    tagList(
+      ggvis_output(plot_id, shiny = FALSE),
       tags$script(type = "text/javascript",
         paste0('
           var spec = ', vega_json, ';
@@ -83,8 +80,7 @@ view_static <- function(x,
           plot.parseSpec(spec);
         ')
       )
-    ),
-    shiny_headers = FALSE
+    )
   )
 
   body <- format(body)
@@ -153,11 +149,10 @@ view_dynamic <- function(x,
   # Make our resources available
   ui <- sidebarBottomPage(
     sidebarBottomPanel(
-      uiOutput("ggvis_ui"),
-      ggvisControlGroup(plot_id)
+      uiOutput("ggvis_ui")
     ),
     mainTopPanel(
-      ggvis_output(plot_id)
+      ggvis_output(plot_id, shiny = TRUE)
     )
   )
   

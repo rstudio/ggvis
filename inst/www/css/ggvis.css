@@ -60,3 +60,13 @@
   color: #333;
   white-space: nowrap;
 }
+
+/* For the gear icon on the right of the plot */
+.plot-gear-icon {
+  float: left;
+  width: 15px;
+  height: 15px;
+  position: absolute;
+  bottom: 25px;
+  right: 5px;
+}

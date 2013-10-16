@@ -159,23 +159,24 @@ GgvisPlot.prototype = {
 
   // Set the width of the chart to the wrapper div. If keep_aspect is true,
   // also set the height to maintain the aspect ratio.
-  resizeToDiv: function(duration, keep_aspect) {
+  resizeToWrapper: function(duration, keep_aspect) {
     if (duration === undefined) duration = this.opts.duration;
     if (duration === undefined) duration = 0;
     if (keep_aspect === undefined) keep_aspect = this.opts.keep_aspect;
     if (keep_aspect === undefined) keep_aspect = false;
 
-    var $el = this.getDiv();
-    var chart = this.chart;
-    var padding = chart.padding();
-    var ratio = this.opts.width/this.opts.height;
+    var $div = this.getDiv(),
+        $wrap = $div.parent(),
+        chart = this.chart,
+        padding = chart.padding(),
+        ratio = this.opts.width/this.opts.height;
 
-    var newWidth = $el.width() - padding.left - padding.right;
-    var newHeight;
+    var newWidth = $wrap.width() - padding.left - padding.right - 50,
+        newHeight;
     if (keep_aspect) {
       newHeight = newWidth / ratio;
     } else {
-      newHeight = $el.height() - padding.top - padding.bottom;
+      newHeight = $wrap.height() - padding.top - padding.bottom;
     }
     // Chart height ends up 5 pixels too large, so compensate for it
     newHeight -= 5;
@@ -188,24 +189,24 @@ GgvisPlot.prototype = {
   // Run an update on the chart for the first time
   initialUpdate: function() {
     // If chart hasn't been run yet, we need to run it once so that
-    // resizeToDiv will work properly (it needs the spec to have been run
+    // resizeToWrapper will work properly (it needs the spec to have been run
     // before it can figure out what the padding will be).
     if (!this.initialized) this.chart.update({ duration: 0 });
 
-    this.resizeToDiv(0);
+    this.resizeToWrapper(0);
     this.initialized = true;
   },
 
   // Make manually resizable (by dragging corner)
   enableResizable: function() {
-    var $el = this.getDiv();
+    var $el = this.getDiv().parent();
     var self = this;
 
     // When done resizing, update chart with new width and height
     $el.resizable({
       helper: "ui-resizable-helper",
       grid: [10, 10],
-      stop: function() { self.resizeToDiv(); }
+      stop: function() { self.resizeToWrapper(); }
     });
   },
 
@@ -216,7 +217,7 @@ GgvisPlot.prototype = {
 
     $(window).resize(function() {
       clearTimeout(debounce_id);
-      debounce_id = setTimeout(function() { self.resizeToDiv(); }, 100);
+      debounce_id = setTimeout(function() { self.resizeToWrapper(); }, 100);
     });
   },
 

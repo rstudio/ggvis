@@ -37,28 +37,49 @@ NULL
 
 #' @rdname shiny
 #' @importFrom shiny addResourcePath singleton tagList div
-#' @param id unique identifier to use for div tag containing ggvis plot
+#' @param plot_id unique identifier to use for the div containing the ggvis plot.
+#' @param shiny Should this include headers for Shiny? For dynamic and
+#'   interactive plots, this should be TRUE; otherwise FALSE.
 #' @export
-ggvis_output <- function(id) {
-  addResourcePath("ggvis", system.file("www", package = "ggvis"))
+ggvis_output <- function(plot_id, shiny = FALSE) {
+  container <-
+    div(id = paste0(plot_id, "-container"), class = "ggvis-output-container",
+      # Div containing the plot
+      div(id = plot_id, class = "ggvis-output", style = "float: left;"),
 
-  tagList(
-    singleton(tags$head(
-      tags$script(src = "ggvis/lib/jquery-1.9.1.js"),
-      tags$script(src = "ggvis/lib/jquery-ui/js/jquery-ui-1.10.3.custom.js"),
-      tags$script(src = "ggvis/lib/d3.js"),
-      tags$script(src = "ggvis/lib/vega.js"),
-      tags$script(src = "ggvis/lib/QuadTree.js"),
-      tags$script(src = "ggvis/js/ggvis.js"),
-      tags$script(src = "ggvis/js/shiny-ggvis.js"),
-      tags$link(rel = "stylesheet", type = "text/css",
-                href = "ggvis/css/ggvis.css"),
-      tags$link(rel = "stylesheet",
-                type = "text/css",
-                href = "ggvis/lib/jquery-ui/css/smoothness/jquery-ui-1.10.3.custom.css")
-    )),
-    tags$div(id = id, class = "ggvis-output")
-  )
+      div(class = "plot-gear-icon",
+        ggvisControlGroup(plot_id)
+      ),
+
+      # Div at the bottom to ensure that the wrapper fully contains the other divs
+      div(style = "clear: both;")
+    )
+
+
+  if (shiny) {
+    addResourcePath("ggvis", system.file("www", package = "ggvis"))
+
+    tagList(
+      singleton(tags$head(
+        tags$script(src = "ggvis/lib/jquery-1.9.1.js"),
+        tags$script(src = "ggvis/lib/jquery-ui/js/jquery-ui-1.10.3.custom.js"),
+        tags$script(src = "ggvis/lib/d3.js"),
+        tags$script(src = "ggvis/lib/vega.js"),
+        tags$script(src = "ggvis/lib/QuadTree.js"),
+        tags$script(src = "ggvis/js/ggvis.js"),
+        tags$script(src = "ggvis/js/shiny-ggvis.js"),
+        tags$link(rel = "stylesheet", type = "text/css",
+                  href = "ggvis/css/ggvis.css"),
+        tags$link(rel = "stylesheet",
+                  type = "text/css",
+                  href = "ggvis/lib/jquery-ui/css/smoothness/jquery-ui-1.10.3.custom.css")
+      )),
+      container
+    )
+
+  } else {
+    container
+  }
 }
 
 #' @rdname shiny
@@ -217,14 +238,11 @@ ggvisControlGroup <- function(plot_id) {
   withTags(
     tagList(
       div(id = "ggvis_control_button", class = "btn-group",
-        button(class = "btn btn-mini dropdown-toggle",
-               type = "button",
-               `data-toggle` = "dropdown",
-          i(class = "icon-cog", " "),
-          span(class = "caret")
+        label(class = "dropdown-toggle", `data-toggle` = "dropdown",
+          i(class = "icon-cog", style = "opacity: 0.4;", " ")
         ),
 
-        ul(id = "ggvis_control", class = "dropdown-menu ",
+        ul(id = "ggvis_control", class = "dropdown-menu pull-right",
           li(
             div(class = "dropdown-item",
               "Renderer: ",
@@ -250,21 +268,6 @@ ggvisControlGroup <- function(plot_id) {
 
       script(type = "text/javascript", HTML("
         $(function() {
-
-          // Set the direction that the control menu opens (up or down) based
-          // on window width.
-          function setDropdownDirection() {
-            if ($(this).width() < 768) {
-              $('#ggvis_control_button').addClass('dropup');
-            } else {
-              $('#ggvis_control_button').removeClass('dropup');
-            }
-          }
-
-          setDropdownDirection();
-
-          $(window).on('resize', setDropdownDirection);
-
           // Select the appropriate renderer button when clicked
           $('body').on('click', '#ggvis_renderer_buttons .btn', function(e) {
             ggvis.setRendererChooser(this.textContent.toLowerCase());
