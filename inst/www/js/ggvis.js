@@ -248,12 +248,6 @@ GgvisPlot.prototype = {
 $(function(){ //DOM Ready
   var $el;
 
-  // Attach event handlers to buttons
-  $el = $("#quit");
-  if ($el) {
-    $el.on("click", function() { window.close(); });
-  }
-
   $el = $("#ggvis_download");
   if ($el) {
     $el.on("click", function() {
