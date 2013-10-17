@@ -10,12 +10,6 @@ shinyServer(function(input, output, session) {
   # User interface elements (in the sidebar)
   output$ggvis_ui <- renderControls(r_gv, session)
 
-  # Stop the app when the quit button is clicked
-  observe({
-    if (is.null(input$quit)) return()
-    if (input$quit > 0) stopApp()
-  })
-
   # Print the object that was sent over
   output$hover_data <- renderPrint({
     str(input$ggvis_hover)

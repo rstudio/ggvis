@@ -13,12 +13,6 @@ shinyServer(function(input, output, session) {
   # User interface elements (in the sidebar)
   output$ggvis_ui <- renderControls(r_gv, session)
 
-  # Stop the app when the quit button is clicked
-  observe({
-    if (is.null(input$quit)) return()
-    if (input$quit > 0) stopApp()
-  })
-
   output$mtc_table <- renderTable({
     mtc()[, c("wt", "mpg")]
   })
