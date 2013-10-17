@@ -236,49 +236,42 @@ mainTopPanel <- function(...) {
 ggvisControlGroup <- function(plot_id) {
   withTags(
     tagList(
-      div(id = "ggvis_control_button", class = "btn-group",
+      div(class = "btn-group",
         label(class = "dropdown-toggle", `data-toggle` = "dropdown",
           i(class = "icon-cog", style = "opacity: 0.4;", " ")
         ),
 
-        ul(id = "ggvis_control", class = "dropdown-menu pull-right",
+        ul(class = "ggvis-control dropdown-menu pull-right",
           li(
             div(class = "dropdown-item",
               "Renderer: ",
-              span(id = "ggvis_renderer_buttons",
-                   class = "btn-group",
+              span(class = "ggvis-renderer-buttons btn-group",
                    style = "vertical-align: middle;",
-                label(id = "ggvis_renderer_canvas", class = "btn btn-mini", "Canvas"),
-                label(id = "ggvis_renderer_svg", class = "btn btn-mini", "SVG")
+                label(id = paste0(plot_id, "_renderer_canvas"),
+                      class = "btn btn-mini",
+                      `data-plot-id` = plot_id,
+                      `data-renderer` = "canvas",
+                      "Canvas"
+                ),
+                label(id = paste0(plot_id, "_renderer_svg"),
+                      class = "btn btn-mini",
+                      `data-plot-id` = plot_id,
+                      `data-renderer` = "svg",
+                      "SVG"
+                )
               )
             )
           ),
           li(class = "divider"),
           li(
-            a(id = "ggvis_download", `data-plot-id` = plot_id, "Download")
+            a(id = paste0(plot_id, "_download"),
+              class = "ggvis-download",
+              `data-plot-id` = plot_id,
+              "Download"
+            )
           )
         )
-      ),
-
-      script(type = "text/javascript", HTML("
-        $(function() {
-          // Select the appropriate renderer button when clicked
-          $('body').on('click', '#ggvis_renderer_buttons .btn', function(e) {
-            ggvis.setRendererChooser(this.textContent.toLowerCase());
-
-            // Don't close the dropdown
-            e.stopPropagation();
-          });
-
-          // Don't close the dropdown when objects in it are clicked (by default
-          // the dropdown menu closes when anything inside is clicked).
-          $('body').on('click', '#ggvis_control.dropdown-menu', function(e) {
-            e.stopPropagation();
-          });
-
-        });
-        "
-      ))
+      )
     )
   )
 }

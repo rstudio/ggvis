@@ -64,8 +64,8 @@ ggvis.setPlotRenderers = function(renderer) {
 };
 
 // Set the value of the renderer selector, if present
-ggvis.setRendererChooser = function(renderer) {
-  var $el = $("#ggvis_renderer_" + renderer);
+ggvis.setRendererChooser = function(plotId, renderer) {
+  var $el = $("#" + plotId + "_renderer_" + renderer);
 
   // Toggle the renderer buttons when clicked
   $el.addClass('active');
@@ -246,20 +246,30 @@ GgvisPlot.prototype = {
 
 
 $(function(){ //DOM Ready
-  var $el;
 
-  $el = $("#ggvis_download");
-  if ($el) {
-    $el.on("click", function() {
-      var plotId = $(this).data("plot-id");
-      ggvis.updateDownloadLink(plotId, this);
-    });
-  }
+  // Don't close the dropdown when objects in it are clicked (by default
+  // the dropdown menu closes when anything inside is clicked).
+  // Need to bind to body instead of document for e.stopPropogation to catch
+  // at appropriate point.
+  $("body").on('click', '.ggvis-control.dropdown-menu', function(e) {
+    e.stopPropagation();
+  });
 
-  $el = $("#ggvis_renderer_buttons .btn");
-  if ($el) {
-    $el.on("click", function() {
-      ggvis.setRenderer(this.textContent.toLowerCase());
-    });
-  }
+  $("body").on("click", ".ggvis-download", function() {
+    var plotId = $(this).data("plot-id");
+    ggvis.updateDownloadLink(plotId, this);
+  });
+
+  $("body").on("click", ".ggvis-renderer-buttons .btn", function(e) {
+    var $el = $(this);
+
+    ggvis.setRenderer($el.data("renderer"));
+
+    // Select the appropriate renderer button when clicked
+    ggvis.setRendererChooser($el.data("plot-id"), $el.data("renderer"));
+
+    // Don't close the dropdown
+    e.stopPropagation();
+  });
+
 });
