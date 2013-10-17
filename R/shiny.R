@@ -41,7 +41,7 @@ NULL
 #' @param shiny Should this include headers for Shiny? For dynamic and
 #'   interactive plots, this should be TRUE; otherwise FALSE.
 #' @export
-ggvis_output <- function(plot_id, shiny = FALSE) {
+ggvis_output <- function(plot_id, shiny = TRUE) {
   container <-
     div(id = paste0(plot_id, "-container"), class = "ggvis-output-container",
       # Div containing the plot
