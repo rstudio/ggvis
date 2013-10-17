@@ -209,7 +209,7 @@ sidebarBottomPage <- function(sidebarPanel, mainPanel, shiny_headers = TRUE) {
 #' @export
 sidebarBottomPanel <- function(...) {
   div(class = "span4 sidebar-bottom",
-    tags$form(class = "well",
+    tags$form(class = "well well-small",
       ...
     )
   )
