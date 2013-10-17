@@ -166,12 +166,13 @@ GgvisPlot.prototype = {
     if (keep_aspect === undefined) keep_aspect = false;
 
     var $div = this.getDiv(),
-        $wrap = $div.parent(),
+        $wrap = $div.parent()
+        $gear = $div.siblings().filter(".plot-gear-icon"),
         chart = this.chart,
         padding = chart.padding(),
         ratio = this.opts.width/this.opts.height;
 
-    var newWidth = $wrap.width() - padding.left - padding.right - 50,
+    var newWidth = $wrap.width() - $gear.width() - padding.left - padding.right,
         newHeight;
     if (keep_aspect) {
       newHeight = newWidth / ratio;
