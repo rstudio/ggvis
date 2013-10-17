@@ -70,16 +70,14 @@ view_static <- function(x,
       href = "lib/jquery-ui/css/smoothness/jquery-ui-1.10.3.custom.css")
   )
 
-  body <- bootstrapPage(
-    tagList(
-      ggvis_output(plot_id, shiny = FALSE),
-      tags$script(type = "text/javascript",
-        paste0('
-          var spec = ', vega_json, ';
-          var plot = ggvis.getPlot("', plot_id, '");
-          plot.parseSpec(spec);
-        ')
-      )
+  body <- tagList(
+    ggvis_output(plot_id, shiny = FALSE),
+    tags$script(type = "text/javascript",
+      paste0('
+        var spec = ', vega_json, ';
+        var plot = ggvis.getPlot("', plot_id, '");
+        plot.parseSpec(spec);
+      ')
     )
   )
 
