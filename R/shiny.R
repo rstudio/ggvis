@@ -257,11 +257,6 @@ ggvisControlGroup <- function(plot_id) {
           li(class = "divider"),
           li(
             a(id = "ggvis_download", `data-plot-id` = plot_id, "Download")
-          ),
-          li(class = "divider"),
-          li(
-            # An actionButton that quits the app and closes the browser window
-            a(id = "quit", class = "action-button", "Quit")
           )
         )
       ),

@@ -161,12 +161,6 @@ view_dynamic <- function(x,
     
     # User interface elements (in the sidebar)
     output$ggvis_ui <- renderControls(r_gv, session)
-    
-    # Stop the app when the quit button is clicked
-    observe({
-      if (is.null(input$quit)) return()
-      if (input$quit > 0) stopApp()
-    })
   }
   
   app <- list(ui = ui, server = server)
