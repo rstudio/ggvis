@@ -5,15 +5,19 @@
 \alias{shiny}
 \title{Connect a ggvis graphic to a shiny app.}
 \usage{
-  ggvis_output(id)
+  ggvis_output(plot_id, shiny = TRUE)
 
   observe_ggvis(r_gv, id, session, ...)
 
   renderControls(r_gv, session = NULL)
 }
 \arguments{
-  \item{id}{unique identifier to use for div tag containing
-  ggvis plot}
+  \item{plot_id}{unique identifier to use for the div
+  containing the ggvis plot.}
+
+  \item{shiny}{Should this include headers for Shiny? For
+  dynamic and interactive plots, this should be TRUE;
+  otherwise FALSE.}
 
   \item{r_gv}{A reactive expression which returns a ggvis
   object.}
