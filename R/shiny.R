@@ -45,14 +45,11 @@ ggvis_output <- function(plot_id, shiny = TRUE) {
   container <-
     div(id = paste0(plot_id, "-container"), class = "ggvis-output-container",
       # Div containing the plot
-      div(id = plot_id, class = "ggvis-output", style = "float: left;"),
+      div(id = plot_id, class = "ggvis-output"),
 
       div(class = "plot-gear-icon",
         ggvisControlGroup(plot_id)
-      ),
-
-      # Div at the bottom to ensure that the wrapper fully contains the other divs
-      div(style = "clear: both;")
+      )
     )
 
 

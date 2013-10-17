@@ -63,10 +63,9 @@
 
 /* For the gear icon on the right of the plot */
 .plot-gear-icon {
-  float: left;
+  position: absolute;
   width: 15px;
   height: 15px;
-  position: absolute;
-  bottom: 25px;
+  top: 0px;
   right: 5px;
 }
