@@ -166,7 +166,7 @@ GgvisPlot.prototype = {
     if (keep_aspect === undefined) keep_aspect = false;
 
     var $div = this.getDiv(),
-        $wrap = $div.parent()
+        $wrap = $div.parent(),
         $gear = $div.siblings().filter(".plot-gear-icon"),
         chart = this.chart,
         padding = chart.padding(),
