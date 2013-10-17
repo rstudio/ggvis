@@ -6,82 +6,15 @@ var ggvis = window.ggvis = window.ggvis || {};  // If already defined, just exte
 
 // Keep track of information about all plots: contains GgvisPlot objects
 ggvis.plots = {};
-ggvis.renderer = null; // "canvas" or "svg"
 
+// Get a GgvisPlot object with a particular name, creating it if needed
 ggvis.getPlot = function(plotId) {
-  // Get the GgvisPlot object (and create if needed)
   if (!this.plots[plotId]) {
     this.plots[plotId] = new GgvisPlot(plotId);
   }
   return this.plots[plotId];
 };
 
-// Given the name of a plot and an <a> element, set the href of that element
-// to the canvas content of the plot converted to PNG. This will set the href
-// when the link is clicked; the download happens when it is released.
-ggvis.updateDownloadLink = function(plotId, el) {
-  var plot = $("#" + plotId + ".ggvis-output .marks")[0];
-  var imageUrl;
-
-  if (this.renderer === "svg") {
-    // Extract the svg code and add needed xmlns attribute
-    var svg = $(plot).clone().attr("xmlns", "http://www.w3.org/2000/svg");
-    // Convert to string
-    svg = $('<div>').append(svg).html();
-    imageUrl = "data:image/octet-stream;base64,\n" + btoa(svg);
-
-  } else if (this.renderer === "canvas") {
-    imageUrl = plot.toDataURL("image/png").replace("image/png", "image/octet-stream");
-  }
-
-  // Set download filename and data URL
-  var ext = "";
-  if      (this.renderer === "svg")    ext = ".svg";
-  else if (this.renderer === "canvas") ext = ".png";
-  el.setAttribute("download", plotId + ext);
-  el.setAttribute("href", imageUrl);
-};
-
-// Set the renderer for all plots (unless updatePlots is false), and update
-// the renderer selector and download button if present.
-// renderer is either "canvas" or "svg"
-ggvis.setRenderer = function(renderer, updatePlots) {
-  if (updatePlots === undefined) updatePlots = true;
-
-  this.renderer = renderer;
-  if (updatePlots) this.setPlotRenderers(renderer);
-  this.setRendererChooser(renderer);
-  this.updateDownloadButtonText(renderer);
-};
-
-// Change the renderer for all plots
-ggvis.setPlotRenderers = function(renderer) {
-  for (var plotId in this.plots) {
-    if (this.plots.hasOwnProperty(plotId)) {
-      this.plots[plotId].chart.renderer(renderer).update();
-    }
-  }
-};
-
-// Set the value of the renderer selector, if present
-ggvis.setRendererChooser = function(plotId, renderer) {
-  var $el = $("#" + plotId + "_renderer_" + renderer);
-
-  // Toggle the renderer buttons when clicked
-  $el.addClass('active');
-  $el.siblings().removeClass('active');
-};
-
-ggvis.updateDownloadButtonText = function(renderer) {
-  var $el = $("#ggvis_download");
-  if ($el) {
-    var filetype = "";
-    if      (renderer === "svg")    filetype = "SVG";
-    else if (renderer === "canvas") filetype = "PNG";
-
-    $el.text("Download " + filetype);
-  }
-};
 
 // GgvisPlot objects ----------------------------------------------------------
 // Constructor for GgvisPlot objects
@@ -95,7 +28,8 @@ var GgvisPlot = function(plotId) {
 };
 
 GgvisPlot.prototype = {
-  // opts is an optional object which can have entries:
+  // opts is an optional object which can have any entries that are in spec.opts
+  // (they get merged on top of spec.opts), and additionally:
   // * mouseover: A callback for the "mouseover" event
   // * mouseout: A callback for the "mouseout" event
   // * hovertime: Number of milliseconds for a hover transition
@@ -123,10 +57,8 @@ GgvisPlot.prototype = {
       self.chart = chart;
       $el.data("ggvis-chart", chart);
 
-      // If the overall renderer option hasn't been set, set it
-      if(ggvis.renderer === null) {
-        ggvis.setRenderer(self.opts.renderer, false);
-      }
+      // Set the renderer (update buttons and download link)
+      self.setRenderer(self.opts.renderer, false);
 
       // If hovertime is specified, set callbacks for hover behavior
       if (self.opts.hovertime && self.opts.hovertime !== 0) {
@@ -238,6 +170,67 @@ GgvisPlot.prototype = {
     return this.arraysEqual(existing_data, expected_data);
   },
 
+  // Set the renderer, and update the renderer button and download link text if
+  // present. Also update the chart (unless update is false).
+  // renderer is either "canvas" or "svg".
+  setRenderer: function(renderer, update) {
+    if (update === undefined) update = true;
+
+    this.renderer = renderer;
+    if (update) {
+      this.chart.renderer(renderer).update();
+    }
+    this.setRendererButton(renderer);
+    this.updateDownloadButtonText(renderer);
+  },
+
+  // Set the value of the renderer button, if present
+  setRendererButton: function(renderer) {
+    var $el = $("#" + this.plotId + "_renderer_" + renderer);
+
+    // Toggle the renderer buttons when clicked
+    $el.addClass('active');
+    $el.siblings().removeClass('active');
+  },
+
+  // Given an <a> element, set the href of that element to the canvas content
+  // of the plot converted to SVG or PNG. This will set the href when the link
+  // is clicked; the download happens when it is released.
+  updateDownloadLink: function(el) {
+    var plot = $("#" + this.plotId + ".ggvis-output .marks")[0];
+    var imageUrl;
+
+    if (this.renderer === "svg") {
+      // Extract the svg code and add needed xmlns attribute
+      var svg = $(plot).clone().attr("xmlns", "http://www.w3.org/2000/svg");
+      // Convert to string
+      svg = $('<div>').append(svg).html();
+      imageUrl = "data:image/octet-stream;base64,\n" + btoa(svg);
+
+    } else if (this.renderer === "canvas") {
+      imageUrl = plot.toDataURL("image/png").replace("image/png", "image/octet-stream");
+    }
+
+    // Set download filename and data URL
+    var ext = "";
+    if      (this.renderer === "svg")    ext = ".svg";
+    else if (this.renderer === "canvas") ext = ".png";
+    el.setAttribute("download", this.plotId + ext);
+    el.setAttribute("href", imageUrl);
+  },
+
+  updateDownloadButtonText: function(renderer) {
+    var $el = $(this.plotId + "_download");
+    if ($el) {
+      var filetype = "";
+      if      (renderer === "svg")    filetype = "SVG";
+      else if (renderer === "canvas") filetype = "PNG";
+
+      $el.text("Download " + filetype);
+    }
+  },
+
+
   // Returns true if arrays have same contents (in any order), false otherwise.
   arraysEqual: function(a, b) {
     return $(a).not(b).length === 0 && $(b).not(a).length === 0;
@@ -256,17 +249,15 @@ $(function(){ //DOM Ready
   });
 
   $("body").on("click", ".ggvis-download", function() {
-    var plotId = $(this).data("plot-id");
-    ggvis.updateDownloadLink(plotId, this);
+    var plot = ggvis.plots[$(this).data("plot-id")];
+    plot.updateDownloadLink(this);
   });
 
   $("body").on("click", ".ggvis-renderer-buttons .btn", function(e) {
     var $el = $(this);
+    var plot = ggvis.plots[$el.data("plot-id")];
 
-    ggvis.setRenderer($el.data("renderer"));
-
-    // Select the appropriate renderer button when clicked
-    ggvis.setRendererChooser($el.data("plot-id"), $el.data("renderer"));
+    plot.setRenderer($el.data("renderer"));
 
     // Don't close the dropdown
     e.stopPropagation();
