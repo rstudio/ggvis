@@ -57,7 +57,9 @@ ggvis_output <- function(plot_id, shiny = TRUE) {
 
 
   if (shiny) {
-    addResourcePath("ggvis", system.file("www", package = "ggvis"))
+    suppressMessages(
+      addResourcePath("ggvis", system.file("www", package = "ggvis"))
+    )
 
     tagList(
       singleton(tags$head(

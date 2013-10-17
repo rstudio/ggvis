@@ -165,7 +165,9 @@ view_dynamic <- function(x,
   
   app <- list(ui = ui, server = server)
   if (launch) {
-    runApp(app, launch.browser = function(url) view_plot(url, 600))
+    suppressMessages(
+      runApp(app, launch.browser = function(url) view_plot(url, 600))
+    )
   } else {
     app
   }
