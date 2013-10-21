@@ -1,20 +1,25 @@
 /*jshint forin:true, noarg:true, noempty:true, eqeqeq:true, bitwise:true,
     strict:false, undef:true, unused:true, browser:true, jquery:true, maxerr:50,
     curly:false, multistr:true */
-/*global vg*/
-var ggvis = window.ggvis = window.ggvis || {};  // If already defined, just extend it
+/*global vg, ggvis:true*/
 
-// Keep track of information about all plots: contains GgvisPlot objects
-ggvis.plots = {};
+ggvis = (function() {
 
-// Get a GgvisPlot object with a particular name, creating it if needed
-ggvis.getPlot = function(plotId) {
-  if (!this.plots[plotId]) {
-    this.plots[plotId] = new GgvisPlot(plotId);
-  }
-  return this.plots[plotId];
-};
+  var ggvis = {
+    // Keep track of information about all plots: contains GgvisPlot objects
+    plots: {}
+  };
 
+  // Get a GgvisPlot object with a particular name, creating it if needed
+  ggvis.getPlot = function(plotId) {
+    if (!this.plots[plotId]) {
+      this.plots[plotId] = new GgvisPlot(plotId);
+    }
+    return this.plots[plotId];
+  };
+
+  return ggvis;
+})();
 
 // GgvisPlot objects ----------------------------------------------------------
 // Constructor for GgvisPlot objects
