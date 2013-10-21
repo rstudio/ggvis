@@ -86,22 +86,12 @@ ggvis = (function() {
         if (opts.mouseout)  chart.on("mouseout",  opts.mouseout);
 
         if (opts.resizable) self.enableResizable();
+        if (opts.smart_size) self.enableAutoResizeToWindow();
 
         // If the data arrived earlier, use it.
         if (this.pendingData) self.loadPendingData();
 
         if (self.dataReady()) self.initialUpdate();
-
-        if (opts.smart_size) {
-          if (ggvis.inViewerPanel()) {
-            self.resizeToWindow(0);
-          } else {
-            self.resizeWrapperToPlot();
-          }
-
-          self.enableAutoResizeToWindow();
-        }
-
       });
     };
 
@@ -204,6 +194,15 @@ ggvis = (function() {
       if (!this.initialized) this.chart.update({ duration: 0 });
 
       this.initialized = true;
+
+      // Resizing to fit has to happen after the initial update
+      if (this.opts.smart_size) {
+        if (ggvis.inViewerPanel()) {
+          this.resizeToWindow(0);
+        } else {
+          this.resizeWrapperToPlot();
+        }
+      }
     };
 
     // Make manually resizable (by dragging corner)
