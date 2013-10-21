@@ -144,19 +144,7 @@ GgvisPlot.prototype = {
   },
 
   // Make the plot auto-resize to fit available width - debounce to 100ms
-  enableAutoWidth: function(auto_width) {
-    if (auto_width === undefined) auto_width = this.opts.auto_width;
-    if (auto_width === undefined) auto_width = false;
-
-    // auto_width can be true, false, or an array of 2 values
-    if (auto_width === false) return;
-    if (auto_width instanceof Array) {
-      $("#" + this.plotId + "-container").css({
-        "min-width": auto_width[0],
-        "max-width": auto_width[1]
-      });
-    }
-
+  enableAutoWidth: function() {
     var self = this;
     var debounce_id = null;
 

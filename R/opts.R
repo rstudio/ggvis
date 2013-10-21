@@ -1,15 +1,12 @@
 #' Set options for a ggvis plot
 #'
 #' @param width,height Width and height of plot, in pixels. Default is 400x400.
-#' @param auto_width Should the plot be resized according to the window size?
-#'   This can be FALSE, TRUE, or a pair of numbers like \code{c(200, 600)}. If
+#' @param auto_width Should the plot be resized according to the window size? If
 #'   FALSE, the plot size will be set to \code{height} and \code{width},
-#'   regardless of window size. If TRUE, the plot width will be sized to
-#'   the width of the window. If it is a pair of numbers like
-#'   \code{c(200, 600)}, then the plot width will be sized to the window width,
-#'   keeping within the range of the pair of numbers. The default value is
-#'   \code{c(200, 600)}, or the value of \code{getOption("ggvis.auto_width")},
-#'   if it is set.
+#'   regardless of window size. If TRUE, the plot size will be sized to
+#'   the window or to \code{width} and \code{height}, whichever is smaller.
+#'   The default value is \code{TRUE}, or the value of
+#'   \code{getOption("ggvis.auto_width")}, if it is set.
 #' @param keep_aspect If the plot is auto-sized, should the aspect ratio be
 #'   preserved? (This is only useful when \code{auto_width} is \code{TRUE}.)
 #'   The default value is \code{FALSE}, or the value of
@@ -57,7 +54,7 @@ default_opts <- function() {
     list(
       width = 400,
       height = 400,
-      auto_width = getOption("ggvis.auto_width", c(200, 600)),
+      auto_width = getOption("ggvis.auto_width", TRUE),
       keep_aspect = getOption("ggvis.keep_aspect", FALSE),
       resizable = getOption("ggvis.resizable", TRUE),
       padding = padding(),
