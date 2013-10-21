@@ -149,7 +149,7 @@ bin.numeric <- function(x, weight = NULL, binwidth = 1, origin = NULL, right = T
   if (is.null(origin)) {
     breaks <- fullseq(range(x), binwidth, pad = TRUE)
   } else {
-    breaks <- seq(origin, max(range) + binwidth, binwidth)
+    breaks <- seq(origin, max(range(x)) + binwidth, binwidth)
   }
 
   # Adapt break fuzziness from base::hist - this protects from floating
