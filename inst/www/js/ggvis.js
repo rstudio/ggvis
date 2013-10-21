@@ -87,8 +87,11 @@ ggvis = (function() {
 
         if (opts.resizable) self.enableResizable();
 
-        if (ggvis.inViewerPanel()) self.resizeToWindow();
-        self.enableAutoResizeToWindow();
+        if (opts.smart_size) {
+          if (ggvis.inViewerPanel()) self.resizeToWindow();
+
+          self.enableAutoResizeToWindow();
+        }
 
         // If the data arrived earlier, use it.
         if (this.pendingData) self.loadPendingData();
