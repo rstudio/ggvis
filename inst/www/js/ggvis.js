@@ -87,22 +87,39 @@ ggvis = (function() {
 
         if (opts.resizable) self.enableResizable();
 
-        if (opts.smart_size) {
-          if (ggvis.inViewerPanel()) self.resizeToWindow();
-
-          self.enableAutoResizeToWindow();
-        }
-
         // If the data arrived earlier, use it.
         if (this.pendingData) self.loadPendingData();
 
         if (self.dataReady()) self.initialUpdate();
+
+        if (opts.smart_size) {
+          if (ggvis.inViewerPanel()) {
+            self.resizeToWindow(0);
+          } else {
+            self.resizeWrapperToPlot();
+          }
+
+          self.enableAutoResizeToWindow();
+        }
+
       });
     };
 
-    // Get the ggvis-output wrapper div
+    // Get the div which is around ggvis-output
     prototype.getDiv = function() {
       return $("#" + this.plotId);
+    };
+
+    // Wrapper div, which includes sizing handle and gear
+    prototype.getWrapper = function() {
+      return this.getDiv().parent();
+    };
+
+    // Get the marks object (the Canvas or SVG object, which is rendered too)
+    prototype.getMarks = function() {
+      // Can't do $vega.children(".marks") because it doesn't work for SVG DOM
+      // objects. So we'll just grab any svg or canvas object.
+      return $(this.chart._el).children("svg, canvas");
     };
 
     // Set the width of the chart to the wrapper div. If keep_aspect is true,
@@ -114,18 +131,21 @@ ggvis = (function() {
       if (keep_aspect === undefined) keep_aspect = false;
 
       var $div = this.getDiv(),
-          $wrap = $div.parent(),
+          $wrap = this.getWrapper(),
           $gear = $div.siblings().filter(".plot-gear-icon"),
           chart = this.chart,
           padding = chart.padding(),
           ratio = this.opts.width/this.opts.height;
 
       var newWidth = $wrap.width() - $gear.width() - padding.left - padding.right,
-          newHeight;
+          newHeight = $wrap.height() - padding.top - padding.bottom;
+
       if (keep_aspect) {
-        newHeight = newWidth / ratio;
-      } else {
-        newHeight = $wrap.height() - padding.top - padding.bottom;
+        if (newHeight > newWidth / ratio) {
+          newHeight = Math.floor(newWidth / ratio);
+        } else if (newHeight < newWidth / ratio) {
+          newWidth = Math.floor(newHeight * ratio);
+        }
       }
       // Chart height ends up 5 pixels too large, so compensate for it
       newHeight -= 5;
@@ -137,19 +157,43 @@ ggvis = (function() {
 
     // Set width and height to fill window
     prototype.resizeToWindow = function(duration) {
-      if (duration === undefined) duration = this.opts.duration;
-      if (duration === undefined) duration = 0;
-
       var $win = $(window);
       var $body = $('body');
-      var $wrap = this.getDiv().parent();
+      var $wrap = this.getWrapper();
+
+      // Left and right padding of body element
+      var padding_left  = parseFloat($body.css("padding-left").replace("px", ""));
+      var padding_right = parseFloat($body.css("padding-right").replace("px", ""));
 
       // Resize the wrapper div to the window - take off a little extra to make
       // sure it fits
-      $wrap.width($win.width() - 5 - $body.css("padding-left")- $body.css("padding-right"));
+      $wrap.width($win.width() - 5 - padding_left - padding_right);
       $wrap.height($win.height() - 5);
 
-      this.resizeToWrapper();
+      this.resizeToWrapper(duration);
+    };
+
+    // Change the dimensions of the wrapper div to fit the plot.
+    // This is useful when the we're not auto-sizing the plot, and the plot is
+    // smaller than the window; if we don't do this, then the div will take the
+    // full window width, but the plot will be smaller.
+    prototype.resizeWrapperToPlot = function() {
+      var chart   = this.chart;
+      var $wrap   = this.getWrapper();  // wrapper around $div
+      var $div    = this.getDiv();      // ggvis div, containing $el
+      var $gear   = $div.siblings().filter(".plot-gear-icon");
+      var $vega   = $(chart._el);       // Immediate wrapper around marks
+      var $marks  = this.getMarks();
+
+      // Need to use getAttribute because itt works for both svg and canvas
+      // DOM objects. (marks.width doesn't work for SVG, nor does)
+      var width = Math.ceil($marks.width());
+      // There are 5 extra pixels in the bottom
+      var height = Math.ceil($marks.height() + 5);
+
+      $vega.width(width).height(height);
+      $div.width(width).height(height);
+      $wrap.width(width + $gear.width()).height(height);
     };
 
     // Run an update on the chart for the first time
@@ -159,7 +203,6 @@ ggvis = (function() {
       // before it can figure out what the padding will be).
       if (!this.initialized) this.chart.update({ duration: 0 });
 
-      this.resizeToWrapper(0);
       this.initialized = true;
     };
 
