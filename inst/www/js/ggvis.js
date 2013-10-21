@@ -51,16 +51,17 @@ ggvis = (function() {
       self.opts = $.extend(true, self.spec.ggvis_opts, opts);
 
       vg.parse.spec(spec, function(chart) {
+        var opts = self.opts;
         var $el = self.getDiv();
 
         // If hovertime is supplied, use that later in a custom callback,
         // instead of the default hover behavior.
         var hover = true;
-        if (self.opts.hovertime && self.opts.hovertime !== 0) hover = false;
+        if (opts.hovertime && opts.hovertime !== 0) hover = false;
 
         chart = chart({
           el: "#" + self.plotId,
-          renderer: self.opts.renderer || "canvas",
+          renderer: opts.renderer || "canvas",
           hover: hover
         });
         // Save the chart object
@@ -68,23 +69,23 @@ ggvis = (function() {
         $el.data("ggvis-chart", chart);
 
         // Set the renderer (update buttons and download link)
-        self.setRenderer(self.opts.renderer, false);
+        self.setRenderer(opts.renderer, false);
 
         // If hovertime is specified, set callbacks for hover behavior
-        if (self.opts.hovertime && self.opts.hovertime !== 0) {
+        if (opts.hovertime && opts.hovertime !== 0) {
           chart.on("mouseover", function(event, item) {
-            this.update({ props:"hover", items:item, duration:self.opts.hovertime });
+            this.update({ props:"hover", items:item, duration:opts.hovertime });
           });
           chart.on("mouseout", function(event, item) {
-            this.update({ props:"update", items:item, duration:self.opts.hovertime });
+            this.update({ props:"update", items:item, duration:opts.hovertime });
           });
         }
 
         // If extra callbacks are specified for mouseover and out, add them.
-        if (self.opts.mouseover) chart.on("mouseover", self.opts.mouseover);
-        if (self.opts.mouseout)  chart.on("mouseout",  self.opts.mouseout);
+        if (opts.mouseover) chart.on("mouseover", opts.mouseover);
+        if (opts.mouseout)  chart.on("mouseout",  opts.mouseout);
 
-        if (self.opts.resizable) self.enableResizable();
+        if (opts.resizable) self.enableResizable();
 
         if (ggvis.inViewerPanel()) self.resizeToWindow();
         self.enableAutoResizeToWindow();
