@@ -87,7 +87,7 @@ view_static <- function(x,
   writeLines(whisker.render(template, list(head = head, body = body)),
     con = html_file)
   
-  if (launch) view_plot(html_file, 600)
+  if (launch) view_plot(html_file, 350)
   invisible(html_file)
 }
 
@@ -166,7 +166,7 @@ view_dynamic <- function(x,
   app <- list(ui = ui, server = server)
   if (launch) {
     suppressMessages(
-      runApp(app, launch.browser = function(url) view_plot(url, 600))
+      runApp(app, launch.browser = function(url) view_plot(url, 350))
     )
   } else {
     app
