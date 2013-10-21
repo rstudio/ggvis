@@ -118,7 +118,7 @@ observe_data <- function(r_spec, id, session) {
   obs_all <- observe({
     # If data_observers list is nonempty, that means there are old observers
     # which need to be suspended before we create new ones.
-    for (obs in data_observers) obs$suspend
+    for (obs in data_observers) obs$suspend()
     data_observers <<- list()
 
     data_table <- attr(r_spec(), "data_table")
