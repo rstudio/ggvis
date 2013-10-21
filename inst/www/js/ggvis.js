@@ -17,6 +17,12 @@ ggvis = (function() {
     return this.plots[plotId];
   };
 
+  // Are we in a small viewer panel?
+  ggvis.inViewerPanel = function() {
+    // This is a pretty dumb criterion, but it's good enough
+    return $(window).width() < 600 || $(window).height() < 600;
+  };
+
 
   // ggvis.Plot class ----------------------------------------------------------
   ggvis.Plot = (function() {
@@ -79,7 +85,9 @@ ggvis = (function() {
         if (self.opts.mouseout)  chart.on("mouseout",  self.opts.mouseout);
 
         if (self.opts.resizable) self.enableResizable();
-        if (self.opts.auto_width) self.enableAutoWidth();
+
+        if (ggvis.inViewerPanel()) self.resizeToWindow();
+        self.enableAutoResizeToWindow();
 
         // If the data arrived earlier, use it.
         if (this.pendingData) self.loadPendingData();
@@ -123,6 +131,23 @@ ggvis = (function() {
       chart.update({ duration: duration });
     };
 
+    // Set width and height to fill window
+    prototype.resizeToWindow = function(duration) {
+      if (duration === undefined) duration = this.opts.duration;
+      if (duration === undefined) duration = 0;
+
+      var $win = $(window);
+      var $body = $('body');
+      var $wrap = this.getDiv().parent();
+
+      // Resize the wrapper div to the window - take off a little extra to make
+      // sure it fits
+      $wrap.width($win.width() - 5 - $body.css("padding-left")- $body.css("padding-right"));
+      $wrap.height($win.height() - 5);
+
+      this.resizeToWrapper();
+    };
+
     // Run an update on the chart for the first time
     prototype.initialUpdate = function() {
       // If chart hasn't been run yet, we need to run it once so that
@@ -147,14 +172,18 @@ ggvis = (function() {
       });
     };
 
-    // Make the plot auto-resize to fit available width - debounce to 100ms
-    prototype.enableAutoWidth = function() {
+    // Make the plot auto-resize to fit window, if in viewer panel
+    prototype.enableAutoResizeToWindow = function() {
       var self = this;
       var debounce_id = null;
 
       $(window).resize(function() {
         clearTimeout(debounce_id);
-        debounce_id = setTimeout(function() { self.resizeToWrapper(); }, 100);
+        debounce_id = setTimeout(function() {
+          if (ggvis.inViewerPanel()) {
+            self.resizeToWindow();
+          }
+        }, 100); // Debounce to 100ms
       });
     };
 
