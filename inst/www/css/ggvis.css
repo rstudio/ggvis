@@ -26,27 +26,27 @@
 
 /* Sidebar that goes to the bottom on small devices */
 .sidebar-bottom {
-    float:left;
-    margin-left:0;
+  float:left;
+  margin-left:0;
 }
 
 /* Main content that goes to top on small devices */
 .main-top {
-    float:right !important;
-    margin-left:auto;
+  float:right !important;
+  margin-left:auto;
 }
 
 @media (max-width: 767px) {
-    .sidebar-bottom {
-        display: inline-block;
-        margin-top: 20px;
-        width: 100%;
-    }
+  .sidebar-bottom {
+    display: inline-block;
+    margin-top: 20px;
+    width: 100%;
+  }
 
-    .main-top {
-        float:none !important;
-        margin-left:0;
-    }
+  .main-top {
+    float:none !important;
+    margin-left:0;
+  }
 }
 
 /* For items in a dropdown menu that aren't links, make sure they display
