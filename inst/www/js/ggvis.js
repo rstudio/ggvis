@@ -154,14 +154,11 @@ ggvis = (function() {
       var padding_left  = parseFloat($body.css("padding-left").replace("px", ""));
       var padding_right = parseFloat($body.css("padding-right").replace("px", ""));
 
-      // Use innerWidth/Height to get size of window, including scrollbars.
-      // Use document.body.clientWidth as fallback for IE8.
-      var inner_width  = window.innerWidth  || document.body.clientWidth;
-      var inner_height = window.innerHeight || document.body.clientHeight;
-
-      // Resize the wrapper div to the window
-      $wrap.width(inner_width - padding_left - padding_right);
-      $wrap.height(inner_height);
+      // Resize the wrapper div to the window, inside of scrollbars if present
+      // The wrapper has overflow:hidden so that objects inside of it won't
+      // scrollbars to appear while it's being resized.
+      $wrap.width(document.documentElement.clientWidth - padding_left - padding_right);
+      $wrap.height(document.documentElement.clientHeight);
 
       this.resizeToWrapper(duration);
     };

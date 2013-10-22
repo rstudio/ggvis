@@ -5,6 +5,11 @@
   float: left;
 }
 
+/* Containers for plots shouldn't allow overflow */
+.ggvis-output-container {
+  overflow: hidden;
+}
+
 /* Outline box when resizing a plot */
 .ui-resizable-helper {
   border: 1px dotted #999;
