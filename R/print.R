@@ -65,9 +65,9 @@ view_static <- function(x,
     tags$script(src = "lib/QuadTree.js"),
     tags$script(src = "js/ggvis.js"),
     tags$link(rel = "stylesheet", type = "text/css",
-      href = "css/ggvis.css"),
+      href = "lib/jquery-ui/css/smoothness/jquery-ui-1.10.3.custom.css"),
     tags$link(rel = "stylesheet", type = "text/css",
-      href = "lib/jquery-ui/css/smoothness/jquery-ui-1.10.3.custom.css")
+      href = "css/ggvis.css")
   )
 
   body <- tagList(

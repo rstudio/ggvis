@@ -37,6 +37,12 @@
 }
 
 @media (max-width: 767px) {
+  /* Bootstrap-responsive adds padding, but we don't want it */
+  body {
+    padding-right: 0px;
+    padding-left: 0px;
+  }
+
   .sidebar-bottom {
     display: inline-block;
     margin-top: 20px;

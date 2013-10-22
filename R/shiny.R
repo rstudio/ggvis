@@ -67,11 +67,11 @@ ggvis_output <- function(plot_id, shiny = TRUE) {
         tags$script(src = "ggvis/lib/QuadTree.js"),
         tags$script(src = "ggvis/js/ggvis.js"),
         tags$script(src = "ggvis/js/shiny-ggvis.js"),
-        tags$link(rel = "stylesheet", type = "text/css",
-                  href = "ggvis/css/ggvis.css"),
         tags$link(rel = "stylesheet",
                   type = "text/css",
-                  href = "ggvis/lib/jquery-ui/css/smoothness/jquery-ui-1.10.3.custom.css")
+                  href = "ggvis/lib/jquery-ui/css/smoothness/jquery-ui-1.10.3.custom.css"),
+        tags$link(rel = "stylesheet", type = "text/css",
+                  href = "ggvis/css/ggvis.css")
       )),
       container
     )

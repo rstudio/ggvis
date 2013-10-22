@@ -147,7 +147,6 @@ ggvis = (function() {
 
     // Set width and height to fill window
     prototype.resizeToWindow = function(duration) {
-      var $win = $(window);
       var $body = $('body');
       var $wrap = this.getWrapper();
 
@@ -155,10 +154,14 @@ ggvis = (function() {
       var padding_left  = parseFloat($body.css("padding-left").replace("px", ""));
       var padding_right = parseFloat($body.css("padding-right").replace("px", ""));
 
-      // Resize the wrapper div to the window - take off a little extra to make
-      // sure it fits
-      $wrap.width($win.width() - 5 - padding_left - padding_right);
-      $wrap.height($win.height() - 5);
+      // Use innerWidth/Height to get size of window, including scrollbars.
+      // Use document.body.clientWidth as fallback for IE8.
+      var inner_width  = window.innerWidth  || document.body.clientWidth;
+      var inner_height = window.innerHeight || document.body.clientHeight;
+
+      // Resize the wrapper div to the window
+      $wrap.width(inner_width - padding_left - padding_right);
+      $wrap.height(inner_height);
 
       this.resizeToWrapper(duration);
     };
@@ -214,6 +217,7 @@ ggvis = (function() {
       $el.resizable({
         helper: "ui-resizable-helper",
         grid: [10, 10],
+        handles: "se",
         stop: function() { self.resizeToWrapper(); }
       });
     };
