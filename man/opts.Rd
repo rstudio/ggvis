@@ -8,7 +8,7 @@
 }
 \arguments{
   \item{width,height}{Width and height of plot, in pixels.
-  Default is 400x400.}
+  Default is 600x400.}
 
   \item{smart_size}{If \code{TRUE}, ggvis will try to
   auto-detect if it is running in a small viewer window,

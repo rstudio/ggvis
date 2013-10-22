@@ -1,6 +1,6 @@
 #' Set options for a ggvis plot
 #'
-#' @param width,height Width and height of plot, in pixels. Default is 400x400.
+#' @param width,height Width and height of plot, in pixels. Default is 600x400.
 #' @param smart_size If \code{TRUE}, ggvis will try to auto-detect if it is
 #'   running in a small viewer window, and if so, will automatically size the
 #'   plot to fill the window. The default value is \code{TRUE}, or the value of
@@ -49,7 +49,7 @@ as.vega.ggvis_opts <- function(x) x
 default_opts <- function() {
   structure(
     list(
-      width = 400,
+      width = 600,
       height = 400,
       smart_size = getOption("ggvis.smart_size", TRUE),
       keep_aspect = getOption("ggvis.keep_aspect", FALSE),
