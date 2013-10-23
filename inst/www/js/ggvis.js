@@ -17,11 +17,21 @@ ggvis = (function() {
     return this.plots[plotId];
   };
 
-  // Are we in a small viewer panel?
-  ggvis.inViewerPanel = function() {
-    // This is a pretty dumb criterion, but it's good enough
-    return $(window).width() < 600 || $(window).height() < 600;
+  // Are we in a viewer pane?
+  ggvis.inViewerPane = function() {
+    return queryVar("viewer_pane") === "1";
   };
+
+  // Private methods --------------------------------------------------
+
+  // Returns the value of a GET variable
+  function queryVar (name) {
+    return decodeURI(window.location.search.replace(
+      new RegExp("^(?:.*[&\\?]" +
+                 encodeURI(name).replace(/[\.\+\*]/g, "\\$&") +
+                 "(?:\\=([^&]*))?)?.*$", "i"),
+      "$1"));
+  }
 
 
   // ggvis.Plot class ----------------------------------------------------------
@@ -201,7 +211,7 @@ ggvis = (function() {
 
       // Resizing to fit has to happen after the initial update
       if (this.opts.smart_size) {
-        if (ggvis.inViewerPanel()) {
+        if (ggvis.inViewerPane()) {
           this.resizeToWindow(0);
         } else {
           this.resizeWrapperToPlot();
@@ -231,7 +241,7 @@ ggvis = (function() {
       $(window).resize(function() {
         clearTimeout(debounce_id);
         debounce_id = setTimeout(function() {
-          if (ggvis.inViewerPanel()) {
+          if (ggvis.inViewerPane()) {
             self.resizeToWindow();
           }
         }, 100); // Debounce to 100ms
