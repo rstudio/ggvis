@@ -1,10 +1,6 @@
 #' Set options for a ggvis plot
 #'
 #' @param width,height Width and height of plot, in pixels. Default is 600x400.
-#' @param smart_size If \code{TRUE}, ggvis will try to auto-detect if it is
-#'   running in a small viewer window, and if so, will automatically size the
-#'   plot to fill the window. The default value is \code{TRUE}, or the value of
-#'   \code{getOption("ggvis.smart_size")}, if it is set.
 #' @param keep_aspect Should the aspect ratio be preserved? The default value
 #'   is \code{FALSE}, or the value of \code{getOption("ggvis.keep_aspect")}, if
 #'   it is set.
@@ -24,14 +20,13 @@
 #'   opts(width = 300, height = 200, padding = padding(10, 10, 10, 10)))
 #'
 #' @export
-opts <- function(width = NULL, height = NULL, smart_size = NULL,
-                 keep_aspect = NULL, resizable = NULL, padding = NULL,
-                 duration = NULL, renderer = NULL) {
+opts <- function(width = NULL, height = NULL, keep_aspect = NULL,
+                 resizable = NULL, padding = NULL, duration = NULL,
+                 renderer = NULL) {
   structure(
     compact(list(
       width = width,
       height = height,
-      smart_size = smart_size,
       keep_aspect = keep_aspect,
       resizable = resizable,
       padding = padding,
@@ -51,7 +46,6 @@ default_opts <- function() {
     list(
       width = 600,
       height = 400,
-      smart_size = getOption("ggvis.smart_size", TRUE),
       keep_aspect = getOption("ggvis.keep_aspect", FALSE),
       resizable = getOption("ggvis.resizable", TRUE),
       padding = padding(),

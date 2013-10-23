@@ -95,7 +95,7 @@ ggvis = (function() {
         if (opts.mouseover) chart.on("mouseover", opts.mouseover);
         if (opts.mouseout)  chart.on("mouseout",  opts.mouseout);
 
-        if (opts.smart_size && ggvis.inViewerPane()) {
+        if (ggvis.inViewerPane()) {
           self.enableAutoResizeToWindow();
         } else if (opts.resizable) {
           self.enableResizable();
@@ -213,12 +213,10 @@ ggvis = (function() {
       this.initialized = true;
 
       // Resizing to fit has to happen after the initial update
-      if (this.opts.smart_size) {
-        if (ggvis.inViewerPane()) {
-          this.resizeToWindow(0);
-        } else {
-          this.resizeWrapperToPlot();
-        }
+      if (ggvis.inViewerPane()) {
+        this.resizeToWindow(0);
+      } else {
+        this.resizeWrapperToPlot();
       }
     };
 
