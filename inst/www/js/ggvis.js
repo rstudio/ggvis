@@ -159,6 +159,10 @@ ggvis = (function() {
       // scrollbars to appear while it's being resized.
       $wrap.width(document.documentElement.clientWidth - padding_left - padding_right);
       $wrap.height(document.documentElement.clientHeight);
+      // Resize again - needed because if the first resize caused a scrollbar to
+      // disappear, there will be a little extra space.
+      $wrap.width(document.documentElement.clientWidth - padding_left - padding_right);
+      $wrap.height(document.documentElement.clientHeight);
 
       this.resizeToWrapper(duration);
     };
