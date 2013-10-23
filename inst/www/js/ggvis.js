@@ -244,7 +244,7 @@ ggvis = (function() {
       $(window).resize(function() {
         clearTimeout(debounce_id);
         // Debounce to 100ms
-        debounce_id = setTimeout(function() { self.resizeToWindow() }, 100);
+        debounce_id = setTimeout(function() { self.resizeToWindow(); }, 100);
       });
     };
 
