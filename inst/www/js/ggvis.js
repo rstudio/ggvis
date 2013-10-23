@@ -95,8 +95,11 @@ ggvis = (function() {
         if (opts.mouseover) chart.on("mouseover", opts.mouseover);
         if (opts.mouseout)  chart.on("mouseout",  opts.mouseout);
 
-        if (opts.resizable) self.enableResizable();
-        if (opts.smart_size) self.enableAutoResizeToWindow();
+        if (opts.smart_size && ggvis.inViewerPane()) {
+          self.enableAutoResizeToWindow();
+        } else if (opts.resizable) {
+          self.enableResizable();
+        }
 
         // If the data arrived earlier, use it.
         if (this.pendingData) self.loadPendingData();
@@ -240,11 +243,8 @@ ggvis = (function() {
 
       $(window).resize(function() {
         clearTimeout(debounce_id);
-        debounce_id = setTimeout(function() {
-          if (ggvis.inViewerPane()) {
-            self.resizeToWindow();
-          }
-        }, 100); // Debounce to 100ms
+        // Debounce to 100ms
+        debounce_id = setTimeout(function() { self.resizeToWindow() }, 100);
       });
     };
 
