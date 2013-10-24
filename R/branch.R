@@ -31,7 +31,7 @@
 #' }
 #' @param ... components: data, \code{\link{props}}, \code{branch}es,
 #'   or \code{\link{marks}}
-#' @param drop_unnamed if \code{FALSE}, the default, will throw an error if
+#' @param drop_named if \code{FALSE}, the default, will throw an error if
 #'   any of the arguments in \code{...} are named. If \code{TRUE} it will
 #'   silently drop them - this is primarily useful for \code{branch_} functions
 #'   which send named arguments to the transform, and unnamed arguments to the
