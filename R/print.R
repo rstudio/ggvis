@@ -144,7 +144,10 @@ view_dynamic <- function(x,
   
   plot_id <- "plot1"
 
-  if (is.null(controls(x))) {
+  # Find number of control elements for the plot
+  n_controls <- length(controls(x))
+
+  if (n_controls == 0) {
     ui <- basicPage(ggvis_output(plot_id, shiny = TRUE))
 
   } else {
@@ -171,8 +174,11 @@ view_dynamic <- function(x,
   
   app <- list(ui = ui, server = server)
   if (launch) {
+    # Request 50 vertical pixels for each control item
+    height <- 350 + 50 * n_controls
+
     suppressMessages(
-      runApp(app, launch.browser = function(url) view_plot(url, 350))
+      runApp(app, launch.browser = function(url) view_plot(url, height))
     )
   } else {
     app
