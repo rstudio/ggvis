@@ -2,19 +2,13 @@
 \alias{opts}
 \title{Set options for a ggvis plot}
 \usage{
-  opts(width = NULL, height = NULL, smart_size = NULL,
-    keep_aspect = NULL, resizable = NULL, padding = NULL,
-    duration = NULL, renderer = NULL)
+  opts(width = NULL, height = NULL, keep_aspect = NULL,
+    resizable = NULL, padding = NULL, duration = NULL,
+    renderer = NULL)
 }
 \arguments{
   \item{width,height}{Width and height of plot, in pixels.
   Default is 600x400.}
-
-  \item{smart_size}{If \code{TRUE}, ggvis will try to
-  auto-detect if it is running in a small viewer window,
-  and if so, will automatically size the plot to fill the
-  window. The default value is \code{TRUE}, or the value of
-  \code{getOption("ggvis.smart_size")}, if it is set.}
 
   \item{keep_aspect}{Should the aspect ratio be preserved?
   The default value is \code{FALSE}, or the value of
