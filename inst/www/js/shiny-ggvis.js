@@ -21,6 +21,42 @@ $(function(){ //DOM Ready
   });
   Shiny.outputBindings.register(ggvisOutputBinding, 'shiny.ggvisOutput');
 
+  // A customized version of Shiny's htmlOutputBinding which can call a plot's
+  // onControlOutput function when outputs are updated drawn.
+  var ggvisControlOutputBinding = new Shiny.OutputBinding();
+  $.extend(ggvisControlOutputBinding, {
+    find: function(scope) {
+      return $(scope).find('.ggvis-control-output');
+    },
+    onValueError: function(el, err) {
+      Shiny.unbindAll(el);
+      this.renderError(el, err);
+    },
+    renderValue: function(el, data) {
+      var $el = $(el);
+
+      Shiny.unbindAll(el);
+      $el.html(data);
+      Shiny.initializeInputs(el);
+      Shiny.bindAll(el);
+
+      // Run onControlOutput for each plot listed in data-plot-id
+      var plotId = $el.data('plot-id');
+      if (plotId !== undefined) {
+        var ids = plotId.split(/ +/);
+
+        for (var i = 0; i < ids.length; i++) {
+          var plot = ggvis.plots[ids[i]];
+          if (plot && plot.onControlOutput) {
+            plot.onControlOutput();
+          }
+        }
+      }
+    }
+  });
+  Shiny.outputBindings.register(ggvisControlOutputBinding, 'shiny.ggvisControlOutput');
+
+
   // Receive data object and dispatch to appropriate vega object
   Shiny.addCustomMessageHandler("ggvis_data", function(message) {
     var plotId = message.plotId;

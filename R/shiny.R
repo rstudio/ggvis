@@ -19,7 +19,7 @@
 #' }
 #' @examples
 #' \dontrun{
-#' # In server.r
+#' ## In server.r
 #' gv <- reactive({
 #'   ggvis(mtcars, props(x = ~wt, y = ~mpg),
 #'     mark_symbol(),
@@ -31,6 +31,10 @@
 #' })
 #'
 #' output$controls <- renderControls(gv)
+#'
+#'
+#' ## In ui.r
+#' ggvisControlOutput("controls")
 #' }
 #' @name shiny
 NULL
@@ -272,4 +276,32 @@ ggvisControlGroup <- function(plot_id) {
       )
     )
   )
+}
+
+#' Create a ggvis control output element in UI
+#'
+#' This is effectively the same as \code{\link{shiny::uiOutput}}, except that
+#' on the client side it may call some plot resizing functions after new
+#' controls are drawn.
+#'
+#' \code{ggvisControlOutput} is intended to be used with
+#' \code{\link{renderControls}} on the server side.
+#'
+#' @param outputId The output variable to read the value from.
+#' @param plotId An optional plot ID or vector of plot IDs. The plots will
+#'   have their .onControlOutput functions called after the controls are drawn.
+#' @examples
+#' htmlOutput("summary")
+#' @export
+ggvisControlOutput <- function(outputId, plotId = NULL) {
+  if (is.null(plotId)) {
+    div(id = outputId, class = "ggvis-control-output")
+
+  } else {
+    div(
+      id = outputId,
+      class = "ggvis-control-output",
+      `data-plot-id` = paste(plotId, collapse = " ")
+    )
+  }
 }

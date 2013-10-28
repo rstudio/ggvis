@@ -170,12 +170,18 @@ ggvis = (function() {
       // Resize the wrapper div to the window, inside of scrollbars if present
       // The wrapper has overflow:hidden so that objects inside of it won't
       // scrollbars to appear while it's being resized.
-      $wrap.width(document.documentElement.clientWidth - padding_left - padding_right);
-      $wrap.height(document.documentElement.clientHeight);
+      var docEl = document.documentElement;
+      $wrap.width(docEl.clientWidth - padding_left - padding_right);
+      $wrap.height(docEl.clientHeight);
       // Resize again - needed because if the first resize caused a scrollbar to
       // disappear, there will be a little extra space.
-      $wrap.width(document.documentElement.clientWidth - padding_left - padding_right);
-      $wrap.height(document.documentElement.clientHeight);
+      $wrap.width(docEl.clientWidth - padding_left - padding_right);
+      $wrap.height(docEl.clientHeight);
+
+      // Now if there are any other elements in the body that cause the page to
+      // be larger than the window (like controls), we need to shrink the
+      // plot so that they end up inside the window.
+      $wrap.height(2 * docEl.clientHeight - $body.height());
 
       this.resizeToWrapper(duration);
     };
@@ -245,6 +251,14 @@ ggvis = (function() {
         debounce_id = setTimeout(function() { self.resizeToWindow(); }, 100);
       });
     };
+
+    // This is called when control outputs for a plot are updated
+    prototype.onControlOutput = function() {
+      console.log(this + "oncontroloutput");
+      if (ggvis.inViewerPane()) {
+        this.resizeToWindow(0);
+      }
+    }
 
     prototype.loadPendingData = function() {
       this.chart.data(this.pendingData);

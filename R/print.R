@@ -147,7 +147,7 @@ view_dynamic <- function(x,
   # Make our resources available
   ui <- sidebarBottomPage(
     sidebarBottomPanel(
-      uiOutput("ggvis_ui")
+      ggvisControlOutput("ggvis_controls", plot_id)
     ),
     mainTopPanel(
       ggvis_output(plot_id, shiny = TRUE)
@@ -160,7 +160,7 @@ view_dynamic <- function(x,
     observe_ggvis(r_gv, plot_id, session, renderer)
     
     # User interface elements (in the sidebar)
-    output$ggvis_ui <- renderControls(r_gv, session)
+    output$ggvis_controls <- renderControls(r_gv, session)
   }
   
   app <- list(ui = ui, server = server)

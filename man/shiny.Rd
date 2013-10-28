@@ -48,7 +48,7 @@
 }
 \examples{
 \dontrun{
-# In server.r
+## In server.r
 gv <- reactive({
   ggvis(mtcars, props(x = ~wt, y = ~mpg),
     mark_symbol(),
@@ -60,6 +60,10 @@ gv <- reactive({
 })
 
 output$controls <- renderControls(gv)
+
+
+## In ui.r
+ggvisControlOutput("controls")
 }
 }
 
