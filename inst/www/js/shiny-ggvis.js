@@ -76,7 +76,7 @@ $(function(){ //DOM Ready
       // If all data objects have been received, update
       if (plot.dataReady()) {
         if (!plot.initialized) {
-          plot.initialUpdate()
+          plot.initialUpdate();
         } else {
           plot.chart.update({ duration: plot.opts.duration });
         }
@@ -116,7 +116,7 @@ $(function(){ //DOM Ready
         }
       );
     };
-  }
+  };
 
   // Returns a mouseout handler with plotId
   var createMouseOutHandler = function(plotId) {
@@ -130,7 +130,7 @@ $(function(){ //DOM Ready
         }
       );
     };
-  }
+  };
 
   // Tooltip message handler
   Shiny.addCustomMessageHandler('ggvis_tooltip', function(data) {
