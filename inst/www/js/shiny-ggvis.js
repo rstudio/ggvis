@@ -121,6 +121,7 @@ $(function(){ //DOM Ready
   // Returns a mouseout handler with plotId
   var createMouseOutHandler = function(plotId) {
     return function(event, item) {
+      /* jshint unused: false */
       Shiny.onInputChange("ggvis_hover",
         {
           plot_id: plotId,
