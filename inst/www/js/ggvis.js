@@ -254,7 +254,6 @@ ggvis = (function() {
 
     // This is called when control outputs for a plot are updated
     prototype.onControlOutput = function() {
-      console.log(this + "oncontroloutput");
       if (ggvis.inViewerPane()) {
         this.resizeToWindow(0);
       }
