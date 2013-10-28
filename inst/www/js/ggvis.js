@@ -325,8 +325,8 @@ ggvis = (function() {
     };
 
     prototype.updateDownloadButtonText = function(renderer) {
-      var $el = $(this.plotId + "_download");
-      if ($el) {
+      var $el = $("#" + this.plotId + "_download");
+      if ($el[0]) {
         var filetype = "";
         if      (renderer === "svg")    filetype = "SVG";
         else if (renderer === "canvas") filetype = "PNG";
