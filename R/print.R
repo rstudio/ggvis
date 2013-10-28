@@ -143,23 +143,29 @@ view_dynamic <- function(x,
     stop("renderer must be 'canvas' or 'svg'")
   
   plot_id <- "plot1"
-  
-  # Make our resources available
-  ui <- sidebarBottomPage(
-    sidebarBottomPanel(
-      ggvisControlOutput("ggvis_controls", plot_id)
-    ),
-    mainTopPanel(
-      ggvis_output(plot_id, shiny = TRUE)
+
+  if (is.null(controls(x))) {
+    ui <- basicPage(ggvis_output(plot_id, shiny = TRUE))
+
+  } else {
+    ui <- sidebarBottomPage(
+      sidebarBottomPanel(
+        ggvisControlOutput("ggvis_controls", plot_id)
+      ),
+      mainTopPanel(
+        ggvis_output(plot_id, shiny = TRUE)
+      )
     )
-  )
-  
+  }
+
   server <- function(input, output, session) {
     r_gv <- reactive(x)
     # Set up observers for the spec and the data
     observe_ggvis(r_gv, plot_id, session, renderer)
     
-    # User interface elements (in the sidebar)
+    # User interface elements (in the sidebar). These must be added dynamically
+    # (instead of being rendered statically in ui) because they are unique to
+    # each session.
     output$ggvis_controls <- renderControls(r_gv, session)
   }
   
