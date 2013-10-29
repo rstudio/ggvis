@@ -10,6 +10,10 @@
   overflow: hidden;
 }
 
+.ggvis-control-output {
+  overflow: hidden;
+}
+
 /* Outline box when resizing a plot */
 .ui-resizable-helper {
   border: 1px dotted #999;
@@ -57,6 +61,13 @@
   .main-top {
     float:none !important;
     margin-left:0;
+  }
+
+  .ggvis-input-container {
+    width: 45%;
+    padding-left: 2.5%;
+    padding-right: 2.5%;
+    float: left;
   }
 }
 

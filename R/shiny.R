@@ -168,7 +168,10 @@ renderControls <- function(r_gv, session = NULL) {
     if (empty(controls)) {
       NULL
     } else {
-      tagList(controls)
+      # Wrap each control in a div, for layout purposes
+      tagList(
+        lapply(controls, function(x) div(x, class = "ggvis-input-container"))
+      )
     }
   })
 }
