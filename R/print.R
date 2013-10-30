@@ -174,8 +174,9 @@ view_dynamic <- function(x,
   
   app <- list(ui = ui, server = server)
   if (launch) {
-    # Request 50 vertical pixels for each control item
-    height <- 350 + 50 * n_controls
+    # Request 70 vertical pixels for each pair of control items, since there are
+    # two on a row.
+    height <- 350 + 70 * ceiling(n_controls / 2)
 
     suppressMessages(
       runApp(app, launch.browser = function(url) view_plot(url, height))
