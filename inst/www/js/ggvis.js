@@ -257,7 +257,7 @@ ggvis = (function() {
       if (ggvis.inViewerPane()) {
         this.resizeToWindow(0);
       }
-    }
+    };
 
     prototype.loadPendingData = function() {
       this.chart.data(this.pendingData);
