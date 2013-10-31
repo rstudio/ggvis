@@ -70,7 +70,7 @@ range_prop <- function(x, name) {
     if (is.na(x[1])) {
       named_list(paste0(name, "Max"), x[2])
     } else {
-      named_list(paste0(name, "Min"), x[2])
+      named_list(paste0(name, "Min"), x[1])
     }
   } else if (n_miss == 2) {
     list()

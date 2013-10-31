@@ -78,8 +78,13 @@ add_default_scales <- function(x, nodes, data_table) {
   
   # Override domains (if not already present)
   for (scale_n in names(scales)) {
-    if (!is.null(scales[[scale_n]]$domain)) next
-    scales[[scale_n]]$domain <- list(fields = scale_uses[[scale_n]])
+    # If domain isn't specified (length == 0) or if only one of domainMin and
+    # domainMax is specified, then get domain from data (min or max will also
+    # be present). If both min and max are specified, no need to get domain from
+    # data.
+    if (length(scales[[scale_n]]$domain) < 2) {
+      scales[[scale_n]]$domain <- list(fields = scale_uses[[scale_n]])
+    }
   }
   
   unclass(scales)
