@@ -4,7 +4,7 @@
 \alias{pipeline}
 \title{Create a new "pipeline" object.}
 \usage{
-  pipeline(..., .pipes = list())
+  pipeline(..., .pipes = list(), .id = NULL)
 
   is.pipeline(x)
 
@@ -17,6 +17,10 @@
   use this argument.}
 
   \item{x}{an object to test/coerce}
+
+  \item{.id}{Use a specific ID for this pipeline instead of
+  an auto-generated one. This is primarily for internal
+  use.}
 }
 \description{
   A pipeline represents a sequence of data transformations,
