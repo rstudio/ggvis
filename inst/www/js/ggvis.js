@@ -161,6 +161,9 @@ ggvis = (function() {
       chart.width(newWidth);
       chart.height(newHeight);
       chart.update({ duration: duration });
+
+      // Need to re-enable brushing when resized
+      if (this.opts.brush) this.enableBrushing();
     };
 
     // Set width and height to fill window
@@ -222,6 +225,8 @@ ggvis = (function() {
       if (!this.initialized) this.chart.update({ duration: 0 });
 
       this.initialized = true;
+
+      if (this.opts.brush) this.enableBrushing();
 
       // Resizing to fit has to happen after the initial update
       if (ggvis.inViewerPane()) {
@@ -346,6 +351,116 @@ ggvis = (function() {
     function arraysEqual(a, b) {
       return $(a).not(b).length === 0 && $(b).not(a).length === 0;
     }
+
+
+    // Brushing -------------------------------------------------------
+    prototype.enableBrushing = function() {
+      var self = this;
+      var chart = this.chart;
+      var $el = $(chart._el);
+
+      var dragStart = null;
+
+      // Remove any existing handlers
+      $el.off("mousedown.ggvis_brush");
+      $el.off("mouseup.ggvis_brush");
+      $el.off("mousemove.ggvis_brush");
+
+      // Hook up handlers
+      $el.on("mousedown.ggvis_brush", function (event, item) {
+        /* jshint unused: false */
+        startBrushing(removePadding(mouseOffset(event)));
+      });
+      $el.on("mouseup.ggvis_brush", function (event, item) {
+        /* jshint unused: false */
+        stopBrushing();
+      });
+      $el.on("mousemove.ggvis_brush", function (event, item) {
+        /* jshint unused: false */
+        brushTo(removePadding(mouseOffset(event)));
+      });
+
+      // x/y coords are relative to the containing div. We need to account for the
+      // padding that surrounds the data area by removing the padding before we
+      // compare it to any scene item bounds.
+      function removePadding(point) {
+        return {
+          x: point.x - chart.padding().left,
+          y: point.y - chart.padding().top
+        };
+      }
+
+      function mouseOffset(e) {
+        return {
+          x: e.offsetX,
+          y: e.offsetY
+        };
+      }
+
+      function startBrushing(point) {
+        // Clear all brushes and highlights
+        chart.data({
+          ggvis_brush: [
+            { x: 0, y: 0, width: 0, height: 0 }
+          ]
+        });
+        chart.update();
+
+        // Record the start point
+        dragStart = point;
+      }
+
+      function stopBrushing() {
+        dragStart = null;
+      }
+
+      function brushTo(point) {
+        if (!dragStart) return; // We're not brushing right now
+
+        var limits = self._getSceneBounds();
+
+        // Calculate the bounds based on start and end points
+        var end = point;
+        var maxX = Math.min(Math.max(dragStart.x, end.x), limits.x2);
+        var minX = Math.max(Math.min(dragStart.x, end.x), limits.x1);
+        var maxY = Math.min(Math.max(dragStart.y, end.y), limits.y2);
+        var minY = Math.max(Math.min(dragStart.y, end.y), limits.y1);
+        var bounds = new vg.Bounds().set(minX, minY, maxX, maxY);
+
+        // Update the brush bounding box
+        chart.data({
+          ggvis_brush: [{
+            x: bounds.x1,
+            y: bounds.y1,
+            width: bounds.width(),
+            height: bounds.height()
+          }]
+        });
+
+        // Find the items in the current scene that match
+        var items = self._getItems();
+        var matchingItems = [];
+        for (var i = 0; i < items.length; i++) {
+          if (bounds.intersects(items[i].bounds)) {
+            matchingItems.push(items[i]);
+          }
+        }
+
+        // Clear any highlighted items, then highlight new ones
+        chart.update();
+        chart.update({ props: "brush", items: matchingItems });
+      }
+    };
+
+    // Function that retrieves vega scene items using a hard coded path. This will
+    // obviously not work when our charts start getting interesting.
+    prototype._getItems = function() {
+      return this.chart.model().scene().items[0].items[0].items;
+    };
+
+    prototype._getSceneBounds = function() {
+      return this.chart.model().scene().items[0].bounds;
+    };
 
     return Plot;
   })(); // ggvis.Plot
