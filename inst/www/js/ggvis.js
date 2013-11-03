@@ -94,6 +94,8 @@ ggvis = (function() {
         if (opts.mouseover) chart.on("mouseover", opts.mouseover);
         if (opts.mouseout)  chart.on("mouseout",  opts.mouseout);
 
+        if (self.opts.brush) self.enableBrushing();
+
         if (ggvis.inViewerPane()) {
           self.enableAutoResizeToWindow();
         } else if (opts.resizable) {
@@ -161,9 +163,6 @@ ggvis = (function() {
       chart.width(newWidth);
       chart.height(newHeight);
       chart.update({ duration: duration });
-
-      // Need to re-enable brushing when resized
-      if (this.opts.brush) this.enableBrushing();
     };
 
     // Set width and height to fill window
@@ -225,8 +224,6 @@ ggvis = (function() {
       if (!this.initialized) this.chart.update({ duration: 0 });
 
       this.initialized = true;
-
-      if (this.opts.brush) this.enableBrushing();
 
       // Resizing to fit has to happen after the initial update
       if (ggvis.inViewerPane()) {
@@ -356,26 +353,26 @@ ggvis = (function() {
     // Brushing -------------------------------------------------------
     prototype.enableBrushing = function() {
       var self = this;
+      var $div = this.getDiv();
       var chart = this.chart;
-      var $el = $(chart._el);
 
       var dragStart = null;
 
       // Remove any existing handlers
-      $el.off("mousedown.ggvis_brush");
-      $el.off("mouseup.ggvis_brush");
-      $el.off("mousemove.ggvis_brush");
+      $div.off("mousedown.ggvis_brush");
+      $div.off("mouseup.ggvis_brush");
+      $div.off("mousemove.ggvis_brush");
 
       // Hook up handlers
-      $el.on("mousedown.ggvis_brush", function (event, item) {
+      $div.on("mousedown.ggvis_brush", "div.vega", function (event) {
         /* jshint unused: false */
         startBrushing(removePadding(mouseOffset(event)));
       });
-      $el.on("mouseup.ggvis_brush", function (event, item) {
+      $div.on("mouseup.ggvis_brush", "div.vega", function (event) {
         /* jshint unused: false */
         stopBrushing();
       });
-      $el.on("mousemove.ggvis_brush", function (event, item) {
+      $div.on("mousemove.ggvis_brush", "div.vega", function (event) {
         /* jshint unused: false */
         brushTo(removePadding(mouseOffset(event)));
       });
