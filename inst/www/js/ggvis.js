@@ -76,7 +76,6 @@ ggvis = (function() {
         });
         // Save the chart object
         self.chart = chart;
-        $el.data("ggvis-chart", chart);
 
         // Set the renderer (update buttons and download link)
         self.setRenderer(opts.renderer, false);
