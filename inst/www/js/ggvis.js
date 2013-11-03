@@ -107,7 +107,13 @@ ggvis = (function() {
       });
     };
 
-    // Get the div which is around ggvis-output
+    // Get the div which wraps the svg or canvas object (created by vega).
+    prototype.getVegaDiv = function() {
+      // This is also known is this.getDiv().children(".vega")
+      return $(this.chart._el);
+    }
+
+    // Get the div which wraps the .vega div
     prototype.getDiv = function() {
       return $("#" + this.plotId);
     };
@@ -119,9 +125,9 @@ ggvis = (function() {
 
     // Get the marks object (the Canvas or SVG object, which is rendered too)
     prototype.getMarks = function() {
-      // Can't do $vega.children(".marks") because it doesn't work for SVG DOM
-      // objects. So we'll just grab any svg or canvas object.
-      return $(this.chart._el).children("svg, canvas");
+      // Can't do this.getVegaDiv().children(".marks") because it doesn't work
+      // for SVG DOM objects. So we'll just grab any svg or canvas object.
+      return this.getVegaDiv().children("svg, canvas");
     };
 
     // Set the width of the chart to the wrapper div. If keep_aspect is true,
@@ -193,9 +199,9 @@ ggvis = (function() {
       var chart   = this.chart;
       var $wrap   = this.getWrapper();  // wrapper around $div
       var $div    = this.getDiv();      // ggvis div, containing $el
-      var $gear   = $div.siblings().filter(".plot-gear-icon");
-      var $vega   = $(chart._el);       // Immediate wrapper around marks
+      var $vega   = this.getVegaDiv();  // Immediate wrapper around marks
       var $marks  = this.getMarks();
+      var $gear   = $div.siblings().filter(".plot-gear-icon");
 
       // Need to use getAttribute because itt works for both svg and canvas
       // DOM objects. (marks.width doesn't work for SVG, nor does)
