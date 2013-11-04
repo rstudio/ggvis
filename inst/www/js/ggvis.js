@@ -1,9 +1,9 @@
 /*jshint forin:true, noarg:true, noempty:true, eqeqeq:true, bitwise:true,
     strict:false, undef:true, unused:true, browser:true, jquery:true, maxerr:50,
     curly:false, multistr:true */
-/*global vg, ggvis:true*/
+/*global vg, ggvis:true, lodash*/
 
-ggvis = (function() {
+ggvis = (function(_) {
   var ggvis = {
     // Keep track of information about all plots: contains ggvis.Plot objects
     plots: {}
@@ -463,7 +463,7 @@ ggvis = (function() {
   })(); // ggvis.Plot
 
   return ggvis;
-})();
+})(lodash);
 
 
 $(function(){ //DOM Ready

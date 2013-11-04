@@ -63,6 +63,8 @@ view_static <- function(x,
     tags$script(charset = "utf-8", src = "lib/d3.js"),
     tags$script(src = "lib/vega.js"),
     tags$script(src = "lib/QuadTree.js"),
+    tags$script(src = "lib/lodash.min.js"),
+    tags$script("var lodash = _.noConflict()"),
     tags$script(src = "js/ggvis.js"),
     tags$link(rel = "stylesheet", type = "text/css",
       href = "lib/jquery-ui/css/smoothness/jquery-ui-1.10.3.custom.css"),
@@ -121,6 +123,7 @@ copy_www_resources <- function(destdir) {
     "lib/QuadTree.js",
     "lib/jquery-ui/js/jquery-ui-1.10.3.custom.js",
     "lib/jquery-ui",
+    "lib/lodash.min.js",
     "js/ggvis.js",
     "css/ggvis.css"
   )
