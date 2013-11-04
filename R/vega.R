@@ -75,22 +75,32 @@ as.vega.mark <- function(mark) {
   # I'm not sure how else we can figure it out.
   split <- is.split_df(isolate(mark$pipeline()))
 
+  properties <- as.vega(props)
+  properties$ggvis <- list()
+
   if (split) {
+    data <- paste0(mark$pipeline_id, "_tree")
+    properties$ggvis$data <- data
+
     m <- list(
       type = "group",
-      from = list(data = paste0(mark$pipeline_id, "_tree")),
+      from = list(data = data),
       marks = list(
         list(
           type = mark$type,
-          properties = as.vega(props)
+          properties = properties
         )
       )
     )
+
   } else {
+    data <- mark$pipeline_id
+    properties$ggvis$data <- data
+
     m <- list(
       type = mark$type,
-      properties = as.vega(props),
-      from = list(data = mark$pipeline_id)
+      properties = properties,
+      from = list(data = data)
     )
   }
 
