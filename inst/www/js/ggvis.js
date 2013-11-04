@@ -355,6 +355,7 @@ ggvis = (function(_) {
       var self = this;
       var $div = this.getDiv();
       var chart = this.chart;
+      var lastMatchingItems = [];
 
       var dragStart = null;
 
@@ -434,6 +435,9 @@ ggvis = (function(_) {
           }]
         });
 
+        // Update the brush
+        chart.update({ items: self._getBrushItem() });
+
         // Find the items in the current scene that match
         var items = self._getItems();
         var matchingItems = [];
@@ -443,9 +447,14 @@ ggvis = (function(_) {
           }
         }
 
-        // Clear any highlighted items, then highlight new ones
-        chart.update();
-        chart.update({ props: "brush", items: matchingItems });
+        var newBrushItems = _.difference(matchingItems, lastMatchingItems);
+        var unBrushItems = _.difference(lastMatchingItems, matchingItems);
+
+        // Clear any un-brushed items, then highlight new ones
+        chart.update({ props: "update", items: unBrushItems });
+        chart.update({ props: "brush", items: newBrushItems });
+
+        lastMatchingItems = matchingItems;
       }
     };
 
@@ -453,6 +462,10 @@ ggvis = (function(_) {
     // obviously not work when our charts start getting interesting.
     prototype._getItems = function() {
       return this.chart.model().scene().items[0].items[0].items;
+    };
+
+    prototype._getBrushItem = function() {
+      return this.chart.model().scene().items[0].items[1].items;
     };
 
     prototype._getSceneBounds = function() {
