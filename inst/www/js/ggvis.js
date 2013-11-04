@@ -62,7 +62,6 @@ ggvis = (function(_) {
 
       vg.parse.spec(spec, function(chart) {
         var opts = self.opts;
-        var $el = self.getDiv();
 
         // If hovertime is supplied, use that later in a custom callback,
         // instead of the default hover behavior.
@@ -113,7 +112,7 @@ ggvis = (function(_) {
     prototype.getVegaDiv = function() {
       // This is also known is this.getDiv().children(".vega")
       return $(this.chart._el);
-    }
+    };
 
     // Get the div which wraps the .vega div
     prototype.getDiv = function() {
@@ -198,7 +197,6 @@ ggvis = (function(_) {
     // smaller than the window; if we don't do this, then the div will take the
     // full window width, but the plot will be smaller.
     prototype.resizeWrapperToPlot = function() {
-      var chart   = this.chart;
       var $wrap   = this.getWrapper();  // wrapper around $div
       var $div    = this.getDiv();      // ggvis div, containing $el
       var $vega   = this.getVegaDiv();  // Immediate wrapper around marks
