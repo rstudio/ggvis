@@ -14,6 +14,8 @@
 #' @param ... a list of pipes
 #' @param .pipes if you already have the pipes in a list, use this argument.
 #' @param x an object to test/coerce
+#' @param .id Use a specific ID for this pipeline instead of an auto-generated
+#'   one. This is primarily for internal use.
 #' @export
 #' @keywords internal
 #' @examples
@@ -28,7 +30,7 @@
 #' # More useful pipelines combine data and transformations
 #' pipeline(mtcars, transform_bin())
 #' pipeline(mtcars, by_group(cyl), transform_bin())
-pipeline <- function(..., .pipes = list()) {
+pipeline <- function(..., .pipes = list(), .id = NULL) {
   check_empty_args()
   args <- list(...)
   if (is.null(names(args))) {
@@ -42,7 +44,8 @@ pipeline <- function(..., .pipes = list()) {
 
   structure(
     pipes,
-    class = "pipeline"
+    class = "pipeline",
+    id = .id
   )
 }
 
@@ -98,6 +101,7 @@ print.pipeline <- function(x, ...) {
 # Return an id string, summarizing the pipeline
 pipeline_id <- function(x, props) {
   if (length(x) == 0) return(NULL)
+  if (!is.null(attr(x, "id"))) return(attr(x, "id"))
   paste(vapply(x, props = props, pipe_id, character(1)), collapse = "_")
 }
 
@@ -109,6 +113,11 @@ trim_to_source <- function(x) {
     x <- x[max(which(sources)):length(x)]
 
   x
+}
+
+# Does this pipeline contain a data source?
+has_source <- function(x) {
+  any(vapply(x, is_source, FUN.VALUE = logical(1)))
 }
 
 #' @S3method split_vars pipeline

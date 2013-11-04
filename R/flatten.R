@@ -19,10 +19,13 @@ flatten <- function(node, parent = NULL, session = NULL) {
   } else {
     # Create new pipeline connected to parent
     node$pipeline <- connect(node$data, node$props, parent$pipeline, session)
-    node$pipeline_id <- paste0(
-      parent$pipeline_id,
-      pipeline_id(node$data, node$props)
-    )
+
+    # Generate pipeline_id; if connected to parent's pipeline, append to its id
+    id <- pipeline_id(node$data, node$props)
+    if (!has_source(node$data)) {
+      id <- paste(parent$pipeline_id, id, sep = "_")
+    }
+    node$pipeline_id <- id
   }
 
   if (is.mark(node)) {
