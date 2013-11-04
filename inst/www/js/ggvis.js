@@ -353,9 +353,13 @@ ggvis = (function(_) {
       var self = this;
       var $div = this.getDiv();
       var chart = this.chart;
-      var lastMatchingItems = [];
 
-      var dragStart = null;
+      var brushBounds = new vg.Bounds();  // Current brush bounds
+      var lastMatchingItems = [];  // Items that were brushed in previous call
+      var mouseDownStart = null;   // Coordinates where mouse was clicked
+      var lastMouse = null;        // Previous mouse coordinate
+      var brushing = false;
+      var dragging = false;
 
       // Remove any existing handlers
       $div.off("mousedown.ggvis_brush");
@@ -364,16 +368,23 @@ ggvis = (function(_) {
 
       // Hook up handlers
       $div.on("mousedown.ggvis_brush", "div.vega", function (event) {
-        /* jshint unused: false */
-        startBrushing(removePadding(mouseOffset(event)));
+        var point = removePadding(mouseOffset(event));
+
+        if (brushBounds.contains(point.x, point.y)) {
+          startDragging(point);
+        } else {
+          startBrushing(point);
+        }
       });
       $div.on("mouseup.ggvis_brush", "div.vega", function (event) {
         /* jshint unused: false */
-        stopBrushing();
+        if (dragging) stopDragging();
+        if (brushing) stopBrushing();
       });
       $div.on("mousemove.ggvis_brush", "div.vega", function (event) {
-        /* jshint unused: false */
-        brushTo(removePadding(mouseOffset(event)));
+        var point = removePadding(mouseOffset(event));
+        if (dragging) dragTo(point);
+        if (brushing) brushTo(point);
       });
 
       // x/y coords are relative to the containing div. We need to account for the
@@ -393,66 +404,97 @@ ggvis = (function(_) {
         };
       }
 
-      function startBrushing(point) {
-        // Clear all brushes and highlights
-        chart.data({
-          ggvis_brush: [
-            { x: 0, y: 0, width: 0, height: 0 }
-          ]
-        });
-        chart.update();
+      // Dragging functions
+      function startDragging(point) {
+        dragging = true;
+        lastMouse = point;
+        mouseDownStart = point;
+      }
+      function dragTo(point) {
+        if (!dragging) return;
 
-        // Record the start point
-        dragStart = point;
+        var dx = point.x - lastMouse.x;
+        var dy = point.y - lastMouse.y;
+
+        brushBounds.translate(dx, dy);
+        updateBrush();
+
+        lastMouse = point;
+      }
+      function stopDragging() {
+        dragging = false;
+        mouseDownStart = null;
+      }
+
+      // Brushing functions
+      function startBrushing(point) {
+        // Reset brush
+        brushBounds.set(0, 0, 0, 0);
+        updateBrush();
+
+        brushing = true;
+        mouseDownStart = point;
       }
 
       function stopBrushing() {
-        dragStart = null;
+        brushing = false;
+        mouseDownStart = null;
       }
 
       function brushTo(point) {
-        if (!dragStart) return; // We're not brushing right now
+        if (!brushing) return; // We're not brushing right now
 
         var limits = self._getSceneBounds();
 
         // Calculate the bounds based on start and end points
         var end = point;
-        var maxX = Math.min(Math.max(dragStart.x, end.x), limits.x2);
-        var minX = Math.max(Math.min(dragStart.x, end.x), limits.x1);
-        var maxY = Math.min(Math.max(dragStart.y, end.y), limits.y2);
-        var minY = Math.max(Math.min(dragStart.y, end.y), limits.y1);
-        var bounds = new vg.Bounds().set(minX, minY, maxX, maxY);
+        var maxX = Math.min(Math.max(mouseDownStart.x, end.x), limits.x2);
+        var minX = Math.max(Math.min(mouseDownStart.x, end.x), limits.x1);
+        var maxY = Math.min(Math.max(mouseDownStart.y, end.y), limits.y2);
+        var minY = Math.max(Math.min(mouseDownStart.y, end.y), limits.y1);
 
+        brushBounds.set(minX, minY, maxX, maxY);
+
+        updateBrush();
+      }
+
+      // Update the brush with new coordinates stored in brushBounds variable.
+      // This updates the box, and calls update on scenegraph items which have
+      // a change of brush state.
+      function updateBrush() {
         // Update the brush bounding box
         chart.data({
           ggvis_brush: [{
-            x: bounds.x1,
-            y: bounds.y1,
-            width: bounds.width(),
-            height: bounds.height()
+            x: brushBounds.x1,
+            y: brushBounds.y1,
+            width: brushBounds.width(),
+            height: brushBounds.height()
           }]
         });
-
-        // Update the brush
-        chart.update({ items: self._getBrushItem() });
 
         // Find the items in the current scene that match
         var items = self._getItems();
         var matchingItems = [];
         for (var i = 0; i < items.length; i++) {
-          if (bounds.intersects(items[i].bounds)) {
+          if (brushBounds.intersects(items[i].bounds)) {
             matchingItems.push(items[i]);
           }
         }
 
+        // Clear any un-brushed items, then highlight new ones
         var newBrushItems = _.difference(matchingItems, lastMatchingItems);
         var unBrushItems = _.difference(lastMatchingItems, matchingItems);
 
-        // Clear any un-brushed items, then highlight new ones
-        chart.update({ props: "update", items: unBrushItems });
         chart.update({ props: "brush", items: newBrushItems });
+        // Need to update brushed items and brush rect in one step, because of
+        // bug in Vega's canvas renderer.
+        chart.update({ props: "update", items: unBrushItems.concat(getBrushItem()) });
 
         lastMatchingItems = matchingItems;
+      }
+
+      function getBrushItem() {
+        return self.chart.model().scene().items[0].items[1].items;
       }
     };
 
@@ -460,10 +502,6 @@ ggvis = (function(_) {
     // obviously not work when our charts start getting interesting.
     prototype._getItems = function() {
       return this.chart.model().scene().items[0].items[0].items;
-    };
-
-    prototype._getBrushItem = function() {
-      return this.chart.model().scene().items[0].items[1].items;
     };
 
     prototype._getSceneBounds = function() {
