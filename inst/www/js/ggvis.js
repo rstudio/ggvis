@@ -352,6 +352,39 @@ ggvis = (function(_) {
       return this.chart.model().scene().items[0].bounds;
     };
 
+    // Return the brush mark; if not present, return null.
+    prototype._getBrushMark = function() {
+      // We can identify the brush mark because it draws data from ggvis_brush.
+      var brushMark = _.find(this._allMarks(), function(mark) {
+        return getMarkPropKey(mark, "ggvis", "data") === "ggvis_brush";
+      });
+
+      if (brushMark === undefined) return null;
+
+      return brushMark;
+    };
+
+    prototype._getBrushItem = function() {
+      var brushMark = this._getBrushMark();
+      if (brushMark === null || brushMark.items === null) return null;
+
+      return brushMark.items[0];
+    };
+
+    // Return all brushable items
+    prototype._getBrushableItems = function() {
+      var brushableMarks = _.filter(this._allMarks(), function(mark) {
+        if (getMarkProp(mark, "brush"))
+          return true;
+        else
+          return false;
+      });
+
+      var items = _.pluck(brushableMarks, "items");
+      return _.flatten(items);
+    };
+
+
     // Internal functions----------------------------------------------
 
     // Returns true if arrays have same contents (in any order), false otherwise.
@@ -368,13 +401,14 @@ ggvis = (function(_) {
       return mark.def.properties[propname];
     }
 
-    // Given a property function and (optional) key, return the key with that
-    // value. If key is undefined, then return an object with all keys.
+    // Given a property function and (optional) key, return the value of that
+    // key. If key is undefined, then return an object with all keys.
     function getPropKey(property, key) {
       if (property === undefined || property === null) {
         return null;
       }
 
+      // Call the property function on a dummy object
       var temp = {};
       property(temp);
 
@@ -385,6 +419,9 @@ ggvis = (function(_) {
       }
     }
 
+    // Given a mark, a property name, and an (optional) key, return the mark's
+    // property's key. If key is null or undefined, return the mark's property
+    // object.
     function getMarkPropKey(mark, propname, key) {
       var property = getMarkProp(mark, propname);
       return getPropKey(property, key);
@@ -516,7 +553,7 @@ ggvis = (function(_) {
         });
 
         // Find the items in the current scene that match
-        var items = getBrushableItems();
+        var items = self._getBrushableItems();
         var matchingItems = [];
         for (var i = 0; i < items.length; i++) {
           if (brushBounds.intersects(items[i].bounds)) {
@@ -531,32 +568,9 @@ ggvis = (function(_) {
         chart.update({ props: "brush", items: newBrushItems });
         // Need to update brushed items and brush rect in one step, because of
         // bug in Vega's canvas renderer.
-        chart.update({ props: "update", items: unBrushItems.concat(getBrushItem()) });
+        chart.update({ props: "update", items: unBrushItems.concat(self._getBrushItem()) });
 
         lastMatchingItems = matchingItems;
-      }
-
-      // Return the brush item
-      function getBrushItem() {
-        // The brush mark draws data from ggvis_brush.
-        var brushMark = _.find(self._allMarks(), function(mark) {
-          return getMarkPropKey(mark, "ggvis", "data") === "ggvis_brush";
-        });
-
-        return brushMark.items[0];
-      }
-
-      // Return all the brushable items
-      function getBrushableItems() {
-        var brushableMarks = _.filter(self._allMarks(), function(mark) {
-          if (getMarkProp(mark, "brush"))
-            return true;
-          else
-            return false;
-        });
-
-        var items = _.pluck(brushableMarks, "items");
-        return _.flatten(items);
       }
 
     };
