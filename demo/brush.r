@@ -14,3 +14,11 @@ ggvis(
   mark_rect(props(y2 = 0, width = band(), fill.brush := "red")),
   branch_brush()
 )
+
+# Brushing with 10000 points
+data("diamonds", package="ggplot2")
+d <- diamonds[sample(nrow(diamonds), 10000), ]
+ggvis(d, props(x = ~carat, y = ~price),
+  mark_symbol(props(size := 40, fillOpacity := 0.02, fillOpacity.brush := 0.4)),
+  branch_brush()
+)
