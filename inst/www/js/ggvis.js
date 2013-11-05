@@ -93,7 +93,8 @@ ggvis = (function(_) {
         if (opts.mouseover) chart.on("mouseover", opts.mouseover);
         if (opts.mouseout)  chart.on("mouseout",  opts.mouseout);
 
-        if (self.opts.brush) self.enableBrushing();
+        // If there's a brush mark, turn on brushing
+        if (self._getBrushMarkDef()) self.enableBrushing();
 
         if (ggvis.inViewerPane()) {
           self.enableAutoResizeToWindow();
@@ -343,7 +344,14 @@ ggvis = (function(_) {
 
     // Private methods ------------------------------------------------
 
-    // Returns all top-level marks in the scene graph
+    // Returns all top-level mark definitions in the scene graph.
+    // These are available as soon as the spec is parsed.
+    prototype._allMarkDefs = function() {
+      return this.chart.model().defs().marks.marks;
+    };
+
+    // Returns all top-level marks in the scene graph.
+    // These are available after the first update.
     prototype._allMarks = function() {
       return this.chart.model().scene().items[0].items;
     };
@@ -352,11 +360,24 @@ ggvis = (function(_) {
       return this.chart.model().scene().items[0].bounds;
     };
 
+    // Return the definition of the brush mark
+    prototype._getBrushMarkDef = function() {
+      var def = _.find(this._allMarkDefs(), function(markdef) {
+        var data = getMarkProp(markdef, "ggvis").data || null;
+        return data === "ggvis_brush";
+      });
+
+      if (def === undefined) return null;
+
+      return def;
+    };
+
     // Return the brush mark; if not present, return null.
     prototype._getBrushMark = function() {
       // We can identify the brush mark because it draws data from ggvis_brush.
       var brushMark = _.find(this._allMarks(), function(mark) {
-        return getMarkPropKey(mark, "ggvis", "data") === "ggvis_brush";
+        var data = getMarkProp(mark.def, "ggvis").data || null;
+        return data === "ggvis_brush";
       });
 
       if (brushMark === undefined) return null;
@@ -374,7 +395,7 @@ ggvis = (function(_) {
     // Return all brushable items
     prototype._getBrushableItems = function() {
       var brushableMarks = _.filter(this._allMarks(), function(mark) {
-        if (getMarkProp(mark, "brush"))
+        if (getMarkProp(mark.def, "brush"))
           return true;
         else
           return false;
@@ -392,39 +413,23 @@ ggvis = (function(_) {
       return $(a).not(b).length === 0 && $(b).not(a).length === 0;
     }
 
-    // Given a mark and a property name, return the property function
-    function getMarkProp(mark, propname) {
+    // Given a mark definition, property name, return an object with the
+    // properties. If key is provided, then pull out that key.
+    function getMarkProp(markdef, propname) {
       if (propname === undefined || propname === null) {
-        return null;
+        return {};
       }
+      var property = markdef.properties[propname];
 
-      return mark.def.properties[propname];
-    }
-
-    // Given a property function and (optional) key, return the value of that
-    // key. If key is undefined, then return an object with all keys.
-    function getPropKey(property, key) {
       if (property === undefined || property === null) {
-        return null;
+        return {};
       }
 
       // Call the property function on a dummy object
       var temp = {};
       property(temp);
 
-      if (key === undefined || key === null) {
-        return temp;
-      } else {
-        return temp[key];
-      }
-    }
-
-    // Given a mark, a property name, and an (optional) key, return the mark's
-    // property's key. If key is null or undefined, return the mark's property
-    // object.
-    function getMarkPropKey(mark, propname, key) {
-      var property = getMarkProp(mark, propname);
-      return getPropKey(property, key);
+      return temp;
     }
 
 
