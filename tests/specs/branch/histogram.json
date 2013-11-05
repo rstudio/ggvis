@@ -1,7 +1,7 @@
 {
 	"data" : [
 		{
-			"name" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6fbin_b01b1b0c",
+			"name" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_bin_c4b31d12",
 			"format" : {
 				"type" : "csv",
 				"parse" : {
@@ -26,11 +26,11 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6fbin_b01b1b0c",
+						"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_bin_c4b31d12",
 						"field" : "data.xmin__"
 					},
 					{
-						"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6fbin_b01b1b0c",
+						"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_bin_c4b31d12",
 						"field" : "data.xmax__"
 					}
 				]
@@ -48,7 +48,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6fbin_b01b1b0c",
+						"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_bin_c4b31d12",
 						"field" : "data.count__"
 					}
 				]
@@ -82,10 +82,13 @@
 						"scale" : "y",
 						"value" : 0
 					}
+				},
+				"ggvis" : {
+					"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_bin_c4b31d12"
 				}
 			},
 			"from" : {
-				"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6fbin_b01b1b0c"
+				"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_bin_c4b31d12"
 			}
 		}
 	],
@@ -118,6 +121,7 @@
 		"resizable" : true,
 		"padding" : {},
 		"duration" : 250,
-		"renderer" : "canvas"
+		"renderer" : "svg",
+		"brush" : false
 	}
 }

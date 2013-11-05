@@ -91,6 +91,9 @@
 						"scale" : "blah",
 						"field" : "data.z"
 					}
+				},
+				"ggvis" : {
+					"data" : "df_5d6dccca750b57e8b95a60db154cdb8e"
 				}
 			},
 			"from" : {
@@ -127,6 +130,7 @@
 		"resizable" : true,
 		"padding" : {},
 		"duration" : 250,
-		"renderer" : "canvas"
+		"renderer" : "svg",
+		"brush" : false
 	}
 }

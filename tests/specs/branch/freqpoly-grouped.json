@@ -1,7 +1,7 @@
 {
 	"data" : [
 		{
-			"name" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_856ff7a4bin_ee79221e_tree",
+			"name" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_83b487e0_bin_f47a3a9c_tree",
 			"format" : {
 				"type" : "treejson"
 			},
@@ -93,8 +93,8 @@
 			}
 		},
 		{
-			"name" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_856ff7a4bin_ee79221e",
-			"source" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_856ff7a4bin_ee79221e_tree",
+			"name" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_83b487e0_bin_f47a3a9c",
+			"source" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_83b487e0_bin_f47a3a9c_tree",
 			"transform" : [
 				{
 					"type" : "flatten"
@@ -115,7 +115,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_856ff7a4bin_ee79221e",
+						"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_83b487e0_bin_f47a3a9c",
 						"field" : "data.cyl"
 					}
 				]
@@ -133,7 +133,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_856ff7a4bin_ee79221e",
+						"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_83b487e0_bin_f47a3a9c",
 						"field" : "data.x"
 					}
 				]
@@ -151,7 +151,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_856ff7a4bin_ee79221e",
+						"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_83b487e0_bin_f47a3a9c",
 						"field" : "data.count__"
 					}
 				]
@@ -162,7 +162,7 @@
 		{
 			"type" : "group",
 			"from" : {
-				"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_856ff7a4bin_ee79221e_tree"
+				"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_83b487e0_bin_f47a3a9c_tree"
 			},
 			"marks" : [
 				{
@@ -181,6 +181,9 @@
 								"scale" : "y",
 								"field" : "data.count__"
 							}
+						},
+						"ggvis" : {
+							"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_83b487e0_bin_f47a3a9c_tree"
 						}
 					}
 				}
@@ -221,6 +224,7 @@
 		"resizable" : true,
 		"padding" : {},
 		"duration" : 250,
-		"renderer" : "canvas"
+		"renderer" : "svg",
+		"brush" : false
 	}
 }

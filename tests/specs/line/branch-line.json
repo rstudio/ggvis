@@ -1,7 +1,7 @@
 {
 	"data" : [
 		{
-			"name" : "df_176991690869283a6ffde232ed9aa63csplit_af4a4782_sort_dcb266ad_tree",
+			"name" : "df_176991690869283a6ffde232ed9aa63c_split_af4a4782_sort_b1f0862c_tree",
 			"format" : {
 				"type" : "treejson"
 			},
@@ -83,8 +83,8 @@
 			}
 		},
 		{
-			"name" : "df_176991690869283a6ffde232ed9aa63csplit_af4a4782_sort_dcb266ad",
-			"source" : "df_176991690869283a6ffde232ed9aa63csplit_af4a4782_sort_dcb266ad_tree",
+			"name" : "df_176991690869283a6ffde232ed9aa63c_split_af4a4782_sort_b1f0862c",
+			"source" : "df_176991690869283a6ffde232ed9aa63c_split_af4a4782_sort_b1f0862c_tree",
 			"transform" : [
 				{
 					"type" : "flatten"
@@ -105,7 +105,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "df_176991690869283a6ffde232ed9aa63csplit_af4a4782_sort_dcb266ad",
+						"data" : "df_176991690869283a6ffde232ed9aa63c_split_af4a4782_sort_b1f0862c",
 						"field" : "data.x"
 					}
 				]
@@ -123,7 +123,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "df_176991690869283a6ffde232ed9aa63csplit_af4a4782_sort_dcb266ad",
+						"data" : "df_176991690869283a6ffde232ed9aa63c_split_af4a4782_sort_b1f0862c",
 						"field" : "data.y"
 					}
 				]
@@ -143,7 +143,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "df_176991690869283a6ffde232ed9aa63csplit_af4a4782_sort_dcb266ad",
+						"data" : "df_176991690869283a6ffde232ed9aa63c_split_af4a4782_sort_b1f0862c",
 						"field" : "data.z"
 					}
 				]
@@ -154,7 +154,7 @@
 		{
 			"type" : "group",
 			"from" : {
-				"data" : "df_176991690869283a6ffde232ed9aa63csplit_af4a4782_sort_dcb266ad_tree"
+				"data" : "df_176991690869283a6ffde232ed9aa63c_split_af4a4782_sort_b1f0862c_tree"
 			},
 			"marks" : [
 				{
@@ -173,6 +173,9 @@
 								"scale" : "stroke",
 								"field" : "data.z"
 							}
+						},
+						"ggvis" : {
+							"data" : "df_176991690869283a6ffde232ed9aa63c_split_af4a4782_sort_b1f0862c_tree"
 						}
 					}
 				}
@@ -213,6 +216,7 @@
 		"resizable" : true,
 		"padding" : {},
 		"duration" : 250,
-		"renderer" : "canvas"
+		"renderer" : "svg",
+		"brush" : false
 	}
 }

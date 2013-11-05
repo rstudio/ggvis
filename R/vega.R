@@ -80,7 +80,7 @@ as.vega.mark <- function(mark) {
 
   if (split) {
     data <- paste0(mark$pipeline_id, "_tree")
-    properties$ggvis$data <- data
+    properties$ggvis$data <- list(value = data)
 
     m <- list(
       type = "group",
@@ -95,7 +95,7 @@ as.vega.mark <- function(mark) {
 
   } else {
     data <- mark$pipeline_id
-    properties$ggvis$data <- data
+    properties$ggvis$data <- list(value = data)
 
     m <- list(
       type = mark$type,

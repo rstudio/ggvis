@@ -342,9 +342,52 @@ ggvis = (function(_) {
 
 
     // Private methods ------------------------------------------------
+
+    // Returns all top-level marks in the scene graph
+    prototype._allMarks = function() {
+      return this.chart.model().scene().items[0].items;
+    };
+
+    prototype._getSceneBounds = function() {
+      return this.chart.model().scene().items[0].bounds;
+    };
+
+    // Internal functions----------------------------------------------
+
     // Returns true if arrays have same contents (in any order), false otherwise.
     function arraysEqual(a, b) {
       return $(a).not(b).length === 0 && $(b).not(a).length === 0;
+    }
+
+    // Given a mark and a property name, return the property function
+    function getMarkProp(mark, propname) {
+      if (propname === undefined || propname === null) {
+        return null;
+      }
+
+      return mark.def.properties[propname];
+    }
+
+    // Given a property function and (optional) key, return the key with that
+    // value. If key is undefined, then return an object with all keys.
+    function getPropKey(property, key) {
+      if (property === undefined || property === null) {
+        return null;
+      }
+
+      var temp = {};
+      property(temp);
+
+      if (key === undefined || key === null) {
+        return temp;
+      } else {
+        return temp[key];
+      }
+    }
+
+    function getMarkPropKey(mark, propname, key) {
+      var property = getMarkProp(mark, propname);
+      return getPropKey(property, key);
     }
 
 
@@ -473,7 +516,7 @@ ggvis = (function(_) {
         });
 
         // Find the items in the current scene that match
-        var items = self._getItems();
+        var items = getBrushableItems();
         var matchingItems = [];
         for (var i = 0; i < items.length; i++) {
           if (brushBounds.intersects(items[i].bounds)) {
@@ -493,25 +536,36 @@ ggvis = (function(_) {
         lastMatchingItems = matchingItems;
       }
 
+      // Return the brush item
       function getBrushItem() {
-        return self.chart.model().scene().items[0].items[1].items;
+        // The brush mark draws data from ggvis_brush.
+        var brushMark = _.find(self._allMarks(), function(mark) {
+          return getMarkPropKey(mark, "ggvis", "data") === "ggvis_brush";
+        });
+
+        return brushMark.items[0];
       }
-    };
 
-    // Function that retrieves vega scene items using a hard coded path. This will
-    // obviously not work when our charts start getting interesting.
-    prototype._getItems = function() {
-      return this.chart.model().scene().items[0].items[0].items;
-    };
+      // Return all the brushable items
+      function getBrushableItems() {
+        var brushableMarks = _.filter(self._allMarks(), function(mark) {
+          if (getMarkProp(mark, "brush"))
+            return true;
+          else
+            return false;
+        });
 
-    prototype._getSceneBounds = function() {
-      return this.chart.model().scene().items[0].bounds;
+        var items = _.pluck(brushableMarks, "items");
+        return _.flatten(items);
+      }
+
     };
 
     return Plot;
   })(); // ggvis.Plot
 
   return ggvis;
+
 })(lodash);
 
 
