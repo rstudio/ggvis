@@ -1,9 +1,9 @@
 /*jshint forin:true, noarg:true, noempty:true, eqeqeq:true, bitwise:true,
     strict:false, undef:true, unused:true, browser:true, jquery:true, maxerr:50,
     curly:false, multistr:true */
-/*global vg, ggvis:true*/
+/*global vg, ggvis:true, lodash*/
 
-ggvis = (function() {
+ggvis = (function(_) {
   var ggvis = {
     // Keep track of information about all plots: contains ggvis.Plot objects
     plots: {}
@@ -62,7 +62,6 @@ ggvis = (function() {
 
       vg.parse.spec(spec, function(chart) {
         var opts = self.opts;
-        var $el = self.getDiv();
 
         // If hovertime is supplied, use that later in a custom callback,
         // instead of the default hover behavior.
@@ -94,6 +93,8 @@ ggvis = (function() {
         if (opts.mouseover) chart.on("mouseover", opts.mouseover);
         if (opts.mouseout)  chart.on("mouseout",  opts.mouseout);
 
+        if (self.opts.brush) self.enableBrushing();
+
         if (ggvis.inViewerPane()) {
           self.enableAutoResizeToWindow();
         } else if (opts.resizable) {
@@ -111,7 +112,7 @@ ggvis = (function() {
     prototype.getVegaDiv = function() {
       // This is also known is this.getDiv().children(".vega")
       return $(this.chart._el);
-    }
+    };
 
     // Get the div which wraps the .vega div
     prototype.getDiv = function() {
@@ -196,7 +197,6 @@ ggvis = (function() {
     // smaller than the window; if we don't do this, then the div will take the
     // full window width, but the plot will be smaller.
     prototype.resizeWrapperToPlot = function() {
-      var chart   = this.chart;
       var $wrap   = this.getWrapper();  // wrapper around $div
       var $div    = this.getDiv();      // ggvis div, containing $el
       var $vega   = this.getVegaDiv();  // Immediate wrapper around marks
@@ -347,11 +347,172 @@ ggvis = (function() {
       return $(a).not(b).length === 0 && $(b).not(a).length === 0;
     }
 
+
+    // Brushing -------------------------------------------------------
+    prototype.enableBrushing = function() {
+      var self = this;
+      var $div = this.getDiv();
+      var chart = this.chart;
+
+      var brushBounds = new vg.Bounds();  // Current brush bounds
+      var lastMatchingItems = [];  // Items that were brushed in previous call
+      var mouseDownStart = null;   // Coordinates where mouse was clicked
+      var lastMouse = null;        // Previous mouse coordinate
+      var brushing = false;
+      var dragging = false;
+
+      // Remove any existing handlers
+      $div.off("mousedown.ggvis_brush");
+      $div.off("mouseup.ggvis_brush");
+      $div.off("mousemove.ggvis_brush");
+
+      // Hook up handlers
+      $div.on("mousedown.ggvis_brush", "div.vega", function (event) {
+        var point = removePadding(mouseOffset(event));
+
+        if (brushBounds.contains(point.x, point.y)) {
+          startDragging(point);
+        } else {
+          startBrushing(point);
+        }
+      });
+      $div.on("mouseup.ggvis_brush", "div.vega", function (event) {
+        /* jshint unused: false */
+        if (dragging) stopDragging();
+        if (brushing) stopBrushing();
+      });
+      $div.on("mousemove.ggvis_brush", "div.vega", function (event) {
+        var point = removePadding(mouseOffset(event));
+        if (dragging) dragTo(point);
+        if (brushing) brushTo(point);
+      });
+
+      // x/y coords are relative to the containing div. We need to account for the
+      // padding that surrounds the data area by removing the padding before we
+      // compare it to any scene item bounds.
+      function removePadding(point) {
+        return {
+          x: point.x - chart.padding().left,
+          y: point.y - chart.padding().top
+        };
+      }
+
+      function mouseOffset(e) {
+        return {
+          x: e.offsetX,
+          y: e.offsetY
+        };
+      }
+
+      // Dragging functions
+      function startDragging(point) {
+        dragging = true;
+        lastMouse = point;
+        mouseDownStart = point;
+      }
+      function dragTo(point) {
+        if (!dragging) return;
+
+        var dx = point.x - lastMouse.x;
+        var dy = point.y - lastMouse.y;
+
+        brushBounds.translate(dx, dy);
+        updateBrush();
+
+        lastMouse = point;
+      }
+      function stopDragging() {
+        dragging = false;
+        mouseDownStart = null;
+      }
+
+      // Brushing functions
+      function startBrushing(point) {
+        // Reset brush
+        brushBounds.set(0, 0, 0, 0);
+        updateBrush();
+
+        brushing = true;
+        mouseDownStart = point;
+      }
+
+      function stopBrushing() {
+        brushing = false;
+        mouseDownStart = null;
+      }
+
+      function brushTo(point) {
+        if (!brushing) return; // We're not brushing right now
+
+        var limits = self._getSceneBounds();
+
+        // Calculate the bounds based on start and end points
+        var end = point;
+        var maxX = Math.min(Math.max(mouseDownStart.x, end.x), limits.x2);
+        var minX = Math.max(Math.min(mouseDownStart.x, end.x), limits.x1);
+        var maxY = Math.min(Math.max(mouseDownStart.y, end.y), limits.y2);
+        var minY = Math.max(Math.min(mouseDownStart.y, end.y), limits.y1);
+
+        brushBounds.set(minX, minY, maxX, maxY);
+
+        updateBrush();
+      }
+
+      // Update the brush with new coordinates stored in brushBounds variable.
+      // This updates the box, and calls update on scenegraph items which have
+      // a change of brush state.
+      function updateBrush() {
+        // Update the brush bounding box
+        chart.data({
+          ggvis_brush: [{
+            x: brushBounds.x1,
+            y: brushBounds.y1,
+            width: brushBounds.width(),
+            height: brushBounds.height()
+          }]
+        });
+
+        // Find the items in the current scene that match
+        var items = self._getItems();
+        var matchingItems = [];
+        for (var i = 0; i < items.length; i++) {
+          if (brushBounds.intersects(items[i].bounds)) {
+            matchingItems.push(items[i]);
+          }
+        }
+
+        // Clear any un-brushed items, then highlight new ones
+        var newBrushItems = _.difference(matchingItems, lastMatchingItems);
+        var unBrushItems = _.difference(lastMatchingItems, matchingItems);
+
+        chart.update({ props: "brush", items: newBrushItems });
+        // Need to update brushed items and brush rect in one step, because of
+        // bug in Vega's canvas renderer.
+        chart.update({ props: "update", items: unBrushItems.concat(getBrushItem()) });
+
+        lastMatchingItems = matchingItems;
+      }
+
+      function getBrushItem() {
+        return self.chart.model().scene().items[0].items[1].items;
+      }
+    };
+
+    // Function that retrieves vega scene items using a hard coded path. This will
+    // obviously not work when our charts start getting interesting.
+    prototype._getItems = function() {
+      return this.chart.model().scene().items[0].items[0].items;
+    };
+
+    prototype._getSceneBounds = function() {
+      return this.chart.model().scene().items[0].bounds;
+    };
+
     return Plot;
   })(); // ggvis.Plot
 
   return ggvis;
-})();
+})(lodash);
 
 
 $(function(){ //DOM Ready

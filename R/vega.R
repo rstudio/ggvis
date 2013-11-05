@@ -38,6 +38,7 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
   axes <- add_default_axes(x$axes, scales)
   legends <- add_default_legends(x$legends, scales)
   opts <- add_default_opts(x$opts[[1]] %||% opts())
+  opts$brush <- has_brush_props(nodes)
 
   spec <- list(
     data = datasets,

@@ -72,3 +72,4 @@ Collate:
     'utils_data.R'
     'utils_props.R'
     'opts.R'
+    'brush.R'
