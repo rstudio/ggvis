@@ -136,8 +136,7 @@ copy_www_resources <- function(destdir) {
 #' @export
 #' @importFrom RJSONIO toJSON
 #' @importFrom whisker whisker.render
-#' @importFrom shiny pageWithSidebar headerPanel sidebarPanel uiOutput
-#'   mainPanel tags observe runApp stopApp renderUI
+#' @importFrom shiny basicPage uiOutput mainPanel tags observe runApp stopApp renderUI
 view_dynamic <- function(x, 
                          renderer = getOption("ggvis.renderer", default="canvas"), 
                          launch = TRUE, port = 8228) {
