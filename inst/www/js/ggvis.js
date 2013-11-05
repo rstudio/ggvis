@@ -543,9 +543,8 @@ ggvis = (function(_) {
         updateBrush();
       }
 
-      // Update the brush with new coordinates stored in brushBounds variable.
-      // This updates the box, and calls update on scenegraph items which have
-      // a change of brush state.
+      // Update the brush with new coordinates stored in brushBounds variable,
+      // then update the brushed items.
       function updateBrush() {
         // Update the brush bounding box
         chart.data({
@@ -557,6 +556,19 @@ ggvis = (function(_) {
           }]
         });
 
+        chart.update({ props: "update", items: self._getBrushItem() });
+
+        updateBrushedItemsThrottled();
+      }
+
+      // Find items that are and aren't under the brush, then call update on
+      // each set, with the "brush" or "update" property set, as appropriate.
+      function updateBrushedItems() {
+        // TODO: This function is a performance bottleneck.
+        //   Could use a faster method for finding array differences, but it'll
+        //   probably be even better to track brushed and unbrushed items from
+        //   the previous run.
+
         // Find the items in the current scene that match
         var items = self._getBrushableItems();
         var matchingItems = [];
@@ -566,17 +578,19 @@ ggvis = (function(_) {
           }
         }
 
-        // Clear any un-brushed items, then highlight new ones
         var newBrushItems = _.difference(matchingItems, lastMatchingItems);
-        var unBrushItems = _.difference(lastMatchingItems, matchingItems);
-
-        chart.update({ props: "brush", items: newBrushItems });
-        // Need to update brushed items and brush rect in one step, because of
-        // bug in Vega's canvas renderer.
-        chart.update({ props: "update", items: unBrushItems.concat(self._getBrushItem()) });
+        var unBrushItems  = _.difference(lastMatchingItems, matchingItems);
 
         lastMatchingItems = matchingItems;
+
+        chart.update({ props: "brush", items: newBrushItems });
+        chart.update({ props: "update", items: unBrushItems });
       }
+
+      // It's not uncommong for mouse events to occur at up to 120 Hz, but
+      // throttling brush updates to 20 Hz still gives a responsive feel, while
+      // allowing the CPU to spend more time doing other stuff.
+      var updateBrushedItemsThrottled = _.throttle(updateBrushedItems, 50);
 
     };
 
