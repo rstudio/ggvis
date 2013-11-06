@@ -44,6 +44,7 @@ ggvis = (function(_) {
       this.spec = null;      // Vega spec for this plot
       this.initialized = false; // Has update() or enter() been run?
       this.opts = {};
+      this.brush = new Plot.Brush(this);
     };
 
     var prototype = Plot.prototype;
@@ -94,7 +95,7 @@ ggvis = (function(_) {
         if (opts.mouseout)  chart.on("mouseout",  opts.mouseout);
 
         // If there's a brush mark, turn on brushing
-        if (self._getBrushMarkDef()) self.enableBrushing();
+        if (self.brush.hasBrush()) self.brush.enable();
 
         if (ggvis.inViewerPane()) {
           self.enableAutoResizeToWindow();
@@ -360,51 +361,6 @@ ggvis = (function(_) {
       return this.chart.model().scene().items[0].bounds;
     };
 
-    // Return the definition of the brush mark
-    prototype._getBrushMarkDef = function() {
-      var def = _.find(this._allMarkDefs(), function(markdef) {
-        var data = getMarkProp(markdef, "ggvis").data || null;
-        return data === "ggvis_brush";
-      });
-
-      if (def === undefined) return null;
-
-      return def;
-    };
-
-    // Return the brush mark; if not present, return null.
-    prototype._getBrushMark = function() {
-      // We can identify the brush mark because it draws data from ggvis_brush.
-      var brushMark = _.find(this._allMarks(), function(mark) {
-        var data = getMarkProp(mark.def, "ggvis").data || null;
-        return data === "ggvis_brush";
-      });
-
-      if (brushMark === undefined) return null;
-
-      return brushMark;
-    };
-
-    prototype._getBrushItem = function() {
-      var brushMark = this._getBrushMark();
-      if (brushMark === null || brushMark.items === null) return null;
-
-      return brushMark.items[0];
-    };
-
-    // Return all brushable items
-    prototype._getBrushableItems = function() {
-      var brushableMarks = _.filter(this._allMarks(), function(mark) {
-        if (getMarkProp(mark.def, "brush"))
-          return true;
-        else
-          return false;
-      });
-
-      var items = _.pluck(brushableMarks, "items");
-      return _.flatten(items);
-    };
-
 
     // Internal functions----------------------------------------------
 
@@ -433,55 +389,236 @@ ggvis = (function(_) {
     }
 
 
-    // Brushing -------------------------------------------------------
-    prototype.enableBrushing = function() {
-      var self = this;
-      var $div = this.getDiv();
-      var chart = this.chart;
+    // ggvis.Plot.Brush class --------------------------------------------------
+    Plot.Brush = (function() {
+      // Constructor
+      // plot: The ggvis.Plot object which uses this brush.
+      var brush = function(plot) {
+        this.plot = plot;
 
-      var brushBounds = new vg.Bounds();  // Current brush bounds
-      var lastMatchingItems = [];  // Items that were brushed in previous call
-      var mouseDownStart = null;   // Coordinates where mouse was clicked
-      var lastMouse = null;        // Previous mouse coordinate
-      var brushing = false;
-      var dragging = false;
+        this._brushBounds = new vg.Bounds();
+        this._clickPoint = null;      // Coordinates where mouse was clicked
+        this._lastPoint = null;       // Previous mouse coordinate
+        this._lastMatchingItems = [];
+        this._callbacks = []; // Function(s) to call each time brush is updated
 
-      // Remove any existing handlers
-      $div.off("mousedown.ggvis_brush");
-      $div.off("mouseup.ggvis_brush");
-      $div.off("mousemove.ggvis_brush");
+        this._brushing = false;
+        this._dragging = false;
+      };
 
-      // Hook up handlers
-      $div.on("mousedown.ggvis_brush", "div.vega", function (event) {
-        var point = removePadding(mouseOffset(event));
+      var prototype = brush.prototype;
 
-        if (brushBounds.contains(point.x, point.y)) {
-          startDragging(point);
-        } else {
-          startBrushing(point);
+      // Register a callback which is run each time the brush is updated.
+      prototype.addCallback = function(fn) {
+        this._callbacks.push(fn);
+      };
+
+      // Returns true if the plot has a brush object, false otherwise.
+      prototype.hasBrush = function() {
+        if (this._getBrushMarkDef()) return true;
+        else return false;
+      };
+
+      // Enable the brush.
+      prototype.enable = function() {
+        var self = this;
+        var $div = this.plot.getDiv();
+
+        // Remove any existing handlers
+        $div.off("mousedown.ggvis_brush");
+        $div.off("mouseup.ggvis_brush");
+        $div.off("mousemove.ggvis_brush");
+
+        // Hook up handlers
+        $div.on("mousedown.ggvis_brush", "div.vega", function (event) {
+          var point = self._removePadding(mouseOffset(event));
+
+          if (self._brushBounds.contains(point.x, point.y)) {
+            self._startDragging(point);
+          } else {
+            self._startBrushing(point);
+          }
+        });
+        $div.on("mouseup.ggvis_brush", "div.vega", function (event) {
+          /* jshint unused: false */
+          if (self._dragging) self._stopDragging();
+          if (self._brushing) self._stopBrushing();
+        });
+        $div.on("mousemove.ggvis_brush", "div.vega", function (event) {
+          var point = self._removePadding(mouseOffset(event));
+          if (self._dragging) self._dragTo(point);
+          if (self._brushing) self._brushTo(point);
+        });
+
+        // It's not uncommong for mouse events to occur at up to 120 Hz, but
+        // throttling brush updates to 20 Hz still gives a responsive feel, while
+        // allowing the CPU to spend more time doing other stuff.
+        var updateThrottled = _.throttle(self._updateBrushedItems.bind(self), 50);
+        self.addCallback(updateThrottled);
+      };
+
+      // Dragging functions
+      prototype._startDragging = function(point) {
+        this._dragging = true;
+        this._lastPoint = point;
+        this._clickPoint = point;
+      };
+      prototype._dragTo = function(point) {
+        if (!this._dragging) return;
+
+        var dx = point.x - this._lastPoint.x;
+        var dy = point.y - this._lastPoint.y;
+
+        this._brushBounds.translate(dx, dy);
+        this._updateBrush();
+
+        this._lastPoint = point;
+      };
+      prototype._stopDragging = function() {
+        this._dragging = false;
+        this._clickPoint = null;
+      };
+
+      // Brushing functions
+      prototype._startBrushing = function(point) {
+        // Reset brush
+        this._brushBounds.set(0, 0, 0, 0);
+        this._updateBrush();
+
+        this._brushing = true;
+        this._clickPoint = point;
+      };
+      prototype._brushTo = function(point) {
+        if (!this._brushing) return; // We're not brushing right now
+
+        var limits = this.plot._getSceneBounds();
+
+        // Calculate the bounds based on start and end points
+        var end = point;
+        var maxX = Math.min(Math.max(this._clickPoint.x, end.x), limits.x2);
+        var minX = Math.max(Math.min(this._clickPoint.x, end.x), limits.x1);
+        var maxY = Math.min(Math.max(this._clickPoint.y, end.y), limits.y2);
+        var minY = Math.max(Math.min(this._clickPoint.y, end.y), limits.y1);
+
+        this._brushBounds.set(minX, minY, maxX, maxY);
+
+        this._updateBrush();
+      };
+      prototype._stopBrushing = function() {
+        this._brushing = false;
+        this._clickPoint = null;
+      };
+
+      // Update the brush with new coordinates stored in brushBounds variable,
+      // then run registered callbacks.
+       prototype._updateBrush = function() {
+        // Update the brush bounding box
+        this.plot.chart.data({
+          ggvis_brush: [{
+            x:      this._brushBounds.x1,
+            y:      this._brushBounds.y1,
+            width:  this._brushBounds.width(),
+            height: this._brushBounds.height()
+          }]
+        });
+
+        this.plot.chart.update({
+          props: "update",
+          items: this._getBrushItem()
+        });
+
+        this._runCallbacks();
+      };
+
+      prototype._runCallbacks = function() {
+        for (var i = 0; i < this._callbacks.length; i++) {
+          this._callbacks[i]();
         }
-      });
-      $div.on("mouseup.ggvis_brush", "div.vega", function (event) {
-        /* jshint unused: false */
-        if (dragging) stopDragging();
-        if (brushing) stopBrushing();
-      });
-      $div.on("mousemove.ggvis_brush", "div.vega", function (event) {
-        var point = removePadding(mouseOffset(event));
-        if (dragging) dragTo(point);
-        if (brushing) brushTo(point);
-      });
+      };
+
+      // Find items that are and aren't under the brush, then call update on
+      // each set, with the "brush" or "update" property set, as appropriate.
+      prototype._updateBrushedItems = function() {
+        // TODO: This function is a performance bottleneck.
+        //   Could use a faster method for finding array differences, but it'll
+        //   probably be even better to track brushed and unbrushed items from
+        //   the previous run.
+
+        // Find the items in the current scene that match
+        var items = this._getBrushableItems();
+        var matchingItems = [];
+        for (var i = 0; i < items.length; i++) {
+          if (this._brushBounds.intersects(items[i].bounds)) {
+            matchingItems.push(items[i]);
+          }
+        }
+
+        var newBrushItems = _.difference(matchingItems, this._lastMatchingItems);
+        var unBrushItems  = _.difference(this._lastMatchingItems, matchingItems);
+
+        this._lastMatchingItems = matchingItems;
+
+        this.plot.chart.update({ props: "brush", items: newBrushItems });
+        this.plot.chart.update({ props: "update", items: unBrushItems });
+      };
+
+
+      // Return the definition of the brush mark
+      prototype._getBrushMarkDef = function() {
+        var def = _.find(this.plot._allMarkDefs(), function(markdef) {
+          var data = getMarkProp(markdef, "ggvis").data || null;
+          return data === "ggvis_brush";
+        });
+
+        if (def === undefined) return null;
+
+        return def;
+      };
+
+      // Return the brush mark; if not present, return null.
+      prototype._getBrushMark = function() {
+        // We can identify the brush mark because it draws data from ggvis_brush.
+        var brushMark = _.find(this.plot._allMarks(), function(mark) {
+          var data = getMarkProp(mark.def, "ggvis").data || null;
+          return data === "ggvis_brush";
+        });
+
+        if (brushMark === undefined) return null;
+
+        return brushMark;
+      };
+
+      prototype._getBrushItem = function() {
+        var brushMark = this._getBrushMark();
+        if (brushMark === null || brushMark.items === null) return null;
+
+        return brushMark.items[0];
+      };
+
+      // Return all brushable items
+      prototype._getBrushableItems = function() {
+        var brushableMarks = _.filter(this.plot._allMarks(), function(mark) {
+          if (getMarkProp(mark.def, "brush"))
+            return true;
+          else
+            return false;
+        });
+
+        var items = _.pluck(brushableMarks, "items");
+        return _.flatten(items);
+      };
 
       // x/y coords are relative to the containing div. We need to account for the
       // padding that surrounds the data area by removing the padding before we
       // compare it to any scene item bounds.
-      function removePadding(point) {
+      prototype._removePadding = function(point) {
         return {
-          x: point.x - chart.padding().left,
-          y: point.y - chart.padding().top
+          x: point.x - this.plot.chart.padding().left,
+          y: point.y - this.plot.chart.padding().top
         };
-      }
+      };
 
+      // Internal functions --------------------------------------------
       function mouseOffset(e) {
         return {
           x: e.offsetX,
@@ -489,110 +626,8 @@ ggvis = (function(_) {
         };
       }
 
-      // Dragging functions
-      function startDragging(point) {
-        dragging = true;
-        lastMouse = point;
-        mouseDownStart = point;
-      }
-      function dragTo(point) {
-        if (!dragging) return;
-
-        var dx = point.x - lastMouse.x;
-        var dy = point.y - lastMouse.y;
-
-        brushBounds.translate(dx, dy);
-        updateBrush();
-
-        lastMouse = point;
-      }
-      function stopDragging() {
-        dragging = false;
-        mouseDownStart = null;
-      }
-
-      // Brushing functions
-      function startBrushing(point) {
-        // Reset brush
-        brushBounds.set(0, 0, 0, 0);
-        updateBrush();
-
-        brushing = true;
-        mouseDownStart = point;
-      }
-
-      function stopBrushing() {
-        brushing = false;
-        mouseDownStart = null;
-      }
-
-      function brushTo(point) {
-        if (!brushing) return; // We're not brushing right now
-
-        var limits = self._getSceneBounds();
-
-        // Calculate the bounds based on start and end points
-        var end = point;
-        var maxX = Math.min(Math.max(mouseDownStart.x, end.x), limits.x2);
-        var minX = Math.max(Math.min(mouseDownStart.x, end.x), limits.x1);
-        var maxY = Math.min(Math.max(mouseDownStart.y, end.y), limits.y2);
-        var minY = Math.max(Math.min(mouseDownStart.y, end.y), limits.y1);
-
-        brushBounds.set(minX, minY, maxX, maxY);
-
-        updateBrush();
-      }
-
-      // Update the brush with new coordinates stored in brushBounds variable,
-      // then update the brushed items.
-      function updateBrush() {
-        // Update the brush bounding box
-        chart.data({
-          ggvis_brush: [{
-            x: brushBounds.x1,
-            y: brushBounds.y1,
-            width: brushBounds.width(),
-            height: brushBounds.height()
-          }]
-        });
-
-        chart.update({ props: "update", items: self._getBrushItem() });
-
-        updateBrushedItemsThrottled();
-      }
-
-      // Find items that are and aren't under the brush, then call update on
-      // each set, with the "brush" or "update" property set, as appropriate.
-      function updateBrushedItems() {
-        // TODO: This function is a performance bottleneck.
-        //   Could use a faster method for finding array differences, but it'll
-        //   probably be even better to track brushed and unbrushed items from
-        //   the previous run.
-
-        // Find the items in the current scene that match
-        var items = self._getBrushableItems();
-        var matchingItems = [];
-        for (var i = 0; i < items.length; i++) {
-          if (brushBounds.intersects(items[i].bounds)) {
-            matchingItems.push(items[i]);
-          }
-        }
-
-        var newBrushItems = _.difference(matchingItems, lastMatchingItems);
-        var unBrushItems  = _.difference(lastMatchingItems, matchingItems);
-
-        lastMatchingItems = matchingItems;
-
-        chart.update({ props: "brush", items: newBrushItems });
-        chart.update({ props: "update", items: unBrushItems });
-      }
-
-      // It's not uncommong for mouse events to occur at up to 120 Hz, but
-      // throttling brush updates to 20 Hz still gives a responsive feel, while
-      // allowing the CPU to spend more time doing other stuff.
-      var updateBrushedItemsThrottled = _.throttle(updateBrushedItems, 50);
-
-    };
+      return brush;
+    })(); // ggvis.Plot.Brush
 
     return Plot;
   })(); // ggvis.Plot
