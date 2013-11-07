@@ -597,11 +597,11 @@ ggvis = (function(_) {
 
       // Return all brushable items
       prototype._getBrushableItems = function() {
-        var brushableMarks = _.filter(this.plot._allMarks(), function(mark) {
-          if (getMarkProp(mark.def, "brush"))
-            return true;
-          else
+        var brushableMarks = this.plot._allMarks().filter(function(mark) {
+          if (_.isEmpty(getMarkProp(mark.def, "brush")))
             return false;
+          else
+            return true;
         });
 
         var items = _.pluck(brushableMarks, "items");
