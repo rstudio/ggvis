@@ -100,8 +100,8 @@ $(function(){ //DOM Ready
     var plot = ggvis.getPlot(plotId);
 
     plot.parseSpec(spec,
-      { mouseover: createMouseOverHandler(plotId),
-        mouseout: createMouseOutHandler(plotId) }
+      { mouseover: _.debounce(createMouseOverHandler(plotId), 250),
+        mouseout: _.debounce(createMouseOutHandler(plotId), 250) }
     );
 
     var brushHandler = _.debounce(createBrushHandler(plotId), 250);
