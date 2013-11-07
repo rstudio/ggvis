@@ -450,10 +450,13 @@ ggvis = (function(_) {
           if (self._brushing) self._brushTo(point);
         });
 
+        // Register functions to be called each time brush is dragged or resized.
+        self.addCallback(self._updateBrush);
+
         // It's not uncommong for mouse events to occur at up to 120 Hz, but
         // throttling brush updates to 20 Hz still gives a responsive feel, while
         // allowing the CPU to spend more time doing other stuff.
-        var updateThrottled = _.throttle(self._updateBrushedItems.bind(self), 50);
+        var updateThrottled = _.throttle(self._updateBrushedItems, 50);
         self.addCallback(updateThrottled);
       };
 
@@ -462,6 +465,7 @@ ggvis = (function(_) {
         this._dragging = true;
         this._lastPoint = point;
         this._clickPoint = point;
+        this._runCallbacks();
       };
       prototype._dragTo = function(point) {
         if (!this._dragging) return;
@@ -470,23 +474,22 @@ ggvis = (function(_) {
         var dy = point.y - this._lastPoint.y;
 
         this._brushBounds.translate(dx, dy);
-        this._updateBrush();
-
         this._lastPoint = point;
+        this._runCallbacks();
       };
       prototype._stopDragging = function() {
         this._dragging = false;
         this._clickPoint = null;
+        this._runCallbacks();
       };
 
       // Brushing functions
       prototype._startBrushing = function(point) {
         // Reset brush
         this._brushBounds.set(0, 0, 0, 0);
-        this._updateBrush();
-
         this._brushing = true;
         this._clickPoint = point;
+        this._runCallbacks();
       };
       prototype._brushTo = function(point) {
         if (!this._brushing) return; // We're not brushing right now
@@ -501,18 +504,17 @@ ggvis = (function(_) {
         var minY = Math.max(Math.min(this._clickPoint.y, end.y), limits.y1);
 
         this._brushBounds.set(minX, minY, maxX, maxY);
-
-        this._updateBrush();
+        this._runCallbacks();
       };
       prototype._stopBrushing = function() {
         this._brushing = false;
         this._clickPoint = null;
+        this._runCallbacks();
       };
 
-      // Update the brush with new coordinates stored in brushBounds variable,
-      // then run registered callbacks.
-       prototype._updateBrush = function() {
-        // Update the brush bounding box
+      // Update the brush with new coordinates stored in brushBounds variable
+      // and call update on plot.
+      prototype._updateBrush = function() {
         this.plot.chart.data({
           ggvis_brush: [{
             x:      this._brushBounds.x1,
@@ -526,13 +528,11 @@ ggvis = (function(_) {
           props: "update",
           items: this._getBrushItem()
         });
-
-        this._runCallbacks();
       };
 
       prototype._runCallbacks = function() {
         for (var i = 0; i < this._callbacks.length; i++) {
-          this._callbacks[i]();
+          this._callbacks[i].call(this);
         }
       };
 
