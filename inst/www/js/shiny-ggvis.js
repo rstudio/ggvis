@@ -99,10 +99,12 @@ $(function(){ //DOM Ready
     var spec = message.spec;
     var plot = ggvis.getPlot(plotId);
 
-    plot.parseSpec(spec,
-      { mouseover: _.debounce(createMouseOverHandler(plotId), 250),
-        mouseout: _.debounce(createMouseOutHandler(plotId), 250) }
-    );
+    plot.parseSpec(spec, {
+      handlers: {
+        mouseover: _.debounce(createMouseOverHandler(plotId), 250),
+        mouseout: _.debounce(createMouseOutHandler(plotId), 250)
+      }
+    });
 
     var brushHandler = _.debounce(createBrushHandler(plotId), 250);
     plot.brush.on("updateItems", brushHandler);
@@ -141,12 +143,6 @@ $(function(){ //DOM Ready
   // Send information about the current brush
   function createBrushHandler(plotId) {
     return function(info) {
-      // Extract the data for the selected items
-      var data = [];
-
-      for (var i = 0; i < info.items.length; i++) {
-
-      }
       info.items = info.items.map(function(item) {
         return item.datum.data;
       });

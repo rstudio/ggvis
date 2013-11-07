@@ -51,9 +51,10 @@ ggvis = (function(_) {
 
     // opts is an optional object which can have any entries that are in spec.opts
     // (they get merged on top of spec.opts), and additionally:
-    // * mouseover: A callback for the "mouseover" event
-    // * mouseout: A callback for the "mouseout" event
     // * hovertime: Number of milliseconds for a hover transition
+    // * handlers: An object where the keys are event names and the values are
+    //     functions. They are passed to Vega's view.on(key, value), which
+    //     registers the handler functions for the named event.
     prototype.parseSpec = function(spec, opts) {
       var self = this;
       self.spec = spec;
@@ -90,9 +91,12 @@ ggvis = (function(_) {
           });
         }
 
-        // If extra callbacks are specified for mouseover and out, add them.
-        if (opts.mouseover) chart.on("mouseover", opts.mouseover);
-        if (opts.mouseout)  chart.on("mouseout",  opts.mouseout);
+        // If handlers are specified (typically for mouseover and out), add them.
+        if (opts.handlers) {
+          $.each(opts.handlers, function(eventname, fn) {
+            chart.on(eventname, fn);
+          });
+        }
 
         // If there's a brush mark, turn on brushing
         if (self.brush.hasBrush()) self.brush.enable();

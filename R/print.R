@@ -139,7 +139,7 @@ copy_www_resources <- function(destdir) {
 #' @importFrom shiny basicPage uiOutput mainPanel tags observe runApp stopApp renderUI
 view_dynamic <- function(x, 
                          renderer = getOption("ggvis.renderer", default="canvas"), 
-                         launch = TRUE, port = 8228) {
+                         launch = TRUE, port = 8228, quiet = TRUE) {
   
   if (!(renderer %in% c("canvas", "svg")))
     stop("renderer must be 'canvas' or 'svg'")
@@ -180,9 +180,7 @@ view_dynamic <- function(x,
     # two on a row.
     height <- 350 + 70 * ceiling(n_controls / 2)
 
-    suppressMessages(
-      runApp(app, launch.browser = function(url) view_plot(url, height))
-    )
+    runApp(app, launch.browser = function(url) view_plot(url, height))
   } else {
     app
   }
