@@ -400,7 +400,7 @@ ggvis = (function(_) {
         this._clickPoint = null;      // Coordinates where mouse was clicked
         this._lastPoint = null;       // Previous mouse coordinate
         this._lastMatchingItems = [];
-        this._callbacks = []; // Function(s) to call each time brush is updated
+        this._callbacks = {};         // Named arrays of callback functions
 
         this._brushing = false;
         this._dragging = false;
@@ -409,8 +409,12 @@ ggvis = (function(_) {
       var prototype = brush.prototype;
 
       // Register a callback which is run each time the brush is updated.
-      prototype.addCallback = function(fn) {
-        this._callbacks.push(fn);
+      // Events include "brushMove" and "updateItems"
+      prototype.on = function(event, fn) {
+        if (!this._callbacks[event]) {
+          this._callbacks[event] = [];
+        }
+        this._callbacks[event].push(fn);
       };
 
       // Returns true if the plot has a brush object, false otherwise.
@@ -451,13 +455,13 @@ ggvis = (function(_) {
         });
 
         // Register functions to be called each time brush is dragged or resized.
-        self.addCallback(self._updateBrush);
+        self.on("brushMove", self._updateBrush);
 
         // It's not uncommong for mouse events to occur at up to 120 Hz, but
         // throttling brush updates to 20 Hz still gives a responsive feel, while
         // allowing the CPU to spend more time doing other stuff.
         var updateThrottled = _.throttle(self._updateBrushedItems, 50);
-        self.addCallback(updateThrottled);
+        self.on("brushMove", updateThrottled);
       };
 
       // Dragging functions
@@ -465,7 +469,7 @@ ggvis = (function(_) {
         this._dragging = true;
         this._lastPoint = point;
         this._clickPoint = point;
-        this._runCallbacks();
+        this._trigger("brushMove");
       };
       prototype._dragTo = function(point) {
         if (!this._dragging) return;
@@ -475,12 +479,12 @@ ggvis = (function(_) {
 
         this._brushBounds.translate(dx, dy);
         this._lastPoint = point;
-        this._runCallbacks();
+        this._trigger("brushMove");
       };
       prototype._stopDragging = function() {
         this._dragging = false;
         this._clickPoint = null;
-        this._runCallbacks();
+        this._trigger("brushMove");
       };
 
       // Brushing functions
@@ -489,7 +493,7 @@ ggvis = (function(_) {
         this._brushBounds.set(0, 0, 0, 0);
         this._brushing = true;
         this._clickPoint = point;
-        this._runCallbacks();
+        this._trigger("brushMove");
       };
       prototype._brushTo = function(point) {
         if (!this._brushing) return; // We're not brushing right now
@@ -504,12 +508,12 @@ ggvis = (function(_) {
         var minY = Math.max(Math.min(this._clickPoint.y, end.y), limits.y1);
 
         this._brushBounds.set(minX, minY, maxX, maxY);
-        this._runCallbacks();
+        this._trigger("brushMove");
       };
       prototype._stopBrushing = function() {
         this._brushing = false;
         this._clickPoint = null;
-        this._runCallbacks();
+        this._trigger("brushMove");
       };
 
       // Update the brush with new coordinates stored in brushBounds variable
@@ -530,9 +534,13 @@ ggvis = (function(_) {
         });
       };
 
-      prototype._runCallbacks = function() {
-        for (var i = 0; i < this._callbacks.length; i++) {
-          this._callbacks[i].call(this);
+      // Trigger callbacks for a named event. The callbacks are called with
+      // `extra` as an argument.
+      prototype._trigger = function(event, extra) {
+        var callbacks = this._callbacks[event];
+
+        for (var i = 0; i < callbacks.length; i++) {
+          callbacks[i].call(this, extra);
         }
       };
 
@@ -560,6 +568,18 @@ ggvis = (function(_) {
 
         this.plot.chart.update({ props: "brush", items: newBrushItems });
         this.plot.chart.update({ props: "update", items: unBrushItems });
+
+        // Collect information run updateItems callbacks
+        var bounds = this._brushBounds;
+        var info = {
+          plot_id: this.plot.plotId,
+          x1: bounds.x1,
+          x2: bounds.x2,
+          y1: bounds.y1,
+          y2: bounds.y2,
+          items: matchingItems
+        };
+        this._trigger("updateItems", info);
       };
 
 

@@ -4,6 +4,8 @@
 /*global Shiny, ggvis, vg*/
 $(function(){ //DOM Ready
 
+  var _ = window.lodash;
+
   var ggvisOutputBinding = new Shiny.OutputBinding();
   $.extend(ggvisOutputBinding, {
     find: function(scope) {
@@ -101,6 +103,9 @@ $(function(){ //DOM Ready
       { mouseover: createMouseOverHandler(plotId),
         mouseout: createMouseOutHandler(plotId) }
     );
+
+    var brushHandler = _.debounce(createBrushHandler(plotId), 250);
+    plot.brush.on("updateItems", brushHandler);
   });
 
 
@@ -132,6 +137,22 @@ $(function(){ //DOM Ready
       );
     };
   };
+
+  // Send information about the current brush
+  function createBrushHandler(plotId) {
+    return function(info) {
+      // Extract the data for the selected items
+      var data = [];
+
+      for (var i = 0; i < info.items.length; i++) {
+
+      }
+      info.items = info.items.map(function(item) {
+        return item.datum.data;
+      });
+      Shiny.onInputChange("ggvis_brush_" + plotId, info);
+    };
+  }
 
   // Tooltip message handler
   Shiny.addCustomMessageHandler('ggvis_tooltip', function(data) {
