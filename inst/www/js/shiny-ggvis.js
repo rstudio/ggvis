@@ -101,8 +101,8 @@ $(function(){ //DOM Ready
 
     plot.parseSpec(spec, {
       handlers: {
-        mouseover: _.debounce(createMouseOverHandler(plotId), 250),
-        mouseout: _.debounce(createMouseOutHandler(plotId), 250)
+        mouseover: _.throttle(createMouseOverHandler(plotId), 100),
+        mouseout: _.throttle(createMouseOutHandler(plotId), 100)
       }
     });
 
