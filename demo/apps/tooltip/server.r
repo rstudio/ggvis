@@ -12,11 +12,11 @@ shinyServer(function(input, output, session) {
 
   # Print the object that was sent over
   output$hover_data <- renderPrint({
-    str(input$ggvis_hover)
+    str(input$ggvis_plot1_hover)
   })
 
   observe({
-    hover <- input$ggvis_hover
+    hover <- input$ggvis_plot1_hover
 
     # Initially, hover is null. Later, after mousing out of a mark, hover$data
     # exists, and is NULL.

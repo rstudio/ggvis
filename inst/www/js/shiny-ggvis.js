@@ -114,7 +114,7 @@ $(function(){ //DOM Ready
   // Returns a mouseover handler with plotId
   var createMouseOverHandler = function(plotId) {
     return function(event, item) {
-      Shiny.onInputChange("ggvis_hover",
+      Shiny.onInputChange("ggvis_" + plotId + "_hover",
         {
           plot_id: plotId,
           data: item.datum.data,
@@ -129,7 +129,7 @@ $(function(){ //DOM Ready
   var createMouseOutHandler = function(plotId) {
     return function(event, item) {
       /* jshint unused: false */
-      Shiny.onInputChange("ggvis_hover",
+      Shiny.onInputChange("ggvis_" + plotId + "_hover",
         {
           plot_id: plotId,
           data: null,
@@ -146,7 +146,7 @@ $(function(){ //DOM Ready
       info.items = info.items.map(function(item) {
         return item.datum.data;
       });
-      Shiny.onInputChange("ggvis_brush_" + plotId, info);
+      Shiny.onInputChange("ggvis_" + plotId + "_brush", info);
     };
   }
 

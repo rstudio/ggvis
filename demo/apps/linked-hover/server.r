@@ -18,11 +18,11 @@ shinyServer(function(input, output, session) {
 
   # Get subset of diamonds from first plot
   observe({
-    hover <- input$ggvis_hover
+    hover <- input$ggvis_plot1_hover
 
     # These conditions means that we're not ready yet, or that we're not
     # hovering over the right thing.
-    if (is.null(hover) || hover$plot_id != "plot1" || is.null(hover$data) ||
+    if (is.null(hover) || is.null(hover$data) ||
         is.na(hover$data['xmin__'])) {
       return()
     }
@@ -53,7 +53,7 @@ shinyServer(function(input, output, session) {
 
   # Print the object that was sent over
   output$hover_data <- renderPrint({
-    str(input$ggvis_hover)
+    str(input$ggvis_plot1_hover)
   })
 
 })
