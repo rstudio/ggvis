@@ -12,6 +12,14 @@
 #' @param duration Duration of transitions, in milliseconds.
 #' @param renderer The renderer to use in the browser. Can be \code{"canvas"}
 #'   (the default) or \code{"svg"}.
+#' @param brush_policy The policy for limiting the rate that brush update events
+#'   are reported by the client to the server. Can be \code{"debounce"} (the
+#'   default) or \code{"throttle"}. When debouncing, event information will be
+#'   sent to the server <brush_delay> milliseconds after the last change. When
+#'   throttling, event information will be sent at a rate no faster than once per
+#'   <brush_delay> milliseconds.
+#' @param brush_delay The number of milliseconds to use with
+#'   \code{brush_policy}.
 #'
 #' @seealso \code{link{getOption}} and \code{link{options}}, for getting and
 #'   setting global options.
@@ -22,7 +30,12 @@
 #' @export
 opts <- function(width = NULL, height = NULL, keep_aspect = NULL,
                  resizable = NULL, padding = NULL, duration = NULL,
-                 renderer = NULL) {
+                 renderer = NULL, brush_policy = NULL, brush_delay = NULL) {
+
+  if (!(is.null(brush_policy) || brush_policy %in% c("throttle", "debounce"))) {
+    stop("'brush_policy' must be NULL, 'throttle', or 'debounce'.")
+  }
+
   structure(
     compact(list(
       width = width,
@@ -31,7 +44,9 @@ opts <- function(width = NULL, height = NULL, keep_aspect = NULL,
       resizable = resizable,
       padding = padding,
       duration = duration,
-      renderer = renderer
+      renderer = renderer,
+      brush_policy = brush_policy,
+      brush_delay = brush_delay
     )),
     class = "ggvis_opts"
   )
@@ -50,7 +65,9 @@ default_opts <- function() {
       resizable = getOption("ggvis.resizable", TRUE),
       padding = padding(),
       duration = 250,
-      renderer = getOption("ggvis.renderer", "canvas")
+      renderer = getOption("ggvis.renderer", "canvas"),
+      brush_policy = "debounce",
+      brush_delay = 250
     ),
     class = "ggvis_opts"
   )

@@ -106,7 +106,14 @@ $(function(){ //DOM Ready
       }
     });
 
-    var brushHandler = _.debounce(createBrushHandler(plotId), 250);
+    // Add brush handler
+    var policy = spec.ggvis_opts.brush_policy || "debounce";
+    var brushHandler;
+    if (policy === "throttle") {
+      brushHandler = _.throttle(createBrushHandler(plotId), spec.ggvis_opts.brush_delay);
+    } else if (policy === "debounce") {
+      brushHandler = _.debounce(createBrushHandler(plotId), spec.ggvis_opts.brush_delay);
+    }
     plot.brush.on("updateItems", brushHandler);
   });
 

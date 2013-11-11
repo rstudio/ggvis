@@ -4,7 +4,8 @@
 \usage{
   opts(width = NULL, height = NULL, keep_aspect = NULL,
     resizable = NULL, padding = NULL, duration = NULL,
-    renderer = NULL)
+    renderer = NULL, brush_policy = NULL,
+    brush_delay = NULL)
 }
 \arguments{
   \item{width,height}{Width and height of plot, in pixels.
@@ -26,6 +27,18 @@
 
   \item{renderer}{The renderer to use in the browser. Can
   be \code{"canvas"} (the default) or \code{"svg"}.}
+
+  \item{brush_policy}{The policy for limiting the rate that
+  brush update events are reported by the client to the
+  server. Can be \code{"debounce"} (the default) or
+  \code{"throttle"}. When debouncing, event information
+  will be sent to the server <brush_delay> milliseconds
+  after the last change. When throttling, event information
+  will be sent at a rate no faster than once per
+  <brush_delay> milliseconds.}
+
+  \item{brush_delay}{The number of milliseconds to use with
+  \code{brush_policy}.}
 }
 \description{
   Set options for a ggvis plot
