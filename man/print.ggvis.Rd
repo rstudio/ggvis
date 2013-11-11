@@ -12,7 +12,7 @@
 
   view_dynamic(x,
     renderer = getOption("ggvis.renderer", default = "canvas"),
-    launch = TRUE, port = NULL)
+    launch = TRUE, port = NULL, quiet = TRUE)
 }
 \arguments{
   \item{x}{A ggvis object.}
@@ -30,6 +30,9 @@
 
   \item{port}{the port on which to start the shiny app. If
   NULL (the default), Shiny will select a random port.}
+
+  \item{quiet}{If \code{TRUE} show status messages from
+  Shiny. (Default is \code{FALSE}.)}
 }
 \description{
   \code{view_static} creates a static web page in a
