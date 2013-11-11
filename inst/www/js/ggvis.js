@@ -621,8 +621,12 @@ ggvis = (function(_) {
 
       // Return all brushable items
       prototype._getBrushableItems = function() {
+        // Get the brush mark, so we can make sure not to include it as a
+        // brushable item.
+        var brushMark = this._getBrushMark();
+
         var brushableMarks = this.plot._allMarks().filter(function(mark) {
-          if (_.isEmpty(getMarkProp(mark.def, "brush")))
+          if (_.isEmpty(getMarkProp(mark.def, "brush")) || mark === brushMark)
             return false;
           else
             return true;
