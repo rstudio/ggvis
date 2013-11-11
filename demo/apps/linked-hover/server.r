@@ -11,7 +11,7 @@ shinyServer(function(input, output, session) {
   })
 
   # Set up observers for the spec and the data
-  observe_ggvis(hist_gv, "plot1", session, "svg")
+  observe_ggvis(hist_gv, "plot1", session)
 
   # Store the subset of diamonds subset in a reactiveValues object
   values <- reactiveValues(diamonds = diamonds)
@@ -46,7 +46,7 @@ shinyServer(function(input, output, session) {
   })
 
   # Set up observers for the spec and the data
-  observe_ggvis(hist2_gv, "plot2", session, "svg")
+  observe_ggvis(hist2_gv, "plot2", session)
 
   # User interface elements (in the sidebar)
   output$ggvis_ui <- renderControls(hist_gv, session)

@@ -5,7 +5,7 @@ shinyServer(function(input, output, session) {
   })
 
   # Set up observers for the spec and the data
-  observe_ggvis(r_gv, "plot1", session, "svg")
+  observe_ggvis(r_gv, "plot1", session)
 
   # User interface elements (in the sidebar)
   output$ggvis_ui <- renderControls(r_gv, session)

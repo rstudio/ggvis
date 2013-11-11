@@ -16,7 +16,7 @@ shinyServer(function(input, output, session) {
   })
 
   # Set up observers for the spec and the data
-  observe_ggvis(hist_gv, "plot1", session, "svg")
+  observe_ggvis(hist_gv, "plot1", session)
 
   # Return a character vector that tells whether each point is within a brushed
   # bar
@@ -49,7 +49,7 @@ shinyServer(function(input, output, session) {
   })
 
   # Set up observers for the spec and the data
-  observe_ggvis(scatter_gv, "plot2", session, "svg")
+  observe_ggvis(scatter_gv, "plot2", session)
 
   # Print the object that was sent over
   output$brush_data <- renderPrint({
