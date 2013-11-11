@@ -12,7 +12,7 @@
 
   view_dynamic(x,
     renderer = getOption("ggvis.renderer", default = "canvas"),
-    launch = TRUE, port = 8228)
+    launch = TRUE, port = NULL)
 }
 \arguments{
   \item{x}{A ggvis object.}
@@ -28,7 +28,8 @@
   \item{launch}{If \code{TRUE}, launch this web page in a
   browser.}
 
-  \item{port}{the port on which to start the shiny app}
+  \item{port}{the port on which to start the shiny app. If
+  NULL (the default), Shiny will select a random port.}
 }
 \description{
   \code{view_static} creates a static web page in a
