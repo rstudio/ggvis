@@ -10,7 +10,8 @@ shinyServer(function(input, output, session) {
       diamonds,
       props(x = ~carat),
       branch_histogram(props(fill.brush := "red"), binwidth = 0.1),
-      branch_brush()
+      branch_brush(),
+      opts(height = 200)
     )
   })
 
@@ -22,8 +23,9 @@ shinyServer(function(input, output, session) {
   brushed_idx <- reactive({
     ranges <- input$ggvis_plot1_brush$items
 
-    if (is.null(ranges) || length(ranges) == 0)
-      return(rep("FALSE", nrow(diamonds)))
+    if (is.null(ranges) || length(ranges) == 0) {
+      return(cbind(diamonds, colors = "#333"))
+    }
 
     in_ranges <- lapply(ranges, function(range) {
       diamonds$carat > range$xmin__ & diamonds$carat < range$xmax__
@@ -31,15 +33,18 @@ shinyServer(function(input, output, session) {
     
     selected <- Reduce(`|`, in_ranges)
 
-    as.character(selected)
+    # Return a character vector with colors for each TRUE and FALSE value
+    colors <- rep("#333", length(selected))
+    colors[selected == TRUE] <- "red"
+
+    cbind(diamonds, colors = colors)
   })
 
   scatter_gv <- reactive({
     ggvis(
-      diamonds,
+      brushed_idx,
       props(x = ~depth, y = ~price),
-      mark_symbol(props(fill = ~brushed_idx(), fillOpacity := 0.8)),
-      dscale("fill", "nominal", range = c("#333", "red"))
+      mark_symbol(props(fill := ~colors, fillOpacity := 0.8))
     )
   })
 
