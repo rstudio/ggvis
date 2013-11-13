@@ -7,7 +7,6 @@ diamonds$id <- sample(1:1000)
 shinyServer(function(input, output, session) {
 
   gv1 <- reactive({
-    print(str(diamonds))
     ggvis(
       diamonds,
       props(x = ~carat, y = ~price),
@@ -50,7 +49,6 @@ shinyServer(function(input, output, session) {
   # Print the object that was sent over
   output$brush_data <- renderPrint({
      str(input$ggvis_plot1_brush)
-    # selected()
   })
 
 })
