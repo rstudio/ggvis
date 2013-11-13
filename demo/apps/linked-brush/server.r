@@ -18,9 +18,8 @@ shinyServer(function(input, output, session) {
   # Set up observers for the spec and the data
   observe_ggvis(hist_gv, "plot1", session)
 
-  # Return a character vector that tells whether each point is within a brushed
-  # bar
-  brushed_idx <- reactive({
+
+  diamonds_brushed <- reactive({
     ranges <- input$ggvis_plot1_brush$items
 
     if (is.null(ranges) || length(ranges) == 0) {
@@ -42,7 +41,7 @@ shinyServer(function(input, output, session) {
 
   scatter_gv <- reactive({
     ggvis(
-      brushed_idx,
+      diamonds_brushed,
       props(x = ~depth, y = ~price),
       mark_symbol(props(fill := ~colors, fillOpacity := 0.8))
     )
