@@ -12,6 +12,12 @@
 #' @param duration Duration of transitions, in milliseconds.
 #' @param renderer The renderer to use in the browser. Can be \code{"canvas"}
 #'   (the default) or \code{"svg"}.
+#' @param hover_duration The amount of time for hover transitions, in
+#'   milliseconds.
+#' @param enter_duration The amount of time for enter transitions, in
+#'   milliseconds.
+#' @param exit_duration The amount of time for exit transitions, in
+#'   milliseconds.
 #' @param brush_policy The policy for limiting the rate that brush update events
 #'   are reported by the client to the server. Can be \code{"debounce"} (the
 #'   default) or \code{"throttle"}. When debouncing, event information will be
@@ -23,14 +29,19 @@
 #'
 #' @seealso \code{link{getOption}} and \code{link{options}}, for getting and
 #'   setting global options.
+#' @seealso \code{link{default_opts}} to see the default options.
 #' @examples
 #' ggvis(mtcars, props(x = ~wt, y = ~mpg), mark_symbol(),
 #'   opts(width = 300, height = 200, padding = padding(10, 10, 10, 10)))
 #'
+#' # Display the default options
+#' str(default_opts())
+#'
 #' @export
 opts <- function(width = NULL, height = NULL, keep_aspect = NULL,
                  resizable = NULL, padding = NULL, duration = NULL,
-                 renderer = NULL, brush_policy = NULL, brush_delay = NULL) {
+                 renderer = NULL, hover_duration = NULL, enter_duration = NULL,
+                 exit_duration = NULL, brush_policy = NULL, brush_delay = NULL) {
 
   if (!(is.null(brush_policy) || brush_policy %in% c("throttle", "debounce"))) {
     stop("'brush_policy' must be NULL, 'throttle', or 'debounce'.")
@@ -45,6 +56,9 @@ opts <- function(width = NULL, height = NULL, keep_aspect = NULL,
       padding = padding,
       duration = duration,
       renderer = renderer,
+      hover_duration = hover_duration,
+      enter_duration = enter_duration,
+      exit_duration = exit_duration,
       brush_policy = brush_policy,
       brush_delay = brush_delay
     )),
@@ -55,7 +69,11 @@ opts <- function(width = NULL, height = NULL, keep_aspect = NULL,
 #' @S3method as.vega ggvis_opts
 as.vega.ggvis_opts <- function(x) x
 
-# Default options
+#' Default options
+#'
+#' This returns an object containing the default options for ggvis.
+#'
+#' @export
 default_opts <- function() {
   structure(
     list(
@@ -66,6 +84,9 @@ default_opts <- function() {
       padding = padding(),
       duration = 250,
       renderer = getOption("ggvis.renderer", "canvas"),
+      hover_duration = 0,
+      enter_duration = 250,
+      exit_duration = 250,
       brush_policy = "debounce",
       brush_delay = 250
     ),

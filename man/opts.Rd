@@ -4,8 +4,9 @@
 \usage{
   opts(width = NULL, height = NULL, keep_aspect = NULL,
     resizable = NULL, padding = NULL, duration = NULL,
-    renderer = NULL, brush_policy = NULL,
-    brush_delay = NULL)
+    renderer = NULL, hover_duration = NULL,
+    enter_duration = NULL, exit_duration = NULL,
+    brush_policy = NULL, brush_delay = NULL)
 }
 \arguments{
   \item{width,height}{Width and height of plot, in pixels.
@@ -28,6 +29,15 @@
   \item{renderer}{The renderer to use in the browser. Can
   be \code{"canvas"} (the default) or \code{"svg"}.}
 
+  \item{hover_duration}{The amount of time for hover
+  transitions, in milliseconds.}
+
+  \item{enter_duration}{The amount of time for enter
+  transitions, in milliseconds.}
+
+  \item{exit_duration}{The amount of time for exit
+  transitions, in milliseconds.}
+
   \item{brush_policy}{The policy for limiting the rate that
   brush update events are reported by the client to the
   server. Can be \code{"debounce"} (the default) or
@@ -46,9 +56,14 @@
 \examples{
 ggvis(mtcars, props(x = ~wt, y = ~mpg), mark_symbol(),
   opts(width = 300, height = 200, padding = padding(10, 10, 10, 10)))
+
+# Display the default options
+str(default_opts())
 }
 \seealso{
   \code{link{getOption}} and \code{link{options}}, for
   getting and setting global options.
+
+  \code{link{default_opts}} to see the default options.
 }
 

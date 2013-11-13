@@ -51,7 +51,6 @@ ggvis = (function(_) {
 
     // opts is an optional object which can have any entries that are in spec.opts
     // (they get merged on top of spec.opts), and additionally:
-    // * hovertime: Number of milliseconds for a hover transition
     // * handlers: An object where the keys are event names and the values are
     //     functions. They are passed to Vega's view.on(key, value), which
     //     registers the handler functions for the named event.
@@ -65,15 +64,17 @@ ggvis = (function(_) {
       vg.parse.spec(spec, function(chart) {
         var opts = self.opts;
 
-        // If hovertime is supplied, use that later in a custom callback,
+        // If hover_duration is supplied, use that later in a custom callback,
         // instead of the default hover behavior.
-        var hover = true;
-        if (opts.hovertime && opts.hovertime !== 0) hover = false;
+        var default_hover = true;
+        if (opts.hover_duration && opts.hover_duration !== 0) {
+          default_hover = false;
+        }
 
         chart = chart({
           el: "#" + self.plotId,
           renderer: opts.renderer || "canvas",
-          hover: hover
+          hover: default_hover
         });
         // Save the chart object
         self.chart = chart;
@@ -81,13 +82,13 @@ ggvis = (function(_) {
         // Set the renderer (update buttons and download link)
         self.setRenderer(opts.renderer, false);
 
-        // If hovertime is specified, set callbacks for hover behavior
-        if (opts.hovertime && opts.hovertime !== 0) {
+        // If hover_duration is specified, set callbacks for hover behavior
+        if (opts.hover_duration && opts.hover_duration !== 0) {
           chart.on("mouseover", function(event, item) {
-            this.update({ props:"hover", items:item, duration:opts.hovertime });
+            this.update({ props:"hover", items:item, duration:opts.hover_duration });
           });
           chart.on("mouseout", function(event, item) {
-            this.update({ props:"update", items:item, duration:opts.hovertime });
+            this.update({ props:"update", items:item, duration:opts.hover_duration });
           });
         }
 

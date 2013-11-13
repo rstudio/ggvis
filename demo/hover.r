@@ -12,10 +12,12 @@ ggvis(mtcars,
   mark_symbol()
 )
 
-# Line changes color and points change size when hovered over
+# Line changes color and points change size when hovered over, with 250 ms
+# transition time
 ggvis(pressure, props(x = ~temperature, y = ~pressure),
   mark_line(props(stroke.hover := "red", strokeWidth.hover := 4, strokeWidth := 2)),
-  mark_symbol(props(size := 50, size.hover := 200))
+  mark_symbol(props(size := 50, size.hover := 200)),
+  opts(hover_duration = 250)
 )
 
 # Hover with transform_smooth
