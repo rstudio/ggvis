@@ -151,7 +151,9 @@ $(function(){ //DOM Ready
   function createBrushHandler(plotId) {
     return function(info) {
       info.items = info.items.map(function(item) {
-        return item.datum.data;
+        var newitem = $.extend({}, item.datum.data);
+        newitem.key__ = item.key;
+        return newitem;
       });
       Shiny.onInputChange("ggvis_" + plotId + "_brush", info);
     };
