@@ -119,7 +119,7 @@ $(function(){ //DOM Ready
 
 
   // Returns a mouseover handler with plotId
-  var createMouseOverHandler = function(plotId) {
+  function createMouseOverHandler(plotId) {
     return function(event, item) {
       Shiny.onInputChange("ggvis_" + plotId + "_hover",
         {
@@ -130,10 +130,10 @@ $(function(){ //DOM Ready
         }
       );
     };
-  };
+  }
 
   // Returns a mouseout handler with plotId
-  var createMouseOutHandler = function(plotId) {
+  function createMouseOutHandler(plotId) {
     return function(event, item) {
       /* jshint unused: false */
       Shiny.onInputChange("ggvis_" + plotId + "_hover",
@@ -145,7 +145,7 @@ $(function(){ //DOM Ready
         }
       );
     };
-  };
+  }
 
   // Send information about the current brush
   function createBrushHandler(plotId) {
