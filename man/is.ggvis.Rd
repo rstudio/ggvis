@@ -2,7 +2,7 @@
 \alias{is.ggvis}
 \title{Is an object a ggvis object?}
 \usage{
-  is.ggvis(x)
+is.ggvis(x)
 }
 \arguments{
   \item{x}{an object to test}

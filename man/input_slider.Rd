@@ -2,10 +2,9 @@
 \alias{input_slider}
 \title{Create an interactive slider.}
 \usage{
-  input_slider(min, max, value = min, step = NULL,
-    round = FALSE, format = "#,##0.#####", locale = "us",
-    ticks = TRUE, animate = FALSE, label = "",
-    id = rand_id("slider_"), map = identity)
+input_slider(min, max, value = min, step = NULL, round = FALSE,
+  format = "#,##0.#####", locale = "us", ticks = TRUE, animate = FALSE,
+  label = "", id = rand_id("slider_"), map = identity)
 }
 \arguments{
   \item{min}{The minimum value (inclusive) that can be

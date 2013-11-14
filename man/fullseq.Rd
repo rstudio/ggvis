@@ -2,7 +2,7 @@
 \alias{fullseq}
 \title{Generate sequence of fixed size intervals covering range.}
 \usage{
-  fullseq(range, size, ...)
+fullseq(range, size, ...)
 }
 \arguments{
   \item{range}{range}

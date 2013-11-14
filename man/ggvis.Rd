@@ -2,7 +2,7 @@
 \alias{ggvis}
 \title{Create a ggvis graphic.}
 \usage{
-  ggvis(...)
+ggvis(...)
 }
 \arguments{
   \item{...}{components: data, \code{\link{props}},

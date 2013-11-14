@@ -2,7 +2,7 @@
 \alias{datasource}
 \title{Create a new data source.}
 \usage{
-  datasource(data, name = deparse2(substitute(data)))
+datasource(data, name = deparse2(substitute(data)))
 }
 \arguments{
   \item{data}{a data frame}

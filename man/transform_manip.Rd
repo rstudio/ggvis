@@ -5,11 +5,11 @@
 \alias{transform_summarise}
 \title{Subset, summarise and mutate your data}
 \usage{
-  transform_subset(..., .env = parent.frame())
+transform_subset(..., .env = parent.frame())
 
-  transform_summarise(..., .env = parent.frame())
+transform_summarise(..., .env = parent.frame())
 
-  transform_mutate(..., .env = parent.frame())
+transform_mutate(..., .env = parent.frame())
 }
 \description{
   Subset, summarise and mutate your data

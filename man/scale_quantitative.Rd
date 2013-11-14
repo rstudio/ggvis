@@ -2,10 +2,9 @@
 \alias{scale_quantitative}
 \title{Create a quantitative scale}
 \usage{
-  scale_quantitative(name, trans = "linear",
-    exponent = NULL, clamp = FALSE, nice = TRUE,
-    zero = FALSE, domain = NULL, range = NULL,
-    reverse = FALSE, round = FALSE)
+scale_quantitative(name, trans = "linear", exponent = NULL, clamp = FALSE,
+  nice = TRUE, zero = FALSE, domain = NULL, range = NULL,
+  reverse = FALSE, round = FALSE)
 }
 \arguments{
   \item{trans}{A scale transformation: one of "linear",

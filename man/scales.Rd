@@ -3,9 +3,9 @@
 \alias{scales}
 \title{Create a "scales" object.}
 \usage{
-  scales(..., .scales = list())
+scales(..., .scales = list())
 
-  is.scales(x)
+is.scales(x)
 }
 \arguments{
   \item{...,.scales}{scales to combine into a single scales

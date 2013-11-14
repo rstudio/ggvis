@@ -2,9 +2,8 @@
 \alias{scale_time}
 \title{Create a date/time scale.}
 \usage{
-  scale_time(name, utc = FALSE, clamp = FALSE, nice = NULL,
-    domain = NULL, range = NULL, reverse = FALSE,
-    round = FALSE)
+scale_time(name, utc = FALSE, clamp = FALSE, nice = NULL, domain = NULL,
+  range = NULL, reverse = FALSE, round = FALSE)
 }
 \arguments{
   \item{clamp}{If true, values that exceed the data domain

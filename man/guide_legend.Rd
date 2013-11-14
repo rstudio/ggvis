@@ -2,9 +2,9 @@
 \alias{guide_legend}
 \title{Generate a vega legend specification}
 \usage{
-  guide_legend(size = NULL, shape = NULL, fill = NULL,
-    stroke = NULL, orient = "right", title = NULL,
-    format = NULL, values = NULL, properties = NULL)
+guide_legend(size = NULL, shape = NULL, fill = NULL, stroke = NULL,
+  orient = "right", title = NULL, format = NULL, values = NULL,
+  properties = NULL)
 }
 \arguments{
   \item{size,shape,fill,stroke}{The name of the scale that

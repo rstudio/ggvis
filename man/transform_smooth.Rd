@@ -3,11 +3,10 @@
 \alias{transform_smooth}
 \title{Transformation: smooth the data}
 \usage{
-  transform_smooth(..., method = guess(),
-    formula = guess(), se = TRUE, level = 0.95, n = 80L,
-    na.rm = FALSE)
+transform_smooth(..., method = guess(), formula = guess(), se = TRUE,
+  level = 0.95, n = 80L, na.rm = FALSE)
 
-  branch_smooth(..., se = TRUE)
+branch_smooth(..., se = TRUE)
 }
 \arguments{
   \item{method}{Model fitting function to use - it must

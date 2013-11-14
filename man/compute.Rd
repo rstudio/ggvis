@@ -2,7 +2,7 @@
 \alias{compute}
 \title{Compute the transformation.}
 \usage{
-  compute(x, props, data)
+compute(x, props, data)
 }
 \arguments{
   \item{x}{the \code{\link{transform}} object}

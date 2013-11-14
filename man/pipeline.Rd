@@ -4,11 +4,11 @@
 \alias{pipeline}
 \title{Create a new "pipeline" object.}
 \usage{
-  pipeline(..., .pipes = list(), .id = NULL)
+pipeline(..., .pipes = list(), .id = NULL)
 
-  is.pipeline(x)
+is.pipeline(x)
 
-  as.pipeline(x, ...)
+as.pipeline(x, ...)
 }
 \arguments{
   \item{...}{a list of pipes}

@@ -2,7 +2,7 @@
 \alias{prop_to_scale}
 \title{Convert the name of a property to the name of it's default scale.}
 \usage{
-  prop_to_scale(prop)
+prop_to_scale(prop)
 }
 \arguments{
   \item{prop}{character vector of property names. Any

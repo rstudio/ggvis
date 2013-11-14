@@ -3,10 +3,10 @@
 \alias{scale}
 \title{Create a new "scale" object.}
 \usage{
-  scale(name, type = NULL, domain = NULL, range = NULL,
-    reverse = FALSE, round = FALSE, ..., subclass = NULL)
+scale(name, type = NULL, domain = NULL, range = NULL, reverse = FALSE,
+  round = FALSE, ..., subclass = NULL)
 
-  is.scale(x)
+is.scale(x)
 }
 \arguments{
   \item{name}{name of the scale.}

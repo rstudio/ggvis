@@ -3,10 +3,10 @@
 \alias{is.input}
 \title{Create a new interactive "input" object.}
 \usage{
-  input(subclass, control_args = list(), value = NULL,
-    map = identity, id = rand_id(), control_f = NULL)
+input(subclass, control_args = list(), value = NULL, map = identity,
+  id = rand_id(), control_f = NULL)
 
-  is.input(x)
+is.input(x)
 }
 \arguments{
   \item{subclass}{The name of a class to be used in

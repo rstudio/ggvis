@@ -4,12 +4,11 @@
 \alias{transform_bin}
 \title{Transformation: bin continuous variable.}
 \usage{
-  transform_bin(..., binwidth = guess(), origin = NULL,
-    right = TRUE)
+transform_bin(..., binwidth = guess(), origin = NULL, right = TRUE)
 
-  branch_histogram(...)
+branch_histogram(...)
 
-  branch_freqpoly(...)
+branch_freqpoly(...)
 }
 \arguments{
   \item{binwidth}{The width of the bins. The default is

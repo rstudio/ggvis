@@ -4,14 +4,14 @@
 \alias{input_select}
 \title{Create interactive control to select one (or more options) from a list.}
 \usage{
-  input_select(choices, selected = NULL, multiple = FALSE,
-    label = "", id = rand_id("select_"), map = identity)
+input_select(choices, selected = NULL, multiple = FALSE, label = "",
+  id = rand_id("select_"), map = identity)
 
-  input_radiobuttons(choices, selected = NULL, label = "",
-    id = rand_id("radio_"), map = identity)
+input_radiobuttons(choices, selected = NULL, label = "",
+  id = rand_id("radio_"), map = identity)
 
-  input_checkboxgroup(choices, selected = NULL, label = "",
-    id = rand_id("radio_"), map = identity)
+input_checkboxgroup(choices, selected = NULL, label = "",
+  id = rand_id("radio_"), map = identity)
 }
 \arguments{
   \item{choices}{List of values to select from. If elements

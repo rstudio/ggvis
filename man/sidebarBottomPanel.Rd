@@ -2,7 +2,7 @@
 \alias{sidebarBottomPanel}
 \title{Create a sidebar panel which moves to the bottom}
 \usage{
-  sidebarBottomPanel(...)
+sidebarBottomPanel(...)
 }
 \arguments{
   \item{...}{UI elements to include in the sidebar.}

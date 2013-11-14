@@ -3,9 +3,9 @@
 \alias{mark}
 \title{Create a new "mark" object.}
 \usage{
-  mark(type, props, data = NULL)
+mark(type, props, data = NULL)
 
-  is.mark(x)
+is.mark(x)
 }
 \arguments{
   \item{type}{vega mark list}

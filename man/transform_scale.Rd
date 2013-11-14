@@ -2,7 +2,7 @@
 \alias{transform_scale}
 \title{Transform scale: a simple transform for testing}
 \usage{
-  transform_scale(add = 0, mult = 1)
+transform_scale(add = 0, mult = 1)
 }
 \arguments{
   \item{add}{constant to add to x}

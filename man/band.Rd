@@ -3,9 +3,9 @@
 \alias{is.band}
 \title{A band}
 \usage{
-  band(offset = NULL, mult = NULL)
+band(offset = NULL, mult = NULL)
 
-  is.band(x)
+is.band(x)
 }
 \arguments{
   \item{x}{object to for band-ness}

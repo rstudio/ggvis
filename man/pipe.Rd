@@ -4,11 +4,11 @@
 \alias{pipe}
 \title{Create new "pipe" object.}
 \usage{
-  pipe(type, ...)
+pipe(type, ...)
 
-  is.pipe(x)
+is.pipe(x)
 
-  as.pipe(x, ...)
+as.pipe(x, ...)
 }
 \description{
   A pipe object represents a component in a

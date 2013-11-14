@@ -2,7 +2,7 @@
 \alias{transform}
 \title{Create a new "transform" object.}
 \usage{
-  transform(type, ..., dots = list())
+transform(type, ..., dots = list())
 }
 \arguments{
   \item{type}{A string representing type of transform.}

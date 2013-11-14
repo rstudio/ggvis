@@ -2,7 +2,7 @@
 \alias{branch_line}
 \title{A branch to add a line.}
 \usage{
-  branch_line(..., sort = TRUE)
+branch_line(..., sort = TRUE)
 }
 \arguments{
   \item{props}{An optional props object which will be

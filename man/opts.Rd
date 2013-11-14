@@ -2,11 +2,10 @@
 \alias{opts}
 \title{Set options for a ggvis plot}
 \usage{
-  opts(width = NULL, height = NULL, keep_aspect = NULL,
-    resizable = NULL, padding = NULL, duration = NULL,
-    renderer = NULL, hover_duration = NULL,
-    enter_duration = NULL, exit_duration = NULL,
-    brush_policy = NULL, brush_delay = NULL)
+opts(width = NULL, height = NULL, keep_aspect = NULL, resizable = NULL,
+  padding = NULL, duration = NULL, renderer = NULL,
+  hover_duration = NULL, enter_duration = NULL, exit_duration = NULL,
+  brush_policy = NULL, brush_delay = NULL)
 }
 \arguments{
   \item{width,height}{Width and height of plot, in pixels.

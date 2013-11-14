@@ -2,7 +2,7 @@
 \alias{transform_stack}
 \title{Transformation: stack the data}
 \usage{
-  transform_stack(direction = "y")
+transform_stack(direction = "y")
 }
 \arguments{
   \item{direction}{The direction to stack. This is a

@@ -3,9 +3,9 @@
 \alias{export_svg}
 \title{Export a PNG or SVG from a ggvis object}
 \usage{
-  export_png(x, envir = parent.frame(), file = NULL)
+export_png(x, envir = parent.frame(), file = NULL)
 
-  export_svg(x, envir = parent.frame(), file = NULL)
+export_svg(x, envir = parent.frame(), file = NULL)
 }
 \arguments{
   \item{x}{A ggvis object.}

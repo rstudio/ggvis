@@ -3,10 +3,10 @@
 \alias{transform_density}
 \title{Transformation: density estimate}
 \usage{
-  transform_density(..., adjust = 1, kernel = "gaussian",
-    trim = FALSE, n = 200L, na.rm = FALSE)
+transform_density(..., adjust = 1, kernel = "gaussian", trim = FALSE,
+  n = 200L, na.rm = FALSE)
 
-  branch_density(..., area = TRUE)
+branch_density(..., area = TRUE)
 }
 \arguments{
   \item{adjust}{Bandwidth adjustment. See

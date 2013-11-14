@@ -2,13 +2,11 @@
 \alias{guide_axis}
 \title{Generate a vega axis specification}
 \usage{
-  guide_axis(type, scale = type, orient = NULL,
-    title = NULL, title_offset = NULL, format = NULL,
-    ticks = NULL, values = NULL, subdivide = NULL,
-    tick_padding = NULL, tick_size_major = NULL,
-    tick_size_minor = tick_size_major,
-    tick_size_end = tick_size_major, offset = NULL,
-    layer = "back", grid = TRUE, properties = list())
+guide_axis(type, scale = type, orient = NULL, title = NULL,
+  title_offset = NULL, format = NULL, ticks = NULL, values = NULL,
+  subdivide = NULL, tick_padding = NULL, tick_size_major = NULL,
+  tick_size_minor = tick_size_major, tick_size_end = tick_size_major,
+  offset = NULL, layer = "back", grid = TRUE, properties = list())
 }
 \arguments{
   \item{type}{The type of axis. Either x or y.}

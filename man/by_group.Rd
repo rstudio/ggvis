@@ -2,7 +2,7 @@
 \alias{by_group}
 \title{Visualise data by group.}
 \usage{
-  by_group(..., .vars = list(), .env = parent.frame())
+by_group(..., .vars = list(), .env = parent.frame())
 }
 \arguments{
   \item{...}{Unquoted variable names or expressions

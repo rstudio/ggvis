@@ -4,15 +4,13 @@
 \alias{view_static}
 \title{View in a ggvis plot in the browser.}
 \usage{
-  \method{print}{ggvis} (x, dynamic = NA, ...)
+\S3method{print}{ggvis}(x, dynamic = NA, ...)
 
-  view_static(x,
-    renderer = getOption("ggvis.renderer", default = "canvas"),
-    launch = interactive())
+view_static(x, renderer = getOption("ggvis.renderer", default = "canvas"),
+  launch = interactive())
 
-  view_dynamic(x,
-    renderer = getOption("ggvis.renderer", default = "canvas"),
-    launch = TRUE, port = NULL)
+view_dynamic(x, renderer = getOption("ggvis.renderer", default = "canvas"),
+  launch = TRUE, port = NULL)
 }
 \arguments{
   \item{x}{A ggvis object.}

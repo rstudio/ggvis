@@ -3,11 +3,9 @@
 \alias{input_text}
 \title{Create an interactive text or numeric input box.}
 \usage{
-  input_text(value, label = "", id = rand_id("text_"),
-    map = identity)
+input_text(value, label = "", id = rand_id("text_"), map = identity)
 
-  input_numeric(value, label = "", id = rand_id("text_"),
-    map = identity)
+input_numeric(value, label = "", id = rand_id("text_"), map = identity)
 }
 \arguments{
   \item{value}{Initial value}

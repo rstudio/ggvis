@@ -2,9 +2,8 @@
 \alias{scale_ordinal}
 \title{Create an ordinal scale.}
 \usage{
-  scale_ordinal(name, points = TRUE, padding = NULL,
-    sort = TRUE, domain = NULL, range = NULL,
-    reverse = FALSE, round = FALSE)
+scale_ordinal(name, points = TRUE, padding = NULL, sort = TRUE,
+  domain = NULL, range = NULL, reverse = FALSE, round = FALSE)
 }
 \arguments{
   \item{points}{If \code{TRUE}, distributes the ordinal

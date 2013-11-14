@@ -2,7 +2,7 @@
 \alias{vector_type}
 \title{Determine the "type" of a vector}
 \usage{
-  vector_type(x)
+vector_type(x)
 }
 \arguments{
   \item{x}{a vector}

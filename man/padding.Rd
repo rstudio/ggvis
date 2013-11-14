@@ -2,8 +2,7 @@
 \alias{padding}
 \title{Define padding.}
 \usage{
-  padding(top = NULL, right = NULL, bottom = NULL,
-    left = NULL)
+padding(top = NULL, right = NULL, bottom = NULL, left = NULL)
 }
 \arguments{
   \item{top,right,bottom,left}{Amount of padding on each

@@ -2,7 +2,7 @@
 \alias{vega_data_parser}
 \title{Determine the vega data type for a vector}
 \usage{
-  vega_data_parser(x)
+vega_data_parser(x)
 }
 \arguments{
   \item{x}{A vector.}

@@ -5,11 +5,11 @@
 \alias{shiny}
 \title{Connect a ggvis graphic to a shiny app.}
 \usage{
-  ggvis_output(plot_id, shiny = TRUE)
+ggvis_output(plot_id, shiny = TRUE)
 
-  observe_ggvis(r_gv, id, session, ...)
+observe_ggvis(r_gv, id, session, ...)
 
-  renderControls(r_gv, session = NULL)
+renderControls(r_gv, session = NULL)
 }
 \arguments{
   \item{plot_id}{unique identifier to use for the div

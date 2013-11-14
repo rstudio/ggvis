@@ -3,9 +3,9 @@
 \alias{is.branch}
 \title{Create a new branch.}
 \usage{
-  branch(..., drop_named = FALSE)
+branch(..., drop_named = FALSE)
 
-  is.branch(x)
+is.branch(x)
 }
 \arguments{
   \item{...}{components: data, \code{\link{props}},

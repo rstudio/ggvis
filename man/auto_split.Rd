@@ -2,7 +2,7 @@
 \alias{auto_split}
 \title{Automatically split data by groups}
 \usage{
-  auto_split()
+auto_split()
 }
 \description{
   Use \code{auto_split} to split up a dataset on all

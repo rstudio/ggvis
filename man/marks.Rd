@@ -9,19 +9,19 @@
 \alias{marks}
 \title{Vega marks.}
 \usage{
-  mark_symbol(props = NULL, data = NULL)
+mark_symbol(props = NULL, data = NULL)
 
-  mark_image(props = NULL, data = NULL)
+mark_image(props = NULL, data = NULL)
 
-  mark_arc(props = NULL, data = NULL)
+mark_arc(props = NULL, data = NULL)
 
-  mark_area(props = NULL, data = NULL)
+mark_area(props = NULL, data = NULL)
 
-  mark_line(props = NULL, data = NULL)
+mark_line(props = NULL, data = NULL)
 
-  mark_rect(props = NULL, data = NULL)
+mark_rect(props = NULL, data = NULL)
 
-  mark_text(props = NULL, data = NULL)
+mark_text(props = NULL, data = NULL)
 }
 \arguments{
   \item{props}{A \code{\link{props}} object, named

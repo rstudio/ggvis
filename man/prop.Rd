@@ -3,10 +3,9 @@
 \alias{prop}
 \title{Create a property.}
 \usage{
-  prop(x, scale = NULL, offset = NULL, mult = NULL,
-    env = parent.frame())
+prop(x, scale = NULL, offset = NULL, mult = NULL, env = parent.frame())
 
-  is.prop(x)
+is.prop(x)
 }
 \arguments{
   \item{x}{The value of the property. This can be an atomic

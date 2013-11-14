@@ -3,9 +3,9 @@
 \alias{dscale}
 \title{Create a default scale for a given property and variable type.}
 \usage{
-  default_scale(prop, type, ..., name = NULL)
+default_scale(prop, type, ..., name = NULL)
 
-  dscale(prop, type, ..., name = NULL)
+dscale(prop, type, ..., name = NULL)
 }
 \arguments{
   \item{prop}{A vega property name.}

@@ -3,9 +3,9 @@
 \alias{sluice}
 \title{Connect a pipeline, creating a reactive expression.}
 \usage{
-  connect(x, props, source = NULL, session = NULL)
+connect(x, props, source = NULL, session = NULL)
 
-  sluice(x, props, source = NULL, session = NULL)
+sluice(x, props, source = NULL, session = NULL)
 }
 \arguments{
   \item{x}{a pipeline or pipe}

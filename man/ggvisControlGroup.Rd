@@ -2,7 +2,7 @@
 \alias{ggvisControlGroup}
 \title{Generate Shiny tags for ggvis controls}
 \usage{
-  ggvisControlGroup(plot_id)
+ggvisControlGroup(plot_id)
 }
 \arguments{
   \item{plot_id}{Plot ID}

@@ -3,9 +3,9 @@
 \alias{split_df}
 \title{Create a "split_df" object.}
 \usage{
-  split_df(data, split, env = NULL)
+split_df(data, split, env = NULL)
 
-  is.split_df(x)
+is.split_df(x)
 }
 \arguments{
   \item{data}{A data frame.}

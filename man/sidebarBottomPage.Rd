@@ -2,8 +2,7 @@
 \alias{sidebarBottomPage}
 \title{Create a page with a sidebar}
 \usage{
-  sidebarBottomPage(sidebarPanel, mainPanel,
-    shiny_headers = TRUE)
+sidebarBottomPage(sidebarPanel, mainPanel, shiny_headers = TRUE)
 }
 \arguments{
   \item{sidebarPanel}{The \code{\link{sidebarBottomPanel}}

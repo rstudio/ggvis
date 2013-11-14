@@ -2,7 +2,7 @@
 \alias{ggvisControlOutput}
 \title{Create a ggvis control output element in UI}
 \usage{
-  ggvisControlOutput(outputId, plotId = NULL)
+ggvisControlOutput(outputId, plotId = NULL)
 }
 \arguments{
   \item{outputId}{The output variable to read the value

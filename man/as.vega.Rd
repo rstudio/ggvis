@@ -3,10 +3,9 @@
 \alias{as.vega.ggvis}
 \title{Coerce an ggvis object to a vega list.}
 \usage{
-  as.vega(x, ...)
+as.vega(x, ...)
 
-  \method{as.vega}{ggvis} (x, session = NULL,
-    dynamic = FALSE, ...)
+\S3method{as.vega}{ggvis}(x, session = NULL, dynamic = FALSE, ...)
 }
 \arguments{
   \item{x}{an object to convert to vega}

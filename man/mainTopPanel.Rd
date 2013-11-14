@@ -2,7 +2,7 @@
 \alias{mainTopPanel}
 \title{Create a main panel which moves to the top}
 \usage{
-  mainTopPanel(...)
+mainTopPanel(...)
 }
 \arguments{
   \item{...}{UI elements to include in the main panel.}

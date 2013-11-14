@@ -4,9 +4,9 @@
 \alias{props}
 \title{Manage a list of properties.}
 \usage{
-  props(..., inherit = TRUE)
+props(..., inherit = TRUE)
 
-  is.ggvis_props(x)
+is.ggvis_props(x)
 }
 \arguments{
   \item{...}{A set of name-value pairs. The name should be

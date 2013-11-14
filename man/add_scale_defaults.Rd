@@ -2,7 +2,7 @@
 \alias{add_scale_defaults}
 \title{Add new default scale properties.}
 \usage{
-  add_scale_defaults(scale, types, ...)
+add_scale_defaults(scale, types, ...)
 }
 \arguments{
   \item{scale}{scale name}

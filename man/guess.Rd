@@ -3,9 +3,9 @@
 \alias{is.guess}
 \title{Guess the value.}
 \usage{
-  guess()
+guess()
 
-  is.guess(x)
+is.guess(x)
 }
 \arguments{
   \item{x}{object to test for guess-ness}

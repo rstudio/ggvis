@@ -2,8 +2,8 @@
 \alias{input_checkbox}
 \title{Create an interactive checkbox.}
 \usage{
-  input_checkbox(value = FALSE, label = "",
-    id = rand_id("checkbox_"), map = identity)
+input_checkbox(value = FALSE, label = "", id = rand_id("checkbox_"),
+  map = identity)
 }
 \arguments{
   \item{value}{Initial value (\code{TRUE} or
