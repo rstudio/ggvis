@@ -3,7 +3,7 @@
 \title{Generate a vega axis specification}
 \usage{
   guide_axis(type, scale = type, orient = NULL,
-    title = NULL, title_offset = 0, format = NULL,
+    title = NULL, title_offset = NULL, format = NULL,
     ticks = NULL, values = NULL, subdivide = NULL,
     tick_padding = NULL, tick_size_major = NULL,
     tick_size_minor = tick_size_major,
@@ -24,7 +24,9 @@
   for the right edge of the chart) - defaults to bottom for
   x axes, and left for y axes.}
 
-  \item{title}{A title for the axis (none by default).}
+  \item{title}{A title for the axis. By default, it uses
+  the name of the field in the first data set used by the
+  scale. Use \code{""} to suppress the title.}
 
   \item{title_offset}{The offset (in pixels) from the axis
   at which to place the title.}

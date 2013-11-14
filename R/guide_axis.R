@@ -19,7 +19,9 @@
 #'   The orientation can be used to further specialize the axis type (e.g., a y
 #'   axis oriented for the right edge of the chart) - defaults to bottom for
 #'   x axes, and left for y axes.
-#' @param title A title for the axis (none by default).
+#' @param title A title for the axis. By default, it uses the name of the field
+#'   in the first data set used by the scale. Use \code{""} to suppress the
+#'   title.
 #' @param title_offset The offset (in pixels) from the axis at which to place
 #'   the title.
 #' @param format The formatting pattern for axis labels. Vega uses D3's format
@@ -49,7 +51,7 @@
 #' guide_axis("x")
 #' guide_axis("x", properties = list(ticks = props(stroke = "red")))
 guide_axis <- function(type, scale = type, orient = NULL, title = NULL,
-                 title_offset = 0, format = NULL, ticks = NULL,
+                 title_offset = NULL, format = NULL, ticks = NULL,
                  values = NULL, subdivide = NULL, tick_padding = NULL,
                  tick_size_major = NULL, tick_size_minor = tick_size_major,
                  tick_size_end = tick_size_major, offset = NULL,
@@ -79,7 +81,6 @@ guide_axis <- function(type, scale = type, orient = NULL, title = NULL,
 
 add_default_axes <- function(axes, scales) {
   present <- vapply(axes, "[[", "scale", FUN.VALUE = character(1))
-
   missing <- setdiff(intersect(names(scales), c("x", "y")), present)
 
   for (scale in missing) {
@@ -89,3 +90,17 @@ add_default_axes <- function(axes, scales) {
   unname(axes)
 }
 
+# Some axis settings require examining the scale
+apply_axes_defaults <- function(axes, scales) {
+  lapply(axes, function(axis) {
+    scale <- scales[[axis$scale]]
+
+    if (is.null(axis$title)) {
+      title <- scale$domain$fields[[1]]$field
+      title <- sub("^data\\.", "", title)
+      axis$title <- title
+    }
+
+    axis
+  })
+}
