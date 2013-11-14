@@ -14,7 +14,9 @@
   "left" or "right". This determines how the legend is
   positioned within the scene. The default is "right".}
 
-  \item{title}{The title for the legend (none by default).}
+  \item{title}{A title for the legend. By default, it uses
+  the name the fields used in the legend. Use \code{""} to
+  suppress the title.}
 
   \item{format}{The formatting pattern for axis labels.
   Vega uses D3's format pattern:

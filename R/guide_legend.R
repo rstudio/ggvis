@@ -16,7 +16,8 @@
 #' @param orient The orientation of the legend. One of "left" or "right". This
 #'   determines how the legend is positioned within the scene. The default is
 #'   "right".
-#' @param title The title for the legend (none by default).
+#' @param title A title for the legend. By default, it uses the name the fields
+#'   used in the legend. Use \code{""} to suppress the title.
 #' @param format The formatting pattern for axis labels. Vega uses D3's format
 #'   pattern: \url{https://github.com/mbostock/d3/wiki/Formatting}
 #' @param values  Explicitly set the visible legend values.
@@ -51,4 +52,26 @@ add_default_legends <- function(legends, scales) {
   }
 
   unname(legends)
+}
+
+# Some legend settings require examining the scale
+apply_legends_defaults <- function(legends, scales) {
+  legs <- c("size", "shape", "fill", "stroke")
+
+  lapply(legends, function(legend) {
+    present <- unlist(legend[legs])
+    present_scales <- scales[present]
+
+    if (is.null(legend$title)) {
+      # Default title for each legend consists of the fields pasted together
+      fields <- vapply(present_scales, function(scale) {
+        field <- scale$domain$fields[[1]]$field
+        sub("^data\\.", "", field)
+      }, FUN.VALUE = character(1))
+
+      legend$title <- paste(fields, collapse = ".")
+    }
+
+    legend
+  })
 }

@@ -38,6 +38,7 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
   axes <- add_default_axes(x$axes, scales)
   axes <- apply_axes_defaults(axes, scales)
   legends <- add_default_legends(x$legends, scales)
+  legends <- apply_legends_defaults(legends, scales)
   opts <- add_default_opts(x$opts[[1]] %||% opts())
 
   spec <- list(
