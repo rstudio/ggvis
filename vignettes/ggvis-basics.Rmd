@@ -35,7 +35,7 @@ ggvis(props(x = ~ wt, y = ~ mpg), mtcars, mark_symbol())
 
 ## Data sets
 
-You bring the data and ggvis brings the plots. Unlike ggvis, ggplot2 will eventually support multiple types of data, not just data frames.
+You bring the data and ggvis brings the plots. Unlike ggplot2, ggvis will eventually support multiple types of data, not just data frames.
 
 You'll can also use transformation functions which take a dataset and modify it in some way.  See `transform_bin()` and `transform_smooth()` for examples.
 
