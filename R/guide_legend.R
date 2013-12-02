@@ -65,10 +65,14 @@ apply_legends_defaults <- function(legends, scales) {
     if (is.null(legend$title)) {
       # Default title for each legend consists of the fields pasted together
       fields <- vapply(present_scales, function(scale) {
+        # scale$domain can be a numeric vector, in which case return ""
+        if (!is.list(scale$domain)) return("")
+
         field <- scale$domain$fields[[1]]$field
         sub("^data\\.", "", field)
       }, FUN.VALUE = character(1))
 
+      fields <- fields[fields != ""]
       legend$title <- paste(fields, collapse = ".")
     }
 

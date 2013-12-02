@@ -88,7 +88,7 @@ parse_components <- function(..., drop_named = FALSE) {
     components$data <- trim_to_source(pl)
   }
   
-  components$scales <- scales(.scales = components$scale)
+  components$scales <- scales(.scales = components$scales)
   components
 }
 
@@ -105,7 +105,5 @@ component_type.vega_axis <- function(x) "axes"
 component_type.ggvis_props <- function(x) "props"
 #' @S3method component_type ggvis_opts
 component_type.ggvis_opts <- function(x) "opts"
-#' @S3method component_type padding
-component_type.padding <- function(x) "padding"
 #' @S3method component_type default
 component_type.default <- function(x) "data"
