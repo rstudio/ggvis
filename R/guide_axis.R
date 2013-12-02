@@ -95,7 +95,11 @@ apply_axes_defaults <- function(axes, scales) {
   lapply(axes, function(axis) {
     scale <- scales[[axis$scale]]
 
-    if (is.null(axis$title)) {
+    # If we don't have a title, try to get it from the scale.
+    # Domain can be a named list with the field, in which case we can get the
+    # title from the field; or it can be a numeric vector, in which case we
+    # can't automatically get the title from the scale.
+    if (is.null(axis$title) && is.list(scale$domain)) {
       title <- scale$domain$fields[[1]]$field
       title <- sub("^data\\.", "", title)
       axis$title <- title
