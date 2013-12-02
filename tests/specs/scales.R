@@ -27,3 +27,11 @@ ggvis(df, props(x = ~x),
   dscale("y", "numeric", name = "y-z")
 )
 save_spec("scales/dual.json")
+
+# Numeric domains
+ggvis(df, props(x = ~x, y = ~x, fill = ~z),
+  mark_symbol(),
+  dscale("x", "numeric", domain = c(0, 10)),
+  dscale("fill", "numeric", domain = c(0, 2))
+)
+save_spec("scales/domain_numeric.json")

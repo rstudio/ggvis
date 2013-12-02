@@ -1,0 +1,139 @@
+{
+	"data" : [
+		{
+			"name" : "df_5d6dccca750b57e8b95a60db154cdb8e",
+			"format" : {
+				"type" : "csv",
+				"parse" : {
+					"x" : "number",
+					"z" : "number"
+				}
+			},
+			"values" : "\"x\",\"z\"\n1,0.0807501\n2,0.8343330\n3,0.6007609\n4,0.1572084\n5,0.0073994"
+		}
+	],
+	"scales" : [
+		{
+			"name" : "x",
+			"type" : "linear",
+			"reverse" : false,
+			"round" : false,
+			"clamp" : false,
+			"nice" : true,
+			"zero" : false,
+			"range" : "width",
+			"domain" : [
+				0,
+				10
+			]
+		},
+		{
+			"name" : "fill",
+			"type" : "linear",
+			"reverse" : false,
+			"round" : false,
+			"clamp" : false,
+			"nice" : true,
+			"zero" : false,
+			"range" : [
+				"#132B43",
+				"#56B1F7"
+			],
+			"domain" : [
+				0,
+				2
+			]
+		},
+		{
+			"name" : "y",
+			"type" : "linear",
+			"reverse" : false,
+			"round" : false,
+			"clamp" : false,
+			"nice" : true,
+			"zero" : false,
+			"range" : "height",
+			"domain" : {
+				"fields" : [
+					{
+						"data" : "df_5d6dccca750b57e8b95a60db154cdb8e",
+						"field" : "data.x"
+					}
+				]
+			}
+		}
+	],
+	"marks" : [
+		{
+			"type" : "symbol",
+			"properties" : {
+				"update" : {
+					"size" : {
+						"value" : 100
+					},
+					"x" : {
+						"scale" : "x",
+						"field" : "data.x"
+					},
+					"y" : {
+						"scale" : "y",
+						"field" : "data.x"
+					},
+					"fill" : {
+						"scale" : "fill",
+						"field" : "data.z"
+					}
+				},
+				"ggvis" : {
+					"data" : {
+						"value" : "df_5d6dccca750b57e8b95a60db154cdb8e"
+					}
+				}
+			},
+			"from" : {
+				"data" : "df_5d6dccca750b57e8b95a60db154cdb8e"
+			}
+		}
+	],
+	"width" : 600,
+	"height" : 400,
+	"legends" : [
+		{
+			"fill" : "fill",
+			"orient" : "right",
+			"title" : ""
+		}
+	],
+	"axes" : [
+		{
+			"type" : "x",
+			"scale" : "x",
+			"orient" : "bottom",
+			"layer" : "back",
+			"grid" : true
+		},
+		{
+			"type" : "y",
+			"scale" : "y",
+			"orient" : "left",
+			"layer" : "back",
+			"grid" : true,
+			"title" : "x"
+		}
+	],
+	"padding" : null,
+	"ggvis_opts" : {
+		"width" : 600,
+		"height" : 400,
+		"keep_aspect" : false,
+		"resizable" : true,
+		"padding" : {},
+		"duration" : 250,
+		"renderer" : "canvas",
+		"hover_duration" : 0,
+		"enter_duration" : 250,
+		"exit_duration" : 250,
+		"brush_policy" : "debounce",
+		"brush_delay" : 250
+	}
+}
