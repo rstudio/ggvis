@@ -69,6 +69,12 @@ opts <- function(width = NULL, height = NULL, keep_aspect = NULL,
 #' @S3method as.vega ggvis_opts
 as.vega.ggvis_opts <- function(x) x
 
+
+#' @rdname opts
+#' @export
+#' @param x an object to test for opts-ness.
+is.ggvis_opts <- function(x) inherits(x, "ggvis_opts")
+
 #' Default options
 #'
 #' This returns an object containing the default options for ggvis.
@@ -95,8 +101,15 @@ default_opts <- function() {
 }
 
 # Given a ggvis_opts object, merge it into default options
-add_default_opts <- function(x) {
-  structure(modifyList(default_opts(), x), class = "ggvis_opts")
+add_default_opts <- function(x) merge_opts(default_opts(), x)
+
+# Merge two opts() objects
+merge_opts <- function(a, b) {
+  if (is.null(a)) return(b)
+  if (is.null(b)) return(a)
+  stopifnot(is.ggvis_opts(a), is.ggvis_opts(b))
+
+  structure(modifyList(a, b), class = "ggvis_opts")
 }
 
 #' Define padding.
