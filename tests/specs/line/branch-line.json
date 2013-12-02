@@ -175,7 +175,9 @@
 							}
 						},
 						"ggvis" : {
-							"data" : "df_176991690869283a6ffde232ed9aa63c_split_af4a4782_sort_b1f0862c_tree"
+							"data" : {
+								"value" : "df_176991690869283a6ffde232ed9aa63c_split_af4a4782_sort_b1f0862c_tree"
+							}
 						}
 					}
 				}
@@ -187,7 +189,8 @@
 	"legends" : [
 		{
 			"stroke" : "stroke",
-			"orient" : "right"
+			"orient" : "right",
+			"title" : "z"
 		}
 	],
 	"axes" : [
@@ -195,17 +198,17 @@
 			"type" : "x",
 			"scale" : "x",
 			"orient" : "bottom",
-			"titleOffset" : 0,
 			"layer" : "back",
-			"grid" : true
+			"grid" : true,
+			"title" : "x"
 		},
 		{
 			"type" : "y",
 			"scale" : "y",
 			"orient" : "left",
-			"titleOffset" : 0,
 			"layer" : "back",
-			"grid" : true
+			"grid" : true,
+			"title" : "y"
 		}
 	],
 	"padding" : null,
@@ -216,7 +219,11 @@
 		"resizable" : true,
 		"padding" : {},
 		"duration" : 250,
-		"renderer" : "svg",
-		"brush" : false
+		"renderer" : "canvas",
+		"hover_duration" : 0,
+		"enter_duration" : 250,
+		"exit_duration" : 250,
+		"brush_policy" : "debounce",
+		"brush_delay" : 250
 	}
 }

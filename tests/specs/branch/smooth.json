@@ -89,7 +89,9 @@
 					}
 				},
 				"ggvis" : {
-					"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_smooth_68e16999"
+					"data" : {
+						"value" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_smooth_68e16999"
+					}
 				}
 			},
 			"from" : {
@@ -113,7 +115,9 @@
 					}
 				},
 				"ggvis" : {
-					"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_smooth_68e16999"
+					"data" : {
+						"value" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_smooth_68e16999"
+					}
 				}
 			},
 			"from" : {
@@ -129,17 +133,17 @@
 			"type" : "x",
 			"scale" : "x",
 			"orient" : "bottom",
-			"titleOffset" : 0,
 			"layer" : "back",
-			"grid" : true
+			"grid" : true,
+			"title" : "x"
 		},
 		{
 			"type" : "y",
 			"scale" : "y",
 			"orient" : "left",
-			"titleOffset" : 0,
 			"layer" : "back",
-			"grid" : true
+			"grid" : true,
+			"title" : "y_lower__"
 		}
 	],
 	"padding" : null,
@@ -150,7 +154,11 @@
 		"resizable" : true,
 		"padding" : {},
 		"duration" : 250,
-		"renderer" : "svg",
-		"brush" : false
+		"renderer" : "canvas",
+		"hover_duration" : 0,
+		"enter_duration" : 250,
+		"exit_duration" : 250,
+		"brush_policy" : "debounce",
+		"brush_delay" : 250
 	}
 }

@@ -183,7 +183,9 @@
 							}
 						},
 						"ggvis" : {
-							"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_83b487e0_bin_f47a3a9c_tree"
+							"data" : {
+								"value" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_83b487e0_bin_f47a3a9c_tree"
+							}
 						}
 					}
 				}
@@ -195,7 +197,8 @@
 	"legends" : [
 		{
 			"stroke" : "stroke",
-			"orient" : "right"
+			"orient" : "right",
+			"title" : "cyl"
 		}
 	],
 	"axes" : [
@@ -203,17 +206,17 @@
 			"type" : "x",
 			"scale" : "x",
 			"orient" : "bottom",
-			"titleOffset" : 0,
 			"layer" : "back",
-			"grid" : true
+			"grid" : true,
+			"title" : "x"
 		},
 		{
 			"type" : "y",
 			"scale" : "y",
 			"orient" : "left",
-			"titleOffset" : 0,
 			"layer" : "back",
-			"grid" : true
+			"grid" : true,
+			"title" : "count__"
 		}
 	],
 	"padding" : null,
@@ -224,7 +227,11 @@
 		"resizable" : true,
 		"padding" : {},
 		"duration" : 250,
-		"renderer" : "svg",
-		"brush" : false
+		"renderer" : "canvas",
+		"hover_duration" : 0,
+		"enter_duration" : 250,
+		"exit_duration" : 250,
+		"brush_policy" : "debounce",
+		"brush_delay" : 250
 	}
 }

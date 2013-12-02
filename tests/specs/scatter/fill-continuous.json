@@ -94,7 +94,9 @@
 					}
 				},
 				"ggvis" : {
-					"data" : "df_5d6dccca750b57e8b95a60db154cdb8e"
+					"data" : {
+						"value" : "df_5d6dccca750b57e8b95a60db154cdb8e"
+					}
 				}
 			},
 			"from" : {
@@ -107,7 +109,8 @@
 	"legends" : [
 		{
 			"fill" : "fill",
-			"orient" : "right"
+			"orient" : "right",
+			"title" : "z"
 		}
 	],
 	"axes" : [
@@ -115,17 +118,17 @@
 			"type" : "x",
 			"scale" : "x",
 			"orient" : "bottom",
-			"titleOffset" : 0,
 			"layer" : "back",
-			"grid" : true
+			"grid" : true,
+			"title" : "x"
 		},
 		{
 			"type" : "y",
 			"scale" : "y",
 			"orient" : "left",
-			"titleOffset" : 0,
 			"layer" : "back",
-			"grid" : true
+			"grid" : true,
+			"title" : "y"
 		}
 	],
 	"padding" : null,
@@ -136,7 +139,11 @@
 		"resizable" : true,
 		"padding" : {},
 		"duration" : 250,
-		"renderer" : "svg",
-		"brush" : false
+		"renderer" : "canvas",
+		"hover_duration" : 0,
+		"enter_duration" : 250,
+		"exit_duration" : 250,
+		"brush_policy" : "debounce",
+		"brush_delay" : 250
 	}
 }

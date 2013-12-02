@@ -68,7 +68,9 @@
 					}
 				},
 				"ggvis" : {
-					"data" : "df_176991690869283a6ffde232ed9aa63c_sort_83c919b1"
+					"data" : {
+						"value" : "df_176991690869283a6ffde232ed9aa63c_sort_83c919b1"
+					}
 				}
 			},
 			"from" : {
@@ -84,17 +86,17 @@
 			"type" : "x",
 			"scale" : "x",
 			"orient" : "bottom",
-			"titleOffset" : 0,
 			"layer" : "back",
-			"grid" : true
+			"grid" : true,
+			"title" : "x"
 		},
 		{
 			"type" : "y",
 			"scale" : "y",
 			"orient" : "left",
-			"titleOffset" : 0,
 			"layer" : "back",
-			"grid" : true
+			"grid" : true,
+			"title" : "y"
 		}
 	],
 	"padding" : null,
@@ -105,7 +107,11 @@
 		"resizable" : true,
 		"padding" : {},
 		"duration" : 250,
-		"renderer" : "svg",
-		"brush" : false
+		"renderer" : "canvas",
+		"hover_duration" : 0,
+		"enter_duration" : 250,
+		"exit_duration" : 250,
+		"brush_policy" : "debounce",
+		"brush_delay" : 250
 	}
 }
