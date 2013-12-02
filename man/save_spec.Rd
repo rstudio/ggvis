@@ -15,7 +15,7 @@ view_spec(path, ...)
   \item{...}{other arguments passed to \code{as.vega}}
 }
 \description{
-  These functions are mainly useful for testing.
+These functions are mainly useful for testing.
 }
 \keyword{internal}
 

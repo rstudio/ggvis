@@ -17,11 +17,11 @@ export_svg(x, envir = parent.frame(), file = NULL)
   "plot.svg" or "plot.png".}
 }
 \description{
-  This requires that the external program \code{vg2png} is
-  installed. This is part of \code{vega} node.js module.
+This requires that the external program \code{vg2png} is
+installed. This is part of \code{vega} node.js module.
 }
 \seealso{
-  \url{https://github.com/trifacta/vega} for information on
-  installing \code{vg2png} and \code{vg2svg}
+\url{https://github.com/trifacta/vega} for information on
+installing \code{vg2png} and \code{vg2svg}
 }
 

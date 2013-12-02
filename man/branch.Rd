@@ -21,11 +21,11 @@ is.branch(x)
   \item{x}{object to test for "branch"-ness}
 }
 \description{
-  Branches are used to describe the data hierarchy of
-  ggvis. As well as using this function to create them, you
-  can also use the many specialised \code{branch_}
-  functions that combine marks and transforms to create
-  useful visualisations.
+Branches are used to describe the data hierarchy of ggvis.
+As well as using this function to create them, you can also
+use the many specialised \code{branch_} functions that
+combine marks and transforms to create useful
+visualisations.
 }
 \section{Hierarchy}{
   A ggvis plot has a hierarchical structure, where each

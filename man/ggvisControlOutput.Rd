@@ -13,14 +13,14 @@ ggvisControlOutput(outputId, plotId = NULL)
   called after the controls are drawn.}
 }
 \description{
-  This is effectively the same as
-  \code{\link{shiny::uiOutput}}, except that on the client
-  side it may call some plot resizing functions after new
-  controls are drawn.
+This is effectively the same as
+\code{\link{shiny::uiOutput}}, except that on the client
+side it may call some plot resizing functions after new
+controls are drawn.
 }
 \details{
-  \code{ggvisControlOutput} is intended to be used with
-  \code{\link{renderControls}} on the server side.
+\code{ggvisControlOutput} is intended to be used with
+\code{\link{renderControls}} on the server side.
 }
 \examples{
 htmlOutput("summary")

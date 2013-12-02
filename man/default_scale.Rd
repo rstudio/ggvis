@@ -29,12 +29,12 @@ dscale(prop, type, ..., name = NULL)
   secondary y scale.}
 }
 \description{
-  Default scales depend on both the property (e.g. fill, x,
-  opacity) and the type of variable (e.g. numeric, nominal,
-  ordinal). For this reason \code{default_scale} implements
-  a crude S3-like double dispatch mechanism, looking for a
-  function called \code{dscale_prop_type}. \code{dscale} is
-  a short-hand useful for interactive exploration.
+Default scales depend on both the property (e.g. fill, x,
+opacity) and the type of variable (e.g. numeric, nominal,
+ordinal). For this reason \code{default_scale} implements a
+crude S3-like double dispatch mechanism, looking for a
+function called \code{dscale_prop_type}. \code{dscale} is a
+short-hand useful for interactive exploration.
 }
 \section{Scale selection}{
   First, the type of scale is selected based on the

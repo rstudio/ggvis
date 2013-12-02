@@ -14,14 +14,14 @@ transform(type, ..., dots = list())
   transform.}
 }
 \description{
-  A transform object is a \code{\link{pipe}} that
-  represents a data transformation.
+A transform object is a \code{\link{pipe}} that represents
+a data transformation.
 }
 \details{
-  This function is designed to be used by authors of new
-  types of transform If you are a ggvis user, please use
-  one of the more specific transform functions starting
-  with the \code{transform_}.
+This function is designed to be used by authors of new
+types of transform If you are a ggvis user, please use one
+of the more specific transform functions starting with the
+\code{transform_}.
 }
 \section{Important methods}{
   An transform subclass should provide methods for:

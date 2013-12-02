@@ -30,12 +30,12 @@ guide_legend(size = NULL, shape = NULL, fill = NULL, stroke = NULL,
   \code{\link{props}}.}
 }
 \description{
-  Axis specifications allow you to either override the
-  default legends, or supply additional legends.
+Axis specifications allow you to either override the
+default legends, or supply additional legends.
 }
 \details{
-  More information about axes can be found in the "axes and
-  legends" vignettes.
+More information about axes can be found in the "axes and
+legends" vignettes.
 }
 \section{Compared to ggplot2}{
   In ggplot2, legend (and axis) properties are part of the

@@ -8,7 +8,7 @@ is.ggvis(x)
   \item{x}{an object to test}
 }
 \description{
-  Is an object a ggvis object?
+Is an object a ggvis object?
 }
 \keyword{internal}
 

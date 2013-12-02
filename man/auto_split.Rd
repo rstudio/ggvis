@@ -5,9 +5,9 @@
 auto_split()
 }
 \description{
-  Use \code{auto_split} to split up a dataset on all
-  categorical variables specified by props, and have each
-  piece rendered by the same mark.
+Use \code{auto_split} to split up a dataset on all
+categorical variables specified by props, and have each
+piece rendered by the same mark.
 }
 \examples{
 # One line
@@ -21,7 +21,7 @@ sluice(pipeline(mtcars, by_group(cyl)), props(x = ~disp, y = ~mpg))
 # props to be present to work.
 }
 \seealso{
-  To manually specify grouping variables, see
-  \code{\link{by_group}}.
+To manually specify grouping variables, see
+\code{\link{by_group}}.
 }
 

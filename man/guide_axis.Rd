@@ -68,12 +68,12 @@ guide_axis(type, scale = type, orient = NULL, title = NULL,
   \code{\link{props}}.}
 }
 \description{
-  Axis specifications allow you to either override the
-  default axes, or additional axes.
+Axis specifications allow you to either override the
+default axes, or additional axes.
 }
 \details{
-  More information about axes can be found in the "axes and
-  legends" vignettes.
+More information about axes can be found in the "axes and
+legends" vignettes.
 }
 \section{Compared to ggplot2}{
   In ggplot2, axis (and legend) properties are part of the
@@ -86,7 +86,7 @@ guide_axis("x")
 guide_axis("x", properties = list(ticks = props(stroke = "red")))
 }
 \seealso{
-  Vega axis documentation:
-  \url{https://github.com/trifacta/vega/wiki/Axes}
+Vega axis documentation:
+\url{https://github.com/trifacta/vega/wiki/Axes}
 }
 

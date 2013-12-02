@@ -54,15 +54,15 @@ scale_ordinal(name, points = TRUE, padding = NULL, sort = TRUE,
   grid.}
 }
 \description{
-  A ordinal scale controls the mapping of ordinal and
-  nominal variables to visual properties.
+A ordinal scale controls the mapping of ordinal and nominal
+variables to visual properties.
 }
 \details{
-  Generally, you should create new scales with
-  \code{\link{dscale}} because that will automatically set
-  the range to a reasonable default, and it will
-  automatically pick the correct type of scale given the
-  variable type.
+Generally, you should create new scales with
+\code{\link{dscale}} because that will automatically set
+the range to a reasonable default, and it will
+automatically pick the correct type of scale given the
+variable type.
 }
 \examples{
 scale_ordinal("x")
@@ -72,11 +72,11 @@ scale_ordinal("x", padding = 0.5, points = FALSE)
 dscale("x", "nominal", points = FALSE)
 }
 \seealso{
-  \url{https://github.com/trifacta/vega/wiki/Scales#ordinal-scale-properties}
+\url{https://github.com/trifacta/vega/wiki/Scales#ordinal-scale-properties}
 
-  \url{https://github.com/mbostock/d3/wiki/Ordinal-Scales}
+\url{https://github.com/mbostock/d3/wiki/Ordinal-Scales}
 
-  Other vega scales: \code{\link{scale_quantitative}},
-  \code{\link{scale_time}}
+Other vega scales: \code{\link{scale_quantitative}},
+\code{\link{scale_time}}
 }
 

@@ -9,12 +9,12 @@ prop_to_scale(prop)
   unrecognised names are left unchanged.}
 }
 \value{
-  character vector of default scale names.
+character vector of default scale names.
 }
 \description{
-  This is mainly used to ensure that similar properties
-  share the same scale by default - e.g. \code{x} and
-  \code{x2} should use the same scale.
+This is mainly used to ensure that similar properties share
+the same scale by default - e.g. \code{x} and \code{x2}
+should use the same scale.
 }
 \examples{
 prop_to_scale(c("x", "x2"))

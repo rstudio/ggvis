@@ -5,7 +5,7 @@
 default_opts()
 }
 \description{
-  This returns an object containing the default options for
-  ggvis.
+This returns an object containing the default options for
+ggvis.
 }
 

@@ -45,22 +45,22 @@ is.scale(x)
   \item{x}{object to test for scale-ness}
 }
 \description{
-  A scale object is a close mapping to a vega mark object.
-  Vega scales are documented in
-  \url{https://github.com/trifacta/vega/wiki/Scales}.
+A scale object is a close mapping to a vega mark object.
+Vega scales are documented in
+\url{https://github.com/trifacta/vega/wiki/Scales}.
 }
 \details{
-  This function is designed to be used by authors of new
-  types of scale. If you are a ggvis user, please use one
-  of the more specific scale functions starting with the
-  \code{scale_}.
+This function is designed to be used by authors of new
+types of scale. If you are a ggvis user, please use one of
+the more specific scale functions starting with the
+\code{scale_}.
 }
 \examples{
 scale("x", "linear")
 scale("x", "ord")
 }
 \seealso{
-  \url{https://github.com/trifacta/vega/wiki/Scales}
+\url{https://github.com/trifacta/vega/wiki/Scales}
 }
 \keyword{internal}
 

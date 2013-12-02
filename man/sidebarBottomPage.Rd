@@ -16,9 +16,8 @@ sidebarBottomPage(sidebarPanel, mainPanel, shiny_headers = TRUE)
   pages, FALSE for static pages.}
 }
 \description{
-  This creates a page with a sidebar, where the sidebar
-  moves to the bottom when the width goes below a
-  particular value.
+This creates a page with a sidebar, where the sidebar moves
+to the bottom when the width goes below a particular value.
 }
 \examples{
 sidebarBottomPage

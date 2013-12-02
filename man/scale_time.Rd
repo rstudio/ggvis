@@ -43,15 +43,15 @@ scale_time(name, utc = FALSE, clamp = FALSE, nice = NULL, domain = NULL,
   grid.}
 }
 \description{
-  A date/time scale controls the mapping of date and time
-  variables to visual properties.
+A date/time scale controls the mapping of date and time
+variables to visual properties.
 }
 \details{
-  Generally, you should create new scales with
-  \code{\link{dscale}} because that will automatically set
-  the range to a reasonable default, and it will
-  automatically pick the correct type of scale given the
-  variable type.
+Generally, you should create new scales with
+\code{\link{dscale}} because that will automatically set
+the range to a reasonable default, and it will
+automatically pick the correct type of scale given the
+variable type.
 }
 \examples{
 scale_time("x", nice = "year")
@@ -61,9 +61,9 @@ scale_time("y", utc = TRUE)
 dscale("y", "datetime", utc = TRUE)
 }
 \seealso{
-  \url{https://github.com/trifacta/vega/wiki/Scales#time-scale-properties}
+\url{https://github.com/trifacta/vega/wiki/Scales#time-scale-properties}
 
-  Other vega scales: \code{\link{scale_ordinal}},
-  \code{\link{scale_quantitative}}
+Other vega scales: \code{\link{scale_ordinal}},
+\code{\link{scale_quantitative}}
 }
 

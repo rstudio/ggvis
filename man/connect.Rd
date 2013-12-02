@@ -21,17 +21,16 @@ sluice(x, props, source = NULL, session = NULL)
   within a Shiny application.}
 }
 \description{
-  \code{connect} creates a reactive pipeline (starting with
-  \code{NULL}), applying each pipe (transformation) in
-  sequence. \code{sluice} is a convenient helper method
-  that creates the pipeline, then flows the data along it
-  to render a final result.
+\code{connect} creates a reactive pipeline (starting with
+\code{NULL}), applying each pipe (transformation) in
+sequence. \code{sluice} is a convenient helper method that
+creates the pipeline, then flows the data along it to
+render a final result.
 }
 \details{
-  Every element in a pipeline recieves the same set of
-  properties: this generally means that for more
-  complicated transformations you will need to create
-  multiple branches.
+Every element in a pipeline recieves the same set of
+properties: this generally means that for more complicated
+transformations you will need to create multiple branches.
 }
 \examples{
 df <- data.frame(x = 1:10, y = 1:10)

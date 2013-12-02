@@ -22,9 +22,9 @@ input_numeric(value, label = "", id = rand_id("text_"), map = identity)
   \code{identity}, leaving the output unchanged.}
 }
 \description{
-  \code{input_numeric} only allows numbers and comes with a
-  spin box control. \code{input_text} allows any type of
-  input.
+\code{input_numeric} only allows numbers and comes with a
+spin box control. \code{input_text} allows any type of
+input.
 }
 \examples{
 fill_text <- input_text(label = "Point color", value = "red")
@@ -36,9 +36,9 @@ ggvis(mtcars, props(x = ~wt, y = ~mpg),
   mark_symbol(props(size := size_num)))
 }
 \seealso{
-  Other interactive input: \code{\link{input_checkbox}},
-  \code{\link{input_checkboxgroup}},
-  \code{\link{input_radiobuttons}},
-  \code{\link{input_select}}, \code{\link{input_slider}}
+Other interactive input: \code{\link{input_checkbox}},
+\code{\link{input_checkboxgroup}},
+\code{\link{input_radiobuttons}},
+\code{\link{input_select}}, \code{\link{input_slider}}
 }
 

@@ -38,11 +38,11 @@ input_checkboxgroup(choices, selected = NULL, label = "",
   \code{identity}, leaving the output unchanged.}
 }
 \description{
-  \itemize{ \item \code{input_radiobuttons} only ever
-  selects one value \item \code{input_checkboxgroup} can
-  alway select multiple values \item \code{input_select}
-  can select only one if \code{multiple = FALSE}, otherwise
-  the user can select multiple by using modifier keys }
+\itemize{ \item \code{input_radiobuttons} only ever selects
+one value \item \code{input_checkboxgroup} can alway select
+multiple values \item \code{input_select} can select only
+one if \code{multiple = FALSE}, otherwise the user can
+select multiple by using modifier keys }
 }
 \examples{
 # Dropdown
@@ -69,8 +69,8 @@ branch_smooth(model = input_radiobuttons(
               label = "Model type"))
 }
 \seealso{
-  Other interactive input: \code{\link{input_checkbox}},
-  \code{\link{input_numeric}}, \code{\link{input_slider}},
-  \code{\link{input_text}}
+Other interactive input: \code{\link{input_checkbox}},
+\code{\link{input_numeric}}, \code{\link{input_slider}},
+\code{\link{input_text}}
 }
 

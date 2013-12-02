@@ -12,10 +12,10 @@ transform_stack(direction = "y")
   not \code{"mpg"}.}
 }
 \description{
-  \code{transform_stack} is a data transformation that
-  stacks values in a a data object. Typically, y values are
-  stacked at each unique x value, although it's also
-  possible to stack x values at each unique y.
+\code{transform_stack} is a data transformation that stacks
+values in a a data object. Typically, y values are stacked
+at each unique x value, although it's also possible to
+stack x values at each unique y.
 }
 \section{Input}{
   \code{transform_stack} takes a data frame or a split_df

@@ -11,14 +11,14 @@ datasource(data, name = deparse2(substitute(data)))
   messages etc.)}
 }
 \description{
-  A data source implements a pointer (using a environment
-  and a promise) to an existing data frame or other data
-  source in R. Most of the time you should not need to call
-  this function directly - just supply an object to
-  \code{\link{ggvis}} and \code{datasource} will be
-  automatically called. You may want to call this function
-  directly in order to control the datasource name used
-  when printing and in the vega plot specification.
+A data source implements a pointer (using a environment and
+a promise) to an existing data frame or other data source
+in R. Most of the time you should not need to call this
+function directly - just supply an object to
+\code{\link{ggvis}} and \code{datasource} will be
+automatically called. You may want to call this function
+directly in order to control the datasource name used when
+printing and in the vega plot specification.
 }
 \examples{
 datasource(mtcars)

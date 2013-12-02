@@ -8,6 +8,6 @@ mainTopPanel(...)
   \item{...}{UI elements to include in the main panel.}
 }
 \description{
-  This is to be used with \code{link{sidebarBottomPage}}.
+This is to be used with \code{link{sidebarBottomPage}}.
 }
 

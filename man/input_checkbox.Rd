@@ -21,7 +21,7 @@ input_checkbox(value = FALSE, label = "", id = rand_id("checkbox_"),
   \code{identity}, leaving the output unchanged.}
 }
 \description{
-  Create an interactive checkbox.
+Create an interactive checkbox.
 }
 \examples{
 input_checkbox(label = "Confidence interval")
@@ -36,11 +36,10 @@ model_type <- input_checkbox(label = "Use flexible curve",
 branch_smooth(method = model_type)
 }
 \seealso{
-  Other interactive input:
-  \code{\link{input_checkboxgroup}},
-  \code{\link{input_numeric}},
-  \code{\link{input_radiobuttons}},
-  \code{\link{input_select}}, \code{\link{input_slider}},
-  \code{\link{input_text}}
+Other interactive input: \code{\link{input_checkboxgroup}},
+\code{\link{input_numeric}},
+\code{\link{input_radiobuttons}},
+\code{\link{input_select}}, \code{\link{input_slider}},
+\code{\link{input_text}}
 }
 

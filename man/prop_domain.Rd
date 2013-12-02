@@ -10,6 +10,6 @@ prop_domain(x, data)
   \item{data}{name of data set}
 }
 \description{
-  Property domain.
+Property domain.
 }
 

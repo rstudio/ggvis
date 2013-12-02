@@ -33,16 +33,16 @@ is.input(x)
   \item{x}{object to test for "input"-ness}
 }
 \description{
-  An interactive input represents a reactive value bound to
-  a UI control. Interactive inputs were previously called
-  delayed reactives because they represent an reactive
-  value that would be created when the plot was drawn.
+An interactive input represents a reactive value bound to a
+UI control. Interactive inputs were previously called
+delayed reactives because they represent an reactive value
+that would be created when the plot was drawn.
 }
 \details{
-  This function is designed to be used by authors of new
-  types of interactive inputs. If you are a ggvis user,
-  please use one of the more specific input functions
-  starting with the \code{input_}.
+This function is designed to be used by authors of new
+types of interactive inputs. If you are a ggvis user,
+please use one of the more specific input functions
+starting with the \code{input_}.
 }
 \keyword{internal}
 

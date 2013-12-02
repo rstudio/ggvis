@@ -9,8 +9,8 @@ proptype_to_scale(type)
   logical or datetime.}
 }
 \description{
-  Convert the type of a property to the type of it's
-  default scale.
+Convert the type of a property to the type of it's default
+scale.
 }
 \keyword{internal}
 

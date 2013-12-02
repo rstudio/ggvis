@@ -20,15 +20,14 @@ is.split_df(x)
   \item{x}{object to test for split_df-ness}
 }
 \description{
-  An split_df object represents a data frame that has been
-  split into multiple pieces according to the value of some
-  variable (or variables, or functions of variables).
+An split_df object represents a data frame that has been
+split into multiple pieces according to the value of some
+variable (or variables, or functions of variables).
 }
 \details{
-  This function is designed to create \code{split_df}
-  objects by hand: generally, users of ggvis should create
-  these objects with the helper \code{\link{by_group}}
-  function.
+This function is designed to create \code{split_df} objects
+by hand: generally, users of ggvis should create these
+objects with the helper \code{\link{by_group}} function.
 }
 \keyword{internal}
 

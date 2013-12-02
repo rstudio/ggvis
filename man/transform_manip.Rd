@@ -12,7 +12,7 @@ transform_summarise(..., .env = parent.frame())
 transform_mutate(..., .env = parent.frame())
 }
 \description{
-  Subset, summarise and mutate your data
+Subset, summarise and mutate your data
 }
 \examples{
 # Dynamically restrict range using transform subset

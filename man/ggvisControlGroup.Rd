@@ -8,7 +8,7 @@ ggvisControlGroup(plot_id)
   \item{plot_id}{Plot ID}
 }
 \description{
-  Controls for choosing a renderer, downloading an image,
-  and quitting.
+Controls for choosing a renderer, downloading an image, and
+quitting.
 }
 

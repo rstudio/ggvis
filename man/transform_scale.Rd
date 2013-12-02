@@ -10,7 +10,7 @@ transform_scale(add = 0, mult = 1)
   \item{mult}{constant to multiply x by}
 }
 \description{
-  Transform scale: a simple transform for testing
+Transform scale: a simple transform for testing
 }
 \examples{
 neg <- transform_scale(mult = -1)

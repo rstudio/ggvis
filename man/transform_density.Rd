@@ -36,11 +36,11 @@ branch_density(..., area = TRUE)
   branch.}
 }
 \description{
-  \code{transform_density} is a data transformation that
-  computes a kernel density estimate from a dataset.
-  \code{branch_density} combines \code{transform_density}
-  with \code{mark_line} and \code{mark_area} to display a
-  smooth line and its standard errror.
+\code{transform_density} is a data transformation that
+computes a kernel density estimate from a dataset.
+\code{branch_density} combines \code{transform_density}
+with \code{mark_line} and \code{mark_area} to display a
+smooth line and its standard errror.
 }
 \section{Input}{
   Currently \code{transform_density} only works with data

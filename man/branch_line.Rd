@@ -18,7 +18,7 @@ branch_line(..., sort = TRUE)
   used.}
 }
 \description{
-  A branch to add a line.
+A branch to add a line.
 }
 \examples{
 ggvis(mtcars,
@@ -28,6 +28,6 @@ ggvis(mtcars,
 )
 }
 \seealso{
-  \code{link{mark_line}}
+\code{link{mark_line}}
 }
 

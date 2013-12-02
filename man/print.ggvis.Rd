@@ -4,7 +4,7 @@
 \alias{view_static}
 \title{View in a ggvis plot in the browser.}
 \usage{
-\S3method{print}{ggvis}(x, dynamic = NA, ...)
+\method{print}{ggvis}(x, dynamic = NA, ...)
 
 view_static(x, renderer = getOption("ggvis.renderer", default = "canvas"),
   launch = interactive())
@@ -30,10 +30,10 @@ view_dynamic(x, renderer = getOption("ggvis.renderer", default = "canvas"),
   NULL (the default), Shiny will select a random port.}
 }
 \description{
-  \code{view_static} creates a static web page in a
-  temporary directory; \code{view_dynamic} generate a
-  dynamic shiny app and launches it. Print picks between
-  the two methods automatically.
+\code{view_static} creates a static web page in a temporary
+directory; \code{view_dynamic} generate a dynamic shiny app
+and launches it. Print picks between the two methods
+automatically.
 }
 \keyword{internal}
 

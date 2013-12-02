@@ -35,13 +35,13 @@ branch_freqpoly(...)
   branch.}
 }
 \description{
-  \code{transform_bin} is a data transformation that
-  reduces a one-d vector of positions to a data frame of
-  binned counts. \code{branch_histogram} combines
-  \code{transform_bin} with \code{mark_rect} to create a
-  histogram, and \code{branch_freqpoly} combines
-  \code{transform_bin} with \code{mark_line} to create a
-  frequency polygon.
+\code{transform_bin} is a data transformation that reduces
+a one-d vector of positions to a data frame of binned
+counts. \code{branch_histogram} combines
+\code{transform_bin} with \code{mark_rect} to create a
+histogram, and \code{branch_freqpoly} combines
+\code{transform_bin} with \code{mark_line} to create a
+frequency polygon.
 }
 \section{Input}{
   Currently \code{transform_bin} only works with data

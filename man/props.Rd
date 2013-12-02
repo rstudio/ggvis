@@ -19,11 +19,11 @@ is.ggvis_props(x)
   \item{x}{an object to test for props-ness.}
 }
 \description{
-  \code{props()} provides a tool for concise creation of
-  \code{prop} objects using a set of conventions designed
-  to capture the most common use cases. If you need
-  something less common, you'll need to use
-  \code{\link{prop}} to access all possible options.
+\code{props()} provides a tool for concise creation of
+\code{prop} objects using a set of conventions designed to
+capture the most common use cases. If you need something
+less common, you'll need to use \code{\link{prop}} to
+access all possible options.
 }
 \section{Heuristics}{
   If the values are not already objects of class

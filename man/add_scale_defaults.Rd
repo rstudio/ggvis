@@ -14,7 +14,7 @@ add_scale_defaults(scale, types, ...)
   function}
 }
 \description{
-  You can use this function to add new defaults
+You can use this function to add new defaults
 }
 \examples{
 \dontrun{

@@ -5,8 +5,8 @@
 last_vis()
 }
 \description{
-  Visualisations are saved whenever they are created or
-  plotted.
+Visualisations are saved whenever they are created or
+plotted.
 }
 \examples{
 ggvis(mtcars, props(x = ~mpg, y = ~cyl), mark_symbol())

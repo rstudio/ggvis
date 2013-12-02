@@ -10,7 +10,7 @@ padding(top = NULL, right = NULL, bottom = NULL, left = NULL)
   "strict"}
 }
 \description{
-  Define padding.
+Define padding.
 }
 \examples{
 opts(padding = padding())

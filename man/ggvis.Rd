@@ -16,12 +16,11 @@ ggvis(...)
   \code{\link{padding}}}
 }
 \value{
-  a \code{branch} object. Will display the plot when
-  printed; see \code{\link{save_spec}},
-  \code{\link{view_static}} and \code{\link{view_dynamic}}
-  for other options.
+a \code{branch} object. Will display the plot when printed;
+see \code{\link{save_spec}}, \code{\link{view_static}} and
+\code{\link{view_dynamic}} for other options.
 }
 \description{
-  Create a ggvis graphic.
+Create a ggvis graphic.
 }
 

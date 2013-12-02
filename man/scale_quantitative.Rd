@@ -51,15 +51,15 @@ scale_quantitative(name, trans = "linear", exponent = NULL, clamp = FALSE,
   grid.}
 }
 \description{
-  A quantitative scale controls the mapping of continuous
-  variables to visual properties.
+A quantitative scale controls the mapping of continuous
+variables to visual properties.
 }
 \details{
-  Generally, you should create new scales with
-  \code{\link{dscale}} because that will automatically set
-  the range to a reasonable default, and it will
-  automatically pick the correct type of scale given the
-  variable type.
+Generally, you should create new scales with
+\code{\link{dscale}} because that will automatically set
+the range to a reasonable default, and it will
+automatically pick the correct type of scale given the
+variable type.
 }
 \examples{
 scale_quantitative("y")
@@ -72,9 +72,9 @@ scale_quantitative("x", clamp = TRUE, nice = FALSE, zero = TRUE)
 dscale("x", "numeric", clamp = TRUE, nice = FALSE, zero = TRUE)
 }
 \seealso{
-  \url{https://github.com/trifacta/vega/wiki/Scales#quantitative-scale-properties}
+\url{https://github.com/trifacta/vega/wiki/Scales#quantitative-scale-properties}
 
-  Other vega scales: \code{\link{scale_ordinal}},
-  \code{\link{scale_time}}
+Other vega scales: \code{\link{scale_ordinal}},
+\code{\link{scale_time}}
 }
 

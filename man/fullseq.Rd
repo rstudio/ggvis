@@ -12,10 +12,10 @@ fullseq(range, size, ...)
   \item{...}{other arguments passed on to methods}
 }
 \description{
-  Generate sequence of fixed size intervals covering range.
+Generate sequence of fixed size intervals covering range.
 }
 \seealso{
-  \code{\link[plyr]{round_any}}
+\code{\link[plyr]{round_any}}
 }
 \keyword{internal}
 

@@ -16,8 +16,8 @@ transform_sort(..., var = "x")
   arguments will be dropped.}
 }
 \description{
-  \code{transform_sort} is a data transformation that sorts
-  a data object based on one or more columns in the data.
+\code{transform_sort} is a data transformation that sorts a
+data object based on one or more columns in the data.
 }
 \section{Input}{
   \code{transform_sort} takes a data frame or a split_df as

@@ -11,7 +11,7 @@ is.band(x)
   \item{x}{object to for band-ness}
 }
 \description{
-  Bands are used to set the width or height on categorical
-  scales.
+Bands are used to set the width or height on categorical
+scales.
 }
 

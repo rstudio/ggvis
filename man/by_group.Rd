@@ -14,8 +14,8 @@ by_group(..., .vars = list(), .env = parent.frame())
   In ordinary use, the default is adequate.}
 }
 \description{
-  Use \code{by_group} to split up a dataset into multiple
-  pieces, and have each piece rendered by the same mark.
+Use \code{by_group} to split up a dataset into multiple
+pieces, and have each piece rendered by the same mark.
 }
 \examples{
 by_group(cyl)
@@ -43,7 +43,7 @@ var <- "cyl"
 by_group(.vars = list(as.name(var)))
 }
 \seealso{
-  To automatically detect grouping variables, see
-  \code{\link{auto_split}}.
+To automatically detect grouping variables, see
+\code{\link{auto_split}}.
 }
 

@@ -1,4 +1,5 @@
 \name{opts}
+\alias{is.ggvis_opts}
 \alias{opts}
 \title{Set options for a ggvis plot}
 \usage{
@@ -6,6 +7,8 @@ opts(width = NULL, height = NULL, keep_aspect = NULL, resizable = NULL,
   padding = NULL, duration = NULL, renderer = NULL,
   hover_duration = NULL, enter_duration = NULL, exit_duration = NULL,
   brush_policy = NULL, brush_delay = NULL)
+
+is.ggvis_opts(x)
 }
 \arguments{
   \item{width,height}{Width and height of plot, in pixels.
@@ -48,9 +51,11 @@ opts(width = NULL, height = NULL, keep_aspect = NULL, resizable = NULL,
 
   \item{brush_delay}{The number of milliseconds to use with
   \code{brush_policy}.}
+
+  \item{x}{an object to test for opts-ness.}
 }
 \description{
-  Set options for a ggvis plot
+Set options for a ggvis plot
 }
 \examples{
 ggvis(mtcars, props(x = ~wt, y = ~mpg), mark_symbol(),
@@ -60,9 +65,9 @@ ggvis(mtcars, props(x = ~wt, y = ~mpg), mark_symbol(),
 str(default_opts())
 }
 \seealso{
-  \code{link{getOption}} and \code{link{options}}, for
-  getting and setting global options.
+\code{link{getOption}} and \code{link{options}}, for
+getting and setting global options.
 
-  \code{link{default_opts}} to see the default options.
+\code{link{default_opts}} to see the default options.
 }
 

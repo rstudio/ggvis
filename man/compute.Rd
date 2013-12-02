@@ -13,13 +13,13 @@ compute(x, props, data)
   data frame}
 }
 \value{
-  a data frame
+a data frame
 }
 \description{
-  This generic represents the actual numerical computation
-  performed by the transformation. This is the method that
-  does most of the work, and only needs to know about props
-  and values, not about reactive objects.
+This generic represents the actual numerical computation
+performed by the transformation. This is the method that
+does most of the work, and only needs to know about props
+and values, not about reactive objects.
 }
 \keyword{internal}
 

@@ -47,12 +47,12 @@ branch_smooth(..., se = TRUE)
   branch.}
 }
 \description{
-  \code{transform_smooth} is a data transformation that
-  fits a model to a 2d dataset and computes predictions and
-  standard errors. \code{branch_smooth} combines
-  \code{transform_smooth} with \code{mark_line} and
-  \code{mark_area} to display a smooth line and its
-  standard errror.
+\code{transform_smooth} is a data transformation that fits
+a model to a 2d dataset and computes predictions and
+standard errors. \code{branch_smooth} combines
+\code{transform_smooth} with \code{mark_line} and
+\code{mark_area} to display a smooth line and its standard
+errror.
 }
 \section{Input}{
   Currently \code{transform_smooth} only works with data

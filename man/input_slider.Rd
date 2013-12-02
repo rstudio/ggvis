@@ -59,7 +59,7 @@ input_slider(min, max, value = min, step = NULL, round = FALSE,
   \code{identity}, leaving the output unchanged.}
 }
 \description{
-  Create an interactive slider.
+Create an interactive slider.
 }
 \examples{
 input_slider(0, 100)
@@ -73,10 +73,10 @@ input_slider(0, 100, c(25, 75))
 input_slider(-5, 5, label = "Log scale", map = function(x) 10 ^ x)
 }
 \seealso{
-  Other interactive input: \code{\link{input_checkbox}},
-  \code{\link{input_checkboxgroup}},
-  \code{\link{input_numeric}},
-  \code{\link{input_radiobuttons}},
-  \code{\link{input_select}}, \code{\link{input_text}}
+Other interactive input: \code{\link{input_checkbox}},
+\code{\link{input_checkboxgroup}},
+\code{\link{input_numeric}},
+\code{\link{input_radiobuttons}},
+\code{\link{input_select}}, \code{\link{input_text}}
 }
 

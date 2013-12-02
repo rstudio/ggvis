@@ -8,13 +8,13 @@ vector_type(x)
   \item{x}{a vector}
 }
 \description{
-  The \code{vector_type} collapses down the class of base
-  vectors into something useful more for visualisation,
-  yielding one of "datetime", "numeric", "ordinal",
-  "nominal" or "logical".
+The \code{vector_type} collapses down the class of base
+vectors into something useful more for visualisation,
+yielding one of "datetime", "numeric", "ordinal", "nominal"
+or "logical".
 }
 \seealso{
-  \code{default_scale}, which uses this when picking the
-  default scale.
+\code{default_scale}, which uses this when picking the
+default scale.
 }
 

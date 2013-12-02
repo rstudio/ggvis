@@ -31,16 +31,16 @@ mark_text(props = NULL, data = NULL)
   the usual data inheritance for this mark.}
 }
 \description{
-  These functions create mark objects, corresponding to
-  vega marks. Marks are leaves in the plot tree, and
-  control the details of the final rendering. Marks are
-  equivalent to the basic geoms in ggplot2 (e.g. point,
-  line, polygon), where ggvis branches correspond to
-  combinations of geoms and statistical transforms.
+These functions create mark objects, corresponding to vega
+marks. Marks are leaves in the plot tree, and control the
+details of the final rendering. Marks are equivalent to the
+basic geoms in ggplot2 (e.g. point, line, polygon), where
+ggvis branches correspond to combinations of geoms and
+statistical transforms.
 }
 \details{
-  Note that by supplying a fill property to
-  \code{mark_line} will produce a filled property.
+Note that by supplying a fill property to \code{mark_line}
+will produce a filled property.
 }
 \section{Properties}{
   You can set the following mark properties:
@@ -92,6 +92,6 @@ mark_text(props = NULL, data = NULL)
   or in a parent \code{\link{branch}}.
 }
 \seealso{
-  The "marks" vignette.
+The "marks" vignette.
 }
 

@@ -14,8 +14,8 @@ is.scales(x)
   \item{x}{object to test for scales-ness}
 }
 \description{
-  A scales object is used to manage multiple scales,
-  essentially converting a unnamed list into a named list.
+A scales object is used to manage multiple scales,
+essentially converting a unnamed list into a named list.
 }
 \keyword{internal}
 
