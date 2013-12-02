@@ -88,7 +88,7 @@ parse_components <- function(..., drop_named = FALSE) {
     components$data <- trim_to_source(pl)
   }
   
-  components$scales <- scales(.scales = components$scale)
+  components$scales <- scales(.scales = components$scales)
   components
 }
 
