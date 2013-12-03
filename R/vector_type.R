@@ -10,25 +10,25 @@
 #'   scale.
 vector_type <- function(x) UseMethod("vector_type")
 
-#' @S3method vector_type POSIXt
+#' @export
 vector_type.POSIXt <- function(x) "datetime"
-#' @S3method vector_type Date
+#' @export
 vector_type.Date <- function(x) "datetime"
-#' @S3method vector_type numeric
+#' @export
 vector_type.numeric <- function(x) "numeric"
-#' @S3method vector_type integer
+#' @export
 vector_type.integer <- function(x) "numeric"
-#' @S3method vector_type character
+#' @export
 vector_type.character <- function(x) "nominal"
-#' @S3method vector_type logical
+#' @export
 vector_type.logical <- function(x) "logical"
-#' @S3method vector_type factor
+#' @export
 vector_type.factor <- function(x) "nominal"
-#' @S3method vector_type ordered
+#' @export
 vector_type.ordered <- function(x) "ordinal"
-#' @S3method vector_type NULL
+#' @export
 vector_type.NULL <- function(x) "NULL"
-#' @S3method vector_type default
+#' @export
 vector_type.default <- function(x) {
   stop("Unknown variable type: ", paste0(class(x), collapse = "/"))
 }
@@ -41,25 +41,25 @@ vector_type.default <- function(x) {
 #' @param x A vector.
 vega_data_parser <- function(x) UseMethod("vega_data_parser")
 
-#' @S3method vega_data_parser POSIXt
+#' @export
 vega_data_parser.POSIXt <- function(x) "date"
-#' @S3method vega_data_parser Date
+#' @export
 vega_data_parser.Date <- function(x) "date"
-#' @S3method vega_data_parser numeric
+#' @export
 vega_data_parser.numeric <- function(x) "number"
-#' @S3method vega_data_parser integer
+#' @export
 vega_data_parser.integer <- function(x) "number"
-#' @S3method vega_data_parser character
+#' @export
 vega_data_parser.character <- function(x) NULL
-#' @S3method vega_data_parser logical
+#' @export
 vega_data_parser.logical <- function(x) "boolean"
-#' @S3method vega_data_parser factor
+#' @export
 vega_data_parser.factor <- function(x) NULL
-#' @S3method vega_data_parser ordered
+#' @export
 vega_data_parser.ordered <- function(x) NULL
-#' @S3method vega_data_parser NULL
+#' @export
 vega_data_parser.NULL <- function(x) NULL
-#' @S3method vega_data_parser default
+#' @export
 vega_data_parser.default <- function(x) {
   stop("Unknown variable type: ", paste0(class(x), collapse = "/"))
 }

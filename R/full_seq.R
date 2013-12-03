@@ -8,7 +8,7 @@
 #' @seealso \code{\link[plyr]{round_any}}
 fullseq <- function(range, size, ...) UseMethod("fullseq")
 
-#' @S3method fullseq numeric
+#' @export
 fullseq.numeric <- function(range, size, ..., pad = FALSE) {
   # if (zero_range(range)) return(range + size * c(-1, 1) / 2)
 

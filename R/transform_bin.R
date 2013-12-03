@@ -100,12 +100,12 @@ branch_freqpoly <- function(...) {
   )
 }
 
-#' @S3method format transform_bin
+#' @export
 format.transform_bin <- function(x, ...) {
   paste0(" -> bin", param_string(x))
 }
 
-#' @S3method compute transform_bin
+#' @export
 compute.transform_bin <- function(x, props, data) {
   check_prop(x, props, data, "x.update", "numeric")
 
@@ -123,19 +123,19 @@ compute.transform_bin <- function(x, props, data) {
 
 bin <- function(data, ...) UseMethod("bin")
 
-#' @S3method bin split_df
+#' @export
 bin.split_df <- function(x, x_var, ...) {
   x[] <- lapply(x, bin, x_var = x_var, ...)
   x
 }
 
-#' @S3method bin data.frame
+#' @export
 bin.data.frame <- function(x, x_var, ...) {
   x_val <- remove_missing(prop_value(x_var, x), warn_na = !trans$na.rm)
   bin(x_val, ...)
 }
 
-#' @S3method bin numeric
+#' @export
 bin.numeric <- function(x, weight = NULL, binwidth = 1, origin = NULL, right = TRUE) {
   stopifnot(is.numeric(binwidth) && length(binwidth) == 1)
   stopifnot(is.null(origin) || (is.numeric(origin) && length(origin) == 1))

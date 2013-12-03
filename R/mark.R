@@ -57,7 +57,7 @@ check_mark_props <- function(mark, props) {
 }
 
 
-#' @S3method format mark
+#' @export
 format.mark <- function(x, ...) {
   paste0("<", class(x)[1], ">",
     if (!is.null(x$pipeline_id)) paste0(" (ID: ", x$pipeline_id, ")"),
@@ -65,5 +65,5 @@ format.mark <- function(x, ...) {
     format(x$props))
 }
 
-#' @S3method print mark
+#' @export
 print.mark <- function(x, ...) cat(format(x), "\n")

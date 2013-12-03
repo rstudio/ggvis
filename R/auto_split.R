@@ -19,12 +19,12 @@ auto_split <- function() {
   pipe(c("auto_split", "split"))
 }
 
-#' @S3method format auto_split
+#' @export
 format.auto_split <- function(x, ...) {
   " -> auto_split"
 }
 
-#' @S3method connect auto_split
+#' @export
 connect.auto_split <- function(x, props, source = NULL, session = NULL) {
   source <- as.reactive(source)
   reactive({
@@ -40,5 +40,5 @@ connect.auto_split <- function(x, props, source = NULL, session = NULL) {
   })
 }
 
-#' @S3method empty auto_split
+#' @export
 empty.auto_split <- function(x) FALSE

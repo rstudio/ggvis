@@ -91,7 +91,7 @@ is.prop <- function(x) inherits(x, "prop")
 # Given a property and a dataset, get the value of the property.
 prop_value <- function(x, data) UseMethod("prop_value")
 
-#' @S3method prop_value default
+#' @export
 prop_value.default <- function(x, data) {
   if (x$type == "constant") return(rep(x$value, nrow(data)))
 
@@ -118,7 +118,7 @@ prop_value.default <- function(x, data) {
 # vega data frame
 prop_name <- function(x) UseMethod("prop_name")
 
-#' @S3method prop_name default
+#' @export
 prop_name.default <- function(x) {
   switch(x$type,
     constant = "",
@@ -129,7 +129,7 @@ prop_name.default <- function(x) {
 # The scale (if any) that this property needs
 prop_scale <- function(x, default_scale) UseMethod("prop_scale")
 
-#' @S3method prop_scale default
+#' @export
 prop_scale.default <- function(x, default_scale) {
   if (isTRUE(x$scale)) {
     default_scale
@@ -143,7 +143,7 @@ prop_scale.default <- function(x, default_scale) {
 # Generate a vega object for the individual mark.
 prop_vega <- function(x, default_scale) UseMethod("prop_vega")
 
-#' @S3method prop_vega default
+#' @export
 prop_vega.default <- function(x, default_scale) {
   scale <- prop_scale(x, default_scale)
   pv <- list(
@@ -167,7 +167,7 @@ prop_vega.default <- function(x, default_scale) {
 #' @param data name of data set
 prop_domain <- function(x, data) UseMethod("prop_domain")
 
-#' @S3method prop_domain default
+#' @export
 prop_domain.default <- function(x, data) {
   # FIXME: for scaled constants, this should really insert a literal value in
   #   to the domain, but it's not obvious how to do that in vega currently.
@@ -187,7 +187,7 @@ prop_domain.default <- function(x, data) {
 #
 # p <- props(x := input_select(c("red", "blue")), y = 10)
 # as.character.prop(p$x)
-#' @S3method as.character prop
+#' @export
 as.character.prop <- function(x, ...) {
   switch(x$type,
     constant = as.character(x$value),
@@ -196,7 +196,7 @@ as.character.prop <- function(x, ...) {
   )
 }
 
-#' @S3method format prop
+#' @export
 format.prop <- function(x, ...) {
   if (identical(x$scale, TRUE)) {
     scale <- "auto"
@@ -222,7 +222,7 @@ format.prop <- function(x, ...) {
     " (scale: ", scale, ")")
 }
 
-#' @S3method print prop
+#' @export
 print.prop <- function(x, ...) cat(format(x, ...), "\n", sep = "")
 
 # Determine the variable type given a data frame and property.
@@ -235,11 +235,11 @@ print.prop <- function(x, ...) cat(format(x, ...), "\n", sep = "")
 prop_type <- function(data, prop, processed = FALSE) {
   UseMethod("prop_type")
 }
-#' @S3method prop_type split_df
+#' @export
 prop_type.split_df <- function(data, prop, processed = FALSE) {
   prop_type(data[[1]], prop, processed = processed)
 }
-#' @S3method prop_type data.frame
+#' @export
 prop_type.data.frame <- function(data, prop, processed = FALSE) {
   if (processed) {
     value <- data[[prop_name(prop)]]
@@ -270,11 +270,11 @@ prop_countable<- function(data, prop, processed = FALSE) {
 prop_range <- function(data, prop, na.rm = TRUE) {
   UseMethod("prop_range")
 }
-#' @S3method prop_range data.frame
+#' @export
 prop_range.data.frame <- function(data, prop, na.rm = TRUE) {
   range(prop_value(prop, data), na.rm = na.rm)
 }
-#' @S3method prop_range split_df
+#' @export
 prop_range.split_df <- function(data, var, na.rm = TRUE) {
   ranges <- vapply(data, prop_range, var, na.rm = na.rm,
     FUN.VALUE = numeric(2))

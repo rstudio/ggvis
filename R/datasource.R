@@ -36,30 +36,30 @@ datasource <- function(data, name = deparse2(substitute(data))) {
 }
 
 source_class <- function(x) UseMethod("source_class")
-#' @S3method source_class reactive
+#' @export
 source_class.reactive <- function(x) "datasource_reactive"
-#' @S3method source_class default
+#' @export
 source_class.default <- function(x) NULL
 
-#' @S3method format datasource
+#' @export
 format.datasource <- function(x, ...) {
   paste0("|-> ", x$name, " (", x$hash, ")")
 }
 
-#' @S3method is_source datasource
+#' @export
 is_source.datasource <- function(x) TRUE
 
-#' @S3method pipe_id datasource
+#' @export
 pipe_id.datasource <- function(x, props) paste0(x$name, "_", x$hash)
 
 # Connect methods --------------------------------------------------------------
 
-#' @S3method connect datasource
+#' @export
 #' @importFrom shiny reactive
 connect.datasource <- function(x, props, source = NULL, session = NULL) {
   reactive(x$env$data)
 }
-#' @S3method connect datasource_reactive
+#' @export
 connect.datasource_reactive <- function(x, props, source = NULL, session = NULL) {
   x$env$data
 }

@@ -49,7 +49,7 @@ pipeline <- function(..., .pipes = list(), .id = NULL) {
   )
 }
 
-#' @S3method c pipeline
+#' @export
 c.pipeline <- function(x, ...) {
   new_pipes <- lapply(list(...), as.pipeline)
 
@@ -59,7 +59,7 @@ c.pipeline <- function(x, ...) {
   )
 }
 
-#' @S3method [ pipeline
+#' @export
 `[.pipeline` <- function(x, ...) {
   structure(NextMethod(x, ...), class = "pipeline")
 }
@@ -74,26 +74,26 @@ as.pipeline <- function(x, ...) {
   UseMethod("as.pipeline")
 }
 
-#' @S3method as.pipeline pipeline
+#' @export
 as.pipeline.pipeline <- function(x, ...) x
 
-#' @S3method as.pipeline pipe
+#' @export
 as.pipeline.pipe <- function(x, ...) pipeline(x)
 
-#' @S3method as.pipeline default
+#' @export
 as.pipeline.default <- function(x, name = NULL, ...) {
   if (is.null(name)) name <- deparse2(substitute(x))
   pipeline(datasource(x, name = name))
 }
 
 
-#' @S3method format pipeline
+#' @export
 format.pipeline <- function(x, ...) {
   pipes <- vapply(x, format, character(1))
   paste0(pipes, collapse = "\n")
 }
 
-#' @S3method print pipeline
+#' @export
 print.pipeline <- function(x, ...) {
   cat(format(x, ...), "\n", sep = "")
 }
@@ -120,7 +120,7 @@ has_source <- function(x) {
   any(vapply(x, is_source, FUN.VALUE = logical(1)))
 }
 
-#' @S3method split_vars pipeline
+#' @export
 split_vars.pipeline <- function(x) {
   unlist(lapply(x, split_vars), recursive = FALSE)
 }

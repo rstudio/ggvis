@@ -93,17 +93,17 @@ parse_components <- function(..., drop_named = FALSE) {
 }
 
 component_type <- function(x) UseMethod("component_type")
-#' @S3method component_type branch
+#' @export
 component_type.branch <- function(x) "children"
-#' @S3method component_type scale
+#' @export
 component_type.scale <- function(x) "scales"
-#' @S3method component_type vega_legend
+#' @export
 component_type.vega_legend <- function(x) "legends"
-#' @S3method component_type vega_axis
+#' @export
 component_type.vega_axis <- function(x) "axes"
-#' @S3method component_type ggvis_props
+#' @export
 component_type.ggvis_props <- function(x) "props"
-#' @S3method component_type ggvis_opts
+#' @export
 component_type.ggvis_opts <- function(x) "opts"
-#' @S3method component_type default
+#' @export
 component_type.default <- function(x) "data"

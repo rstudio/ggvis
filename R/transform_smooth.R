@@ -112,12 +112,12 @@ branch_smooth <- function(..., se = TRUE) {
   )
 }
 
-#' @S3method format transform_smooth
+#' @export
 format.transform_smooth <- function(x, ...) {
   paste0(" -> smooth()", param_string(x[c("method", "formula")]))
 }
 
-#' @S3method compute transform_smooth
+#' @export
 compute.transform_smooth <- function(x, props, data) {
   check_prop(x, props, data, "x.update", "numeric")
   check_prop(x, props, data, "y.update", "numeric")
@@ -138,13 +138,13 @@ compute.transform_smooth <- function(x, props, data) {
 
 smooth <- function(data, trans, x_var, y_var) UseMethod("smooth")
 
-#' @S3method smooth split_df
+#' @export
 smooth.split_df <- function(data, trans, x_var, y_var) {
   data[] <- lapply(data, smooth, trans = trans, x_var = x_var, y_var = y_var)
   data
 }
 
-#' @S3method smooth data.frame
+#' @export
 smooth.data.frame <- function(data, trans, x_var, y_var) {
   assert_that(is.formula(trans$formula))
   assert_that(is.flag(trans$se))
@@ -173,7 +173,7 @@ smooth.data.frame <- function(data, trans, x_var, y_var) {
 
 predict_df <- function(model, x_grid, se = se, level = level) UseMethod("predict_df")
 
-#' @S3method predict_df lm
+#' @export
 predict_df.lm <- function(model, x_grid, se, level) {
   grid <- data.frame(x = x_grid)
   pred <- predict(model, newdata = grid, se = se,
@@ -189,7 +189,7 @@ predict_df.lm <- function(model, x_grid, se, level) {
   grid
 }
 
-#' @S3method predict_df loess
+#' @export
 predict_df.loess <- function(model, x_grid, se, level) {
   grid <- data.frame(x = x_grid)
   pred <- predict(model, newdata = grid, se = se)
@@ -209,9 +209,9 @@ predict_df.loess <- function(model, x_grid, se, level) {
 # Helper function to determin maximum number of rows ---------------------------
 
 max_rows <- function(x) UseMethod("max_rows")
-#' @S3method max_rows data.frame
+#' @export
 max_rows.data.frame <- function(x) nrow(x)
-#' @S3method max_rows split_df
+#' @export
 max_rows.split_df <- function(x) {
   rows <- vapply(x, nrow, integer(1))
   max(rows)

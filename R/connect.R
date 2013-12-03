@@ -64,7 +64,7 @@ sluice <- function(x, props, source = NULL, session = NULL) {
   isolate(connect(x, props, source, session)())
 }
 
-#' @S3method connect pipeline
+#' @export
 connect.pipeline <- function(x, props, source = NULL, session = NULL) {
   source <- as.reactive(source)
 
@@ -81,7 +81,7 @@ connect.pipeline <- function(x, props, source = NULL, session = NULL) {
   source
 }
 
-#' @S3method connect NULL
+#' @export
 connect.NULL <- function(x, props, source = NULL, session = NULL) {
   as.reactive(source)
 }

@@ -3,7 +3,7 @@ controls <- function(x, session = NULL, ...) UseMethod("controls")
 
 # Assumes that controls have id status set - delayed reactive will do this
 
-#' @S3method controls branch
+#' @export
 controls.branch <- function(x, session = NULL, ...) {
   t_controls <- unlist(unname(lapply(x$data, controls)), recursive = FALSE)
   p_controls <- unlist(unname(lapply(x$props, controls)), recursive = FALSE)
@@ -13,7 +13,7 @@ controls.branch <- function(x, session = NULL, ...) {
   all[!duplicated(names(all))]
 }
 
-#' @S3method controls list
+#' @export
 controls.list <- function(x, session = NULL, ...) {
   inp <- vapply(x, is.input, logical(1))
   # Remove top-level name (method, n, etc), but preserve second-level name,
@@ -21,15 +21,15 @@ controls.list <- function(x, session = NULL, ...) {
   ctrls <- lapply(x[inp], controls, session)
   unlist(unname(ctrls), recursive = FALSE, use.names = TRUE)
 }
-#' @S3method controls ggvis_props
+#' @export
 controls.ggvis_props <- controls.list
-#' @S3method controls prop
+#' @export
 controls.prop <- controls.list
 
-#' @S3method controls transform
+#' @export
 controls.transform <- function(x) {
   c(controls.list(x), controls.list(x$dots))
 }
 
-#' @S3method controls default
+#' @export
 controls.default <- function(x, session = NULL, ...) NULL

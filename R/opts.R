@@ -66,7 +66,7 @@ opts <- function(width = NULL, height = NULL, keep_aspect = NULL,
   )
 }
 
-#' @S3method as.vega ggvis_opts
+#' @export
 as.vega.ggvis_opts <- function(x) x
 
 
@@ -135,7 +135,7 @@ padding <- function(top = NULL, right = NULL, bottom = NULL, left = NULL) {
   )
 }
 
-#' @S3method as.vega padding
+#' @export
 as.vega.padding <- function(x) {
   if (length(x) == 0) {
     NULL

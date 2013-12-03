@@ -16,7 +16,7 @@ remove_missing <- function(x, warn_na = TRUE, finite = FALSE, ...) {
   UseMethod("remove_missing")
 }
 
-#' @S3method remove_missing default
+#' @export
 remove_missing.default <- function(x, warn_na = TRUE, finite = FALSE) {
   if (!is.atomic(x)) {
     stop("Input to remove_missing.default must be a vector.")
@@ -38,7 +38,7 @@ remove_missing.default <- function(x, warn_na = TRUE, finite = FALSE) {
   x
 }
 
-#' @S3method remove_missing data.frame
+#' @export
 remove_missing.data.frame <- function(x, warn_na = TRUE, finite = FALSE,
     vars = names(x)) {
 
@@ -60,7 +60,7 @@ remove_missing.data.frame <- function(x, warn_na = TRUE, finite = FALSE,
   x
 }
 
-#' @S3method remove_missing split_df
+#' @export
 remove_missing.split_df <- function(x, warn_na = TRUE, finite = FALSE,
     vars = names(x)) {
   x[] <- lapply(x, remove_missing, warn_na, vars, finite)
@@ -87,7 +87,7 @@ finite.cases <- function(x) {
 
 to_csv <- function(x, header = TRUE, ...) UseMethod("to_csv")
 
-#' @S3method to_csv data.frame
+#' @export
 to_csv.data.frame <- function(x, header = TRUE) {
 
   format_vec <- function(vec) {
@@ -115,7 +115,7 @@ to_csv.data.frame <- function(x, header = TRUE) {
   rows
 }
 
-#' @S3method to_csv split_df
+#' @export
 to_csv.split_df <- function(x, header = TRUE) {
   headers <- logical(length(x))
   # If we want a header, only add it for the first data frame in the split_df

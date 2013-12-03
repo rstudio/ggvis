@@ -57,7 +57,7 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
 }
 
 # Given a ggvis mark object and set of scales, output a vega mark object
-#' @S3method as.vega mark
+#' @export
 as.vega.mark <- function(mark) {
   # Keep only the vega-specific fields, then remove the class, drop nulls,
   # and convert to proper format for vega properties.
@@ -111,7 +111,7 @@ as.vega.mark <- function(mark) {
   m
 }
 
-#' @S3method as.vega ggvis_props
+#' @export
 as.vega.ggvis_props <- function(x, default_scales = NULL) {
   x <- prop_sets(x)
 
@@ -128,7 +128,7 @@ as.vega.ggvis_props <- function(x, default_scales = NULL) {
   lapply(x, vega_prop_set)
 }
 
-#' @S3method as.vega vega_axis
+#' @export
 as.vega.vega_axis <- function(x) {
   if (empty(x$properties)) {
     x$properties <- NULL
@@ -138,10 +138,10 @@ as.vega.vega_axis <- function(x) {
 
   unclass(x)
 }
-#' @S3method as.vega vega_legend
+#' @export
 as.vega.vega_legend <- as.vega.vega_axis
 
-#' @S3method as.vega data.frame
+#' @export
 as.vega.data.frame <- function(x, name, ...) {
   # For CSV output, we need to unescape periods, which were turned into \. by
   # prop_name().
@@ -158,7 +158,7 @@ as.vega.data.frame <- function(x, name, ...) {
   ))
 }
 
-#' @S3method as.vega split_df
+#' @export
 as.vega.split_df <- function(x, name, ...) {
   data <- lapply(x, function(x) list(children = df_to_json(x)))
 

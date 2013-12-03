@@ -16,7 +16,7 @@
 #' @param e1 A ggvis object.
 #' @param e2 Another object, of a type listed above.
 #'
-#' @S3method + ggvis
+#' @export
 #' @rdname ggvis-add
 `+.ggvis` <- function(e1, e2){
   e2name <- deparse(substitute(e2))

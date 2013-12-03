@@ -21,12 +21,12 @@ scales <- function(..., .scales = list()) {
 #' @param x object to test for scales-ness
 is.scales <- function(x) inherits(x, "scales")
 
-#' @S3method format scales
+#' @export
 format.scales <- function(x, ...) {
   paste("*", vapply(x, format, character(1)), collapse = "\n")
 }
 
-#' @S3method print scales
+#' @export
 print.scales <- function(x, ...) cat(format(x, ...), "\n", sep = "")
 
 # Merge two ggvis scales objects

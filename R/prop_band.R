@@ -10,39 +10,39 @@ band <- function(offset = NULL, mult = NULL) {
   )
 }
 
-#' @S3method format band
+#' @export
 format.band <- function(x, ...) {
   paste0("<band>")
 }
 
-#' @S3method print band
+#' @export
 print.band <- function(x, ...) cat(format(x, ...), "\n", sep = "")
 
 #' @rdname band
 #' @param x object to for band-ness
 is.band <- function(x) inherits(x, "band")
 
-#' @S3method prop_value band
+#' @export
 prop_value.band <- function(x, data) {
   NULL
 }
 
-#' @S3method prop_name band
+#' @export
 prop_name.band <- function(x) {
   ""
 }
 
-#' @S3method prop_scale band
+#' @export
 prop_scale.band <- function(x, default_scale) {
   switch(default_scale, width = "x", height = "y")
 }
 
-#' @S3method prop_domain band
+#' @export
 prop_domain.band <- function(x, data) {
   NULL
 }
 
-#' @S3method prop_vega band
+#' @export
 prop_vega.band <- function(x, default_scale) {
   compact(list(
     scale = prop_scale(x, default_scale),

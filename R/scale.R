@@ -87,7 +87,7 @@ named_list <- function(names, ...) {
 #' @param x object to test for scale-ness
 is.scale <- function(x) inherits(x, "scale")
 
-#' @S3method format scale
+#' @export
 format.scale <- function(x, ...) {
   params <- param_string(x, collapse = FALSE)
   param_s <- paste0(" ", format(paste0(names(params), ":")), " ", format(params), "\n",
@@ -96,5 +96,5 @@ format.scale <- function(x, ...) {
   paste0("<", class(x)[1], ">\n", param_s)
 }
 
-#' @S3method print scale
+#' @export
 print.scale <- function(x, ...) cat(format(x, ...), "\n", sep = "")

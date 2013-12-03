@@ -1,8 +1,8 @@
 as.reactive <- function(x, session = NULL, ...) UseMethod("as.reactive")
 
-#' @S3method as.reactive function
+#' @export
 as.reactive.function <- function(x, session = NULL, ...) x
-#' @S3method as.reactive reactive
+#' @export
 as.reactive.reactive <- function(x, session = NULL, ...) x
-#' @S3method as.reactive default
+#' @export
 as.reactive.default <- function(x, session = NULL, ...) reactive(x, ...)

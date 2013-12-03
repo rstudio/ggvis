@@ -21,7 +21,7 @@ split_df <- function(data, split, env = NULL) {
   UseMethod("split_df")
 }
 
-#' @S3method split_df data.frame
+#' @export
 split_df.data.frame <- function(data, split, env) {
   if (is.null(split)) return(data)
 
@@ -32,7 +32,7 @@ split_df.data.frame <- function(data, split, env) {
   structure(pieces, class = "split_df", variables = split)
 }
 
-#' @S3method split_df split_df
+#' @export
 split_df.split_df <- function(data, split, env) {
   if (is.null(split)) return(data)
 
@@ -48,10 +48,10 @@ split_df.split_df <- function(data, split, env) {
 #' @param x object to test for split_df-ness
 is.split_df <- function(x) inherits(x, "split_df")
 
-#' @S3method split_vars split_df
+#' @export
 split_vars.split_df <- function(x) attr(x, "variables")
 
-#' @S3method as.data.frame split_df
+#' @export
 as.data.frame.split_df <- function(x) {
   do.call(rbind, x)
 }

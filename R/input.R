@@ -50,13 +50,13 @@ input <- function(subclass, control_args = list(), value = NULL,
 #' @param x object to test for "input"-ness
 is.input <- function(x) inherits(x, "input")
 
-#' @S3method controls input
+#' @export
 controls.input <- function(x, session = NULL) {
   control <- do.call(x$control_f, x$control_args)
   setNames(list(control), x$id)
 }
 
-#' @S3method format input
+#' @export
 format.input <- function(x, ...) {
   control <- as.call(c(as.name(x$control_f), x$control_args))
   control_s <- paste0(deparse(control), collapse = "\n")
@@ -65,12 +65,12 @@ format.input <- function(x, ...) {
     control_s, "\n")
 }
 
-#' @S3method print input
+#' @export
 print.input <- function(x, ...) {
   cat(format(x), "\n", sep = "")
 }
 
-#' @S3method as.reactive input
+#' @export
 as.reactive.input <- function(x, session = NULL, ...) {
   f <- from_input(x$id, x$default, x$map)
     
@@ -102,23 +102,23 @@ init_inputs <- function(x, session) {
   UseMethod("init_inputs")
 }
 
-#' @S3method init_inputs default
+#' @export
 init_inputs.default <- function(x, session) x
 
-#' @S3method init_inputs NULL
+#' @export
 init_inputs.NULL <- function(x, session) NULL
 
-#' @S3method init_inputs list
+#' @export
 init_inputs.list <- function(x, session) {
   drs <- vapply(x, is.input, logical(1))
   x[drs] <- lapply(x[drs], as.reactive, session = session)
   x
 }
-#' @S3method init_inputs transform
+#' @export
 init_inputs.transform <- init_inputs.list
 
 #' @importFrom shiny is.reactive
-#' @S3method init_inputs prop
+#' @export
 init_inputs.prop <- function(x, session) {
   if (x$type != "reactive") return(x)
   if (is.reactive(x$value)) stop("Delayed reactive has already been advanced.")
@@ -127,7 +127,7 @@ init_inputs.prop <- function(x, session) {
   x
 }
 
-#' @S3method init_inputs ggvis_props
+#' @export
 init_inputs.ggvis_props <- function(x, session) {
   x[] <- lapply(x, init_inputs, session = session)
   x

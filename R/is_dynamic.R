@@ -4,36 +4,36 @@
 #' @keywords internal
 is.dynamic <- function(x) UseMethod("is.dynamic")
 
-#' @S3method is.dynamic branch
+#' @export
 is.dynamic.branch <- function(x) {
   is.dynamic(x$data) || is.dynamic(x$props) || any_apply(x$children, is.dynamic)
 }
 
-#' @S3method is.dynamic pipeline
+#' @export
 is.dynamic.pipeline <- function(x, ...) {
   any_apply(x, is.dynamic)
 }
-#' @S3method is.dynamic ggvis_props
+#' @export
 is.dynamic.ggvis_props <- is.dynamic.pipeline
 
-#' @S3method is.dynamic datasource_reactive
+#' @export
 is.dynamic.datasource_reactive <- function(x) TRUE
 
-#' @S3method is.dynamic transform
+#' @export
 is.dynamic.transform <- function(x, ...) {
   any_apply(x, is.dynamic) || any_apply(x$dots, is.dynamic)
 }
 
-#' @S3method is.dynamic reactive
+#' @export
 is.dynamic.reactive <- function(x) TRUE
 
-#' @S3method is.dynamic input
+#' @export
 is.dynamic.input <- function(x) TRUE
 
-#' @S3method is.dynamic prop
+#' @export
 is.dynamic.prop <- function(x) x$type == "reactive"
 
-#' @S3method is.dynamic default
+#' @export
 is.dynamic.default <- function(x) FALSE
 
 any_apply <- function(xs, f) {

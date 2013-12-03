@@ -12,12 +12,12 @@ transform_scale <- function(add = 0, mult = 1) {
   transform("scale", add = add, mult = mult)
 }
 
-#' @S3method format transform_scale
+#' @export
 format.transform_scale <- function(x, ...) {
   paste0(" -> scale", param_string(x[c("add", "mult")]))
 }
 
-#' @S3method compute transform_scale
+#' @export
 compute.transform_scale <- function(x, props, data) {
   x_val <- prop_value(props$x, data)
   y_val <- prop_value(props$y, data)

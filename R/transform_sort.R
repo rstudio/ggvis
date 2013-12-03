@@ -69,12 +69,12 @@ transform_sort <- function(..., var = "x") {
   transform("sort", var = var, dots = dots)
 }
 
-#' @S3method format transform_sort
+#' @export
 format.transform_sort <- function(x, ...) {
   paste0(" -> sort()", param_string(x["var"]))
 }
 
-#' @S3method compute transform_sort
+#' @export
 compute.transform_sort <- function(x, props, data) {
   prop_names <- paste0(x$var, ".update")
   vapply(prop_names,
@@ -88,13 +88,13 @@ compute.transform_sort <- function(x, props, data) {
 
 compute_sort <- function(data, trans, vars) UseMethod("compute_sort")
 
-#' @S3method compute_sort split_df
+#' @export
 compute_sort.split_df <- function(data, trans, vars) {
   data[] <- lapply(data, compute_sort, trans = trans, vars = vars)
   data
 }
 
-#' @S3method compute_sort data.frame
+#' @export
 compute_sort.data.frame <- function(data, trans, vars) {
   cols <- lapply(vars, prop_value, data)
   idx <- do.call(order, args = c(cols, trans$dots))

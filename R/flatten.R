@@ -87,7 +87,7 @@ apply_props <- function(data, props) {
   UseMethod("apply_props")
 }
 
-#' @S3method apply_props data.frame
+#' @export
 apply_props.data.frame <- function(data, props) {
   cols <- lapply(props, prop_value, data = data)
   names(cols) <- vapply(props, prop_name, character(1))
@@ -95,7 +95,7 @@ apply_props.data.frame <- function(data, props) {
   quickdf(compact(cols))
 }
 
-#' @S3method apply_props split_df
+#' @export
 apply_props.split_df <- function(data, props) {
   data[] <- lapply(data, apply_props, props)
   data

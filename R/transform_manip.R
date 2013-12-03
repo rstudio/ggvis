@@ -58,7 +58,7 @@ transform_mutate <- function(..., .env = parent.frame()) {
 
 # transform_manip methods ------------------------------------------------------
 
-#' @S3method connect transform_manip
+#' @export
 connect.transform_manip <- function(x, props, source = NULL, session = NULL) {  
   inputs <- lapply(x$inputs, as.reactive, session = session)
   
@@ -72,12 +72,12 @@ connect.transform_manip <- function(x, props, source = NULL, session = NULL) {
   })
 }
 
-#' @S3method is.dynamic transform_manip
+#' @export
 is.dynamic.transform_manip <- function(x) {
   length(x$inputs) > 0 
 }
 
-#' @S3method controls transform_manip
+#' @export
 controls.transform_manip <- function(x) {
   controls.list(x$inputs)
 }
@@ -86,7 +86,7 @@ controls.transform_manip <- function(x) {
 
 manip <- function(x, data, expr, env) UseMethod("manip")
 
-#' @S3method manip transform_subset
+#' @export
 manip.transform_subset <- function(x, data, expr, env) {
   r <- vapply(expr, eval, env = data, enclos = env,
     FUN.VALUE = logical(nrow(data)))
@@ -95,7 +95,7 @@ manip.transform_subset <- function(x, data, expr, env) {
   data[all, , drop = FALSE]
 }
 
-#' @S3method manip transform_mutate
+#' @export
 manip.transform_mutate <- function(x, data, expr, env) {
   data_env <- list2env(data, parent = env)
   
@@ -107,7 +107,7 @@ manip.transform_mutate <- function(x, data, expr, env) {
   as_df(mget(out_cols, data_env))
 }
 
-#' @S3method manip transform_summarise
+#' @export
 manip.transform_summarise <- function(x, data, expr, env) {
   data_env <- list2env(data, parent = env)
   

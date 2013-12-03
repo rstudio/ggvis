@@ -72,12 +72,12 @@ transform_stack <- function(direction = "y") {
   transform("stack", direction = direction)
 }
 
-#' @S3method format transform_stack
+#' @export
 format.transform_stack <- function(x, ...) {
   paste0(" -> stack()", param_string(x$direction))
 }
 
-#' @S3method compute transform_stack
+#' @export
 compute.transform_stack <- function(x, props, data) {
   stack_prop <- x$direction
   group_prop <- if (x$direction == "x") "y" else "x"
@@ -96,7 +96,7 @@ compute_stack <- function(data, trans, stack_var, group_var) {
   UseMethod("compute_stack")
 }
 
-#' @S3method compute_stack split_df
+#' @export
 compute_stack.split_df <- function(data, trans, stack_var, group_var) {
   # Record split variables
   vars <- split_vars(data)
@@ -109,7 +109,7 @@ compute_stack.split_df <- function(data, trans, stack_var, group_var) {
   split_df(df, vars, emptyenv())
 }
 
-#' @S3method compute_stack data.frame
+#' @export
 compute_stack.data.frame <- function(data, trans, stack_var, group_var) {
   # Get the x and y values (these are named as if we're stacking y, but it
   # will work when stacking x - we just need to rename at end)

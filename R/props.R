@@ -148,7 +148,7 @@ check_unscaled_form <- function(x) {
   }
 }
 
-#' @S3method format ggvis_props
+#' @export
 format.ggvis_props <- function(x, ...) {
   labels <- lapply(x, format, ...)
   if (length(labels) > 0) {
@@ -161,7 +161,7 @@ format.ggvis_props <- function(x, ...) {
     "props()"
   }
 }
-#' @S3method print ggvis_props
+#' @export
 print.ggvis_props <- function(x, ...) cat(format(x, ...))
 
 #' @rdname props
@@ -169,7 +169,7 @@ print.ggvis_props <- function(x, ...) cat(format(x, ...))
 #' @param x an object to test for props-ness.
 is.ggvis_props <- function(x) inherits(x, "ggvis_props")
 
-#' @S3method [ ggvis_props
+#' @export
 `[.ggvis_props` <- function(x, idx) {
   structure(NextMethod(), inherit = attr(x, "inherit"), class = "ggvis_props")
 }

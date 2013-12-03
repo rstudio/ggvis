@@ -116,7 +116,7 @@ safe_vega_var <- function(x) {
 
 empty <- function(x) UseMethod("empty")
 
-#' @S3method empty default
+#' @export
 empty.default <- function(x) length(x) == 0
 
 quickdf <- function(list) {

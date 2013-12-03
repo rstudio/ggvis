@@ -101,12 +101,12 @@ branch_density <- function(..., area = TRUE) {
   )
 }
 
-#' @S3method format transform_density
+#' @export
 format.transform_density <- function(x, ...) {
   paste0(" -> density()", param_string(x[c("adjust", "kernel")]))
 }
 
-#' @S3method compute transform_density
+#' @export
 compute.transform_density <- function(x, props, data) {
   check_prop(x, props, data, "x.update", "numeric")
 
@@ -116,14 +116,14 @@ compute.transform_density <- function(x, props, data) {
 
 compute_density <- function(data, trans, x_var, y_var) UseMethod("compute_density")
 
-#' @S3method compute_density split_df
+#' @export
 compute_density.split_df <- function(data, trans, x_var, y_var) {
   data[] <- lapply(data, compute_density, trans = trans, x_var = x_var,
     y_var = y_var)
   data
 }
 
-#' @S3method compute_density data.frame
+#' @export
 compute_density.data.frame <- function(data, trans, x_var, y_var) {
   assert_that(is.numeric(trans$adjust), length(trans$adjust) == 1)
   assert_that(length(trans$n) == 1, trans$n >= 0)

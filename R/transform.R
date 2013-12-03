@@ -65,7 +65,7 @@ check_prop <- function(trans, props, data, prop_name, types = NULL) {
 
 preserve_constants <- function(input, output) UseMethod("preserve_constants")
 
-#' @S3method preserve_constants data.frame
+#' @export
 preserve_constants.data.frame <- function(input, output) {
   is_constant <- constant_vars(input)
   constants <- input[1, is_constant, drop = FALSE]
@@ -74,7 +74,7 @@ preserve_constants.data.frame <- function(input, output) {
   merge_df(constants, output)
 }
 
-#' @S3method preserve_constants split_df
+#' @export
 preserve_constants.split_df <- function(input, output) {
   is_constant <- constant_vars(input)
   
@@ -89,11 +89,11 @@ preserve_constants.split_df <- function(input, output) {
 }
 
 constant_vars <- function(data) UseMethod("constant_vars")
-#' @S3method constant_vars data.frame
+#' @export
 constant_vars.data.frame <- function(data) {
   vapply(data, all_same, logical(1), USE.NAMES = FALSE)
 }
-#' @S3method constant_vars split_df
+#' @export
 constant_vars.split_df <- function(data) {
   n <- length(data)
   
@@ -102,7 +102,7 @@ constant_vars.split_df <- function(data) {
   colSums(mat) == n
 }
 
-#' @S3method pipe_id transform
+#' @export
 #' @importFrom digest digest
 pipe_id.transform <- function(x, props) {
   # Hash the transform's settings, as well as props, since the props can affect
@@ -118,7 +118,7 @@ transform_type <- function(transform) {
   sub("^transform_", "", type)
 }
 
-#' @S3method connect transform
+#' @export
 connect.transform <- function(x, props, source = NULL, session = NULL) {
   x <- init_inputs(x, session)
   x$dots <- init_inputs(x$dots, session)
