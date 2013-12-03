@@ -1,7 +1,7 @@
 library(ggvis)
 
 # Basic
-ggvis(faithful, props(x = ~waiting), branch_density())
+ggvis(faithful, props(x = ~waiting)) + branch_density()
 
 # Smaller bandwidth
 ggvis(faithful, props(x = ~waiting, fill := "lightblue"),
