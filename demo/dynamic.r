@@ -6,9 +6,7 @@ mtc1 <- reactive({
   invalidateLater(2000, NULL);
   mtcars[sample(nrow(mtcars), 10), ]
 })
-ggvis(mtc1, props(x = ~wt, y = ~mpg),
-  mark_symbol()
-)
+ggvis(mtc1, props(x = ~wt, y = ~mpg)) + mark_symbol()
 
 # Rapidly changing dynamic example
 df <- data.frame(x = runif(20), y = runif(20))
@@ -20,10 +18,9 @@ mtc1 <- reactive({
   df$y <<- df$y + runif(20, -0.05, 0.05)
   df
 })
-ggvis(mtc1, props(x = ~x, y = ~y),
-  mark_symbol(),
+ggvis(mtc1, props(x = ~x, y = ~y)) +
+  mark_symbol() +
   dscale("x", "numeric", domain = c(0, 1))
-)
 
 # Two separate data sets, equal in the tree
 mtc1 <- reactive({
@@ -34,27 +31,18 @@ mtc2 <- reactive({
   invalidateLater(2000, NULL);
   mtcars[sample(nrow(mtcars), 10), ]
 })
-ggvis(
-  props(x = ~wt, y = ~mpg),
-  branch(
-    mtc1,
-    mark_symbol(props(stroke := "black", fill := "black"))
-  ),
-  branch(
-    mtc2,
-    mark_symbol(props(fill := "red", size := 40))
-  )
-)
+ggvis(props(x = ~wt, y = ~mpg)) +
+  branch(mtc1, mark_symbol(props(stroke := "black", fill := "black"))) +
+  branch(mtc2, mark_symbol(props(fill := "red", size := 40)))
 
 # With a transform
 mtc1 <- reactive({
   invalidateLater(1000, NULL)
   mtcars[sample(nrow(mtcars), 10), ]
 })
-ggvis(mtc1, props(x = ~wt, y = ~mpg),
-  mark_symbol(),
+ggvis(mtc1, props(x = ~wt, y = ~mpg)) +
+  mark_symbol() +
   branch_smooth()
-)
 
 
 # Data points moving from right to left
@@ -67,12 +55,9 @@ ddat <- reactive({
   dat$value <<- c(dat$value[-1], runif(1))
   dat
 })
-ggvis(
-  ddat,
-  props(x = ~time, y = ~value, key := ~time),
-  mark_symbol(),
+ggvis(ddat, props(x = ~time, y = ~value, key := ~time)) +
+  mark_symbol() +
   mark_line()
-)
 
 
 # Bars moving from right to left
@@ -84,9 +69,7 @@ ddat <- reactive({
   dat$value <<- c(dat$value[-1], runif(1))
   dat
 })
-ggvis(
-  ddat,
-  props(
+ggvis(ddat, props(
     x = ~time, x.enter = ~time + 1, x.exit  = ~time - 1,
     y = ~value, y.enter = 0, y.exit = 0,
     y2 = 0, y2.enter = 0, y2.exit = 0,
@@ -95,11 +78,10 @@ ggvis(
     strokeOpacity := 1, strokeOpacity.enter := 0, strokeOpacity.exit := 0,
     width = band(),
     key := ~time
-  ),
-  dscale("y", "numeric", domain = 0:1),
-  dscale("x", "nominal", range = "width", padding = 0, points = FALSE),
+  )) +
+  dscale("y", "numeric", domain = 0:1) +
+  dscale("x", "nominal", range = "width", padding = 0, points = FALSE) +
   mark_rect()
-)
 
 
 # Dynamic stacked bars
@@ -114,7 +96,6 @@ ddat <- reactive({
   dat
 })
 ggvis(ddat, transform_stack(),
-  props(x = ~g1, y = ~value, fill = ~g2, fillOpacity := 0.5),
-  dscale("x", "nominal", range = "width", padding = 0, points = FALSE),
+  props(x = ~g1, y = ~value, fill = ~g2, fillOpacity := 0.5)) +
+  dscale("x", "nominal", range = "width", padding = 0, points = FALSE) +
   mark_rect(props(y = ~ymin__, y2 = ~ymax__, width = band()))
-)

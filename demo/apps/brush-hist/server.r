@@ -6,13 +6,10 @@ diamonds <- diamonds[sample(1:nrow(diamonds), 1000), ]
 shinyServer(function(input, output, session) {
 
   hist_gv <- reactive({
-    ggvis(
-      diamonds,
-      props(x = ~carat),
-      branch_histogram(props(fill.brush := "red"), binwidth = 0.1),
-      branch_brush(),
+    ggvis(diamonds, props(x = ~carat)) +
+      branch_histogram(props(fill.brush := "red"), binwidth = 0.1) +
+      branch_brush() +
       opts(height = 200)
-    )
   })
 
   # Set up observers for the spec and the data
@@ -40,11 +37,8 @@ shinyServer(function(input, output, session) {
   })
 
   scatter_gv <- reactive({
-    ggvis(
-      diamonds_brushed,
-      props(x = ~depth, y = ~price),
+    ggvis(diamonds_brushed, props(x = ~depth, y = ~price)) +
       mark_symbol(props(fill := ~colors, fillOpacity := 0.8))
-    )
   })
 
   # Set up observers for the spec and the data

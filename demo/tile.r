@@ -15,4 +15,5 @@ pp <- function (n, r = 4) {
   df
 }
 
-ggvis(pp(100), props(x = ~x, y = ~y, x2 = ~x2, y2 = ~y2, fill = ~ z, stroke := NA), mark_rect())
+ggvis(pp(100), props(x = ~x, y = ~y, x2 = ~x2, y2 = ~y2, fill = ~ z, stroke := NA)) +
+  mark_rect()

@@ -1,7 +1,7 @@
 shinyServer(function(input, output, session) {
 
   r_gv <- reactive({
-    ggvis(mtcars, props(x = ~wt, y = ~mpg, size.hover := 200), mark_symbol())
+    ggvis(mtcars, props(x = ~wt, y = ~mpg, size.hover := 200)) + mark_symbol()
   })
 
   # Set up observers for the spec and the data
