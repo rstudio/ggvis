@@ -377,7 +377,8 @@ ggvis = (function(_) {
     // Given a mark definition, property name, return an object with the
     // properties. If key is provided, then pull out that key.
     function getMarkProp(markdef, propname) {
-      if (propname === undefined || propname === null) {
+      if (propname === undefined || propname === null ||
+          markdef.properties === undefined) {
         return {};
       }
       var property = markdef.properties[propname];
