@@ -164,8 +164,8 @@ add_scale_defaults("y", c("numeric", "datetime"), range = "height")
 add_scale_defaults("y", c("ordinal", "nominal"), range = "height", padding = 0.5)
 
 # Colour scales
-add_scale_defaults("stroke", "nominal", range = c("#132B43", "#56B1F7"))
-add_scale_defaults("stroke", c("numeric", "ordinal"), range = "category10")
+add_scale_defaults("stroke", "numeric", range = c("#132B43", "#56B1F7"))
+add_scale_defaults("stroke", c("nominal", "ordinal"), range = "category10")
 # Fill colours should really be a little more saturated
 add_scale_defaults("fill", "numeric", range = c("#132B43", "#56B1F7"))
 add_scale_defaults("fill", c("nominal", "ordinal"), range = "category10")

@@ -111,7 +111,10 @@
 			"clamp" : false,
 			"nice" : true,
 			"zero" : false,
-			"range" : "category10",
+			"range" : [
+				"#132B43",
+				"#56B1F7"
+			],
 			"domain" : {
 				"fields" : [
 					{
