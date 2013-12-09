@@ -27,6 +27,13 @@ fullseq.numeric <- function(range, size, ..., pad = FALSE) {
   }
 }
 
+#' @export
+fullseq.POSIXt <- function(range, size, ...) {
+  seq(range[1], range[2], by = size)
+}
+#' @export
+fullseq.Date <- fullseq.POSIXt
+
 round_any <- function(x, accuracy, f = round) {
   f(x / accuracy) * accuracy
 }

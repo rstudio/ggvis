@@ -107,10 +107,15 @@ format.transform_bin <- function(x, ...) {
 
 #' @export
 compute.transform_bin <- function(x, props, data) {
-  check_prop(x, props, data, "x.update", "numeric")
+  check_prop(x, props, data, "x.update", c("numeric", "datetime"))
 
   if (is.guess(x$binwidth)) {
     x$binwidth <- diff(prop_range(data, props$x)) / 30
+
+    if (inherits(x$binwidth, "difftime")) {
+      x$binwidth <- as.numeric(x$binwidth, units = "secs")
+    }
+
     message("Guess: transform_bin(binwidth = ", format(x$binwidth, digits = 3),
       ") # range / 30")
   }
@@ -178,6 +183,20 @@ bin.numeric <- function(x, weight = NULL, binwidth = 1, origin = NULL, right = T
     xmax__ = x + width/2,
     width__ = width
   )
+
+  results
+}
+
+#' @export
+bin.POSIXt <- function(x, weight = NULL, binwidth = 1, origin = NULL, right = TRUE) {
+  # Convert times to raw numbers (seconds since UNIX epoch), and call bin.numeric
+  results <- bin(as.numeric(x), weight, binwidth, origin, right)
+
+  # Convert some columns from numeric back to POSIXct objects
+  time_cols <- c("x", "xmin__", "xmax__")
+  results[time_cols] <- lapply(results[time_cols], function(col) {
+    structure(col, class = c("POSIXct", "POSIXt"))
+  })
 
   results
 }

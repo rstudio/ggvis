@@ -36,3 +36,8 @@ ggvis(diamonds, by_group(cut), props(x = ~table, fill = ~cut),
       mark_rect(props(y = ~ymax__, y2 = ~ymin__))
     )
   )
+
+# Histogram of dates
+set.seed(2934)
+dat <- data.frame(times = as.POSIXct("2013-07-01", tz = "GMT") + rnorm(200) * 60 * 60 * 24 * 7)
+ggvis(dat, props(x = ~times)) + branch_histogram()

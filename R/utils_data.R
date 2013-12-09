@@ -89,16 +89,7 @@ to_csv <- function(x, header = TRUE, ...) UseMethod("to_csv")
 
 #' @export
 to_csv.data.frame <- function(x, header = TRUE) {
-
-  format_vec <- function(vec) {
-    if (is.numeric(vec)) {
-      format(vec, digits = 5)
-    } else if (is.character(vec) || is.factor(vec)) {
-      quote_text(vec)
-    }
-  }
-
-  x <- lapply(x, format_vec)
+  x <- lapply(x, format_vec_csv)
 
   # Collapse across rows, yielding each row of CSV text
   rows <- do.call(paste, c(x, sep = ","))
@@ -123,6 +114,19 @@ to_csv.split_df <- function(x, header = TRUE) {
 
   paste(mapply(to_csv, x, header = headers), collapse = "\n")
 }
+
+# Format a vector for csv output
+#' @export
+format_vec_csv <- function(vec) UseMethod("format_vec_csv")
+#' @export
+format_vec_csv.numeric <- function(vec) format(vec, digits = 5)
+#' @export
+format_vec_csv.character <- function(vec) quote_text(vec)
+#' @export
+format_vec_csv.factor <- function(vec) quote_text(vec)
+#' @export
+format_vec_csv.POSIXt <- function(vec) quote_text(vec)
+
 
 # Replace \ with \\, " with \", and add " to start and end
 quote_text <- function(txt) {
