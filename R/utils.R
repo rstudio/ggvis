@@ -120,6 +120,8 @@ empty <- function(x) UseMethod("empty")
 empty.default <- function(x) length(x) == 0
 
 quickdf <- function(list) {
+  if (length(list) == 0) return(data.frame())
+
   class(list) <- "data.frame"
   attr(list, "row.names") <- c(NA_integer_, -length(list[[1]]))
 

@@ -92,7 +92,7 @@ apply_props.data.frame <- function(data, props) {
   cols <- lapply(props, prop_value, data = data)
   names(cols) <- vapply(props, prop_name, character(1))
 
-  quickdf(compact(cols))
+  quickdf(cols)
 }
 
 #' @export
