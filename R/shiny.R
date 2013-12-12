@@ -238,7 +238,7 @@ mainTopPanel <- function(...) {
 
 #' Generate Shiny tags for ggvis controls
 #'
-#' Controls for choosing a renderer, downloading an image, and quitting.
+#' Controls for choosing a renderer and downloading an image.
 #' @param plot_id Plot ID
 #' @importFrom shiny withTags HTML
 #' @export
@@ -296,7 +296,7 @@ ggvisControlGroup <- function(plot_id) {
 #' @param plotId An optional plot ID or vector of plot IDs. The plots will
 #'   have their .onControlOutput functions called after the controls are drawn.
 #' @examples
-#' htmlOutput("summary")
+#' ggvisControlOutput("plot1")
 #' @export
 ggvisControlOutput <- function(outputId, plotId = NULL) {
   if (is.null(plotId)) {

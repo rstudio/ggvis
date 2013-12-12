@@ -23,6 +23,6 @@ controls are drawn.
 \code{\link{renderControls}} on the server side.
 }
 \examples{
-htmlOutput("summary")
+ggvisControlOutput("plot1")
 }
 
