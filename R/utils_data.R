@@ -116,7 +116,6 @@ to_csv.split_df <- function(x, header = TRUE) {
 }
 
 # Format a vector for csv output
-#' @export
 format_vec_csv <- function(vec) UseMethod("format_vec_csv")
 #' @export
 format_vec_csv.numeric <- function(vec) vec
@@ -124,6 +123,9 @@ format_vec_csv.numeric <- function(vec) vec
 format_vec_csv.character <- function(vec) quote_text(vec)
 #' @export
 format_vec_csv.factor <- function(vec) quote_text(vec)
+# Represent dates and times as numbers (ms from epoch). If they're represented
+# as date-time strings, this will cause problems when the client is in a
+# different time zone from the server.
 #' @export
 format_vec_csv.POSIXt <- function(vec) floor(as.numeric(vec) * 1000)
 #' @export
