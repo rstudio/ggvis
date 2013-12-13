@@ -123,6 +123,8 @@ compute.transform_bin <- function(x, props, data) {
   output <- bin(data, x_var = props$x,
     binwidth = x$binwidth, origin = x$origin, right = x$right)
 
+  if (nrow(output) == 0) return(output)
+
   preserve_constants(data, output)
 }
 
@@ -146,7 +148,15 @@ bin.numeric <- function(x, weight = NULL, binwidth = 1, origin = NULL, right = T
   stopifnot(is.null(origin) || (is.numeric(origin) && length(origin) == 1))
   stopifnot(is.flag(right))
 
-  if (length(na.omit(x)) == 0)  return(data.frame())
+  if (length(na.omit(x)) == 0) {
+    return(data.frame(
+      count__ = numeric(0),
+      x = numeric(0),
+      xmin__ = numeric(0),
+      xmax__ = numeric(0),
+      width__ = numeric(0)
+    ))
+  }
 
   if (is.null(weight))  weight <- rep(1, length(x))
   weight[is.na(weight)] <- 0
