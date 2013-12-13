@@ -42,9 +42,9 @@ vector_type.default <- function(x) {
 vega_data_parser <- function(x) UseMethod("vega_data_parser")
 
 #' @export
-vega_data_parser.POSIXt <- function(x) "date"
+vega_data_parser.POSIXt <- function(x) "number"
 #' @export
-vega_data_parser.Date <- function(x) "date"
+vega_data_parser.Date <- function(x) "number"
 #' @export
 vega_data_parser.numeric <- function(x) "number"
 #' @export

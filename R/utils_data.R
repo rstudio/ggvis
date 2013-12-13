@@ -119,14 +119,15 @@ to_csv.split_df <- function(x, header = TRUE) {
 #' @export
 format_vec_csv <- function(vec) UseMethod("format_vec_csv")
 #' @export
-format_vec_csv.numeric <- function(vec) format(vec, digits = 5)
+format_vec_csv.numeric <- function(vec) vec
 #' @export
 format_vec_csv.character <- function(vec) quote_text(vec)
 #' @export
 format_vec_csv.factor <- function(vec) quote_text(vec)
 #' @export
-format_vec_csv.POSIXt <- function(vec) quote_text(vec)
-
+format_vec_csv.POSIXt <- function(vec) floor(as.numeric(vec) * 1000)
+#' @export
+format_vec_csv.Date <- function(vec) as.numeric(as.POSIXct(vec)) * 1000
 
 # Replace \ with \\, " with \", and add " to start and end
 quote_text <- function(txt) {
