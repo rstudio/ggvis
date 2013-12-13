@@ -4,8 +4,9 @@ branch_brush <- function(...) {
 
   props <- merge_props(
     props(x := ~x, y := ~y, width := ~width, height := ~height,
-          fill := "black", fillOpacity := 0.3,
-          stroke := "black", strokeOpacity := 0.6),
+          fill := "black", fillOpacity := 0.2,
+          stroke := "black", strokeOpacity := 0.6,
+          inherit = FALSE),
     comps$props
   )
 
