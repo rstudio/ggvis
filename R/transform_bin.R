@@ -123,7 +123,8 @@ compute.transform_bin <- function(x, props, data) {
   output <- bin(data, x_var = props$x,
     binwidth = x$binwidth, origin = x$origin, right = x$right)
 
-  if (nrow(output) == 0) return(output)
+  # TODO: Check for zero-row output for other data types
+  if (is.data.frame(output) && nrow(output) == 0) return(output)
 
   preserve_constants(data, output)
 }
