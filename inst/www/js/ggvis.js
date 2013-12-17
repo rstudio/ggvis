@@ -73,7 +73,7 @@ ggvis = (function(_) {
 
         chart = chart({
           el: "#" + self.plotId,
-          renderer: opts.renderer || "canvas",
+          renderer: opts.renderer || "svg",
           hover: default_hover
         });
         // Save the chart object
