@@ -99,22 +99,24 @@ $(function(){ //DOM Ready
     var spec = message.spec;
     var plot = ggvis.getPlot(plotId);
 
+    // Brush handler
+    var brush_policy = spec.ggvis_opts.brush_policy || "debounce";
+    var brushHandler;
+    if (brush_policy === "throttle") {
+      brushHandler = _.throttle(createBrushHandler(plotId), spec.ggvis_opts.brush_delay);
+    } else if (brush_policy === "debounce") {
+      brushHandler = _.debounce(createBrushHandler(plotId), spec.ggvis_opts.brush_delay);
+    }
+
     plot.parseSpec(spec, {
       handlers: {
         mouseover: _.throttle(createMouseOverHandler(plotId), 100),
         mouseout: _.throttle(createMouseOutHandler(plotId), 100)
+      },
+      brush: {
+        handlers: { updateItems: brushHandler}
       }
     });
-
-    // Add brush handler
-    var policy = spec.ggvis_opts.brush_policy || "debounce";
-    var brushHandler;
-    if (policy === "throttle") {
-      brushHandler = _.throttle(createBrushHandler(plotId), spec.ggvis_opts.brush_delay);
-    } else if (policy === "debounce") {
-      brushHandler = _.debounce(createBrushHandler(plotId), spec.ggvis_opts.brush_delay);
-    }
-    plot.brush.on("updateItems", brushHandler);
   });
 
 

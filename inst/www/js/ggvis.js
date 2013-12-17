@@ -99,8 +99,8 @@ ggvis = (function(_) {
           });
         }
 
-        // If there's a brush mark, turn on brushing
-        if (self.brush.hasBrush()) self.brush.enable();
+        // If there's a brush mark, turn on brushing, passing in brush options
+        if (self.brush.hasBrush()) self.brush.enable(opts.brush);
 
         if (ggvis.inViewerPane()) {
           self.enableAutoResizeToWindow();
@@ -414,13 +414,20 @@ ggvis = (function(_) {
 
       var prototype = brush.prototype;
 
-      // Register a callback which is run each time the brush is updated.
-      // Events include "brushMove" and "updateItems"
+      // Register a callback for brush events. These are separate from the
+      // jQuery-driven callbacks on the div, like "mousedown.ggvis_brush".
+      // Those callbacks may trigger these ones. Events include "brushMove" and
+      // "updateItems".
       prototype.on = function(event, fn) {
         if (!this._callbacks[event]) {
           this._callbacks[event] = [];
         }
         this._callbacks[event].push(fn);
+      };
+
+      // Clear callbacks for a given brush event
+      prototype.off = function(event) {
+        this._callbacks[event] = [];
       };
 
       // Returns true if the plot has a brush object, false otherwise.
@@ -430,16 +437,17 @@ ggvis = (function(_) {
       };
 
       // Enable the brush.
-      prototype.enable = function() {
+      prototype.enable = function(opts) {
+        opts = opts || {};
         var self = this;
         var $div = this.plot.getDiv();
 
-        // Remove any existing handlers
+        // Remove any existing mouse event handlers from the div
         $div.off("mousedown.ggvis_brush");
         $div.off("mouseup.ggvis_brush");
         $div.off("mousemove.ggvis_brush");
 
-        // Hook up handlers
+        // Hook up mouse event handlers
         $div.on("mousedown.ggvis_brush", "div.vega", function (event) {
           var point = self._removePadding(mouseOffset(event));
 
@@ -460,6 +468,11 @@ ggvis = (function(_) {
           if (self._brushing) self._brushTo(point);
         });
 
+
+        // Clear any existing brush event handlers
+        self.off("brushMove");
+        self.off("updateItems");
+
         // Register functions to be called each time brush is dragged or resized.
         self.on("brushMove", self._updateBrush);
 
@@ -468,6 +481,14 @@ ggvis = (function(_) {
         // allowing the CPU to spend more time doing other stuff.
         var updateThrottled = _.throttle(self._updateBrushedItems, 50);
         self.on("brushMove", updateThrottled);
+
+        // If brush event handlers are specified (typically for brushMove and
+        // updateItems), add them.
+        if (opts.handlers) {
+          $.each(opts.handlers, function(eventname, fn) {
+            self.on(eventname, fn);
+          });
+        }
       };
 
       // Dragging functions
