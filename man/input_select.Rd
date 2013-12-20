@@ -69,8 +69,8 @@ branch_smooth(model = input_radiobuttons(
               label = "Model type"))
 }
 \seealso{
-Other interactive input: \code{\link{input_checkbox}},
-\code{\link{input_numeric}}, \code{\link{input_slider}},
-\code{\link{input_text}}
+Other interactive input: \code{\link{input_checkbox}};
+\code{\link{input_numeric}}, \code{\link{input_text}};
+\code{\link{input_slider}}
 }
 

@@ -76,7 +76,7 @@ dscale("x", "nominal", points = FALSE)
 
 \url{https://github.com/mbostock/d3/wiki/Ordinal-Scales}
 
-Other vega scales: \code{\link{scale_quantitative}},
+Other vega scales: \code{\link{scale_quantitative}};
 \code{\link{scale_time}}
 }
 

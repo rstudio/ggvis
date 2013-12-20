@@ -37,9 +37,8 @@ branch_smooth(method = model_type)
 }
 \seealso{
 Other interactive input: \code{\link{input_checkboxgroup}},
-\code{\link{input_numeric}},
 \code{\link{input_radiobuttons}},
-\code{\link{input_select}}, \code{\link{input_slider}},
-\code{\link{input_text}}
+\code{\link{input_select}}; \code{\link{input_numeric}},
+\code{\link{input_text}}; \code{\link{input_slider}}
 }
 

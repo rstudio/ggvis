@@ -74,7 +74,7 @@ dscale("x", "numeric", clamp = TRUE, nice = FALSE, zero = TRUE)
 \seealso{
 \url{https://github.com/trifacta/vega/wiki/Scales#quantitative-scale-properties}
 
-Other vega scales: \code{\link{scale_ordinal}},
+Other vega scales: \code{\link{scale_ordinal}};
 \code{\link{scale_time}}
 }
 

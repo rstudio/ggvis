@@ -36,9 +36,9 @@ ggvis(mtcars, props(x = ~wt, y = ~mpg),
   mark_symbol(props(size := size_num)))
 }
 \seealso{
-Other interactive input: \code{\link{input_checkbox}},
-\code{\link{input_checkboxgroup}},
+Other interactive input: \code{\link{input_checkboxgroup}},
 \code{\link{input_radiobuttons}},
-\code{\link{input_select}}, \code{\link{input_slider}}
+\code{\link{input_select}}; \code{\link{input_checkbox}};
+\code{\link{input_slider}}
 }
 
