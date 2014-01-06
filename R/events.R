@@ -16,13 +16,15 @@ EventBroker <- setRefClass("EventBroker",
   ),
   methods = list(
     initialize = function(session = NULL, path = NULL, id = rand_id(), ...) {
-      initFields(id = id, session = session, path = path)
+      initFields(id = id, session = session, path = path, ...)
     },
     
     as_vega = function(...) {
       "This method should return a list suitable for inclusion in the 
       interaction component of the vega specific. The default method sends
-      the id, the type (the class name) and the path."
+      the id, the type (the class name) and the path. If you override it
+      to add extra data, make sure to use \\code{callSuper()} to include
+      these necessary fields"
       
       class <- as.vector(.refClassDef@className)
       list(id = id, type = class, path = path)

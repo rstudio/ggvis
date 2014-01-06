@@ -31,6 +31,8 @@ Collate:
     'df_to_json.R'
     'utils.R'
     'events.R'
+    'events-keyboard.R'
+    'events-mouse.R'
     'export.R'
     'flatten.R'
     'full_seq.R'
