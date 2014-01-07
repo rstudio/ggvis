@@ -33,10 +33,16 @@ Hover <- setRefClass("Hover", contains = "EventBroker",
 #'   will be a list containing the data in the mark currently under the 
 #'   mouse. It should return a string containing HTML.
 #' @export
+#' @examples
+#' all_values <- function(x) {
+#'   paste0(names(x), ": ", format(x), collapse = "<br />")
+#' } 
+#' 
+#' ggvis(mtcars, props(x = ~wt, y = ~mpg), mark_symbol(), tooltip(all_values))
 tooltip <- function(f) {
   stopifnot(is.function(f))
   
-  structure(list(f = f), class = c("tooltip", "input"))
+  handler("tooltip", "hover", list(f = f))
 }
 
 #' @export

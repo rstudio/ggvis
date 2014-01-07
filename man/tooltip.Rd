@@ -13,4 +13,11 @@ tooltip(f)
 \description{
 Display tooltips.
 }
+\examples{
+all_values <- function(x) {
+  paste0(names(x), ": ", format(x), collapse = "<br />")
+}
+
+ggvis(mtcars, props(x = ~wt, y = ~mpg), mark_symbol(), tooltip(all_values))
+}
 

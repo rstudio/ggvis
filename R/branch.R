@@ -107,3 +107,5 @@ component_type.ggvis_props <- function(x) "props"
 component_type.ggvis_opts <- function(x) "opts"
 #' @export
 component_type.default <- function(x) "data"
+#' @export
+component_type.handler <- function(x) "handlers"
