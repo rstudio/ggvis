@@ -51,9 +51,9 @@ handlers <- function(x) UseMethod("handlers")
 
 #' @export
 handlers.branch <- function(x) {
-  t_handlers <- lapply(x$data, handlers)
+  t_handlers <- unname(lapply(x$data, handlers))
   p_handlers <- unname(lapply(x$props, handlers))
-  c_handlers <- lapply(x$children, handlers)
+  c_handlers <- unname(lapply(x$children, handlers))
   
   compact(c(t_handlers, p_handlers, c_handlers, x$handlers))
 }
