@@ -49,8 +49,8 @@ Keyboard <- setRefClass("Keyboard", contains = "EventBroker",
 #' @param step How much each key press changes \code{value}.
 #' @export
 #' @examples
-#' ggvis(mtcars, props(x = ~mpg, y = ~wt, size = left_right(1, 100)),
-#'   mark_symbol())
+#' ggvis(mtcars, props(x = ~mpg, y = ~wt, size := left_right(1, 100))) +
+#'   mark_symbol()
 left_right <- function(min, max, value = min, step = (max - min) / 50) {
   handler("left_right", "keyboard",
     list(min = min, max = max, value = value, step = step),
