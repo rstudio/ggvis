@@ -37,14 +37,14 @@ EventBroker <- setRefClass("EventBroker",
       "Send a message to the client telling it to do something."
 
       check_session()
-      sendCustomMessage(message_name(name), list(...))
+      session$sendCustomMessage(message_name(name), list(...))
     },
 
     listen_for = function(name) {
       "List for a custom message from the client called \\code{name}"
       
       check_session()
-      input[[message_name(name)]]
+      session$input[[message_name(name)]]
     },
     
     check_session = function() {

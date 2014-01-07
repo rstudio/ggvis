@@ -1,0 +1,87 @@
+#' Create handler S3 class.
+#' 
+#' This is currently a subclass on input, but it should probably be the
+#' other way around since inputs are handlers that have controls.
+#' 
+#' @export
+#' @examples
+#' p <- ggvis(mtcars, props(x = ~mpg, y = ~wt, size = left_right(1, 100)),
+#'   mark_symbol())
+#' p$props$size.update$dr
+#' handlers(p)
+handler <- function(subclass, listener, control_args = list(), value = NULL, 
+                    map = identity, id = rand_id()) {
+  assert_that(is.string(listener))
+  
+  out <- input("", control_args = control_args, value = value, 
+    map = map, id = id)
+  class(out) <- c(subclass, "handler", "input")
+  
+  # Hack around current bad class design
+  out$listener <- listener
+  out$control_f <- NULL
+  out
+}
+
+#' @export
+as.vega.handler <- function(x, session = NULL, dynamic = FALSE, ...) {
+  c(list(id = x$id, type = x$listener), x$control_args)
+}
+
+#' @export
+format.handler <- function(x, ...) {
+  control <- as.call(c(as.name(class(x)[1]), x$control_args))
+  control_s <- paste0(deparse(control), collapse = "\n")
+  
+  paste0("<handler> ", x$id, "\n", control_s, "\n")
+}
+
+#' @export
+#' @rdname handler
+is.handler <- function(x) inherits(x, "handler")
+
+#' @export
+controls.handler <- function(x, session = NULL, ...) NULL
+
+# Code to extract handlers -----------------------------------------------------
+
+# Extract all handlers from a ggvis object. This shares a lot of code with
+# control(), so probably need to extract out standard walk function.
+handlers <- function(x) UseMethod("handlers")
+
+#' @export
+handlers.branch <- function(x) {
+  t_handlers <- lapply(x$data, handlers)
+  p_handlers <- unname(lapply(x$props, handlers))
+  c_handlers <- lapply(x$children, handlers)
+  
+  compact(c(t_handlers, p_handlers, c_handlers))
+}
+
+#' @export
+handlers.list <- function(x) {
+  compact(lapply(x, handlers))
+}
+#' @export
+handlers.ggvis_props <- handlers.list
+
+#' @export
+handlers.prop <- function(x) {
+  handlers(x$dr)
+}
+
+#' @export
+handlers.handler <- function(x) x
+
+#' @export
+handlers.transform <- function(x) {
+  c(handlers.list(x), handlers.list(x$dots))
+}
+
+#' @export
+handlers.default <- function(x) NULL
+
+#' @export
+handlers.transform_manip <- function(x) {
+  handlers.list(x$inputs)
+}

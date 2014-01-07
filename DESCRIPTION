@@ -42,6 +42,7 @@ Collate:
     'guide_axis.R'
     'guide_legend.R'
     'hover_tooltip.R'
+    'input-handler.R'
     'input.R'
     'inputs.R'
     'is_dynamic.R'

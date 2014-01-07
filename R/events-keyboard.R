@@ -52,8 +52,9 @@ Keyboard <- setRefClass("Keyboard", contains = "EventBroker",
 #' ggvis(mtcars, props(x = ~mpg, y = ~wt, size = left_right(1, 100)),
 #'   mark_symbol())
 left_right <- function(min, max, value = min, step = (max - min) / 50) {
-  structure(list(min = min, max = max, value = value, step = step),
-    class = c("left_right", "input")
+  handler("left_right", "keyboard",
+    list(min = min, max = max, value = value, step = step),
+    value = value
   )
 }
 
