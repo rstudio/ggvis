@@ -21,7 +21,7 @@ left_right(min, max, value = min, step = (max - min)/50)
 An interactive input bound to the left and right arrows.
 }
 \examples{
-p <- ggvis(mtcars, props(x = ~mpg, y = ~wt, size = left_right(1, 100)),
+ggvis(mtcars, props(x = ~mpg, y = ~wt, size = left_right(1, 100)),
   mark_symbol())
 }
 

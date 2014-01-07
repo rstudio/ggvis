@@ -62,13 +62,14 @@ left_right <- function(min, max, value = min, step = (max - min) / 50) {
 as.reactive.left_right <- function(x, session = NULL, ...) {
   k <- Keyboard(session, c("left", "right"))
   
-  i <- x$value
+  i <- x$control_args$value
+  step <- x$control_args$step
   reactive({
     press <- k$key_press()
     if (is.null(press)) return(i)
     
-    if (press$key == "left"  && i > x$min) i <<- i - x$step
-    if (press$key == "right" && i < x$max) i <<- i + x$step
+    if (press$key == "left"  && i > x$control_args$min) i <<- i - step
+    if (press$key == "right" && i < x$control_args$max) i <<- i + step
     
     i
   })
