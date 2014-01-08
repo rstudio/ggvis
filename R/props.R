@@ -34,7 +34,7 @@
 #' If you have the name of a variable in a string, see the
 #' props vignette for how to create the needed property mapping.
 #'
-#' @section Enter, exit, hover, and update propsets
+#' @section Enter, exit, hover, and update propsets:
 #'
 #' There are four different sets of properties (propsets) that the marks
 #' can use. These can, for example, be used to change the appearance of a mark
@@ -62,7 +62,7 @@
 #' a duration (and is therefore not instantaneous). The update propset can be
 #' thought of as the "default" state.
 #'
-#' @section Key property
+#' @section Key property:
 #'
 #' In addition to the standard properties, there is a special optional property
 #' called \code{key}. This is useful for plots with dynamic data and smooth

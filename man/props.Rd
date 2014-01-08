@@ -60,14 +60,13 @@ access all possible options.
   mapping.
 }
 
-\section{Enter, exit, hover, and update propsets
-
-There are four different sets of properties (propsets) that the marks
-can use. These can, for example, be used to change the appearance of a mark
-when the mouse cursor is hovering over it}{
-  when the mark is hovered over, it uses the hover propset,
-  and when the mark isn't hovered over, it uses the update
-  propset.
+\section{Enter, exit, hover, and update propsets}{
+  There are four different sets of properties (propsets)
+  that the marks can use. These can, for example, be used
+  to change the appearance of a mark when the mouse cursor
+  is hovering over it: when the mark is hovered over, it
+  uses the hover propset, and when the mark isn't hovered
+  over, it uses the update propset.
 
   \itemize{ \item enter: This propset is used by marks when
   they are added to a plot.  \item update: This propset is
@@ -93,17 +92,16 @@ when the mouse cursor is hovering over it}{
   the "default" state.
 }
 
-\section{Key property
-
-In addition to the standard properties, there is a special optional property
-called \code{key}. This is useful for plots with dynamic data and smooth
-transitions}{
-  as the data changes, the key is used to tell the plot how
-  the new data rows should be matched to the old data rows.
-  Note that the key must be an unscaled value.
-  Additionally, the key property doesn't have a propset,
-  since it is independent of enter, update, exit, and hover
-  events.
+\section{Key property}{
+  In addition to the standard properties, there is a
+  special optional property called \code{key}. This is
+  useful for plots with dynamic data and smooth
+  transitions: as the data changes, the key is used to tell
+  the plot how the new data rows should be matched to the
+  old data rows. Note that the key must be an unscaled
+  value. Additionally, the key property doesn't have a
+  propset, since it is independent of enter, update, exit,
+  and hover events.
 }
 
 \section{Properties}{
