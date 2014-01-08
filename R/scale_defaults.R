@@ -50,7 +50,7 @@
 #' @export
 #' @examples
 #' default_scale("x", "numeric")
-#' default_scale("fillOpacity", "ordinal")
+#' default_scale("fillOpacity", "numeric")
 #' default_scale("stroke", "nominal")
 #'
 #' # You can also supply additional arguments or override the defaults

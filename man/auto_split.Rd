@@ -10,10 +10,16 @@ categorical variables specified by props, and have each
 piece rendered by the same mark.
 }
 \examples{
+# Make cyl a factor (as it really should be)
+mtcars2 <- mtcars
+mtcars2$cyl <- factor(mtcars2$cyl)
+
 # One line
-ggvis(mtcars, props(x = ~disp, y = ~mpg), mark_line())
+ggvis(mtcars2, props(x = ~disp, y = ~mpg, stroke = ~cyl)) +
+  mark_line()
 # One line for each level of cyl
-ggvis(mtcars, auto_split(cyl), props(x = ~disp, y = ~mpg), mark_line())
+ggvis(mtcars2, auto_split(), props(x = ~disp, y = ~mpg, stroke = ~cyl)) +
+  mark_line()
 
 # This shows the data generated using by_group
 sluice(pipeline(mtcars, by_group(cyl)), props(x = ~disp, y = ~mpg))

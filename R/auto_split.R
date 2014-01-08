@@ -6,10 +6,16 @@
 #' @export
 #' @seealso To manually specify grouping variables, see \code{\link{by_group}}.
 #' @examples
+#' # Make cyl a factor (as it really should be)
+#' mtcars2 <- mtcars
+#' mtcars2$cyl <- factor(mtcars2$cyl)
+#' 
 #' # One line
-#' ggvis(mtcars, props(x = ~disp, y = ~mpg), mark_line())
+#' ggvis(mtcars2, props(x = ~disp, y = ~mpg, stroke = ~cyl)) + 
+#'   mark_line()
 #' # One line for each level of cyl
-#' ggvis(mtcars, auto_split(cyl), props(x = ~disp, y = ~mpg), mark_line())
+#' ggvis(mtcars2, auto_split(), props(x = ~disp, y = ~mpg, stroke = ~cyl)) +
+#'   mark_line()
 #'
 #' # This shows the data generated using by_group
 #' sluice(pipeline(mtcars, by_group(cyl)), props(x = ~disp, y = ~mpg))
@@ -31,9 +37,13 @@ connect.auto_split <- function(x, props, source = NULL, session = NULL) {
     # Get quoted expressions from props which are both variable and countable
     data <- source()
     countable <- vapply(props,
-      function(prop) prop$type =="variable" && prop_countable(data, prop),
+      function(prop) prop$type == "variable" && prop_countable(data, prop),
       logical(1)
     )
+    if (!any(countable)) {
+      stop("No categorical variables", call. = FALSE)
+    }
+    
     split_vars <- lapply(unname(props[countable]), "[[", "value")
 
     split_df(data, split_vars, env = x$env)
