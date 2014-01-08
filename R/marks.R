@@ -129,3 +129,14 @@ valid_mark_properties.mark_text <- function(mark) {
 default_mark_properties.mark_text <- function(mark) {
   props(fill := "#333333")
 }
+
+
+# Hack to stop spurious warnings in R CMD check
+globalVariables(c(
+  valid_mark_properties.mark_symbol(),
+  valid_mark_properties.mark_text(),
+  valid_mark_properties.mark_arc(),
+  valid_mark_properties.mark_image(),
+  valid_mark_properties.mark_line(),
+  valid_mark_properties.mark_rect()
+))
