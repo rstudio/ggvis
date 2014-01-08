@@ -17,9 +17,8 @@ please contact us via the mailing list: https://groups.google.com/group/ggvis.
 To install: 
 
 ```R
-library(devtools)
-install_github(c("assertthat", "testthat"))
-install_github(c("httpuv", "shiny", "ggvis"), "rstudio")
+devtools::install_github("hadley/testthat")
+devtools::install_github("rstudio/ggvis")
 ```
 
 Then check out the various demos in the `demo/` directory. Get started with
