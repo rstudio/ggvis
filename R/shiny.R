@@ -92,15 +92,15 @@ ggvis_output <- function(plot_id, shiny = TRUE) {
 #' @param session A Shiny session object.
 #' @param ... Other arguments passed to \code{as.vega}.
 #' @export
-observe_ggvis <- function(r_gv, id, session, ...) {
+observe_ggvis <- function(r_gv, plot_id, session, ...) {
   if (!is.reactive(r_gv)) {
     stop("observe_ggvis requires a reactive expression that returns a ggvis object",
       call. = FALSE)
   }
   r_spec <- reactive(as.vega(r_gv(), session = session, dynamic = TRUE, ...))
 
-  observe_spec(r_spec, id, session)
-  observe_data(r_spec, id, session)
+  observe_spec(r_spec, plot_id, session)
+  observe_data(r_spec, plot_id, session)
 }
 
 # Create an observer for a reactive vega spec
@@ -283,7 +283,7 @@ ggvisControlGroup <- function(plot_id) {
 
 #' Create a ggvis control output element in UI
 #'
-#' This is effectively the same as \code{\link{shiny::uiOutput}}, except that
+#' This is effectively the same as \code{\link[shiny]{uiOutput}}, except that
 #' on the client side it may call some plot resizing functions after new
 #' controls are drawn.
 #'

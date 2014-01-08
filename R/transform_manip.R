@@ -1,5 +1,9 @@
 #' Subset, summarise and mutate your data
 #' 
+#' @param ... Expressions to evaluation in the context of the data. Reactive
+#'   components must be wrapped in \code{eval}.
+#' @param .env Environment to look for names not found in the data. 
+#'   Defaults to environment where function was called from
 #' @examples
 #' # Dynamically restrict range using transform subset
 #' ggvis(mtcars, 

@@ -7,7 +7,7 @@
 \usage{
 ggvis_output(plot_id, shiny = TRUE)
 
-observe_ggvis(r_gv, id, session, ...)
+observe_ggvis(r_gv, plot_id, session, ...)
 
 renderControls(r_gv, session = NULL)
 }

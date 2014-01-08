@@ -39,12 +39,11 @@ branch_smooth(..., se = TRUE)
   silently removed, otherwise they will be removed with a
   warning.}
 
-  \item{...}{Named arguments for model function, unnamed
-  arguments will be dropped.}
-
-  \item{...}{Named arguments are passed on to the
-  transform, unnamed arguments are passed on to the
-  branch.}
+  \item{...}{\code{transform_smooth}: named arguments
+  passed on to \code{method} function, unnamed arguments
+  ignored.  \code{branch_smooth}: named arguments are
+  passed on to the transform, (and hence to \code{method}),
+  unnamed arguments are passed on to \code{\link{branch}}.}
 }
 \description{
 \code{transform_smooth} is a data transformation that fits

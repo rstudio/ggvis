@@ -2,8 +2,6 @@
 #'
 #' @seealso \code{link{mark_line}}
 #' @export
-#' @param props An optional props object which will be passed to
-#'   \code{\link{mark_line}}.
 #' @param sort Should the data be sorted? If \code{TRUE} (the default), a
 #'   \code{\link{transform_sort}} will be used. By default, this will sort the
 #'   data on the x variable.

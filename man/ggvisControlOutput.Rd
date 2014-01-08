@@ -14,7 +14,7 @@ ggvisControlOutput(outputId, plotId = NULL)
 }
 \description{
 This is effectively the same as
-\code{\link{shiny::uiOutput}}, except that on the client
+\code{\link[shiny]{uiOutput}}, except that on the client
 side it may call some plot resizing functions after new
 controls are drawn.
 }

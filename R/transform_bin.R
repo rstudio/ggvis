@@ -34,7 +34,9 @@
 #'   the default, will use the smallest value in the dataset.
 #' @param right Should bins be right-open, left-closed, or
 #'   right-closed, left-open
-#' @param ... Ignored: all transforms must use named arguments.
+#' @param ... For \code{transform_bin}: ignored, all transforms must use 
+#'   named arguments.  For \code{branch_histogram}: named arguments are 
+#'   passed on to the transform, unnamed arguments are passed on to the branch.
 #' @export
 #' @examples
 #' # Create histograms and frequency polygons with branches
@@ -70,9 +72,6 @@ transform_bin <- function(..., binwidth = guess(), origin = NULL, right = TRUE) 
 
 #' @rdname transform_bin
 #' @export
-#' @param props a \code{\link{props}} object describing a property mapping
-#' @param ... Named arguments are passed on to the transform, unnamed
-#'   arguments are passed on to the branch.
 branch_histogram <- function(...) {
   branch(
     transform_bin(...),

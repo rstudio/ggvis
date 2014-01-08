@@ -47,8 +47,11 @@
 #' @param n the number of grid points to use in the prediction
 #' @param na.rm If \code{TRUE} missing values will be silently removed,
 #'   otherwise they will be removed with a warning.
-#' @param ... Named arguments for model function, unnamed arguments will
-#'   be dropped.
+#' @param ... \code{transform_smooth}: named arguments passed on to
+#'  \code{method} function, unnamed arguments ignored. 
+#'  \code{branch_smooth}: named arguments are passed on to the transform,
+#'  (and hence to \code{method}), unnamed arguments are passed on to 
+#'  \code{\link{branch}}.
 #' @export
 #' @examples
 #' ggvis(mtcars, props(x = ~wt, y = ~mpg), mark_symbol(), branch_smooth())
@@ -87,8 +90,6 @@ transform_smooth <- function(..., method = guess(), formula = guess(), se = TRUE
 
 #' @rdname transform_smooth
 #' @export
-#' @param ... Named arguments are passed on to the transform, unnamed
-#'   arguments are passed on to the branch.
 branch_smooth <- function(..., se = TRUE) {
   comps <- parse_components(..., drop_named = TRUE)
 

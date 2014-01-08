@@ -1,4 +1,7 @@
+#' A branch used to draw the brush.
+#' 
 #' @export
+#' @keywords internal
 branch_brush <- function(...) {
   comps <- parse_components(..., drop_named = TRUE)
 

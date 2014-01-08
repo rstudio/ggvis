@@ -24,14 +24,10 @@ branch_freqpoly(...)
   \item{right}{Should bins be right-open, left-closed, or
   right-closed, left-open}
 
-  \item{...}{Ignored: all transforms must use named
-  arguments.}
-
-  \item{props}{a \code{\link{props}} object describing a
-  property mapping}
-
-  \item{...}{Named arguments are passed on to the
-  transform, unnamed arguments are passed on to the
+  \item{...}{For \code{transform_bin}: ignored, all
+  transforms must use named arguments.  For
+  \code{branch_histogram}: named arguments are passed on to
+  the transform, unnamed arguments are passed on to the
   branch.}
 }
 \description{

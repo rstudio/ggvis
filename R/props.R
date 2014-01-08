@@ -77,7 +77,6 @@
 #' @param inherit If \code{TRUE}, the defaults, will inherit from properties
 #'   from the parent branch If \code{FALSE}, it will start from nothing.
 #' @export
-#' @aliases ":="
 #' @examples
 #' # Set to constant values
 #' props(x := 1, y := 2)
@@ -144,7 +143,9 @@ props <- function(..., inherit = TRUE) {
 
 #' @export
 #' @rdname props
-`:=` <- function(x, value) {
+#' @param prop,value Name of property and the unscaled value that should
+#'   be mapped to it.
+`:=` <- function(prop, value) {
   stop(":= may only be used inside props", call. = FALSE)
 }
 

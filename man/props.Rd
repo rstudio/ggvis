@@ -1,5 +1,4 @@
 \name{props}
-\alias{":="}
 \alias{:=}
 \alias{is.ggvis_props}
 \alias{props}
@@ -7,7 +6,7 @@
 \usage{
 props(..., inherit = TRUE)
 
-":="(x, value)
+":="(prop, value)
 
 is.ggvis_props(x)
 }
@@ -18,6 +17,9 @@ is.ggvis_props(x)
   \item{inherit}{If \code{TRUE}, the defaults, will inherit
   from properties from the parent branch If \code{FALSE},
   it will start from nothing.}
+
+  \item{prop,value}{Name of property and the unscaled value
+  that should be mapped to it.}
 
   \item{x}{an object to test for props-ness.}
 }

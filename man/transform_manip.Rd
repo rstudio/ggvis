@@ -11,6 +11,15 @@ transform_summarise(..., .env = parent.frame())
 
 transform_mutate(..., .env = parent.frame())
 }
+\arguments{
+  \item{...}{Expressions to evaluation in the context of
+  the data. Reactive components must be wrapped in
+  \code{eval}.}
+
+  \item{.env}{Environment to look for names not found in
+  the data.  Defaults to environment where function was
+  called from}
+}
 \description{
 Subset, summarise and mutate your data
 }

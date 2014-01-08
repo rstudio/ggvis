@@ -5,9 +5,6 @@
 branch_line(..., sort = TRUE)
 }
 \arguments{
-  \item{props}{An optional props object which will be
-  passed to \code{\link{mark_line}}.}
-
   \item{sort}{Should the data be sorted? If \code{TRUE}
   (the default), a \code{\link{transform_sort}} will be
   used. By default, this will sort the data on the x
