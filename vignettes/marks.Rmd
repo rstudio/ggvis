@@ -3,10 +3,10 @@
 %\VignetteIndexEntry{Marks}
 -->
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, message = FALSE}
 library(knitr)
 library(ggvis)
-opts_chunk$set(comment = "#", error = TRUE, tidy = FALSE, eval = FALSE)
+opts_chunk$set(comment = "#>", error = TRUE, tidy = FALSE)
 ```
 
 # Marks
@@ -66,10 +66,11 @@ you'll usually set the data in top-level plot object, and usually only override
 props in the mark.
 
 ```{r}
-ggvis(mtcars, props(x ~ wt, y ~ mpg, stroke = "red"), 
-  mark_symbol())
+ggvis(mtcars, props(x = ~wt, y = ~mpg, stroke := "red")) +
+  mark_symbol()
 
-ggvis(mark_symbol(props(x ~ wt, y ~ mpg, stroke = "red"), mtcars))
+ggvis() + 
+  mark_symbol(data = mtcars, props(x = ~wt, y = ~mpg, stroke := "red"))
 ```
 
 In terms of the data hierarchy, marks are leaves: they can not have any 
@@ -84,13 +85,11 @@ The following sections describe particular details related to individual marks.
 If you have an ordinal scale, set width and/or height to `prop_band()` to 
 occupy the complete band corresponding to that categorical value.
 
-```{r}
-data(diamonds, package = "ggplot2")
-library(plyr)
-counts <- count(diamonds, c("cut", "color"))
+```{r, eval = FALSE}
+hec <- as.data.frame(xtabs(Freq ~ Hair + Eye, HairEyeColor))
 
-ggvis(counts, props(x ~ cut, y ~ colour, fill ~ freq),
-  mark_rect(props(width ~ prop_band(), y ~ prop_band())))
+ggvis(hec, props(x = ~Hair, y = ~Eye, fill = ~Freq),
+  mark_rect(props(width := band(), y := band())))
 ```
 
 ### `mark_line`
@@ -100,9 +99,9 @@ value.
 
 ```{r}
 df <- data.frame(x = c(1, 1, 2, 2), y = c(2, 1, 1, 2))
-ggvis(df, props(x ~ x, y ~ y), mark_line())
+ggvis(df, props(x = ~x, y = ~y, stroke := "red"), mark_line())
 # Add a fill colour to make it a polygon
-ggvis(df, props(x ~ x, y ~ y, fill = "red"), mark_line())
+ggvis(df, props(x = ~x, y = ~y, fill := "red"), mark_line())
 ```
 
 You can not currently set the component of lines to different colours: 
@@ -110,12 +109,11 @@ track progress at https://github.com/trifacta/vega/issues/122.
 
 To create a line that spans the complete range of the plot, use `prop_group()`:
 
-```{r}
-ggvis(
-  mark_symbol(props(x ~ disp, y ~ wt), mtcars),
-  mark_line(props(y ~ mean(mtcars$wt), x = 0, x2 = prop_group())),
-  mark_line(props(x ~ mean(mtcars$disp), y = 0, y2 = prop_group()))
-)
+```{r, eval = FALSE}
+ggvis()
+  mark_symbol(props(x = ~disp, y = ~wt), mtcars) + 
+  mark_line(props(y = ~mean(mtcars$wt), x := 0, x2 := prop_group()) + 
+  mark_line(props(x = ~mean(mtcars$disp), y := 0, y2 := prop_group())
 ```
 
 Note that this won't work because `prop_group()` hasn't been written yet: track 
@@ -127,10 +125,10 @@ You need to set two of `y`, `y2` and `height`:
 
 ```{r}
 df <- data.frame(x = 1:10, y = (1:10) ^ 2)
-ggvis(df, props(x ~ x, y ~ y, y2 ~ 0), mark_area())
+ggvis(df, props(x = ~x, y = ~y, y2 := 0), mark_area())
 
 # Set height in pixels
-ggvis(df, props(x ~ x, y ~ y, height = 20), mark_area())
+ggvis(df, props(x = ~x, y = ~y, height := 20), mark_area())
 ```
 
 Height is only suitable for constant, because it does not have an obvious scale
@@ -142,12 +140,13 @@ you increase height, it's mapped like a y variable so bigger values are further
 away.
 
 ```{r}
-ggvis(df, props(x ~ x, y ~ y, height = prop(80, scale = "y")), mark_area())
+ggvis(df, props(x = ~x, y = ~y, height := prop(80, scale = "y"))) + 
+  mark_area()
   
 df <- data.frame(x = 1:10, y = (1:10) ^ 2)
-ggvis(df, props(x ~ x, y ~ y), 
+ggvis(df, props(x = ~x, y = ~y), 
   mark_area(props(height = prop(input_slider(0, 100), scale = "y"))),
-  mark_line(props(stroke = "red", strokeWidth = 10))
+  mark_line(props(stroke := "red", strokeWidth := 10))
 )
 ```
 
@@ -155,7 +154,7 @@ If you want to set the height in data units, you need to
 compute the offsets yourself:
 
 ```{r}
-ggvis(df, props(x ~ x, y ~ y - 2, y2 ~ y + 2), mark_area())
+ggvis(df, props(x = ~x, y = ~y - 2, y2 = ~y + 2), mark_area())
 ```
 
 ## Grouping
@@ -165,10 +164,9 @@ transformation: use `by_group()` to split your data up into pieces given a
 specified variable:
 
 ```{r}
-ggvis(mtcars, props(x ~ wt, y ~ mpg),
-  mark_symbol(),
-  mark_line(data = by_group("cyl"))
-)
+ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
+  mark_symbol() + 
+  mark_line(data = by_group(cyl))
 ```
 
 ## Branches
@@ -183,7 +181,7 @@ transformation, and often a set of default props. For example:
 All branches start with `branch_` and the source will typically be simple so is 
 worth reading:
 
-```{r, eval = TRUE}
+```{r}
 branch_smooth
 branch_histogram
 ```

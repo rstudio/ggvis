@@ -3,10 +3,10 @@
 %\VignetteIndexEntry{Interactivity}
 -->
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, message = FALSE}
 library(ggvis)
 library(knitr)
-opts_chunk$set(comment = "#", error = TRUE, tidy = FALSE, eval = FALSE)
+opts_chunk$set(comment = "#>", error = TRUE, tidy = FALSE, eval = FALSE)
 ```
 
 # Interactivity
@@ -34,10 +34,9 @@ You just replace constant values with functions that produce interactive
 controls like `input_slider()`:
 
 ```{r}
-ggvis(mtcars, props(x ~ wt, y ~ mpg),
-  mark_symbol(props(size = input_slider(100, 1000)),
-  branch_smooth(span = input_slider(0.5, 1, 1)))
-)
+ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
+  branch_smooth(span = input_slider(0.5, 1, 1)) + 
+  mark_symbol(props(size := input_slider(100, 1000)))
 ```
 
 As well as `input_slider()`, which produces a slider (or a double-ended range 
@@ -85,20 +84,19 @@ the plot.
 1.  Use the regular property inheritance structure:
 
     ```{r}
-    ggvis(mtcars, props(x ~ wt, y ~ mpg, stroke = input_slider(10, 1000)),
-      mark_symbol(),
-      mark_line(props(strokeWidth = 5))
+    ggvis(mtcars, props(x = ~wt, y = ~mpg, size := input_slider(10, 1000)),
+      mark_symbol(props(fill := "red")),
+      mark_symbol(props(stroke := "black", fill := NA))
     )
     ```
 
 2. Create the input and assign it to a variable:
 
     ```{r}
-    slider <- input_slider(10, 100)
-    ggvis(mtcars, props(x ~ wt, y ~ mpg),
-      mark_line(props(strokeWidth = slider)),
-      mark_symbol(props(size = slider, fill = "red"))
-    )
+    slider <- input_slider(10, 1000)
+    ggvis(mtcars, props(x = ~wt, y = ~mpg)) + 
+      mark_symbol(props(fill := "red", size := slider)) + 
+      mark_symbol(props(stroke := "black", fill := NA, size := slider))
     ```  
     
     This is a little more typing, but is more flexible.
@@ -110,13 +108,13 @@ control the size of the red and black points independently.
 
 ```{r}
 slider <- input_slider(100, 1000)
-ggvis(mtcars, props(x ~ wt, y ~ mpg), 
-  mark_symbol(props(size = slider)),
-  mark_symbol(props(fill = "red", opacity = 0.5, size = slider)))
+ggvis(mtcars, props(x = ~wt, y = ~mpg), 
+  mark_symbol(props(size := slider)),
+  mark_symbol(props(fill := "red", opacity := 0.5, size := slider)))
 
-ggvis(mtcars, props(x ~ wt, y ~ mpg), 
-  mark_symbol(props(size = input_slider(100, 1000))),
-  mark_symbol(props(fill = "red", size = input_slider(100, 1000))))
+ggvis(mtcars, props(x = ~wt, y = ~mpg), 
+  mark_symbol(props(size := input_slider(100, 1000))),
+  mark_symbol(props(fill := "red", size := input_slider(100, 1000))))
 ```
 
 ### Property mappings
@@ -178,26 +176,25 @@ If you know how to create a shiny app already, adding a ggvis plot is easy. In
 first argument is the plot object, the second is the plot id (needs to match
 with `ui.r`, and the third argument is the session object).
 
-```{r}
+```{r, eval = FALSE}
 gv <- reactive({
-  ggvis(mtcars, props(x ~ disp, y ~ mpg, size = input$size),
+  ggvis(mtcars, props(x = ~disp, y = ~mpg, size := input$size),
     mark_symbol()
   )
 })
-
-observeGgvis(gv, "my_plot", session)
+observe_ggvis(gv, "my_plot", session)
 ```
 
 Create `ui.r` as usual, using `ggvisOutput()` to place the ggvis plot on the 
 page.
 
-```{r}
+```{r, eval = FALSE}
 shinyUI(pageWithSidebar(
   sidebarPanel(
     sliderInput("size", "Area", 10, 1000),
   ),
   mainPanel(
-    ggvisOutput("my_plot")
+    uiOutput("ggvis_ui")
   )
 ))
 ```

@@ -3,10 +3,10 @@
 %\VignetteIndexEntry{Properties and scales}
 -->
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, message = FALSE}
 library(knitr)
 suppressPackageStartupMessages(library(ggvis))
-opts_chunk$set(comment = "#", error = TRUE, tidy = FALSE, eval = FALSE)
+opts_chunk$set(comment = "#>", error = TRUE, tidy = FALSE)
 opts_knit$set(
   stop_on_error = 0L
 )
@@ -36,14 +36,14 @@ see the axes and legends vignette for how to customise their display.
 
 Every ggvis mark is associated with a set of properties that governs how it is displayed. These properties can be constant values (like 5, "blue", or "square"), or mapped to variables in your dataset. ggplot2 syntax made a distinction between mapping variables and setting constants. For example, in ggplot2, you might say:
 
-```R
+```{r, eval = FALSE}
 geom_point(aes(x = wt, y = mpg), colour = "red", size = 5)
 ```
 
 But it ggvis, everything is a property:
 
-```R
-mark_line(props(x = ~ wt, y = ~ mpg, stroke := "red", size := 5))
+```{r}
+mark_line(props(x = ~wt, y = ~ mpg, stroke := "red", strokeWidth := 5))
 ```
 
 This section introduces `props()`, a convenient function for creating property objects and binding them to property names. The next chapter shows you how to create the property objects by hand, giving you more control over the specification at the cost of some extra typing.
@@ -68,12 +68,11 @@ Those examples follow a common pattern: `=` is always scaled, and `:=` is never 
 It's also possible provide a scaled constant instead of a raw constant.
 That's useful when you want to label different layers in a plot:
 
-```R
-ggvis(mtcars, props(x = ~wt, y = ~mpg), 
-  mark_symbol(),
-  branch_smooth(props(stroke = "lm"), method = "lm"),
+```{r}
+ggvis(mtcars, props(x = ~wt, y = ~mpg)) + 
+  mark_symbol() + 
+  branch_smooth(props(stroke = "lm"), method = "lm") + 
   branch_smooth(props(stroke = "loess"))
-)
 ```
 
 (Note this isn't currently supported in ggvis because of a limitation 
@@ -85,7 +84,7 @@ Not all marks support all properties. The complete list of all properties is
 available in `?marks`, and mark functions will check that you've supplied them
 valid properties, and will endeavour to provide you a helpful suggestion:
 
-```{r}
+```{r, eval = FALSE}
 mark_line(props(strke = ~cyl))
 # Error: Unknown properties: strke.
 # Did you mean: stroke?
@@ -97,7 +96,7 @@ the pipeline (or the node structure of the graph, including the marks, might
 be changed after plot creation). These will only be checked once the plot
 is rendered.
 
-```{r}
+```{r, eval = FALSE}
 # No error on creation
 p <- ggvis(mtcars, props(x = ~disp, y = ~mpg, strke = ~cyl), mark_symbol())
 # Error when attempt to display it
@@ -151,7 +150,7 @@ constant    | no     | Pixel location, or exact colour | `x := 1`
 `prop()` doesn't do any special evaluation which means that you if you want a
 variable, you need to supply a quoted expression or a one-sided formula:
 
-```R
+```{r}
 prop(quote(x))
 prop(~ x)
 ```
@@ -159,7 +158,7 @@ prop(~ x)
 If you have the name of a variable as a string, you can convert it a name with
 `as.name()`:
 
-```R
+```{r}
 var <- "mpg"
 prop(as.name(var))
 ```
@@ -167,7 +166,7 @@ prop(as.name(var))
 If you have an R expression as a string, `parse()` it then extract the first
 element of the result:
 
-```R
+```{r}
 expr <- "mpg / wt"
 prop(parse(text = expr)[[1]])
 ```
@@ -178,13 +177,12 @@ Like in ggplot2, scales control the mapping between data values and values
 interpreted by the drawing device. Scales are added to the top-level plot 
 specification and are usually created with `dscale` (short for default scale):
 
-```R
+```{r}
 # Override the default data limits:
-ggvis(mtcars, props(x = ~disp, y = ~wt), 
-  mark_symbol(),
-  dscale("x", "numeric", domain = c(50, 500), nice = FALSE),
-  dscale("y", "numeric", domain = c(0, 6), nice = FALSE)
-)
+ggvis(mtcars, props(x = ~disp, y = ~wt)) + 
+  mark_symbol() +
+  dscale("x", "numeric", domain = c(50, 500), nice = FALSE) +
+  dscale("y", "numeric", domain = c(0, 6), nice = FALSE) 
 ```
 
 Compared to ggplot2, ggvis has far fewer scales (3 vs 70), with each function 
@@ -244,7 +242,7 @@ Because the range of a scale is usually determined by the type of variable,
 ggvis provides the `dscale` function to automatically retrieve a default scale
 given a property name and variable type:
 
-```{r, eval = TRUE}
+```{r}
 dscale("x", "numeric")
 dscale("y", "numeric")
 dscale("shape", "nominal")
@@ -252,9 +250,9 @@ dscale("shape", "nominal")
 
 You can also provide other arguments to the underlying scale:
 
-```{r, eval = TRUE}
+```{r}
 dscale("x", "numeric", domain = c(10, 100))
-dscale("x", "numeric", trans = "log10")
+dscale("x", "numeric", trans = "log")
 ```
 
 So `dscale()` is usually a better way to create new scales that starting from
@@ -269,11 +267,10 @@ data. There's no default scale for font, but you could create one yourself:
 ```{r}
 df <- data.frame(x = runif(5), y = runif(5), 
   labels = c("a", "b", "b", "a", "b"))
-ggvis(df, 
-  props(x = ~x, y = ~y, text := ~labels, font = ~labels, 
-    fontSize := 40), 
-  mark_text(),
-  scale_ordinal("font", range = c("Helvetica Neue", "Times New Roman")))
+ggvis(df, props(x = ~x, y = ~y, text := ~labels, font = ~labels, 
+    fontSize := 40)) + 
+  mark_text() +
+  scale_ordinal("font", range = c("Helvetica Neue", "Times New Roman"))
 ```
 
 Note the use of `text := ~labels`: we don't want to scale the labels - they already make sense in the visual space.
@@ -285,16 +282,15 @@ more scales than the default. You could do this in order to create a dual-axis
 chart (which is a bad idea - read [this paper][dual-axis] for more details).
 If you do this, you will also need to add a scale object.
 
-```R
-ggvis(mtcars, props(y = ~mpg), 
-  mark_symbol(props(x = prop(~disp, scale = "xdisp"))),
-  mark_symbol(props(x = prop(~wt, scale = "xwt"), fill := "blue")),
-  dscale("x", "numeric", name = "xdisp"),
-  dscale("x", "numeric", name = "xwt"),
-  guide_axis("x", "xdisp", orient = "bottom"),
+```{r}
+ggvis(mtcars, props(y = ~mpg)) +
+  mark_symbol(props(x = prop(~disp, scale = "xdisp"))) +
+  mark_symbol(props(x = prop(~wt, scale = "xwt"), fill := "blue")) +
+  dscale("x", "numeric", name = "xdisp") +
+  dscale("x", "numeric", name = "xwt") +
+  guide_axis("x", "xdisp", orient = "bottom") +
   guide_axis("x", "xwt", orient = "bottom", offset = 20, properties = 
     list(labels = props(fill := "blue")))
-)
 ```
 
 ### Multiple properties for one scale
@@ -303,7 +299,7 @@ You could also force ggplot2 to use the same scale for properties that would
 otherwise use different scales. I'm not sure of a useful example of this, 
 except to force `stroke` and `fill` to use the same scale:
 
-```R
+```{r}
 df <- data.frame(x = 1:5, y = 1:5, a = runif(5), b = -runif(5))
 p <- props(x = ~x, y = ~y, stroke = ~a, fill = ~b, strokeWidth := 5, size := 1000)
 ggvis(df, p, mark_symbol(),
