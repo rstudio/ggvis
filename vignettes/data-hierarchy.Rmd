@@ -3,10 +3,10 @@
 %\VignetteIndexEntry{Data hierarchy}
 -->
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, message = FALSE}
 library(knitr)
 library(ggvis)
-opts_chunk$set(comment = "#", error = TRUE, tidy = FALSE)
+opts_chunk$set(comment = "#>", error = TRUE, tidy = FALSE)
 ```
 
 # Data hierarchy
@@ -62,7 +62,7 @@ df <- data.frame(x = 1:9, grp = rep(1:3, each = 3))
 # A dataset has a name, and unique id (hash) in bracket
 a <- pipeline(df)
 a
-sluice(a, props(x ~ x))
+sluice(a, props(x = ~x))
 ```
 
 The next two pipelines add a data transformation. `b1` summarises the data 
@@ -77,8 +77,8 @@ b1
 b2 <- pipeline(df, by_group(grp))
 b2
 
-sluice(b1, props(x ~ x))
-sluice(b2, props(x ~ x))
+sluice(b1, props(x = ~x))
+sluice(b2, props(x = ~x))
 ```
 
 Finally, `c` combines the operation of `b1` and `b2`, first splitting the data into pieces, then summarising each group with binned counts:
@@ -86,7 +86,7 @@ Finally, `c` combines the operation of `b1` and `b2`, first splitting the data i
 ```{r}
 c <- pipeline(df, by_group(grp), transform_bin(binwidth = 3))
 c
-sluice(c, props(x ~ x))
+sluice(c, props(x = ~x))
 ```
 
 Note that pipeline will automatically remove redundancies from a pipeline:
@@ -107,9 +107,10 @@ layer.  In ggvis, that's now a property of `props()`: `props(inherit = FALSE)`.
 To see how ggvis combines properties, you can use the `merge_props` function:
 
 ```{r}
-ggvis:::merge_props(props(x ~ x), props(y ~ y))
-ggvis:::merge_props(props(x ~ a), props(x ~ b))
-ggvis:::merge_props(props(x ~ a, y ~ a), props(x ~ b, inherit = FALSE))
+merge_props <- ggvis:::merge_props
+merge_props(props(x = ~x), props(y = ~y))
+merge_props(props(x = ~a), props(x = ~b))
+merge_props(props(x = ~a, y = ~a), props(x = ~b, inherit = FALSE))
 ```
 
 There is currently no way to remove a prop inherited from the parent. See
@@ -119,7 +120,7 @@ https://github.com/rstudio/ggvis/issues/37 for progress.
 
 ### Minard's march
 
-```R
+```{r, eval = FALSE}
 ggplot(cities, aes(x = long, y = lat)) + 
   geom_path(
     aes(size = survivors, colour = direction, group = group), 
@@ -132,7 +133,7 @@ ggplot(cities, aes(x = long, y = lat)) +
 In gigvis, we can make it a little more clear that we have one marked based on 
 survivors dataset and two marks based on the cities dataset.
 
-```R
+```{r, eval = FALSE}
 ggvis(props(long, lat), 
   node(
     survivors, 
