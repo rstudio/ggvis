@@ -6,7 +6,10 @@ is.dynamic <- function(x) UseMethod("is.dynamic")
 
 #' @export
 is.dynamic.branch <- function(x) {
-  is.dynamic(x$data) || is.dynamic(x$props) || any_apply(x$children, is.dynamic)
+  is.dynamic(x$data) || 
+    is.dynamic(x$props) || 
+    any_apply(x$children, is.dynamic) ||
+    length(x$handlers) > 0
 }
 
 #' @export
