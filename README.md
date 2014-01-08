@@ -1,7 +1,7 @@
 # ggvis
 
 
-[![Build Status](https://travis-ci.org/hadley/ggvis.png?branch=master)](https://travis-ci.org/hadley/ggvis)
+[![Build Status](https://travis-ci.org/rstudio/ggvis.png?branch=master)](https://travis-ci.org/rstudio/ggvis)
 
 The goal of ggvis is to makes it easy to describe interactive web graphics in 
 R. It fuses the ideas of [ggplot2](http://github.com/hadley/ggplot2) and 
