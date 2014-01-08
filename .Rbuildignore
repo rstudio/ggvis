@@ -2,3 +2,4 @@ man-roxygen
 ^.*\.Rproj$
 ^\.Rproj\.user$
 bench
+^\.travis\.yml$
