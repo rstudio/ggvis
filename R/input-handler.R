@@ -25,7 +25,10 @@ handler <- function(subclass, listener, control_args = list(), value = NULL,
 
 #' @export
 as.vega.handler <- function(x, session = NULL, dynamic = FALSE, ...) {
-  c(list(id = x$id, type = x$listener), x$control_args)
+  args <- x$control_args
+  funs <- vapply(args, is.function, logical(1))
+  
+  c(list(id = x$id, type = x$listener), args[!funs])
 }
 
 #' @export
