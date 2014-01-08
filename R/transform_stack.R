@@ -27,11 +27,8 @@
 #'   For example, with \code{props(y = ~mpg)}, you would use \code{"y"}, not
 #'   \code{"mpg"}.
 #' @examples
-#'
-#' library(plyr)
-#' hec <- as.data.frame(HairEyeColor)
-#' # Collapse across Sex
-#' hec <- ddply(hec, c("Hair", "Eye"), summarise, Freq = sum(Freq))
+#' # Collapse across hair & eye colour data across sex
+#' hec <- as.data.frame(xtabs(Freq ~ Hair + Eye, HairEyeColor))
 #'
 #' # Without stacking - bars overlap
 #' ggvis(hec,
