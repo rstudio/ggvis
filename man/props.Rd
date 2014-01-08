@@ -1,10 +1,13 @@
 \name{props}
 \alias{":="}
+\alias{:=}
 \alias{is.ggvis_props}
 \alias{props}
 \title{Manage a list of properties.}
 \usage{
 props(..., inherit = TRUE)
+
+":="(x, value)
 
 is.ggvis_props(x)
 }

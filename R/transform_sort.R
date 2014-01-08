@@ -82,7 +82,7 @@ compute.transform_sort <- function(x, props, data) {
     logical(1)
   )
 
-  output <- compute_sort(data, x, var = props[prop_names])
+  output <- compute_sort(data, x, vars = props[prop_names])
   preserve_constants(data, output)
 }
 

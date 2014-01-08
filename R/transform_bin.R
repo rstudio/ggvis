@@ -139,7 +139,7 @@ bin.split_df <- function(x, x_var, ...) {
 
 #' @export
 bin.data.frame <- function(x, x_var, ...) {
-  x_val <- remove_missing(prop_value(x_var, x), warn_na = !trans$na.rm)
+  x_val <- remove_missing(prop_value(x_var, x))
   bin(x_val, ...)
 }
 

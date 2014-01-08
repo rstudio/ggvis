@@ -142,6 +142,12 @@ props <- function(..., inherit = TRUE) {
   )
 }
 
+#' @export
+#' @rdname props
+`:=` <- function(x, value) {
+  stop(":= may only be used inside props", call. = FALSE)
+}
+
 check_unscaled_form <- function(x) {
   if (!is.call(x) || !identical(x[[1]], quote(`:=`))) {
     stop("Arguments to props must use either := or =", call. = FALSE)
@@ -192,3 +198,4 @@ merge_props <- function(parent = NULL, child = NULL) {
 }
 
 is.formula <- function(x) inherits(x, "formula")
+
