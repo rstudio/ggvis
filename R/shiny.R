@@ -243,40 +243,38 @@ mainTopPanel <- function(...) {
 #' @importFrom shiny withTags HTML
 #' @export
 ggvisControlGroup <- function(plot_id) {
-  withTags(
-    div(class = "btn-group",
-      label(class = "dropdown-toggle", `data-toggle` = "dropdown",
-        i(class = "icon-cog", style = "opacity: 0.4;", " ")
-      ),
+  tags$div(class = "btn-group",
+    tags$label(class = "dropdown-toggle", `data-toggle` = "dropdown",
+      tags$i(class = "icon-cog", style = "opacity: 0.4;", " ")
+    ),
 
-      ul(class = "ggvis-control dropdown-menu pull-right",
-        li(
-          div(class = "dropdown-item",
-            "Renderer: ",
-            span(class = "ggvis-renderer-buttons btn-group",
-                 style = "vertical-align: middle;",
-              label(id = paste0(plot_id, "_renderer_canvas"),
-                    class = "btn btn-mini",
-                    `data-plot-id` = plot_id,
-                    `data-renderer` = "canvas",
-                    "Canvas"
-              ),
-              label(id = paste0(plot_id, "_renderer_svg"),
-                    class = "btn btn-mini",
-                    `data-plot-id` = plot_id,
-                    `data-renderer` = "svg",
-                    "SVG"
-              )
+    tags$ul(class = "ggvis-control dropdown-menu pull-right",
+      tags$li(
+        tags$div(class = "dropdown-item",
+          "Renderer: ",
+          tags$span(class = "ggvis-renderer-buttons btn-group",
+               style = "vertical-align: middle;",
+            tags$label(id = paste0(plot_id, "_renderer_canvas"),
+                  class = "btn btn-mini",
+                  `data-plot-id` = plot_id,
+                  `data-renderer` = "canvas",
+                  "Canvas"
+            ),
+            tags$label(id = paste0(plot_id, "_renderer_svg"),
+                  class = "btn btn-mini",
+                  `data-plot-id` = plot_id,
+                  `data-renderer` = "svg",
+                  "SVG"
             )
           )
-        ),
-        li(class = "divider"),
-        li(
-          a(id = paste0(plot_id, "_download"),
-            class = "ggvis-download",
-            `data-plot-id` = plot_id,
-            "Download"
-          )
+        )
+      ),
+      tags$li(class = "divider"),
+      tags$li(
+        tags$a(id = paste0(plot_id, "_download"),
+          class = "ggvis-download",
+          `data-plot-id` = plot_id,
+          "Download"
         )
       )
     )
