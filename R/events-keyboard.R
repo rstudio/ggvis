@@ -45,13 +45,16 @@ Keyboard <- setRefClass("Keyboard", contains = "EventBroker",
 #' An interactive input bound to the left and right arrows.
 #' 
 #' @inheritParams shiny::sliderInput
-#' @param value The initial value before any keys are pressed.
-#' @param step How much each key press changes \code{value}.
+#' @param value The initial value before any keys are pressed. Defaults to
+#'   half-way between \code{min} and \code{max}.
+#' @param step How much each key press changes \code{value}. Defaults to
+#'   40 steps along range
 #' @export
 #' @examples
 #' ggvis(mtcars, props(x = ~mpg, y = ~wt, size := left_right(1, 100))) +
 #'   mark_symbol()
-left_right <- function(min, max, value = min, step = (max - min) / 50) {
+left_right <- function(min, max, value = (min + max) / 2, 
+                       step = (max - min) / 40) {
   handler("left_right", "keyboard",
     list(min = min, max = max, value = value, step = step),
     value = value
