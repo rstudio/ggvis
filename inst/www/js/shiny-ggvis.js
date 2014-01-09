@@ -189,10 +189,14 @@ $(function(){ //DOM Ready
   // event handlers use shiny.
   // ---------------------------------------------------------------------------
   ggvis.handlers.keyboard = (function() {
-    var keyboard = function(plot, opts) {
+    var keyboard = function(plot, h_spec) {
       this.plot = plot;
-      this.opts = opts || {};
-      this._eventId = "ggvis_" + plot.plotId;
+      this.h_spec = h_spec;
+
+      // jQuery event ID for naming event handlers and removing later
+      this._eventId = "ggvis_" + h_spec.id;
+      // The prefix to the shiny input name
+      this._inputId = "ggvis_" + h_spec.id + "_key_press";
       // Used for keeping track of number of key events. Needed so that Shiny
       // will send info when same key is pressed multiple times in a row.
       this._counter = 0;
@@ -205,7 +209,8 @@ $(function(){ //DOM Ready
         self._sendValue(str);
       });
 
-      // keydown handler for special keys, like arrows
+      // keydown handler for special keys that aren't caught by keypress,
+      // like arrows
       $(document).on("keydown." + this._eventId, function(e) {
         var str = keycodes[e.which];
         if (str) {
@@ -235,8 +240,7 @@ $(function(){ //DOM Ready
 
     prototype._sendValue = function(str) {
       this._counter++;
-      Shiny.onInputChange("ggvis_" + this.plot.plotId + "_keyboard",
-        { value: str, _nonce: this._counter });
+      Shiny.onInputChange(this._inputId, { value: str, _nonce: this._counter });
     };
 
     return keyboard;

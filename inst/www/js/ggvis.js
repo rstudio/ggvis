@@ -372,7 +372,7 @@ ggvis = (function(_) {
         h = h_spec[i];
         // Grab the appropriate handler class and instantiate it
         HandlerClass = ggvis.handlers[h.type];
-        self.handlers[i] = new HandlerClass(self, h.opts);
+        self.handlers[i] = new HandlerClass(self, h);
       }
     };
 
