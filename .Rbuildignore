@@ -3,3 +3,4 @@ man-roxygen
 ^\.Rproj\.user$
 bench
 ^\.travis\.yml$
+^node_modules$
