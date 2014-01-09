@@ -8,7 +8,9 @@
 #' p <- ggvis(mtcars, props(x = ~mpg, y = ~wt, size = left_right(1, 100)),
 #'   mark_symbol())
 #' p$props$size.update$dr
-#' handlers(p)
+#' 
+#' # Handlers are extracted with the internal handlers() function
+#' # ggvis:::handlers(p)
 handler <- function(subclass, listener, control_args = list(), value = NULL, 
                     map = identity, id = rand_id()) {
   assert_that(is.string(listener))

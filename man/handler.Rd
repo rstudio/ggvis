@@ -17,6 +17,8 @@ that have controls.
 p <- ggvis(mtcars, props(x = ~mpg, y = ~wt, size = left_right(1, 100)),
   mark_symbol())
 p$props$size.update$dr
-handlers(p)
+
+# Handlers are extracted with the internal handlers() function
+# ggvis:::handlers(p)
 }
 
