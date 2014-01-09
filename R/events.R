@@ -49,7 +49,7 @@ EventBroker <- setRefClass("EventBroker",
     
     check_session = function() {
       if (!is.null(session)) return(TRUE)
-      stop("Event broken not initialised with shiny session")
+      stop("Event broker not initialised with shiny session")
     }
     
   )
