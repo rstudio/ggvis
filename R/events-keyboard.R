@@ -50,17 +50,24 @@ left_right <- function(min, max, value = (min + max) / 2,
 
 #' @export
 as.reactive.left_right <- function(x, session = NULL, ...) {
-  k <- Keyboard(session, bindings = c("left", "right"), id = x$id)
-  
-  i <- x$control_args$value
-  step <- x$control_args$step
+  k <- Keyboard(session, id = x$id)
+  modify_value_with_keys(k, x$control_args$value, 
+    left =  function(i) pmax(x$control_args$min, i - x$control_args$step),
+    right = function(i) pmin(x$control_args$max, i + x$control_args$step)
+  )
+}
+
+modify_value_with_keys <- function(k, val, ..., .key_funs = list()) {
+  key_funs <- c(list(...), .key_funs)
+  stopifnot(is(k, "Keyboard"))
+
+  k$bindings <- names(key_funs)
   reactive({
     press <- k$key_press()
-    if (is.null(press)) return(i)
+    if (is.null(press)) return(val)
+    if (!(press$value %in% names(key_funs))) return(val)
     
-    if (press$value == "left"  && i > x$control_args$min) i <<- i - step
-    if (press$value == "right" && i < x$control_args$max) i <<- i + step
-    
-    i
+    val <<- key_funs[[press$value]](val)
+    val 
   })
 }
