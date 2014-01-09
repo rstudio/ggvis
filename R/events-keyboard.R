@@ -39,7 +39,8 @@ Keyboard <- setRefClass("Keyboard", contains = "EventBroker",
 #'   40 steps along range
 #' @export
 #' @examples
-#' ggvis(mtcars, props(x = ~mpg, y = ~wt, size := left_right(1, 100))) +
+#' ggvis(mtcars, props(x = ~mpg, y = ~wt,
+#'                     size := left_right(1, 801, value = 51, step = 50))) +
 #'   mark_symbol()
 left_right <- function(min, max, value = (min + max) / 2, 
                        step = (max - min) / 40) {
