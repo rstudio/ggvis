@@ -10,6 +10,7 @@ NULL
 #' @seealso \code{\link{tooltip}} for a custom wrapper that uses hover
 #'   events to display tooltips.
 #' @export
+#' @importFrom methods setRefClass
 Hover <- setRefClass("Hover", contains = "EventBroker",
   methods = list(
     mouse_out = function() {
@@ -38,7 +39,7 @@ Hover <- setRefClass("Hover", contains = "EventBroker",
 #'   paste0(names(x), ": ", format(x), collapse = "<br />")
 #' } 
 #' 
-#' ggvis(mtcars, props(x = ~wt, y = ~mpg), mark_symbol(), tooltip(all_values)
+#' ggvis(mtcars, props(x = ~wt, y = ~mpg), mark_symbol(), tooltip(all_values))
 #' ggvis(mtcars, props(x = ~wt, y = ~mpg)) + 
 #'   mark_symbol() +
 #'   tooltip(all_values)
@@ -57,7 +58,7 @@ as.reactive.tooltip <- function(x, session = NULL, ...) {
   })
   observe({
     hover <- h$mouse_over()
-    html <- fun(hover$data)
+    html <- x$control_args$f(hover$data)
     
     tell_to("show_tooltip",
       visible = TRUE,

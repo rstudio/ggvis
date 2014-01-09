@@ -8,6 +8,7 @@ NULL
 #' 
 #' @keywords internal
 #' @export
+#' @importFrom methods setRefClass
 EventBroker <- setRefClass("EventBroker",
   fields = list(
     session = "ANY", 

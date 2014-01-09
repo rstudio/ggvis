@@ -4,6 +4,11 @@
 #' other way around since inputs are handlers that have controls.
 #' 
 #' @export
+#' @param subclass name of the subclass. \code{handler} is an abstract base 
+#'   class so this must always be provided.
+#' @param listener name of the js listener (with corresponding R event broker)
+#'   that this handler is associated with
+#' @inheritParams input
 #' @examples
 #' p <- ggvis(mtcars, props(x = ~mpg, y = ~wt, size = left_right(1, 100)),
 #'   mark_symbol())

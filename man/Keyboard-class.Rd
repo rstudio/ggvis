@@ -16,8 +16,7 @@ to respond to keyboard events: \code{key_down},
 \code{key_press} and \code{key_up}.
 }
 \seealso{
-\code{\link{left_right}} and \code{\link{up_down}} to
-easily control values in a ggvis object with the arrow
-keys.
+\code{\link{left_right}} to easily control values in a
+ggvis object with the arrow keys.
 }
 

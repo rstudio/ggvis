@@ -10,9 +10,10 @@ NULL
 #'   to listen to. The keyboard event handling in ggvis is implemented with
 #'   \href{mousetrap}{http://craig.is/killing/mice} so you can specify keys
 #'   like \code{c("C", "Shift + X", "F2", "up"))}
-#' @seealso \code{\link{left_right}} and \code{\link{up_down}} to easily
+#' @seealso \code{\link{left_right}} to easily
 #'   control values in a ggvis object with the arrow keys.
 #' @export
+#' @importFrom methods setRefClass
 Keyboard <- setRefClass("Keyboard", contains = "EventBroker",
   fields = list("bindings" = "character"),
   methods = list(
