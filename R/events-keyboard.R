@@ -50,6 +50,8 @@ left_right <- function(min, max, value = (min + max) / 2,
 
 #' @export
 as.reactive.left_right <- function(x, session = NULL, ...) {
+  if (is.null(session)) return(reactive(x$control_args$value))
+  
   k <- Keyboard(session, id = x$id)
   modify_value_with_keys(k, x$control_args$value, 
     left =  function(i) pmax(x$control_args$min, i - x$control_args$step),
