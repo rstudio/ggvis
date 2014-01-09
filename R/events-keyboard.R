@@ -17,10 +17,7 @@ Keyboard <- setRefClass("Keyboard", contains = "EventBroker",
   fields = list("bindings" = "character"),
   methods = list(
     key_press = function() {
-      "A reactive value changed when any key listed in \\code{bindings} is first
-      'pressed'. It is similar to \\code{key_down} but in most browsers is only
-      triggered by printing keys, not modifiers (like shift or control), or 
-      special keys like escape or delete."
+      "A reactive value changed when any key is pressed."
       
       listen_for("key_press")
     },
