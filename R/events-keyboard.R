@@ -16,12 +16,6 @@ NULL
 Keyboard <- setRefClass("Keyboard", contains = "EventBroker",
   fields = list("bindings" = "character"),
   methods = list(
-    key_down = function() {
-      "A reactive value changed when any key listed in \\code{bindings} is first
-      depressed. Returns a list describing the key press"
-      
-      listen_for("key_down")
-    },
     key_press = function() {
       "A reactive value changed when any key listed in \\code{bindings} is first
       'pressed'. It is similar to \\code{key_down} but in most browsers is only
@@ -29,12 +23,6 @@ Keyboard <- setRefClass("Keyboard", contains = "EventBroker",
       special keys like escape or delete."
       
       listen_for("key_press")
-    },
-    key_up = function() {
-      "A reactive value changed when any key listed in \\code{bindings} is
-      released. Returns a list describing the key press"
-      
-      listen_for("key_up")
     },
     as_vega = function(...) {
       c(callSuper(), list(keys = bindings))
