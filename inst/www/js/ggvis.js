@@ -45,6 +45,7 @@ ggvis = (function(_) {
       this.initialized = false; // Has update() or enter() been run?
       this.opts = {};
       this.brush = new Plot.Brush(this);
+      this.handlers = [];    // Interaction input handlers
     };
 
     var prototype = Plot.prototype;
@@ -98,6 +99,9 @@ ggvis = (function(_) {
             chart.on(eventname, fn);
           });
         }
+
+        self.resetHandlers();
+        self.handlers = self.addHandlers(self.spec.handlers);
 
         // If there's a brush mark, turn on brushing, passing in brush options
         if (self.brush.hasBrush()) self.brush.enable(opts.brush);
@@ -344,6 +348,31 @@ ggvis = (function(_) {
         else if (renderer === "canvas") filetype = "PNG";
 
         $el.text("Download " + filetype);
+      }
+    };
+
+    prototype.resetHandlers = function() {
+      for (var i=0; i<this.handlers.length; i++) {
+        this.handlers.remove();
+      }
+
+      this.handlers = [];
+    };
+
+    // h_spec is an array of handler specifications (typically taken from spec)
+    prototype.addHandlers = function(h_spec) {
+      if (h_spec === [] || h_spec === undefined || h_spec === null)
+        return;
+
+      var self = this;
+      var h, HandlerClass;
+
+      // Call the appropriate handlers
+      for (var i=0; i<h_spec.length; i++) {
+        h = h_spec[i];
+        // Grab the appropriate handler class and instantiate it
+        HandlerClass = ggvis.handlers[h.type];
+        self.handlers[i] = new HandlerClass(self, h);
       }
     };
 
@@ -682,6 +711,13 @@ ggvis = (function(_) {
 
     return Plot;
   })(); // ggvis.Plot
+
+
+  // ---------------------------------------------------------------------------
+  // Handlers for interaction events
+  // Some of these are defined in shiny-ggvis.js
+  ggvis.handlers = {};
+
 
   return ggvis;
 

@@ -40,6 +40,7 @@ ggvis_add.ggvis <- function(e1, e2, e2name) {
     axes     = e1$axes <- c(e1$axes, list(e2)),
     props    = e1$props <- merge_props(e1$props, e2),
     opts     = e1$opts <- list(merge_opts(e1$opts[[1]], e2)),
+    handlers = e1$handlers <- c(e1$handlers, list(e2)),
     stop("Don't know how to add object ", e2name, " of type ", type,
       " to ggvis object.")
   )

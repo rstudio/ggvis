@@ -50,7 +50,8 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
     legends = lapply(legends, as.vega),
     axes = lapply(axes, as.vega),
     padding = as.vega(opts$padding),
-    ggvis_opts = as.vega(opts)
+    ggvis_opts = as.vega(opts),
+    handlers = lapply(handlers(x), as.vega)
   )
 
   structure(spec, data_table = data_table)
