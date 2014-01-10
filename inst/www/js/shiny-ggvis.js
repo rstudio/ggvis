@@ -227,6 +227,9 @@ $(function(){ //DOM Ready
       this._eventId = "ggvis_" + h_spec.id;
       // The prefix to the shiny input name
       this._inputIdPrefix = "ggvis_" + h_spec.id;
+      // Used for keeping track of number of events. Needed so that Shiny
+      // will send info when mouse_out event happens multiple times.
+      this._nonce_counter = 0;
 
       plot.chart.on("mouseover." + this._eventId, this._createMouseOverHandler());
       plot.chart.on("mouseout."  + this._eventId, this._createMouseOutHandler());
@@ -247,9 +250,11 @@ $(function(){ //DOM Ready
             plot_id: self.plot.plotId,
             data: item.datum.data,
             pagex: event.pageX,
-            pagey: event.pageY
+            pagey: event.pageY,
+            _nonce: self._nonce_counter
           }
         );
+        self._nonce_counter++;
       };
     };
 
@@ -262,9 +267,11 @@ $(function(){ //DOM Ready
             plot_id: self.plot.plotId,
             data: null,
             pagex: null,
-            pagey: null
+            pagey: null,
+            _nonce: self._nonce_counter
           }
         );
+        self._nonce_counter++;
       };
     };
 
