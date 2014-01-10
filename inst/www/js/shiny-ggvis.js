@@ -109,45 +109,11 @@ $(function(){ //DOM Ready
     }
 
     plot.parseSpec(spec, {
-      handlers: {
-        mouseover: _.throttle(createMouseOverHandler(plotId), 100),
-        mouseout: _.throttle(createMouseOutHandler(plotId), 100)
-      },
       brush: {
         handlers: { updateItems: brushHandler}
       }
     });
   });
-
-
-  // Returns a mouseover handler with plotId
-  function createMouseOverHandler(plotId) {
-    return function(event, item) {
-      Shiny.onInputChange("ggvis_" + plotId + "_hover",
-        {
-          plot_id: plotId,
-          data: item.datum.data,
-          pagex: event.pageX,
-          pagey: event.pageY
-        }
-      );
-    };
-  }
-
-  // Returns a mouseout handler with plotId
-  function createMouseOutHandler(plotId) {
-    return function(event, item) {
-      /* jshint unused: false */
-      Shiny.onInputChange("ggvis_" + plotId + "_hover",
-        {
-          plot_id: plotId,
-          data: null,
-          pagex: null,
-          pagey: null
-        }
-      );
-    };
-  }
 
   // Send information about the current brush
   function createBrushHandler(plotId) {
@@ -188,6 +154,8 @@ $(function(){ //DOM Ready
   // These are defined here instead of ggvis.js because at present all of the
   // event handlers use shiny.
   // ---------------------------------------------------------------------------
+  // Keyboard handler
+  // Sends ggvis_xxxx_key_press events
   ggvis.handlers.keyboard = (function() {
     var keyboard = function(plot, h_spec) {
       this.plot = plot;
@@ -244,6 +212,64 @@ $(function(){ //DOM Ready
     };
 
     return keyboard;
-  })(); // ggvis.handlers.Keyboard
+  })(); // ggvis.handlers.keyboard
+
+
+  // ---------------------------------------------------------------------------
+  // Hover handler
+  // Sends ggvis_xxxx_mouse_over and ggvis_xxxx_mouse_out events
+  ggvis.handlers.hover = (function() {
+    var hover = function(plot, h_spec) {
+      this.plot = plot;
+      this.h_spec = h_spec;
+
+      // Event ID for naming event handlers and removing later
+      this._eventId = "ggvis_" + h_spec.id;
+      // The prefix to the shiny input name
+      this._inputIdPrefix = "ggvis_" + h_spec.id;
+
+      plot.chart.on("mouseover." + this._eventId, this._createMouseOverHandler());
+      plot.chart.on("mouseout."  + this._eventId, this._createMouseOutHandler());
+    };
+
+    var prototype = hover.prototype;
+
+    prototype.remove = function() {
+      this.plot.chart.off("mouseover." + this._eventId);
+      this.plot.chart.off("mouseout."  + this._eventId);
+    };
+
+    prototype._createMouseOverHandler = function() {
+      var self = this;
+      return function(event, item) {
+        Shiny.onInputChange(self._inputIdPrefix + "_mouse_over",
+          {
+            plot_id: self.plot.plotId,
+            data: item.datum.data,
+            pagex: event.pageX,
+            pagey: event.pageY
+          }
+        );
+      };
+    };
+
+    prototype._createMouseOutHandler = function() {
+      var self = this;
+      return function(event, item) {
+        /* jshint unused: false */
+        Shiny.onInputChange(self._inputIdPrefix + "_mouse_out",
+          {
+            plot_id: self.plot.plotId,
+            data: null,
+            pagex: null,
+            pagey: null
+          }
+        );
+      };
+    };
+
+    return hover;
+  })(); // ggvis.handlers.hover
+
 
 });
