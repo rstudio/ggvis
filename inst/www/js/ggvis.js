@@ -100,7 +100,7 @@ ggvis = (function(_) {
           });
         }
 
-        self.resetHandlers();
+        self.removeHandlers();
         self.handlers = self.addHandlers(self.spec.handlers);
 
         // If there's a brush mark, turn on brushing, passing in brush options
@@ -351,7 +351,7 @@ ggvis = (function(_) {
       }
     };
 
-    prototype.resetHandlers = function() {
+    prototype.removeHandlers = function() {
       for (var i=0; i<this.handlers.length; i++) {
         this.handlers.remove();
       }
