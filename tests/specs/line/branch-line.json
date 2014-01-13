@@ -222,5 +222,6 @@
 		"exit_duration" : 250,
 		"brush_policy" : "debounce",
 		"brush_delay" : 250
-	}
+	},
+	"handlers" : []
 }

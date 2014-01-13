@@ -10,7 +10,7 @@
 					"count__" : "number"
 				}
 			},
-			"values" : "\"xmin__\",\"xmax__\",\"count__\"\n0,1, 0\n1,2, 4\n2,3, 8\n3,4,16\n4,5, 1\n5,6, 3\n6,7, 0"
+			"values" : "\"xmin__\",\"xmax__\",\"count__\"\n0,1,0\n1,2,4\n2,3,8\n3,4,16\n4,5,1\n5,6,3\n6,7,0"
 		}
 	],
 	"scales" : [
@@ -129,5 +129,6 @@
 		"exit_duration" : 250,
 		"brush_policy" : "debounce",
 		"brush_delay" : 250
-	}
+	},
+	"handlers" : []
 }
