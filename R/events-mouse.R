@@ -78,8 +78,8 @@ as.reactive.tooltip <- function(x, session = NULL, ...) {
 #' Send a message to the client to show or hide a tooltip
 #'
 #' @param session A Shiny session object.
-#' @param pagex x offset of the tooltip box, relative to the mouse cursor.
-#' @param pagey y offset of the tooltip box, relative to the mouse cursor.
+#' @param pagex x position of the tooltip box on the page.
+#' @param pagey y position of the tooltip box on the page.
 #' @param html HTML to display in the tooltip box.
 #'
 #' @export
