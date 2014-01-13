@@ -55,23 +55,41 @@ as.reactive.tooltip <- function(x, session = NULL, ...) {
 
   observe({
     h$mouse_out()
-    h$tell_to("hide_tooltip", .use_id = FALSE)
+    hide_tooltip(session)
   })
   observe({
     hover <- h$mouse_over()
     if (is.null(hover$data)) {
-      h$tell_to("hide_tooltip", .use_id = FALSE)
+      hide_tooltip(session)
       return()
     }
 
     html <- x$control_args$f(hover$data)
 
-    h$tell_to("show_tooltip",
+    show_tooltip(session,
       pagex = hover$pagex - 90,
       pagey = hover$pagey - 6,
-      html = html,
-      .use_id = FALSE
+      html = html
     )
   })
   reactive({ NULL })
+}
+
+#' Send a message to the client to show or hide a tooltip
+#'
+#' @param session A Shiny session object.
+#' @param pagex x offset of the tooltip box, relative to the mouse cursor.
+#' @param pagey y offset of the tooltip box, relative to the mouse cursor.
+#' @param html HTML to display in the tooltip box.
+#'
+#' @export
+show_tooltip <- function(session, pagex = 0, pagey = 0, html = "") {
+  ggvis_message(session, "show_tooltip",
+    list(pagex = pagex, pagey = pagey, html = html))
+}
+
+#' @rdname show_tooltip
+#' @export
+hide_tooltip <- function(session) {
+  ggvis_message(session, "hide_tooltip")
 }

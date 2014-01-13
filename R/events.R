@@ -30,21 +30,10 @@ EventBroker <- setRefClass("EventBroker",
       class <- as.vector(.refClassDef@className)
       list(id = id, type = class, path = path)
     },
-        
-    # Standard communication protocols
-    message_name = function(name, .use_id = TRUE) {
-      if (.use_id) {
-        paste0("ggvis_", id, "_", name)
-      } else {
-        paste0("ggvis_", name)
-      }
-    },
-    
-    tell_to = function(name, ..., .use_id = TRUE) {
-      "Send a message to the client telling it to do something."
 
-      check_session()
-      session$sendCustomMessage(message_name(name, .use_id), list(...))
+    # Standard communication protocols
+    message_name = function(name) {
+      paste0("ggvis_", id, "_", name)
     },
 
     listen_for = function(name) {

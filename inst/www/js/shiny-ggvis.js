@@ -253,32 +253,81 @@ $(function(){ //DOM Ready
       };
     };
 
-    // Tooltip message handlers
-    // These custom message handlers are registered once with Shiny, regardless
-    // of how many mouse event handlers are registered with the plot(s).
-    Shiny.addCustomMessageHandler('ggvis_show_tooltip', function(data) {
-      // Remove any existing tooltips
-      $('.ggvis-tooltip').remove();
-
-      // Add the tooltip div
-      var $el = $('<div id="ggvis-tooltip" class="ggvis-tooltip"></div>')
-        .appendTo('body');
-
-      $el.html(data.html);
-      $el.css({
-        left:  data.pagex,
-        top:   data.pagey,
-        display: "block"
-      });
-    });
-
-    Shiny.addCustomMessageHandler('ggvis_hide_tooltip', function(data) {
-      /* jshint unused: false */
-      $('.ggvis-tooltip').remove();
-    });
-
     return hover;
   })(); // ggvis.handlers.hover
 
+
+  // ---------------------------------------------------------------------------
+  // Handlers for messages sent from Shiny server to client
+  ggvis.messages = (function() {
+    var messages = {
+      _handlers: {}   // Registry of ggvis message handlers
+    };
+
+    // Register a handler function for messages of a given type
+    // handler should have signature function(data, id)
+    messages.addHandler = function(type, handler) {
+      messages._handlers[type] = handler;
+    };
+
+    // Remove handler function for messages of a given type
+    messages.removeHandler = function(type) {
+      delete messages._handlers[type];
+    };
+
+    // Handle custom messages with this format:
+    // {
+    //   "custom": {
+    //     "ggvis_message": {
+    //       "type": "show_tooltip",
+    //       "id": null,
+    //       "data": {
+    //         "pagex":    -63,
+    //         "pagey":    196,
+    //         "html": "text here"
+    //       }
+    //     }
+    //   }
+    // }
+    Shiny.addCustomMessageHandler('ggvis_message', function(msg) {
+      var type = msg.type;
+      if (!type) return;
+
+      // Grab the appropriate handler function for this type of message
+      var handler = messages._handlers[type];
+      if (!handler) return;
+
+      handler(msg.data, msg.id);
+    });
+
+    return messages;
+  })(); // ggvis.messages
+
+
+  // ---------------------------------------------------------------------------
+  // Message handlers
+
+  // Tooltip message handlers
+  ggvis.messages.addHandler("show_tooltip", function(data, id) {
+    /* jshint unused: false */
+    // Remove any existing tooltips
+    $('.ggvis-tooltip').remove();
+
+    // Add the tooltip div
+    var $el = $('<div id="ggvis-tooltip" class="ggvis-tooltip"></div>')
+      .appendTo('body');
+
+    $el.html(data.html);
+    $el.css({
+      left:  data.pagex,
+      top:   data.pagey,
+      display: "block"
+    });
+  });
+
+  ggvis.messages.addHandler("hide_tooltip", function(data, id) {
+    /* jshint unused: false */
+    $('.ggvis-tooltip').remove();
+  });
 
 });

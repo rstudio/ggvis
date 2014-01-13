@@ -50,6 +50,7 @@ Collate:
     'last_vis.R'
     'mark.R'
     'marks.R'
+    'message.R'
     'opts.R'
     'pipe.R'
     'pipeline.R'
