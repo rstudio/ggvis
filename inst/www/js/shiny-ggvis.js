@@ -127,28 +127,6 @@ $(function(){ //DOM Ready
     };
   }
 
-  // Tooltip message handler
-  Shiny.addCustomMessageHandler('ggvis_tooltip', function(data) {
-    if (data.visible) {
-      // Remove any existing tooltips
-      $('.ggvis-tooltip').remove();
-
-      // Add the tooltip div
-      var $el = $('<div id="ggvis-tooltip" class="ggvis-tooltip"></div>')
-        .appendTo('body');
-
-      $el.html(data.html);
-      $el.css({
-        left:  data.pagex,
-        top:   data.pagey,
-        display: "block"
-      });
-
-    } else {
-      $('.ggvis-tooltip').remove();
-    }
-  });
-
   // ---------------------------------------------------------------------------
   // Interaction event handlers
   // These are defined here instead of ggvis.js because at present all of the
@@ -274,6 +252,30 @@ $(function(){ //DOM Ready
         self._nonce_counter++;
       };
     };
+
+    // Tooltip message handlers
+    // These custom message handlers are registered once with Shiny, regardless
+    // of how many mouse event handlers are registered with the plot(s).
+    Shiny.addCustomMessageHandler('ggvis_show_tooltip', function(data) {
+      // Remove any existing tooltips
+      $('.ggvis-tooltip').remove();
+
+      // Add the tooltip div
+      var $el = $('<div id="ggvis-tooltip" class="ggvis-tooltip"></div>')
+        .appendTo('body');
+
+      $el.html(data.html);
+      $el.css({
+        left:  data.pagex,
+        top:   data.pagey,
+        display: "block"
+      });
+    });
+
+    Shiny.addCustomMessageHandler('ggvis_hide_tooltip', function(data) {
+      /* jshint unused: false */
+      $('.ggvis-tooltip').remove();
+    });
 
     return hover;
   })(); // ggvis.handlers.hover

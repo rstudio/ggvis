@@ -51,21 +51,27 @@ tooltip <- function(f) {
 
 #' @export
 as.reactive.tooltip <- function(x, session = NULL, ...) {
-  h <- Hover(session)
+  h <- Hover(session, id = x$id)
+
   observe({
     h$mouse_out()
-    h$tell_to("hide_tooltip")
+    h$tell_to("hide_tooltip", .use_id = FALSE)
   })
   observe({
     hover <- h$mouse_over()
+    if (is.null(hover$data)) {
+      h$tell_to("hide_tooltip", .use_id = FALSE)
+      return()
+    }
+
     html <- x$control_args$f(hover$data)
-    
-    tell_to("show_tooltip",
-      visible = TRUE,
-      pagex = hover$pagex - 100,
-      pagey = hover$pagey + 6,
-      html = html
+
+    h$tell_to("show_tooltip",
+      pagex = hover$pagex - 90,
+      pagey = hover$pagey - 6,
+      html = html,
+      .use_id = FALSE
     )
   })
-  reactive(NULL)
+  reactive({ NULL })
 }
