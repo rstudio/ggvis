@@ -3,6 +3,7 @@
 \alias{mark_area}
 \alias{mark_image}
 \alias{mark_line}
+\alias{mark_point}
 \alias{mark_rect}
 \alias{mark_symbol}
 \alias{mark_text}
@@ -10,6 +11,8 @@
 \title{Vega marks.}
 \usage{
 mark_symbol(props = NULL, data = NULL)
+
+mark_point(props = NULL, data = NULL)
 
 mark_image(props = NULL, data = NULL)
 
@@ -40,7 +43,8 @@ statistical transforms.
 }
 \details{
 Note that by supplying a fill property to \code{mark_line}
-will produce a filled property.
+will produce a filled property. \code{mark_point} is an
+alias to \code{mark_symbol}.
 }
 \section{Properties}{
   You can set the following mark properties:

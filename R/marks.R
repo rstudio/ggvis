@@ -7,7 +7,7 @@
 #' statistical transforms.
 #'
 #' Note that by supplying a fill property to \code{mark_line} will produce
-#' a filled property.
+#' a filled property. \code{mark_point} is an alias to \code{mark_symbol}.
 #'
 #' @template properties
 #' @name marks
@@ -33,6 +33,7 @@ default_mark_properties.default <- function(mark) {
 }
 
 
+
 #' @rdname marks
 #' @export
 mark_symbol <- function(props = NULL, data = NULL) mark("symbol", props = props, data = data)
@@ -45,6 +46,10 @@ valid_mark_properties.mark_symbol <- function(mark) {
 default_mark_properties.mark_symbol <- function(mark) {
   props(fill := "#000000", size := 100)
 }
+
+#' @rdname marks
+#' @export
+mark_point <- mark_symbol
 
 
 #' @rdname marks
