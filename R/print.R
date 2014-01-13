@@ -1,14 +1,16 @@
 #' View in a ggvis plot in the browser.
-#' 
+#'
 #' \code{view_static} creates a static web page in a temporary directory;
-#' \code{view_dynamic} generate a dynamic shiny app and launches it. Print 
+#' \code{view_dynamic} generate a dynamic shiny app and launches it. Print
 #' picks between the two methods automatically.
 #'
 #' @param x A ggvis object.
 #' @param dynamic Uses \code{view_dynamic} if \code{TRUE}, \code{view_static} if
 #'   \code{FALSE}. The default picks automatically based on the presence of
 #'   reactives or interactive inputs.
-#' @param ... Other arguments passed on to \code{view_dynamic} and 
+#' @param spec If \code{TRUE} will override usual printing and instead print
+#'   the spec rendered as json. This is useful for generating regression tests.
+#' @param ... Other arguments passed on to \code{view_dynamic} and
 #'   \code{view_static}
 #' @param launch If \code{TRUE}, launch this web page in a browser.
 #' @param port the port on which to start the shiny app. If NULL (the default),
@@ -16,12 +18,20 @@
 #' @keywords internal
 #' @method print ggvis
 #' @export
-print.ggvis <- function(x, dynamic = NA, ...) {
-  
+print.ggvis <- function(x, dynamic = NA,
+                        spec = getOption("ggvis.print_spec", FALSE), ...) {
+
   set_last_vis(x)
-  
+
+  # Special case for spec printing mode
+  if (spec) {
+    spec <- as.vega(x, dynamic = FALSE)
+    cat(toJSON(spec, pretty = TRUE), "\n", sep = "")
+    return()
+  }
+
   if (is.na(dynamic)) dynamic <- is.dynamic(x) && interactive()
-  
+
   if (dynamic) {
     view_dynamic(x, ...)
   } else {
@@ -33,18 +43,18 @@ print.ggvis <- function(x, dynamic = NA, ...) {
 #' @export
 #' @importFrom RJSONIO toJSON
 #' @importFrom whisker whisker.render
-view_static <- function(x, 
-                        renderer = getOption("ggvis.renderer", default="canvas"), 
+view_static <- function(x,
+                        renderer = getOption("ggvis.renderer", default="canvas"),
                         launch = interactive()) {
-  
+
   if (!(renderer %in% c("canvas", "svg")))
     stop("renderer must be 'canvas' or 'svg'")
-  
+
   temp_dir <- tempfile(pattern = "ggvis")
   dir.create(temp_dir)
-  
+
   copy_www_resources(temp_dir)
-  
+
   spec <- as.vega(x, dynamic = FALSE)
   vega_json <- toJSON(spec, pretty = TRUE)
 
@@ -85,11 +95,11 @@ view_static <- function(x,
   )
 
   body <- format(body)
-  
+
   html_file <- file.path(temp_dir, "plot.html")
   writeLines(whisker.render(template, list(head = head, body = body)),
     con = html_file)
-  
+
   if (launch) view_plot(html_file, 350)
   invisible(html_file)
 }
@@ -138,13 +148,13 @@ copy_www_resources <- function(destdir) {
 #' @importFrom RJSONIO toJSON
 #' @importFrom whisker whisker.render
 #' @importFrom shiny basicPage uiOutput mainPanel tags observe runApp stopApp renderUI
-view_dynamic <- function(x, 
-                         renderer = getOption("ggvis.renderer", default="canvas"), 
+view_dynamic <- function(x,
+                         renderer = getOption("ggvis.renderer", default="canvas"),
                          launch = TRUE, port = NULL) {
-  
+
   if (!(renderer %in% c("canvas", "svg")))
     stop("renderer must be 'canvas' or 'svg'")
-  
+
   plot_id <- "plot1"
 
   # Find number of control elements for the plot
@@ -168,13 +178,13 @@ view_dynamic <- function(x,
     r_gv <- reactive(x)
     # Set up observers for the spec and the data
     observe_ggvis(r_gv, plot_id, session, renderer)
-    
+
     # User interface elements (in the sidebar). These must be added dynamically
     # (instead of being rendered statically in ui) because they are unique to
     # each session.
     output$ggvis_controls <- renderControls(r_gv, session)
   }
-  
+
   app <- list(ui = ui, server = server)
   if (launch) {
     # Request 70 vertical pixels for each pair of control items, since there are

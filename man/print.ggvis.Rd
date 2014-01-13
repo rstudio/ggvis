@@ -4,7 +4,8 @@
 \alias{view_static}
 \title{View in a ggvis plot in the browser.}
 \usage{
-\method{print}{ggvis}(x, dynamic = NA, ...)
+\method{print}{ggvis}(x, dynamic = NA, spec = getOption("ggvis.print_spec",
+  FALSE), ...)
 
 view_static(x, renderer = getOption("ggvis.renderer", default = "canvas"),
   launch = interactive())
@@ -19,6 +20,10 @@ view_dynamic(x, renderer = getOption("ggvis.renderer", default = "canvas"),
   \code{view_static} if \code{FALSE}. The default picks
   automatically based on the presence of reactives or
   interactive inputs.}
+
+  \item{spec}{If \code{TRUE} will override usual printing
+  and instead print the spec rendered as json. This is
+  useful for generating regression tests.}
 
   \item{...}{Other arguments passed on to
   \code{view_dynamic} and \code{view_static}}
