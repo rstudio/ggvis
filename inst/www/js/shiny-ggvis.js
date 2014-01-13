@@ -320,8 +320,7 @@ $(function(){ //DOM Ready
     $el.html(data.html);
     $el.css({
       left:  data.pagex,
-      top:   data.pagey,
-      display: "block"
+      top:   data.pagey
     });
   });
 
