@@ -65,8 +65,10 @@ default_scale <- function(prop, type, ..., name = NULL) {
 
   default <- scale_defaults[[paste0(scale, "_", type)]]
   if (is.null(default)) {
-    stop("Don't know how to make default scale for ", prop,
-      " with variable of type ", type, call. = FALSE)
+    # Silently drop scales that we don't know how to provide: error
+    # detection is left up to the mark, because it knows exactly what
+    # properties it needs.
+    return(NULL)
   }
 
   f <- match.fun(default$scale)
