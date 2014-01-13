@@ -3,41 +3,67 @@
 %\VignetteIndexEntry{ggvis basics}
 -->
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, message = FALSE}
 library(knitr)
-suppressPackageStartupMessages(library(ggvis))
-opts_chunk$set(comment = "#", error = TRUE, tidy = FALSE, eval = FALSE)
+library(ggvis)
+opts_chunk$set(comment = "#>", error = TRUE, tidy = FALSE)
 ```
 
 # ggvis basics
 
-Every ggvis graphic starts with a call to `ggvis()`. Every ggvis plot must 
-contain one or more:
+## Introduction
 
-* data sets
-* property mapping
-* mark
+The goal of ggvis is to make it easy to build interactive graphics for exploratory data analysis. ggvis has a similar underlying theory to [ggplot2](http://ggplot2.org) (the grammar of graphics), but it's expressed a little differently, and adds new features to make your plots interactive. ggvis also incorporates reactive programming ideas drawn from [shiny](http://www.rstudio.com/shiny/).
 
-A basic plot looks like this:
+Currently, every interactive ggvis plot must be connected to a running R session. This is great for exploration, because anything you can do in R, you can do in your interactive plot, but not so great for publication. Making it easy to publish ggvis is on our long-term roadmap. For now, if you want to make a ggvis plot broadly available, sign up for [shinyapps](http://www.shinyapps.io/) and publish your ggvis plot there.
 
-```{r}
-ggvis(mtcars, props(x = ~ wt, y = ~ mpg), mark_symbol())
-```
+The rest of this vignette will introduce you to the major ideas in ggvis, and point you to the other resources where they are explained in more detail. 
 
-The order of the arguments doesn't matter, so the following specifications 
-will create the same plot. However, it's customary to arrange arguments in the 
-order: data, prop, mark.
+## Required components
+
+Every ggvis graphic starts with a call to `ggvis()` which specify some data and a set of mappings which describe how variables in the dataset are mapped to visual properties (like position, size and shape). Similar to ggplot2, you then create a visualisation by adding on some marks. A basic scatterplot plot looks like this:
 
 ```{r}
-ggvis(mark_symbol(), mtcars, props(x = ~ wt, y = ~ mpg))
-ggvis(props(x = ~ wt, y = ~ mpg), mtcars, mark_symbol())
+ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
+  mark_point()
 ```
 
-## Data sets
+This visualises the `mtcars` dataset by mapping `wt` to x-position, `mpg` to y-position and drawing each row with a point. ggvis uses formula notation (`x = ~wt)` to remind you that unlike most functions, `props()` does not use the value of the `wt` variable, but instead defines a mapping between a visual property (x-position) and a variable in the dataset (`wt`).
 
-You bring the data and ggvis brings the plots. Unlike ggplot2, ggvis will eventually support multiple types of data, not just data frames.
+(If you're not using RStudio, you'll notice that this code opens up your web browser. That's because all ggvis graphics are web graphics, and need to be shown in the browser. RStudio includes a built-in browser so it can show you the plots directly.)
 
-You'll can also use transformation functions which take a dataset and modify it in some way.  See `transform_bin()` and `transform_smooth()` for examples.
+You can also add on components that add interactive capabilities to your plot. Here are a few examples:
+
+* Tooltips:
+
+    ```{r}
+    ggvis(mtcars, props(x = ~wt, y = ~mpg)) + 
+      mark_point() + 
+      tooltip(function(df) df$wt)
+    ```
+
+* Controls
+
+    ```{r}
+    slider_s <- input_slider(10, 100)
+    slider_o <- input_slider(0, 1, value = 0.5)
+  
+    ggvis(mtcars, props(x = ~wt, y = ~mpg, size := slider_s, opacity := slider_o)) + 
+      mark_point()
+    ```
+
+* Keyboard controls:
+
+    ```{r}
+    keys_s <- left_right(10, 100)
+  
+    ggvis(mtcars, props(x = ~wt, y = ~mpg, size := keys_s)) + 
+      mark_point()
+    ```
+
+These interactive plots are created using shiny, and you can currently only have one running at a time. To finish with a plot, press the stop button in Rstudio, or close the browser window and then press Ctrl + C in R.
+
+You may have noticed something a little different in two of the props specifications: when we use a slider or keyboard control we use `:=` instead of `=` and don't use `~`.  This is explained in the next section.
 
 ## Property mappings
 
@@ -47,9 +73,7 @@ The first thing you really need to understand is how to map variables in your da
 
 * `props(x = ~factor(cyl), y = mpg / wt)`: map x position to `cyl` transformed to be a factor, and y to `mpg` standardised by `wt`
 
-Note the use of `~`: we're using to refer to variables in the dataset, not variables in the local environment.
-
-Unlike ggplot2, you also use `props()` to set constant values:
+Note the use of `~`. This reminds us that we're referring to variables in the plot dataset, not the value of variables in the local environment. Unlike ggplot2, you also use `props()` to set constant values:
 
 * `props(x = ~wt, y = ~mpg, stroke := "red", fill := "blue")`: as well as mapping `wt` to x position and `mpg` to y position, also _set_ the stroke to red and the fill to blue.
 
@@ -62,23 +86,23 @@ This gives us four combinations:
 * `x := ~mpg`: set a variable
 * `x := 1`: set a constant
 
-Most of the time you'll use either `x = ~mpg` or `fill := "red"`. But there are cases where the other options are useful, as you'll see in other vignettes.
+Most of the time you'll use either `x = ~mpg` or `fill := "red"`. But there are cases where the other options are useful, as you'll see in the [properties and scales](properties-scales.html) vignette.
 
 ## Marks
 
 Marks do the actual drawing. 
 
-* `mark_symbol`, for drawing points (like `geom_point`)
+* `mark_point()`, for drawing points (like `geom_point`)
 
-* `mark_line`, for drawing general paths and polygons (like `geom_path`, or if ordered, `geom_line`)
+* `mark_line()`, for drawing general paths and polygons (like `geom_path()`, or if ordered, `geom_line()`)
 
-* `mark_rect`, for drawing rectangles (like `geom_rect`, `geom_bar`, `geom_tile`)
+* `mark_rect()`, for drawing rectangles (like `geom_rect()`, `geom_bar()`, `geom_tile()`)
 
-* `mark_area`, for filled areas (like `geom_area` and `geom_ribbon`)
+* `mark_area()`, for filled areas (like `geom_area()` and `geom_ribbon()`)
 
-* `mark_text`, for text (like `geom_text`)
+* `mark_text`, for text (like `geom_text()`)
 
-* `mark_arc`, for drawing circular arcs
+* `mark_arc()`, for drawing circular arcs
 
 The basic properties are:
 
@@ -87,12 +111,29 @@ The basic properties are:
  * `stroke` and `fill` colours
  * `opacity` of both stroke and fill
  
-`mark_symbol` also understands:
+`mark_point()` also understands:
  
  * `size`: the area of the symbol (in pixels)
  * `shape`: the shape of the symbol
 
-Plus a quite few more that only apply to `mark_text` or `mark_arc`. See `?props` for a full list. 
+`mark_text()` or `mark_arc()` also understand a lot of other properties. See `?props` for a full list. 
+
+## Branches
+
+Many of the most useful geoms in ggplot2 were actually combinations on geoms and a statistical transformation. In ggvis, these are called branches:
+
+* `branch_smooth()` = `stat_transform()` + `mark_ribbon()`
+
+    ```{r}
+    ggvis(mtcars, props(x = ~mpg, y = ~wt)) + branch_smooth()
+    ```
+    
+* `branch_histogram()` = `stat_bin()` + `mark_rect()`
+
+    ```{r}
+    ggvis(mtcars, props(x = ~mpg)) + branch_histogram()
+    ggvis(mtcars, props(x = ~mpg)) + branch_histogram(binwidth = 2)
+    ```
 
 ## More details
 
@@ -104,7 +145,7 @@ There are also other optional components that you can include:
 * `legends` and `axes` to control the appearance of the guides produced by
   the scales.  See the "axes and legends" vignette for more details.
   
-* `nodes` to create a richer hierarchy of data and marks. See the "data 
+* `branches` to create a richer hierarchy of data and marks. See the "data 
   hierarchy" vignette to learn how this works.
 
 Other vignettes describe:
