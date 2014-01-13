@@ -1,6 +1,11 @@
 flatten <- function(node, parent = NULL, session = NULL) {
 
   node$props <- init_inputs(node$props, session)
+  # Convert handlers which were added directly to the ggvis object to reactives.
+  # This is useful only for observers. If the reactive returns a reactive
+  # expression, it will never get used because the returned values aren't
+  # used.
+  lapply(node$handlers, as.reactive, session)
 
   # Inherit behaviour from parent
   node$dynamic <- node$dynamic %||% parent$dynamic
