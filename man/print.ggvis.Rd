@@ -22,8 +22,10 @@ view_dynamic(x, renderer = getOption("ggvis.renderer", default = "canvas"),
   interactive inputs.}
 
   \item{spec}{If \code{TRUE} will override usual printing
-  and instead print the spec rendered as json. This is
-  useful for generating regression tests.}
+  and instead print the spec rendered as json. If a
+  character vector, will display just those components of
+  the spec. This is useful for generating regression
+  tests.}
 
   \item{...}{Other arguments passed on to
   \code{view_dynamic} and \code{view_static}}

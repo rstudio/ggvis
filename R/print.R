@@ -9,7 +9,8 @@
 #'   \code{FALSE}. The default picks automatically based on the presence of
 #'   reactives or interactive inputs.
 #' @param spec If \code{TRUE} will override usual printing and instead print
-#'   the spec rendered as json. This is useful for generating regression tests.
+#'   the spec rendered as json. If a character vector, will display just those
+#'   components of the spec. This is useful for generating regression tests.
 #' @param ... Other arguments passed on to \code{view_dynamic} and
 #'   \code{view_static}
 #' @param launch If \code{TRUE}, launch this web page in a browser.
@@ -24,10 +25,8 @@ print.ggvis <- function(x, dynamic = NA,
   set_last_vis(x)
 
   # Special case for spec printing mode
-  if (spec) {
-    spec <- as.vega(x, dynamic = FALSE)
-    cat(toJSON(spec, pretty = TRUE), "\n", sep = "")
-    return()
+  if (!identical(spec, FALSE)) {
+    return(show_spec(x, spec))
   }
 
   if (is.na(dynamic)) dynamic <- is.dynamic(x) && interactive()
@@ -37,6 +36,19 @@ print.ggvis <- function(x, dynamic = NA,
   } else {
     view_static(x, ...)
   }
+}
+
+show_spec <- function(x, pieces) {
+  out <- as.vega(x, dynamic = FALSE)
+
+  if (is.character(pieces)) {
+    out <- out[pieces]
+  }
+
+  json <- toJSON(out, pretty = TRUE)
+  cat(gsub("\t", " ", json), "\n", sep = "")
+
+  invisible()
 }
 
 #' @rdname print.ggvis
