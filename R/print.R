@@ -1,19 +1,20 @@
 #' View in a ggvis plot in the browser.
 #'
 #' \code{view_static} creates a static web page in a temporary directory;
-#' \code{view_dynamic} generate a dynamic shiny app and launches it. Print
-#' picks between the two methods automatically.
+#' \code{view_dynamic} generate a dynamic shiny app and launches it.
+#' \code{print} picks between the two methods automatically based on whether
+#' or not your plot has interactive features.
 #'
 #' @param x A ggvis object.
 #' @param dynamic Uses \code{view_dynamic} if \code{TRUE}, \code{view_static} if
-#'   \code{FALSE}. The default picks automatically based on the presence of
-#'   reactives or interactive inputs.
-#' @param spec If \code{TRUE} will override usual printing and instead print
-#'   the spec rendered as json. If a character vector, will display just those
+#'   \code{FALSE}. The default, \code{NA}, chooses automatically based on the
+#'   presence of reactives or interactive inputs in \code{x}.
+#' @param spec If \code{TRUE}, override usual printing and instead print
+#'   the json plot spec. If a character vector, will display just those
 #'   components of the spec. This is useful for generating regression tests.
 #' @param ... Other arguments passed on to \code{view_dynamic} and
-#'   \code{view_static}
-#' @param launch If \code{TRUE}, launch this web page in a browser.
+#'   \code{view_static} from \code{print}.
+#' @param launch If \code{TRUE}, launch this web page in a browser or Rstudio.
 #' @param port the port on which to start the shiny app. If NULL (the default),
 #'   Shiny will select a random port.
 #' @keywords internal
