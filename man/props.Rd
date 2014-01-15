@@ -4,7 +4,7 @@
 \alias{props}
 \title{Manage a list of properties.}
 \usage{
-props(..., inherit = TRUE)
+props(..., .props = NULL, inherit = TRUE)
 
 ":="(prop, value)
 
@@ -13,6 +13,14 @@ is.ggvis_props(x)
 \arguments{
   \item{...}{A set of name-value pairs. The name should be
   a valid vega property.}
+
+  \item{.props}{When calling \code{props} from other
+  functions, you'll often have a list of quoted function
+  functions. You can pass that function to the
+  \code{.props} argument instead of messing around with
+  substitute. In other words, \code{.props} lets you opt
+  out of the non-standard evaluation that \code{props}
+  does.  parse in a list of un}
 
   \item{inherit}{If \code{TRUE}, the defaults, will inherit
   from properties from the parent branch If \code{FALSE},
@@ -173,5 +181,10 @@ props(fill.update := "black", fill.hover := "red")
 
 # Use a column called id as the key (for dynamic data)
 props(key := ~id)
+
+# Using .props
+props(.props = list(x = 1, y = 2))
+props(.props = list(x = ~mpg, y = ~cyl))
+props(.props = list(quote(x := ~mpg)))
 }
 

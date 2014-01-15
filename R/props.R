@@ -4,9 +4,9 @@
 #' using a set of conventions designed to capture the most common use cases.
 #' If you need something less common, you'll need to use \code{\link{prop}} to
 #' access all possible options.
-#' 
+#'
 #' @section Heuristics:
-#' 
+#'
 #' If the values are not already objects of class \code{prop}, \code{props}
 #' uses the following heuristics to when creating the prop:
 #'
@@ -14,7 +14,7 @@
 #'  \item atomic vectors, e.g. \code{x = 1}: scaled = FALSE
 #'  \item an interative input, e.g. \code{x = input_slider}:
 #'     scaled = FALSE
-#'  \item a formula containing a single value, e.g. \code{x ~ 1}: 
+#'  \item a formula containing a single value, e.g. \code{x ~ 1}:
 #'     scaled = TRUE
 #'  \item a formula containing a name or expression, \code{x ~ mpg}:
 #'     scaled = TRUE
@@ -22,15 +22,15 @@
 #'
 #' @section Non-standard evaluation:
 #'
-#' \code{props} uses non-standard evaluation in a slightly unusual way: 
-#' if you provide a formula input, the LHS of the formula will provide the 
+#' \code{props} uses non-standard evaluation in a slightly unusual way:
+#' if you provide a formula input, the LHS of the formula will provide the
 #' name of the component. In otherwise, \code{props(x = y ~ 1)} is the
 #' same as \code{props(y ~ 1)}.
-#' 
-#' You can combine variables from the dataset and variables defined in the 
+#'
+#' You can combine variables from the dataset and variables defined in the
 #' local environment: expressions will be evaluated in the environment which
 #' the formula was defined.
-#' 
+#'
 #' If you have the name of a variable in a string, see the
 #' props vignette for how to create the needed property mapping.
 #'
@@ -39,7 +39,7 @@
 #' There are four different sets of properties (propsets) that the marks
 #' can use. These can, for example, be used to change the appearance of a mark
 #' when the mouse cursor is hovering over it: when the mark is hovered over, it
-#' uses the hover propset, and when the mark isn't hovered over, it uses the 
+#' uses the hover propset, and when the mark isn't hovered over, it uses the
 #' update propset.
 #'
 #' \itemize{
@@ -57,7 +57,7 @@
 #'
 #' The default propset is update, so if you run \code{props(fill := "red")},
 #' this is equivalent to \code{props(fill.update := "red")}.
-#' 
+#'
 #' In practice, the enter and exit propsets are useful only when the update has
 #' a duration (and is therefore not instantaneous). The update propset can be
 #' thought of as the "default" state.
@@ -74,6 +74,12 @@
 #' @template properties
 #' @param ... A set of name-value pairs. The name should be a valid vega
 #'   property.
+#' @param .props When calling \code{props} from other functions, you'll
+#'   often have a list of quoted function functions. You can pass that function
+#'   to the \code{.props} argument instead of messing around with
+#'   substitute. In other words, \code{.props} lets you opt out of the
+#'   non-standard evaluation that \code{props} does.
+#'   parse in a list of un
 #' @param inherit If \code{TRUE}, the defaults, will inherit from properties
 #'   from the parent branch If \code{FALSE}, it will start from nothing.
 #' @export
@@ -86,7 +92,7 @@
 #' props(x = 1, y = 1)
 #' # Use an interactive slider
 #' props(opacity := input_slider(0, 1))
-#' 
+#'
 #' # To control other settings (like custom scales, mult and offset)
 #' # use a prop object
 #' props(x = prop("old", scale = TRUE, offset = -1))
@@ -97,11 +103,16 @@
 #'
 #' # Use a column called id as the key (for dynamic data)
 #' props(key := ~id)
-props <- function(..., inherit = TRUE) {
+#'
+#' # Using .props
+#' props(.props = list(x = 1, y = 2))
+#' props(.props = list(x = ~mpg, y = ~cyl))
+#' props(.props = list(quote(x := ~mpg)))
+props <- function(..., .props = NULL, inherit = TRUE) {
   check_empty_args()
-  args <- dots(...)
+  args <- c(dots(...), .props)
   env <- parent.frame()
-  
+
   # If named, use regular evaluation and scale
   scaled <- lapply(args[named(args)], function(x) {
     val <- eval(x, env)
@@ -149,8 +160,12 @@ props <- function(..., inherit = TRUE) {
   stop(":= may only be used inside props", call. = FALSE)
 }
 
+uses_colon_equals <- function(x) {
+  is.call(x) && identical(x[[1]], quote(`:=`))
+}
+
 check_unscaled_form <- function(x) {
-  if (!is.call(x) || !identical(x[[1]], quote(`:=`))) {
+  if (!uses_colon_equals(x)) {
     stop("Arguments to props must use either := or =", call. = FALSE)
   }
 }

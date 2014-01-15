@@ -30,6 +30,12 @@ ggvis_add <- function(e1, e2, e2name) UseMethod("ggvis_add")
 
 #' @export
 ggvis_add.ggvis <- function(e1, e2, e2name) {
+
+  # Bare list: recurse over children
+  if (is.list(e2) && !is.object(e2)) {
+    return(Reduce(ggvis_add, e2, init = e1))
+  }
+
   type <- component_type(e2)
 
   # Top-level ggvis objects can add many kinds of objects

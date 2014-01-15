@@ -16,9 +16,9 @@ dot_names <- function(...) {
   nms <- names2(args)
   missing <- nms == ""
   if (all(!missing)) return(nms)
-  
+
   defaults <- vapply(args[missing], deparse2, character(1), USE.NAMES = FALSE)
-  
+
   nms[missing] <- defaults
   nms
 }
@@ -110,7 +110,7 @@ safe_vega_var <- function(x) {
   } else if (is.quoted(x)) {
     x <- deparse2(x)
   }
-  
+
   gsub(".", "\\.", x, fixed = TRUE)
 }
 
