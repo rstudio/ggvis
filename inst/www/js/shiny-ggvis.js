@@ -256,6 +256,50 @@ $(function(){ //DOM Ready
     return hover;
   })(); // ggvis.handlers.hover
 
+  // ---------------------------------------------------------------------------
+  // Click handler
+  // Sends ggvis_xxxx_mouse_click
+  ggvis.handlers.click = (function() {
+    var click = function(plot, h_spec) {
+      this.plot = plot;
+      this.h_spec = h_spec;
+
+      // Event ID for naming event handlers and removing later
+      this._eventId = "ggvis_" + h_spec.id;
+      // The prefix to the shiny input name
+      this._inputIdPrefix = "ggvis_" + h_spec.id;
+      // Used for keeping track of number of events. Needed so that Shiny
+      // will send info when mouse_out event happens multiple times.
+      this._nonce_counter = 0;
+
+      plot.chart.on("click." + this._eventId, this._createMouseClickHandler());
+    };
+
+    var prototype = click.prototype;
+
+    prototype.remove = function() {
+      this.plot.chart.off("click."  + this._eventId);
+    };
+
+    prototype._createMouseClickHandler = function() {
+      var self = this;
+      return function(event, item) {
+        Shiny.onInputChange(self._inputIdPrefix + "_mouse_click",
+          {
+            plot_id: self.plot.plotId,
+            data: item.datum.data,
+            pagex: event.pageX,
+            pagey: event.pageY,
+            _nonce: self._nonce_counter
+          }
+        );
+        self._nonce_counter++;
+      };
+    };
+
+    return click;
+  })(); // ggvis.handlers.click
+
 
   // ---------------------------------------------------------------------------
   // Handlers for messages sent from Shiny server to client

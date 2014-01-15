@@ -28,6 +28,62 @@ Hover <- setRefClass("Hover", contains = "EventBroker",
   )
 )
 
+#' Event broker for click events.
+#'
+#' The click event broker is useful if you want your shiny app to respond
+#' to click events (\code{mouse_click} in a custom way.
+#'
+#' @seealso \code{\link{click_tooltip}} for a custom wrapper that can use click
+#'   events to display tooltips.
+#' @export
+#' @importFrom methods setRefClass
+Click <- setRefClass("Click", contains = "EventBroker",
+  methods = list(
+    mouse_click = function() {
+      "A reactive value that changes every time the mouse is clicked.
+      The return should be ignored."
+
+      listen_for("mouse_click")
+    }
+  )
+)
+
+#' @export
+click_tooltip <- function(f) {
+  stopifnot(is.function(f))
+
+  handler("click_tooltip", "click", list(f = f))
+}
+
+#' @export
+as.reactive.click_tooltip <- function(x, session = NULL, ...) {
+  h <- Click(session, id = x$id)
+
+  obs <- observe({
+    click <- h$mouse_click()
+    if (is.null(click$data)) {
+      hide_tooltip(session)
+      return()
+    }
+
+    html <- x$control_args$f(click$data)
+
+    show_tooltip(session,
+      pagex = click$pagex - 90,
+      pagey = click$pagey - 6,
+      html = html
+    )
+  })
+
+  session$onSessionEnded(function() {
+    obs$suspend()
+  })
+
+  reactive({ NULL })
+}
+
+
+
 #' Display tooltips.
 #' 
 #' @param f A function that takes a single argument as input. This argument
