@@ -14,13 +14,15 @@ tooltip(f)
 Display tooltips.
 }
 \examples{
+\dontrun{
 all_values <- function(x) {
+  if(is.null(x)) return(NULL)
   paste0(names(x), ": ", format(x), collapse = "<br />")
 }
 
-ggvis(mtcars, props(x = ~wt, y = ~mpg), mark_symbol(), tooltip(all_values))
 ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
   mark_symbol() +
   tooltip(all_values)
+}
 }
 

@@ -83,7 +83,6 @@ as.reactive.click_tooltip <- function(x, session = NULL, ...) {
 }
 
 
-
 #' Display tooltips.
 #' 
 #' @param f A function that takes a single argument as input. This argument
@@ -91,14 +90,16 @@ as.reactive.click_tooltip <- function(x, session = NULL, ...) {
 #'   mouse. It should return a string containing HTML.
 #' @export
 #' @examples
+#' \dontrun{
 #' all_values <- function(x) {
+#'   if(is.null(x)) return(NULL)
 #'   paste0(names(x), ": ", format(x), collapse = "<br />")
 #' } 
 #' 
-#' ggvis(mtcars, props(x = ~wt, y = ~mpg), mark_symbol(), tooltip(all_values))
 #' ggvis(mtcars, props(x = ~wt, y = ~mpg)) + 
 #'   mark_symbol() +
 #'   tooltip(all_values)
+#' }
 tooltip <- function(f) {
   stopifnot(is.function(f))
   
