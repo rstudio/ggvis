@@ -48,42 +48,7 @@ Click <- setRefClass("Click", contains = "EventBroker",
   )
 )
 
-#' @export
-click_tooltip <- function(f) {
-  stopifnot(is.function(f))
-
-  handler("click_tooltip", "click", list(f = f))
-}
-
-#' @export
-as.reactive.click_tooltip <- function(x, session = NULL, ...) {
-  h <- Click(session, id = x$id)
-
-  obs <- observe({
-    click <- h$mouse_click()
-    if (is.null(click$data)) {
-      hide_tooltip(session)
-      return()
-    }
-
-    html <- x$control_args$f(click$data)
-
-    show_tooltip(session,
-      pagex = click$pagex - 90,
-      pagey = click$pagey - 6,
-      html = html
-    )
-  })
-
-  session$onSessionEnded(function() {
-    obs$suspend()
-  })
-
-  reactive({ NULL })
-}
-
-
-#' Display tooltips.
+#' Display tooltips
 #' 
 #' @param f A function that takes a single argument as input. This argument
 #'   will be a list containing the data in the mark currently under the 
@@ -96,9 +61,16 @@ as.reactive.click_tooltip <- function(x, session = NULL, ...) {
 #'   paste0(names(x), ": ", format(x), collapse = "<br />")
 #' } 
 #' 
+#' # Display tooltip when hovering over objects
 #' ggvis(mtcars, props(x = ~wt, y = ~mpg)) + 
 #'   mark_symbol() +
 #'   tooltip(all_values)
+#'
+#' # Display tooltip when objects are clicked
+#' ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
+#'   mark_symbol() +
+#'   click_tooltip(all_values)
+#'
 #' }
 tooltip <- function(f) {
   stopifnot(is.function(f))
@@ -137,6 +109,43 @@ as.reactive.tooltip <- function(x, session = NULL, ...) {
 
   reactive({ NULL })
 }
+
+#' @export
+#' @rdname tooltip
+click_tooltip <- function(f) {
+  stopifnot(is.function(f))
+
+  handler("click_tooltip", "click", list(f = f))
+}
+
+#' @export
+as.reactive.click_tooltip <- function(x, session = NULL, ...) {
+  h <- Click(session, id = x$id)
+
+  obs <- observe({
+    click <- h$mouse_click()
+    if (is.null(click$data)) {
+      hide_tooltip(session)
+      return()
+    }
+
+    html <- x$control_args$f(click$data)
+
+    show_tooltip(session,
+      pagex = click$pagex - 90,
+      pagey = click$pagey - 6,
+      html = html
+    )
+  })
+
+  session$onSessionEnded(function() {
+    obs$suspend()
+  })
+
+  reactive({ NULL })
+}
+
+
 
 #' Send a message to the client to show or hide a tooltip
 #'

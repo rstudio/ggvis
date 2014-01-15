@@ -1,8 +1,11 @@
 \name{tooltip}
+\alias{click_tooltip}
 \alias{tooltip}
-\title{Display tooltips.}
+\title{Display tooltips}
 \usage{
 tooltip(f)
+
+click_tooltip(f)
 }
 \arguments{
   \item{f}{A function that takes a single argument as
@@ -11,7 +14,7 @@ tooltip(f)
   string containing HTML.}
 }
 \description{
-Display tooltips.
+Display tooltips
 }
 \examples{
 \dontrun{
@@ -20,9 +23,16 @@ all_values <- function(x) {
   paste0(names(x), ": ", format(x), collapse = "<br />")
 }
 
+# Display tooltip when hovering over objects
 ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
   mark_symbol() +
   tooltip(all_values)
+
+# Display tooltip when objects are clicked
+ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
+  mark_symbol() +
+  click_tooltip(all_values)
+
 }
 }
 
