@@ -53,11 +53,11 @@ tooltip <- function(f) {
 as.reactive.tooltip <- function(x, session = NULL, ...) {
   h <- Hover(session, id = x$id)
 
-  observe({
+  obs_out <- observe({
     h$mouse_out()
     hide_tooltip(session)
   })
-  observe({
+  obs_over <- observe({
     hover <- h$mouse_over()
     if (is.null(hover$data)) {
       hide_tooltip(session)
@@ -72,6 +72,12 @@ as.reactive.tooltip <- function(x, session = NULL, ...) {
       html = html
     )
   })
+
+  session$onSessionEnded(function() {
+    obs_out$suspend()
+    obs_over$suspend()
+  })
+
   reactive({ NULL })
 }
 
