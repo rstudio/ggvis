@@ -435,7 +435,7 @@ ggvis = (function(_) {
         this._clickPoint = null;      // Coordinates where mouse was clicked
         this._lastPoint = null;       // Previous mouse coordinate
         this._lastMatchingItems = [];
-        this._callbacks = {};         // Named arrays of callback functions
+        this._callbacks = new Plot.CallbackRegistry(this);
 
         this._brushing = false;
         this._dragging = false;
@@ -443,20 +443,18 @@ ggvis = (function(_) {
 
       var prototype = brush.prototype;
 
-      // Register a callback for brush events. These are separate from the
-      // jQuery-driven callbacks on the div, like "mousedown.ggvis_brush".
-      // Those callbacks may trigger these ones. Events include "brushMove" and
-      // "updateItems".
-      prototype.on = function(event, fn) {
-        if (!this._callbacks[event]) {
-          this._callbacks[event] = [];
-        }
-        this._callbacks[event].push(fn);
+      // Wrappers for callback methods. These are for brush events.
+      // They are separate from the jQuery-driven callbacks on the div, like
+      // "mousedown.ggvis_brush". Those callbacks may trigger these ones. Events
+      // include "brushMove" and "updateItems".
+      prototype.on = function(type, fn) {
+        this._callbacks.on(type, fn);
       };
-
-      // Clear callbacks for a given brush event
-      prototype.off = function(event) {
-        this._callbacks[event] = [];
+      prototype.off = function(type) {
+        this._callbacks.off(type);
+      };
+      prototype.trigger = function() {
+        this._callbacks.trigger.apply(this._callbacks, arguments);
       };
 
       // Returns true if the plot has a brush object, false otherwise.
@@ -525,7 +523,7 @@ ggvis = (function(_) {
         this._dragging = true;
         this._lastPoint = point;
         this._clickPoint = point;
-        this._trigger("brushMove");
+        this.trigger("brushMove");
       };
       prototype._dragTo = function(point) {
         if (!this._dragging) return;
@@ -535,12 +533,12 @@ ggvis = (function(_) {
 
         this._brushBounds.translate(dx, dy);
         this._lastPoint = point;
-        this._trigger("brushMove");
+        this.trigger("brushMove");
       };
       prototype._stopDragging = function() {
         this._dragging = false;
         this._clickPoint = null;
-        this._trigger("brushMove");
+        this.trigger("brushMove");
       };
 
       // Brushing functions
@@ -549,7 +547,7 @@ ggvis = (function(_) {
         this._brushBounds.set(0, 0, 0, 0);
         this._brushing = true;
         this._clickPoint = point;
-        this._trigger("brushMove");
+        this.trigger("brushMove");
       };
       prototype._brushTo = function(point) {
         if (!this._brushing) return; // We're not brushing right now
@@ -564,12 +562,12 @@ ggvis = (function(_) {
         var minY = Math.max(Math.min(this._clickPoint.y, end.y), limits.y1);
 
         this._brushBounds.set(minX, minY, maxX, maxY);
-        this._trigger("brushMove");
+        this.trigger("brushMove");
       };
       prototype._stopBrushing = function() {
         this._brushing = false;
         this._clickPoint = null;
-        this._trigger("brushMove");
+        this.trigger("brushMove");
       };
 
       // Update the brush with new coordinates stored in brushBounds variable
@@ -588,16 +586,6 @@ ggvis = (function(_) {
           props: "update",
           items: this._getBrushItem()
         });
-      };
-
-      // Trigger callbacks for a named event. The callbacks are called with
-      // `extra` as an argument.
-      prototype._trigger = function(event, extra) {
-        var callbacks = this._callbacks[event];
-
-        for (var i = 0; i < callbacks.length; i++) {
-          callbacks[i].call(this, extra);
-        }
       };
 
       // Find items that are and aren't under the brush, then call update on
@@ -635,7 +623,7 @@ ggvis = (function(_) {
           y2: bounds.y2,
           items: matchingItems
         };
-        this._trigger("updateItems", info);
+        this.trigger("updateItems", info);
       };
 
 
@@ -772,7 +760,7 @@ ggvis = (function(_) {
         if (!callbacks) return;
 
         for (var i = 0; i < callbacks.length; i++) {
-          callbacks[i].fn.call(this._obj, args);
+          callbacks[i].fn.apply(this._obj, args);
         }
       };
 
