@@ -22,7 +22,7 @@ ggvis = (function(_) {
     return queryVar("viewer_pane") === "1";
   };
 
-  // Private methods --------------------------------------------------
+  // Internal functions --------------------------------------------------
 
   // Returns the value of a GET variable
   function queryVar (name) {
@@ -32,6 +32,82 @@ ggvis = (function(_) {
                  "(?:\\=([^&]*))?)?.*$", "i"),
       "$1"));
   }
+
+  // ggvis.CallbackRegistry class ----------------------------------------------
+  ggvis.CallbackRegistry = (function() {
+    // obj is an object to use as the context for the callbacks
+    var callbackregistry = function(obj) {
+      this._registry = {};
+      this._obj = obj || null;
+    };
+    // this._registry has a structure like:
+    // {
+    //   "resize": [
+    //     { "type": "resize", "fn": fn1 },
+    //     { "type": "resize.foo", "fn": fn2 },
+    //     { "type": "resize.foo", "fn": fn3 }
+    //   ]
+    //   "click": [
+    //     { "type": "click", "fn": fn1 }
+    //   ]
+    // }
+
+    var prototype = callbackregistry.prototype;
+
+    // Register a callback for an event.
+    // type can be a string like "resize" or "resize.foo". If there is a period,
+    // the part after the period is an id which can be used for for targeted
+    // removal.
+    prototype.on = function(type, fn) {
+      var event = eventName(type);
+      var reg = this._registry;
+
+      reg[event] = reg[event] || [];
+      reg[event].push({
+        type: type,
+        fn: fn
+      });
+    };
+
+    // Clear callbacks for a given event and (optional) id
+    prototype.off = function(type) {
+      var event = eventName(type);
+      // If there's no . in the type, remove all callbacks for this event
+      if (event === type) {
+        delete this._registry[event];
+        return;
+      }
+
+      var callbacks = this._registry[event];
+      if (!callbacks) return;
+
+      // Remove individual callbacks that match type
+      for (var i = callbacks.length-1; i >= 0; i--) {
+        if (callbacks[i].type === type) callbacks.splice(i, 1);
+      }
+    };
+
+    // Trigger callbacks for a named event. Any extra arguments are passed to
+    // the function.
+    prototype.trigger = function(event) {
+      var args = Array.prototype.slice.call(arguments, 1);
+      var callbacks = this._registry[event];
+      if (!callbacks) return;
+
+      for (var i = 0; i < callbacks.length; i++) {
+        callbacks[i].fn.apply(this._obj, args);
+      }
+    };
+
+    // Given a string, return the part before "."
+    function eventName(name) {
+      var i = name.indexOf(".");
+      if (i < 0) return name;
+      return name.substring(0, i);
+    }
+
+    return callbackregistry;
+  })(); // ggvis.CallbackRegistry
 
 
   // ggvis.Plot class ----------------------------------------------------------
@@ -429,33 +505,23 @@ ggvis = (function(_) {
       // Constructor
       // plot: The ggvis.Plot object which uses this brush.
       var brush = function(plot) {
+        // This is a subclass of ggvis.CallbackRegistry
+        ggvis.CallbackRegistry.call(this, this);
         this.plot = plot;
 
         this._brushBounds = new vg.Bounds();
         this._clickPoint = null;      // Coordinates where mouse was clicked
         this._lastPoint = null;       // Previous mouse coordinate
         this._lastMatchingItems = [];
-        this._callbacks = new Plot.CallbackRegistry(this);
+        this._callbacks = new ggvis.CallbackRegistry(this);
 
         this._brushing = false;
         this._dragging = false;
       };
 
+      // This is a subclass of ggvis.CallbackRegistry
+      brush.prototype = new ggvis.CallbackRegistry();
       var prototype = brush.prototype;
-
-      // Wrappers for callback methods. These are for brush events.
-      // They are separate from the jQuery-driven callbacks on the div, like
-      // "mousedown.ggvis_brush". Those callbacks may trigger these ones. Events
-      // include "brushMove" and "updateItems".
-      prototype.on = function(type, fn) {
-        this._callbacks.on(type, fn);
-      };
-      prototype.off = function(type) {
-        this._callbacks.off(type);
-      };
-      prototype.trigger = function() {
-        this._callbacks.trigger.apply(this._callbacks, arguments);
-      };
 
       // Returns true if the plot has a brush object, false otherwise.
       prototype.hasBrush = function() {
@@ -696,84 +762,6 @@ ggvis = (function(_) {
 
       return brush;
     })(); // ggvis.Plot.Brush
-
-
-    // ggvis.Plot.CallbackRegistry class ---------------------------------------
-    Plot.CallbackRegistry = (function() {
-      // obj is an object to use as the context for the callbacks
-      var callbackregistry = function(obj) {
-        this._registry = {};
-        this._obj = obj || null;
-      };
-      // this._registry has a structure like:
-      // {
-      //   "resize": [
-      //     { "type": "resize", "fn": fn1 },
-      //     { "type": "resize.foo", "fn": fn2 },
-      //     { "type": "resize.foo", "fn": fn3 }
-      //   ]
-      //   "click": [
-      //     { "type": "click", "fn": fn1 }
-      //   ]
-      // }
-
-      var prototype = callbackregistry.prototype;
-
-      // Register a callback for an event.
-      // type can be a string like "resize" or "resize.foo". If there is a period,
-      // the part after the period is an id which can be used for for targeted
-      // removal.
-      prototype.on = function(type, fn) {
-        var event = eventName(type);
-        var reg = this._registry;
-
-        reg[event] = reg[event] || [];
-        reg[event].push({
-          type: type,
-          fn: fn
-        });
-      };
-
-      // Clear callbacks for a given event and (optional) id
-      prototype.off = function(type) {
-        var event = eventName(type);
-        // If there's no . in the type, remove all callbacks for this event
-        if (event === type) {
-          delete this._registry[event];
-          return;
-        }
-
-        var callbacks = this._registry[event];
-        if (!callbacks) return;
-
-        // Remove individual callbacks that match type
-        for (var i = callbacks.length-1; i >= 0; i--) {
-          if (callbacks[i].type === type) callbacks.splice(i, 1);
-        }
-      };
-
-      // Trigger callbacks for a named event. Any extra arguments are passed to
-      // the function.
-      prototype.trigger = function(event) {
-        var args = Array.prototype.slice.call(arguments, 1);
-        var callbacks = this._registry[event];
-        if (!callbacks) return;
-
-        for (var i = 0; i < callbacks.length; i++) {
-          callbacks[i].fn.apply(this._obj, args);
-        }
-      };
-
-      // Given a string, return the part before "."
-      function eventName(name) {
-        var i = name.indexOf(".");
-        if (i < 0) return name;
-        return name.substring(0, i);
-      }
-
-      return callbackregistry;
-    })(); // ggvis.Plot.CallbackRegistry
-
 
     return Plot;
   })(); // ggvis.Plot
