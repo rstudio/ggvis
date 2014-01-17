@@ -34,6 +34,7 @@ Collate:
     'events.R'
     'events-keyboard.R'
     'events-mouse.R'
+    'events-resize.R'
     'export.R'
     'flatten.R'
     'full_seq.R'

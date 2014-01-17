@@ -302,6 +302,47 @@ $(function(){ //DOM Ready
 
 
   // ---------------------------------------------------------------------------
+  // Resize handler
+  // Sends ggvis_xxxx_resize
+  ggvis.handlers.resize = (function() {
+    var resize = function(plot, h_spec) {
+      this.plot = plot;
+      this.h_spec = h_spec;
+
+      // Event ID for naming event handlers and removing later
+      this._eventId = "ggvis_" + h_spec.id;
+      // The prefix to the shiny input name
+      this._inputIdPrefix = "ggvis_" + h_spec.id;
+
+      this.plot.on("resize." + this._eventId, this._createResizeHandler());
+    };
+
+    var prototype = resize.prototype;
+
+    prototype.remove = function() {
+      this.plot.off("resize." + this._eventId);
+    };
+
+    // Returns a function which takes an event
+    prototype._createResizeHandler = function() {
+      var self = this;
+      return function(event) {
+        Shiny.onInputChange(self._inputIdPrefix + "_resize",
+          {
+            plot_id: self.plot.plotId,
+            width: event.width,
+            height: event.height,
+            padding: event.padding
+          }
+        );
+      };
+    };
+
+    return resize;
+  })(); // ggvis.handlers.resize
+
+
+  // ---------------------------------------------------------------------------
   // Handlers for messages sent from Shiny server to client
   ggvis.messages = (function() {
     var messages = {

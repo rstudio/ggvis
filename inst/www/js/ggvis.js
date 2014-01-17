@@ -122,9 +122,17 @@ ggvis = (function(_) {
       this.opts = {};
       this.brush = new Plot.Brush(this);
       this.handlers = [];    // Interaction input handlers
+      this._callbacks = new ggvis.CallbackRegistry(this);
     };
 
     var prototype = Plot.prototype;
+
+    // Wrappers for CallbackRegistry methods
+    prototype.on = function(type, fn) { this._callbacks.on(type, fn); };
+    prototype.off = function(type) { this._callbacks.off(type); };
+    prototype.trigger = function() {
+      this._callbacks.trigger.apply(this._callbacks, arguments);
+    };
 
     // opts is an optional object which can have any entries that are in spec.opts
     // (they get merged on top of spec.opts), and additionally:
@@ -249,6 +257,11 @@ ggvis = (function(_) {
       chart.width(newWidth);
       chart.height(newHeight);
       chart.update({ duration: duration });
+      this.trigger('resize', {
+        width: newWidth,
+        height: newHeight,
+        padding: chart.padding()
+      });
     };
 
     // Set width and height to fill window
