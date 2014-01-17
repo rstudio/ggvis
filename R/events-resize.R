@@ -24,7 +24,7 @@ Resize <- setRefClass("Resize", contains = "EventBroker",
 #'
 #' @export
 #' @examples
-#' \dontrun{}
+#' \dontrun{
 #' # This example just prints out the current dimensions to the console
 #' print_info <- function(x) {
 #'   cat(str(x))
