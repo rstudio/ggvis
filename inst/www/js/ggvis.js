@@ -505,8 +505,6 @@ ggvis = (function(_) {
       // Constructor
       // plot: The ggvis.Plot object which uses this brush.
       var brush = function(plot) {
-        // This is a subclass of ggvis.CallbackRegistry
-        ggvis.CallbackRegistry.call(this, this);
         this.plot = plot;
 
         this._brushBounds = new vg.Bounds();
@@ -519,9 +517,14 @@ ggvis = (function(_) {
         this._dragging = false;
       };
 
-      // This is a subclass of ggvis.CallbackRegistry
-      brush.prototype = new ggvis.CallbackRegistry();
       var prototype = brush.prototype;
+
+      // Wrappers for CallbackRegistry methods
+      prototype.on = function(type, fn) { this._callbacks.on(type, fn); };
+      prototype.off = function(type) { this._callbacks.off(type); };
+      prototype.trigger = function() {
+        this._callbacks.trigger.apply(this._callbacks, arguments);
+      };
 
       // Returns true if the plot has a brush object, false otherwise.
       prototype.hasBrush = function() {
