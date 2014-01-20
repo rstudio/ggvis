@@ -99,33 +99,9 @@ $(function(){ //DOM Ready
     var spec = message.spec;
     var plot = ggvis.getPlot(plotId);
 
-    // Brush handler
-    var brush_policy = spec.ggvis_opts.brush_policy || "debounce";
-    var brushHandler;
-    if (brush_policy === "throttle") {
-      brushHandler = _.throttle(createBrushHandler(plotId), spec.ggvis_opts.brush_delay);
-    } else if (brush_policy === "debounce") {
-      brushHandler = _.debounce(createBrushHandler(plotId), spec.ggvis_opts.brush_delay);
-    }
-
-    plot.parseSpec(spec, {
-      brush: {
-        handlers: { updateItems: brushHandler}
-      }
-    });
+    plot.parseSpec(spec);
   });
 
-  // Send information about the current brush
-  function createBrushHandler(plotId) {
-    return function(info) {
-      info.items = info.items.map(function(item) {
-        var newitem = $.extend({}, item.datum.data);
-        newitem.key__ = item.key;
-        return newitem;
-      });
-      Shiny.onInputChange("ggvis_" + plotId + "_brush", info);
-    };
-  }
 
   // ---------------------------------------------------------------------------
   // Interaction event handlers
@@ -299,6 +275,60 @@ $(function(){ //DOM Ready
 
     return click;
   })(); // ggvis.handlers.click
+
+
+  // ---------------------------------------------------------------------------
+  // Brush handler
+  // Sends ggvis_xxxx_mouse_brush
+  ggvis.handlers.brush = (function() {
+    var brush = function(plot, h_spec) {
+      this.plot = plot;
+      this.h_spec = h_spec;
+
+      // Event ID for naming event handlers and removing later
+      this._eventId = "ggvis_" + h_spec.id;
+      // The prefix to the shiny input name
+      this._inputIdPrefix = "ggvis_" + h_spec.id;
+
+      var policy = h_spec.policy || "debounce";
+      var policy_fun = _[policy];
+      var delay = h_spec.delay || 100;
+
+      var brushHandler = policy_fun(this._createBrushHandler(), delay);
+
+      plot.brush.on("updateItems." + this._eventId, brushHandler);
+    };
+
+    var prototype = brush.prototype;
+
+    prototype.remove = function() {
+      this.plot.brush.off("updateItems." + this._eventId);
+    };
+
+    // Send information about the current brush
+    prototype._createBrushHandler = function() {
+      var self = this;
+      return function(info) {
+        info.items = info.items.map(function(item) {
+          var newitem = $.extend({}, item.datum.data);
+          newitem.key__ = item.key;
+          return newitem;
+        });
+
+        // Get x and y coordinates relative to the page
+        var offset = self.plot.getVegaDiv().offset();
+        var padding = self.plot.chart.padding();
+        info.pagex1 = info.x1 + offset.left + padding.left;
+        info.pagex2 = info.x2 + offset.left + padding.left;
+        info.pagey1 = info.y1 + offset.top  + padding.top;
+        info.pagey2 = info.y2 + offset.top  + padding.top;
+
+        Shiny.onInputChange(self._inputIdPrefix + "_brush_move", info);
+      };
+    };
+
+    return brush;
+  })(); // ggvis.handlers.brush
 
 
   // ---------------------------------------------------------------------------

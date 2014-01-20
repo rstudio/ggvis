@@ -187,8 +187,7 @@ ggvis = (function(_) {
         self.removeHandlers();
         self.handlers = self.addHandlers(self.spec.handlers);
 
-        // If there's a brush mark, turn on brushing, passing in brush options
-        if (self.brush.hasBrush()) self.brush.enable(opts.brush);
+        self.brush.enable();
 
         if (ggvis.inViewerPane()) {
           self.enableAutoResizeToWindow();
@@ -520,6 +519,7 @@ ggvis = (function(_) {
       var brush = function(plot) {
         this.plot = plot;
 
+        this._enabled = false;
         this._brushBounds = new vg.Bounds();
         this._clickPoint = null;      // Coordinates where mouse was clicked
         this._lastPoint = null;       // Previous mouse coordinate
@@ -539,22 +539,30 @@ ggvis = (function(_) {
         this._callbacks.trigger.apply(this._callbacks, arguments);
       };
 
-      // Returns true if the plot has a brush object, false otherwise.
-      prototype.hasBrush = function() {
+      // Returns true if the plot has a brush mark object, false otherwise.
+      prototype.hasBrushMark = function() {
         if (this._getBrushMarkDef()) return true;
         else return false;
       };
 
-      // Enable the brush.
-      prototype.enable = function(opts) {
-        opts = opts || {};
+      // Enable the brush, if a brush mark is present.
+      prototype.enable = function() {
+        if (!this.hasBrushMark()) return;
+
         var self = this;
         var $div = this.plot.getDiv();
 
-        // Remove any existing mouse event handlers from the div
-        $div.off("mousedown.ggvis_brush");
-        $div.off("mouseup.ggvis_brush");
-        $div.off("mousemove.ggvis_brush");
+        if (self._enabled) {
+          // Clear any existing mouse event handlers from the div
+          $div.off("mousedown.ggvis_brush");
+          $div.off("mouseup.ggvis_brush");
+          $div.off("mousemove.ggvis_brush");
+
+          // Clear any existing brush event handlers
+          self.off("brushMove");
+          self.off("updateItems");
+        }
+
 
         // Hook up mouse event handlers
         $div.on("mousedown.ggvis_brush", "div.vega", function (event) {
@@ -577,11 +585,6 @@ ggvis = (function(_) {
           if (self._brushing) self._brushTo(point);
         });
 
-
-        // Clear any existing brush event handlers
-        self.off("brushMove");
-        self.off("updateItems");
-
         // Register functions to be called each time brush is dragged or resized.
         self.on("brushMove", self._updateBrush);
 
@@ -591,13 +594,7 @@ ggvis = (function(_) {
         var updateThrottled = _.throttle(self._updateBrushedItems, 50);
         self.on("brushMove", updateThrottled);
 
-        // If brush event handlers are specified (typically for brushMove and
-        // updateItems), add them.
-        if (opts.handlers) {
-          $.each(opts.handlers, function(eventname, fn) {
-            self.on(eventname, fn);
-          });
-        }
+        self._enabled = true;
       };
 
       // Dragging functions

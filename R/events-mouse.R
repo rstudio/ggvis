@@ -2,11 +2,11 @@
 NULL
 
 #' Event broker for hover events.
-#' 
+#'
 #' The hover event broker is useful if you want your shiny app to respond
 #' to hover events (\code{mouse_out} and \code{mouse_over}) in a custom
-#' way. 
-#' 
+#' way.
+#'
 #' @seealso \code{\link{tooltip}} for a custom wrapper that uses hover
 #'   events to display tooltips.
 #' @export
@@ -14,15 +14,15 @@ NULL
 Hover <- setRefClass("Hover", contains = "EventBroker",
   methods = list(
     mouse_out = function() {
-      "A reactive value that changes every time the mouse moves off the 
-      previously selected data mark. The return should be ignored." 
-    
+      "A reactive value that changes every time the mouse moves off the
+      previously selected data mark. The return should be ignored."
+
       listen_for("mouse_out")
     },
     mouse_over = function() {
       "A reactive value that changes every time the mouse moves on a mark.
       The value is [WINSTON INSERT HERE]."
-      
+
       listen_for("mouse_over")
     }
   )
@@ -48,10 +48,25 @@ Click <- setRefClass("Click", contains = "EventBroker",
   )
 )
 
+#' Event broker for brush events.
+#'
+#' @export
+#' @importFrom methods setRefClass
+Brush <- setRefClass("Brush", contains = "EventBroker",
+  methods = list(
+    brush_move = function() {
+      "A reactive value that changes every time the brush is moved.
+      The return should be ignored."
+
+      listen_for("brush_move")
+    }
+  )
+)
+
 #' Display tooltips
-#' 
+#'
 #' @param f A function that takes a single argument as input. This argument
-#'   will be a list containing the data in the mark currently under the 
+#'   will be a list containing the data in the mark currently under the
 #'   mouse. It should return a string containing HTML.
 #' @export
 #' @examples
@@ -59,10 +74,10 @@ Click <- setRefClass("Click", contains = "EventBroker",
 #' all_values <- function(x) {
 #'   if(is.null(x)) return(NULL)
 #'   paste0(names(x), ": ", format(x), collapse = "<br />")
-#' } 
-#' 
+#' }
+#'
 #' # Display tooltip when hovering over objects
-#' ggvis(mtcars, props(x = ~wt, y = ~mpg)) + 
+#' ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
 #'   mark_symbol() +
 #'   tooltip(all_values)
 #'
@@ -71,10 +86,30 @@ Click <- setRefClass("Click", contains = "EventBroker",
 #'   mark_symbol() +
 #'   click_tooltip(all_values)
 #'
+#' # Grab the mean and standard deviations of brushed values
+#' brushed_summary <- function(x) {
+#'  if(is.null(x) || length(x) == 0) return(NULL)
+#'  # Get the names of variables other than "key__"
+#'  names <- setdiff(names(x[[1]]), "key__")
+#'
+#'  # Print out the mean and sd for each variable
+#'  lines <- lapply(names, function(name) {
+#'    vals <- vapply(x, `[[`, name, FUN.VALUE = numeric(1))
+#'    paste0(name, ": ", round(mean(vals), 2), " (", round(sd(vals), 2), ")")
+#'  })
+#'
+#'  paste0(lines, collapse = "<br />")
+#' }
+#'
+#' # Display tooltip when objects are brushed
+#' ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
+#'   mark_symbol(props(size.brush := 400)) +
+#'   branch_brush() +
+#'   brush_tooltip(brushed_summary)
 #' }
 tooltip <- function(f) {
   stopifnot(is.function(f))
-  
+
   handler("tooltip", "hover", list(f = f))
 }
 
@@ -146,6 +181,42 @@ as.reactive.click_tooltip <- function(x, session = NULL, ...) {
 }
 
 
+
+
+#' @export
+#' @rdname tooltip
+brush_tooltip <- function(f) {
+  stopifnot(is.function(f))
+
+  handler("brush_tooltip", "brush", list(f = f))
+}
+
+#' @export
+as.reactive.brush_tooltip <- function(x, session = NULL, ...) {
+  h <- Brush(session, id = x$id)
+
+  obs <- observe({
+    brush <- h$brush_move()
+    if (is.null(brush$items) || length(brush$items) == 0) {
+      hide_tooltip(session)
+      return()
+    }
+
+    html <- x$control_args$f(brush$items)
+
+    show_tooltip(session,
+      pagex = brush$pagex2 + 5,
+      pagey = brush$pagey1 + 5,
+      html = html
+    )
+  })
+
+  session$onSessionEnded(function() {
+    obs$suspend()
+  })
+
+  reactive({ NULL })
+}
 
 #' Send a message to the client to show or hide a tooltip
 #'
