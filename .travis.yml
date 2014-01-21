@@ -20,8 +20,12 @@ on_failure:
 branches:
   except:
   - /-expt$/
+
 notifications:
   email:
+    recipients:
+    - hadley@rstudio.com
+    - winston@rstudio.com
     on_success: change
     on_failure: change
 
