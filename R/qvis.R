@@ -24,7 +24,7 @@
 #'
 #'   The first two unnamed components are taken to be \code{x} and \code{y}.
 #'   Any additional unnamed components will raise an error.
-#' @param branches A character vector listing the names of branches to
+#' @param layers A character vector listing the names of marks or branches to
 #'   display on the plot. You can use either the full name of the branch
 #'   (e.g. "mark_line" or "branch_smooth"), or just the final part
 #'   (e.g. "line" or "smooth"). If there is both a plain mark and a branch
@@ -46,29 +46,29 @@
 #' qvis(mtcars, ~mpg, binwidth = 2)
 #'
 #' # Scatterplot + smoother
-#' qvis(mtcars, ~mpg, ~wt, branches = c("point", "smooth"))
-#' qvis(mtcars, ~mpg, ~wt, branches = c("point", "smooth"), span = 0.25)
+#' qvis(mtcars, ~mpg, ~wt, layers = c("point", "smooth"))
+#' qvis(mtcars, ~mpg, ~wt, layers = c("point", "smooth"), span = 0.25)
 #'
 #' # It's not currently possible to create a plot of variables
 #' # stored only in the local environment
 #' x <- runif(10)
 #' y <- runif(10)
 #' \dontrun{qvis(environment(), ~x, ~y)}
-qvis <- function(data, ..., branches = character()) {
+qvis <- function(data, ..., layers = character()) {
   args <- dots(...)
 
   props_args <- qvis_default_names(args[is_props(args)])
   branch_args <- args[!is_props(args)]
 
-  if (length(branches) == 0) {
+  if (length(layers) == 0) {
     if ("y" %in% names(props_args)) {
-      branches <- "mark_point"
+      layers <- "point"
     } else {
-      branches <- "branch_histogram"
+      layers <- "histogram"
     }
   }
 
-  branches <- lapply(branches, init_branch, branch_args)
+  branches <- lapply(layers, init_branch, branch_args)
   ggvis(data, props(.props = props_args)) + branches
 }
 

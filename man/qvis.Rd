@@ -2,7 +2,7 @@
 \alias{qvis}
 \title{Quick vis: a succint way of generating simple ggvis plot specifications.}
 \usage{
-qvis(data, ..., branches = character())
+qvis(data, ..., layers = character())
 }
 \arguments{
   \item{data}{The data set where}
@@ -20,9 +20,9 @@ qvis(data, ..., branches = character())
   and \code{y}.  Any additional unnamed components will
   raise an error.}
 
-  \item{branches}{A character vector listing the names of
-  branches to display on the plot. You can use either the
-  full name of the branch (e.g. "mark_line" or
+  \item{layers}{A character vector listing the names of
+  marks or branches to display on the plot. You can use
+  either the full name of the branch (e.g. "mark_line" or
   "branch_smooth"), or just the final part (e.g. "line" or
   "smooth"). If there is both a plain mark and a branch
   with the same name, the branch will be used.
@@ -59,8 +59,8 @@ qvis(mtcars, ~mpg)
 qvis(mtcars, ~mpg, binwidth = 2)
 
 # Scatterplot + smoother
-qvis(mtcars, ~mpg, ~wt, branches = c("point", "smooth"))
-qvis(mtcars, ~mpg, ~wt, branches = c("point", "smooth"), span = 0.25)
+qvis(mtcars, ~mpg, ~wt, layers = c("point", "smooth"))
+qvis(mtcars, ~mpg, ~wt, layers = c("point", "smooth"), span = 0.25)
 
 # It's not currently possible to create a plot of variables
 # stored only in the local environment
