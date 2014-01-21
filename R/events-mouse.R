@@ -115,6 +115,8 @@ tooltip <- function(f) {
 
 #' @export
 as.reactive.tooltip <- function(x, session = NULL, ...) {
+  if (is.null(session)) return()
+
   h <- Hover(session, id = x$id)
 
   obs_out <- observe({
