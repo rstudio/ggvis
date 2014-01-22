@@ -35,10 +35,16 @@ $(function(){ //DOM Ready
       this.renderError(el, err);
     },
     renderValue: function(el, data) {
-      var $el = $(el);
-
       Shiny.unbindAll(el);
-      $el.html(data);
+
+      var html;
+      if (data === null) {
+        html = '';
+      } else {
+        html = data;
+      }
+
+      Shiny.renderHtml(html, el);
       Shiny.initializeInputs(el);
       Shiny.bindAll(el);
 
