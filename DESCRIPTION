@@ -24,7 +24,6 @@ Collate:
     'auto_split.R'
     'branch.R'
     'branch_misc.R'
-    'brush.R'
     'by_group.R'
     'connect.R'
     'controls.R'
