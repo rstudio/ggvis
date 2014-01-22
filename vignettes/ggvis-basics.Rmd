@@ -52,7 +52,7 @@ If you only supply a dataset and an x-position, `qvis()` will draw a barchart or
 # A histogram
 qvis(mtcars, ~wt)
 # A barchart
-qvis(mtcars, ~factor(cyl))
+# FIXME: qvis(mtcars, ~factor(cyl))
 ```
 
 You can add more variables to the plot by mapping them to other visual properties like `fill`, `stroke`, `size` and `shape`.
