@@ -1,14 +1,14 @@
-\name{tooltip}
+\name{brush_tooltip}
 \alias{brush_tooltip}
 \alias{click_tooltip}
 \alias{tooltip}
 \title{Display tooltips}
 \usage{
+brush_tooltip(f)
+
 tooltip(f)
 
 click_tooltip(f)
-
-brush_tooltip(f)
 }
 \arguments{
   \item{f}{A function that takes a single argument as
