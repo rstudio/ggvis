@@ -162,7 +162,10 @@ $(function(){ //DOM Ready
 
     prototype._sendValue = function(str) {
       this._counter++;
-      Shiny.onInputChange(this._inputId, { value: str, _nonce: this._counter });
+      Shiny.onInputChange(this._inputId, {
+        value: str,
+        _nonce: this._counter
+      });
     };
 
     return keyboard;
@@ -218,10 +221,7 @@ $(function(){ //DOM Ready
         /* jshint unused: false */
         Shiny.onInputChange(self._inputIdPrefix + "_mouse_out",
           {
-            plot_id: self.plot.plotId,
-            data: null,
-            pagex: null,
-            pagey: null,
+            plot_id: self.plot.plotId
             _nonce: self._nonce_counter
           }
         );

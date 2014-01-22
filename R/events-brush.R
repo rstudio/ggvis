@@ -8,8 +8,16 @@ NULL
 Brush <- setRefClass("Brush", contains = "EventBroker",
   methods = list(
     brush_move = function() {
-      "A reactive value that changes every time the brush is moved.
-      The return should be ignored."
+      "A reactive value that changes every time the brush is resized or moved.
+      Returns a list containing:
+        * plot_id: The ID of the ggvis plot.
+        * x1, x2, y1, y2: Pixel coordinates of the brushed region, relative to
+          plotting area.
+        * pagex1, pagex2, pagey1, pagey2: Pixel coordinates of brushed region,
+          relative to web page.
+        * items: a list with one item per mark. Each item is another list
+          containing one entry for each variable in the data, as well as a field
+          named `key__`."
 
       listen_for("brush_move")
     }

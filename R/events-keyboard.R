@@ -18,8 +18,10 @@ Keyboard <- setRefClass("Keyboard", contains = "EventBroker",
   fields = list("bindings" = "character"),
   methods = list(
     key_press = function() {
-      "A reactive value changed when any key is pressed."
-      
+      "A reactive value changed when any key is pressed.
+      Returns a list containing:
+        * value: A string representation of the key that was pressed."
+
       listen_for("key_press")
     },
     as_vega = function(...) {

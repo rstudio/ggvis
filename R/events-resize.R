@@ -11,7 +11,15 @@ NULL
 Resize <- setRefClass("Resize", contains = "EventBroker",
   methods = list(
     resize = function() {
-      "A reactive value changed when the plot is resized."
+      "A reactive value changes when the plot is resized.
+      Returns a list containing:
+        * plot_id: The ID of the ggvis plot.
+        * width: Width of the plot in pixels.
+        * height: Height of the plot in pixels.
+        * padding: A list containing `left`, `right`, `top`, `bottom`, which is
+          the padding in pixels for each side. The padding is inside of the
+          width and height values.
+        "
 
       listen_for("resize")
     }

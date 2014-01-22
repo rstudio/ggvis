@@ -15,13 +15,21 @@ Hover <- setRefClass("Hover", contains = "EventBroker",
   methods = list(
     mouse_out = function() {
       "A reactive value that changes every time the mouse moves off the
-      previously selected data mark. The return should be ignored."
+      previously selected data mark.
+      Returns a list containing:
+        * plot_id: The ID of the ggvis plot."
 
       listen_for("mouse_out")
     },
     mouse_over = function() {
       "A reactive value that changes every time the mouse moves on a mark.
-      The value is [WINSTON INSERT HERE]."
+      Returns a list containing:
+        * plot_id: The ID of the ggvis plot.
+        * data: a list of the data underlying the mark that is hovered over.
+          There is an item for each variable in the data, as well as a field
+          named `key__`.
+        * pagex: The x position of the mouse relative to the page.
+        * pagey: The y position of the mouse relative to the page."
 
       listen_for("mouse_over")
     }
@@ -41,7 +49,13 @@ Click <- setRefClass("Click", contains = "EventBroker",
   methods = list(
     mouse_click = function() {
       "A reactive value that changes every time the mouse is clicked.
-      The return should be ignored."
+      Returns a list containing:
+        * plot_id: The ID of the ggvis plot.
+        * data: a list of the data underlying the mark that is hovered over.
+          There is an item for each variable in the data, as well as a field
+          named `key__`.
+        * pagex: The x position of the mouse relative to the page.
+        * pagey: The y position of the mouse relative to the page."
 
       listen_for("mouse_click")
     }
