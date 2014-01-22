@@ -50,3 +50,24 @@ as.reactive.brush_tooltip <- function(x, session = NULL, ...) {
 
   reactive({ NULL })
 }
+
+#' @export
+extract_layer.brush_tooltip <- function(x, ...) {
+  comps <- parse_components(..., drop_named = TRUE)
+
+  props <- merge_props(
+    props(x := ~x, y := ~y, width := ~width, height := ~height,
+          fill := "black", fillOpacity := 0.2,
+          stroke := "black", strokeOpacity := 0.6,
+          inherit = FALSE),
+    comps$props
+  )
+
+  mark_rect(
+    props,
+    data = pipeline(
+      data.frame(x = 0, y = 0, width = 0, height = 0),
+      .id = "ggvis_brush"
+    )
+  )
+}

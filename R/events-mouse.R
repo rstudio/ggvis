@@ -89,7 +89,6 @@ Click <- setRefClass("Click", contains = "EventBroker",
 #' # Display tooltip when objects are brushed
 #' ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
 #'   mark_symbol(props(size.brush := 400)) +
-#'   branch_brush() +
 #'   brush_tooltip(brushed_summary)
 #' }
 tooltip <- function(f) {

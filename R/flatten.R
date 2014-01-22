@@ -37,6 +37,10 @@ flatten <- function(node, parent = NULL, session = NULL) {
     # Base case: so return self
     list(node)
   } else {
+    # If there are any handlers that have layers, grab them and add to children.
+    handler_layers <- lapply(node$handlers, extract_layer)
+    node$children <- c(node$children, handler_layers)
+
     # Otherwise, recurse through children
     children <- lapply(node$children, flatten, parent = node, session = session)
     unlist(children, recursive = FALSE)

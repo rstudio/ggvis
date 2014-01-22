@@ -95,3 +95,13 @@ handlers.default <- function(x) NULL
 handlers.transform_manip <- function(x) {
   handlers.list(x$inputs)
 }
+
+# Extract layers from handlers -------------------------------------------------
+
+extract_layer <- function(x) UseMethod("extract_layer")
+
+#' @export
+extract_layer.handler <- function(x) NULL
+
+#' @export
+extract_layer.default <- function(x) NULL
