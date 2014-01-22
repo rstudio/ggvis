@@ -15,38 +15,56 @@ opts_chunk$set(comment = "#>", error = TRUE, tidy = FALSE)
 
 The goal of ggvis is to make it easy to build interactive graphics for exploratory data analysis. ggvis has a similar underlying theory to [ggplot2](http://ggplot2.org) (the grammar of graphics), but it's expressed a little differently, and adds new features to make your plots interactive. ggvis also incorporates reactive programming ideas drawn from [shiny](http://www.rstudio.com/shiny/).
 
-Currently, every interactive ggvis plot must be connected to a running R session. This is great for exploration, because anything you can do in R, you can do in your interactive plot, but not so great for publication. Making it easy to publish ggvis is on our long-term roadmap. For now, if you want to make a ggvis plot broadly available, sign up for [shinyapps](http://www.shinyapps.io/) and publish your ggvis plot there.
+The graphics produced by ggvis are fundamentally web graphics and work very differently way to traditional R graphics. This gives allows us to implement exciting new features like interactivity, but comes at a cost. For example, every interactive ggvis plot must be connected to a running R session. This is great for exploration, because you can do anything in your interactive plot you can do in R, but it's not so great for publication. We will overcome these issues in time, but for now be aware that we have many existing tools to reimplement before you can do everything that you can do with base graphics.
 
-The rest of this vignette will introduce you to the major ideas in ggvis, and point you to the other resources where they are explained in more detail.
+This vignette is divided four into main sections:
+
+* Dive into plotting with `qvis()`.
+* Add interactivity with mouse controls and the keyboard.
+* Create more types of graphic with layers
+* Build up rich graphics using multiple layers
+
+Each section will introduce to a major idea in ggvis, and point to more detailed explanation in other vignettes.
 
 ## `qvis()`
 
-Every ggvis graphic starts with a call to `ggvis()` or `qvis()`. `qvis()` is a __q__uick way of getting our hands dirty with plotting, while `ggvis()` is more verbose but also more explicitl. We'll start with `qvis()` because it lets you start making graphics very quickly.
+Every ggvis graphic starts with a call to `ggvis()` or `qvis()`:
 
-A basic `qvis()` call has three arguments: a data set, the variable to control x-position and a variable to control y-position.
+* `qvis()` is a __q__uick way of getting your hands dirty with plotting.
+
+* `ggvis()` makes fewer assumptions about what you're trying to do. This
+  gives you more control, but also means you need to type more to get a
+  basic plot.
+
+We'll start with `qvis()` because it lets makes graphics very quickly. You can read more about `ggvis()` in the [data hierarchy](data-hierarchy.html) vignette.
+
+A basic `qvis()` call creates a scatterplot. It has three arguments: a data set, the variable displayed on the x-axis and the variable on the y-axis.
 
 ```{r}
 qvis(mtcars, ~wt, ~mpg)
 ```
 
-(If you're not using RStudio, you'll notice that this plot opens up your web browser. That's because all ggvis graphics are web graphics, and need to be shown in the browser. RStudio includes a built-in browser so it can show you the plots directly.)
+(If you're not using RStudio, you'll notice that this plot opens in your web browser. That's because all ggvis graphics are web graphics, and need to be shown in the browser. RStudio includes a built-in browser so it can show you the plots directly.)
 
-If you only supply two arguments, `qvis()` will draw a barchar or histogram depending on whether the x variable is categorical or continuous.
+If you only supply a dataset and an x-position, `qvis()` will draw a barchart or histogram depending on whether the x variable is categorical or continuous. We use `~` before the variable name to indicate that we don't want to literally use the value of the `wt` variable (which doesn't exist), but instead we want we want to use the `wt` variable inside in the dataset.
 
 ```{r}
+# A histogram
 qvis(mtcars, ~wt)
+# A barchart
+qvis(mtcars, ~factor(cyl))
 ```
 
-You can map variables to other aesthietic properties like `fill`, `stroke`, `size` and `shape`:
+You can add more variables to the plot by mapping them to other visual properties like `fill`, `stroke`, `size` and `shape`.
 
 ```{r}
 qvis(mtcars, ~wt, ~mpg, stroke = ~vs)
 qvis(mtcars, ~wt, ~mpg, fill = ~vs)
 qvis(mtcars, ~wt, ~mpg, size = ~vs)
-qvis(mtcars, ~wt, ~mpg, shape = ~cyl)
+qvis(mtcars, ~wt, ~mpg, shape = ~factor(cyl))
 ```
 
-If you want to make the points a specified colour or size, you'll need to use `:=` instead of `=`. We'll explain why later on.
+If you want to make the points a specified colour or size, you need to use `:=` instead of `=`. This seems like something that `qvis()` should be able to figure out by itself, but making it explicit allows you to create some useful plots that you couldn't otherwise. See the [properties and scales](properties-scales.html) vignette for more details.
 
 ```{r}
 qvis(mtcars, ~wt, ~mpg, fill := "red", stroke := "black")
@@ -56,7 +74,7 @@ qvis(mtcars, ~wt, ~mpg, shape := "cross")
 
 ## Interaction
 
-As well as mapping visual properties to variables, or setting them to specific values, you can also associate them with interactive components. The following example allows you to control the size and opacity of points with two sliders:
+As well as mapping visual properties to variables, or setting them to specific values, you can also connect them to interactive controls. The following example allows you to control the size and opacity of points with two sliders:
 
 ```{r}
 slider_s <- input_slider(10, 100)
@@ -70,25 +88,26 @@ Interactive plots are created using [shiny](http://www.rstudio.com/shiny/), and 
 You can also use keyboard controls. Press the left and right arrows to control the size of the points in the next example.
 
 ```{r}
-keys_s <- left_right(10, 300)
-
-ggvis(mtcars, props(x = ~wt, y = ~mpg, size := keys_s)) +
-  mark_point()
+keys_s <- left_right(10, 1000, step = 50)
+qvis(mtcars, ~wt, ~mpg, size := keys_s, opacity := 0.5)
 ```
 
 You'll see examples of more complex interaction in the [interactivity](interactivity.html) vignette.
 
-## Layers: marks and branches
+## Layers
 
-The previous examples only show scatterplots and barcharts, but of course you can create many other types of graphic. There are two types of layers that you can add to a plot:
+The previous examples showed how to make scatterplots and barcharts, but of course you can create many other types of visualisations. You change the visualisation using the `layers` parameter.
 
-* marks, which are simple drawing primitives like points, lines and rectangles.
+There are two types of layer:
 
-* branches, are more complex and combine data transfomation with marks.
+* Simple, which are basic drawing primitives like points, lines and
+  rectangles.
 
-There are five basic marks:
+* Composite, which combine data transformations with simple layers.
 
-* points: `mark_point()`. This is the default when you supply two variables
+There are five simple marks:
+
+* Points, `layer_point()`. This is the default when you supply two variables
   to `qvis()`. It has properties `x`, `y`, `shape`, `stroke`, `fill`,
   `strokeOpacity`, `fillOpacity`, and `opacity`.
 
@@ -97,14 +116,14 @@ There are five basic marks:
     qvis(mtcars, ~wt, ~mpg, layers = "point")
     ```
 
-* lines: `mark_line()`.
+* Paths and polygons, `layer_path()`.
 
     ```{r}
     df <- data.frame(x = 1:10, y = runif(10))
     qvis(df, ~x, ~y, layers = "line")
     ```
 
-    If you supply a fill, you'll get a polygon
+    If you supply a `fill`, you'll get a polygon
 
     ```{r}
     t <- seq(0, 2 * pi, length = 100)
@@ -112,7 +131,7 @@ There are five basic marks:
     qvis(df, ~x, ~y, fill := "red", layers = "line")
     ```
 
-* filled areas: `mark_area()`. Use properties `y` and `y2` to control the
+* Filled areas, `layer_area()`. Use properties `y` and `y2` to control the
   extent of the area.
 
     ```{r}
@@ -121,15 +140,16 @@ There are five basic marks:
     qvis(df, ~x, ~y + 0.1, y2 = ~y - 0.1, layers = "area")
     ```
 
-* rectangles: `mark_rect()`. As well as `x` and `y` properties,
-  you also set `x2` and `y2`
+* Rectangles, `layer_rect()`. The location and size of the rectangle is
+  controlled by the `x`, `x2`, `y` and `y2` properties.
 
     ```{r}
     df <- data.frame(x1 = runif(5), x2 = runif(5), y1 = runif(5), y2 = runif(5))
     qvis(df, ~x1, ~y1, x2 = ~x2, y2 = ~y2, fillOpacity := 0.1, layers = "rect")
     ```
 
-* text: `mark_text()`. `text` (the label), `dx` and `dy` (margin in pixels
+* Text, `layer_text()`. The text layer has many new options to control the
+  apperance of the text: `text` (the label), `dx` and `dy` (margin in pixels
   between text and anchor point), `angle` (rotate the text), `font` (font
   name), `fontSize` (size in pixels), `fontWeight` (e.g. bold or normal),
   `fontStyle` (e.g. italic or normal.)
@@ -141,46 +161,50 @@ There are five basic marks:
     qvis(df, ~x, ~y, text := ~label, layers = "text", angle := 45)
     ```
 
-The two most useful branches are:
+Two richer layers are:
 
-* `branch_histogram()` to explore the distribution of a continuous variable.
-  This is the default when `qvis()` is not called with a y variable.
+* `layer_histogram()` which allows you to explore the distribution of a
+  continuous variable. It bins the data and then displays the results with
+  `layer_rect()`. This is the default layer when `qvis()` is called with
+  a dataset and an `x` variable.
 
-  ```{r}
-  qvis(mtcars, ~wt)
-  qvis(mtcars, ~wt, layers = "histogram")
-  ```
+    ```{r}
+    qvis(mtcars, ~wt)
+    qvis(mtcars, ~wt, layers = "histogram")
+    ```
 
-  The most important parameter to `branch_histogram()` is the bin width:
+    The most important parameter to `layer_histogram()` is the bin width:
 
-  ```{r}
-  qvis(mtcars, ~wt, binwidth = 1)
-  qvis(mtcars, ~wt, binwidth = 0.1)
-  ```
+    ```{r}
+    qvis(mtcars, ~wt, binwidth = 1)
+    qvis(mtcars, ~wt, binwidth = 0.1)
+    ```
 
-* `branch_smooth()` to overlay a smoother on top of a data cloud:
+* `layer_smooth()` fits a smooth model to the data, and displays predictions
+  with a line and confidence interval. It's useful to highlight the trend
+  in noisy data:
 
     ```{r}
     qvis(mtcars, ~wt, ~mpg, layers = "smooth")
     ```
 
-You can learn more about marks and branches in the [marks](marks.html) vignette.
+You can learn more about layers in the [layers](layers.html) vignette.
 
 ## Multiple layers
 
-There are two ways to display multiple layers on one plot. The first and simplest way is to provide a vector of layer names to `layer`:
+Rich graphics can be created by combining multiple layers on the same plot. There are two ways to display multiple layers on one plot. The first and simplest way is to provide a vector of layer names to `layer`:
 
 ```{r}
 qvis(mtcars, ~wt, ~mpg, layers = c("smooth", "point"))
 ```
 
-This is ok for very simple plots, but it's fundamentally limited because you can't use different properties or different parameters on different levels. A more flexible approach is to add branches on to a base plot:
+This is ok for very simple plots, but it's fundamentally limited because you can't use different properties or different parameters on different levels. A more flexible approach is to add layers to a base plot:
 
 ```{r}
 qvis(mtcars, ~wt, ~mpg) + branch_smooth()
 ```
 
-You could use this approach to add two smoothers with varying wiggliness:
+You could use this approach to add two smoothers with varying degrees of wiggliness:
 
 ```{r}
 qvis(mtcars, ~wt, ~mpg) +
@@ -192,8 +216,17 @@ There's an important difference between `qvis()` and individual branches. `qvis(
 
 ```{r}
 qvis(mtcars, ~wt, ~mpg, layers = c("point", "smooth"), stroke := "red")
+
 qvis(mtcars, ~wt, ~mpg, stroke := "red") +
   branch_smooth(props(stroke := "red"))
+```
+
+It's confusing to read code that refers to properties in two different ways, so when your plots reach this level of complexity, it's usually best to switch to the more explicit `ggvis()`.
+
+```{r}
+ggvis(mtcars, props(x = ~wt, y = ~mpg, stroke := "red")) +
+  mark_point() +
+  branch_smooth()
 ```
 
 You'll learn more about building up rich hierarchical graphics in the [data hierarchy](data-hierarchy.html) vignette.
