@@ -13,7 +13,7 @@ Imports:
     whisker,
     RJSONIO,
     digest,
-    shiny (>= 0.6.0.99),
+    shiny (>= 0.8.0.99),
     methods
 Suggests:
     testthat (>= 0.7.1.99),

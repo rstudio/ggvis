@@ -225,7 +225,8 @@ knitr_print <- function(x, dynamic = NA, id = rand_id("plot_"), minify = TRUE,
 html_head <- function(prefix = NULL, minify = TRUE, shiny = FALSE) {
   if(minify) {
     tags <- tagList(
-      tags$script(src = "lib/jquery-1.11.0.min.js"),
+      # Shiny has its own copy of jQuery; duplicates can cause problems
+      if (!shiny) tags$script(src = "lib/jquery-1.11.0.min.js"),
       tags$script(src = "lib/jquery-ui/js/jquery-ui-1.10.3.custom.min.js"),
       tags$script(charset = "utf-8", src = "lib/d3.min.js"),
       tags$script(src = "lib/vega.min.js"),
@@ -241,7 +242,7 @@ html_head <- function(prefix = NULL, minify = TRUE, shiny = FALSE) {
     )
   } else {
     tags <- tagList(
-      tags$script(src = "lib/jquery-1.11.0.js"),
+      if (!shiny) tags$script(src = "lib/jquery-1.11.0.js"),
       tags$script(src = "lib/jquery-ui/js/jquery-ui-1.10.3.custom.js"),
       tags$script(charset = "utf-8", src = "lib/d3.js"),
       tags$script(src = "lib/vega.js"),
@@ -249,7 +250,7 @@ html_head <- function(prefix = NULL, minify = TRUE, shiny = FALSE) {
       tags$script(src = "lib/lodash.min.js"),
       tags$script("var lodash = _.noConflict();"),
       tags$script(src = "js/ggvis.js"),
-      if(shiny) tags$script(src = "js/shiny-ggvis.js"),
+      if (shiny) tags$script(src = "js/shiny-ggvis.js"),
       tags$link(rel = "stylesheet", type = "text/css",
         href = "lib/jquery-ui/css/smoothness/jquery-ui-1.10.3.custom.css"),
       tags$link(rel = "stylesheet", type = "text/css",

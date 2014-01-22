@@ -35,15 +35,21 @@ $(function(){ //DOM Ready
       this.renderError(el, err);
     },
     renderValue: function(el, data) {
-      var $el = $(el);
-
       Shiny.unbindAll(el);
-      $el.html(data);
+
+      var html;
+      if (data === null) {
+        html = '';
+      } else {
+        html = data;
+      }
+
+      Shiny.renderHtml(html, el);
       Shiny.initializeInputs(el);
       Shiny.bindAll(el);
 
       // Run onControlOutput for each plot listed in data-plot-id
-      var plotId = $el.data('plot-id');
+      var plotId = $(el).data('plot-id');
       if (plotId !== undefined) {
         var ids = plotId.split(/ +/);
 
