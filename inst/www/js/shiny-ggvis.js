@@ -221,7 +221,7 @@ $(function(){ //DOM Ready
         /* jshint unused: false */
         Shiny.onInputChange(self._inputIdPrefix + "_mouse_out",
           {
-            plot_id: self.plot.plotId
+            plot_id: self.plot.plotId,
             _nonce: self._nonce_counter
           }
         );
