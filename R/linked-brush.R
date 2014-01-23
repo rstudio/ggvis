@@ -39,7 +39,7 @@ LinkedBrush <- setRefClass("LinkedBrush",
     },
 
     brush_handler = function() {
-      handler("linked_brush", "brush", id = rand_id())
+      handler("linked_brush", "brush", list(fill = fill), id = rand_id())
     }
   )
 )
@@ -80,8 +80,8 @@ extract_layer.linked_brush <- function(x, ...) {
 
   props <- merge_props(
     props(x := ~x, y := ~y, width := ~width, height := ~height,
-      fill := "black", fillOpacity := 0.2,
-      stroke := "black", strokeOpacity := 0.6,
+      fill := x$control_args$fill, fillOpacity := 0.2,
+      stroke := x$control_args$fill, strokeOpacity := 0.6,
       inherit = FALSE),
     comps$props
   )
