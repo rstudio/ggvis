@@ -28,25 +28,25 @@ LinkedBrush <- setRefClass("LinkedBrush",
     selected_prop = function() {
       "Returns a delayed reactive suitable for use in props"
       reactive_proxy(rv, "keys", rep(FALSE, length(keys)),
-        function(x) keys %in% rv$keys
+        function(x) keys %in% rv$keys, id = id
       )
     },
     fill_prop = function() {
       "Returns a delayed reactive suitable for use in props"
       reactive_proxy(rv, "keys", rep("black", length(keys)),
-        function(x) c("black", fill)[keys %in% rv$keys + 1]
+        function(x) c("black", fill)[keys %in% rv$keys + 1], id = id
       )
     },
 
     brush_handler = function() {
-      handler("linked_brush", "brush", list(fill = fill), id = rand_id())
+      handler("linked_brush", "brush", list(fill = fill), id = id)
     }
   )
 )
 
-reactive_proxy <- function(rv, name, default, trans = identity) {
+reactive_proxy <- function(rv, name, default, trans = identity, id = rand_id()) {
   structure(
-    list(rv = rv, name = name, trans = trans, default = default, id = rand_id()),
+    list(rv = rv, name = name, trans = trans, default = default, id = id),
     class = c("reactive_proxy", "input"))
 }
 
@@ -55,10 +55,17 @@ as.reactive.reactive_proxy <- function(x, session = NULL, ...) {
   if (is.null(session)) return(reactive(x$default))
 
   brush <- Brush(session, id = x$id)
-  observe({
+  brush_obs <- observe({
     moved <- brush$brush_move()
-    print(moved)
-    x$rv$keys <- moved$keys
+    keys <- sapply(moved$items, "[[", "key__")
+    if (length(keys) == 0) {
+      x$rv$keys <- NULL
+    } else {
+      x$rv$keys <- keys + 1
+    }
+  })
+  session$onSessionEnded(function() {
+    brush_obs$suspend()
   })
 
   reactive(x$trans(x$rv[[x$name]]))
