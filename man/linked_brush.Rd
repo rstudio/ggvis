@@ -1,7 +1,11 @@
 \name{linked_brush}
 \alias{linked_brush}
+\title{Create a lnked brush object}
 \usage{
 linked_brush(keys, fill = "red")
+}
+\description{
+Create a lnked brush object
 }
 \examples{
 lb <- linked_brush(keys = 1:nrow(mtcars))
