@@ -3,7 +3,7 @@
 #' These functions create mark objects, corresponding to vega marks. Marks
 #' are leaves in the plot tree, and control the details of the final rendering.
 #' Marks are equivalent to the basic geoms in ggplot2 (e.g. point, line,
-#' polygon), where ggvis branches correspond to combinations of geoms and
+#' polygon), where ggvis layers correspond to combinations of geoms and
 #' statistical transforms.
 #'
 #' Note that by supplying a fill property to \code{mark_line} will produce

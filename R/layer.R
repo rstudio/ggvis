@@ -1,13 +1,13 @@
-#' Create a new branch.
+#' Create a new layer.
 #' 
-#' Branches are used to describe the data hierarchy of ggvis. As well as 
+#' Layers are used to describe the data hierarchy of ggvis. As well as 
 #' using this function to create them, you can also use the many specialised
-#' \code{branch_} functions that combine marks and transforms to create 
+#' \code{layer_} functions that combine marks and transforms to create 
 #' useful visualisations.
 #'
 #' @section Hierarchy:
 #'
-#' A ggvis plot has a hierarchical structure, where each branch inherits
+#' A ggvis plot has a hierarchical structure, where each layer inherits
 #' data and properties from its parent. This is somewhat similar to ggplot2,
 #' but ggplot2 plots only had a single layer of hierarchy - with ggvis, you
 #' can have multiple levels, making it easier to avoid redundancy, both in
@@ -17,45 +17,45 @@
 #' predictions and the standard error from a linear model. In ggplot2, you
 #' had to use \code{geom_smooth()}, which was a special geom that combined a
 #' line and a ribbon. With ggvis, you can do it yourself by using two marks
-#' nested inside a branch: (and in fact, this is exactly how
-#' \code{\link{branch_smooth}}) works.
+#' nested inside a layer: (and in fact, this is exactly how
+#' \code{\link{layer_smooth}}) works.
 #'
 #' \code{
 #' ggvis(mtcars, props(x = ~disp, y = ~mpg),
-#'   branch(transform_smooth(),
+#'   layer(transform_smooth(),
 #'     mark_area(props(y = ~y_min, y2 = ~y_max, fill := "#eee")),
 #'     mark_line()
 #'   ),
 #'   mark_symbol()
 #' )
 #' }
-#' @param ... components: data, \code{\link{props}}, \code{branch}es,
+#' @param ... components: data, \code{\link{props}}, \code{layer}es,
 #'   or \code{\link{marks}}
 #' @param drop_named if \code{FALSE}, the default, will throw an error if
 #'   any of the arguments in \code{...} are named. If \code{TRUE} it will
-#'   silently drop them - this is primarily useful for \code{branch_} functions
+#'   silently drop them - this is primarily useful for \code{layer_} functions
 #'   which send named arguments to the transform, and unnamed arguments to the
-#'   branch.
+#'   layer.
 #' @export
-branch <- function(..., drop_named = FALSE) {
+layer <- function(..., drop_named = FALSE) {
   check_empty_args()
   
   comp <- parse_components(..., drop_named = drop_named)
-  check_branch_components(comp)
-  class(comp) <- "branch"
+  check_layer_components(comp)
+  class(comp) <- "layer"
 
   comp
 }
 
-#' @rdname branch
+#' @rdname layer
 #' @export
-#' @param x object to test for "branch"-ness
-is.branch <- function(x) inherits(x, "branch")
+#' @param x object to test for "layer"-ness
+is.layer <- function(x) inherits(x, "layer")
 
-check_branch_components <- function(x) {
+check_layer_components <- function(x) {
   incorrect <- setdiff(names(x), c("children", "data", "props"))
   if (length(incorrect) > 0) {
-    stop("Branch may only contain other branches, not scales, legends or axes",
+    stop("Layer may only contain other layeres, not scales, legends or axes",
       call. = FALSE)
   }
 }
@@ -68,7 +68,7 @@ parse_components <- function(..., drop_named = FALSE) {
     if (drop_named) {
       args <- args[!named]
     } else {
-      stop("Inputs to ggvis/branch should not be named", call. = FALSE)
+      stop("Inputs to ggvis/layer should not be named", call. = FALSE)
     }
   }
   names(args) <- NULL
@@ -94,7 +94,7 @@ parse_components <- function(..., drop_named = FALSE) {
 
 component_type <- function(x) UseMethod("component_type")
 #' @export
-component_type.branch <- function(x) "children"
+component_type.layer <- function(x) "children"
 #' @export
 component_type.scale <- function(x) "scales"
 #' @export

@@ -61,8 +61,8 @@ input_radiobuttons(choices = c("Linear" = "lm", "LOESS" = "loess"),
                    selected = "LOESS",
                    label = "Model type")
 
-# Used in a branch_smooth
-branch_smooth(model = input_radiobuttons(
+# Used in a layer_smooth
+layer_smooth(model = input_radiobuttons(
   choices = c("Linear" = "lm", "LOESS" = "loess"),
               selected = "LOESS",
               label = "Model type"))

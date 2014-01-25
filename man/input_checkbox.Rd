@@ -27,13 +27,13 @@ Create an interactive checkbox.
 input_checkbox(label = "Confidence interval")
 input_checkbox(label = "Confidence interval", value = TRUE)
 
-# Used in a branch_smooth
-branch_smooth(se = input_checkbox(label = "Confidence interval"))
+# Used in a layer_smooth
+layer_smooth(se = input_checkbox(label = "Confidence interval"))
 
 # Used with a map function, to convert the boolean to another type of value
 model_type <- input_checkbox(label = "Use flexible curve",
   map = function(val) if(val) "loess" else "lm")
-branch_smooth(method = model_type)
+layer_smooth(method = model_type)
 }
 \seealso{
 Other interactive input: \code{\link{input_checkboxgroup}},

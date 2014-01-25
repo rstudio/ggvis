@@ -25,10 +25,10 @@ aliases for a geom + combination.  For example:
 * `geom_smooth` = `geom_smooth` + `stat_smooth`
 
 In ggvis, there is a clear demarkation between marks (pure drawing) and 
-branches (drawing + transformation):
+layers (drawing + transformation):
 
-* `branch_histogram` = `mark_bar` + `transform_bin`
-* `branch_smooth` = (`mark_line` + `mark_area`) + `transform_smooth`
+* `layer_histogram` = `mark_bar` + `transform_bin`
+* `layer_smooth` = (`mark_line` + `mark_area`) + `transform_smooth`
 
 ggplot2 needed special geoms like `geom_smooth` because the data hierarchy
 was not deep enough, and there was no standard way for a stat to take the 

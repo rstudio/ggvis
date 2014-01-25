@@ -1,9 +1,9 @@
 #' Transformation: bin continuous variable.
 #'
 #' \code{transform_bin} is a data transformation that reduces a one-d vector 
-#' of positions to a data frame of binned counts. \code{branch_histogram} 
+#' of positions to a data frame of binned counts. \code{layer_histogram} 
 #' combines \code{transform_bin} with \code{mark_rect} to create a histogram,
-#' and \code{branch_freqpoly} combines \code{transform_bin} with 
+#' and \code{layer_freqpoly} combines \code{transform_bin} with 
 #' \code{mark_line} to create a frequency polygon.
 #' 
 #' @section Input:
@@ -35,14 +35,14 @@
 #' @param right Should bins be right-open, left-closed, or
 #'   right-closed, left-open
 #' @param ... For \code{transform_bin}: ignored, all transforms must use 
-#'   named arguments.  For \code{branch_histogram}: named arguments are 
-#'   passed on to the transform, unnamed arguments are passed on to the branch.
+#'   named arguments.  For \code{layer_histogram}: named arguments are 
+#'   passed on to the transform, unnamed arguments are passed on to the layer.
 #' @export
 #' @examples
-#' # Create histograms and frequency polygons with branches
-#' ggvis(mtcars, props(x = ~mpg), branch_histogram())
-#' ggvis(mtcars, props(x = ~mpg), branch_histogram(binwidth = 2))
-#' ggvis(mtcars, props(x = ~mpg), branch_freqpoly(binwidth = 2))
+#' # Create histograms and frequency polygons with layers
+#' ggvis(mtcars, props(x = ~mpg), layer_histogram())
+#' ggvis(mtcars, props(x = ~mpg), layer_histogram(binwidth = 2))
+#' ggvis(mtcars, props(x = ~mpg), layer_freqpoly(binwidth = 2))
 #'
 #' # These are equivalent to combining transform_bin with the corresponding
 #' # mark
@@ -53,7 +53,7 @@
 #'
 #' # You can also combine other data transformations like splitting
 #' ggvis(mtcars, props(x = ~mpg, stroke = ~cyl, strokeWidth = 4),
-#'    by_group(cyl), branch_freqpoly(binwidth = 2))
+#'    by_group(cyl), layer_freqpoly(binwidth = 2))
 #' 
 #' # You can see the results of a transformation by creating your own pipeline
 #' # and flowing data through it
@@ -72,10 +72,10 @@ transform_bin <- function(..., binwidth = guess(), origin = NULL, right = TRUE) 
 
 #' @rdname transform_bin
 #' @export
-branch_histogram <- function(...) {
-  branch(
+layer_histogram <- function(...) {
+  layer(
     transform_bin(...),
-    branch(
+    layer(
       props(x = ~xmin__, x2 = ~xmax__, y = ~count__, y2 = 0),
       mark_rect(),
       ...,
@@ -86,11 +86,11 @@ branch_histogram <- function(...) {
 
 #' @rdname transform_bin
 #' @export
-#' @inheritParams branch_histogram
-branch_freqpoly <- function(...) {
-  branch(
+#' @inheritParams layer_histogram
+layer_freqpoly <- function(...) {
+  layer(
     transform_bin(...),
-    branch(
+    layer(
       props(x = ~x, y = ~count__),
       mark_line(),
       ...,

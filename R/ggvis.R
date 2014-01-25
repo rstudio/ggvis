@@ -1,9 +1,9 @@
 #' Create a ggvis graphic.
 #'
-#' @param ... components: data, \code{\link{props}}, \code{\link{branch}}es,
+#' @param ... components: data, \code{\link{props}}, \code{\link{layer}}es,
 #'   \code{\link{marks}}, \code{\link{scales}}, \code{\link{axis}} or 
 #'   \code{\link{legend}} objects.
-#' @return a \code{branch} object. Will display the plot when printed;
+#' @return a \code{layer} object. Will display the plot when printed;
 #'   see \code{\link{save_spec}}, \code{\link{view_static}} and
 #'   \code{\link{view_dynamic}} for other options.
 #' @export
@@ -11,7 +11,7 @@
 ggvis <- function(...) {
   check_empty_args()
   vis <- parse_components(...)
-  class(vis) <- c("ggvis", "branch")
+  class(vis) <- c("ggvis", "layer")
 
   set_last_vis(vis)
   vis

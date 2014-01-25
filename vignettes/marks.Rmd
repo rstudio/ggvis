@@ -169,25 +169,25 @@ ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
   mark_line(data = by_group(cyl))
 ```
 
-## Branches
+## Layers
 
-In ggvis marks strictly represent drawing; a branch combines a mark with a
+In ggvis marks strictly represent drawing; a layer combines a mark with a
 transformation, and often a set of default props. For example:
 
-* `branch_histogram` = `mark_rect` + `transform_bin`
-* `branch_freqpoly` = `mark_line` + `transform_bin`
-* `branch_smooth` = (`mark_line` + `mark_area`) + `transform_bin`
+* `layer_histogram` = `mark_rect` + `transform_bin`
+* `layer_freqpoly` = `mark_line` + `transform_bin`
+* `layer_smooth` = (`mark_line` + `mark_area`) + `transform_bin`
 
-All branches start with `branch_` and the source will typically be simple so is 
+All layers start with `layer_` and the source will typically be simple so is 
 worth reading:
 
 ```{r}
-branch_smooth
-branch_histogram
+layer_smooth
+layer_histogram
 ```
 
 If you find yourself using a set of marks commonly, it might be worth writing
-your own branch function. Typically, the first argument should be `props` and
+your own layer function. Typically, the first argument should be `props` and
 `...` should be passed on to the tranform function.
 
 ## Conversion from ggplot2
@@ -212,7 +212,7 @@ time.
 * `geom_errorbarh`
 * `geom_freqpoly`
 * `geom_hex`
-* `geom_histogram` = `branch_histogram` = `mark_bar` + `transform_bin`
+* `geom_histogram` = `layer_histogram` = `mark_bar` + `transform_bin`
 * `geom_hline` =  = `mark_line` + `props(x2 ~ proo_group("width"))`.
 * `geom_jitter`
 * `geom_line` = `mark_line` + `transform_sort`
@@ -228,7 +228,7 @@ time.
 * `geom_ribbon` = `mark_area`
 * `geom_rug`
 * `geom_segment`
-* `geom_smooth` = `branch_smooth` = `mark_area` + `mark_line` + `transform_smooth`
+* `geom_smooth` = `layer_smooth` = `mark_area` + `mark_line` + `transform_smooth`
 * `geom_step` = `mark_line` + `transform_step`
 * `geom_text` = `mark_text`
 * `geom_tile` = `mark_rect` + `props(width ~ prop_band(), height ~ prob_band())`

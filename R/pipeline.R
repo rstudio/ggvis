@@ -8,7 +8,7 @@
 #' 
 #' This function allows you to explicitly connect a series of 
 #' \code{\link{pipe}} objects into a pipeline. You should never need to call
-#' it explicitly as \code{\link{ggvis}} and \code{\link{branch}} automatically
+#' it explicitly as \code{\link{ggvis}} and \code{\link{layer}} automatically
 #' create a pipeline using \code{as.pipeline}.
 #' 
 #' @param ... a list of pipes

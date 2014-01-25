@@ -7,7 +7,7 @@
 #'
 #' Every element in a pipeline recieves the same set of properties: this
 #' generally means that for more complicated transformations you will need
-#' to create multiple branches.
+#' to create multiple layers.
 #'
 #' @param x a pipeline or pipe
 #' @param properties a \code{\link{props}} object

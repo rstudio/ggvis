@@ -20,6 +20,6 @@ ggvis(df, props(x = ~x, y = ~y), transform_sort(var = "y"),
 save_spec("line/sort-y.json")
 
 ggvis(df, props(x = ~x, y = ~y, stroke = ~z), 
-  branch_line()
+  layer_line()
 )
-save_spec("line/branch-line.json")
+save_spec("line/layer-line.json")

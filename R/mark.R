@@ -19,7 +19,7 @@ mark <- function(type, props, data = NULL) {
       data = as.pipeline(data),
       props = props
     )),
-    class = c(paste0("mark_", type), "mark", "branch")
+    class = c(paste0("mark_", type), "mark", "layer")
   )
 
   check_mark_props(m, names(m$props))

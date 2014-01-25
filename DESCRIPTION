@@ -22,8 +22,6 @@ VignetteBuilder: knitr
 License: GPL-2
 Collate:
     'auto_split.R'
-    'branch.R'
-    'branch_misc.R'
     'by_group.R'
     'connect.R'
     'controls.R'
@@ -49,6 +47,8 @@ Collate:
     'inputs.R'
     'is_dynamic.R'
     'last_vis.R'
+    'layer.R'
+    'layer_misc.R'
     'linked-brush.R'
     'mark.R'
     'marks.R'

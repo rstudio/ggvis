@@ -9,7 +9,7 @@ shinyServer(function(input, output, session) {
   gv1 <- reactive({
     ggvis(diamonds, props(x = ~carat, y = ~price)) +
       mark_symbol(props(fill.brush := "red", fillOpacity := 0.8, key := ~id)) +
-      branch_brush() +
+      layer_brush() +
       opts(width = 300, height = 300, brush_delay = 100)
   })
 

@@ -30,7 +30,7 @@ render a final result.
 \details{
 Every element in a pipeline recieves the same set of
 properties: this generally means that for more complicated
-transformations you will need to create multiple branches.
+transformations you will need to create multiple layers.
 }
 \examples{
 df <- data.frame(x = 1:10, y = 1:10)

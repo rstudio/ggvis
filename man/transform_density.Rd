@@ -1,12 +1,12 @@
 \name{transform_density}
-\alias{branch_density}
+\alias{layer_density}
 \alias{transform_density}
 \title{Transformation: density estimate}
 \usage{
 transform_density(..., adjust = 1, kernel = "gaussian", trim = FALSE,
   n = 200L, na.rm = FALSE)
 
-branch_density(..., area = TRUE)
+layer_density(..., area = TRUE)
 }
 \arguments{
   \item{adjust}{Bandwidth adjustment. See
@@ -32,15 +32,14 @@ branch_density(..., area = TRUE)
   the curve?}
 
   \item{...}{Named arguments are passed on to the
-  transform, unnamed arguments are passed on to the
-  branch.}
+  transform, unnamed arguments are passed on to the layer.}
 }
 \description{
 \code{transform_density} is a data transformation that
 computes a kernel density estimate from a dataset.
-\code{branch_density} combines \code{transform_density}
-with \code{mark_line} and \code{mark_area} to display a
-smooth line and its standard errror.
+\code{layer_density} combines \code{transform_density} with
+\code{mark_line} and \code{mark_area} to display a smooth
+line and its standard errror.
 }
 \section{Input}{
   Currently \code{transform_density} only works with data
@@ -58,23 +57,23 @@ smooth line and its standard errror.
 }
 \examples{
 # Basic density estimate
-ggvis(faithful, props(x = ~waiting), branch_density())
+ggvis(faithful, props(x = ~waiting), layer_density())
 
 # Smaller bandwidth
 ggvis(faithful, props(x = ~waiting, fill :="lightblue"),
-  branch_density(adjust = .25)
+  layer_density(adjust = .25)
 )
 
 # Control stroke and fill
 ggvis(faithful, props(x = ~waiting),
-  branch_density(props(stroke := "#cc3333", strokeWidth := 3,
+  layer_density(props(stroke := "#cc3333", strokeWidth := 3,
     fill := "#666699", fillOpacity := 0.6))
 )
 
 # With groups
 ggvis(PlantGrowth, by_group(group),
   props(x = ~weight, stroke = ~group, fill = ~group, fillOpacity := 0.2),
-  branch_density()
+  layer_density()
 )
 
 # Using various arguments: adjust na.rm, n, area, kernel
@@ -82,7 +81,7 @@ mtc <- mtcars
 mtc$mpg[5:10] <- NA
 ggvis(mtc,
   props(x = ~mpg, y = ~mpg),
-  branch_density(adjust = 0.3, n = 100, area = FALSE, kernel = "rectangular",
+  layer_density(adjust = 0.3, n = 100, area = FALSE, kernel = "rectangular",
     props(stroke := "#cc0000"))
 )
 }

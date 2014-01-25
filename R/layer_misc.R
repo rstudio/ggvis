@@ -1,4 +1,4 @@
-#' A branch to add a line.
+#' A layer to add a line.
 #'
 #' @seealso \code{link{mark_line}}
 #' @export
@@ -10,13 +10,13 @@
 #' @examples
 #' ggvis(mtcars,
 #'   props(x = ~wt, y = ~mpg, stroke = ~factor(cyl)),
-#'   branch_line(),
+#'   layer_line(),
 #'   mark_symbol()
 #' )
-branch_line <- function(..., sort = TRUE) {
+layer_line <- function(..., sort = TRUE) {
   comps <- parse_components(..., drop_named = TRUE)
 
-  branch(
+  layer(
     auto_split(),
     if (sort) transform_sort(...),
     mark_line(comps$props)

@@ -8,7 +8,7 @@ shinyServer(function(input, output, session) {
   gv <- reactive({
     ggvis(mtcars, props(x = ~wt, y = ~mpg, fill.brush := "blue")) +
       mark_symbol() +
-      branch_brush() +
+      layer_brush() +
       opts(brush_delay = 100)
   })
 

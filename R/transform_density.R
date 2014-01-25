@@ -1,7 +1,7 @@
 #' Transformation: density estimate
 #'
 #' \code{transform_density} is a data transformation that computes a kernel
-#' density estimate from a dataset. \code{branch_density} combines
+#' density estimate from a dataset. \code{layer_density} combines
 #' \code{transform_density} with \code{mark_line} and \code{mark_area}
 #' to display a smooth line and its standard errror.
 #'
@@ -34,23 +34,23 @@
 #' @export
 #' @examples
 #' # Basic density estimate
-#' ggvis(faithful, props(x = ~waiting), branch_density())
+#' ggvis(faithful, props(x = ~waiting), layer_density())
 #'
 #' # Smaller bandwidth
 #' ggvis(faithful, props(x = ~waiting, fill :="lightblue"),
-#'   branch_density(adjust = .25)
+#'   layer_density(adjust = .25)
 #' )
 #'
 #' # Control stroke and fill
 #' ggvis(faithful, props(x = ~waiting),
-#'   branch_density(props(stroke := "#cc3333", strokeWidth := 3,
+#'   layer_density(props(stroke := "#cc3333", strokeWidth := 3,
 #'     fill := "#666699", fillOpacity := 0.6))
 #' )
 #'
 #' # With groups
 #' ggvis(PlantGrowth, by_group(group),
 #'   props(x = ~weight, stroke = ~group, fill = ~group, fillOpacity := 0.2),
-#'   branch_density()
+#'   layer_density()
 #' )
 #'
 #' # Using various arguments: adjust na.rm, n, area, kernel
@@ -58,7 +58,7 @@
 #' mtc$mpg[5:10] <- NA
 #' ggvis(mtc,
 #'   props(x = ~mpg, y = ~mpg),
-#'   branch_density(adjust = 0.3, n = 100, area = FALSE, kernel = "rectangular",
+#'   layer_density(adjust = 0.3, n = 100, area = FALSE, kernel = "rectangular",
 #'     props(stroke := "#cc0000"))
 #' )
 #'
@@ -77,8 +77,8 @@ transform_density <- function(..., adjust = 1, kernel = "gaussian",
 #' @export
 #' @param area Should there be a shaded region drawn under the curve?
 #' @param ... Named arguments are passed on to the transform, unnamed
-#'   arguments are passed on to the branch.
-branch_density <- function(..., area = TRUE) {
+#'   arguments are passed on to the layer.
+layer_density <- function(..., area = TRUE) {
   comps <- parse_components(..., drop_named = TRUE)
 
   line_props <- merge_props(props(x = ~x, y = ~y), comps$props)
@@ -90,9 +90,9 @@ branch_density <- function(..., area = TRUE) {
   line_props <- drop_props(line_props, c("fill", "fillOpacity"))
   area_props <- drop_props(area_props, c("stroke", "strokeOpacity"))
 
-  branch(
+  layer(
     transform_density(...),
-    branch(
+    layer(
       comps$data,
       comps$marks,
       if (area) mark_area(area_props),

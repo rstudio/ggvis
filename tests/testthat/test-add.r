@@ -16,11 +16,11 @@ test_that("Adding to ggvis objects", {
   p2 <- p2 + mark_line()
   expect_equal(nsort(p1), nsort(p2))
 
-  # Branches
-  p1 <- ggvis(mtcars, props(x = ~wt, y = ~mpg), mark_symbol(), branch_smooth())
+  # Layers
+  p1 <- ggvis(mtcars, props(x = ~wt, y = ~mpg), mark_symbol(), layer_smooth())
   p2 <- ggvis(mtcars, props(x = ~wt, y = ~mpg))
   p2 <- p2 + mark_symbol()
-  p2 <- p2 + branch_smooth()
+  p2 <- p2 + layer_smooth()
   expect_equal(nsort(p1), nsort(p2))
 
   # Scales
@@ -83,29 +83,29 @@ test_that("Adding to ggvis objects", {
 })
 
 
-test_that("Adding to branch objects", {
+test_that("Adding to layer objects", {
   # Marks
   expect_equal(
-    branch() + mark_symbol() + mark_line(),
-    branch(mark_symbol(), mark_line())
+    layer() + mark_symbol() + mark_line(),
+    layer(mark_symbol(), mark_line())
   )
 
   # Props
   expect_equal(
-    nsort(branch() + props(x = ~wt) + props(y = ~mpg)),
-    nsort(branch(props(x = ~wt), props(y = ~mpg)))
+    nsort(layer() + props(x = ~wt) + props(y = ~mpg)),
+    nsort(layer(props(x = ~wt), props(y = ~mpg)))
   )
 
   # Marks and props
   expect_equal(
-    nsort(branch() + props(x = ~wt) + mark_line()),
-    nsort(branch(props(x = ~wt), mark_line()))
+    nsort(layer() + props(x = ~wt) + mark_line()),
+    nsort(layer(props(x = ~wt), mark_line()))
   )
 
-  expect_error(branch() + dscale("x", "numeric"))
-  expect_error(branch() + guide_axis("x"))
-  expect_error(branch() + guide_legend("fill"))
-  expect_error(branch() + opts())
+  expect_error(layer() + dscale("x", "numeric"))
+  expect_error(layer() + guide_axis("x"))
+  expect_error(layer() + guide_legend("fill"))
+  expect_error(layer() + opts())
 })
 
 

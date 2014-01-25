@@ -1,7 +1,7 @@
 context("controls")
 
 test_that("controls() returns named list of controls", {
-  b <- branch_smooth(
+  b <- layer_smooth(
     n = input_slider(min = 1, max = 10, value = 5,
       label = "Slider 1", id = "slider1"),
     method = input_select(c("LM" = "lm", "LOESS" = "loess"),

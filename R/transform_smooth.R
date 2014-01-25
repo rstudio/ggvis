@@ -1,7 +1,7 @@
 #' Transformation: smooth the data
 #'
 #' \code{transform_smooth} is a data transformation that fits a model to a 2d
-#' dataset and computes predictions and standard errors. \code{branch_smooth}
+#' dataset and computes predictions and standard errors. \code{layer_smooth}
 #' combines \code{transform_smooth} with \code{mark_line} and \code{mark_area} 
 #' to display a smooth line and its standard errror.
 #'
@@ -49,20 +49,20 @@
 #'   otherwise they will be removed with a warning.
 #' @param ... \code{transform_smooth}: named arguments passed on to
 #'  \code{method} function, unnamed arguments ignored. 
-#'  \code{branch_smooth}: named arguments are passed on to the transform,
+#'  \code{layer_smooth}: named arguments are passed on to the transform,
 #'  (and hence to \code{method}), unnamed arguments are passed on to 
-#'  \code{\link{branch}}.
+#'  \code{\link{layer}}.
 #' @export
 #' @examples
-#' ggvis(mtcars, props(x = ~wt, y = ~mpg), mark_symbol(), branch_smooth())
+#' ggvis(mtcars, props(x = ~wt, y = ~mpg), mark_symbol(), layer_smooth())
 #' ggvis(mtcars, props(x = ~wt, y = ~mpg), mark_symbol(),
-#'   branch_smooth(method = "lm", se = FALSE))
+#'   layer_smooth(method = "lm", se = FALSE))
 #' 
 #' # These are equivalent to combining transform_smooth with mark_line and
 #' # mark_area
 #' ggvis(mtcars, props(x = ~wt, y = ~mpg),
 #'   mark_symbol(),
-#'   branch(transform_smooth(),
+#'   layer(transform_smooth(),
 #'     mark_area(props(x = ~x, y = ~y_lower__, y2 = ~y_upper__,
 #'       fillOpacity := 0.2)),
 #'     mark_line(props(x = ~x, y = ~y))
@@ -71,7 +71,7 @@
 #'
 #' # You can also combine other data transformations like splitting
 #' ggvis(mtcars, props(x = ~wt, y = ~mpg, stroke = ~cyl), by_group(cyl),
-#'    branch_smooth(method = "lm"))
+#'    layer_smooth(method = "lm"))
 #' 
 #' # You can see the results of a transformation by creating your own pipeline
 #' # and sluicing data through it
@@ -90,7 +90,7 @@ transform_smooth <- function(..., method = guess(), formula = guess(), se = TRUE
 
 #' @rdname transform_smooth
 #' @export
-branch_smooth <- function(..., se = TRUE) {
+layer_smooth <- function(..., se = TRUE) {
   comps <- parse_components(..., drop_named = TRUE)
 
   line_props <-  merge_props(props(x = ~x, y = ~y), comps$props)
@@ -102,9 +102,9 @@ branch_smooth <- function(..., se = TRUE) {
   line_props <- drop_props(line_props, c("fill", "fillOpacity"))
   se_props <- drop_props(se_props, c("stroke", "strokeOpacity"))
 
-  branch(
+  layer(
     transform_smooth(..., se = se),
-    branch(
+    layer(
       comps$data,
       comps$marks,
       if (!identical(se, FALSE)) mark_area(se_props),

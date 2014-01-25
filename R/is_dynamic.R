@@ -5,7 +5,7 @@
 is.dynamic <- function(x) UseMethod("is.dynamic")
 
 #' @export
-is.dynamic.branch <- function(x) {
+is.dynamic.layer <- function(x) {
   is.dynamic(x$data) || 
     is.dynamic(x$props) || 
     any_apply(x$children, is.dynamic) ||

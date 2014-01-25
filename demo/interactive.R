@@ -3,14 +3,14 @@ library(ggvis)
 # Slider input in transform_smooth
 ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
   mark_symbol() +
-  branch_smooth(method = "loess", formula = y ~ x,
+  layer_smooth(method = "loess", formula = y ~ x,
     span = input_slider(0.2, 1, step = 0.05, label = "span")
   )
 
 
 # Slider and select input in transform_density
 ggvis(mtcars, props(x = ~wt)) +
-  branch_density(
+  layer_density(
     adjust = input_slider(.1, 2, value = 1, step = .1, label = "Bandwidth adjustment"),
     kernel = input_select(
       c("Gaussian" = "gaussian", "Epanechnikov" = "epanechnikov",
@@ -22,7 +22,7 @@ ggvis(mtcars, props(x = ~wt)) +
 # Example with value map function
 ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
   mark_symbol() +
-  branch_smooth(
+  layer_smooth(
     n = input_select(
       choices = c("Two", "Six", "Eighty"),
       map = function(value) switch(value, Two = 2, Six = 6, Eighty = 80),
@@ -35,24 +35,24 @@ ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
   mark_symbol(
     props(opacity := input_checkbox(label = "Semi-transparent",
                                    map = function(val) ifelse(val, .3, 1)))) +
-  branch_smooth(
+  layer_smooth(
     method = input_checkbox(label = "LOESS (curve) model fit",
                             map = function(val) ifelse(val, "loess", "lm")))
 
 # Text input
 ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
   mark_symbol(props(fill := input_text(label = "Point color", value = "red"))) +
-  branch_smooth(method = input_text(label = "Model type", value = "loess"))
+  layer_smooth(method = input_text(label = "Model type", value = "loess"))
 
 # Numeric input
 ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
   mark_symbol(props(size := input_numeric(value = 25, label = "Point size"))) +
-  branch_smooth(n = input_numeric(value = 5, label = "Interpolation points"))
+  layer_smooth(n = input_numeric(value = 5, label = "Interpolation points"))
 
 # Radio buttons
 ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
   mark_symbol() +
-  branch_smooth(
+  layer_smooth(
     method = input_radiobuttons(c("LOESS" = "loess", "Linear" = "lm"),
       label = "Model type"),
     props(stroke := input_radiobuttons(c("Red" = "red", "Black" = "black"),

@@ -41,13 +41,13 @@ input_slider <- function(min, max, value = min, step = NULL, round = FALSE,
 #' input_checkbox(label = "Confidence interval")
 #' input_checkbox(label = "Confidence interval", value = TRUE)
 #'
-#' # Used in a branch_smooth
-#' branch_smooth(se = input_checkbox(label = "Confidence interval"))
+#' # Used in a layer_smooth
+#' layer_smooth(se = input_checkbox(label = "Confidence interval"))
 #'
 #' # Used with a map function, to convert the boolean to another type of value
 #' model_type <- input_checkbox(label = "Use flexible curve",
 #'   map = function(val) if(val) "loess" else "lm")
-#' branch_smooth(method = model_type)
+#' layer_smooth(method = model_type)
 input_checkbox <- function(value = FALSE, label = "", 
                            id = rand_id("checkbox_"), map = identity) {
 
@@ -129,8 +129,8 @@ input_numeric <- function(value, label = "", id = rand_id("text_"),
 #'                    selected = "LOESS",
 #'                    label = "Model type")
 #'
-#' # Used in a branch_smooth
-#' branch_smooth(model = input_radiobuttons(
+#' # Used in a layer_smooth
+#' layer_smooth(model = input_radiobuttons(
 #'   choices = c("Linear" = "lm", "LOESS" = "loess"),
 #'               selected = "LOESS",
 #'               label = "Model type"))

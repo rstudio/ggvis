@@ -35,7 +35,7 @@ controls like `input_slider()`:
 
 ```{r}
 ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
-  branch_smooth(span = input_slider(0.5, 1, 1)) + 
+  layer_smooth(span = input_slider(0.5, 1, 1)) + 
   mark_symbol(props(size := input_slider(100, 1000)))
 ```
 

@@ -1,14 +1,14 @@
 \name{transform_bin}
-\alias{branch_freqpoly}
-\alias{branch_histogram}
+\alias{layer_freqpoly}
+\alias{layer_histogram}
 \alias{transform_bin}
 \title{Transformation: bin continuous variable.}
 \usage{
 transform_bin(..., binwidth = guess(), origin = NULL, right = TRUE)
 
-branch_histogram(...)
+layer_histogram(...)
 
-branch_freqpoly(...)
+layer_freqpoly(...)
 }
 \arguments{
   \item{binwidth}{The width of the bins. The default is
@@ -26,16 +26,16 @@ branch_freqpoly(...)
 
   \item{...}{For \code{transform_bin}: ignored, all
   transforms must use named arguments.  For
-  \code{branch_histogram}: named arguments are passed on to
+  \code{layer_histogram}: named arguments are passed on to
   the transform, unnamed arguments are passed on to the
-  branch.}
+  layer.}
 }
 \description{
 \code{transform_bin} is a data transformation that reduces
 a one-d vector of positions to a data frame of binned
-counts. \code{branch_histogram} combines
+counts. \code{layer_histogram} combines
 \code{transform_bin} with \code{mark_rect} to create a
-histogram, and \code{branch_freqpoly} combines
+histogram, and \code{layer_freqpoly} combines
 \code{transform_bin} with \code{mark_line} to create a
 frequency polygon.
 }
@@ -56,10 +56,10 @@ frequency polygon.
   of bin \item \code{width__}: width of bin }
 }
 \examples{
-# Create histograms and frequency polygons with branches
-ggvis(mtcars, props(x = ~mpg), branch_histogram())
-ggvis(mtcars, props(x = ~mpg), branch_histogram(binwidth = 2))
-ggvis(mtcars, props(x = ~mpg), branch_freqpoly(binwidth = 2))
+# Create histograms and frequency polygons with layers
+ggvis(mtcars, props(x = ~mpg), layer_histogram())
+ggvis(mtcars, props(x = ~mpg), layer_histogram(binwidth = 2))
+ggvis(mtcars, props(x = ~mpg), layer_freqpoly(binwidth = 2))
 
 # These are equivalent to combining transform_bin with the corresponding
 # mark
@@ -70,7 +70,7 @@ ggvis(mtcars, props(x = ~mpg), transform_bin(binwidth = 2),
 
 # You can also combine other data transformations like splitting
 ggvis(mtcars, props(x = ~mpg, stroke = ~cyl, strokeWidth = 4),
-   by_group(cyl), branch_freqpoly(binwidth = 2))
+   by_group(cyl), layer_freqpoly(binwidth = 2))
 
 # You can see the results of a transformation by creating your own pipeline
 # and flowing data through it

@@ -60,7 +60,7 @@ controls.handler <- function(x, session = NULL, ...) NULL
 handlers <- function(x) UseMethod("handlers")
 
 #' @export
-handlers.branch <- function(x) {
+handlers.layer <- function(x) {
   t_handlers <- unname(lapply(x$data, handlers))
   p_handlers <- unname(lapply(x$props, handlers))
   c_handlers <- unname(lapply(x$children, handlers))

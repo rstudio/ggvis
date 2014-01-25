@@ -38,7 +38,7 @@ These functions create mark objects, corresponding to vega
 marks. Marks are leaves in the plot tree, and control the
 details of the final rendering. Marks are equivalent to the
 basic geoms in ggplot2 (e.g. point, line, polygon), where
-ggvis branches correspond to combinations of geoms and
+ggvis layers correspond to combinations of geoms and
 statistical transforms.
 }
 \details{
@@ -93,7 +93,7 @@ alias to \code{mark_symbol}.
 
   To each property, you can assign any property object
   (\code{\link{prop}}) either locally (i.e. in the mark),
-  or in a parent \code{\link{branch}}.
+  or in a parent \code{\link{layer}}.
 }
 \seealso{
 The "marks" vignette.

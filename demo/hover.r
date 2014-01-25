@@ -20,9 +20,9 @@ ggvis(pressure, props(x = ~temperature, y = ~pressure)) +
 # Hover with transform_smooth
 ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
   mark_symbol() +
-  branch_smooth(props(fill.hover := "red"))
+  layer_smooth(props(fill.hover := "red"))
 
 # Opacity with transform_density
 ggvis(PlantGrowth, by_group(group),
   props(x = ~weight, stroke = ~group, fill = ~group, fillOpacity := 0.2, fillOpacity.hover := .5)) +
-  branch_density()
+  layer_density()

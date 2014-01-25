@@ -1,12 +1,12 @@
 \name{transform_smooth}
-\alias{branch_smooth}
+\alias{layer_smooth}
 \alias{transform_smooth}
 \title{Transformation: smooth the data}
 \usage{
 transform_smooth(..., method = guess(), formula = guess(), se = TRUE,
   level = 0.95, n = 80L, na.rm = FALSE)
 
-branch_smooth(..., se = TRUE)
+layer_smooth(..., se = TRUE)
 }
 \arguments{
   \item{method}{Model fitting function to use - it must
@@ -41,14 +41,14 @@ branch_smooth(..., se = TRUE)
 
   \item{...}{\code{transform_smooth}: named arguments
   passed on to \code{method} function, unnamed arguments
-  ignored.  \code{branch_smooth}: named arguments are
-  passed on to the transform, (and hence to \code{method}),
-  unnamed arguments are passed on to \code{\link{branch}}.}
+  ignored.  \code{layer_smooth}: named arguments are passed
+  on to the transform, (and hence to \code{method}),
+  unnamed arguments are passed on to \code{\link{layer}}.}
 }
 \description{
 \code{transform_smooth} is a data transformation that fits
 a model to a 2d dataset and computes predictions and
-standard errors. \code{branch_smooth} combines
+standard errors. \code{layer_smooth} combines
 \code{transform_smooth} with \code{mark_line} and
 \code{mark_area} to display a smooth line and its standard
 errror.
@@ -77,15 +77,15 @@ errror.
   interval) }
 }
 \examples{
-ggvis(mtcars, props(x = ~wt, y = ~mpg), mark_symbol(), branch_smooth())
+ggvis(mtcars, props(x = ~wt, y = ~mpg), mark_symbol(), layer_smooth())
 ggvis(mtcars, props(x = ~wt, y = ~mpg), mark_symbol(),
-  branch_smooth(method = "lm", se = FALSE))
+  layer_smooth(method = "lm", se = FALSE))
 
 # These are equivalent to combining transform_smooth with mark_line and
 # mark_area
 ggvis(mtcars, props(x = ~wt, y = ~mpg),
   mark_symbol(),
-  branch(transform_smooth(),
+  layer(transform_smooth(),
     mark_area(props(x = ~x, y = ~y_lower__, y2 = ~y_upper__,
       fillOpacity := 0.2)),
     mark_line(props(x = ~x, y = ~y))
@@ -94,7 +94,7 @@ ggvis(mtcars, props(x = ~wt, y = ~mpg),
 
 # You can also combine other data transformations like splitting
 ggvis(mtcars, props(x = ~wt, y = ~mpg, stroke = ~cyl), by_group(cyl),
-   branch_smooth(method = "lm"))
+   layer_smooth(method = "lm"))
 
 # You can see the results of a transformation by creating your own pipeline
 # and sluicing data through it

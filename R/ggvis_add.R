@@ -1,11 +1,11 @@
-#' Modify a ggvis branch object by adding new components
+#' Modify a ggvis layer object by adding new components
 #'
-#' This operator lets you add objects to a ggvis branch object.
+#' This operator lets you add objects to a ggvis layer object.
 #'
-#' You can add the following types of objects to a branch object:
+#' You can add the following types of objects to a layer object:
 #' \itemize{
 #'   \item \code{mark}
-#'   \item \code{branch}
+#'   \item \code{layer}
 #'   \item \code{scale}
 #'   \item \code{guide_legend}
 #'   \item \code{guide_axis}
@@ -13,11 +13,11 @@
 #'   \item \code{opts}
 #' }
 #'
-#' @param e1 A branch object.
+#' @param e1 A layer object.
 #' @param e2 Another object, of a type listed above.
 #'
 #' @export
-`+.branch` <- function(e1, e2){
+`+.layer` <- function(e1, e2){
   e2name <- deparse(substitute(e2))
 
   # Separate function is needed for S3 dispatch - providing methods for the +
@@ -67,15 +67,15 @@ ggvis_add.mark <- function(e1, e2, e2name) {
 }
 
 #' @export
-ggvis_add.branch <- function(e1, e2, e2name) {
+ggvis_add.layer <- function(e1, e2, e2name) {
   type <- component_type(e2)
 
-  # Branch objects can add children and props
+  # Layer objects can add children and props
   switch(type,
     children = e1$children <- c(e1$children, list(e2)),
     props    = e1$props <- merge_props(e1$props, e2),
     stop("Don't know how to add object ", e2name, " of type ", type,
-      " to branch object.")
+      " to layer object.")
   )
   e1
 }

@@ -201,24 +201,24 @@ qvis(mtcars, ~wt, ~mpg, layers = c("smooth", "point"))
 This is ok for very simple plots, but it's fundamentally limited because you can't use different properties or different parameters on different levels. A more flexible approach is to add layers to a base plot:
 
 ```{r}
-qvis(mtcars, ~wt, ~mpg) + branch_smooth()
+qvis(mtcars, ~wt, ~mpg) + layer_smooth()
 ```
 
 You could use this approach to add two smoothers with varying degrees of wiggliness:
 
 ```{r}
 qvis(mtcars, ~wt, ~mpg) +
-  branch_smooth(span = 1, se = FALSE) +
-  branch_smooth(span = 0.3, se = FALSE)
+  layer_smooth(span = 1, se = FALSE) +
+  layer_smooth(span = 0.3, se = FALSE)
 ```
 
-There's an important difference between `qvis()` and individual branches. `qvis()` does some magic to guess whether an argument is a property or an argument to a transformation. The individual branches don't use this magic, so you need to identify properties by wrapping them in `props()`:
+There's an important difference between `qvis()` and individual layers. `qvis()` does some magic to guess whether an argument is a property or an argument to a transformation. The individual layers don't use this magic, so you need to identify properties by wrapping them in `props()`:
 
 ```{r}
 qvis(mtcars, ~wt, ~mpg, layers = c("point", "smooth"), stroke := "red")
 
 qvis(mtcars, ~wt, ~mpg, stroke := "red") +
-  branch_smooth(props(stroke := "red"))
+  layer_smooth(props(stroke := "red"))
 ```
 
 It's confusing to read code that refers to properties in two different ways, so when your plots reach this level of complexity, it's usually best to switch to the more explicit `ggvis()`.
@@ -226,7 +226,7 @@ It's confusing to read code that refers to properties in two different ways, so 
 ```{r}
 ggvis(mtcars, props(x = ~wt, y = ~mpg, stroke := "red")) +
   mark_point() +
-  branch_smooth()
+  layer_smooth()
 ```
 
 You'll learn more about building up rich hierarchical graphics in the [data hierarchy](data-hierarchy.html) vignette.

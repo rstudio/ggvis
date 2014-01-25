@@ -7,8 +7,8 @@ shinyServer(function(input, output, session) {
 
   hist_gv <- reactive({
     ggvis(diamonds, props(x = ~carat)) +
-      branch_histogram(props(fill.brush := "red"), binwidth = 0.1) +
-      branch_brush() +
+      layer_histogram(props(fill.brush := "red"), binwidth = 0.1) +
+      layer_brush() +
       opts(height = 200)
   })
 

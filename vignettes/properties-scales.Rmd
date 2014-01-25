@@ -71,8 +71,8 @@ That's useful when you want to label different layers in a plot:
 ```{r}
 ggvis(mtcars, props(x = ~wt, y = ~mpg)) + 
   mark_symbol() + 
-  branch_smooth(props(stroke = "lm"), method = "lm") + 
-  branch_smooth(props(stroke = "loess"))
+  layer_smooth(props(stroke = "lm"), method = "lm") + 
+  layer_smooth(props(stroke = "loess"))
 ```
 
 (Note this isn't currently supported in ggvis because of a limitation 

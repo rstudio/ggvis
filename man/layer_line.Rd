@@ -1,8 +1,8 @@
-\name{branch_line}
-\alias{branch_line}
-\title{A branch to add a line.}
+\name{layer_line}
+\alias{layer_line}
+\title{A layer to add a line.}
 \usage{
-branch_line(..., sort = TRUE)
+layer_line(..., sort = TRUE)
 }
 \arguments{
   \item{sort}{Should the data be sorted? If \code{TRUE}
@@ -15,12 +15,12 @@ branch_line(..., sort = TRUE)
   used.}
 }
 \description{
-A branch to add a line.
+A layer to add a line.
 }
 \examples{
 ggvis(mtcars,
   props(x = ~wt, y = ~mpg, stroke = ~factor(cyl)),
-  branch_line(),
+  layer_line(),
   mark_symbol()
 )
 }

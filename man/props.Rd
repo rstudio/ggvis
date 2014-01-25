@@ -23,8 +23,8 @@ is.ggvis_props(x)
   does.  parse in a list of un}
 
   \item{inherit}{If \code{TRUE}, the defaults, will inherit
-  from properties from the parent branch If \code{FALSE},
-  it will start from nothing.}
+  from properties from the parent layer If \code{FALSE}, it
+  will start from nothing.}
 
   \item{prop,value}{Name of property and the unscaled value
   that should be mapped to it.}
@@ -159,7 +159,7 @@ access all possible options.
 
   To each property, you can assign any property object
   (\code{\link{prop}}) either locally (i.e. in the mark),
-  or in a parent \code{\link{branch}}.
+  or in a parent \code{\link{layer}}.
 }
 \examples{
 # Set to constant values

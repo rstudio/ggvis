@@ -11,7 +11,7 @@ and many of the interfaces are likely to change as we learn more about what
 works well.
 
 * Basic naming conversions: layer -> node, geom -> mark, stat -> transform, 
-aes -> props, ggplot2 -> ggvis, geom + stat -> branch.
+aes -> props, ggplot2 -> ggvis, geom + stat -> layer.
 
 * Facetting is not currently supported, and when it is supported, it's more
   like to resemble [embedded plots](http://vita.had.co.nz/papers/embedded-plots.html)
@@ -20,7 +20,7 @@ aes -> props, ggplot2 -> ggvis, geom + stat -> branch.
 * In ggplot2, the definition of a geom was somewhat blurred, because of things
   like `geom_histogram()` which combined `geom_bar()` with `stat_bin()`. The
   distinction is more clear in ggvis: pure geoms correspond to marks, and 
-  combined geoms and stats correspond to branches.
+  combined geoms and stats correspond to layers.
   
 * There is no equivalent to `qplot` in ggvis: you must spell out everything
   explicitly using `ggvis`.

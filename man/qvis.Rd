@@ -7,30 +7,30 @@ qvis(data, ..., layers = character())
 \arguments{
   \item{data}{The data set where}
 
-  \item{...}{Properties and branch arguments.
+  \item{...}{Properties and layer arguments.
 
   If the name of the argument matches the name of a known
   property, it will be added to the plot properties.
   Otherwise it will be passed as an argument to every
-  branch. If you want to pass different arguments to
-  different branches, you'll need to add branches on one at
-  a time.
+  layer. If you want to pass different arguments to
+  different layers, you'll need to add layers on one at a
+  time.
 
   The first two unnamed components are taken to be \code{x}
   and \code{y}.  Any additional unnamed components will
   raise an error.}
 
   \item{layers}{A character vector listing the names of
-  marks or branches to display on the plot. You can use
-  either the full name of the branch (e.g. "mark_line" or
-  "branch_smooth"), or just the final part (e.g. "line" or
-  "smooth"). If there is both a plain mark and a branch
-  with the same name, the branch will be used.
+  marks or layers to display on the plot. You can use
+  either the full name of the layer (e.g. "mark_line" or
+  "layer_smooth"), or just the final part (e.g. "line" or
+  "smooth"). If there is both a plain mark and a layer with
+  the same name, the layer will be used.
 
-  If \code{branches} is not supplied, it defaults to
+  If \code{layers} is not supplied, it defaults to
   \code{"\link{mark_point}"} if both \code{x} and \code{y}
   are supplied.  If only \code{x} is supplied, it defaults
-  to \code{"\link{branch_histogram}"}.}
+  to \code{"\link{layer_histogram}"}.}
 }
 \description{
 \code{qvis} is a succinct way of creating simple plots. It

@@ -34,10 +34,10 @@ ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
   mark_symbol() +
   mark_symbol(props(fill := "red", size := 25))
 
-# Multiple nested branches
+# Multiple nested layers
 ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
-  branch(mark_symbol()) +
-  branch(branch(mark_symbol(props(fill := "red", size := 25))))
+  layer(mark_symbol()) +
+  layer(layer(mark_symbol(props(fill := "red", size := 25))))
 
 # Two marks at different levels of the tree, with different mappings for a
 # variable
@@ -64,7 +64,7 @@ ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
   mark_symbol(props(stroke = ~factor(cyl), fill := NA)) +
   mark_symbol(props(fill = ~factor(am), size := 25))
 
-# Same as previous, but also with (useless) grouping in the branches
+# Same as previous, but also with (useless) grouping in the layers
 by_cyl <- pipeline(mtcars, by_group(cyl))
 ggvis(by_cyl, props(x = ~wt, y = ~mpg)) +
   mark_symbol(props(stroke = ~factor(cyl), fill := NA)) +

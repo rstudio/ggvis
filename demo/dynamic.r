@@ -32,8 +32,8 @@ mtc2 <- reactive({
   mtcars[sample(nrow(mtcars), 10), ]
 })
 ggvis(props(x = ~wt, y = ~mpg)) +
-  branch(mtc1, mark_symbol(props(stroke := "black", fill := "black"))) +
-  branch(mtc2, mark_symbol(props(fill := "red", size := 40)))
+  layer(mtc1, mark_symbol(props(stroke := "black", fill := "black"))) +
+  layer(mtc2, mark_symbol(props(fill := "red", size := 40)))
 
 # With a transform
 mtc1 <- reactive({
@@ -42,7 +42,7 @@ mtc1 <- reactive({
 })
 ggvis(mtc1, props(x = ~wt, y = ~mpg)) +
   mark_symbol() +
-  branch_smooth()
+  layer_smooth()
 
 
 # Data points moving from right to left

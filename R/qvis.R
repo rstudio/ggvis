@@ -15,25 +15,25 @@
 #' the right component on to the plot.
 #'
 #' @param data The data set where
-#' @param ... Properties and branch arguments.
+#' @param ... Properties and layer arguments.
 #'
 #'   If the name of the argument matches the name of a known property, it will
 #'   be added to the plot properties. Otherwise it will be passed as an
-#'   argument to every branch. If you want to pass different arguments to
-#'   different branches, you'll need to add branches on one at a time.
+#'   argument to every layer. If you want to pass different arguments to
+#'   different layers, you'll need to add layers on one at a time.
 #'
 #'   The first two unnamed components are taken to be \code{x} and \code{y}.
 #'   Any additional unnamed components will raise an error.
-#' @param layers A character vector listing the names of marks or branches to
-#'   display on the plot. You can use either the full name of the branch
-#'   (e.g. "mark_line" or "branch_smooth"), or just the final part
-#'   (e.g. "line" or "smooth"). If there is both a plain mark and a branch
-#'   with the same name, the branch will be used.
+#' @param layers A character vector listing the names of marks or layers to
+#'   display on the plot. You can use either the full name of the layer
+#'   (e.g. "mark_line" or "layer_smooth"), or just the final part
+#'   (e.g. "line" or "smooth"). If there is both a plain mark and a layer
+#'   with the same name, the layer will be used.
 #'
-#'   If \code{branches} is not supplied, it defaults to
+#'   If \code{layers} is not supplied, it defaults to
 #'   \code{"\link{mark_point}"} if both \code{x} and \code{y} are supplied.
 #'   If only \code{x} is supplied, it defaults to
-#'   \code{"\link{branch_histogram}"}.
+#'   \code{"\link{layer_histogram}"}.
 #' @export
 #' @examples
 #' # A basic scatterplot
@@ -58,7 +58,7 @@ qvis <- function(data, ..., layers = character()) {
   args <- dots(...)
 
   props_args <- qvis_default_names(args[is_props(args)])
-  branch_args <- args[!is_props(args)]
+  layer_args <- args[!is_props(args)]
 
   if (length(layers) == 0) {
     if ("y" %in% names(props_args)) {
@@ -68,14 +68,14 @@ qvis <- function(data, ..., layers = character()) {
     }
   }
 
-  branches <- lapply(layers, init_branch, branch_args)
-  ggvis(data, props(.props = props_args)) + branches
+  layers <- lapply(layers, init_layer, layer_args)
+  ggvis(data, props(.props = props_args)) + layers
 }
 
-# TODO: make sure this uses the right scoping so that it will find branches
+# TODO: make sure this uses the right scoping so that it will find layers
 # defined in other packages and in the global environment.
-init_branch <- function(name, args = list()) {
-  to_try <- paste0(c("mark_", "branch_", ""), name)
+init_layer <- function(name, args = list()) {
+  to_try <- paste0(c("mark_", "layer_", ""), name)
 
   for (fname in to_try) {
     if (!exists(fname, mode = "function")) next
@@ -89,7 +89,7 @@ init_branch <- function(name, args = list()) {
     }
   }
 
-  stop("Couldn't find mark or branch called ", name, call. = FALSE)
+  stop("Couldn't find mark or layer called ", name, call. = FALSE)
 }
 
 qvis_default_names <- function(args) {

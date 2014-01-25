@@ -20,7 +20,7 @@ behaviour of each component in the data hierarchy.
 This function is designed to be used by authors of new
 types of pipes. If you are a ggvis user, please use an
 existing pipe: a data frame, a transform, a mark, or a
-branch.
+layer
 }
 \keyword{internal}
 

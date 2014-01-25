@@ -1,0 +1,21 @@
+\name{+.layer}
+\alias{+.layer}
+\title{Modify a ggvis layer object by adding new components}
+\usage{
+\method{+}{layer}(e1, e2)
+}
+\arguments{
+  \item{e1}{A layer object.}
+
+  \item{e2}{Another object, of a type listed above.}
+}
+\description{
+This operator lets you add objects to a ggvis layer object.
+}
+\details{
+You can add the following types of objects to a layer
+object: \itemize{ \item \code{mark} \item \code{layer}
+\item \code{scale} \item \code{guide_legend} \item
+\code{guide_axis} \item \code{props} \item \code{opts} }
+}
+

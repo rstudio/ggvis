@@ -24,7 +24,7 @@ ggvis(df, auto_split(), transform_sort(),
   mark_symbol()
 
 
-# Using branch_line
+# Using layer_line
 ggvis(df, props(x = ~x, y = ~y, stroke = ~z, fill := NA)) +
-  branch_line() +
+  layer_line() +
   mark_symbol()
