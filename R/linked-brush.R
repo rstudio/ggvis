@@ -1,4 +1,4 @@
-#' Create a lnked brush object
+#' Create a linked brush object
 #'
 #' @examples
 #' lb <- linked_brush(keys = 1:nrow(mtcars))
