@@ -22,8 +22,7 @@ aes -> props, ggplot2 -> ggvis, geom + stat -> layer.
   distinction is more clear in ggvis: pure geoms correspond to marks, and 
   combined geoms and stats correspond to layers.
   
-* There is no equivalent to `qplot` in ggvis: you must spell out everything
-  explicitly using `ggvis`.
+* The ggvis function `qvis` is analogous to ggplot2's `qplot`.
 
 * Vega provides a smaller set of scales than ggplot2 (just ordinal, 
   quantitative, and time), but they are much more flexible than ggplot2 scales,

@@ -23,7 +23,7 @@ devtools::install_github("hadley/testthat")
 devtools::install_github("rstudio/ggvis")
 ```
 
-Next, read the vignettes (`vignettes(package = "ggvis")`), starting with
+Next, read the vignettes (`vignette(package = "ggvis")`), starting with
 `vignette("ggvis-basics")`. They're still a work in progress, but should
 help you understand the general layout of the package. Also check out the
 various demos in the `demo/` directory. Get started with `demo/scatterplot.r`
