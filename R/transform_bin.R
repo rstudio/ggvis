@@ -1,15 +1,15 @@
 #' Transformation: bin continuous variable.
 #'
-#' \code{transform_bin} is a data transformation that reduces a one-d vector 
-#' of positions to a data frame of binned counts. \code{layer_histogram} 
+#' \code{transform_bin} is a data transformation that reduces a one-d vector
+#' of positions to a data frame of binned counts. \code{layer_histogram}
 #' combines \code{transform_bin} with \code{mark_rect} to create a histogram,
-#' and \code{layer_freqpoly} combines \code{transform_bin} with 
+#' and \code{layer_freqpoly} combines \code{transform_bin} with
 #' \code{mark_line} to create a frequency polygon.
-#' 
+#'
 #' @section Input:
 #' Currently \code{transform_bin} only works with data frames and requires the
 #' following properties:
-#' 
+#'
 #' \itemize{
 #'   \item \code{x}, numeric, the values to bin and count
 #' }
@@ -20,8 +20,8 @@
 #'
 #' \itemize{
 #'  \item \code{count__}: the number of points
-#'  \item \code{x}: mid-point of bin 
-#'  \item \code{xmin__}: left boundary of bin 
+#'  \item \code{x}: mid-point of bin
+#'  \item \code{xmin__}: left boundary of bin
 #'  \item \code{xmax__}: right boundary of bin
 #'  \item \code{width__}: width of bin
 #' }
@@ -34,8 +34,8 @@
 #'   the default, will use the smallest value in the dataset.
 #' @param right Should bins be right-open, left-closed, or
 #'   right-closed, left-open
-#' @param ... For \code{transform_bin}: ignored, all transforms must use 
-#'   named arguments.  For \code{layer_histogram}: named arguments are 
+#' @param ... For \code{transform_bin}: ignored, all transforms must use
+#'   named arguments.  For \code{layer_histogram}: named arguments are
 #'   passed on to the transform, unnamed arguments are passed on to the layer.
 #' @export
 #' @examples
@@ -54,7 +54,7 @@
 #' # You can also combine other data transformations like splitting
 #' ggvis(mtcars, props(x = ~mpg, stroke = ~cyl, strokeWidth = 4),
 #'    by_group(cyl), layer_freqpoly(binwidth = 2))
-#' 
+#'
 #' # You can see the results of a transformation by creating your own pipeline
 #' # and flowing data through it
 #' sluice(pipeline(mtcars, transform_bin(2)), props(x = ~mpg))
@@ -106,7 +106,8 @@ format.transform_bin <- function(x, ...) {
 
 #' @export
 compute.transform_bin <- function(x, props, data) {
-  check_prop(x, props, data, "x.update", c("numeric", "datetime"))
+  check_prop(x, props, data, "x.update",
+    c("numeric", "datetime", "ordinal", "nominal"))
 
   if (is.guess(x$binwidth)) {
     x$binwidth <- diff(prop_range(data, props$x)) / 30
@@ -128,6 +129,8 @@ compute.transform_bin <- function(x, props, data) {
   preserve_constants(data, output)
 }
 
+# Bin complete dataset ---------------------------------------------------------
+
 bin <- function(data, ...) UseMethod("bin")
 
 #' @export
@@ -139,43 +142,38 @@ bin.split_df <- function(x, x_var, ...) {
 #' @export
 bin.data.frame <- function(x, x_var, ...) {
   x_val <- remove_missing(prop_value(x_var, x))
-  bin(x_val, ...)
+  bin_vector(x_val, ...)
+}
+
+# Bin individual vector --------------------------------------------------------
+
+bin_vector <- function(x, weight = NULL, ...) {
+  UseMethod("bin_vector")
 }
 
 #' @export
-bin.numeric <- function(x, weight = NULL, binwidth = 1, origin = NULL, right = TRUE) {
+bin_vector.numeric <- function(x, weight = NULL, ..., binwidth = 1,
+                               origin = NULL, right = TRUE) {
   stopifnot(is.numeric(binwidth) && length(binwidth) == 1)
   stopifnot(is.null(origin) || (is.numeric(origin) && length(origin) == 1))
   stopifnot(is.flag(right))
 
   if (length(na.omit(x)) == 0) {
-    return(data.frame(
-      count__ = numeric(0),
-      x = numeric(0),
-      xmin__ = numeric(0),
-      xmax__ = numeric(0),
-      width__ = numeric(0)
-    ))
+    return(bin_out())
   }
 
-  if (is.null(weight))  weight <- rep(1, length(x))
-  weight[is.na(weight)] <- 0
+  if (is.null(weight)) {
+    weight <- rep(1, length(x))
+  } else {
+    weight[is.na(weight)] <- 0
+  }
 
   if (is.null(origin)) {
     breaks <- fullseq(range(x), binwidth, pad = TRUE)
   } else {
     breaks <- seq(origin, max(range(x)) + binwidth, binwidth)
   }
-
-  # Adapt break fuzziness from base::hist - this protects from floating
-  # point rounding errors
-  diddle <- 1e-07 * stats::median(diff(breaks))
-  if (right) {
-    fuzz <- c(-diddle, rep.int(diddle, length(breaks) - 1))
-  } else {
-    fuzz <- c(rep.int(-diddle, length(breaks) - 1), diddle)
-  }
-  fuzzybreaks <- sort(breaks) + fuzz
+  fuzzybreaks <- adjust_breaks(breaks, open = if (right) "right" else "left")
 
   bins <- cut(x, fuzzybreaks, include.lowest = TRUE, right = right)
   left <- breaks[-length(breaks)]
@@ -183,22 +181,15 @@ bin.numeric <- function(x, weight = NULL, binwidth = 1, origin = NULL, right = T
   x <- (left + right)/2
   width <- diff(breaks)
 
-  count <- as.numeric(tapply(weight, bins, sum, na.rm=TRUE))
+  count <- as.numeric(tapply(weight, bins, sum, na.rm = TRUE))
   count[is.na(count)] <- 0
 
-  results <- data.frame(
-    count__ = count,
-    x = x,
-    xmin__ = x - width/2,
-    xmax__ = x + width/2,
-    width__ = width
-  )
-
-  results
+  bin_out(count, x, width)
 }
 
 #' @export
-bin.POSIXt <- function(x, weight = NULL, binwidth = 1, origin = NULL, right = TRUE) {
+bin_vector.POSIXt <- function(x, weight = NULL, ..., binwidth = 1,
+                              origin = NULL, right = TRUE) {
   # Convert times to raw numbers (seconds since UNIX epoch), and call bin.numeric
   results <- bin(as.numeric(x), weight, binwidth, origin, right)
 
@@ -209,4 +200,34 @@ bin.POSIXt <- function(x, weight = NULL, binwidth = 1, origin = NULL, right = TR
   })
 
   results
+}
+
+#' @export
+bin_vector.factor <- function(x, weight = NULL, ...) {
+  browser()
+}
+
+bin_out <- function(count = numeric(0), x = numeric(0), width = numeric(0), xmin = x - width / 2, xmax = x + width / 2) {
+  data.frame(
+    count__ = count,
+    x = x,
+    xmin__ = xmin,
+    xmax__ = xmax,
+    width__ = width,
+    stringsAsFactors = FALSE
+  )
+}
+
+# Adapt break fuzziness from base::hist - this protects from floating
+# point rounding errors
+adjust_breaks <- function(breaks, open = "right") {
+  open <- match.arg(open, c("left", "right"))
+
+  diddle <- 1e-08 * median(diff(breaks))
+  if (open == "left") {
+    fuzz <- c(-diddle, rep.int(diddle, length(breaks) - 1))
+  } else {
+    fuzz <- c(rep.int(-diddle, length(breaks) - 1), diddle)
+  }
+  sort(breaks) + fuzz
 }
