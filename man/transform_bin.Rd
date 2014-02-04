@@ -1,4 +1,5 @@
 \name{transform_bin}
+\alias{layer_barchart}
 \alias{layer_freqpoly}
 \alias{layer_histogram}
 \alias{transform_bin}
@@ -9,6 +10,8 @@ transform_bin(..., binwidth = guess(), origin = NULL, right = TRUE)
 layer_histogram(...)
 
 layer_freqpoly(...)
+
+layer_barchart(...)
 }
 \arguments{
   \item{binwidth}{The width of the bins. The default is

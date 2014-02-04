@@ -2,10 +2,10 @@
 NULL
 
 #' Event broker for keyboard events.
-#' 
+#'
 #' The hover event broker is useful if you want your shiny app to respond
 #' to keyboard events: \code{key_down}, \code{key_press} and \code{key_up}.
-#' 
+#'
 #' @param bindings A character vector describing the keyboard bindings
 #'   to listen to. The keyboard event handling in ggvis is implemented with
 #'   \href{mousetrap}{http://craig.is/killing/mice} so you can specify keys
@@ -30,8 +30,8 @@ Keyboard <- setRefClass("Keyboard", contains = "EventBroker",
   )
 )
 
-#' An interactive input bound to the left and right arrows.
-#' 
+#' Interactive inputs bound to arrow keys.
+#'
 #' @inheritParams shiny::sliderInput
 #' @param value The initial value before any keys are pressed. Defaults to
 #'   half-way between \code{min} and \code{max}.
@@ -39,10 +39,12 @@ Keyboard <- setRefClass("Keyboard", contains = "EventBroker",
 #'   40 steps along range
 #' @export
 #' @examples
-#' ggvis(mtcars, props(x = ~mpg, y = ~wt,
-#'                     size := left_right(1, 801, value = 51, step = 50))) +
+#' size <- left_right(1, 801, value = 51, step = 50)
+#' opacity <- up_down(0, 1, value = 0.9, step = 0.05)
+#'
+#' ggvis(mtcars, props(x = ~mpg, y = ~wt, size := size, opacity := opacity)) +
 #'   mark_symbol()
-left_right <- function(min, max, value = (min + max) / 2, 
+left_right <- function(min, max, value = (min + max) / 2,
                        step = (max - min) / 40) {
   handler("left_right", "keyboard",
     list(min = min, max = max, value = value, step = step),
@@ -53,11 +55,32 @@ left_right <- function(min, max, value = (min + max) / 2,
 #' @export
 as.reactive.left_right <- function(x, session = NULL, ...) {
   if (is.null(session)) return(reactive(x$control_args$value))
-  
+
   k <- Keyboard(session, id = x$id)
-  modify_value_with_keys(k, x$control_args$value, 
+  modify_value_with_keys(k, x$control_args$value,
     left =  function(i) pmax(x$control_args$min, i - x$control_args$step),
     right = function(i) pmin(x$control_args$max, i + x$control_args$step)
+  )
+}
+
+#' @export
+#' @rdname left_right
+up_down <- function(min, max, value = (min + max) / 2,
+  step = (max - min) / 40) {
+  handler("up_down", "keyboard",
+    list(min = min, max = max, value = value, step = step),
+    value = value
+  )
+}
+
+#' @export
+as.reactive.up_down <- function(x, session = NULL, ...) {
+  if (is.null(session)) return(reactive(x$control_args$value))
+
+  k <- Keyboard(session, id = x$id)
+  modify_value_with_keys(k, x$control_args$value,
+    up =  function(i) pmax(x$control_args$min, i - x$control_args$step),
+    down = function(i) pmin(x$control_args$max, i + x$control_args$step)
   )
 }
 
@@ -70,8 +93,8 @@ modify_value_with_keys <- function(k, val, ..., .key_funs = list()) {
     press <- k$key_press()
     if (is.null(press)) return(val)
     if (!(press$value %in% names(key_funs))) return(val)
-    
+
     val <<- key_funs[[press$value]](val)
-    val 
+    val
   })
 }

@@ -1,8 +1,11 @@
 \name{left_right}
 \alias{left_right}
-\title{An interactive input bound to the left and right arrows.}
+\alias{up_down}
+\title{Interactive inputs bound to arrow keys.}
 \usage{
 left_right(min, max, value = (min + max)/2, step = (max - min)/40)
+
+up_down(min, max, value = (min + max)/2, step = (max - min)/40)
 }
 \arguments{
   \item{value}{The initial value before any keys are
@@ -19,11 +22,13 @@ left_right(min, max, value = (min + max)/2, step = (max - min)/40)
   selected.}
 }
 \description{
-An interactive input bound to the left and right arrows.
+Interactive inputs bound to arrow keys.
 }
 \examples{
-ggvis(mtcars, props(x = ~mpg, y = ~wt,
-                    size := left_right(1, 801, value = 51, step = 50))) +
+size <- left_right(1, 801, value = 51, step = 50)
+opacity <- up_down(0, 1, value = 0.9, step = 0.05)
+
+ggvis(mtcars, props(x = ~mpg, y = ~wt, size := size, opacity := opacity)) +
   mark_symbol()
 }
 
