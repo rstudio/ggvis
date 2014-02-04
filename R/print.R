@@ -31,6 +31,10 @@ print.ggvis <- function(x, dynamic = NA,
     return(show_spec(x, spec))
   }
 
+  if (getOption("knitr.in.progress", FALSE)) {
+    return(knitr_print(x, dynamic, id = id, ...))
+  }
+
   if (is.na(dynamic)) dynamic <- is.dynamic(x) && interactive()
 
   if (dynamic) {
@@ -217,4 +221,25 @@ view_plot <- function(url, height) {
     utils::browseURL(url)
 }
 
+# Print from within a knitr document.
+# The knitr chunk must use the results="asis" option for this to work properly
+knitr_print <- function(x, dynamic = NA, id = rand_id("plot_"), ...) {
+  if (is.na(dynamic)) dynamic <- is.dynamic(x) && interactive()
+  if (is.dynamic(x)) {
+    stop("Can't print dynamic/interactive plots in a knitr document")
+  }
 
+  spec <- as.vega(x, dynamic = FALSE)
+  vega_json <- toJSON(spec, pretty = TRUE)
+
+  body <- tagList(
+    ggvis_output(id, shiny = FALSE),
+    tags$script(type = "text/javascript",
+      paste0('var ', id, '_spec = ', vega_json, ';
+        var plot = ggvis.getPlot("', id, '");
+        plot.parseSpec(', id, '_spec);
+      ')
+    )
+  )
+  cat(format(body))
+}
