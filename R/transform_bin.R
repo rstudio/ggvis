@@ -99,6 +99,20 @@ layer_freqpoly <- function(...) {
   )
 }
 
+#' @rdname transform_bin
+#' @export
+layer_barchart <- function(...) {
+  layer(
+    transform_bin(...),
+    layer(
+      props(x = ~x, width = band(), y2 = ~count__, y = 0),
+      mark_rect(),
+      ...,
+      drop_named = TRUE
+    )
+  )
+}
+
 #' @export
 format.transform_bin <- function(x, ...) {
   paste0(" -> bin", param_string(x))
