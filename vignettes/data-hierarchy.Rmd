@@ -120,29 +120,36 @@ https://github.com/rstudio/ggvis/issues/37 for progress.
 
 ### Minard's march
 
+We will use the Minard dataset from the Histdata package.
+
 ```{r, eval = FALSE}
-ggplot(cities, aes(x = long, y = lat)) + 
+data(Minard.cities, Minard.troops, package = "HistData")
+```
+
+```{r, eval = FALSE}
+ggplot(Minard.cities, aes(x = long, y = lat)) + 
   geom_path(
     aes(size = survivors, colour = direction, group = group), 
-    data = troops
+    data = Minard.troops
   ) + 
   geom_point() + 
   geom_text(aes(label = city), hjust=0, vjust=1, size=4)
 ```
 
-In gigvis, we can make it a little more clear that we have one marked based on 
+In ggvis, we can make it a little more clear that we have one mark based on 
 survivors dataset and two marks based on the cities dataset.
 
 ```{r, eval = FALSE}
-ggvis(props(long, lat), 
-  node(
-    survivors, 
-    props(size ~ survivors, colour ~ direction, group ~ group),
-    mark_symbol()),
-  node(
-    cities,
-    mark_symbol()
-    mark_text(props(label ~ city))
+ggvis(
+  props(x = ~long, y = ~lat),
+  layer(
+    Minard.cities, 
+    mark_symbol(),
+    mark_text(props(text := ~city, dx := 5, dy := -5)) 
+  ),
+  layer(
+    Minard.troops,
+    mark_point(props(size = ~survivors, stroke = ~direction))
   )
-)
+) 
 ```

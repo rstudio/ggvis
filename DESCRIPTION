@@ -17,7 +17,8 @@ Imports:
     methods
 Suggests:
     testthat (>= 0.7.1.99),
-    knitr
+    knitr,
+    HistData
 VignetteBuilder: knitr
 License: GPL-2
 Collate:
