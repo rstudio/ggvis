@@ -105,7 +105,7 @@ layer_barchart <- function(...) {
   layer(
     transform_bin(...),
     layer(
-      props(x = ~x, width = band(), y2 = ~count__, y = 0),
+      props(x = ~x, width = band(mult = 0.9), y2 = ~count__, y = 0),
       mark_rect(),
       ...,
       drop_named = TRUE
