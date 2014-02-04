@@ -15,6 +15,20 @@ The hover event broker is useful if you want your shiny app
 to respond to keyboard events: \code{key_down},
 \code{key_press} and \code{key_up}.
 }
+\section{Methods}{
+\itemize{
+\item \code{as_vega(...)}: This method should return a list suitable for inclusion in the 
+interaction component of the vega specific. The default method sends
+the id, the type (the class name) and the path. If you override it
+to add extra data, make sure to use \code{callSuper()} to include
+these necessary fields
+
+\item \code{key_press()}: A reactive value changed when any key is pressed.
+Returns a list containing:
+  * value: A string representation of the key that was pressed.
+
+\item \code{listen_for(name)}: List for a custom message from the client called \code{name}
+}}
 \seealso{
 \code{\link{left_right}} to easily control values in a
 ggvis object with the arrow keys.
