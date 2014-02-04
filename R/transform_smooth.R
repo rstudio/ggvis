@@ -90,10 +90,10 @@ transform_smooth <- function(..., method = guess(), formula = guess(), se = TRUE
 
 #' @rdname transform_smooth
 #' @export
-layer_smooth <- function(..., se = TRUE) {
+layer_smooth <- function(..., se = FALSE) {
   comps <- parse_components(..., drop_named = TRUE)
 
-  line_props <-  merge_props(props(x = ~x, y = ~y), comps$props)
+  line_props <-  merge_props(props(x = ~x, y = ~y, strokeWidth := 2), comps$props)
   se_props <- merge_props(props(x = ~x, y = ~y_lower__, y2 = ~y_upper__,
     fillOpacity := 0.2), comps$props)
 
