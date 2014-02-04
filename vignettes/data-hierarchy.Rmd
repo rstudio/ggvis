@@ -123,7 +123,7 @@ https://github.com/rstudio/ggvis/issues/37 for progress.
 We will use the Minard dataset from the Histdata package.
 
 ```{r, eval = FALSE}
-require(HistData)
+data(Minard.cities, Minard.troops, package = "HistData")
 ```
 
 ```{r, eval = FALSE}
@@ -140,11 +140,16 @@ In ggvis, we can make it a little more clear that we have one mark based on
 survivors dataset and two marks based on the cities dataset.
 
 ```{r, eval = FALSE}
-ggvis(Minard.cities, props(x = ~long, y = ~lat)) +
-  mark_symbol() +
-  mark_text(props(text := ~city, dx := 5, dy := -5)) +
-  mark_point(
-    data = Minard.troops,
-    props(size = ~survivors, stroke = ~direction)
-  ) 
+ggvis(
+  props(x = ~long, y = ~lat),
+  layer(
+    Minard.cities, 
+    mark_symbol(),
+    mark_text(props(text := ~city, dx := 5, dy := -5)) 
+  ),
+  layer(
+    Minard.troops,
+    mark_point(props(size = ~survivors, stroke = ~direction))
+  )
+) 
 ```
