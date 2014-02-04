@@ -164,7 +164,7 @@ bin_params.numeric <- function(x_range, binwidth = guess(), origin = guess(),
 
   if (is.guess(binwidth)) {
     binwidth <- diff(x_range) / 30
-    message("Guess: transform_bin(binwidth = ", format(x$binwidth, digits = 3),
+    message("Guess: transform_bin(binwidth = ", format(binwidth, digits = 3),
       ") # range / 30")
   }
 
@@ -177,7 +177,7 @@ bin_params.POSIXct <- function(x_range, binwidth = guess(), origin = guess(),
 
   if (is.guess(binwidth)) {
     binwidth <- as.numeric(diff(x_range) / 30, units = "secs")
-    message("Guess: transform_bin(binwidth = ", format(x$binwidth, digits = 3),
+    message("Guess: transform_bin(binwidth = ", format(binwidth, digits = 3),
       ") # range / 30")
   }
 
