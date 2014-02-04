@@ -2,18 +2,18 @@
 #'
 #' \code{transform_smooth} is a data transformation that fits a model to a 2d
 #' dataset and computes predictions and standard errors. \code{layer_smooth}
-#' combines \code{transform_smooth} with \code{mark_line} and \code{mark_area} 
+#' combines \code{transform_smooth} with \code{mark_line} and \code{mark_area}
 #' to display a smooth line and its standard errror.
 #'
 #' @section Input:
 #' Currently \code{transform_smooth} only works with data frames and requires the
 #' following properties:
-#' 
+#'
 #' \itemize{
 #'   \item \code{x}, numeric, horizontal position
 #'   \item \code{y}, numeric, vertical position
 #' }
-#' 
+#'
 #' @section Ouput:
 #'
 #' \code{transform_smooth} creates a data frame with columns:
@@ -26,7 +26,7 @@
 #' If standard errors are requested, it will also contain:
 #'
 #' \itemize{
-#'  \item \code{y_lower__} and \code{y_upper__}: upper and lower bounds of 
+#'  \item \code{y_lower__} and \code{y_upper__}: upper and lower bounds of
 #'    confidence interval
 #'  \item \code{se__}: the standard error (width of the confidence interval)
 #' }
@@ -48,16 +48,16 @@
 #' @param na.rm If \code{TRUE} missing values will be silently removed,
 #'   otherwise they will be removed with a warning.
 #' @param ... \code{transform_smooth}: named arguments passed on to
-#'  \code{method} function, unnamed arguments ignored. 
+#'  \code{method} function, unnamed arguments ignored.
 #'  \code{layer_smooth}: named arguments are passed on to the transform,
-#'  (and hence to \code{method}), unnamed arguments are passed on to 
+#'  (and hence to \code{method}), unnamed arguments are passed on to
 #'  \code{\link{layer}}.
 #' @export
 #' @examples
 #' ggvis(mtcars, props(x = ~wt, y = ~mpg), mark_symbol(), layer_smooth())
 #' ggvis(mtcars, props(x = ~wt, y = ~mpg), mark_symbol(),
 #'   layer_smooth(method = "lm", se = FALSE))
-#' 
+#'
 #' # These are equivalent to combining transform_smooth with mark_line and
 #' # mark_area
 #' ggvis(mtcars, props(x = ~wt, y = ~mpg),
@@ -72,18 +72,18 @@
 #' # You can also combine other data transformations like splitting
 #' ggvis(mtcars, props(x = ~wt, y = ~mpg, stroke = ~cyl), by_group(cyl),
 #'    layer_smooth(method = "lm"))
-#' 
+#'
 #' # You can see the results of a transformation by creating your own pipeline
 #' # and sluicing data through it
-#' sluice(pipeline(mtcars, transform_smooth(n = 5L)), 
+#' sluice(pipeline(mtcars, transform_smooth(n = 5L)),
 #'   props(x = ~disp, y = ~mpg))
 transform_smooth <- function(..., method = guess(), formula = guess(), se = TRUE,
-                             level = 0.95, n = 80L, na.rm = FALSE) {  
-  
+                             level = 0.95, n = 80L, na.rm = FALSE) {
+
   # Drop unnamed arguments
   dots <- list(...)
   dots <- dots[named(dots)]
-  
+
   transform("smooth", method = method, formula = formula, se = se,
     level = level, n = n, na.rm = na.rm, dots = dots)
 }
@@ -94,7 +94,7 @@ layer_smooth <- function(..., se = TRUE) {
   comps <- parse_components(..., drop_named = TRUE)
 
   line_props <-  merge_props(props(x = ~x, y = ~y), comps$props)
-  se_props <- merge_props(props(x = ~x, y = ~y_lower__, y2 = ~y_upper__, 
+  se_props <- merge_props(props(x = ~x, y = ~y_lower__, y2 = ~y_upper__,
     fillOpacity := 0.2), comps$props)
 
   # Line shouldn't get fill-related props, and se area shouldn't get
@@ -120,7 +120,7 @@ format.transform_smooth <- function(x, ...) {
 
 #' @export
 compute.transform_smooth <- function(x, props, data) {
-  check_prop(x, props, data, "x.update", "numeric")
+  check_prop(x, props, data, "x.update", c("numeric", "datetime"))
   check_prop(x, props, data, "y.update", "numeric")
 
   if (is.guess(x$method)) {
@@ -132,7 +132,7 @@ compute.transform_smooth <- function(x, props, data) {
     environment(x$formula) <- globalenv()
     message("Guess transform_smooth(formula = ", deparse(x$formula), ")")
   }
-  
+
   output <- smooth(data, x, x_var = props$x.update, y_var = props$y.update)
   preserve_constants(data, output)
 }
@@ -156,7 +156,7 @@ smooth.data.frame <- function(data, trans, x_var, y_var) {
 
   env <- new.env(parent = environment(trans$formula))
   env$data <- remove_missing(data.frame(
-    x = prop_value(x_var, data),
+    x = as.numeric(prop_value(x_var, data)),
     y = prop_value(y_var, data)
   ))
 
@@ -167,7 +167,12 @@ smooth.data.frame <- function(data, trans, x_var, y_var) {
 
   # Make prediction
   x_grid <- seq(min(env$data$x), max(env$data$x), length = trans$n)
-  predict_df(model, x_grid, trans$se, trans$level)
+  pred <- predict_df(model, x_grid, trans$se, trans$level)
+
+  if (prop_type(data, x_var) == "datetime") {
+    pred$x <- as.Date(pred$x, origin = "1970-01-01")
+  }
+  pred
 }
 
 # Helper function to create data frame of predictions -------------------------
@@ -179,7 +184,7 @@ predict_df.lm <- function(model, x_grid, se, level) {
   grid <- data.frame(x = x_grid)
   pred <- predict(model, newdata = grid, se = se,
     level = level, interval = if(se) "confidence" else "none")
-  
+
   if (se) {
     fit <- as.data.frame(pred$fit)
     names(fit) <- c("y", "y_lower__", "y_upper__")
