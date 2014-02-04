@@ -109,19 +109,12 @@ compute.transform_bin <- function(x, props, data) {
   check_prop(x, props, data, "x.update",
     c("numeric", "datetime", "ordinal", "nominal"))
 
-  if (is.guess(x$binwidth)) {
-    x$binwidth <- diff(prop_range(data, props$x)) / 30
-
-    if (inherits(x$binwidth, "difftime")) {
-      x$binwidth <- as.numeric(x$binwidth, units = "secs")
-    }
-
-    message("Guess: transform_bin(binwidth = ", format(x$binwidth, digits = 3),
-      ") # range / 30")
-  }
+  range <- prop_range(data, props$x)
+  params <- bin_params(range, binwidth = x$binwidth, origin = x$origin,
+    right = x$right)
 
   output <- bin(data, x_var = props$x,
-    binwidth = x$binwidth, origin = x$origin, right = x$right)
+    binwidth = params$binwidth, origin = params$origin, right = params$right)
 
   # TODO: Check for zero-row output for other data types
   if (is.data.frame(output) && nrow(output) == 0) return(output)
@@ -134,16 +127,69 @@ compute.transform_bin <- function(x, props, data) {
 bin <- function(data, ...) UseMethod("bin")
 
 #' @export
-bin.split_df <- function(x, x_var, ...) {
-  x[] <- lapply(x, bin, x_var = x_var, ...)
+bin.split_df <- function(data, x_var, ...) {
+  x[] <- lapply(data, bin, x_var = x_var, ...)
   x
 }
 
 #' @export
-bin.data.frame <- function(x, x_var, ...) {
-  x_val <- remove_missing(prop_value(x_var, x))
+bin.data.frame <- function(data, x_var, ...) {
+  x_val <- remove_missing(prop_value(x_var, data))
   bin_vector(x_val, ...)
 }
+
+# Compute parameters -----------------------------------------------------------
+
+bin_params <- function(x_range, binwidth = guess(), origin = guess(), right = TRUE) {
+  UseMethod("bin_params")
+}
+
+#' @export
+bin_params.numeric <- function(x_range, binwidth = guess(), origin = guess(),
+                               right = TRUE) {
+
+  if (is.guess(binwidth)) {
+    binwidth <- diff(x_range) / 30
+    message("Guess: transform_bin(binwidth = ", format(x$binwidth, digits = 3),
+      ") # range / 30")
+  }
+
+  list(binwidth = binwidth, origin = origin, right = right)
+}
+
+#' @export
+bin_params.POSIXct <- function(x_range, binwidth = guess(), origin = guess(),
+                               right = TRUE) {
+
+  if (is.guess(binwidth)) {
+    binwidth <- as.numeric(diff(x_range) / 30, units = "secs")
+    message("Guess: transform_bin(binwidth = ", format(x$binwidth, digits = 3),
+      ") # range / 30")
+  }
+
+  list(binwidth = binwidth, origin = origin, right = right)
+}
+
+#' @export
+bin_params.integer <- function(x_range, binwidth = guess(), origin = guess(),
+                               right = TRUE) {
+  if (is.guess(binwidth)) {
+    binwidth <- 1
+    origin <- x_range[1] - 1/2
+    message("Guess: transform_bin(binwidth = 1)")
+  }
+
+  list(binwidth = binwidth, origin = origin, right = right)
+}
+
+#' @export
+bin_params.character <- function(x_range, binwidth = guess(), origin = guess(),
+                                 right = TRUE) {
+
+  list()
+}
+#' @export
+bin_params.factor <- bin_params.character
 
 # Bin individual vector --------------------------------------------------------
 
@@ -204,7 +250,14 @@ bin_vector.POSIXt <- function(x, weight = NULL, ..., binwidth = 1,
 
 #' @export
 bin_vector.factor <- function(x, weight = NULL, ...) {
-  browser()
+  tbl <- table(x, exclude = NULL)
+  df <- as.data.frame(tbl)
+
+  data.frame(
+    count__ = df[[2]],
+    x = as.character(df[[1]]),
+    stringsAsFactors = FALSE
+  )
 }
 
 bin_out <- function(count = numeric(0), x = numeric(0), width = numeric(0), xmin = x - width / 2, xmax = x + width / 2) {
