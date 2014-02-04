@@ -53,9 +53,9 @@ layer <- function(..., drop_named = FALSE) {
 is.layer <- function(x) inherits(x, "layer")
 
 check_layer_components <- function(x) {
-  incorrect <- setdiff(names(x), c("children", "data", "props"))
+  incorrect <- setdiff(names(x), c("children", "data", "props", "NULL"))
   if (length(incorrect) > 0) {
-    stop("Layer may only contain other layeres, not scales, legends or axes",
+    stop("Layer may only contain other layers, not scales, legends or axes",
       call. = FALSE)
   }
 }
