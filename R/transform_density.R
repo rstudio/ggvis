@@ -2,7 +2,7 @@
 #'
 #' \code{transform_density} is a data transformation that computes a kernel
 #' density estimate from a dataset. \code{layer_density} combines
-#' \code{transform_density} with \code{mark_line} and \code{mark_area}
+#' \code{transform_density} with \code{mark_path} and \code{mark_area}
 #' to display a smooth line and its standard errror.
 #'
 #' @section Input:
@@ -96,7 +96,7 @@ layer_density <- function(..., area = TRUE) {
       comps$data,
       comps$marks,
       if (area) mark_area(area_props),
-      mark_line(line_props)
+      mark_path(line_props)
     )
   )
 }

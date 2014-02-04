@@ -23,7 +23,7 @@
 #' # Unsorted
 #' ggvis(mtcars,
 #'   props(x = ~wt, y = ~mpg),
-#'   mark_line(),
+#'   mark_path(),
 #'   mark_symbol(props(fill := NA))
 #' )
 #'
@@ -31,7 +31,7 @@
 #' ggvis(mtcars,
 #'   transform_sort(),
 #'   props(x = ~wt, y = ~mpg),
-#'   mark_line(),
+#'   mark_path(),
 #'   mark_symbol(props(fill := NA))
 #' )
 #'
@@ -40,7 +40,7 @@
 #'   by_group(factor(cyl)),
 #'   transform_sort(),
 #'   props(x = ~wt, y = ~mpg, stroke = ~factor(cyl)),
-#'   mark_line(),
+#'   mark_path(),
 #'   mark_symbol(props(fill := NA))
 #' )
 #'

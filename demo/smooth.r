@@ -6,7 +6,7 @@ ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
   layer(
     transform_smooth(se = F),
     layer(
-      mark_line(props(x = ~x, y = ~y, stroke := "red"))
+      mark_path(props(x = ~x, y = ~y, stroke := "red"))
     )
   )
 

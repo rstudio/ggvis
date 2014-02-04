@@ -57,7 +57,7 @@ ddat <- reactive({
 })
 ggvis(ddat, props(x = ~time, y = ~value, key := ~time)) +
   mark_symbol() +
-  mark_line()
+  mark_path()
 
 
 # Bars moving from right to left

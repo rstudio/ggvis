@@ -26,7 +26,7 @@ ggvis(mtcars, props(x = ~wt)) +
 
 # Line and point graph
 ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
-  mark_line() +
+  mark_path() +
   mark_symbol(props(fill := "red"))
 
 # Two marks

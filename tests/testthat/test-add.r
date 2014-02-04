@@ -10,10 +10,10 @@ test_that("Adding to ggvis objects", {
   # existing object.
 
   # Marks
-  p1 <- ggvis(mtcars, props(x = ~wt, y = ~mpg), mark_symbol(), mark_line())
+  p1 <- ggvis(mtcars, props(x = ~wt, y = ~mpg), mark_symbol(), mark_path())
   p2 <- ggvis(mtcars, props(x = ~wt, y = ~mpg))
   p2 <- p2 + mark_symbol()
-  p2 <- p2 + mark_line()
+  p2 <- p2 + mark_path()
   expect_equal(nsort(p1), nsort(p2))
 
   # Layers
@@ -86,8 +86,8 @@ test_that("Adding to ggvis objects", {
 test_that("Adding to layer objects", {
   # Marks
   expect_equal(
-    layer() + mark_symbol() + mark_line(),
-    layer(mark_symbol(), mark_line())
+    layer() + mark_symbol() + mark_path(),
+    layer(mark_symbol(), mark_path())
   )
 
   # Props
@@ -98,8 +98,8 @@ test_that("Adding to layer objects", {
 
   # Marks and props
   expect_equal(
-    nsort(layer() + props(x = ~wt) + mark_line()),
-    nsort(layer(props(x = ~wt), mark_line()))
+    nsort(layer() + props(x = ~wt) + mark_path()),
+    nsort(layer(props(x = ~wt), mark_path()))
   )
 
   expect_error(layer() + dscale("x", "numeric"))
@@ -116,9 +116,9 @@ test_that("Adding to mark objects", {
     nsort(mark_symbol(props(x = ~wt, y = ~mpg)))
   )
 
-  expect_error(mark_line() + mark_rect())
+  expect_error(mark_path() + mark_rect())
   expect_error(mark_symbol() + dscale("x", "numeric"))
   expect_error(mark_symbol() + guide_axis("x"))
-  expect_error(mark_line() + guide_legend("fill"))
+  expect_error(mark_path() + guide_legend("fill"))
   expect_error(mark_symbol() + opts())
 })

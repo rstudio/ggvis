@@ -6,7 +6,7 @@
 #' polygon), where ggvis layers correspond to combinations of geoms and
 #' statistical transforms.
 #'
-#' Note that by supplying a fill property to \code{mark_line} will produce
+#' Note that by supplying a fill property to \code{mark_path} will produce
 #' a filled property. \code{mark_point} is an alias to \code{mark_symbol}.
 #'
 #' @template properties
@@ -86,7 +86,7 @@ default_mark_properties.mark_arc <- function(mark) {
 mark_area <- function(props = NULL, data = NULL) mark("area", props = props, data = data)
 #' @export
 valid_mark_properties.mark_area <- function(mark) {
-  c("x", "y", "y2", "height", "opacity", "fill", "fillOpacity", "stroke", 
+  c("x", "y", "y2", "height", "opacity", "fill", "fillOpacity", "stroke",
     "strokeWidth", "strokeOpacity", "interpolate", "tension", "key")
 }
 #' @export
@@ -97,14 +97,14 @@ default_mark_properties.mark_area <- function(mark) {
 
 #' @rdname marks
 #' @export
-mark_line <- function(props = NULL, data = NULL) mark("line", props = props, data = data)
+mark_path <- function(props = NULL, data = NULL) mark("line", props = props, data = data)
 #' @export
-valid_mark_properties.mark_line <- function(mark) {
+valid_mark_properties.mark_path <- function(mark) {
   c("x", "y", "opacity", "fill", "fillOpacity", "stroke", "strokeWidth",
     "strokeOpacity", "interpolate", "tension", "key")
 }
 #' @export
-default_mark_properties.mark_line <- function(mark) {
+default_mark_properties.mark_path <- function(mark) {
   props(stroke := "#000000")
 }
 
@@ -142,6 +142,6 @@ globalVariables(c(
   valid_mark_properties.mark_text(),
   valid_mark_properties.mark_arc(),
   valid_mark_properties.mark_image(),
-  valid_mark_properties.mark_line(),
+  valid_mark_properties.mark_path(),
   valid_mark_properties.mark_rect()
 ))

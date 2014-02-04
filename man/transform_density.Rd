@@ -38,7 +38,7 @@ layer_density(..., area = TRUE)
 \code{transform_density} is a data transformation that
 computes a kernel density estimate from a dataset.
 \code{layer_density} combines \code{transform_density} with
-\code{mark_line} and \code{mark_area} to display a smooth
+\code{mark_path} and \code{mark_area} to display a smooth
 line and its standard errror.
 }
 \section{Input}{

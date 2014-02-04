@@ -35,7 +35,7 @@ data object based on one or more columns in the data.
 # Unsorted
 ggvis(mtcars,
   props(x = ~wt, y = ~mpg),
-  mark_line(),
+  mark_path(),
   mark_symbol(props(fill := NA))
 )
 
@@ -43,7 +43,7 @@ ggvis(mtcars,
 ggvis(mtcars,
   transform_sort(),
   props(x = ~wt, y = ~mpg),
-  mark_line(),
+  mark_path(),
   mark_symbol(props(fill := NA))
 )
 
@@ -52,7 +52,7 @@ ggvis(mtcars,
   by_group(factor(cyl)),
   transform_sort(),
   props(x = ~wt, y = ~mpg, stroke = ~factor(cyl)),
-  mark_line(),
+  mark_path(),
   mark_symbol(props(fill := NA))
 )
 

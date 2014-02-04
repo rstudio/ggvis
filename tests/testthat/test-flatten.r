@@ -5,7 +5,7 @@ test_that("props inherited from parent", {
     props(x := 1),
     layer(
       props(y := 2),
-      mark_line(props(x := 3))
+      mark_path(props(x := 3))
     )
   )
   nodes <- flatten(p)
@@ -21,7 +21,7 @@ test_that("props inherited from parent", {
 test_that("data flows through pipeline", {
   df <- data.frame(x = 1, y = 2)
   p <- ggvis(df, props(x = ~x, y = ~y),
-    layer(layer(layer(layer(layer(mark_line()))))))
+    layer(layer(layer(layer(layer(mark_path()))))))
   nodes <- flatten(p)
 
   expect_equal(length(nodes), 1)
@@ -32,7 +32,7 @@ test_that("data flows through pipeline", {
 
 test_that("no data is an error", {
   p <- ggvis(NULL, props(x = ~x, y = ~y),
-    layer(layer(layer(layer(layer(mark_line()))))))
+    layer(layer(layer(layer(layer(mark_path()))))))
   expect_error(flatten(p), "parent has no data")
 })
 
@@ -46,7 +46,7 @@ test_that("reactive source data only run once", {
   })
 
   p <- ggvis(rdf, props(x = ~x, y = ~y),
-    mark_line(),
+    mark_path(),
     mark_symbol())
   nodes <- flatten(p)
 

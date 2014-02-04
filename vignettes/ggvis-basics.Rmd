@@ -52,7 +52,7 @@ If you only supply a dataset and an x-position, `qvis()` will draw a barchart or
 # A histogram
 qvis(mtcars, ~wt)
 # A barchart
-# FIXME: qvis(mtcars, ~factor(cyl))
+qvis(mtcars, ~factor(cyl))
 ```
 
 You can add more variables to the plot by mapping them to other visual properties like `fill`, `stroke`, `size` and `shape`.
@@ -64,7 +64,7 @@ qvis(mtcars, ~wt, ~mpg, size = ~vs)
 qvis(mtcars, ~wt, ~mpg, shape = ~factor(cyl))
 ```
 
-If you want to make the points a specified colour or size, you need to use `:=` instead of `=`. This seems like something that `qvis()` should be able to figure out by itself, but making it explicit allows you to create some useful plots that you couldn't otherwise. See the [properties and scales](properties-scales.html) vignette for more details.
+If you want to make the points a fixed colour or size, you need to use `:=` instead of `=`. This seems like something that `qvis()` should be able to figure out by itself, but making it explicit allows you to create some useful plots that you couldn't otherwise. See the [properties and scales](properties-scales.html) for more details.
 
 ```{r}
 qvis(mtcars, ~wt, ~mpg, fill := "red", stroke := "black")
@@ -74,7 +74,9 @@ qvis(mtcars, ~wt, ~mpg, shape := "cross")
 
 ## Interaction
 
-As well as mapping visual properties to variables, or setting them to specific values, you can also connect them to interactive controls. The following example allows you to control the size and opacity of points with two sliders:
+As well as mapping visual properties to variables, or setting them to specific values, you can also connect them to interactive controls.
+
+The following example allows you to control the size and opacity of points with two sliders:
 
 ```{r}
 slider_s <- input_slider(10, 100)
@@ -83,29 +85,42 @@ slider_o <- input_slider(0, 1, value = 0.5)
 qvis(mtcars, ~wt, ~mpg, size := slider_s, opacity := slider_o)
 ```
 
-Interactive plots are created using [shiny](http://www.rstudio.com/shiny/), and you can currently only have one running at a time. To finish with a plot, press the stop button in Rstudio, or close the browser window and then press Ctrl + C in R.
+You can also connect interactive components to other plot parameters like the binwidth of a histogram:
 
-You can also use keyboard controls. Press the left and right arrows to control the size of the points in the next example.
+```{r}
+binwidth <- input_slider(0, 2, value = 1, step = 0.1)
+qvis(mtcars, ~wt, binwidth = binwidth)
+```
+
+Behind the scenes, interactive plots are built with [shiny](http://www.rstudio.com/shiny/), and you can currently only have one running at a time. To finish with a plot, press the stop button in Rstudio, or close the browser window and then press Ctrl + C in R.
+
+As well as `input_slider()`, ggvis also provides `input_checkbox()`, `input_checkboxgroup()`, `input_numeric()`, `input_radiobuttons()`, `input_select()` and  `input_text()`. See the examples in the documentation for how you might use each one.
+
+You can also use keyboard controls with `left_right()` and `up_down()`. Press the left and right arrows to control the size of the points in the next example.
 
 ```{r}
 keys_s <- left_right(10, 1000, step = 50)
 qvis(mtcars, ~wt, ~mpg, size := keys_s, opacity := 0.5)
 ```
 
-You'll see examples of more complex interaction in the [interactivity](interactivity.html) vignette.
+You can also add on more complex types of interaction like tooltips:
+
+```{r}
+qvis(mtcars, ~wt, ~mpg) + tooltip(function(df) df$wt)
+```
+
+You'll learn more about complex interaction in the [interactivity](interactivity.html) vignette.
 
 ## Layers
 
-The previous examples showed how to make scatterplots and barcharts, but of course you can create many other types of visualisations. You change the visualisation using the `layers` parameter.
-
-There are two types of layer:
+The previous examples showed how to make scatterplots and barcharts, but of course you can create many other types of visualisations. You change the visualisation using the `layers` parameter. There are two types of layer:
 
 * Simple, which are basic drawing primitives like points, lines and
   rectangles.
 
 * Composite, which combine data transformations with simple layers.
 
-There are five simple marks:
+There are five simple layers:
 
 * Points, `layer_point()`. This is the default when you supply two variables
   to `qvis()`. It has properties `x`, `y`, `shape`, `stroke`, `fill`,
@@ -188,6 +203,13 @@ Two richer layers are:
     qvis(mtcars, ~wt, ~mpg, layers = "smooth")
     ```
 
+    You can control the degree of wiggliness with the span parameter:
+
+    ```{r}
+    span <- input_slider(0, 1, value = 0.75)
+    qvis(mtcars, ~wt, ~mpg, layers = c("point", "smooth"), span = span)
+    ```
+
 You can learn more about layers in the [layers](layers.html) vignette.
 
 ## Multiple layers
@@ -198,7 +220,7 @@ Rich graphics can be created by combining multiple layers on the same plot. Ther
 qvis(mtcars, ~wt, ~mpg, layers = c("smooth", "point"))
 ```
 
-This is ok for very simple plots, but it's fundamentally limited because you can't use different properties or different parameters on different levels. A more flexible approach is to add layers to a base plot:
+This is ok for very simple plots, but it's fundamentally limited because you can't use different properties or parameters on different layers. A more flexible approach is to add layers to a base plot:
 
 ```{r}
 qvis(mtcars, ~wt, ~mpg) + layer_smooth()
@@ -217,19 +239,19 @@ There's an important difference between `qvis()` and individual layers. `qvis()`
 ```{r}
 qvis(mtcars, ~wt, ~mpg, layers = c("point", "smooth"), stroke := "red")
 
-qvis(mtcars, ~wt, ~mpg, stroke := "red") +
+qvis(mtcars, ~wt, ~mpg) +
   layer_smooth(props(stroke := "red"))
 ```
 
 It's confusing to read code that refers to properties in two different ways, so when your plots reach this level of complexity, it's usually best to switch to the more explicit `ggvis()`.
 
 ```{r}
-ggvis(mtcars, props(x = ~wt, y = ~mpg, stroke := "red")) +
+ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
   mark_point() +
-  layer_smooth()
+  layer_smooth(props(stroke := "red"))
 ```
 
-You'll learn more about building up rich hierarchical graphics in the [data hierarchy](data-hierarchy.html) vignette.
+You'll learn more about building up rich hierarchical graphics in [data hierarchy](data-hierarchy.html).
 
 ## More details
 

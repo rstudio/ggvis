@@ -25,6 +25,6 @@ ggvis(mtcars,
 )
 }
 \seealso{
-\code{link{mark_line}}
+\code{link{mark_path}}
 }
 

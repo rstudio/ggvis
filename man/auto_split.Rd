@@ -16,10 +16,10 @@ mtcars2$cyl <- factor(mtcars2$cyl)
 
 # One line
 ggvis(mtcars2, props(x = ~disp, y = ~mpg, stroke = ~cyl)) +
-  mark_line()
+  mark_path()
 # One line for each level of cyl
 ggvis(mtcars2, auto_split(), props(x = ~disp, y = ~mpg, stroke = ~cyl)) +
-  mark_line()
+  mark_path()
 
 # This shows the data generated using by_group
 sluice(pipeline(mtcars, by_group(cyl)), props(x = ~disp, y = ~mpg))

@@ -47,7 +47,7 @@ visualisations.
 
   \code{ ggvis(mtcars, props(x = ~disp, y = ~mpg),
   layer(transform_smooth(), mark_area(props(y = ~y_min, y2
-  = ~y_max, fill := "#eee")), mark_line() ), mark_symbol()
+  = ~y_max, fill := "#eee")), mark_path() ), mark_symbol()
   ) }
 }
 

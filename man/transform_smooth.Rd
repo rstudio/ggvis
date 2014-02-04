@@ -49,7 +49,7 @@ layer_smooth(..., se = TRUE)
 \code{transform_smooth} is a data transformation that fits
 a model to a 2d dataset and computes predictions and
 standard errors. \code{layer_smooth} combines
-\code{transform_smooth} with \code{mark_line} and
+\code{transform_smooth} with \code{mark_path} and
 \code{mark_area} to display a smooth line and its standard
 errror.
 }
@@ -81,14 +81,14 @@ ggvis(mtcars, props(x = ~wt, y = ~mpg), mark_symbol(), layer_smooth())
 ggvis(mtcars, props(x = ~wt, y = ~mpg), mark_symbol(),
   layer_smooth(method = "lm", se = FALSE))
 
-# These are equivalent to combining transform_smooth with mark_line and
+# These are equivalent to combining transform_smooth with mark_path and
 # mark_area
 ggvis(mtcars, props(x = ~wt, y = ~mpg),
   mark_symbol(),
   layer(transform_smooth(),
     mark_area(props(x = ~x, y = ~y_lower__, y2 = ~y_upper__,
       fillOpacity := 0.2)),
-    mark_line(props(x = ~x, y = ~y))
+    mark_path(props(x = ~x, y = ~y))
   )
 )
 

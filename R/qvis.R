@@ -26,7 +26,7 @@
 #'   Any additional unnamed components will raise an error.
 #' @param layers A character vector listing the names of marks or layers to
 #'   display on the plot. You can use either the full name of the layer
-#'   (e.g. "mark_line" or "layer_smooth"), or just the final part
+#'   (e.g. "mark_path" or "layer_smooth"), or just the final part
 #'   (e.g. "line" or "smooth"). If there is both a plain mark and a layer
 #'   with the same name, the layer will be used.
 #'

@@ -2,7 +2,7 @@
 \alias{mark_arc}
 \alias{mark_area}
 \alias{mark_image}
-\alias{mark_line}
+\alias{mark_path}
 \alias{mark_point}
 \alias{mark_rect}
 \alias{mark_symbol}
@@ -20,7 +20,7 @@ mark_arc(props = NULL, data = NULL)
 
 mark_area(props = NULL, data = NULL)
 
-mark_line(props = NULL, data = NULL)
+mark_path(props = NULL, data = NULL)
 
 mark_rect(props = NULL, data = NULL)
 
@@ -42,7 +42,7 @@ ggvis layers correspond to combinations of geoms and
 statistical transforms.
 }
 \details{
-Note that by supplying a fill property to \code{mark_line}
+Note that by supplying a fill property to \code{mark_path}
 will produce a filled property. \code{mark_point} is an
 alias to \code{mark_symbol}.
 }

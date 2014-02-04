@@ -1,6 +1,6 @@
 #' A layer to add a line.
 #'
-#' @seealso \code{link{mark_line}}
+#' @seealso \code{link{mark_path}}
 #' @export
 #' @param sort Should the data be sorted? If \code{TRUE} (the default), a
 #'   \code{\link{transform_sort}} will be used. By default, this will sort the
@@ -19,6 +19,6 @@ layer_line <- function(..., sort = TRUE) {
   layer(
     auto_split(),
     if (sort) transform_sort(...),
-    mark_line(comps$props)
+    mark_path(comps$props)
   )
 }

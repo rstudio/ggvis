@@ -5,7 +5,7 @@ ggvis(mtcars, props(x = ~wt, y = ~mpg, size.hover := 200)) +
   mark_symbol()
 
 # Larger point and outline when hovering
-ggvis(mtcars, 
+ggvis(mtcars,
   props(x = ~wt, y = ~mpg, size.hover := 200,
         stroke := NA, stroke.hover := "red", strokeWidth := 3)) +
   mark_symbol()
@@ -13,7 +13,7 @@ ggvis(mtcars,
 # Line changes color and points change size when hovered over, with 250 ms
 # transition time
 ggvis(pressure, props(x = ~temperature, y = ~pressure)) +
-  mark_line(props(stroke.hover := "red", strokeWidth.hover := 4, strokeWidth := 2)) +
+  mark_path(props(stroke.hover := "red", strokeWidth.hover := 4, strokeWidth := 2)) +
   mark_symbol(props(size := 50, size.hover := 200)) +
   opts(hover_duration = 250)
 

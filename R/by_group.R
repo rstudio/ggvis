@@ -2,7 +2,7 @@
 #'
 #' Use \code{by_group} to split up a dataset into multiple pieces, and have
 #' each piece rendered by the same mark.
-#' 
+#'
 #' @param ... Unquoted variable names or expressions describe how to split
 #'   up the dataset.
 #' @param .vars a list of quoted expressions.
@@ -16,21 +16,21 @@
 #' by_group(vs + am)
 #'
 #' # One line
-#' ggvis(mtcars, props(x = ~disp, y = ~mpg), mark_line())
+#' ggvis(mtcars, props(x = ~disp, y = ~mpg), mark_path())
 #' # One line for each level of cyl
-#' ggvis(mtcars, by_group(cyl), props(x = ~disp, y = ~mpg), mark_line())
-#' 
+#' ggvis(mtcars, by_group(cyl), props(x = ~disp, y = ~mpg), mark_path())
+#'
 #' # This shows the data generated using by_group
 #' sluice(pipeline(mtcars, by_group(cyl)), props(x = ~disp, y = ~mpg))
 #' # Note that the props aren't used for splitting, but sluice() needs some
 #' # props to be present to work.
 #'
 #' # Special evaluation -------------------
-#' 
+#'
 #' # If you have previously quoted variables, use .vars
 #' v <- quote(cyl)
 #' by_group(.vars = list(v))
-#' 
+#'
 #' # If you have the name of a variable as a string, use as.name
 #' var <- "cyl"
 #' by_group(.vars = list(as.name(var)))

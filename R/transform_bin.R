@@ -4,7 +4,7 @@
 #' of positions to a data frame of binned counts. \code{layer_histogram}
 #' combines \code{transform_bin} with \code{mark_rect} to create a histogram,
 #' and \code{layer_freqpoly} combines \code{transform_bin} with
-#' \code{mark_line} to create a frequency polygon.
+#' \code{mark_path} to create a frequency polygon.
 #'
 #' @section Input:
 #' Currently \code{transform_bin} only works with data frames and requires the
@@ -48,7 +48,7 @@
 #' # mark
 #' ggvis(mtcars, props(x = ~mpg), transform_bin(binwidth = 2),
 #'   mark_rect(props(x = ~xmin__, x2 = ~xmax__, y = ~count__, y2 = 0)),
-#'   mark_line(props(x = ~x, y = ~count__, stroke := "red", strokeWidth := 4))
+#'   mark_path(props(x = ~x, y = ~count__, stroke := "red", strokeWidth := 4))
 #' )
 #'
 #' # You can also combine other data transformations like splitting
@@ -92,7 +92,7 @@ layer_freqpoly <- function(...) {
     transform_bin(...),
     layer(
       props(x = ~x, y = ~count__),
-      mark_line(),
+      mark_path(),
       ...,
       drop_named = TRUE
     )
