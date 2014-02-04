@@ -113,12 +113,12 @@ layer_area <- mark_area
 #' @export
 mark_path <- function(props = NULL, data = NULL) mark("line", props = props, data = data)
 #' @export
-valid_mark_properties.mark_path <- function(mark) {
+valid_mark_properties.mark_line <- function(mark) {
   c("x", "y", "opacity", "fill", "fillOpacity", "stroke", "strokeWidth",
     "strokeOpacity", "interpolate", "tension", "key")
 }
 #' @export
-default_mark_properties.mark_path <- function(mark) {
+default_mark_properties.mark_line <- function(mark) {
   props(stroke := "#000000")
 }
 
@@ -170,6 +170,6 @@ globalVariables(c(
   valid_mark_properties.mark_text(),
   valid_mark_properties.mark_arc(),
   valid_mark_properties.mark_image(),
-  valid_mark_properties.mark_path(),
+  valid_mark_properties.mark_line(),
   valid_mark_properties.mark_rect()
 ))
