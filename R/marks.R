@@ -32,8 +32,6 @@ default_mark_properties.default <- function(mark) {
   stop("Unknown mark type: ", paste(class(mark), collapse=", "))
 }
 
-
-
 #' @rdname marks
 #' @export
 mark_symbol <- function(props = NULL, data = NULL) mark("symbol", props = props, data = data)
@@ -51,6 +49,9 @@ default_mark_properties.mark_symbol <- function(mark) {
 #' @export
 mark_point <- mark_symbol
 
+#' @rdname marks
+#' @export
+layer_point <- mark_point
 
 #' @rdname marks
 #' @export
@@ -64,6 +65,10 @@ valid_mark_properties.mark_image <- function(mark) {
 default_mark_properties.mark_image <- function(mark) {
   props(fill := "#000000")
 }
+
+#' @rdname marks
+#' @export
+layer_image <- mark_image
 
 
 #' @rdname marks
@@ -80,6 +85,11 @@ default_mark_properties.mark_arc <- function(mark) {
   props(fill := "#333333")
 }
 
+#' @rdname marks
+#' @export
+layer_arc <- mark_arc
+
+
 
 #' @rdname marks
 #' @export
@@ -93,6 +103,10 @@ valid_mark_properties.mark_area <- function(mark) {
 default_mark_properties.mark_area <- function(mark) {
   props(fill := "#333333")
 }
+
+#' @rdname marks
+#' @export
+layer_area <- mark_area
 
 
 #' @rdname marks
@@ -108,6 +122,11 @@ default_mark_properties.mark_path <- function(mark) {
   props(stroke := "#000000")
 }
 
+#' @rdname marks
+#' @export
+layer_path <- mark_path
+
+
 #' @export
 #' @rdname marks
 mark_rect <- function(props = NULL, data = NULL) mark("rect", props = props, data = data)
@@ -120,6 +139,11 @@ valid_mark_properties.mark_rect <- function(mark) {
 default_mark_properties.mark_rect <- function(mark) {
   props(stroke := "#000000", fill := "#333333")
 }
+
+#' @rdname marks
+#' @export
+layer_rect <- mark_rect
+
 
 #' @export
 #' @rdname marks
@@ -134,6 +158,10 @@ valid_mark_properties.mark_text <- function(mark) {
 default_mark_properties.mark_text <- function(mark) {
   props(fill := "#333333")
 }
+
+#' @rdname marks
+#' @export
+layer_text <- mark_text
 
 
 # Hack to stop spurious warnings in R CMD check

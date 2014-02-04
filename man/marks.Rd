@@ -1,4 +1,11 @@
 \name{marks}
+\alias{layer_arc}
+\alias{layer_area}
+\alias{layer_image}
+\alias{layer_path}
+\alias{layer_point}
+\alias{layer_rect}
+\alias{layer_text}
 \alias{mark_arc}
 \alias{mark_area}
 \alias{mark_image}
@@ -14,17 +21,31 @@ mark_symbol(props = NULL, data = NULL)
 
 mark_point(props = NULL, data = NULL)
 
+layer_point(props = NULL, data = NULL)
+
 mark_image(props = NULL, data = NULL)
+
+layer_image(props = NULL, data = NULL)
 
 mark_arc(props = NULL, data = NULL)
 
+layer_arc(props = NULL, data = NULL)
+
 mark_area(props = NULL, data = NULL)
+
+layer_area(props = NULL, data = NULL)
 
 mark_path(props = NULL, data = NULL)
 
+layer_path(props = NULL, data = NULL)
+
 mark_rect(props = NULL, data = NULL)
 
+layer_rect(props = NULL, data = NULL)
+
 mark_text(props = NULL, data = NULL)
+
+layer_text(props = NULL, data = NULL)
 }
 \arguments{
   \item{props}{A \code{\link{props}} object, named

@@ -247,7 +247,7 @@ It's confusing to read code that refers to properties in two different ways, so 
 
 ```{r}
 ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
-  mark_point() +
+  layer_point() +
   layer_smooth(props(stroke := "red"))
 ```
 

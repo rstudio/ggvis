@@ -83,11 +83,9 @@ qvis <- function(data, ..., layers = character()) {
 # TODO: make sure this uses the right scoping so that it will find layers
 # defined in other packages and in the global environment.
 init_layer <- function(name, args = list()) {
-  to_try <- paste0(c("mark_", "layer_", ""), name)
+  fname <- paste0("layer_", name)
 
-  for (fname in to_try) {
-    if (!exists(fname, mode = "function")) next
-
+  if (exists(fname, mode = "function")) {
     f <- get(fname, mode = "function")
     if ("..." %in% names(formals(f))) {
       return(do.call(f, args))
@@ -97,7 +95,7 @@ init_layer <- function(name, args = list()) {
     }
   }
 
-  stop("Couldn't find mark or layer called ", name, call. = FALSE)
+  stop("Couldn't find layer called ", fname, call. = FALSE)
 }
 
 qvis_default_names <- function(args) {
