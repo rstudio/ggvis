@@ -15,14 +15,14 @@ opts_chunk$set(comment = "#>", error = TRUE, tidy = FALSE)
 
 The goal of ggvis is to make it easy to build interactive graphics for exploratory data analysis. ggvis has a similar underlying theory to [ggplot2](http://ggplot2.org) (the grammar of graphics), but it's expressed a little differently, and adds new features to make your plots interactive. ggvis also incorporates reactive programming ideas drawn from [shiny](http://www.rstudio.com/shiny/).
 
-The graphics produced by ggvis are fundamentally web graphics and work very differently way to traditional R graphics. This gives allows us to implement exciting new features like interactivity, but comes at a cost. For example, every interactive ggvis plot must be connected to a running R session. This is great for exploration, because you can do anything in your interactive plot you can do in R, but it's not so great for publication. We will overcome these issues in time, but for now be aware that we have many existing tools to reimplement before you can do everything that you can do with base graphics.
+The graphics produced by ggvis are fundamentally web graphics and work very differently way to traditional R graphics. This gives allows us to implement exciting new features like interactivity, but comes at a cost. For example, every interactive ggvis plot must be connected to a running R session. This is great for exploration, because you can do anything in your interactive plot you can do in R, but it's not so great for publication. We will overcome these issues in time, but for now be aware that we have many existing tools to reimplement before you can do everything with ggvis that you can do with base graphics.
 
 This vignette is divided four into main sections:
 
 * Dive into plotting with `qvis()`.
-* Add interactivity with mouse controls and the keyboard.
-* Create more types of graphic with layers
-* Build up rich graphics using multiple layers
+* Add interactivity with the mouse and keyboard.
+* Create more types of graphic by controlling the layer type.
+* Build up rich graphics with multiple layers.
 
 Each section will introduce to a major idea in ggvis, and point to more detailed explanation in other vignettes.
 
@@ -36,7 +36,7 @@ Every ggvis graphic starts with a call to `ggvis()` or `qvis()`:
   gives you more control, but also means you need to type more to get a
   basic plot.
 
-We'll start with `qvis()` because it lets makes graphics very quickly. You can read more about `ggvis()` in the [data hierarchy](data-hierarchy.html) vignette.
+We'll start with `qvis()` because it lets makes graphics very quickly. You can learn more about `ggvis()` in the [data hierarchy](data-hierarchy.html) vignette.
 
 A basic `qvis()` call creates a scatterplot. It has three arguments: a data set, the variable displayed on the x-axis and the variable on the y-axis.
 
