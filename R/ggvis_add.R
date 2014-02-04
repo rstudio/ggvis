@@ -40,6 +40,7 @@ ggvis_add.ggvis <- function(e1, e2, e2name) {
 
   # Top-level ggvis objects can add many kinds of objects
   switch(type,
+    NULL = NULL,
     children = e1$children <- c(e1$children, list(e2)),
     scales   = e1$scales <- scales(.scales = c(e1$scales, list(e2))),
     legends  = e1$legends <- c(e1$legends, list(e2)),

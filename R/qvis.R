@@ -60,11 +60,14 @@ qvis <- function(data, ..., layers = character()) {
   props_args <- qvis_default_names(args[is_props(args)])
   props <- props(.props = props_args)
 
+  scale <- NULL
   if (length(layers) == 0) {
     if ("y" %in% names(props_args)) {
       layers <- "point"
     } else {
       if (prop_countable(data, props$x)) {
+        scale <- dscale("x", "nominal", range = "width", padding = 0,
+          points = FALSE)
         layers <- "barchart"
       } else {
         layers <- "histogram"
@@ -74,7 +77,7 @@ qvis <- function(data, ..., layers = character()) {
 
   layer_args <- args[!is_props(args)]
   layers <- lapply(layers, init_layer, layer_args)
-  ggvis(data, props) + layers
+  ggvis(data, props) + layers + scale
 }
 
 # TODO: make sure this uses the right scoping so that it will find layers

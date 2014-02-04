@@ -1,8 +1,8 @@
 #' Create a new layer.
-#' 
-#' Layers are used to describe the data hierarchy of ggvis. As well as 
+#'
+#' Layers are used to describe the data hierarchy of ggvis. As well as
 #' using this function to create them, you can also use the many specialised
-#' \code{layer_} functions that combine marks and transforms to create 
+#' \code{layer_} functions that combine marks and transforms to create
 #' useful visualisations.
 #'
 #' @section Hierarchy:
@@ -39,7 +39,7 @@
 #' @export
 layer <- function(..., drop_named = FALSE) {
   check_empty_args()
-  
+
   comp <- parse_components(..., drop_named = drop_named)
   check_layer_components(comp)
   class(comp) <- "layer"
@@ -63,7 +63,7 @@ check_layer_components <- function(x) {
 parse_components <- function(..., drop_named = FALSE) {
   args <- list(...)
   named <- named(args)
-  
+
   if (any(named)) {
     if (drop_named) {
       args <- args[!named]
@@ -74,7 +74,7 @@ parse_components <- function(..., drop_named = FALSE) {
   names(args) <- NULL
 
   types <- vapply(args, component_type, character(1))
-  
+
   components <- split(args, types)
   components$props <- Reduce(merge_props, components$props)
   if (length(components$data) > 0) {
@@ -83,11 +83,11 @@ parse_components <- function(..., drop_named = FALSE) {
     # Convert each component to a pipeline, preserving original names
     pls <- Map(as.pipeline, components$data, name = names)
     # Collapse into single pipeline
-    pl <- structure(unlist(pls, recursive = FALSE), class = "pipeline")    
+    pl <- structure(unlist(pls, recursive = FALSE), class = "pipeline")
     # Trim any redundant sources
     components$data <- trim_to_source(pl)
   }
-  
+
   components$scales <- scales(.scales = components$scales)
   components
 }
@@ -109,3 +109,5 @@ component_type.ggvis_opts <- function(x) "opts"
 component_type.default <- function(x) "data"
 #' @export
 component_type.handler <- function(x) "handlers"
+#' @export
+component_type.NULL <- function(x) "NULL"
