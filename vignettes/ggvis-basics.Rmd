@@ -94,7 +94,7 @@ qvis(mtcars, ~wt, binwidth = binwidth)
 
 Behind the scenes, interactive plots are built with [shiny](http://www.rstudio.com/shiny/), and you can currently only have one running at a time. To finish with a plot, press the stop button in Rstudio, or close the browser window and then press Ctrl + C in R.
 
-As well as `input_slider()`, ggvis also provides `input_checkbox()`, `input_checkboxgroup()`, `input_numeric()`, `input_radiobuttons()`, `input_select()` and  `input_text()`. See the examples in the documentation for how you might use each one.
+As well as `input_slider()`, ggvis provides `input_checkbox()`, `input_checkboxgroup()`, `input_numeric()`, `input_radiobuttons()`, `input_select()` and  `input_text()`. See the examples in the documentation for how you might use each one.
 
 You can also use keyboard controls with `left_right()` and `up_down()`. Press the left and right arrows to control the size of the points in the next example.
 
@@ -115,15 +115,14 @@ You'll learn more about complex interaction in the [interactivity](interactivity
 
 The previous examples showed how to make scatterplots and barcharts, but of course you can create many other types of visualisations. You change the visualisation using the `layers` parameter. There are two types of layer:
 
-* Simple, which are basic drawing primitives like points, lines and
-  rectangles.
+* Simple, which include primitives like points, lines and rectangles.
 
 * Composite, which combine data transformations with simple layers.
 
 There are five simple layers:
 
-* Points, `layer_point()`. This is the default when you supply two variables
-  to `qvis()`. It has properties `x`, `y`, `shape`, `stroke`, `fill`,
+* Points, `layer_point()`. This is the default layer when you use`qvis()`
+  with two variables. It has properties `x`, `y`, `shape`, `stroke`, `fill`,
   `strokeOpacity`, `fillOpacity`, and `opacity`.
 
     ```{r}
@@ -135,7 +134,7 @@ There are five simple layers:
 
     ```{r}
     df <- data.frame(x = 1:10, y = runif(10))
-    qvis(df, ~x, ~y, layers = "line")
+    qvis(df, ~x, ~y, layers = "path")
     ```
 
     If you supply a `fill`, you'll get a polygon
@@ -143,7 +142,7 @@ There are five simple layers:
     ```{r}
     t <- seq(0, 2 * pi, length = 100)
     df <- data.frame(x = sin(t), y = cos(t))
-    qvis(df, ~x, ~y, fill := "red", layers = "line")
+    qvis(df, ~x, ~y, fill := "red", layers = "path")
     ```
 
 * Filled areas, `layer_area()`. Use properties `y` and `y2` to control the
@@ -176,12 +175,21 @@ There are five simple layers:
     qvis(df, ~x, ~y, text := ~label, layers = "text", angle := 45)
     ```
 
-Two richer layers are:
+Four richer layers are:
 
-* `layer_histogram()` which allows you to explore the distribution of a
-  continuous variable. It bins the data and then displays the results with
-  `layer_rect()`. This is the default layer when `qvis()` is called with
-  a dataset and an `x` variable.
+* `layer_line()` which automatically orders by the x variable:
+
+    ```{r}
+    t <- seq(0, 2 * pi, length = 20)
+    df <- data.frame(x = sin(t), y = cos(t))
+    qvis(df, ~x, ~y, layers = "path")
+    qvis(df, ~x, ~y, layers = "line")
+    ```
+
+* `layer_histogram()` and `layer_barchart()` which allow you to explore the
+  distribution of continuous and discrete variables respectively. It bins
+  the data then displays the results with `layer_rect()`. This is the default
+  layer when `qvis()` is called with a dataset and an `x` variable.
 
     ```{r}
     qvis(mtcars, ~wt)
@@ -207,14 +215,14 @@ Two richer layers are:
 
     ```{r}
     span <- input_slider(0, 1, value = 0.75)
-    qvis(mtcars, ~wt, ~mpg, layers = c("point", "smooth"), span = span)
+    qvis(mtcars, ~wt, ~mpg, layers = "smooth", span = span)
     ```
 
 You can learn more about layers in the [layers](layers.html) vignette.
 
 ## Multiple layers
 
-Rich graphics can be created by combining multiple layers on the same plot. There are two ways to display multiple layers on one plot. The first and simplest way is to provide a vector of layer names to `layer`:
+Rich graphics can be created by combining multiple layers on the same plot. There are two ways to combine layers. The first and simplest way is to provide a vector of layer names to `layer`:
 
 ```{r}
 qvis(mtcars, ~wt, ~mpg, layers = c("smooth", "point"))
@@ -243,7 +251,7 @@ qvis(mtcars, ~wt, ~mpg) +
   layer_smooth(props(stroke := "red"))
 ```
 
-It's confusing to read code that refers to properties in two different ways, so when your plots reach this level of complexity, it's usually best to switch to the more explicit `ggvis()`.
+It's confusing to read code that refers to properties in two different ways, so when you start adding on more complex layers it's better to switch from `qvis()` to `ggvis()`:
 
 ```{r}
 ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
