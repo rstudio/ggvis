@@ -72,7 +72,7 @@ ggvis(mtcars, props(x = ~mpg), transform_bin(binwidth = 2),
 )
 
 # You can also combine other data transformations like splitting
-ggvis(mtcars, props(x = ~mpg, stroke = ~cyl, strokeWidth = 4),
+ggvis(mtcars, props(x = ~mpg, stroke = ~cyl, strokeWidth := 4),
    by_group(cyl), layer_freqpoly(binwidth = 2))
 
 # You can see the results of a transformation by creating your own pipeline
