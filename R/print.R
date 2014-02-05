@@ -83,11 +83,6 @@ view_static <- function(x,
   head <- tagList(
     tags$script(src = "lib/jquery-1.9.1.js"),
     tags$script(src = "lib/jquery-ui/js/jquery-ui-1.10.3.custom.js"),
-    tags$link(rel = "stylesheet", type = "text/css",
-      href = "shared/bootstrap/css/bootstrap.min.css"),
-    tags$link(rel = "stylesheet", type = "text/css",
-      href = "shared/bootstrap/css/bootstrap-responsive.min.css"),
-    tags$script(src = "shared/bootstrap/js/bootstrap.min.js"),
     tags$script(charset = "utf-8", src = "lib/d3.js"),
     tags$script(src = "lib/vega.js"),
     tags$script(src = "lib/QuadTree.js"),
@@ -138,12 +133,6 @@ copy_www_resources <- function(destdir) {
     }
   }
 
-  shiny_files <- c(
-    "shared/bootstrap/css/bootstrap.min.css",
-    "shared/bootstrap/img/glyphicons-halflings.png",
-    "shared/bootstrap/js/bootstrap.min.js",
-    "shared/bootstrap/css/bootstrap-responsive.min.css"
-  )
   ggvis_files <- c(
     "lib/jquery-1.9.1.js",
     "lib/d3.js",
@@ -156,7 +145,6 @@ copy_www_resources <- function(destdir) {
     "css/ggvis.css"
   )
 
-  lapply(shiny_files, copy_www_file, pkg = "shiny")
   lapply(ggvis_files, copy_www_file, pkg = "ggvis")
 }
 

@@ -49,11 +49,7 @@ ggvis_output <- function(plot_id, shiny = TRUE) {
   container <-
     div(id = paste0(plot_id, "-container"), class = "ggvis-output-container",
       # Div containing the plot
-      div(id = plot_id, class = "ggvis-output"),
-
-      div(class = "plot-gear-icon",
-        ggvisControlGroup(plot_id)
-      )
+      div(id = plot_id, class = "ggvis-output")
     )
 
 
@@ -233,51 +229,6 @@ sidebarBottomPanel <- function(...) {
 mainTopPanel <- function(...) {
   div(class = "span8 main-top",
     ...
-  )
-}
-
-#' Generate Shiny tags for ggvis controls
-#'
-#' Controls for choosing a renderer and downloading an image.
-#' @param plot_id Plot ID
-#' @importFrom shiny withTags HTML
-#' @export
-ggvisControlGroup <- function(plot_id) {
-  tags$div(class = "btn-group",
-    tags$label(class = "dropdown-toggle", `data-toggle` = "dropdown",
-      tags$i(class = "icon-cog", style = "opacity: 0.4;", " ")
-    ),
-
-    tags$ul(class = "ggvis-control dropdown-menu pull-right",
-      tags$li(
-        tags$div(class = "dropdown-item",
-          "Renderer: ",
-          tags$span(class = "ggvis-renderer-buttons btn-group",
-               style = "vertical-align: middle;",
-            tags$label(id = paste0(plot_id, "_renderer_canvas"),
-                  class = "btn btn-mini",
-                  `data-plot-id` = plot_id,
-                  `data-renderer` = "canvas",
-                  "Canvas"
-            ),
-            tags$label(id = paste0(plot_id, "_renderer_svg"),
-                  class = "btn btn-mini",
-                  `data-plot-id` = plot_id,
-                  `data-renderer` = "svg",
-                  "SVG"
-            )
-          )
-        )
-      ),
-      tags$li(class = "divider"),
-      tags$li(
-        tags$a(id = paste0(plot_id, "_download"),
-          class = "ggvis-download",
-          `data-plot-id` = plot_id,
-          "Download"
-        )
-      )
-    )
   )
 }
 
