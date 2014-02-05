@@ -78,7 +78,9 @@ You can add layers on to plots created by `qvis()`, but we don't recommend it if
 qvis(mtcars, ~wt, ~mpg) +
   layer_smooth(props(stroke := "red"))
 
+# This is only a little more typing but more symmetric
 ggvis(mtcars, props(~wt, ~mpg)) +
+  layer_point() +
   layer_smooth(props(stroke := "red"))
 ```
 
@@ -87,6 +89,8 @@ ggvis(mtcars, props(~wt, ~mpg)) +
 The following sections describe particular details related to individual marks.
 
 ### `layer_rect`
+
+Must set two of `x`, `x2`, and `width`, and two of `y`, `y2` and `height`.
 
 If you have an ordinal scale, set width and/or height to `prop_band()` to
 occupy the complete band corresponding to that categorical value.
@@ -116,10 +120,10 @@ track progress at https://github.com/trifacta/vega/issues/122.
 To create a line that spans the complete range of the plot, use `prop_group()`:
 
 ```{r, eval = FALSE}
-ggvis()
+ggvis() +
   layer_point(props(x = ~disp, y = ~wt), mtcars) +
-  layer_path(props(y = ~mean(mtcars$wt), x := 0, x2 := prop_group()) +
-  layer_path(props(x = ~mean(mtcars$disp), y := 0, y2 := prop_group())
+  layer_path(props(y = ~mean(mtcars$wt), x := 0, x2 := prop_group())) +
+  layer_path(props(x = ~mean(mtcars$disp), y := 0, y2 := prop_group()))
 ```
 
 Note that this won't work because `prop_group()` hasn't been written yet: track
@@ -137,8 +141,8 @@ ggvis(df, props(x = ~x, y = ~y, y2 := 0), layer_area())
 ggvis(df, props(x = ~x, y = ~y, height := 20), layer_area())
 ```
 
-Height is only suitable for constant, because it does not have an obvious scale
-associated with it. You could force height to use the `y` scale, but that
+Height can only be mapped to a constant, because it does not have an obvious
+scale associated with it. You could force height to use the `y` scale, but that
 doesn't work - the area hangs below the y line, and increasing the value of
 height makes the area narrower! What's going on is that the underlying graphics
 device has (0, 0) in the top-left corner, and so the y-scale is upside down. As
@@ -163,16 +167,29 @@ compute the offsets yourself:
 ggvis(df, props(x = ~x, y = ~y - 2, y2 = ~y + 2), layer_area())
 ```
 
+The distinction between dimension and location is important in other graphics system, and a grid vignette `vignette("locndimn", package = "grid")` has a little more information about how things work in grid.
+
 ## Grouping
 
 In ggplot2, grouping was a special aesthetic; in ggvis, grouping is a data
 transformation: use `by_group()` to split your data up into pieces given a
-specified variable:
+specified variable, or `auto_split()` to split up by any categorical variable included in the plot:
 
 ```{r}
-ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
+ggvis(mtcars, props(~wt, ~mpg)) +
   layer_point() +
   layer_path(data = by_group(cyl))
+
+ggvis(mtcars, props(~wt, ~mpg, stroke = ~factor(cyl))) +
+  layer_point() +
+  layer_path(data = auto_split())
+```
+
+Some layers, like `layer_line()`, include `auto_splot()` so will split automatically:
+
+```{r}
+ggvis(mtcars, props(~wt, ~mpg, stroke = ~factor(cyl))) +
+  layer_line()
 ```
 
 ## Compound layers
