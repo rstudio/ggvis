@@ -9,48 +9,45 @@ library(ggvis)
 opts_chunk$set(comment = "#>", error = FALSE, tidy = FALSE)
 ```
 
-# Marks
+# Layers
 
-The ggvis mark is responsible for the drawing of the data. Each type of mark
-effectively represents a different type of geometric object, and so in some
-sense they are the equivalent of geoms in ggplot2. However, there are a far
-fewer marks than geoms because marks tend to be more capable, and because they
-never perform any statistical transformation.
+In ggvis, there are two types of layers. Simple layers correspond directly to vega marks and represent geometric primitives like points, lines and rectangles. Compound layers combine data transformations with one or more simple layers.
+
+## Marks
+
+Marks are the fundamental building block. Each type of mark represents a different type of geometric object, and so in some sense they are the equivalent of geoms in ggplot2. However, there are a far fewer marks than geoms because marks tend to be more capable, and because they never perform any statistical transformation.
+
+Most of the time you don't use marks directly - you instead use their layer wrappers. That's because most of the time you don't want to think about the difference between simple and compound layers - you just want to make a plot. But if you want to understand more deeply how things work, or create your own layer functions, it's important to understand the distinction.
 
 `ggvis` exposes
 [five vega marks](https://github.com/trifacta/vega/wiki/Marks#color-references)
 that have very similar ggplot2 equivalents:
 
-* `layer_area` = `geom_ribbon`, `geom_area`
-* `layer_path` = `geom_path`, `geom_line`
-* `layer_rect` = `geom_rect`, `geom_bar`, `geom_tile`
-* `layer_point` = `geom_point`
-* `layer_text` = `geom_text`
-
-All marks start with `layer_` so that you can always use tab autocomplete to
-remind yourself of the options.
+* `mark_area()` = `geom_ribbon()`, `geom_area()`
+* `mark_path()` = `geom_path()`, `geom_line()`
+* `mark_rect()` = `geom_rect()`, `geom_bar()`, `geom_tile()`
+* `mark_point()` = `geom_point()`
+* `mark_text()` = `geom_text()`
 
 There are two marks that have no equivalent in ggplot2:
 
-* `layer_arc` which allows you to draw arcs. You could accomplish something
+* `mark_arc()` allows you to draw arcs. You could accomplish something
   similar in ggplot2 with `geom_rect()` with `coord_polar()` but it was
   relatively inflexible and required contorting your brain a bit.
 
-* `layer_image` allows you to place arbitrary images on a plot. There is
+* `mark_image()` allows you to place arbitrary images on a plot. There is
   currently little additional support for this in ggvis, so you'll need to
   make sure the images are publicly available somewhere. If you've found
-  a compelling use-case for `layer_image`, let us know so we can consider
+  a compelling use-case for `layer_image()`, let us know so we can consider
   how to better support it.
 
-There are two vega marks that are not currently implemented in ggvis:
+And two vega marks that are not currently implemented in ggvis:
 
-* Support for the group mark will be added in future major release that will
-  add support for facetting/subplots)
+* Support for the group mark will be added in a future major release that
+  will add support for facetting/subplots.
 
 * I can't currently see any use for the path mark, which takes svg path
   specifications as input.
-
-## Creating a mark
 
 All marks take two optional arguments which are only needed if you want to
 override the values inherited from parent:
@@ -58,10 +55,12 @@ override the values inherited from parent:
 * `props`, a `props()` object used to add any custom override for this layer
 * `data`, an optional dataset to override the data inherited from the parent
 
+## Adding a layer to a plot
+
 For example, the following two plots are equivalent. In the first one, the
 data and props are defined at the top level and inherited by the mark, and in
 the second, they are defined in the mark itself. Note that the order of the
-argumetns to `ggvis()` and the mark function are different: this is because
+arguments to `ggvis()` and the mark function are different: this is because
 you'll usually set the data in top-level plot object, and usually only override
 props in the mark.
 
@@ -73,8 +72,15 @@ ggvis() +
   layer_point(data = mtcars, props(x = ~wt, y = ~mpg, stroke := "red"))
 ```
 
-In terms of the data hierarchy, marks are leaves: they can not have any
-children. See the data hierarchy vignette for more details.
+You can add layers on to plots created by `qvis()`, but we don't recommend it if you're setting custom props. Using two different ways of describes props makes the code harder to read.
+
+```{r}
+qvis(mtcars, ~wt, ~mpg) +
+  layer_smooth(props(stroke := "red"))
+
+ggvis(mtcars, props(~wt, ~mpg)) +
+  layer_smooth(props(stroke := "red"))
+```
 
 ## Mark details
 
@@ -94,7 +100,7 @@ ggvis(hec, props(x = ~Hair, y = ~Eye, fill = ~Freq),
 
 ### `layer_path`
 
-`layer_path` produces lines if fill is empty, and polygons if it's set to a
+`layer_path` produces lines if fill is empty, and polygons if it is set to a
 value.
 
 ```{r}
@@ -169,17 +175,15 @@ ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
   layer_path(data = by_group(cyl))
 ```
 
-## Layers
+## Compound layers
 
-In ggvis marks strictly represent drawing; a layer combines a mark with a
-transformation, and often a set of default props. For example:
+Simple layers map directly to vega's primitive drawing functions (marks). Compound layers combine data transformation and simple layers (potentially multiple of each) to more sophisticated graphics. For example:
 
-* `layer_histogram` = `layer_rect` + `transform_bin`
-* `layer_freqpoly` = `layer_path` + `transform_bin`
-* `layer_smooth` = (`layer_path` + `layer_area`) + `transform_bin`
+* `layer_histogram()` = `transform_bin()` + `mark_rect()`
+* `layer_freqpoly()` = `transform_bin()` + `mark_path()`
+* `layer_smooth()` = `transform_smooth()` + (`mark_path()` + `mark_area()`)
 
-All layers start with `layer_` and the source will typically be simple so is
-worth reading:
+All layers start with `layer_`. The source is usually relatively simple - the complexity generally comes when figuring out how to map properties supplied to the layer to individual marks:
 
 ```{r}
 layer_smooth
