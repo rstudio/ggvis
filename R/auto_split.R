@@ -41,7 +41,7 @@ connect.auto_split <- function(x, props, source = NULL, session = NULL) {
       logical(1)
     )
     if (!any(countable)) {
-      stop("No categorical variables", call. = FALSE)
+      return(data)
     }
 
     split_vars <- lapply(unname(props[countable]), "[[", "value")
