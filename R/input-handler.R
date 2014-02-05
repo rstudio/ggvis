@@ -1,10 +1,10 @@
 #' Create handler S3 class.
-#' 
+#'
 #' This is currently a subclass on input, but it should probably be the
 #' other way around since inputs are handlers that have controls.
-#' 
+#'
 #' @export
-#' @param subclass name of the subclass. \code{handler} is an abstract base 
+#' @param subclass name of the subclass. \code{handler} is an abstract base
 #'   class so this must always be provided.
 #' @param listener name of the js listener (with corresponding R event broker)
 #'   that this handler is associated with
@@ -13,17 +13,17 @@
 #' p <- ggvis(mtcars, props(x = ~mpg, y = ~wt, size = left_right(1, 100)),
 #'   mark_symbol())
 #' p$props$size.update$dr
-#' 
+#'
 #' # Handlers are extracted with the internal handlers() function
 #' # ggvis:::handlers(p)
-handler <- function(subclass, listener, control_args = list(), value = NULL, 
+handler <- function(subclass, listener, control_args = list(), value = NULL,
                     map = identity, id = rand_id()) {
   assert_that(is.string(listener))
-  
-  out <- input("", control_args = control_args, value = value, 
+
+  out <- input("", control_args = control_args, value = value,
     map = map, id = id)
   class(out) <- c(subclass, "handler", "input")
-  
+
   # Hack around current bad class design
   out$listener <- listener
   out$control_f <- NULL
@@ -34,7 +34,7 @@ handler <- function(subclass, listener, control_args = list(), value = NULL,
 as.vega.handler <- function(x, session = NULL, dynamic = FALSE, ...) {
   args <- x$control_args
   funs <- vapply(args, is.function, logical(1))
-  
+
   c(list(id = x$id, type = x$listener), args[!funs])
 }
 
@@ -42,7 +42,7 @@ as.vega.handler <- function(x, session = NULL, dynamic = FALSE, ...) {
 format.handler <- function(x, ...) {
   control <- as.call(c(as.name(class(x)[1]), x$control_args))
   control_s <- paste0(deparse(control), collapse = "\n")
-  
+
   paste0("<handler> ", x$id, "\n", control_s, "\n")
 }
 
@@ -61,10 +61,10 @@ handlers <- function(x) UseMethod("handlers")
 
 #' @export
 handlers.layer <- function(x) {
-  t_handlers <- unname(lapply(x$data, handlers))
+  t_handlers <- unlist(lapply(x$data, handlers), recursive = FALSE)
   p_handlers <- unname(lapply(x$props, handlers))
-  c_handlers <- unname(lapply(x$children, handlers))
-  
+  c_handlers <- unlist(lapply(x$children, handlers), recursive = FALSE)
+
   compact(c(t_handlers, p_handlers, c_handlers, x$handlers))
 }
 
