@@ -6,7 +6,7 @@
 ```{r, echo = FALSE, message = FALSE}
 library(knitr)
 library(ggvis)
-opts_chunk$set(comment = "#>", error = TRUE, tidy = FALSE)
+opts_chunk$set(comment = "#>", error = FALSE, tidy = FALSE)
 ```
 
 # ggvis basics

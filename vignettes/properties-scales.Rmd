@@ -5,7 +5,7 @@
 
 ```{r, echo = FALSE, message = FALSE}
 library(knitr)
-suppressPackageStartupMessages(library(ggvis))
+library(ggvis)
 opts_chunk$set(comment = "#>", error = FALSE, tidy = FALSE)
 ```
 

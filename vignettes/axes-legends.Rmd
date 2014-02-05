@@ -2,11 +2,17 @@
 %\VignetteEngine{knitr}
 %\VignetteIndexEntry{Axes and legends}
 -->
-  
+
+```{r, echo = FALSE, message = FALSE}
+library(knitr)
+library(ggvis)
+opts_chunk$set(comment = "#>", error = FALSE, tidy = FALSE)
+```
+
 # Guides: Axes and legends
 
 When polishing graphics for production you often spend a lot of time getting the
-axes and legends looking exactly right. This vignette describes the ggvis 
+axes and legends looking exactly right. This vignette describes the ggvis
 functions that allow you to control plot guides: axes and legends.
 
 In ggvis, axes and legends are related to scales, but are described separately.
@@ -14,9 +20,9 @@ This is different to ggplot2, where the scale objects controlled both the
 details of the mapping and how it should be displayed on the plot. This makes
 ggvis a little more verbose, but it also makes it more flexible.
 
-Currently, ggvis guides are a close map to their vega equivalents. For 
-reference, you may also want to read the vega documentation for the 
-underlying [axis](https://github.com/trifacta/vega/wiki/Axes) and 
+Currently, ggvis guides are a close map to their vega equivalents. For
+reference, you may also want to read the vega documentation for the
+underlying [axis](https://github.com/trifacta/vega/wiki/Axes) and
 [legend](https://github.com/trifacta/vega/wiki/Legends) components.
 
 ## Common properties
@@ -24,9 +30,9 @@ underlying [axis](https://github.com/trifacta/vega/wiki/Axes) and
 Axes and legends have relatively few components in common, but the ones that
 they share are particularly important.
 
-* `scale` (axis), and stroke/fill/size/shape (legend) describe which scale (or 
+* `scale` (axis), and stroke/fill/size/shape (legend) describe which scale (or
   scales in the case of a legend) will be displayed on the guide
-  
+
   ```R
   guide_axis("x")
   guide_axis("y")
@@ -35,7 +41,7 @@ they share are particularly important.
   # Display multiple scales in one legend:
   guide_legend(fill = stroke, size = size)
   ```
-  
+
 * `title`, a string describing the guide
 
   ```R
@@ -44,25 +50,25 @@ they share are particularly important.
   ```
 
 * `values`, used to override the default placement of ticks on an axis or gradient
-  legend, or visible legend labels. 
-  
+  legend, or visible legend labels.
+
 * `format`, a d3 [formatting specification](https://github.com/mbostock/d3/wiki/Formatting)
-  that controls how values are converted to strings. 
-  
+  that controls how values are converted to strings.
+
 ### Custom styles
 
-Finally, both axes and legends share `properties`, which is a named list of 
+Finally, both axes and legends share `properties`, which is a named list of
 `props()` that is applied to specified components of the axis or legend. For
-axes, you can set the properties of the ticks (or majorTicks and minorTicks 
-separately), the labels and axis. For legends, you can set properties of the 
-title, label, symbols (for categorical scales), gradient (for continuous 
+axes, you can set the properties of the ticks (or majorTicks and minorTicks
+separately), the labels and axis. For legends, you can set properties of the
+title, label, symbols (for categorical scales), gradient (for continuous
 scales), and legend.
 
 Currently, if you're using mulitple scales, you'll need to adjust properties to make
 sure that your legends don't overlap.
 
 ```R
-ggvis(mtcars, props(x ~ wt, y ~ mpg), 
+ggvis(mtcars, props(x ~ wt, y ~ mpg),
   mark_symbol(),
   guide_axis("x", properties = list(
     axis = props(stroke = "red", strokeWidth = 5),
@@ -73,7 +79,7 @@ ggvis(mtcars, props(x ~ wt, y ~ mpg),
 )
 ```
 
-  
+
 ## Axis
 
 ```R
@@ -87,7 +93,7 @@ ggvis(mtcars, props(x ~ wt, y ~ mpg), mark_symbol(),
 ggvis(mtcars, props(x ~ wt, y ~ mpg), mark_symbol(),
   guide_axis("x", title = "Weight", title_offset = 50),
   guide_axis("y", title = "Miles per gallon", title_offset = 50))
-  
+
 ```
 
 ### Tick sizes and padding
@@ -104,14 +110,14 @@ There are five options that control the appearance of ticks:
 
 ```R
 # Change ticks and subdivide with minor ticks
-ggvis(mtcars, props(x ~ wt, y ~ mpg), mark_symbol(), 
+ggvis(mtcars, props(x ~ wt, y ~ mpg), mark_symbol(),
   guide_axis("x", subdivide = 9, values = 1:6),
   guide_axis("y", subdivide = 1, values = seq(10, 34, by = 2))
 )
 
 # Make the minor ticks smaller and the end ticks longer
-ggvis(mtcars, props(x ~ wt, y ~ mpg), mark_symbol(), 
-  guide_axis("x", subdivide = 9, values = 1:6, tick_size_major = 10, 
+ggvis(mtcars, props(x ~ wt, y ~ mpg), mark_symbol(),
+  guide_axis("x", subdivide = 9, values = 1:6, tick_size_major = 10,
     tick_size_minor = 5, tick_size_end = 15, tick_padding = 20)
 )
 ```
@@ -121,7 +127,7 @@ ggvis(mtcars, props(x ~ wt, y ~ mpg), mark_symbol(),
 You can control the placement of the axes with the `orient` argument:
 
 ```R
-ggvis(mtcars, props(x ~ wt, y ~ mpg), mark_symbol(), 
+ggvis(mtcars, props(x ~ wt, y ~ mpg), mark_symbol(),
   guide_axis("x", orient = "top"),
   guide_axis("y", orient = "right")
 )
@@ -130,7 +136,7 @@ ggvis(mtcars, props(x ~ wt, y ~ mpg), mark_symbol(),
 If you want axes on both sides, just add two axes:
 
 ```R
-ggvis(mtcars, props(x ~ wt, y ~ mpg), mark_symbol(), 
+ggvis(mtcars, props(x ~ wt, y ~ mpg), mark_symbol(),
   guide_axis("x", orient = "bottom"),
   guide_axis("x", orient = "top")
 )
@@ -139,31 +145,31 @@ ggvis(mtcars, props(x ~ wt, y ~ mpg), mark_symbol(),
 You can even put multiple scales on one side:
 
 ```R
-ggvis(mtcars, props(x ~ wt, y ~ mpg), mark_symbol(), 
+ggvis(mtcars, props(x ~ wt, y ~ mpg), mark_symbol(),
   guide_axis("x"),
   guide_axis("x", offset = 40, grid = FALSE)
 )
 ```
 
-This is probably more useful if you have multiple x or y position scales, but 
-I've already discussed that enough times in these vignettes given how much I 
+This is probably more useful if you have multiple x or y position scales, but
+I've already discussed that enough times in these vignettes given how much I
 dislike them.
 
 
 ## Legends
 
 
-### Combining legends 
+### Combining legends
 
-Unlike ggplot2, by default, ggvis will not combine scales based on the same 
+Unlike ggplot2, by default, ggvis will not combine scales based on the same
 underlying variables into a single legend. Instead you must do this yourself
 by supplying the name of multiple scales to one legend:
-  
+
 ```R
 mtcars$cyl <- ordered(mtcars$cyl)
-ggvis(mtcars, props(x ~ mpg, y ~ wt, size ~ cyl, fill ~ cyl), 
+ggvis(mtcars, props(x ~ mpg, y ~ wt, size ~ cyl, fill ~ cyl),
   mark_symbol())
-ggvis(mtcars, props(x ~ mpg, y ~ wt, size ~ cyl, fill ~ cyl), 
+ggvis(mtcars, props(x ~ mpg, y ~ wt, size ~ cyl, fill ~ cyl),
   mark_symbol(),
   guide_legend(size = "size", fill = "fill"))
 ```
