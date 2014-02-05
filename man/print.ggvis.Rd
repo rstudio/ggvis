@@ -5,13 +5,13 @@
 \title{View in a ggvis plot in the browser.}
 \usage{
 \method{print}{ggvis}(x, dynamic = NA, spec = getOption("ggvis.print_spec",
-  FALSE), ...)
+  FALSE), id = rand_id("plot_"), ...)
 
 view_static(x, renderer = getOption("ggvis.renderer", default = "canvas"),
-  launch = interactive())
+  launch = interactive(), id = rand_id("plot_"))
 
 view_dynamic(x, renderer = getOption("ggvis.renderer", default = "canvas"),
-  launch = TRUE, port = NULL)
+  launch = TRUE, port = NULL, id = rand_id("plot_"))
 }
 \arguments{
   \item{x}{A ggvis object.}
