@@ -2,7 +2,12 @@
 \alias{linked_brush}
 \title{Create a linked brush object}
 \usage{
-linked_brush(keys, fill = "red")
+linked_brush(keys = NULL, fill = "red")
+}
+\arguments{
+  \item{keys}{vector of all possible keys, if known.}
+
+  \item{fill}{brush colour}
 }
 \description{
 Create a linked brush object

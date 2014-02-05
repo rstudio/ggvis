@@ -1,5 +1,8 @@
 #' Create a linked brush object
 #'
+#' @param keys vector of all possible keys, if known.
+#' @param fill brush colour
+#' @export
 #' @examples
 #' lb <- linked_brush(keys = 1:nrow(mtcars))
 #' qvis(mtcars, ~disp, ~mpg, fill := lb$fill_prop(), size.brush := 400) + lb$brush_handler()
@@ -7,7 +10,7 @@
 #' ggvis(mtcars, props(x = ~disp, y = ~mpg, fill := lb$fill_prop())) +
 #'   mark_point() +
 #'   lb$brush_handler()
-linked_brush <- function(keys, fill = "red") {
+linked_brush <- function(keys = NULL, fill = "red") {
   LinkedBrush(keys = keys, fill = fill)
 }
 
