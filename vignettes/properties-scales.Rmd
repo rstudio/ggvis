@@ -6,27 +6,24 @@
 ```{r, echo = FALSE, message = FALSE}
 library(knitr)
 suppressPackageStartupMessages(library(ggvis))
-opts_chunk$set(comment = "#>", error = TRUE, tidy = FALSE)
-opts_knit$set(
-  stop_on_error = 0L
-)
+opts_chunk$set(comment = "#>", error = FALSE, tidy = FALSE)
 ```
 
 # Properties and scales
 
-Understanding how properties and scales work in ggvis an important step to 
+Understanding how properties and scales work in ggvis an important step to
 mastering basic static plots, and is also necessary for great interactive
 graphics.
 
 In this chapter, you will learn:
 
-* the convenient `props()` wrapper which makes the most common types of 
+* the convenient `props()` wrapper which makes the most common types of
   property mappings available through a concise interface
-  
+
 * the `prop()` function, which is more verbose, but gives you full control
   over all options
-  
-* what scales do, how properties and scales are connected, how you can 
+
+* what scales do, how properties and scales are connected, how you can
   override the defaults.
 
 Note that unlike ggplot2, scales do not control the appearance of their guides:
@@ -40,19 +37,19 @@ Every ggvis mark is associated with a set of properties that governs how it is d
 geom_point(aes(x = wt, y = mpg), colour = "red", size = 5)
 ```
 
-But it ggvis, everything is a property:
+But in ggvis, everything is a property:
 
 ```{r}
-mark_line(props(x = ~wt, y = ~ mpg, stroke := "red", strokeWidth := 5))
+layer_path(props(x = ~wt, y = ~ mpg, stroke := "red", strokeWidth := 5))
 ```
 
 This section introduces `props()`, a convenient function for creating property objects and binding them to property names. The next chapter shows you how to create the property objects by hand, giving you more control over the specification at the cost of some extra typing.
 
 ### Setting vs mapping
 
-Props distinguishes between setting values to constants and mapping values to a variable based on whether you use `~` (mapping) or `=` (setting). The syntax is designed to remind you that, like a linear model, the properties specification isn't using the value of the variable `wt`, but its name. 
+Props distinguishes between setting values to constants and mapping values to a variable based on whether you use `~` (mapping) or `=` (setting). The syntax is designed to remind you that, like a linear model, the properties specification isn't using the value of the variable `wt`, but its name.
 
-* `props(x = ~displ, y = ~mpg)`: map x to engine displacement and y to miles 
+* `props(x = ~displ, y = ~mpg)`: map x to engine displacement and y to miles
   per gallon
 
 * `props(stroke := "red", fill := "blue")`: set the stroke colour to red and the
@@ -69,28 +66,28 @@ It's also possible provide a scaled constant instead of a raw constant.
 That's useful when you want to label different layers in a plot:
 
 ```{r}
-ggvis(mtcars, props(x = ~wt, y = ~mpg)) + 
-  mark_symbol() + 
-  layer_smooth(props(stroke = "lm"), method = "lm") + 
+ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
+  layer_point() +
+  layer_smooth(props(stroke = "lm"), method = "lm") +
   layer_smooth(props(stroke = "loess"))
 ```
 
-(Note this isn't currently supported in ggvis because of a limitation 
+(Note this isn't currently supported in ggvis because of a limitation
 of vega. See https://github.com/rstudio/ggvis/issues/29 for progress.)
 
 ### Valid properties
 
-Not all marks support all properties. The complete list of all properties is 
+Not all marks support all properties. The complete list of all properties is
 available in `?marks`, and mark functions will check that you've supplied them
 valid properties, and will endeavour to provide you a helpful suggestion:
 
 ```{r, eval = FALSE}
-mark_line(props(strke = ~cyl))
+layer_line(props(strke = ~cyl))
 # Error: Unknown properties: strke.
 # Did you mean: stroke?
 ```
 
-Note that properties supplied to `ggvis` or `node` can't be checked 
+Note that properties supplied to `ggvis` or `node` can't be checked
 automatically on creation, because they may be modified by other nodes along
 the pipeline (or the node structure of the graph, including the marks, might
 be changed after plot creation). These will only be checked once the plot
@@ -98,10 +95,10 @@ is rendered.
 
 ```{r, eval = FALSE}
 # No error on creation
-p <- ggvis(mtcars, props(x = ~disp, y = ~mpg, strke = ~cyl), mark_symbol())
+p <- ggvis(mtcars, props(x = ~disp, y = ~mpg, strke = ~cyl), layer_point())
 # Error when attempt to display it
 print(p)
-# Error message currently not informative: see 
+# Error message currently not informative: see
 # https://github.com/rstudio/ggvis/issues/31 for progress
 ```
 
@@ -113,13 +110,13 @@ the local environment:
 ```{r}
 df <- data.frame(x = 1:10)
 f <- function(n) {
-  ggvis(df, props(x = ~x, y = ~x ^ n), mark_line())
+  ggvis(df, props(x = ~x, y = ~x ^ n), layer_path())
 }
 f(1)
 f(2)
 ```
 
-Technically, ggvis uses the environment captured by the formula when it is 
+Technically, ggvis uses the environment captured by the formula when it is
 created, which may be important if you're generating formulas in one function
 and using them in another. You can always override the environment by calling
 `prop()` and supplying the `env` argument.
@@ -134,8 +131,8 @@ A prop has two key properties:
 
 * the scale: if scaled, a vega scale is in charge of converting the data
   value to something that makes sense as a visual property. If unscaled, the
-  value is used as is. 
-  
+  value is used as is.
+
   Unscaled is the equivalent of using `scale_identity` in ggplot2.
 
 Type        | Scaled | Common use | In props
@@ -173,53 +170,53 @@ prop(parse(text = expr)[[1]])
 
 ## Properties -> scales
 
-Like in ggplot2, scales control the mapping between data values and values 
-interpreted by the drawing device. Scales are added to the top-level plot 
+Like in ggplot2, scales control the mapping between data values and values
+interpreted by the drawing device. Scales are added to the top-level plot
 specification and are usually created with `dscale` (short for default scale):
 
 ```{r}
 # Override the default data limits:
-ggvis(mtcars, props(x = ~disp, y = ~wt)) + 
-  mark_symbol() +
+ggvis(mtcars, props(x = ~disp, y = ~wt)) +
+  layer_point() +
   dscale("x", "numeric", domain = c(50, 500), nice = FALSE) +
-  dscale("y", "numeric", domain = c(0, 6), nice = FALSE) 
+  dscale("y", "numeric", domain = c(0, 6), nice = FALSE)
 ```
 
-Compared to ggplot2, ggvis has far fewer scales (3 vs 70), with each function 
-doing much more. The three basic scales in ggvis, corresponding to the 
+Compared to ggplot2, ggvis has far fewer scales (3 vs 70), with each function
+doing much more. The three basic scales in ggvis, corresponding to the
 [three basic vega scales][vega-scales] are:
 
 * `scale_quantitative`: for quantitative, numeric values
 * `scale_ordinal`: for qualitative, categorical values
 * `scale_time`: for date/time values
 
-The vega scales are in turn relatively simple wrappers for 
-[D3 scales][d3-scales] so if you can't find the details in these docs, or in 
-the vega docs, you may need to look in the D3 docs. Fortunately the arguments 
+The vega scales are in turn relatively simple wrappers for
+[D3 scales][d3-scales] so if you can't find the details in these docs, or in
+the vega docs, you may need to look in the D3 docs. Fortunately the arguments
 are by and large named the same across all three systems, although ggvis uses
 underscores while vega and D3 use camelCase.
 
 Each (scaled) property needs a scale. By default, scales are added so that
-every scaled property gets a scale with the same name as the property (with a 
-few exceptions `y2` to `y`, `x2` to `x`, `fillOpacity` and `strokeOpacity` to 
+every scaled property gets a scale with the same name as the property (with a
+few exceptions `y2` to `y`, `x2` to `x`, `fillOpacity` and `strokeOpacity` to
 `opacity` and so on.). See `?add_default_scales` for details.
 
 ### Scale arguments
 
 The scales share the following arguments:
 
-* `name`: a string identifier for the scale. By default, this is the name of the 
-  property it is associated with - i.e. the scale for the x values is called 
+* `name`: a string identifier for the scale. By default, this is the name of the
+  property it is associated with - i.e. the scale for the x values is called
   "x", but it doesn't have to be, and the examples below show some cases where
   you need this extra flexibility.
-  
+
 * `domain`: the input data values to the scale. If left blank, these will be
-  learned from the properties that use this scale. But you can override it 
-  if you want to expand or restrict, or you want to match domains across 
+  learned from the properties that use this scale. But you can override it
+  if you want to expand or restrict, or you want to match domains across
   multiple plots so that they're easier to compare. `domain` is equivalent to
   `limits` in R graphics. For quantiative scales, you can use a missing value
   to only constrain one side of the domain.
-  
+
 * `range`: the output visual values from the scale. For quantiative scales this
   is usually a vector of length two, for ordinal scales, it's a vector the same
   length as the domain. Vega interprets some special values: "width", "height",
@@ -229,16 +226,16 @@ The scales share the following arguments:
 
 `scale_quantitative` and `scale_time` also share a few other properties:
 
-* `nice`: use nice axis labels? The algorithm is described in the 
+* `nice`: use nice axis labels? The algorithm is described in the
   [D3 document][d3-nice]
 
-* `zero`: include a zero in the scale? 
+* `zero`: include a zero in the scale?
 
 * `clamp`: clamp any values outside the domain to the min/max?
 
 ### Default scales
 
-Because the range of a scale is usually determined by the type of variable, 
+Because the range of a scale is usually determined by the type of variable,
 ggvis provides the `dscale` function to automatically retrieve a default scale
 given a property name and variable type:
 
@@ -265,11 +262,11 @@ For example, imagine you wanted to use the font of a label to represent some
 data. There's no default scale for font, but you could create one yourself:
 
 ```{r}
-df <- data.frame(x = runif(5), y = runif(5), 
+df <- data.frame(x = runif(5), y = runif(5),
   labels = c("a", "b", "b", "a", "b"))
-ggvis(df, props(x = ~x, y = ~y, text := ~labels, font = ~labels, 
-    fontSize := 40)) + 
-  mark_text() +
+ggvis(df, props(x = ~x, y = ~y, text := ~labels, font = ~labels,
+    fontSize := 40)) +
+  layer_text() +
   scale_ordinal("font", range = c("Helvetica Neue", "Times New Roman"))
 ```
 
@@ -277,38 +274,38 @@ Note the use of `text := ~labels`: we don't want to scale the labels - they alre
 
 ### Multiple scales for one property
 
-Generally, you will override the default name of a scale in order to use 
+Generally, you will override the default name of a scale in order to use
 more scales than the default. You could do this in order to create a dual-axis
 chart (which is a bad idea - read [this paper][dual-axis] for more details).
 If you do this, you will also need to add a scale object.
 
 ```{r}
 ggvis(mtcars, props(y = ~mpg)) +
-  mark_symbol(props(x = prop(~disp, scale = "xdisp"))) +
-  mark_symbol(props(x = prop(~wt, scale = "xwt"), fill := "blue")) +
+  layer_point(props(x = prop(~disp, scale = "xdisp"))) +
+  layer_point(props(x = prop(~wt, scale = "xwt"), fill := "blue")) +
   dscale("x", "numeric", name = "xdisp") +
   dscale("x", "numeric", name = "xwt") +
   guide_axis("x", "xdisp", orient = "bottom") +
-  guide_axis("x", "xwt", orient = "bottom", offset = 20, properties = 
+  guide_axis("x", "xwt", orient = "bottom", offset = 20, properties =
     list(labels = props(fill := "blue")))
 ```
 
 ### Multiple properties for one scale
 
 You could also force ggplot2 to use the same scale for properties that would
-otherwise use different scales. I'm not sure of a useful example of this, 
+otherwise use different scales. I'm not sure of a useful example of this,
 except to force `stroke` and `fill` to use the same scale:
 
 ```{r}
 df <- data.frame(x = 1:5, y = 1:5, a = runif(5), b = -runif(5))
 p <- props(x = ~x, y = ~y, stroke = ~a, fill = ~b, strokeWidth := 5, size := 1000)
-ggvis(df, p, mark_symbol(),
+ggvis(df, p, layer_point(),
   guide_legend(fill = "stroke", properties = list(legend = props(y := 50)))
 )
 
-p2 <- props(x = ~x, y = ~y, stroke = ~a, fill = prop(~b, scale = "stroke"), 
+p2 <- props(x = ~x, y = ~y, stroke = ~a, fill = prop(~b, scale = "stroke"),
   strokeWidth := 5, size := 1000)
-ggvis(df, p2, mark_symbol())
+ggvis(df, p2, layer_point())
 ```
 
 In this case we don't need to manually add the correct scale, because ggvis
@@ -316,14 +313,14 @@ has detected it for us automatically.
 
 ### Property values
 
-Vega renders either svg or canvas, but fortunately most properties are shared 
-across svg or canvas. The following list describes what the property values 
+Vega renders either svg or canvas, but fortunately most properties are shared
+across svg or canvas. The following list describes what the property values
 mean and the set of allowable values.
 
-* `x`, `x2`, `width`, `y`, `y2`, `height`, `strokeWidth`, `innerRadius`, 
-  `outerRadius`: pixels.  Note that by convention (0, 0) is located in the 
+* `x`, `x2`, `width`, `y`, `y2`, `height`, `strokeWidth`, `innerRadius`,
+  `outerRadius`: pixels.  Note that by convention (0, 0) is located in the
   top-left, so y values are relative to the top of the screen and x values
-  are relative to the left of the screen (as opposed to R where (0,0) is on 
+  are relative to the left of the screen (as opposed to R where (0,0) is on
   the bottom right). Pixel positions should be greater than 0.
 
 * `size`: area, in pixels. Greater than 0.
@@ -334,13 +331,13 @@ mean and the set of allowable values.
 
 * `startAngle`, `endAngle`: angle in radians
 
-* `interpolate`: "linear", "step-before", "step-after", "basis", "basis-open", 
+* `interpolate`: "linear", "step-before", "step-after", "basis", "basis-open",
   "cardinal", "cardinal-open", "monotone".  See the [D3 docs][interpolate-docs]
-  for what they mean. 
-  
-* `tension`: a number between 0 and 1 that controls a tension parameter to 
+  for what they mean.
+
+* `tension`: a number between 0 and 1 that controls a tension parameter to
   some interpolants.See the [D3 docs][tension-docs] for more details.
-  
+
 * `url`: a url.
 
 * `align`: "left", "right", "center".
@@ -353,9 +350,9 @@ mean and the set of allowable values.
 
 * `angle`: an angle in degrees
 
-* `font`: the name of a font available from the browser. 
+* `font`: the name of a font available from the browser.
 
-* `fontWeight`: a font weight, as a string ("normal", "bold", "lighter", 
+* `fontWeight`: a font weight, as a string ("normal", "bold", "lighter",
   "bolder") or number (100, 200, 300, 400, 500, 600, 700, 800, 900).
 
 * `fontStyle`: "normal", "italic", "oblique"
