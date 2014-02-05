@@ -57,7 +57,7 @@
 qvis <- function(data, ..., layers = character()) {
   args <- dots(...)
 
-  props_args <- qvis_default_names(args[is_props(args)])
+  props_args <- props_default_names(args[is_props(args)])
   props <- props(.props = props_args)
 
   scale <- NULL
@@ -98,7 +98,7 @@ init_layer <- function(name, args = list()) {
   stop("Couldn't find layer called ", fname, call. = FALSE)
 }
 
-qvis_default_names <- function(args) {
+props_default_names <- function(args) {
   new_names <- names2(args)
 
   missing <- new_names == "" & !vapply(args, uses_colon_equals, logical(1))

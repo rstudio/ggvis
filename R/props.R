@@ -74,6 +74,9 @@
 #' @template properties
 #' @param ... A set of name-value pairs. The name should be a valid vega
 #'   property.
+#'
+#'   The first two unnamed components are taken to be \code{x} and \code{y}.
+#'   Any additional unnamed components will raise an error.
 #' @param .props When calling \code{props} from other functions, you'll
 #'   often have a list of quoted function functions. You can pass that function
 #'   to the \code{.props} argument instead of messing around with
@@ -110,7 +113,7 @@
 #' props(.props = list(quote(x := ~mpg)))
 props <- function(..., .props = NULL, inherit = TRUE) {
   check_empty_args()
-  args <- c(dots(...), .props)
+  args <- props_default_names(c(dots(...), .props))
   env <- parent.frame()
 
   # If named, use regular evaluation and scale
