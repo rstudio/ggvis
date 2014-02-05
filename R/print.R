@@ -225,8 +225,9 @@ view_plot <- function(url, height) {
 # The knitr chunk must use the results="asis" option for this to work properly
 knitr_print <- function(x, dynamic = NA, id = rand_id("plot_"), ...) {
   if (is.na(dynamic)) dynamic <- is.dynamic(x) && interactive()
-  if (is.dynamic(x)) {
-    stop("Can't print dynamic/interactive plots in a knitr document")
+  if (dynamic) {
+    warning("Can't output dynamic/interactive ggvis plots in a knitr document.\n",
+      "Using a static version of plot, so results may not look right.")
   }
 
   spec <- as.vega(x, dynamic = FALSE)
