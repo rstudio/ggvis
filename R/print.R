@@ -21,7 +21,8 @@
 #' @method print ggvis
 #' @export
 print.ggvis <- function(x, dynamic = NA,
-                        spec = getOption("ggvis.print_spec", FALSE), ...) {
+                        spec = getOption("ggvis.print_spec", FALSE),
+                        id = rand_id("plot_"), ...) {
 
   set_last_vis(x)
 
@@ -33,9 +34,9 @@ print.ggvis <- function(x, dynamic = NA,
   if (is.na(dynamic)) dynamic <- is.dynamic(x) && interactive()
 
   if (dynamic) {
-    view_dynamic(x, ...)
+    view_dynamic(x, id = id, ...)
   } else {
-    view_static(x, ...)
+    view_static(x, id = id, ...)
   }
 }
 
@@ -58,7 +59,8 @@ show_spec <- function(x, pieces) {
 #' @importFrom whisker whisker.render
 view_static <- function(x,
                         renderer = getOption("ggvis.renderer", default="canvas"),
-                        launch = interactive()) {
+                        launch = interactive(),
+                        id = rand_id("plot_")) {
 
   if (!(renderer %in% c("canvas", "svg")))
     stop("renderer must be 'canvas' or 'svg'")
@@ -70,8 +72,6 @@ view_static <- function(x,
 
   spec <- as.vega(x, dynamic = FALSE)
   vega_json <- toJSON(spec, pretty = TRUE)
-
-  plot_id <- "plot1"
 
   template <- paste(readLines(system.file('index.html', package='ggvis')),
     collapse='\n')
@@ -97,11 +97,11 @@ view_static <- function(x,
   )
 
   body <- tagList(
-    ggvis_output(plot_id, shiny = FALSE),
+    ggvis_output(id, shiny = FALSE),
     tags$script(type = "text/javascript",
       paste0('
         var spec = ', vega_json, ';
-        var plot = ggvis.getPlot("', plot_id, '");
+        var plot = ggvis.getPlot("', id, '");
         plot.parseSpec(spec);
       ')
     )
@@ -163,26 +163,24 @@ copy_www_resources <- function(destdir) {
 #' @importFrom shiny basicPage uiOutput mainPanel tags observe runApp stopApp renderUI
 view_dynamic <- function(x,
                          renderer = getOption("ggvis.renderer", default="canvas"),
-                         launch = TRUE, port = NULL) {
+                         launch = TRUE, port = NULL, id = rand_id("plot_")) {
 
   if (!(renderer %in% c("canvas", "svg")))
     stop("renderer must be 'canvas' or 'svg'")
-
-  plot_id <- "plot1"
 
   # Find number of control elements for the plot
   n_controls <- length(controls(x))
 
   if (n_controls == 0) {
-    ui <- basicPage(ggvis_output(plot_id, shiny = TRUE))
+    ui <- basicPage(ggvis_output(id, shiny = TRUE))
 
   } else {
     ui <- sidebarBottomPage(
       sidebarBottomPanel(
-        ggvisControlOutput("ggvis_controls", plot_id)
+        ggvisControlOutput("ggvis_controls", id)
       ),
       mainTopPanel(
-        ggvis_output(plot_id, shiny = TRUE)
+        ggvis_output(id, shiny = TRUE)
       )
     )
   }
@@ -190,7 +188,7 @@ view_dynamic <- function(x,
   server <- function(input, output, session) {
     r_gv <- reactive(x)
     # Set up observers for the spec and the data
-    observe_ggvis(r_gv, plot_id, session, renderer)
+    observe_ggvis(r_gv, id, session, renderer)
 
     # User interface elements (in the sidebar). These must be added dynamically
     # (instead of being rendered statically in ui) because they are unique to
