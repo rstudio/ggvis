@@ -6,45 +6,45 @@
 ```{r, echo = FALSE, message = FALSE}
 library(knitr)
 library(ggvis)
-opts_chunk$set(comment = "#>", error = TRUE, tidy = FALSE)
+opts_chunk$set(comment = "#>", error = FALSE, tidy = FALSE)
 ```
 
 # Marks
 
-The ggvis mark is responsible for the drawing of the data. Each type of mark 
+The ggvis mark is responsible for the drawing of the data. Each type of mark
 effectively represents a different type of geometric object, and so in some
 sense they are the equivalent of geoms in ggplot2. However, there are a far
 fewer marks than geoms because marks tend to be more capable, and because they
 never perform any statistical transformation.
 
-`ggvis` exposes 
+`ggvis` exposes
 [five vega marks](https://github.com/trifacta/vega/wiki/Marks#color-references)
 that have very similar ggplot2 equivalents:
 
-* `mark_area` = `geom_ribbon`, `geom_area`
-* `mark_line` = `geom_path`, `geom_line` 
-* `mark_rect` = `geom_rect`, `geom_bar`, `geom_tile`
-* `mark_symbol` = `geom_point`
-* `mark_text` = `geom_text`
+* `layer_area` = `geom_ribbon`, `geom_area`
+* `layer_path` = `geom_path`, `geom_line`
+* `layer_rect` = `geom_rect`, `geom_bar`, `geom_tile`
+* `layer_point` = `geom_point`
+* `layer_text` = `geom_text`
 
-All marks start with `mark_` so that you can always use tab autocomplete to 
+All marks start with `layer_` so that you can always use tab autocomplete to
 remind yourself of the options.
 
 There are two marks that have no equivalent in ggplot2:
 
-* `mark_arc` which allows you to draw arcs. You could accomplish something
+* `layer_arc` which allows you to draw arcs. You could accomplish something
   similar in ggplot2 with `geom_rect()` with `coord_polar()` but it was
   relatively inflexible and required contorting your brain a bit.
-  
-* `mark_image` allows you to place arbitrary images on a plot. There is 
-  currently little additional support for this in ggvis, so you'll need to 
+
+* `layer_image` allows you to place arbitrary images on a plot. There is
+  currently little additional support for this in ggvis, so you'll need to
   make sure the images are publicly available somewhere. If you've found
-  a compelling use-case for `mark_image`, let us know so we can consider 
+  a compelling use-case for `layer_image`, let us know so we can consider
   how to better support it.
 
 There are two vega marks that are not currently implemented in ggvis:
 
-* Support for the group mark will be added in future major release that will 
+* Support for the group mark will be added in future major release that will
   add support for facetting/subplots)
 
 * I can't currently see any use for the path mark, which takes svg path
@@ -52,87 +52,87 @@ There are two vega marks that are not currently implemented in ggvis:
 
 ## Creating a mark
 
-All marks take two optional arguments which are only needed if you want to 
+All marks take two optional arguments which are only needed if you want to
 override the values inherited from parent:
 
 * `props`, a `props()` object used to add any custom override for this layer
 * `data`, an optional dataset to override the data inherited from the parent
 
-For example, the following two plots are equivalent. In the first one, the 
-data and props are defined at the top level and inherited by the mark, and in 
-the second, they are defined in the mark itself. Note that the order of the 
-argumetns to `ggvis()` and the mark function are different: this is because 
+For example, the following two plots are equivalent. In the first one, the
+data and props are defined at the top level and inherited by the mark, and in
+the second, they are defined in the mark itself. Note that the order of the
+argumetns to `ggvis()` and the mark function are different: this is because
 you'll usually set the data in top-level plot object, and usually only override
 props in the mark.
 
 ```{r}
 ggvis(mtcars, props(x = ~wt, y = ~mpg, stroke := "red")) +
-  mark_symbol()
+  layer_point()
 
-ggvis() + 
-  mark_symbol(data = mtcars, props(x = ~wt, y = ~mpg, stroke := "red"))
+ggvis() +
+  layer_point(data = mtcars, props(x = ~wt, y = ~mpg, stroke := "red"))
 ```
 
-In terms of the data hierarchy, marks are leaves: they can not have any 
+In terms of the data hierarchy, marks are leaves: they can not have any
 children. See the data hierarchy vignette for more details.
 
 ## Mark details
 
 The following sections describe particular details related to individual marks.
 
-### `mark_rect`
+### `layer_rect`
 
-If you have an ordinal scale, set width and/or height to `prop_band()` to 
+If you have an ordinal scale, set width and/or height to `prop_band()` to
 occupy the complete band corresponding to that categorical value.
 
 ```{r, eval = FALSE}
 hec <- as.data.frame(xtabs(Freq ~ Hair + Eye, HairEyeColor))
 
 ggvis(hec, props(x = ~Hair, y = ~Eye, fill = ~Freq),
-  mark_rect(props(width := band(), y := band())))
+  layer_rect(props(width := band(), y := band())))
 ```
 
-### `mark_line`
+### `layer_path`
 
-`mark_line` produces lines if fill is empty, and polygons if it's set to a 
+`layer_path` produces lines if fill is empty, and polygons if it's set to a
 value.
 
 ```{r}
 df <- data.frame(x = c(1, 1, 2, 2), y = c(2, 1, 1, 2))
-ggvis(df, props(x = ~x, y = ~y, stroke := "red"), mark_line())
+ggvis(df, props(x = ~x, y = ~y, stroke := "red"), layer_path())
 # Add a fill colour to make it a polygon
-ggvis(df, props(x = ~x, y = ~y, fill := "red"), mark_line())
+ggvis(df, props(x = ~x, y = ~y, fill := "red"), layer_path())
 ```
 
-You can not currently set the component of lines to different colours: 
+You can not currently set the component of lines to different colours:
 track progress at https://github.com/trifacta/vega/issues/122.
 
 To create a line that spans the complete range of the plot, use `prop_group()`:
 
 ```{r, eval = FALSE}
 ggvis()
-  mark_symbol(props(x = ~disp, y = ~wt), mtcars) + 
-  mark_line(props(y = ~mean(mtcars$wt), x := 0, x2 := prop_group()) + 
-  mark_line(props(x = ~mean(mtcars$disp), y := 0, y2 := prop_group())
+  layer_point(props(x = ~disp, y = ~wt), mtcars) +
+  layer_path(props(y = ~mean(mtcars$wt), x := 0, x2 := prop_group()) +
+  layer_path(props(x = ~mean(mtcars$disp), y := 0, y2 := prop_group())
 ```
 
-Note that this won't work because `prop_group()` hasn't been written yet: track 
+Note that this won't work because `prop_group()` hasn't been written yet: track
 progress at https://github.com/rstudio/ggvis/issues/38.
 
-### `mark_area`
+### `layer_area`
 
 You need to set two of `y`, `y2` and `height`:
 
 ```{r}
 df <- data.frame(x = 1:10, y = (1:10) ^ 2)
-ggvis(df, props(x = ~x, y = ~y, y2 := 0), mark_area())
+ggvis(df, props(x = ~x, y = ~y, y2 := 0), layer_area())
 
 # Set height in pixels
-ggvis(df, props(x = ~x, y = ~y, height := 20), mark_area())
+ggvis(df, props(x = ~x, y = ~y, height := 20), layer_area())
 ```
 
 Height is only suitable for constant, because it does not have an obvious scale
-associated with it. You could force height to use the `y` scale, but that 
+associated with it. You could force height to use the `y` scale, but that
 doesn't work - the area hangs below the y line, and increasing the value of
 height makes the area narrower! What's going on is that the underlying graphics
 device has (0, 0) in the top-left corner, and so the y-scale is upside down. As
@@ -140,13 +140,13 @@ you increase height, it's mapped like a y variable so bigger values are further
 away.
 
 ```{r}
-ggvis(df, props(x = ~x, y = ~y, height := prop(80, scale = "y"))) + 
-  mark_area()
-  
+ggvis(df, props(x = ~x, y = ~y, height := prop(80, scale = "y"))) +
+  layer_area()
+
 df <- data.frame(x = 1:10, y = (1:10) ^ 2)
-ggvis(df, props(x = ~x, y = ~y), 
-  mark_area(props(height = prop(input_slider(0, 100), scale = "y"))),
-  mark_line(props(stroke := "red", strokeWidth := 10))
+ggvis(df, props(x = ~x, y = ~y),
+  layer_area(props(height = prop(input_slider(0, 100), scale = "y"))),
+  layer_path(props(stroke := "red", strokeWidth := 10))
 )
 ```
 
@@ -154,19 +154,19 @@ If you want to set the height in data units, you need to
 compute the offsets yourself:
 
 ```{r}
-ggvis(df, props(x = ~x, y = ~y - 2, y2 = ~y + 2), mark_area())
+ggvis(df, props(x = ~x, y = ~y - 2, y2 = ~y + 2), layer_area())
 ```
 
 ## Grouping
 
-In ggplot2, grouping was a special aesthetic; in ggvis, grouping is a data 
-transformation: use `by_group()` to split your data up into pieces given a 
+In ggplot2, grouping was a special aesthetic; in ggvis, grouping is a data
+transformation: use `by_group()` to split your data up into pieces given a
 specified variable:
 
 ```{r}
 ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
-  mark_symbol() + 
-  mark_line(data = by_group(cyl))
+  layer_point() +
+  layer_path(data = by_group(cyl))
 ```
 
 ## Layers
@@ -174,11 +174,11 @@ ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
 In ggvis marks strictly represent drawing; a layer combines a mark with a
 transformation, and often a set of default props. For example:
 
-* `layer_histogram` = `mark_rect` + `transform_bin`
-* `layer_freqpoly` = `mark_line` + `transform_bin`
-* `layer_smooth` = (`mark_line` + `mark_area`) + `transform_bin`
+* `layer_histogram` = `layer_rect` + `transform_bin`
+* `layer_freqpoly` = `layer_path` + `transform_bin`
+* `layer_smooth` = (`layer_path` + `layer_area`) + `transform_bin`
 
-All layers start with `layer_` and the source will typically be simple so is 
+All layers start with `layer_` and the source will typically be simple so is
 worth reading:
 
 ```{r}
@@ -192,45 +192,45 @@ your own layer function. Typically, the first argument should be `props` and
 
 ## Conversion from ggplot2
 
-The following list provides a conversion from ggplot2 geoms to vega marks. 
+The following list provides a conversion from ggplot2 geoms to vega marks.
 However, because ggvis currently provides few transformations, many translations
-don't currently exists - but they are on the roadmap and will be added over 
+don't currently exists - but they are on the roadmap and will be added over
 time.
 
 * `geom_abline`
-* `geom_area` = `mark_area` with `props(y ~ 0)`
-* `geom_bar` = `mark_rect` with `props(y ~ 0, width = band())`
-* `geom_bin2d` = `mark_rect` + `transform_bin2d`
+* `geom_area` = `layer_area` with `props(y ~ 0)`
+* `geom_bar` = `layer_rect` with `props(y ~ 0, width = band())`
+* `geom_bin2d` = `layer_rect` + `transform_bin2d`
 * `geom_blank`
 * `geom_boxplot`
 * `geom_contour`
 * `geom_crossbar`
-* `geom_density` = `mark_line` + `transform_density`
+* `geom_density` = `layer_path` + `transform_density`
 * `geom_density2d`
 * `geom_dotplot`
-* `geom_errorbar` 
+* `geom_errorbar`
 * `geom_errorbarh`
 * `geom_freqpoly`
 * `geom_hex`
-* `geom_histogram` = `layer_histogram` = `mark_bar` + `transform_bin`
-* `geom_hline` =  = `mark_line` + `props(x2 ~ proo_group("width"))`.
+* `geom_histogram` = `layer_histogram` = `layer_bar` + `transform_bin`
+* `geom_hline` =  = `layer_path` + `props(x2 ~ proo_group("width"))`.
 * `geom_jitter`
-* `geom_line` = `mark_line` + `transform_sort`
+* `geom_line` = `layer_path` + `transform_sort`
 * `geom_linerange`
 * `geom_map`
-* `geom_path` = `mark_line`
-* `geom_point` = `mark_symbol`
-* `geom_pointrange` 
-* `geom_polygon` = `mark_line`
-* `geom_quantile` = `mark_line` + `transform_quantreg`
+* `geom_path` = `layer_path`
+* `geom_point` = `layer_point`
+* `geom_pointrange`
+* `geom_polygon` = `layer_path`
+* `geom_quantile` = `layer_path` + `transform_quantreg`
 * `geom_raster`
-* `geom_rect` = `mark_rect`
-* `geom_ribbon` = `mark_area`
+* `geom_rect` = `layer_rect`
+* `geom_ribbon` = `layer_area`
 * `geom_rug`
 * `geom_segment`
-* `geom_smooth` = `layer_smooth` = `mark_area` + `mark_line` + `transform_smooth`
-* `geom_step` = `mark_line` + `transform_step`
-* `geom_text` = `mark_text`
-* `geom_tile` = `mark_rect` + `props(width ~ prop_band(), height ~ prob_band())`
+* `geom_smooth` = `layer_smooth` = `layer_area` + `layer_path` + `transform_smooth`
+* `geom_step` = `layer_path` + `transform_step`
+* `geom_text` = `layer_text`
+* `geom_tile` = `layer_rect` + `props(width ~ prop_band(), height ~ prob_band())`
 * `geom_violin`
-* `geom_vline` = `mark_line` + `props(y2 ~ prop_group("height"))`
+* `geom_vline` = `layer_path` + `props(y2 ~ prop_group("height"))`
