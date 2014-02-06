@@ -19,6 +19,9 @@ renderControls(r_gv, session = NULL)
   dynamic and interactive plots, this should be TRUE;
   otherwise FALSE.}
 
+  \item{minify}{If \code{TRUE}, use minified version of JS
+  and CSS files. This can be useful for debugging.}
+
   \item{r_gv}{A reactive expression which returns a ggvis
   object.}
 

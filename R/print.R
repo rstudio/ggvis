@@ -17,7 +17,7 @@
 #' @param launch If \code{TRUE}, launch this web page in a browser or Rstudio.
 #' @param port the port on which to start the shiny app. If NULL (the default),
 #'   Shiny will select a random port.
-#' @param minify If \code{TRUE}, use minified version of JS and CSS files? This
+#' @param minify If \code{TRUE}, use minified version of JS and CSS files. This
 #'   can be useful for debugging.
 #' @keywords internal
 #' @method print ggvis

@@ -44,6 +44,8 @@ NULL
 #' @param plot_id unique identifier to use for the div containing the ggvis plot.
 #' @param shiny Should this include headers for Shiny? For dynamic and
 #'   interactive plots, this should be TRUE; otherwise FALSE.
+#' @param minify If \code{TRUE}, use minified version of JS and CSS files. This
+#'   can be useful for debugging.
 #' @export
 ggvis_output <- function(plot_id, shiny = TRUE, minify = TRUE) {
   container <-
