@@ -5,7 +5,7 @@
 \alias{shiny}
 \title{Connect a ggvis graphic to a shiny app.}
 \usage{
-ggvis_output(plot_id, shiny = TRUE)
+ggvis_output(plot_id, shiny = TRUE, minify = TRUE)
 
 observe_ggvis(r_gv, plot_id, session, ...)
 

@@ -17,12 +17,14 @@
 #' @param launch If \code{TRUE}, launch this web page in a browser or Rstudio.
 #' @param port the port on which to start the shiny app. If NULL (the default),
 #'   Shiny will select a random port.
+#' @param minify If \code{TRUE}, use minified version of JS and CSS files? This
+#'   can be useful for debugging.
 #' @keywords internal
 #' @method print ggvis
 #' @export
 print.ggvis <- function(x, dynamic = NA,
                         spec = getOption("ggvis.print_spec", FALSE),
-                        id = rand_id("plot_"), minjs = TRUE, ...) {
+                        id = rand_id("plot_"), minify = TRUE, ...) {
 
   set_last_vis(x)
 
@@ -32,15 +34,15 @@ print.ggvis <- function(x, dynamic = NA,
   }
 
   if (getOption("knitr.in.progress", FALSE)) {
-    return(knitr_print(x, dynamic, id = id, ...))
+    return(knitr_print(x, dynamic, id = id, minify = minify, ...))
   }
 
   if (is.na(dynamic)) dynamic <- is.dynamic(x) && interactive()
 
   if (dynamic) {
-    view_dynamic(x, id = id, minjs = minjs, ...)
+    view_dynamic(x, id = id, minify = minify, ...)
   } else {
-    view_static(x, id = id, minjs = minjs, ...)
+    view_static(x, id = id, minify = minify, ...)
   }
 }
 
@@ -65,7 +67,7 @@ view_static <- function(x,
                         renderer = getOption("ggvis.renderer", default="canvas"),
                         launch = interactive(),
                         id = rand_id("plot_"),
-                        minjs = TRUE) {
+                        minify = TRUE) {
 
   if (!(renderer %in% c("canvas", "svg")))
     stop("renderer must be 'canvas' or 'svg'")
@@ -73,28 +75,15 @@ view_static <- function(x,
   temp_dir <- tempfile(pattern = "ggvis")
   dir.create(temp_dir)
 
-  copy_www_resources(temp_dir)
-
   spec <- as.vega(x, dynamic = FALSE)
   vega_json <- toJSON(spec, pretty = TRUE)
 
   template <- paste(readLines(system.file('index.html', package='ggvis')),
     collapse='\n')
 
-  head <- tagList(
-    tags$script(src = "lib/jquery-1.9.1.js"),
-    tags$script(src = "lib/jquery-ui/js/jquery-ui-1.10.3.custom.js"),
-    tags$script(charset = "utf-8", src = "lib/d3.js"),
-    tags$script(src = "lib/vega.js"),
-    tags$script(src = "lib/QuadTree.js"),
-    tags$script(src = "lib/lodash.min.js"),
-    tags$script("var lodash = _.noConflict()"),
-    tags$script(src = "js/ggvis.js"),
-    tags$link(rel = "stylesheet", type = "text/css",
-      href = "lib/jquery-ui/css/smoothness/jquery-ui-1.10.3.custom.css"),
-    tags$link(rel = "stylesheet", type = "text/css",
-      href = "css/ggvis.css")
-  )
+  head <- html_head(minify = minify)
+
+  copy_www_resources(head, temp_dir)
 
   body <- tagList(
     ggvis_output(id, shiny = FALSE),
@@ -117,10 +106,10 @@ view_static <- function(x,
   invisible(html_file)
 }
 
-copy_www_resources <- function(destdir) {
+copy_www_resources <- function(head_tags, destdir) {
   # Copies a file/dir from an installed package to the destdir (with path)
   copy_www_file <- function(file, pkg) {
-    src <- system.file("www", file, package = pkg)
+    src <- system.file("www", file, package = "ggvis")
 
     destfile <- file.path(destdir, file)
     parent_dir <- dirname(destfile)
@@ -134,19 +123,12 @@ copy_www_resources <- function(destdir) {
     }
   }
 
-  ggvis_files <- c(
-    "lib/jquery-1.9.1.js",
-    "lib/d3.js",
-    "lib/vega.js",
-    "lib/QuadTree.js",
-    "lib/jquery-ui/js/jquery-ui-1.10.3.custom.js",
-    "lib/jquery-ui",
-    "lib/lodash.min.js",
-    "js/ggvis.js",
-    "css/ggvis.css"
-  )
+  # Extract the needed filenames from the head tags
+  ggvis_files <- unlist(lapply(head_tags, function(tag) {
+    tag$attribs$src %||% tag$attribs$href
+  }))
 
-  lapply(ggvis_files, copy_www_file, pkg = "ggvis")
+  lapply(ggvis_files, copy_www_file)
 }
 
 #' @rdname print.ggvis
@@ -157,7 +139,7 @@ copy_www_resources <- function(destdir) {
 view_dynamic <- function(x,
                          renderer = getOption("ggvis.renderer", default="canvas"),
                          launch = TRUE, port = NULL, id = rand_id("plot_"),
-                         minjs = TRUE) {
+                         minify = TRUE) {
 
   if (!(renderer %in% c("canvas", "svg")))
     stop("renderer must be 'canvas' or 'svg'")
@@ -166,7 +148,7 @@ view_dynamic <- function(x,
   n_controls <- length(controls(x))
 
   if (n_controls == 0) {
-    ui <- basicPage(ggvis_output(id, shiny = TRUE))
+    ui <- basicPage(ggvis_output(id, shiny = TRUE, minify = minify))
 
   } else {
     ui <- sidebarBottomPage(
@@ -213,7 +195,8 @@ view_plot <- function(url, height) {
 
 # Print from within a knitr document.
 # The knitr chunk must use the results="asis" option for this to work properly
-knitr_print <- function(x, dynamic = NA, id = rand_id("plot_"), ...) {
+knitr_print <- function(x, dynamic = NA, id = rand_id("plot_"), minify = TRUE,
+                        ...) {
   if (is.na(dynamic)) dynamic <- is.dynamic(x) && interactive()
   if (dynamic) {
     warning("Can't output dynamic/interactive ggvis plots in a knitr document.\n",
@@ -224,7 +207,7 @@ knitr_print <- function(x, dynamic = NA, id = rand_id("plot_"), ...) {
   vega_json <- toJSON(spec, pretty = TRUE)
 
   body <- tagList(
-    ggvis_output(id, shiny = FALSE),
+    ggvis_output(id, shiny = FALSE, minify = minify),
     tags$script(type = "text/javascript",
       paste0('var ', id, '_spec = ', vega_json, ';
         var plot = ggvis.getPlot("', id, '");
@@ -233,4 +216,58 @@ knitr_print <- function(x, dynamic = NA, id = rand_id("plot_"), ...) {
     )
   )
   cat(format(body))
+}
+
+# Returns a shiny tagList with links to the needed JS and CSS files
+# @param prefix A prefix to add to the path (like "ggvis")
+# @param minify Use minified version of JS and CSS files.
+# @param shiny Include shiny-related ggvis files?
+html_head <- function(prefix = NULL, minify = TRUE, shiny = FALSE) {
+  if(minify) {
+    tags <- tagList(
+      tags$script(src = "lib/jquery-1.9.1.min.js"),
+      tags$script(src = "lib/jquery-ui/js/jquery-ui-1.10.3.custom.min.js"),
+      tags$script(charset = "utf-8", src = "lib/d3.min.js"),
+      tags$script(src = "lib/vega.min.js"),
+      tags$script(src = "lib/QuadTree.js"),
+      tags$script(src = "lib/lodash.min.js"),
+      tags$script("var lodash = _.noConflict();"),
+      tags$script(src = "js/ggvis.js"),
+      if(shiny) tags$script(src = "js/shiny-ggvis.js"),
+      tags$link(rel = "stylesheet", type = "text/css",
+        href = "lib/jquery-ui/css/smoothness/jquery-ui-1.10.3.custom.min.css"),
+      tags$link(rel = "stylesheet", type = "text/css",
+        href = "css/ggvis.css")
+    )
+  } else {
+    tags <- tagList(
+      tags$script(src = "lib/jquery-1.9.1.js"),
+      tags$script(src = "lib/jquery-ui/js/jquery-ui-1.10.3.custom.js"),
+      tags$script(charset = "utf-8", src = "lib/d3.js"),
+      tags$script(src = "lib/vega.js"),
+      tags$script(src = "lib/QuadTree.js"),
+      tags$script(src = "lib/lodash.min.js"),
+      tags$script("var lodash = _.noConflict();"),
+      tags$script(src = "js/ggvis.js"),
+      if(shiny) tags$script(src = "js/shiny-ggvis.js"),
+      tags$link(rel = "stylesheet", type = "text/css",
+        href = "lib/jquery-ui/css/smoothness/jquery-ui-1.10.3.custom.css"),
+      tags$link(rel = "stylesheet", type = "text/css",
+        href = "css/ggvis.css")
+    )
+  }
+
+  if (!is.null(prefix)) {
+    tags[] <- lapply(tags, function(tag) {
+      if (!is.null(tag$attribs$src)) {
+        tag$attribs$src <- file.path(prefix, tag$attribs$src)
+      }
+      if (!is.null(tag$attribs$href)) {
+        tag$attribs$href <- file.path(prefix, tag$attribs$href)
+      }
+      tag
+    })
+  }
+
+  tags
 }

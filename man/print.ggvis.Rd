@@ -5,13 +5,13 @@
 \title{View in a ggvis plot in the browser.}
 \usage{
 \method{print}{ggvis}(x, dynamic = NA, spec = getOption("ggvis.print_spec",
-  FALSE), id = rand_id("plot_"), ...)
+  FALSE), id = rand_id("plot_"), minify = TRUE, ...)
 
 view_static(x, renderer = getOption("ggvis.renderer", default = "canvas"),
-  launch = interactive(), id = rand_id("plot_"))
+  launch = interactive(), id = rand_id("plot_"), minify = TRUE)
 
 view_dynamic(x, renderer = getOption("ggvis.renderer", default = "canvas"),
-  launch = TRUE, port = NULL, id = rand_id("plot_"))
+  launch = TRUE, port = NULL, id = rand_id("plot_"), minify = TRUE)
 }
 \arguments{
   \item{x}{A ggvis object.}
@@ -35,6 +35,9 @@ view_dynamic(x, renderer = getOption("ggvis.renderer", default = "canvas"),
 
   \item{port}{the port on which to start the shiny app. If
   NULL (the default), Shiny will select a random port.}
+
+  \item{minify}{If \code{TRUE}, use minified version of JS
+  and CSS files? This can be useful for debugging.}
 }
 \description{
 \code{view_static} creates a static web page in a temporary
