@@ -46,4 +46,5 @@ as.reactive.waggle <- function(x, session = NULL, ...) {
   })
 }
 
+#' @export
 handlers.waggle <- function(x, ...) NULL
