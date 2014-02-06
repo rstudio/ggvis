@@ -73,6 +73,7 @@ html_document <- function(...) {
   # delegate to rmarkdown html_document
   rmarkdown::html_document(
     ...,
+    self_contained = TRUE,
     includes = rmarkdown::includes(in_header = ggvis_head_file),
   )
 }
