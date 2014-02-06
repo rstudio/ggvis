@@ -1,19 +1,19 @@
 #' Connect a ggvis graphic to a shiny app.
-#' 
-#' It's easiest to learn by example: there are two shiny apps in 
+#'
+#' It's easiest to learn by example: there are two shiny apps in
 #' \code{demo/apps/} that you can learn from.
-#' 
+#'
 #' @details
 #' There are two required components and one optional component:
-#' 
+#'
 #' \itemize{
-#'   \item Use \code{ggvis_output} in \code{ui.r} to insert a placeholder 
+#'   \item Use \code{ggvis_output} in \code{ui.r} to insert a placeholder
 #'   (a div with id) for a ggvis graphic.
 #'
 #'   \item Use \code{observe_ggvis} in \code{server.r} to insert a ggvis object
-#'   into a shiny app and set up the observers to notify the client side 
+#'   into a shiny app and set up the observers to notify the client side
 #'   whenever the plot data or spec changes.
-#' 
+#'
 #'   \item If the plot uses interactive inputs, use \code{renderControls} to
 #'   insert those controls into the ui.
 #' }
@@ -45,7 +45,7 @@ NULL
 #' @param shiny Should this include headers for Shiny? For dynamic and
 #'   interactive plots, this should be TRUE; otherwise FALSE.
 #' @export
-ggvis_output <- function(plot_id, shiny = TRUE) {
+ggvis_output <- function(plot_id, shiny = TRUE, minify = TRUE) {
   container <-
     div(id = paste0(plot_id, "-container"), class = "ggvis-output-container",
       # Div containing the plot
@@ -60,20 +60,7 @@ ggvis_output <- function(plot_id, shiny = TRUE) {
 
     tagList(
       singleton(tags$head(
-        tags$script(src = "ggvis/lib/jquery-1.9.1.js"),
-        tags$script(src = "ggvis/lib/jquery-ui/js/jquery-ui-1.10.3.custom.js"),
-        tags$script(src = "ggvis/lib/d3.js"),
-        tags$script(src = "ggvis/lib/vega.js"),
-        tags$script(src = "ggvis/lib/QuadTree.js"),
-        tags$script(src = "ggvis/lib/lodash.min.js"),
-        tags$script("var lodash = _.noConflict();"),
-        tags$script(src = "ggvis/js/ggvis.js"),
-        tags$script(src = "ggvis/js/shiny-ggvis.js"),
-        tags$link(rel = "stylesheet",
-                  type = "text/css",
-                  href = "ggvis/lib/jquery-ui/css/smoothness/jquery-ui-1.10.3.custom.css"),
-        tags$link(rel = "stylesheet", type = "text/css",
-                  href = "ggvis/css/ggvis.css")
+        html_head(prefix = "ggvis", minify = minify, shiny = TRUE)
       )),
       container
     )
