@@ -225,7 +225,7 @@ knitr_print <- function(x, dynamic = NA, id = rand_id("plot_"), minify = TRUE,
 html_head <- function(prefix = NULL, minify = TRUE, shiny = FALSE) {
   if(minify) {
     tags <- tagList(
-      tags$script(src = "lib/jquery-1.9.1.min.js"),
+      tags$script(src = "lib/jquery-1.11.0.min.js"),
       tags$script(src = "lib/jquery-ui/js/jquery-ui-1.10.3.custom.min.js"),
       tags$script(charset = "utf-8", src = "lib/d3.min.js"),
       tags$script(src = "lib/vega.min.js"),
@@ -241,7 +241,7 @@ html_head <- function(prefix = NULL, minify = TRUE, shiny = FALSE) {
     )
   } else {
     tags <- tagList(
-      tags$script(src = "lib/jquery-1.9.1.js"),
+      tags$script(src = "lib/jquery-1.11.0.js"),
       tags$script(src = "lib/jquery-ui/js/jquery-ui-1.10.3.custom.js"),
       tags$script(charset = "utf-8", src = "lib/d3.js"),
       tags$script(src = "lib/vega.js"),
