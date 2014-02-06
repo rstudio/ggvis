@@ -29,46 +29,22 @@ html_document <- function(...) {
     normalizePath(newpath)
   }
 
-  absolute_paths <- function(x) {
-    if (inherits(x, "shiny.tag.list")) {
-      x[] <- lapply(x, absolute_paths)
-      return(x)
+  head <- html_head()
+
+  # Get absolute paths for src/href values
+  head[] <- lapply(head, function(tag) {
+    if (!is.null(tag$attribs$src)) {
+      tag$attribs$src <- url_abs_path(tag$attribs$src)
     }
-
-    if (inherits(x, "shiny.tag")) {
-      if (x$name == "script") {
-        x$attribs$src <- url_abs_path(x$attribs$src)
-      } else if (x$name == "link") {
-        x$attribs$href <- url_abs_path(x$attribs$href)
-      } else {
-        stop("Don't know what to do with tag with name ", x$name)
-      }
-      return(x)
+    if (!is.null(tag$attribs$href)) {
+      tag$attribs$href <- url_abs_path(tag$attribs$href)
     }
+    tag
+  })
 
-    stop("Don't know what to do with ", x)
-  }
-
-
-  resources <- tagList(
-    tags$script(src = "lib/jquery-1.9.1.js"),
-    tags$script(src = "lib/jquery-ui/js/jquery-ui-1.10.3.custom.js"),
-    tags$script(charset = "utf-8", src = "lib/d3.min.js"),
-    tags$script(src = "lib/vega.js"),
-    tags$script(src = "lib/QuadTree.js"),
-    tags$script(src = "lib/lodash.min.js"),
-    tags$script("var lodash = _.noConflict()"),
-    tags$script(src = "js/ggvis.js"),
-    tags$link(rel = "stylesheet", type = "text/css",
-              href = "lib/jquery-ui/css/smoothness/jquery-ui-1.10.3.custom.css"),
-    tags$link(rel = "stylesheet", type = "text/css",
-              href = "css/ggvis.css")
-  )
-
-  head_text <- absolute_paths(resources)
 
   ggvis_head_file <- tempfile("ggvis_head", fileext = ".html")
-  cat(format(head_text), file = ggvis_head_file)
+  cat(format(head), file = ggvis_head_file)
 
   # delegate to rmarkdown html_document
   rmarkdown::html_document(
