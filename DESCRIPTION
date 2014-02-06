@@ -17,7 +17,8 @@ Imports:
     methods
 Suggests:
     testthat (>= 0.7.1.99),
-    knitr
+    knitr,
+    rmarkdown
 VignetteBuilder: knitr
 License: GPL-2
 Collate:
@@ -41,6 +42,7 @@ Collate:
     'guess.R'
     'guide_axis.R'
     'guide_legend.R'
+    'html_document.R'
     'input-handler.R'
     'input.R'
     'inputs.R'

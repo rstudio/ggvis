@@ -1,0 +1,27 @@
+---
+title: "Using ggvis with knitr and rmarkdown"
+output:
+  ggvis:::html_document:
+    theme: united
+    highlight: textmate
+---
+
+To knit this document and render it to HTML:
+
+```{r, eval=FALSE}
+rmarkdown::render("ggvis_example.Rmd")
+```
+
+To embed a ggvis plot just call `ggvis` and remember to specify `results='asis'` as a chunk option:
+
+```{r results='asis'}
+library(ggvis)
+ggvis(mtcars, props(x = ~wt, y = ~mpg)) + mark_symbol()
+```
+
+
+```{r results='asis'}
+ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
+  mark_symbol() +
+  layer_smooth()
+```
