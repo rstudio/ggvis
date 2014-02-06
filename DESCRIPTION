@@ -84,4 +84,5 @@ Collate:
     'utils_reactive.R'
     'vector_type.R'
     'vega.R'
+    'waggle.R'
     'zzz.r'
