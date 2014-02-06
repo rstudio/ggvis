@@ -22,7 +22,7 @@
 #' @export
 print.ggvis <- function(x, dynamic = NA,
                         spec = getOption("ggvis.print_spec", FALSE),
-                        id = rand_id("plot_"), ...) {
+                        id = rand_id("plot_"), minjs = TRUE, ...) {
 
   set_last_vis(x)
 
@@ -38,9 +38,9 @@ print.ggvis <- function(x, dynamic = NA,
   if (is.na(dynamic)) dynamic <- is.dynamic(x) && interactive()
 
   if (dynamic) {
-    view_dynamic(x, id = id, ...)
+    view_dynamic(x, id = id, minjs = minjs, ...)
   } else {
-    view_static(x, id = id, ...)
+    view_static(x, id = id, minjs = minjs, ...)
   }
 }
 
@@ -64,7 +64,8 @@ show_spec <- function(x, pieces) {
 view_static <- function(x,
                         renderer = getOption("ggvis.renderer", default="canvas"),
                         launch = interactive(),
-                        id = rand_id("plot_")) {
+                        id = rand_id("plot_"),
+                        minjs = TRUE) {
 
   if (!(renderer %in% c("canvas", "svg")))
     stop("renderer must be 'canvas' or 'svg'")
@@ -155,7 +156,8 @@ copy_www_resources <- function(destdir) {
 #' @importFrom shiny basicPage uiOutput mainPanel tags observe runApp stopApp renderUI
 view_dynamic <- function(x,
                          renderer = getOption("ggvis.renderer", default="canvas"),
-                         launch = TRUE, port = NULL, id = rand_id("plot_")) {
+                         launch = TRUE, port = NULL, id = rand_id("plot_"),
+                         minjs = TRUE) {
 
   if (!(renderer %in% c("canvas", "svg")))
     stop("renderer must be 'canvas' or 'svg'")
