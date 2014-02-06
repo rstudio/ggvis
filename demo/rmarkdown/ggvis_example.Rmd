@@ -12,7 +12,7 @@ To knit this document and render it to HTML:
 rmarkdown::render("ggvis_example.Rmd")
 ```
 
-To embed a ggvis plot just call `ggvis` and remember to specify `results='asis` as a chunk option:
+To embed a ggvis plot just call `ggvis` and remember to specify `results='asis'` as a chunk option:
 
 ```{r results='asis'}
 library(ggvis)
@@ -23,8 +23,5 @@ ggvis(mtcars, props(x = ~wt, y = ~mpg)) + mark_symbol()
 ```{r results='asis'}
 ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
   mark_symbol() +
-#   layer_smooth() +
-  layer_smooth(method = "loess", formula = y ~ x,
-    span = input_slider(0.2, 1, step = 0.05, label = "span")
-  )
+  layer_smooth()
 ```

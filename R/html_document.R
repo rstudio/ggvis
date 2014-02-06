@@ -41,16 +41,16 @@ html_document <- function(...) {
       } else if (x$name == "link") {
         x$attribs$href <- url_abs_path(x$attribs$href)
       } else {
-        stop("don't know what to do with tag with name ", x$name)
+        stop("Don't know what to do with tag with name ", x$name)
       }
       return(x)
     }
 
-    stop("don't know what to do with ", x)
+    stop("Don't know what to do with ", x)
   }
 
 
-  js_stuff <- tagList(
+  resources <- tagList(
     tags$script(src = "lib/jquery-1.9.1.js"),
     tags$script(src = "lib/jquery-ui/js/jquery-ui-1.10.3.custom.js"),
     tags$script(charset = "utf-8", src = "lib/d3.min.js"),
@@ -65,10 +65,10 @@ html_document <- function(...) {
               href = "css/ggvis.css")
   )
 
-  script_text <- absolute_paths(js_stuff)
+  head_text <- absolute_paths(resources)
 
   ggvis_head_file <- tempfile("ggvis_head", fileext = ".html")
-  cat(format(script_text), file = ggvis_head_file)
+  cat(format(head_text), file = ggvis_head_file)
 
   # delegate to rmarkdown html_document
   rmarkdown::html_document(
