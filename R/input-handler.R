@@ -85,7 +85,8 @@ handlers.handler <- function(x) x
 
 #' @export
 handlers.transform <- function(x) {
-  c(handlers.list(x), handlers.list(x$dots))
+  no_dots <- x[setdiff(names(x), "dots")]
+  c(handlers.list(no_dots), handlers.list(x$dots))
 }
 
 #' @export
