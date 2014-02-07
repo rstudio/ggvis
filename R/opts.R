@@ -103,6 +103,14 @@ default_opts <- function() {
 # Given a ggvis_opts object, merge it into default options
 add_default_opts <- function(x) merge_opts(default_opts(), x)
 
+# Get options from knitr, if present
+knitr_opts <- function() {
+  opts(
+    width = opts_chunk$get('ggvis.width'),
+    height = opts_chunk$get('ggvis.height')
+  )
+}
+
 # Merge two opts() objects
 merge_opts <- function(a, b) {
   if (is.null(a)) return(b)
