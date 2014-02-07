@@ -32,7 +32,7 @@ input_slider(min, max, value = min, step = NULL, round = FALSE,
 
   \item{format}{Customize format values in slider labels.
   See
-  \url{http://archive.plugins.jquery.com/project/numberformatter}
+  \url{https://code.google.com/p/jquery-numberformatter/}
   for syntax details.}
 
   \item{locale}{The locale to be used when applying
@@ -44,7 +44,7 @@ input_slider(min, max, value = min, step = NULL, round = FALSE,
   \item{animate}{\code{TRUE} to show simple animation
   controls with default settings; \code{FALSE} not to; or a
   custom settings list, such as those created using
-  \code{\link{animationOptions}}.}
+  \code{animationOptions}.}
 
   \item{label}{A descriptive label to be displayed with the
   widget.}

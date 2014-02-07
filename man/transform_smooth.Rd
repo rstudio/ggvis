@@ -81,6 +81,9 @@ ggvis(mtcars, props(x = ~wt, y = ~mpg), mark_symbol(), layer_smooth())
 ggvis(mtcars, props(x = ~wt, y = ~mpg), mark_symbol(),
   layer_smooth(method = "lm", se = FALSE))
 
+slider <- input_slider(0.2, 1)
+qvis(mtcars, ~wt, ~mpg, layers = "smooth", span = slider)
+
 # These are equivalent to combining transform_smooth with mark_path and
 # mark_area
 ggvis(mtcars, props(x = ~wt, y = ~mpg),
