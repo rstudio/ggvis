@@ -151,3 +151,8 @@ check_empty_args <- function() {
     " in call to ", as.character(call[[1]]), "()",
     call. = FALSE)
 }
+
+# Report whether a package is installed
+is_installed <- function(pkg) {
+  (suppressPackageStartupMessages(requireNamespace(pkg, quietly = TRUE)))
+}

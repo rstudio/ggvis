@@ -105,9 +105,14 @@ add_default_opts <- function(x) merge_opts(default_opts(), x)
 
 # Get options from knitr, if present
 knitr_opts <- function() {
+  if (!is_installed("knitr")) {
+    stop("knitr must be installed to call this function.")
+  }
+  get_opt <- knitr::opts_chunk$get
+
   opts(
-    width = opts_chunk$get('fig.width') * opts_chunk$get('dpi'),
-    height = opts_chunk$get('fig.height') * opts_chunk$get('dpi')
+    width = get_opt('fig.width') * get_opt('dpi'),
+    height = get_opt('fig.height') * get_opt('dpi')
   )
 }
 
