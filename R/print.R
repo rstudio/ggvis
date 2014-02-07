@@ -17,6 +17,8 @@
 #' @param launch If \code{TRUE}, launch this web page in a browser or Rstudio.
 #' @param port the port on which to start the shiny app. If NULL (the default),
 #'   Shiny will select a random port.
+#' @param quiet If \code{TRUE} show status messages from Shiny. (Default is
+#'   \code{FALSE}.)
 #' @param minify If \code{TRUE}, use minified version of JS and CSS files. This
 #'   can be useful for debugging.
 #' @keywords internal
@@ -138,7 +140,7 @@ copy_www_resources <- function(head_tags, destdir) {
 view_dynamic <- function(x,
                          renderer = getOption("ggvis.renderer", default="canvas"),
                          launch = TRUE, port = NULL, id = rand_id("plot_"),
-                         minify = TRUE) {
+                         minify = TRUE, quiet = TRUE) {
 
   if (!(renderer %in% c("canvas", "svg")))
     stop("renderer must be 'canvas' or 'svg'")
@@ -177,7 +179,8 @@ view_dynamic <- function(x,
     # two on a row.
     height <- 350 + 70 * ceiling(n_controls / 2)
 
-    runApp(app, port = port, launch.browser = function(url) view_plot(url, height))
+    runApp(app, port = port, quiet = quiet,
+      launch.browser = function(url) view_plot(url, height))
   } else {
     app
   }

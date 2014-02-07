@@ -41,7 +41,6 @@ Resize <- setRefClass("Resize", contains = "EventBroker",
 #' ggvis(mtcars, props(x = ~mpg, y = ~wt)) +
 #'   mark_symbol() +
 #'   resize(print_info)
-#' }
 resize <- function(f) {
   stopifnot(is.function(f))
   handler("resize", "resize", list(f = f))

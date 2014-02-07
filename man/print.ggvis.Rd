@@ -11,7 +11,8 @@ view_static(x, renderer = getOption("ggvis.renderer", default = "canvas"),
   launch = interactive(), id = rand_id("plot_"), minify = TRUE)
 
 view_dynamic(x, renderer = getOption("ggvis.renderer", default = "canvas"),
-  launch = TRUE, port = NULL, id = rand_id("plot_"), minify = TRUE)
+  launch = TRUE, port = NULL, id = rand_id("plot_"), minify = TRUE,
+  quiet = TRUE)
 }
 \arguments{
   \item{x}{A ggvis object.}
@@ -35,6 +36,9 @@ view_dynamic(x, renderer = getOption("ggvis.renderer", default = "canvas"),
 
   \item{port}{the port on which to start the shiny app. If
   NULL (the default), Shiny will select a random port.}
+
+  \item{quiet}{If \code{TRUE} show status messages from
+  Shiny. (Default is \code{FALSE}.)}
 
   \item{minify}{If \code{TRUE}, use minified version of JS
   and CSS files. This can be useful for debugging.}
