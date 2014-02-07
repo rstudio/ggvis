@@ -58,6 +58,9 @@
 #' ggvis(mtcars, props(x = ~wt, y = ~mpg), mark_symbol(),
 #'   layer_smooth(method = "lm", se = FALSE))
 #'
+#' slider <- input_slider(0.2, 1)
+#' qvis(mtcars, ~wt, ~mpg, layers = "smooth", span = slider)
+#'
 #' # These are equivalent to combining transform_smooth with mark_path and
 #' # mark_area
 #' ggvis(mtcars, props(x = ~wt, y = ~mpg),
@@ -124,13 +127,15 @@ compute.transform_smooth <- function(x, props, data) {
   check_prop(x, props, data, "y.update", "numeric")
 
   if (is.guess(x$method)) {
-    x$method <- if (max_rows(data) > 1000) "gam" else "loess"
-    message("Guess transform_smooth(method = '", x$method, "')")
+    x$method <- guess_cache(x$method, "method",
+      if (max_rows(data) > 1000) "gam" else "loess")
   }
   if (is.guess(x$formula)) {
-    x$formula <- if (x$method == "gam") y ~ s(x) else y ~ x
-    environment(x$formula) <- globalenv()
-    message("Guess transform_smooth(formula = ", deparse(x$formula), ")")
+    x$formula <- guess_cache(x$formula, "formula", {
+      f <- if (x$method == "gam") y ~ s(x) else y ~ x
+      environment(f) <- globalenv()
+      f
+    })
   }
 
   output <- smooth(data, x, x_var = props$x.update, y_var = props$y.update)

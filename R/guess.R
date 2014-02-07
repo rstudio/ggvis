@@ -7,8 +7,11 @@
 #'
 #' @export
 guess <- function() {
-  structure(list(NULL), class = "guess")
+  structure(list(new.env(parent = emptyenv())), class = "guess")
 }
+
+#' @export
+print.guess <- function(x, ...) cat(toString(x))
 
 #' @export
 #' @rdname guess
@@ -17,3 +20,14 @@ is.guess <- function(x) inherits(x, "guess")
 
 #' @export
 toString.guess <- function(x, ...) "guess()"
+
+
+guess_cache <- function(x, name, value) {
+  if (exists(name, envir = x[[1]])) {
+    return(get(name, envir = x[[1]]))
+  }
+
+  assign(name, value, envir = x[[1]])
+  message("Guessing ", name, " = ", format(value))
+  value
+}
