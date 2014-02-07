@@ -57,15 +57,16 @@ controls.handler <- function(x, session = NULL, ...) NULL
 
 # Extract all handlers from a ggvis object. This shares a lot of code with
 # control(), so probably need to extract out standard walk function.
+# Each handler method should return an unnamed list of handlers.
 handlers <- function(x) UseMethod("handlers")
 
 #' @export
 handlers.layer <- function(x) {
   t_handlers <- unlist(lapply(x$data, handlers), recursive = FALSE)
-  p_handlers <- unname(lapply(x$props, handlers))
+  p_handlers <- lapply(x$props, handlers)
   c_handlers <- unlist(lapply(x$children, handlers), recursive = FALSE)
 
-  compact(c(t_handlers, p_handlers, c_handlers, x$handlers))
+  compact(unname(c(t_handlers, p_handlers, c_handlers, x$handlers)))
 }
 
 #' @export
