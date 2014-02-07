@@ -234,7 +234,7 @@ html_head <- function(prefix = NULL, minify = TRUE, shiny = FALSE) {
       tags$script(src = "lib/lodash.min.js"),
       tags$script("var lodash = _.noConflict();"),
       tags$script(src = "js/ggvis.js"),
-      if(shiny) tags$script(src = "js/shiny-ggvis.js"),
+      if (shiny) tags$script(src = "js/shiny-ggvis.js"),
       tags$link(rel = "stylesheet", type = "text/css",
         href = "lib/jquery-ui/css/smoothness/jquery-ui-1.10.3.custom.min.css"),
       tags$link(rel = "stylesheet", type = "text/css",
