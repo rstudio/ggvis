@@ -8,7 +8,7 @@ output:
 
 To knit this document and render it to HTML:
 
-```{r, eval=FALSE}
+```{r eval=FALSE}
 rmarkdown::render("ggvis_example.Rmd")
 ```
 
