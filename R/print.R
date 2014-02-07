@@ -90,8 +90,7 @@ view_static <- function(x,
     tags$script(type = "text/javascript",
       paste0('
         var spec = ', vega_json, ';
-        var plot = ggvis.getPlot("', id, '");
-        plot.parseSpec(spec);
+        ggvis.getPlot("', id, '").parseSpec(', id, '_spec);
       ')
     )
   )
@@ -214,8 +213,7 @@ knitr_print <- function(x, dynamic = NA, id = rand_id("plot_"), minify = TRUE,
     ggvis_output(id, shiny = FALSE, minify = minify),
     tags$script(type = "text/javascript",
       paste0('var ', id, '_spec = ', vega_json, ';
-        var plot = ggvis.getPlot("', id, '");
-        plot.parseSpec(', id, '_spec);
+        ggvis.getPlot("', id, '").parseSpec(', id, '_spec);
       ')
     )
   )
