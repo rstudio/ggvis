@@ -89,7 +89,7 @@ view_static <- function(x,
     ggvis_output(id, shiny = FALSE),
     tags$script(type = "text/javascript",
       paste0('
-        var spec = ', vega_json, ';
+        var ', id, '_spec = ', vega_json, ';
         ggvis.getPlot("', id, '").parseSpec(', id, '_spec);
       ')
     )
