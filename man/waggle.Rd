@@ -2,14 +2,14 @@
 \alias{waggle}
 \title{Waggle back and forth between two numbers}
 \usage{
-waggle(min, max, value = (min + max)/2, step = (max - min)/60, fps = 30)
+waggle(min, max, value = (min + max)/2, step = (max - min)/50, fps = 10)
 }
 \arguments{
   \item{value}{Starting value. Defaults to half-way between
   \code{min} and \code{max}.}
 
   \item{step}{How much value changes at each frame.
-  Defaults to 60 steps between min and max so it takes 2
+  Defaults to 50 steps between min and max so it takes 5
   seconds to waggle once.}
 
   \item{fps}{number of frames per second.}

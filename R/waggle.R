@@ -3,8 +3,8 @@
 #' @inheritParams shiny::sliderInput
 #' @param value Starting value. Defaults to half-way between \code{min} and
 #'   \code{max}.
-#' @param step How much value changes at each frame. Defaults to 60 steps
-#'   between min and max so it takes 2 seconds to waggle once.
+#' @param step How much value changes at each frame. Defaults to 50 steps
+#'   between min and max so it takes 5 seconds to waggle once.
 #' @param fps number of frames per second.
 #' @export
 #' @examples
@@ -12,8 +12,8 @@
 #' ggvis(mtcars, props(~mpg, ~wt)) +
 #'  layer_point() +
 #'  layer_smooth(span = span, method = "loess", formula = y ~ x)
-waggle <- function(min, max, value = (min + max) / 2, step = (max - min) / 60,
-                   fps = 30) {
+waggle <- function(min, max, value = (min + max) / 2, step = (max - min) / 50,
+                   fps = 10) {
   # FIXME: I need my own class!
   handler("waggle", "waggle",
     list(min = min, max = max, value = value, step = step, fps = fps),
