@@ -42,7 +42,7 @@ valid_mark_properties.mark_symbol <- function(mark) {
 }
 #' @export
 default_mark_properties.mark_symbol <- function(mark) {
-  props(fill := "#000000", size := 100)
+  props(fill := "#000000", size := 50)
 }
 
 #' @rdname marks
