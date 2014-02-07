@@ -131,8 +131,8 @@ as.reactive.tooltip <- function(x, session = NULL, ...) {
     html <- x$control_args$f(hover$data)
 
     show_tooltip(session,
-      pagex = hover$pagex - 90,
-      pagey = hover$pagey - 6,
+      pagex = hover$pagex + 5,
+      pagey = hover$pagey + 5,
       html = html
     )
   })
