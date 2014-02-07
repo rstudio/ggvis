@@ -106,8 +106,8 @@ add_default_opts <- function(x) merge_opts(default_opts(), x)
 # Get options from knitr, if present
 knitr_opts <- function() {
   opts(
-    width = opts_chunk$get('ggvis.width'),
-    height = opts_chunk$get('ggvis.height')
+    width = opts_chunk$get('fig.width') * opts_chunk$get('dpi'),
+    height = opts_chunk$get('fig.height') * opts_chunk$get('dpi')
   )
 }
 

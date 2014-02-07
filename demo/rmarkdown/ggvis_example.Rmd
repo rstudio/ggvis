@@ -6,6 +6,12 @@ output:
     highlight: textmate
 ---
 
+```{r echo=FALSE}
+# Set up default dimensions. Width and height are multiplied by dpi to get
+# pixel dimensions.
+opts_chunk$set(fig.width = 4, fig.height = 3, dpi = 100)
+```
+
 To knit this document and render it to HTML:
 
 ```{r eval=FALSE}
