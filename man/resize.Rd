@@ -22,4 +22,5 @@ ggvis(mtcars, props(x = ~mpg, y = ~wt)) +
   mark_symbol() +
   resize(print_info)
 }
+}
 
