@@ -1,7 +1,7 @@
-/*! jQuery UI - v1.10.3 - 2013-08-08
+/*! jQuery UI - v1.10.4 - 2014-02-07
 * http://jqueryui.com
 * Includes: jquery.ui.core.js, jquery.ui.widget.js, jquery.ui.mouse.js, jquery.ui.draggable.js, jquery.ui.resizable.js
-* Copyright 2013 jQuery Foundation and other contributors Licensed MIT */
+* Copyright 2014 jQuery Foundation and other contributors; Licensed MIT */
 
 (function( $, undefined ) {
 
@@ -12,7 +12,7 @@ var uuid = 0,
 $.ui = $.ui || {};
 
 $.extend( $.ui, {
-	version: "1.10.3",
+	version: "1.10.4",
 
 	keyCode: {
 		BACKSPACE: 8,
@@ -411,7 +411,7 @@ $.widget = function( name, base, prototype ) {
 		// TODO: remove support for widgetEventPrefix
 		// always use the name + a colon as the prefix, e.g., draggable:start
 		// don't prefix for widgets that aren't DOM-based
-		widgetEventPrefix: existingConstructor ? basePrototype.widgetEventPrefix : name
+		widgetEventPrefix: existingConstructor ? (basePrototype.widgetEventPrefix || name) : name
 	}, proxiedPrototype, {
 		constructor: constructor,
 		namespace: namespace,
@@ -620,12 +620,12 @@ $.Widget.prototype = {
 					curOption = curOption[ parts[ i ] ];
 				}
 				key = parts.pop();
-				if ( value === undefined ) {
+				if ( arguments.length === 1 ) {
 					return curOption[ key ] === undefined ? null : curOption[ key ];
 				}
 				curOption[ key ] = value;
 			} else {
-				if ( value === undefined ) {
+				if ( arguments.length === 1 ) {
 					return this.options[ key ] === undefined ? null : this.options[ key ];
 				}
 				options[ key ] = value;
@@ -832,7 +832,7 @@ $( document ).mouseup( function() {
 });
 
 $.widget("ui.mouse", {
-	version: "1.10.3",
+	version: "1.10.4",
 	options: {
 		cancel: "input,textarea,button,select,option",
 		distance: 1,
@@ -983,7 +983,7 @@ $.widget("ui.mouse", {
 (function( $, undefined ) {
 
 $.widget("ui.draggable", $.ui.mouse, {
-	version: "1.10.3",
+	version: "1.10.4",
 	widgetEventPrefix: "drag",
 	options: {
 		addClasses: true,
@@ -1934,7 +1934,7 @@ function isNumber(value) {
 }
 
 $.widget("ui.resizable", $.ui.mouse, {
-	version: "1.10.3",
+	version: "1.10.4",
 	widgetEventPrefix: "resize",
 	options: {
 		alsoResize: false,
@@ -2203,7 +2203,7 @@ $.widget("ui.resizable", $.ui.mouse, {
 		//Store needed variables
 		this.offset = this.helper.offset();
 		this.position = { left: curleft, top: curtop };
-		this.size = this._helper ? { width: el.outerWidth(), height: el.outerHeight() } : { width: el.width(), height: el.height() };
+		this.size = this._helper ? { width: this.helper.width(), height: this.helper.height() } : { width: el.width(), height: el.height() };
 		this.originalSize = this._helper ? { width: el.outerWidth(), height: el.outerHeight() } : { width: el.width(), height: el.height() };
 		this.originalPosition = { left: curleft, top: curtop };
 		this.sizeDiff = { width: el.outerWidth() - el.width(), height: el.outerHeight() - el.height() };
@@ -2684,8 +2684,8 @@ $.ui.plugin.add("resizable", "containment", {
 		isParent = that.containerElement.get(0) === that.element.parent().get(0);
 		isOffsetRelative = /relative|absolute/.test(that.containerElement.css("position"));
 
-		if(isParent && isOffsetRelative) {
-			woset -= that.parentData.left;
+		if ( isParent && isOffsetRelative ) {
+			woset -= Math.abs( that.parentData.left );
 		}
 
 		if (woset + that.size.width >= that.parentData.width) {
@@ -2866,10 +2866,20 @@ $.ui.plugin.add("resizable", "grid", {
 			that.size.height = newHeight;
 			that.position.left = op.left - ox;
 		} else {
-			that.size.width = newWidth;
-			that.size.height = newHeight;
-			that.position.top = op.top - oy;
-			that.position.left = op.left - ox;
+			if ( newHeight - gridY > 0 ) {
+				that.size.height = newHeight;
+				that.position.top = op.top - oy;
+			} else {
+				that.size.height = gridY;
+				that.position.top = op.top + os.height - gridY;
+			}
+			if ( newWidth - gridX > 0 ) {
+				that.size.width = newWidth;
+				that.position.left = op.left - ox;
+			} else {
+				that.size.width = gridX;
+				that.position.left = op.left + os.width - gridX;
+			}
 		}
 	}
 

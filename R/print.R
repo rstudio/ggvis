@@ -232,7 +232,7 @@ html_head <- function(prefix = NULL, minify = TRUE, shiny = FALSE) {
     tags <- tagList(
       # Shiny has its own copy of jQuery; duplicates can cause problems
       if (!shiny) tags$script(src = "lib/jquery-1.11.0.min.js"),
-      tags$script(src = "lib/jquery-ui/js/jquery-ui-1.10.3.custom.min.js"),
+      tags$script(src = "lib/jquery-ui/js/jquery-ui-1.10.4.custom.min.js"),
       tags$script(charset = "utf-8", src = "lib/d3.min.js"),
       tags$script(src = "lib/vega.min.js"),
       tags$script(src = "lib/QuadTree.js"),
@@ -241,14 +241,14 @@ html_head <- function(prefix = NULL, minify = TRUE, shiny = FALSE) {
       tags$script(src = "js/ggvis.js"),
       if (shiny) tags$script(src = "js/shiny-ggvis.js"),
       tags$link(rel = "stylesheet", type = "text/css",
-        href = "lib/jquery-ui/css/smoothness/jquery-ui-1.10.3.custom.min.css"),
+        href = "lib/jquery-ui/css/smoothness/jquery-ui-1.10.4.custom.min.css"),
       tags$link(rel = "stylesheet", type = "text/css",
         href = "css/ggvis.css")
     )
   } else {
     tags <- tagList(
       if (!shiny) tags$script(src = "lib/jquery-1.11.0.js"),
-      tags$script(src = "lib/jquery-ui/js/jquery-ui-1.10.3.custom.js"),
+      tags$script(src = "lib/jquery-ui/js/jquery-ui-1.10.4.custom.js"),
       tags$script(charset = "utf-8", src = "lib/d3.js"),
       tags$script(src = "lib/vega.js"),
       tags$script(src = "lib/QuadTree.js"),
@@ -257,7 +257,7 @@ html_head <- function(prefix = NULL, minify = TRUE, shiny = FALSE) {
       tags$script(src = "js/ggvis.js"),
       if (shiny) tags$script(src = "js/shiny-ggvis.js"),
       tags$link(rel = "stylesheet", type = "text/css",
-        href = "lib/jquery-ui/css/smoothness/jquery-ui-1.10.3.custom.css"),
+        href = "lib/jquery-ui/css/smoothness/jquery-ui-1.10.4.custom.css"),
       tags$link(rel = "stylesheet", type = "text/css",
         href = "css/ggvis.css")
     )
