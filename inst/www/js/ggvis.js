@@ -235,12 +235,11 @@ ggvis = (function(_) {
 
       var $div = this.getDiv(),
           $wrap = this.getWrapper(),
-          $gear = $div.siblings().filter(".plot-gear-icon"),
           chart = this.chart,
           padding = chart.padding(),
           ratio = this.opts.width/this.opts.height;
 
-      var newWidth = $wrap.width() - $gear.width() - padding.left - padding.right,
+      var newWidth = $wrap.width() - padding.left - padding.right,
           newHeight = $wrap.height() - padding.top - padding.bottom;
 
       if (keep_aspect) {
@@ -300,7 +299,6 @@ ggvis = (function(_) {
       var $div    = this.getDiv();      // ggvis div, containing $el
       var $vega   = this.getVegaDiv();  // Immediate wrapper around marks
       var $marks  = this.getMarks();
-      var $gear   = $div.siblings().filter(".plot-gear-icon");
 
       // Need to use getAttribute because it works for both svg and canvas
       // DOM objects. ($marks.width() doesn't work for SVG)
@@ -310,7 +308,7 @@ ggvis = (function(_) {
 
       $vega.width(width).height(height);
       $div.width(width).height(height);
-      $wrap.width(width + $gear.width()).height(height);
+      $wrap.width(width).height(height);
     };
 
     // Run an update on the chart for the first time
