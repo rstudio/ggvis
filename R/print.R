@@ -85,7 +85,14 @@ view_static <- function(x,
 
   head <- html_head(minify = minify)
 
-  copy_www_resources(head, temp_dir)
+  # Find the paths of all the JS and CSS files in head tags
+  www_paths <- unlist(lapply(head, function(tag) {
+    tag$attribs$src %||% tag$attribs$href
+  }))
+  # Also copy jquery-ui resources
+  www_paths <- c(www_paths, "lib/jquery-ui")
+
+  copy_www_resources(www_paths, temp_dir)
 
   body <- tagList(
     ggvis_output(id, shiny = FALSE),
@@ -107,9 +114,9 @@ view_static <- function(x,
   invisible(html_file)
 }
 
-copy_www_resources <- function(head_tags, destdir) {
+copy_www_resources <- function(paths, destdir) {
   # Copies a file/dir from an installed package to the destdir (with path)
-  copy_www_file <- function(file, pkg) {
+  copy_www_path <- function(file, pkg) {
     src <- system.file("www", file, package = "ggvis")
 
     destfile <- file.path(destdir, file)
@@ -124,12 +131,7 @@ copy_www_resources <- function(head_tags, destdir) {
     }
   }
 
-  # Extract the needed filenames from the head tags
-  ggvis_files <- unlist(lapply(head_tags, function(tag) {
-    tag$attribs$src %||% tag$attribs$href
-  }))
-
-  lapply(ggvis_files, copy_www_file)
+  lapply(paths, copy_www_path)
 }
 
 #' @rdname print.ggvis
