@@ -208,7 +208,7 @@ knitr_print <- function(x, dynamic = NA, id = rand_id("plot_"), minify = TRUE,
   if (is.na(dynamic)) dynamic <- is.dynamic(x) && interactive()
   if (dynamic) {
     warning("Can't output dynamic/interactive ggvis plots in a knitr document.\n",
-      "Using a static version of plot, so results may not look right.")
+      "Generating a static (non-dynamic, non-interactive) version of plot.")
   }
 
   spec <- as.vega(x, dynamic = FALSE)
