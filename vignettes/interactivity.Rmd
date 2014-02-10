@@ -1,3 +1,8 @@
+---
+output:
+  ggvis:::html_document
+---
+
 <!--
 %\VignetteEngine{knitr}
 %\VignetteIndexEntry{Interactivity}
@@ -7,6 +12,7 @@
 library(knitr)
 library(ggvis)
 opts_chunk$set(comment = "#>", error = FALSE, tidy = FALSE)
+opts_chunk$set(fig.width = 3.5, fig.height = 2.5, dpi = 100)
 ```
 
 # Interactivity
@@ -33,7 +39,7 @@ A plot with basic interactive controls looks very similar to a static plot.
 You just replace constant values with functions that produce interactive
 controls like `input_slider()`:
 
-```{r}
+```{r, results = 'asis'}
 ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
   layer_smooth(span = input_slider(0.5, 1, 1)) +
   mark_symbol(props(size := input_slider(100, 1000)))
@@ -83,7 +89,7 @@ the plot.
 
 1.  Use the regular property inheritance structure:
 
-    ```{r}
+    ```{r, results = 'asis'}
     ggvis(mtcars, props(x = ~wt, y = ~mpg, size := input_slider(10, 1000)),
       mark_symbol(props(fill := "red")),
       mark_symbol(props(stroke := "black", fill := NA))
@@ -92,7 +98,7 @@ the plot.
 
 2. Create the input and assign it to a variable:
 
-    ```{r}
+    ```{r, results = 'asis'}
     slider <- input_slider(10, 1000)
     ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
       mark_symbol(props(fill := "red", size := slider)) +
@@ -106,7 +112,7 @@ used for both layers - it controls the size of both the red and the black
 points. In the second plot, you get two independent sliders which allow you to
 control the size of the red and black points independently.
 
-```{r}
+```{r, results = 'asis'}
 slider <- input_slider(100, 1000)
 ggvis(mtcars, props(x = ~wt, y = ~mpg),
   mark_symbol(props(size := slider)),

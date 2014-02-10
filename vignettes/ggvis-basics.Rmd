@@ -1,3 +1,8 @@
+---
+output:
+  ggvis:::html_document
+---
+
 <!--
 %\VignetteEngine{knitr}
 %\VignetteIndexEntry{ggvis basics}
@@ -7,6 +12,7 @@
 library(knitr)
 library(ggvis)
 opts_chunk$set(comment = "#>", error = FALSE, tidy = FALSE)
+opts_chunk$set(fig.width = 3.5, fig.height = 2.5, dpi = 100)
 ```
 
 # ggvis basics
@@ -15,9 +21,9 @@ opts_chunk$set(comment = "#>", error = FALSE, tidy = FALSE)
 
 The goal of ggvis is to make it easy to build interactive graphics for exploratory data analysis. ggvis has a similar underlying theory to [ggplot2](http://ggplot2.org) (the grammar of graphics), but it's expressed a little differently, and adds new features to make your plots interactive. ggvis also incorporates reactive programming ideas drawn from [shiny](http://www.rstudio.com/shiny/).
 
-The graphics produced by ggvis are fundamentally web graphics and work very differently way to traditional R graphics. This gives allows us to implement exciting new features like interactivity, but comes at a cost. For example, every interactive ggvis plot must be connected to a running R session. This is great for exploration, because you can do anything in your interactive plot you can do in R, but it's not so great for publication. We will overcome these issues in time, but for now be aware that we have many existing tools to reimplement before you can do everything with ggvis that you can do with base graphics.
+The graphics produced by ggvis are fundamentally web graphics and work very differently from traditional R graphics. This allows us to implement exciting new features like interactivity, but it comes at a cost. For example, every interactive ggvis plot must be connected to a running R session (static plots do not need a running R session to be viewwed). This is great for exploration, because you can do anything in your interactive plot you can do in R, but it's not so great for publication. We will overcome these issues in time, but for now be aware that we have many existing tools to reimplement before you can do everything with ggvis that you can do with base graphics.
 
-This vignette is divided four into main sections:
+This vignette is divided into four main sections:
 
 * Dive into plotting with `qvis()`.
 * Add interactivity with the mouse and keyboard.
@@ -36,11 +42,11 @@ Every ggvis graphic starts with a call to `ggvis()` or `qvis()`:
   gives you more control, but also means you need to type more to get a
   basic plot.
 
-We'll start with `qvis()` because it lets makes graphics very quickly. You can learn more about `ggvis()` in the [data hierarchy](data-hierarchy.html) vignette.
+We'll start with `qvis()` because it lets us make graphics very quickly. You can learn more about `ggvis()` in the [data hierarchy](data-hierarchy.html) vignette.
 
 A basic `qvis()` call creates a scatterplot. It has three arguments: a data set, the variable displayed on the x-axis and the variable on the y-axis.
 
-```{r}
+```{r, results = 'asis'}
 qvis(mtcars, ~wt, ~mpg)
 ```
 
@@ -48,7 +54,7 @@ qvis(mtcars, ~wt, ~mpg)
 
 If you only supply a dataset and an x-position, `qvis()` will draw a barchart or histogram depending on whether the x variable is categorical or continuous. We use `~` before the variable name to indicate that we don't want to literally use the value of the `wt` variable (which doesn't exist), but instead we want we want to use the `wt` variable inside in the dataset.
 
-```{r}
+```{r, results = 'asis'}
 # A histogram
 qvis(mtcars, ~wt)
 # A barchart
@@ -57,16 +63,16 @@ qvis(mtcars, ~factor(cyl))
 
 You can add more variables to the plot by mapping them to other visual properties like `fill`, `stroke`, `size` and `shape`.
 
-```{r}
+```{r, results = 'asis'}
 qvis(mtcars, ~wt, ~mpg, stroke = ~vs)
 qvis(mtcars, ~wt, ~mpg, fill = ~vs)
 qvis(mtcars, ~wt, ~mpg, size = ~vs)
 qvis(mtcars, ~wt, ~mpg, shape = ~factor(cyl))
 ```
 
-If you want to make the points a fixed colour or size, you need to use `:=` instead of `=`. This seems like something that `qvis()` should be able to figure out by itself, but making it explicit allows you to create some useful plots that you couldn't otherwise. See the [properties and scales](properties-scales.html) for more details.
+If you want to make the points a fixed colour or size, you need to use `:=` instead of `=`. The `:=` operator means to use a raw, unscaled value. This seems like something that `qvis()` should be able to figure out by itself, but making it explicit allows you to create some useful plots that you couldn't otherwise. See the [properties and scales](properties-scales.html) for more details.
 
-```{r}
+```{r, results = 'asis'}
 qvis(mtcars, ~wt, ~mpg, fill := "red", stroke := "black")
 qvis(mtcars, ~wt, ~mpg, size := 300)
 qvis(mtcars, ~wt, ~mpg, shape := "cross")
@@ -78,7 +84,7 @@ As well as mapping visual properties to variables, or setting them to specific v
 
 The following example allows you to control the size and opacity of points with two sliders:
 
-```{r}
+```{r, results = 'asis'}
 slider_s <- input_slider(10, 100)
 slider_o <- input_slider(0, 1, value = 0.5)
 
@@ -87,25 +93,25 @@ qvis(mtcars, ~wt, ~mpg, size := slider_s, opacity := slider_o)
 
 You can also connect interactive components to other plot parameters like the binwidth of a histogram:
 
-```{r}
+```{r, results = 'asis'}
 binwidth <- input_slider(0, 2, value = 1, step = 0.1)
 qvis(mtcars, ~wt, binwidth = binwidth)
 ```
 
-Behind the scenes, interactive plots are built with [shiny](http://www.rstudio.com/shiny/), and you can currently only have one running at a time. To finish with a plot, press the stop button in Rstudio, or close the browser window and then press Ctrl + C in R.
+Behind the scenes, interactive plots are built with [shiny](http://www.rstudio.com/shiny/), and you can currently only have one running at a time in a given R session. To finish with a plot, press the stop button in Rstudio, or close the browser window and then press Ctrl + C in R.
 
 As well as `input_slider()`, ggvis provides `input_checkbox()`, `input_checkboxgroup()`, `input_numeric()`, `input_radiobuttons()`, `input_select()` and  `input_text()`. See the examples in the documentation for how you might use each one.
 
 You can also use keyboard controls with `left_right()` and `up_down()`. Press the left and right arrows to control the size of the points in the next example.
 
-```{r}
+```{r, results = 'asis'}
 keys_s <- left_right(10, 1000, step = 50)
 qvis(mtcars, ~wt, ~mpg, size := keys_s, opacity := 0.5)
 ```
 
 You can also add on more complex types of interaction like tooltips:
 
-```{r}
+```{r, results = 'asis'}
 qvis(mtcars, ~wt, ~mpg) + tooltip(function(df) df$wt)
 ```
 
@@ -125,21 +131,21 @@ There are five simple layers:
   with two variables. It has properties `x`, `y`, `shape`, `stroke`, `fill`,
   `strokeOpacity`, `fillOpacity`, and `opacity`.
 
-    ```{r}
+    ```{r, results = 'asis'}
     qvis(mtcars, ~wt, ~mpg)
     qvis(mtcars, ~wt, ~mpg, layers = "point")
     ```
 
 * Paths and polygons, `layer_path()`.
 
-    ```{r}
+    ```{r, results = 'asis'}
     df <- data.frame(x = 1:10, y = runif(10))
     qvis(df, ~x, ~y, layers = "path")
     ```
 
     If you supply a `fill`, you'll get a polygon
 
-    ```{r}
+    ```{r, results = 'asis'}
     t <- seq(0, 2 * pi, length = 100)
     df <- data.frame(x = sin(t), y = cos(t))
     qvis(df, ~x, ~y, fill := "red", layers = "path")
@@ -148,7 +154,7 @@ There are five simple layers:
 * Filled areas, `layer_area()`. Use properties `y` and `y2` to control the
   extent of the area.
 
-    ```{r}
+    ```{r, results = 'asis'}
     df <- data.frame(x = 1:10, y = runif(10))
     qvis(df, ~x, ~y, layers = "area")
     qvis(df, ~x, ~y + 0.1, y2 = ~y - 0.1, layers = "area")
@@ -157,7 +163,7 @@ There are five simple layers:
 * Rectangles, `layer_rect()`. The location and size of the rectangle is
   controlled by the `x`, `x2`, `y` and `y2` properties.
 
-    ```{r}
+    ```{r, results = 'asis'}
     df <- data.frame(x1 = runif(5), x2 = runif(5), y1 = runif(5), y2 = runif(5))
     qvis(df, ~x1, ~y1, x2 = ~x2, y2 = ~y2, fillOpacity := 0.1, layers = "rect")
     ```
@@ -168,7 +174,7 @@ There are five simple layers:
   name), `fontSize` (size in pixels), `fontWeight` (e.g. bold or normal),
   `fontStyle` (e.g. italic or normal.)
 
-    ```{r}
+    ```{r, results = 'asis'}
     df <- data.frame(x = 3:1, y = c(1, 3, 2), label = c("a", "b", "c"))
     qvis(df, ~x, ~y, text := ~label, layers = "text")
     qvis(df, ~x, ~y, text := ~label, layers = "text", fontSize := 50)
@@ -179,7 +185,7 @@ Four richer layers are:
 
 * `layer_line()` which automatically orders by the x variable:
 
-    ```{r}
+    ```{r, results = 'asis'}
     t <- seq(0, 2 * pi, length = 20)
     df <- data.frame(x = sin(t), y = cos(t))
     qvis(df, ~x, ~y, layers = "path")
@@ -191,14 +197,14 @@ Four richer layers are:
   the data then displays the results with `layer_rect()`. This is the default
   layer when `qvis()` is called with a dataset and an `x` variable.
 
-    ```{r}
+    ```{r, results = 'asis'}
     qvis(mtcars, ~wt)
     qvis(mtcars, ~wt, layers = "histogram")
     ```
 
     The most important parameter to `layer_histogram()` is the bin width:
 
-    ```{r}
+    ```{r, results = 'asis'}
     qvis(mtcars, ~wt, binwidth = 1)
     qvis(mtcars, ~wt, binwidth = 0.1)
     ```
@@ -207,14 +213,14 @@ Four richer layers are:
   with a line and confidence interval. It's useful to highlight the trend
   in noisy data:
 
-    ```{r}
+    ```{r, results = 'asis'}
     qvis(mtcars, ~wt, ~mpg, layers = "smooth")
     ```
 
     You can control the degree of wiggliness with the span parameter:
 
-    ```{r}
-    span <- input_slider(0, 1, value = 0.75)
+    ```{r, results = 'asis'}
+    span <- input_slider(0.2, 1, value = 0.75)
     qvis(mtcars, ~wt, ~mpg, layers = "smooth", span = span)
     ```
 
@@ -224,19 +230,19 @@ You can learn more about layers in the [layers](layers.html) vignette.
 
 Rich graphics can be created by combining multiple layers on the same plot. There are two ways to combine layers. The first and simplest way is to provide a vector of layer names to `layer`:
 
-```{r}
+```{r, results = 'asis'}
 qvis(mtcars, ~wt, ~mpg, layers = c("smooth", "point"))
 ```
 
 This is ok for very simple plots, but it's fundamentally limited because you can't use different properties or parameters on different layers. A more flexible approach is to add layers to a base plot:
 
-```{r}
+```{r, results = 'asis'}
 qvis(mtcars, ~wt, ~mpg) + layer_smooth()
 ```
 
 You could use this approach to add two smoothers with varying degrees of wiggliness:
 
-```{r}
+```{r, results = 'asis'}
 qvis(mtcars, ~wt, ~mpg) +
   layer_smooth(span = 1, se = FALSE) +
   layer_smooth(span = 0.3, se = FALSE)
@@ -244,7 +250,7 @@ qvis(mtcars, ~wt, ~mpg) +
 
 There's an important difference between `qvis()` and individual layers. `qvis()` does some magic to guess whether an argument is a property or an argument to a transformation. The individual layers don't use this magic, so you need to identify properties by wrapping them in `props()`:
 
-```{r}
+```{r, results = 'asis'}
 qvis(mtcars, ~wt, ~mpg, layers = c("point", "smooth"), stroke := "red")
 
 qvis(mtcars, ~wt, ~mpg) +
@@ -253,7 +259,7 @@ qvis(mtcars, ~wt, ~mpg) +
 
 It's confusing to read code that refers to properties in two different ways, so when you start adding on more complex layers it's better to switch from `qvis()` to `ggvis()`:
 
-```{r}
+```{r, results = 'asis'}
 ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
   layer_point() +
   layer_smooth(props(stroke := "red"))
@@ -266,7 +272,7 @@ You'll learn more about building up rich hierarchical graphics in [data hierarch
 There are also other optional components that you can include:
 
 * `scales`, to control the mapping between data and visual properties.
-  These are described in the "properties and scales" vignette.
+  These are described in the [properties and scales](properties-scales.html) vignette.
 
 * `legends` and `axes` to control the appearance of the guides produced by
-  the scales.  See the "axes and legends" vignette for more details.
+  the scales.  See the [axes and legends](axes-legends.html) vignette for more details.

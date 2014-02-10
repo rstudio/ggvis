@@ -1,3 +1,8 @@
+---
+output:
+  ggvis:::html_document
+---
+
 <!--
 %\VignetteEngine{knitr}
 %\VignetteIndexEntry{Axes and legends}
@@ -7,6 +12,7 @@
 library(knitr)
 library(ggvis)
 opts_chunk$set(comment = "#>", error = FALSE, tidy = FALSE)
+opts_chunk$set(fig.width = 3.5, fig.height = 2.5, dpi = 100)
 ```
 
 # Guides: Axes and legends
@@ -33,21 +39,21 @@ they share are particularly important.
 * `scale` (axis), and stroke/fill/size/shape (legend) describe which scale (or
   scales in the case of a legend) will be displayed on the guide
 
-  ```R
-  guide_axis("x")
-  guide_axis("y")
-  guide_legend(fill = stroke)
-  guide_legend(size = size)
-  # Display multiple scales in one legend:
-  guide_legend(fill = stroke, size = size)
-  ```
+    ```{r}
+    guide_axis("x")
+    guide_axis("y")
+    guide_legend(fill = "stroke")
+    guide_legend(size = "size")
+    # Display multiple scales in one legend:
+    guide_legend(fill = "stroke", size = "size")
+    ```
 
 * `title`, a string describing the guide
 
-  ```R
-  guide_axis("x", title = "My x variable")
-  guide_legend(fill = fill, title = "Some interesting colours")
-  ```
+    ```{r}
+    guide_axis("x", title = "My x variable")
+    guide_legend(fill = "fill", title = "Some interesting colours")
+    ```
 
 * `values`, used to override the default placement of ticks on an axis or gradient
   legend, or visible legend labels.
@@ -64,36 +70,35 @@ separately), the labels and axis. For legends, you can set properties of the
 title, label, symbols (for categorical scales), gradient (for continuous
 scales), and legend.
 
-Currently, if you're using mulitple scales, you'll need to adjust properties to make
+Currently, if you're using multiple scales, you'll need to adjust properties to make
 sure that your legends don't overlap.
 
-```R
-ggvis(mtcars, props(x ~ wt, y ~ mpg),
-  mark_symbol(),
+```{r, results = 'asis'}
+ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
+  mark_symbol() +
   guide_axis("x", properties = list(
     axis = props(stroke = "red", strokeWidth = 5),
     grid = props(stroke = "blue"),
     ticks = props(stroke = "blue", strokeWidth = 2),
     labels = props(angle = 45, align = "left", fontSize = 20)
   ))
-)
 ```
 
 
 ## Axis
 
-```R
-ggvis(mtcars, props(x ~ wt, y ~ mpg), mark_symbol())
+```{r, results = 'asis'}
+ggvis(mtcars, props(x = ~wt, y = ~mpg)) + mark_symbol()
 
-ggvis(mtcars, props(x ~ wt, y ~ mpg), mark_symbol(),
-  guide_axis("x", title = "Weight"),
-  guide_axis("y", title = "Miles per gallon"))
+ggvis(mtcars, props(x = ~wt, y = ~mpg)) + mark_symbol() +
+  guide_axis("x", title = "Weight") +
+  guide_axis("y", title = "Miles per gallon")
 
 # Use title offset to push the titles further away
-ggvis(mtcars, props(x ~ wt, y ~ mpg), mark_symbol(),
-  guide_axis("x", title = "Weight", title_offset = 50),
-  guide_axis("y", title = "Miles per gallon", title_offset = 50))
-
+ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
+  mark_symbol() +
+  guide_axis("x", title = "Weight", title_offset = 50) +
+  guide_axis("y", title = "Miles per gallon", title_offset = 50)
 ```
 
 ### Tick sizes and padding
@@ -108,47 +113,47 @@ There are five options that control the appearance of ticks:
   major, minor and end ticks. By default they are all the same size as the major
   ticks, but you can set them separately.
 
-```R
+```{r, results = 'asis'}
 # Change ticks and subdivide with minor ticks
-ggvis(mtcars, props(x ~ wt, y ~ mpg), mark_symbol(),
-  guide_axis("x", subdivide = 9, values = 1:6),
+ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
+  mark_symbol() +
+  guide_axis("x", subdivide = 9, values = 1:6) +
   guide_axis("y", subdivide = 1, values = seq(10, 34, by = 2))
-)
 
 # Make the minor ticks smaller and the end ticks longer
-ggvis(mtcars, props(x ~ wt, y ~ mpg), mark_symbol(),
+ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
+  mark_symbol() +
   guide_axis("x", subdivide = 9, values = 1:6, tick_size_major = 10,
     tick_size_minor = 5, tick_size_end = 15, tick_padding = 20)
-)
 ```
 
 ### Orientation
 
 You can control the placement of the axes with the `orient` argument:
 
-```R
-ggvis(mtcars, props(x ~ wt, y ~ mpg), mark_symbol(),
-  guide_axis("x", orient = "top"),
+```{r, results = 'asis'}
+ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
+  mark_symbol() +
+  guide_axis("x", orient = "top") +
   guide_axis("y", orient = "right")
-)
 ```
 
 If you want axes on both sides, just add two axes:
 
-```R
-ggvis(mtcars, props(x ~ wt, y ~ mpg), mark_symbol(),
-  guide_axis("x", orient = "bottom"),
+```{r, results = 'asis'}
+ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
+  mark_symbol() +
+  guide_axis("x", orient = "bottom") +
   guide_axis("x", orient = "top")
-)
 ```
 
 You can even put multiple scales on one side:
 
-```R
-ggvis(mtcars, props(x ~ wt, y ~ mpg), mark_symbol(),
-  guide_axis("x"),
+```{r, results = 'asis'}
+ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
+  mark_symbol() +
+  guide_axis("x") +
   guide_axis("x", offset = 40, grid = FALSE)
-)
 ```
 
 This is probably more useful if you have multiple x or y position scales, but
@@ -165,11 +170,11 @@ Unlike ggplot2, by default, ggvis will not combine scales based on the same
 underlying variables into a single legend. Instead you must do this yourself
 by supplying the name of multiple scales to one legend:
 
-```R
+```{r, results = 'asis'}
 mtcars$cyl <- ordered(mtcars$cyl)
-ggvis(mtcars, props(x ~ mpg, y ~ wt, size ~ cyl, fill ~ cyl),
-  mark_symbol())
-ggvis(mtcars, props(x ~ mpg, y ~ wt, size ~ cyl, fill ~ cyl),
-  mark_symbol(),
-  guide_legend(size = "size", fill = "fill"))
+ggvis(mtcars, props(x = ~mpg, y = ~wt, size = ~cyl, fill = ~cyl)) +
+  mark_symbol()
+ggvis(mtcars, props(x = ~mpg, y = ~wt, size = ~cyl, fill = ~cyl)) +
+  mark_symbol() +
+  guide_legend(size = "size", fill = "fill")
 ```

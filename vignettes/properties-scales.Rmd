@@ -1,3 +1,8 @@
+---
+output:
+  ggvis:::html_document
+---
+
 <!--
 %\VignetteEngine{knitr}
 %\VignetteIndexEntry{Properties and scales}
@@ -7,6 +12,7 @@
 library(knitr)
 library(ggvis)
 opts_chunk$set(comment = "#>", error = FALSE, tidy = FALSE)
+opts_chunk$set(fig.width = 3.5, fig.height = 2.5, dpi = 100)
 ```
 
 # Properties and scales
@@ -27,13 +33,13 @@ In this chapter, you will learn:
   override the defaults.
 
 Note that unlike ggplot2, scales do not control the appearance of their guides:
-see the axes and legends vignette for how to customise their display.
+see the [axes and legends](axes-legends.html) vignette for how to customise their display.
 
 ## The `props()` wrapper
 
 Every ggvis mark is associated with a set of properties that governs how it is displayed. These properties can be constant values (like 5, "blue", or "square"), or mapped to variables in your dataset. ggplot2 syntax made a distinction between mapping variables and setting constants. For example, in ggplot2, you might say:
 
-```{r, eval = FALSE}
+```{r eval = FALSE}
 geom_point(aes(x = wt, y = mpg), colour = "red", size = 5)
 ```
 
@@ -47,7 +53,7 @@ This section introduces `props()`, a convenient function for creating property o
 
 ### Setting vs mapping
 
-Props distinguishes between setting values to constants and mapping values to a variable based on whether you use `~` (mapping) or `=` (setting). The syntax is designed to remind you that, like a linear model, the properties specification isn't using the value of the variable `wt`, but its name.
+Props distinguishes between setting values to constants and mapping values to a variable based on whether you use `=` (mapping) or `:=` (setting). The syntax is designed to remind you that, like a linear model, the properties specification isn't using the value of the variable `wt`, but its name.
 
 * `props(x = ~displ, y = ~mpg)`: map x to engine displacement and y to miles
   per gallon
@@ -65,14 +71,14 @@ Those examples follow a common pattern: `=` is always scaled, and `:=` is never 
 It's also possible provide a scaled constant instead of a raw constant.
 That's useful when you want to label different layers in a plot:
 
-```{r}
+```{r, eval = FALSE}
 ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
   layer_point() +
   layer_smooth(props(stroke = "lm"), method = "lm") +
   layer_smooth(props(stroke = "loess"))
 ```
 
-(Note this isn't currently supported in ggvis because of a limitation
+(Note: this isn't currently supported in ggvis because of a limitation
 of vega. See https://github.com/rstudio/ggvis/issues/29 for progress.)
 
 ### Valid properties
@@ -87,7 +93,7 @@ layer_line(props(strke = ~cyl))
 # Did you mean: stroke?
 ```
 
-Note that properties supplied to `ggvis` or `node` can't be checked
+Note that properties supplied to `ggvis` or `layer` can't be checked
 automatically on creation, because they may be modified by other nodes along
 the pipeline (or the node structure of the graph, including the marks, might
 be changed after plot creation). These will only be checked once the plot
@@ -107,7 +113,7 @@ print(p)
 Variable properties can refer to both variables in the dataset and variables in
 the local environment:
 
-```{r}
+```{r, results = 'asis'}
 df <- data.frame(x = 1:10)
 f <- function(n) {
   ggvis(df, props(x = ~x, y = ~x ^ n), layer_path())
@@ -136,8 +142,8 @@ A prop has two key properties:
   Unscaled is the equivalent of using `scale_identity` in ggplot2.
 
 Type        | Scaled | Common use | In props
-------- ----|--------|-------------------------
-variable    | yes    | Map variable to property | `x ~ mpg`
+------------|--------|-------------------------
+variable    | yes    | Map variable to property | `x = ~mpg`
 variable    | no     | Variable already contains visual values | `x := ~colour`
 constant    | yes    | Annotation position in data space | `x = 1`
 constant    | no     | Pixel location, or exact colour | `x := 1`
@@ -174,7 +180,7 @@ Like in ggplot2, scales control the mapping between data values and values
 interpreted by the drawing device. Scales are added to the top-level plot
 specification and are usually created with `dscale` (short for default scale):
 
-```{r}
+```{r, results = 'asis'}
 # Override the default data limits:
 ggvis(mtcars, props(x = ~disp, y = ~wt)) +
   layer_point() +
@@ -261,7 +267,7 @@ You can add your own scales for properties that don't otherwise have defaults.
 For example, imagine you wanted to use the font of a label to represent some
 data. There's no default scale for font, but you could create one yourself:
 
-```{r}
+```{r, results = 'asis'}
 df <- data.frame(x = runif(5), y = runif(5),
   labels = c("a", "b", "b", "a", "b"))
 ggvis(df, props(x = ~x, y = ~y, text := ~labels, font = ~labels,
@@ -270,16 +276,16 @@ ggvis(df, props(x = ~x, y = ~y, text := ~labels, font = ~labels,
   scale_ordinal("font", range = c("Helvetica Neue", "Times New Roman"))
 ```
 
-Note the use of `text := ~labels`: we don't want to scale the labels - they already make sense in the visual space.
+Note the use of `text := ~labels`: we don't want to scale the labels - the raw values already make sense in the visual space.
 
 ### Multiple scales for one property
 
 Generally, you will override the default name of a scale in order to use
 more scales than the default. You could do this in order to create a dual-axis
-chart (which is a bad idea - read [this paper][dual-axis] for more details).
+chart (which is generally a bad idea - read [this paper][dual-axis] for more details).
 If you do this, you will also need to add a scale object.
 
-```{r}
+```{r, results = 'asis'}
 ggvis(mtcars, props(y = ~mpg)) +
   layer_point(props(x = prop(~disp, scale = "xdisp"))) +
   layer_point(props(x = prop(~wt, scale = "xwt"), fill := "blue")) +
@@ -296,7 +302,7 @@ You could also force ggplot2 to use the same scale for properties that would
 otherwise use different scales. I'm not sure of a useful example of this,
 except to force `stroke` and `fill` to use the same scale:
 
-```{r}
+```{r, results = 'asis'}
 df <- data.frame(x = 1:5, y = 1:5, a = runif(5), b = -runif(5))
 p <- props(x = ~x, y = ~y, stroke = ~a, fill = ~b, strokeWidth := 5, size := 1000)
 ggvis(df, p, layer_point(),

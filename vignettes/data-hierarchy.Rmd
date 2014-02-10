@@ -45,7 +45,7 @@ pipeline:
 * explicitly with pipeline: `pipeline(mtcars, transform_bin())`
 
 * implicitly in ggvis/node: `ggvis(mtcars, transform_bin())`
-  The data pipeline is stored in the data element of the gigvis_node object.
+  The data pipeline is stored in the data element of the ggvis_node object.
 
 To see how a pipeline works, we'll create some explicitly and then flow
 `flow()` properties down them pipeline and see what happens.
@@ -130,7 +130,7 @@ ggplot(cities, aes(x = long, y = lat)) +
   geom_text(aes(label = city), hjust=0, vjust=1, size=4)
 ```
 
-In gigvis, we can make it a little more clear that we have one marked based on
+In ggvis, we can make it a little more clear that we have one marked based on
 survivors dataset and two marks based on the cities dataset.
 
 ```{r, eval = FALSE}
