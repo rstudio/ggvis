@@ -244,7 +244,7 @@ ggvis = (function(_) {
       if (this.renderer === 'canvas') {
         width = width / pixelRatio();
       }
-      return Math.ceil(width);
+      return width;
     };
 
     prototype.marksHeight = function() {
@@ -253,7 +253,7 @@ ggvis = (function(_) {
       if (this.renderer === 'canvas') {
         height = height / pixelRatio();
       }
-      return Math.ceil(height);
+      return height;
     };
 
     // Set the width of the chart to the wrapper div. If keep_aspect is true,
@@ -329,9 +329,9 @@ ggvis = (function(_) {
       var $div    = this.getDiv();      // ggvis div, containing $el
       var $vega   = this.getVegaDiv();  // Immediate wrapper around marks
 
-      var width = this.marksWidth();
+      var width = Math.ceil(this.marksWidth());
       // There are 5 extra pixels in the bottom
-      var height = this.marksHeight() + 5;
+      var height = Math.ceil(this.marksHeight() + 5);
 
       $vega.width(width).height(height);
       $div.width(width).height(height);
