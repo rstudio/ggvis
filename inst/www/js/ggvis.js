@@ -268,8 +268,8 @@ ggvis = (function(_) {
       var $wrap = this.getWrapper();
 
       // Margin plus padding of body element
-      var extra_width = $body.outerWidth(true) - $body.innerWidth();
-      var extra_height = $body.outerHeight(true) - $body.innerHeight();
+      var extra_width = $body.outerWidth(true) - $body.width();
+      var extra_height = $body.outerHeight(true) - $body.height();
 
       // Resize the wrapper div to the window, inside of scrollbars if present
       // The wrapper has overflow:hidden so that objects inside of it won't
