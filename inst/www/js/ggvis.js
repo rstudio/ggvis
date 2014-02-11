@@ -300,11 +300,9 @@ ggvis = (function(_) {
       var $vega   = this.getVegaDiv();  // Immediate wrapper around marks
       var $marks  = this.getMarks();
 
-      // Need to use getAttribute because it works for both svg and canvas
-      // DOM objects. ($marks.width() doesn't work for SVG)
-      var width = Math.ceil(parseFloat($marks[0].getAttribute("width")));
+      var width = Math.ceil($marks.width());
       // There are 5 extra pixels in the bottom
-      var height = Math.ceil(parseFloat($marks[0].getAttribute("height")) + 5);
+      var height = Math.ceil($marks.height() + 5);
 
       $vega.width(width).height(height);
       $div.width(width).height(height);
