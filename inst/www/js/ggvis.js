@@ -33,6 +33,14 @@ ggvis = (function(_) {
       "$1"));
   }
 
+  function pixelRatio() {
+    if (window.devicePixelRatio) {
+      return window.devicePixelRatio;
+    } else {
+      return 1;
+    }
+  }
+
   // ggvis.CallbackRegistry class ----------------------------------------------
   ggvis.CallbackRegistry = (function() {
     // obj is an object to use as the context for the callbacks
@@ -225,6 +233,29 @@ ggvis = (function(_) {
       return this.getVegaDiv().children("svg, canvas");
     };
 
+    // Get the width of the marks object
+    prototype.marksWidth = function() {
+      var $marks = this.getMarks();
+      // Can't use width() because it returns 0 for hidden DOM elements, and
+      // sometimes the ggvis objects can start hidden.
+      // getAttribute does work for hidden DOM elements, but for canvas, it
+      // needs to be scaled down by the pixel ratio.
+      var width = parseFloat($marks[0].getAttribute('width'));
+      if (this.renderer === 'canvas') {
+        width = width / pixelRatio();
+      }
+      return Math.ceil(width);
+    };
+
+    prototype.marksHeight = function() {
+      var $marks = this.getMarks();
+      var height = parseFloat($marks[0].getAttribute('height'));
+      if (this.renderer === 'canvas') {
+        height = height / pixelRatio();
+      }
+      return Math.ceil(height);
+    };
+
     // Set the width of the chart to the wrapper div. If keep_aspect is true,
     // also set the height to maintain the aspect ratio.
     prototype.resizeToWrapper = function(duration, keep_aspect) {
@@ -298,11 +329,10 @@ ggvis = (function(_) {
       var $wrap   = this.getWrapper();  // wrapper around $div
       var $div    = this.getDiv();      // ggvis div, containing $el
       var $vega   = this.getVegaDiv();  // Immediate wrapper around marks
-      var $marks  = this.getMarks();
 
-      var width = Math.ceil($marks.width());
+      var width = this.marksWidth();
       // There are 5 extra pixels in the bottom
-      var height = Math.ceil($marks.height() + 5);
+      var height = this.marksHeight() + 5;
 
       $vega.width(width).height(height);
       $div.width(width).height(height);
