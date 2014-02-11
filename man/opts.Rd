@@ -5,8 +5,7 @@
 \usage{
 opts(width = NULL, height = NULL, keep_aspect = NULL, resizable = NULL,
   padding = NULL, duration = NULL, renderer = NULL,
-  hover_duration = NULL, enter_duration = NULL, exit_duration = NULL,
-  brush_policy = NULL, brush_delay = NULL)
+  hover_duration = NULL)
 
 is.ggvis_opts(x)
 }
@@ -33,24 +32,6 @@ is.ggvis_opts(x)
 
   \item{hover_duration}{The amount of time for hover
   transitions, in milliseconds.}
-
-  \item{enter_duration}{The amount of time for enter
-  transitions, in milliseconds.}
-
-  \item{exit_duration}{The amount of time for exit
-  transitions, in milliseconds.}
-
-  \item{brush_policy}{The policy for limiting the rate that
-  brush update events are reported by the client to the
-  server. Can be \code{"debounce"} (the default) or
-  \code{"throttle"}. When debouncing, event information
-  will be sent to the server <brush_delay> milliseconds
-  after the last change. When throttling, event information
-  will be sent at a rate no faster than once per
-  <brush_delay> milliseconds.}
-
-  \item{brush_delay}{The number of milliseconds to use with
-  \code{brush_policy}.}
 
   \item{x}{an object to test for opts-ness.}
 }

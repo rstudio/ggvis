@@ -14,18 +14,6 @@
 #'   (the default) or \code{"svg"}.
 #' @param hover_duration The amount of time for hover transitions, in
 #'   milliseconds.
-#' @param enter_duration The amount of time for enter transitions, in
-#'   milliseconds.
-#' @param exit_duration The amount of time for exit transitions, in
-#'   milliseconds.
-#' @param brush_policy The policy for limiting the rate that brush update events
-#'   are reported by the client to the server. Can be \code{"debounce"} (the
-#'   default) or \code{"throttle"}. When debouncing, event information will be
-#'   sent to the server <brush_delay> milliseconds after the last change. When
-#'   throttling, event information will be sent at a rate no faster than once per
-#'   <brush_delay> milliseconds.
-#' @param brush_delay The number of milliseconds to use with
-#'   \code{brush_policy}.
 #'
 #' @seealso \code{link{getOption}} and \code{link{options}}, for getting and
 #'   setting global options.
@@ -40,12 +28,7 @@
 #' @export
 opts <- function(width = NULL, height = NULL, keep_aspect = NULL,
                  resizable = NULL, padding = NULL, duration = NULL,
-                 renderer = NULL, hover_duration = NULL, enter_duration = NULL,
-                 exit_duration = NULL, brush_policy = NULL, brush_delay = NULL) {
-
-  if (!(is.null(brush_policy) || brush_policy %in% c("throttle", "debounce"))) {
-    stop("'brush_policy' must be NULL, 'throttle', or 'debounce'.")
-  }
+                 renderer = NULL, hover_duration = NULL) {
 
   structure(
     compact(list(
@@ -56,11 +39,7 @@ opts <- function(width = NULL, height = NULL, keep_aspect = NULL,
       padding = padding,
       duration = duration,
       renderer = renderer,
-      hover_duration = hover_duration,
-      enter_duration = enter_duration,
-      exit_duration = exit_duration,
-      brush_policy = brush_policy,
-      brush_delay = brush_delay
+      hover_duration = hover_duration
     )),
     class = "ggvis_opts"
   )
@@ -90,11 +69,7 @@ default_opts <- function() {
       padding = padding(),
       duration = 250,
       renderer = getOption("ggvis.renderer", "canvas"),
-      hover_duration = 0,
-      enter_duration = 250,
-      exit_duration = 250,
-      brush_policy = "debounce",
-      brush_delay = 250
+      hover_duration = 0
     ),
     class = "ggvis_opts"
   )
