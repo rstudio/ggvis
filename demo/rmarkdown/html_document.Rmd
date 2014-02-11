@@ -1,0 +1,33 @@
+---
+title: "Using ggvis with knitr and rmarkdown"
+output:
+  ggvis:::html_document:
+    theme: united
+    highlight: textmate
+---
+
+```{r echo=FALSE}
+# Set up default dimensions. Width and height are multiplied by dpi to get
+# pixel dimensions.
+knitr::opts_chunk$set(fig.width = 4, fig.height = 3, dpi = 100)
+```
+
+To knit this document and render it to HTML:
+
+```{r eval=FALSE}
+rmarkdown::render("html_document.Rmd")
+```
+
+To embed a ggvis plot just call `ggvis` and remember to specify `results='asis'` as a chunk option:
+
+```{r results='asis'}
+library(ggvis)
+ggvis(mtcars, props(x = ~wt, y = ~mpg)) + mark_symbol()
+```
+
+
+```{r results='asis'}
+ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
+  mark_symbol() +
+  layer_smooth()
+```
