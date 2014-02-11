@@ -68,7 +68,7 @@ default_opts <- function() {
       resizable = getOption("ggvis.resizable", TRUE),
       padding = padding(),
       duration = 250,
-      renderer = getOption("ggvis.renderer", "canvas"),
+      renderer = getOption("ggvis.renderer", "svg"),
       hover_duration = 0
     ),
     class = "ggvis_opts"
