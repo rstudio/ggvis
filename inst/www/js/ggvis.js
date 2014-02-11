@@ -264,8 +264,7 @@ ggvis = (function(_) {
       if (keep_aspect === undefined) keep_aspect = this.opts.keep_aspect;
       if (keep_aspect === undefined) keep_aspect = false;
 
-      var $div = this.getDiv(),
-          $wrap = this.getWrapper(),
+      var $wrap = this.getWrapper(),
           chart = this.chart,
           padding = chart.padding(),
           ratio = this.opts.width/this.opts.height;
