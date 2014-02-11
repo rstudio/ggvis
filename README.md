@@ -19,8 +19,7 @@ please join us on the mailing list: https://groups.google.com/group/ggvis.
 ggvis is not yet available on CRAN, but you can install it directly from github with the following code.
 
 ```R
-devtools::install_github("hadley/testthat")
-devtools::install_github("rstudio/ggvis")
+devtools::install_github(c("hadley/testthat", "rstudio/shiny", "rstudio/ggvis"))
 ```
 
 Next, read the vignettes (`vignette(package = "ggvis")`), starting with
