@@ -267,25 +267,25 @@ ggvis = (function(_) {
       var $body = $('body');
       var $wrap = this.getWrapper();
 
-      // Left and right padding of body element
-      var padding_left  = parseFloat($body.css("padding-left").replace("px", ""));
-      var padding_right = parseFloat($body.css("padding-right").replace("px", ""));
+      // Margin plus padding of body element
+      var extra_width = $body.outerWidth(true) - $body.innerWidth();
+      var extra_height = $body.outerHeight(true) - $body.innerHeight();
 
       // Resize the wrapper div to the window, inside of scrollbars if present
       // The wrapper has overflow:hidden so that objects inside of it won't
       // scrollbars to appear while it's being resized.
       var docEl = document.documentElement;
-      $wrap.width(docEl.clientWidth - padding_left - padding_right);
-      $wrap.height(docEl.clientHeight);
+      $wrap.width(docEl.clientWidth - extra_width);
+      $wrap.height(docEl.clientHeight - extra_height);
       // Resize again - needed because if the first resize caused a scrollbar to
       // disappear, there will be a little extra space.
-      $wrap.width(docEl.clientWidth - padding_left - padding_right);
-      $wrap.height(docEl.clientHeight);
+      $wrap.width(docEl.clientWidth - extra_width);
+      $wrap.height(docEl.clientHeight - extra_height);
 
       // Now if there are any other elements in the body that cause the page to
       // be larger than the window (like controls), we need to shrink the
       // plot so that they end up inside the window.
-      $wrap.height(2 * docEl.clientHeight - $body.height());
+      $wrap.height(2 * (docEl.clientHeight - extra_height) - $body.height());
 
       this.resizeToWrapper(duration);
     };
