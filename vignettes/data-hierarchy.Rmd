@@ -121,10 +121,10 @@ https://github.com/rstudio/ggvis/issues/37 for progress.
 ### Minard's march
 
 ```{r, eval = FALSE}
-ggplot(cities, aes(x = long, y = lat)) +
+ggplot(Minard.cities, aes(x = long, y = lat)) +
   geom_path(
     aes(size = survivors, colour = direction, group = group),
-    data = troops
+    data = Minard.troops
   ) +
   geom_point() +
   geom_text(aes(label = city), hjust=0, vjust=1, size=4)
@@ -134,15 +134,15 @@ In ggvis, we can make it a little more clear that we have one marked based on
 survivors dataset and two marks based on the cities dataset.
 
 ```{r, eval = FALSE}
-ggvis(props(long, lat),
-  node(
-    survivors,
-    props(size ~ survivors, colour ~ direction, group ~ group),
-    mark_symbol()),
-  node(
-    cities,
+ggvis(props(x = ~long, y = ~lat)) +
+  layer(
+    Minard.troops,
+    props(size = ~survivors, stroke = ~direction),
     mark_symbol()
-    mark_text(props(label ~ city))
+  ) +
+  layer(
+    Minard.cities,
+    mark_symbol(),
+    mark_text(props(text := ~city, dx := 5, dy := -5))
   )
-)
 ```
