@@ -83,7 +83,7 @@ knitr_opts <- function() {
   if (!is_installed("knitr")) {
     stop("knitr must be installed to call this function.")
   }
-  get_opt <- knitr::opts_chunk$get
+  get_opt <- knitr::opts_current$get
 
   opts(
     width = get_opt('fig.width') * get_opt('dpi'),
