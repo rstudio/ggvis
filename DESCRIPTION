@@ -16,6 +16,7 @@ Imports:
     shiny (>= 0.8.0.99),
     methods
 Suggests:
+    mgcv,
     testthat (>= 0.7.1.99),
     knitr,
     rmarkdown

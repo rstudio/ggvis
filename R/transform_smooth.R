@@ -130,6 +130,8 @@ compute.transform_smooth <- function(x, props, data) {
     x$method <- guess_cache(x$method, "method",
       if (max_rows(data) > 1000) "gam" else "loess")
   }
+  if (x$method == "gam") try_require("mgcv")
+
   if (is.guess(x$formula)) {
     x$formula <- guess_cache(x$formula, "formula", {
       f <- if (x$method == "gam") y ~ s(x) else y ~ x

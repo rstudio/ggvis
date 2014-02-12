@@ -156,3 +156,15 @@ check_empty_args <- function() {
 is_installed <- function(pkg) {
   (suppressPackageStartupMessages(requireNamespace(pkg, quietly = TRUE)))
 }
+
+# Try to load a package
+try_require <- function(pkg) {
+  result <- suppressPackageStartupMessages(suppressWarnings(
+    require(pkg, character.only = TRUE)))
+
+  if (!result) {
+    stop(pkg,
+      " package required for this functionality.  Please install and try again.",
+      call. = FALSE)
+  }
+}
