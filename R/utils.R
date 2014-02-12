@@ -154,7 +154,7 @@ check_empty_args <- function() {
 
 # Report whether a package is installed
 is_installed <- function(pkg) {
-  (suppressPackageStartupMessages(requireNamespace(pkg, quietly = TRUE)))
+  system.file(package = pkg) != ""
 }
 
 # Try to load a package
