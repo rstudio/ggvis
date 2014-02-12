@@ -205,7 +205,7 @@ knitr_print <- function(x, dynamic = NA, id = rand_id("plot_"), minify = TRUE,
   # Read knitr chunk options (if present) for default values
   x$opts <- list(merge_opts(knitr_opts(), x$opts[[1]]))
 
-  if (is.na(dynamic)) dynamic <- is.dynamic(x) && interactive()
+  if (is.na(dynamic)) dynamic <- is.dynamic(x)
   if (dynamic) {
     warning("Can't output dynamic/interactive ggvis plots in a knitr document.\n",
       "Generating a static (non-dynamic, non-interactive) version of plot.")
