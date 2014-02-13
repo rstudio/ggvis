@@ -162,8 +162,9 @@ smooth.data.frame <- function(data, trans, x_var, y_var) {
   assert_that(is.flag(trans$na.rm))
 
   env <- new.env(parent = environment(trans$formula))
+  old_x_val <- prop_value(x_var, data)
   env$data <- remove_missing(data.frame(
-    x = as.numeric(prop_value(x_var, data)),
+    x = as.numeric(old_x_val),
     y = prop_value(y_var, data)
   ))
 
@@ -176,9 +177,18 @@ smooth.data.frame <- function(data, trans, x_var, y_var) {
   x_grid <- seq(min(env$data$x), max(env$data$x), length = trans$n)
   pred <- predict_df(model, x_grid, trans$se, trans$level)
 
-  if (prop_type(data, x_var) == "datetime") {
+  # Coerce x value back to the original type, if applicable.
+  # This may need to be abstracted out later, so other transforms can use it.
+  if (inherits(old_x_val, "Date")) {
     pred$x <- as.Date(pred$x, origin = "1970-01-01")
+  } else if (inherits(old_x_val, "POSIXct")) {
+    pred$x <- as.POSIXct(pred$x, origin = "1970-01-01 00:00.00 UTC",
+      tz = attr(old_x_val, "tzone"))
+  } else if (inherits(old_x_val, "POSIXlt")) {
+    pred$x <- as.POSIXlt(pred$x, origin = "1970-01-01 00:00.00 UTC",
+      tz = attr(old_x_val, "tzone"))
   }
+
   pred
 }
 
