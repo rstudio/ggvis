@@ -1,7 +1,7 @@
 {
 	"data" : [
 		{
-			"name" : "df_176991690869283a6ffde232ed9aa63c_split_af4a4782_sort_b1f0862c_tree",
+			"name" : "df_176991690869283a6ffde232ed9aa63c_split_af4a4782_sort_3dd74b9a_tree",
 			"format" : {
 				"type" : "treejson"
 			},
@@ -83,8 +83,8 @@
 			}
 		},
 		{
-			"name" : "df_176991690869283a6ffde232ed9aa63c_split_af4a4782_sort_b1f0862c",
-			"source" : "df_176991690869283a6ffde232ed9aa63c_split_af4a4782_sort_b1f0862c_tree",
+			"name" : "df_176991690869283a6ffde232ed9aa63c_split_af4a4782_sort_3dd74b9a",
+			"source" : "df_176991690869283a6ffde232ed9aa63c_split_af4a4782_sort_3dd74b9a_tree",
 			"transform" : [
 				{
 					"type" : "flatten"
@@ -105,7 +105,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "df_176991690869283a6ffde232ed9aa63c_split_af4a4782_sort_b1f0862c",
+						"data" : "df_176991690869283a6ffde232ed9aa63c_split_af4a4782_sort_3dd74b9a",
 						"field" : "data.x"
 					}
 				]
@@ -123,7 +123,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "df_176991690869283a6ffde232ed9aa63c_split_af4a4782_sort_b1f0862c",
+						"data" : "df_176991690869283a6ffde232ed9aa63c_split_af4a4782_sort_3dd74b9a",
 						"field" : "data.y"
 					}
 				]
@@ -140,7 +140,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "df_176991690869283a6ffde232ed9aa63c_split_af4a4782_sort_b1f0862c",
+						"data" : "df_176991690869283a6ffde232ed9aa63c_split_af4a4782_sort_3dd74b9a",
 						"field" : "data.z"
 					}
 				]
@@ -151,7 +151,7 @@
 		{
 			"type" : "group",
 			"from" : {
-				"data" : "df_176991690869283a6ffde232ed9aa63c_split_af4a4782_sort_b1f0862c_tree"
+				"data" : "df_176991690869283a6ffde232ed9aa63c_split_af4a4782_sort_3dd74b9a_tree"
 			},
 			"marks" : [
 				{
@@ -173,7 +173,7 @@
 						},
 						"ggvis" : {
 							"data" : {
-								"value" : "df_176991690869283a6ffde232ed9aa63c_split_af4a4782_sort_b1f0862c_tree"
+								"value" : "df_176991690869283a6ffde232ed9aa63c_split_af4a4782_sort_3dd74b9a_tree"
 							}
 						}
 					}
@@ -216,12 +216,8 @@
 		"resizable" : true,
 		"padding" : {},
 		"duration" : 250,
-		"renderer" : "canvas",
-		"hover_duration" : 0,
-		"enter_duration" : 250,
-		"exit_duration" : 250,
-		"brush_policy" : "debounce",
-		"brush_delay" : 250
+		"renderer" : "svg",
+		"hover_duration" : 0
 	},
 	"handlers" : []
 }

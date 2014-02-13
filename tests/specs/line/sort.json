@@ -1,7 +1,7 @@
 {
 	"data" : [
 		{
-			"name" : "df_176991690869283a6ffde232ed9aa63c_sort_8a2c4c29",
+			"name" : "df_176991690869283a6ffde232ed9aa63c_sort_e00e0dc",
 			"format" : {
 				"type" : "csv",
 				"parse" : {
@@ -25,7 +25,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "df_176991690869283a6ffde232ed9aa63c_sort_8a2c4c29",
+						"data" : "df_176991690869283a6ffde232ed9aa63c_sort_e00e0dc",
 						"field" : "data.x"
 					}
 				]
@@ -43,7 +43,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "df_176991690869283a6ffde232ed9aa63c_sort_8a2c4c29",
+						"data" : "df_176991690869283a6ffde232ed9aa63c_sort_e00e0dc",
 						"field" : "data.y"
 					}
 				]
@@ -69,12 +69,12 @@
 				},
 				"ggvis" : {
 					"data" : {
-						"value" : "df_176991690869283a6ffde232ed9aa63c_sort_8a2c4c29"
+						"value" : "df_176991690869283a6ffde232ed9aa63c_sort_e00e0dc"
 					}
 				}
 			},
 			"from" : {
-				"data" : "df_176991690869283a6ffde232ed9aa63c_sort_8a2c4c29"
+				"data" : "df_176991690869283a6ffde232ed9aa63c_sort_e00e0dc"
 			}
 		}
 	],
@@ -107,12 +107,8 @@
 		"resizable" : true,
 		"padding" : {},
 		"duration" : 250,
-		"renderer" : "canvas",
-		"hover_duration" : 0,
-		"enter_duration" : 250,
-		"exit_duration" : 250,
-		"brush_policy" : "debounce",
-		"brush_delay" : 250
+		"renderer" : "svg",
+		"hover_duration" : 0
 	},
 	"handlers" : []
 }

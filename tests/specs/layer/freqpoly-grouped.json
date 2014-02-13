@@ -1,7 +1,7 @@
 {
 	"data" : [
 		{
-			"name" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_83b487e0_bin_f47a3a9c_tree",
+			"name" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_6871cf8b_bin_c91d09e8_tree",
 			"format" : {
 				"type" : "treejson"
 			},
@@ -93,8 +93,8 @@
 			}
 		},
 		{
-			"name" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_83b487e0_bin_f47a3a9c",
-			"source" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_83b487e0_bin_f47a3a9c_tree",
+			"name" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_6871cf8b_bin_c91d09e8",
+			"source" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_6871cf8b_bin_c91d09e8_tree",
 			"transform" : [
 				{
 					"type" : "flatten"
@@ -118,7 +118,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_83b487e0_bin_f47a3a9c",
+						"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_6871cf8b_bin_c91d09e8",
 						"field" : "data.cyl"
 					}
 				]
@@ -136,7 +136,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_83b487e0_bin_f47a3a9c",
+						"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_6871cf8b_bin_c91d09e8",
 						"field" : "data.x"
 					}
 				]
@@ -154,7 +154,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_83b487e0_bin_f47a3a9c",
+						"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_6871cf8b_bin_c91d09e8",
 						"field" : "data.count__"
 					}
 				]
@@ -165,7 +165,7 @@
 		{
 			"type" : "group",
 			"from" : {
-				"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_83b487e0_bin_f47a3a9c_tree"
+				"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_6871cf8b_bin_c91d09e8_tree"
 			},
 			"marks" : [
 				{
@@ -187,7 +187,7 @@
 						},
 						"ggvis" : {
 							"data" : {
-								"value" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_83b487e0_bin_f47a3a9c_tree"
+								"value" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_6871cf8b_bin_c91d09e8_tree"
 							}
 						}
 					}
@@ -230,12 +230,8 @@
 		"resizable" : true,
 		"padding" : {},
 		"duration" : 250,
-		"renderer" : "canvas",
-		"hover_duration" : 0,
-		"enter_duration" : 250,
-		"exit_duration" : 250,
-		"brush_policy" : "debounce",
-		"brush_delay" : 250
+		"renderer" : "svg",
+		"hover_duration" : 0
 	},
 	"handlers" : []
 }

@@ -107,12 +107,8 @@
 		"resizable" : true,
 		"padding" : {},
 		"duration" : 250,
-		"renderer" : "canvas",
-		"hover_duration" : 0,
-		"enter_duration" : 250,
-		"exit_duration" : 250,
-		"brush_policy" : "debounce",
-		"brush_delay" : 250
+		"renderer" : "svg",
+		"hover_duration" : 0
 	},
 	"handlers" : []
 }
