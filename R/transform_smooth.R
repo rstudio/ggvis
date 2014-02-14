@@ -184,9 +184,6 @@ smooth.data.frame <- function(data, trans, x_var, y_var) {
   } else if (inherits(old_x_val, "POSIXct")) {
     pred$x <- as.POSIXct(pred$x, origin = "1970-01-01 00:00.00 UTC",
       tz = attr(old_x_val, "tzone"))
-  } else if (inherits(old_x_val, "POSIXlt")) {
-    pred$x <- as.POSIXlt(pred$x, origin = "1970-01-01 00:00.00 UTC",
-      tz = attr(old_x_val, "tzone")[1])
   }
 
   pred
