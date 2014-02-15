@@ -175,6 +175,9 @@ add_scale_defaults("fill", c("nominal", "ordinal"), range = "category10")
 # Other nominal properties
 add_scale_defaults("shape", "nominal", range = "shapes")
 
+# Other ordinal properties
+add_scale_defaults("size", c("ordinal", "nominal"), range = c(20, 100))
+
 # Other numeric properties
 add_scale_defaults("size", "numeric", range = c(20, 100))
 
