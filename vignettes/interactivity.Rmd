@@ -1,6 +1,8 @@
 ---
+title: Interactivity
 output:
-  ggvis:::html_document
+  ggvis:::html_document:
+    toc: true
 ---
 
 <!--
@@ -15,23 +17,23 @@ opts_chunk$set(comment = "#>", error = FALSE, tidy = FALSE)
 opts_chunk$set(fig.width = 3.5, fig.height = 2.5, dpi = 100)
 ```
 
-# Interactivity
+**Note: If you're viewing the HTML version of this document generated with knitr, the examples will have their interactive features disabled. You'll need to run the code in R to see and use the interactive controls.**
 
-Ggvis interactivity is built on top of shiny's reactive programming
-model. It's possible to use ggvis without understanding how shiny works,
+Ggvis interactivity is built on top of Shiny's reactive programming
+model. It's possible to use ggvis without understanding how Shiny works,
 but you'll be limited to relatively simple interactions. The first part of
 this vignette describes __basic interactive controls__, which provide a quick
 and easy way to add basic interactivity to a plot. They are not very flexible,
 but they cover the most common interactive needs and you don't need to know
-anything about shiny to use them.
+anything about Shiny to use them.
 
-The second part of this vignette shows you how to __embedding a ggvis in a shiny
+The second part of this vignette shows you how to __embedding a ggvis in a Shiny
 app__.  This gives you complete freedom to make any component of the plot
 interactive, to display multiple plots on one page, and to freely arrange
 controls. The downside is that you'll need more code, and you'll need at
-least a basic understanding of shiny. If you're not already familiar with
-how shiny works, I recommend that you first read through the
-[shiny tutorial](http://rstudio.github.io/shiny/tutorial/)
+least a basic understanding of Shiny. If you're not already familiar with
+how Shiny works, I recommend that you first read through the
+[Shiny tutorial](http://rstudio.github.io/shiny/tutorial/)
 
 ## Basic interactive controls
 
@@ -158,11 +160,11 @@ plot specification. In other words, with only basic interactivity there's no
 way to add or remove layers, or switch between different datasets. This is a
 reasonable limitation because if you're doing exploration you can always create
 a new ggvis with R code, or if you're polishing a plot for presentation, you
-can embed it in a shiny app and gain full control over the plot.
+can embed it in a Shiny app and gain full control over the plot.
 
-### Compared to shiny
+### Compared to Shiny
 
-If you're familiar with shiny, you'll notice that these functions have very
+If you're familiar with Shiny, you'll notice that these functions have very
 similar equivalents: `sliderInput()`, `selectInput()` and so on.  There are two
 main differences:
 
@@ -177,7 +179,7 @@ main differences:
 
 ## Shiny apps
 
-If you know how to create a shiny app already, adding a ggvis plot is easy. In
+If you know how to create a Shiny app already, adding a ggvis plot is easy. In
 `server.r`, create a reactive ggvis object, and call `observeGgvis()`. The
 first argument is the plot object, the second is the plot id (needs to match
 with `ui.r`, and the third argument is the session object).

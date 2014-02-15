@@ -1,4 +1,5 @@
 ---
+title: "ggvis overview"
 output:
   ggvis:::html_document
 ---
@@ -14,8 +15,6 @@ library(ggvis)
 opts_chunk$set(comment = "#>", error = FALSE, tidy = FALSE)
 opts_chunk$set(fig.width = 2.5, fig.height = 1.5, dpi = 100)
 ```
-
-# ggvis
 
 ggvis is a data visualization package for R which lets you:
 

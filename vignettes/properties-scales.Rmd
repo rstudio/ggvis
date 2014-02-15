@@ -1,6 +1,8 @@
 ---
+title: Properties and scales
 output:
-  ggvis:::html_document
+  ggvis:::html_document:
+    toc: true
 ---
 
 <!--
@@ -14,8 +16,6 @@ library(ggvis)
 opts_chunk$set(comment = "#>", error = FALSE, tidy = FALSE)
 opts_chunk$set(fig.width = 3.5, fig.height = 2.5, dpi = 100)
 ```
-
-# Properties and scales
 
 Understanding how properties and scales work in ggvis an important step to
 mastering basic static plots, and is also necessary for great interactive

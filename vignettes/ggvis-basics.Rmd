@@ -1,6 +1,8 @@
 ---
+title: ggvis basics
 output:
-  ggvis:::html_document
+  ggvis:::html_document:
+    toc: true
 ---
 
 <!--
@@ -14,8 +16,6 @@ library(ggvis)
 opts_chunk$set(comment = "#>", error = FALSE, tidy = FALSE)
 opts_chunk$set(fig.width = 3.5, fig.height = 2.5, dpi = 100)
 ```
-
-# ggvis basics
 
 ## Introduction
 

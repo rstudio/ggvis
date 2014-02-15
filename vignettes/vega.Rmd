@@ -1,9 +1,12 @@
+---
+title: ggvis and Vega/D3
+output:
+  html_document
+---
 <!--
 %\VignetteEngine{knitr}
 %\VignetteIndexEntry{ggvis vs vega/d3}
 -->
-
-# ggvis vs vega/d3
 
 While ggvis is built on top of vega, which in turn borrows many ideas from d3,
 it is designed more for data exploration than data presentation. This means that

@@ -1,3 +1,9 @@
+---
+title: "Data hierarchy"
+output:
+  html_document
+---
+
 <!--
 %\VignetteEngine{knitr}
 %\VignetteIndexEntry{Data hierarchy}
@@ -8,8 +14,6 @@ library(knitr)
 library(ggvis)
 opts_chunk$set(comment = "#>", error = FALSE, tidy = FALSE)
 ```
-
-# Data hierarchy
 
 Compared to ggplot2, ggvis has a much richer data hierarchy. In ggplot2, you
 could define a data set and aesthetic mappings in the base plot, and override

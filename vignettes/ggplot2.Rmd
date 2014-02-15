@@ -1,3 +1,10 @@
+---
+title: "ggvis vs ggplot2"
+output:
+  html_document
+---
+
+
 <!--
 %\VignetteEngine{knitr}
 %\VignetteIndexEntry{ggvis vs ggplot2}
@@ -8,8 +15,6 @@ library(knitr)
 library(ggvis)
 opts_chunk$set(comment = "#>", error = FALSE, tidy = FALSE)
 ```
-
-# ggvis vs ggplot2
 
 If you're familiar with ggplot2, learning ggvis shouldn't be too hard - it
 borrows from many familiar concepts.  Note that ggvis is still very young,
