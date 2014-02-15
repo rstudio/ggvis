@@ -44,8 +44,9 @@ ggvis(faithful, props(x = ~eruptions, fill := "#ffffdd", fill.hover := "#eebbbb"
 
 ## Getting started with ggvis
 
-* Start with [ggvis basics](ggvis-basics.html)
-* Then learn how to create [interactive graphics](interactivity.html)
+* See some [quick examples](quick-examples.html)
+* Learn [ggvis basics](ggvis-basics.html)
+* Read more about [interactive graphics](interactivity.html)
 
 ## More advanced topics
 

@@ -1,0 +1,193 @@
+---
+title: "Quick ggvis examples"
+output:
+  ggvis:::html_document:
+    toc: true
+---
+
+<!--
+%\VignetteEngine{knitr}
+%\VignetteIndexEntry{ggvis basics}
+-->
+
+```{r, echo = FALSE, message = FALSE}
+library(knitr)
+opts_chunk$set(comment = "#>", error = FALSE, tidy = FALSE)
+opts_chunk$set(fig.width = 2, fig.height = 1.25, dpi = 100)
+```
+
+## qvis and ggvis
+
+There are two primary functions in ggvis that are used to create plots: `qvis` and `ggvis`.  `qvis` provides a streamlined interface which is suitable for simple plots; when you need more control over plots, `ggvis` may be more appropriate.
+
+In some of the simpler examples below, we'll show equivalent code qvis and ggvis.
+
+
+# Basic plots
+
+First, load the ggvis package:
+
+```{r, message = FALSE}
+library(ggvis)
+```
+
+## Scatterplots
+
+We'll use the built-in `mtcars` data set, and look at two columns of interest, `mpg`, and `wt`:
+
+```{r}
+# The first few rows of mtcars
+head(mtcars)
+```
+
+A basic scatter plot:
+
+```{r, results = 'asis', message = FALSE}
+# qvis(mtcars, ~wt, ~mpg)
+ggvis(mtcars, props(x = ~wt, y = ~mpg)) + mark_point()
+```
+
+Smaller points, a different shape, a different outline (stroke) color, and empty fill:
+
+```{r, results = 'asis', message = FALSE}
+# qvis(mtcars, ~wt, ~mpg, size := 25, shape := "diamond", stroke := "red", fill := NA)
+ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
+  mark_point(props(size := 25, shape := "diamond", stroke := "red", fill := NA))
+```
+
+
+## Bar graphs
+
+We'll use the built-in `pressure` data set for these examples:
+
+```{r}
+# The first few rows
+head(pressure)
+```
+
+
+When the variable on the x axis is continuous (e.g., numeric or date-time):
+
+```{r, results = 'asis', message = FALSE, fig.width = 4}
+# Note that y2 is the bottom of the bar, and the width is specified in pixels
+ggvis(pressure, props(x = ~temperature, y = ~pressure, y2 = 0)) +
+  mark_rect(props(width := 10))
+```
+
+In the previous example, the width of each bar was specified in pixels. If you change the width of the plot, you'll see that the bars remain 10 pixels wide.
+
+Instead of setting the width in pixels, it's possible to set the width in the scaled data space, by specifying the `x` and `x2` values for each bar. If you do this, the width of the bars isn't determined by the
+In this example, each bar is 20 wide in the x scale, so the bars touch:
+
+```{r, results = 'asis', message = FALSE, fig.width = 4}
+ggvis(pressure,
+      props(x = ~temperature - 10, x2 = ~temperature + 10, y = ~pressure, y2 = 0)) +
+  mark_rect() +
+  guide_axis("x", title = "temperature")
+```
+
+
+When the variable on the x axis is categorical (e.g., factor or character):
+
+```{r, results = 'asis', message = FALSE, fig.width = 4}
+# First, modify the pressure data set so that the x variable is a factor
+pressure2 <- pressure
+pressure2$temperature <- factor(pressure2$temperature)
+
+# qvis(pressure2, ~temperature, ~pressure, y2 = 0, width = band(), layers = "rect") +
+#   dscale("x", "nominal", padding = 0, points = FALSE)
+ggvis(pressure2, props(x = ~temperature, y = ~pressure)) +
+  mark_rect(props(y2 = 0, width = band())) +
+  dscale("x", "nominal", padding = 0, points = FALSE)
+```
+
+(Notice that in this example, the x values aren't sorted quite right: they're sorted lexically, by the first, second, and then third digit, instead of by the numeric value. This is due to a bug in ggvis.)
+
+## Line graphs
+
+```{r, results = 'asis', message = FALSE}
+# qvis(pressure, ~temperature, ~pressure, layers = "line")
+ggvis(pressure, props(x = ~temperature, y = ~pressure)) + layer_line()
+```
+
+Lines with points:
+
+```{r, results = 'asis', message = FALSE}
+# qvis(pressure, ~temperature, ~pressure, layers = c("line", "point"))
+ggvis(pressure, props(x = ~temperature, y = ~pressure)) +
+  layer_line() +
+  mark_point()
+```
+
+
+## Histograms
+
+We'll use the built-in `faithful` data set for these examples:
+
+```{r}
+# The first few rows
+head(faithful)
+```
+
+
+Basic histogram:
+
+```{r, results = 'asis', message = FALSE}
+# qvis(faithful, ~eruptions)
+ggvis(faithful, props(x = ~eruptions)) + layer_histogram()
+```
+
+
+Modify the fill color and binwidth, and add titles for the axes, since the automatic titles aren't very informative:
+
+```{r, results = 'asis', message = FALSE}
+ggvis(faithful, props(x = ~eruptions, fill := "#fff8dc")) +
+  layer_histogram(binwidth = 0.25) +
+  guide_axis("x", title = "eruptions") +
+  guide_axis("y", title = "count")
+```
+
+
+## Regression lines
+
+Adding a smoothing line (defaults to a `loess` model):
+
+```{r, results = 'asis', message = FALSE}
+# qvis(mtcars, ~wt, ~mpg, layers = c("point", "smooth"))
+
+ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
+  mark_point() +
+  layer_smooth()
+```
+
+With a linear model, and 95% confidence interval for the model.
+
+```{r, results = 'asis', message = FALSE}
+# qvis(mtcars, ~wt, ~mpg) + layer_smooth(method = "lm", se = TRUE)
+ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
+  layer_point() +
+  layer_smooth(method = "lm", se = TRUE)
+```
+
+
+## Scatter plots with grouping
+
+Coloring points by a variable:
+
+```{r, results = 'asis', message = FALSE}
+ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
+  mark_symbol(props(fill = ~factor(cyl)))
+```
+
+Coloring points, and adding a smoother for each group. The grouping variable (which is applied before the `transform_smooth` is calculated) must be specified with `by_group()`.
+
+```{r, results = 'asis', message = FALSE}
+ggvis(mtcars, by_group(cyl), props(x = ~wt, y = ~mpg)) +
+  mark_symbol(props(fill = ~factor(cyl))) +
+  layer_smooth(method = "lm", props(stroke = ~factor(cyl)))
+```
+
+
+# Interactive plots
+
+The following plots won't display correctly in this online document, but they will display correctly in
