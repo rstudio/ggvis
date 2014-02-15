@@ -1,12 +1,17 @@
 library(ggvis)
 
-# Bar graph with continuous x
+# Bar graph with continuous x, and bars 15 pixels wide
 ggvis(pressure, props(x = ~temperature, y = ~pressure)) +
   mark_rect(props(y2 = 0, width := 15))
 
+# Bar graph with continuous x, and bars occupying full width
+ggvis(pressure, props(x = ~temperature + 10, x2 = ~temperature - 10,
+                      y = ~pressure, y2 = 0)) +
+  mark_rect()
+
 # Bar graph with categorical x
 ggvis(pressure, props(x = ~temperature, y = ~pressure)) +
-  dscale("x", "nominal", range = "width", padding = 0, points = FALSE) +
+  dscale("x", "nominal", padding = 0, points = FALSE) +
   mark_rect(props(y2 = 0, width = band()))
 
 
