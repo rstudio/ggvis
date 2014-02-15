@@ -4,7 +4,7 @@ library(ggvis)
 ggvis(pressure, props(x = ~temperature, y = ~pressure)) +
   mark_rect(props(y2 = 0, width := 15))
 
-# Bar graph with ordinal x
+# Bar graph with categorical x
 ggvis(pressure, props(x = ~temperature, y = ~pressure)) +
   dscale("x", "nominal", range = "width", padding = 0, points = FALSE) +
   mark_rect(props(y2 = 0, width = band()))
