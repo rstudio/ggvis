@@ -51,7 +51,11 @@ ggvis_output <- function(plot_id, shiny = TRUE, minify = TRUE) {
   container <-
     div(id = paste0(plot_id, "-container"), class = "ggvis-output-container",
       # Div containing the plot
-      div(id = plot_id, class = "ggvis-output")
+      div(id = plot_id, class = "ggvis-output"),
+
+      div(class = "plot-gear-icon",
+        ggvisControlGroup(plot_id)
+      )
     )
 
 
@@ -218,6 +222,44 @@ sidebarBottomPanel <- function(...) {
 mainTopPanel <- function(...) {
   div(class = "span8 main-top",
     ...
+  )
+}
+
+#' Generate Shiny tags for ggvis controls
+#'
+#' Controls for choosing a renderer and downloading an image.
+#' @param plot_id Plot ID
+#' @importFrom shiny withTags HTML
+#' @export
+ggvisControlGroup <- function(plot_id) {
+  tags$nav(class = "ggvis-control",
+    tags$a(class = "dropdown-toggle", title = "Controls", "⚙"),
+    tags$ul(class = "dropdown",
+      tags$li(
+        "Renderer: ",
+        tags$a(
+          id = paste0(plot_id, "_renderer_svg"),
+          class = "ggvis-renderer-button",
+          `data-plot-id` = plot_id,
+          `data-renderer` = "svg",
+          "SVG"
+        ),
+        " | ",
+        tags$a(
+          id = paste0(plot_id, "_renderer_canvas"),
+          class = "ggvis-renderer-button",
+          `data-plot-id` = plot_id,
+          `data-renderer` = "canvas",
+          "Canvas"
+        )
+      ),
+      tags$li(tags$a(
+        id = paste0(plot_id, "_download"),
+        class = "ggvis-download",
+        `data-plot-id` = plot_id,
+        "Download"
+      ))
+    )
   )
 }
 

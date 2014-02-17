@@ -90,3 +90,40 @@
   top: 0px;
   right: 5px;
 }
+nav.ggvis-control {
+  position: relative;
+  float: right;
+}
+a.dropdown-toggle {
+  font-size: 15px;
+  text-decoration: none;
+  color: #999;
+  cursor: pointer;
+}
+ul.dropdown {
+  display: none;
+  text-align: right;
+  position: absolute;
+  margin-top: .5em;
+  border-radius: 3px;
+  border: 1px solid #999;
+  padding: 4px;
+  opacity: 0.85;
+  background-color: #fff;
+  box-shadow: 2px 2px 6px #888888;
+  width: 180px;
+  margin-left: -180px;
+}
+ul.dropdown li {
+  list-style-type: none;
+  padding: 5px 2px;
+}
+ul.dropdown li a {
+  text-decoration: none;
+  padding: 2px 2px;
+  cursor: pointer;
+}
+ul.dropdown li a.inactive {
+  color: black;
+  cursor: initial;
+}

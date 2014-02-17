@@ -244,8 +244,7 @@ html_head <- function(prefix = NULL, minify = TRUE, shiny = FALSE) {
       if (shiny) tags$script(src = "js/shiny-ggvis.js"),
       tags$link(rel = "stylesheet", type = "text/css",
         href = "lib/jquery-ui/css/smoothness/jquery-ui-1.10.4.custom.min.css"),
-      tags$link(rel = "stylesheet", type = "text/css",
-        href = "css/ggvis.css")
+      tags$link(rel = "stylesheet", type = "text/css", href = "css/ggvis.css")
     )
   } else {
     tags <- tagList(
@@ -260,8 +259,7 @@ html_head <- function(prefix = NULL, minify = TRUE, shiny = FALSE) {
       if (shiny) tags$script(src = "js/shiny-ggvis.js"),
       tags$link(rel = "stylesheet", type = "text/css",
         href = "lib/jquery-ui/css/smoothness/jquery-ui-1.10.4.custom.css"),
-      tags$link(rel = "stylesheet", type = "text/css",
-        href = "css/ggvis.css")
+      tags$link(rel = "stylesheet", type = "text/css", href = "css/ggvis.css")
     )
   }
 

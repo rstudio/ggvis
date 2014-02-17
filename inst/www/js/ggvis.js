@@ -265,11 +265,12 @@ ggvis = (function(_) {
       if (keep_aspect === undefined) keep_aspect = false;
 
       var $wrap = this.getWrapper(),
+          $gear = $wrap.find(".plot-gear-icon"),
           chart = this.chart,
           padding = chart.padding(),
           ratio = this.opts.width/this.opts.height;
 
-      var newWidth = $wrap.width() - padding.left - padding.right,
+      var newWidth = $wrap.width() - $gear.width() - padding.left - padding.right,
           newHeight = $wrap.height() - padding.top - padding.bottom;
 
       if (keep_aspect) {
@@ -328,6 +329,7 @@ ggvis = (function(_) {
       var $wrap   = this.getWrapper();  // wrapper around $div
       var $div    = this.getDiv();      // ggvis div, containing $el
       var $vega   = this.getVegaDiv();  // Immediate wrapper around marks
+      var $gear   = $wrap.find(".plot-gear-icon");
 
       var width = Math.ceil(this.marksWidth());
       // There are 5 extra pixels in the bottom
@@ -335,7 +337,7 @@ ggvis = (function(_) {
 
       $vega.width(width).height(height);
       $div.width(width).height(height);
-      $wrap.width(width).height(height);
+      $wrap.width(width + $gear.width()).height(height);
     };
 
     // Run an update on the chart for the first time
@@ -408,6 +410,8 @@ ggvis = (function(_) {
     // present. Also update the chart (unless update is false).
     // renderer is either "canvas" or "svg".
     prototype.setRenderer = function(renderer, update) {
+      // Don't set renderer if no change
+      if (renderer === this.renderer) return;
       if (update === undefined) update = true;
 
       this.renderer = renderer;
@@ -423,8 +427,8 @@ ggvis = (function(_) {
       var $el = $("#" + this.plotId + "_renderer_" + renderer);
 
       // Toggle the renderer buttons when clicked
-      $el.addClass('active');
-      $el.siblings().removeClass('active');
+      $el.addClass('inactive');
+      $el.siblings().removeClass('inactive');
     };
 
     // Given an <a> element, set the href of that element to the canvas content
@@ -818,12 +822,18 @@ ggvis = (function(_) {
 
 $(function(){ //DOM Ready
 
-  // Don't close the dropdown when objects in it are clicked (by default
-  // the dropdown menu closes when anything inside is clicked).
-  // Need to bind to body instead of document for e.stopPropogation to catch
-  // at appropriate point.
-  $("body").on('click', '.ggvis-control.dropdown-menu', function(e) {
-    e.stopPropagation();
+  // Dropdown toggle
+  $('.dropdown-toggle').click(function(){
+    $(this).next('.dropdown').toggle();
+  });
+
+  $(document).click(function(e) {
+    var target = e.target;
+    var $target = $(target);
+    if (!$target.is('.dropdown-toggle') &&
+        !$target.parents().is('.dropdown-toggle')) {
+      $('.dropdown').hide();
+    }
   });
 
   $("body").on("click", ".ggvis-download", function() {
@@ -831,7 +841,7 @@ $(function(){ //DOM Ready
     plot.updateDownloadLink(this);
   });
 
-  $("body").on("click", ".ggvis-renderer-buttons .btn", function(e) {
+  $("body").on("click", ".ggvis-renderer-button", function(e) {
     var $el = $(this);
     var plot = ggvis.plots[$el.data("plot-id")];
 
