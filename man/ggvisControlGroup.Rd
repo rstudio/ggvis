@@ -1,0 +1,13 @@
+\name{ggvisControlGroup}
+\alias{ggvisControlGroup}
+\title{Generate Shiny tags for ggvis controls}
+\usage{
+ggvisControlGroup(plot_id)
+}
+\arguments{
+  \item{plot_id}{Plot ID}
+}
+\description{
+Controls for choosing a renderer and downloading an image.
+}
+

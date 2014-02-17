@@ -229,7 +229,6 @@ mainTopPanel <- function(...) {
 #'
 #' Controls for choosing a renderer and downloading an image.
 #' @param plot_id Plot ID
-#' @importFrom shiny withTags HTML
 #' @export
 ggvisControlGroup <- function(plot_id) {
   tags$nav(class = "ggvis-control",
