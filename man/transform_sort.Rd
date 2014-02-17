@@ -35,16 +35,16 @@ data object based on one or more columns in the data.
 # Unsorted
 ggvis(mtcars,
   props(x = ~wt, y = ~mpg),
-  mark_path(),
-  mark_symbol(props(fill := NA))
+  layer_path(),
+  layer_point(props(fill := NA))
 )
 
 # Sorted
 ggvis(mtcars,
   transform_sort(),
   props(x = ~wt, y = ~mpg),
-  mark_path(),
-  mark_symbol(props(fill := NA))
+  layer_path(),
+  layer_point(props(fill := NA))
 )
 
 # With grouping
@@ -52,8 +52,8 @@ ggvis(mtcars,
   by_group(factor(cyl)),
   transform_sort(),
   props(x = ~wt, y = ~mpg, stroke = ~factor(cyl)),
-  mark_path(),
-  mark_symbol(props(fill := NA))
+  layer_path(),
+  layer_point(props(fill := NA))
 )
 
 # Sort on mpg column

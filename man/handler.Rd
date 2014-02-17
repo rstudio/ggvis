@@ -38,8 +38,7 @@ probably be the other way around since inputs are handlers
 that have controls.
 }
 \examples{
-p <- ggvis(mtcars, props(x = ~mpg, y = ~wt, size = left_right(1, 100)),
-  mark_symbol())
+p <- qvis(mtcars, ~mpg, ~wt, size := left_right(1, 100))
 p$props$size.update$dr
 
 # Handlers are extracted with the internal handlers() function

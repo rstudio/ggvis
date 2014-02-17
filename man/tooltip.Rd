@@ -27,14 +27,10 @@ all_values <- function(x) {
 }
 
 # Display tooltip when hovering over objects
-ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
-  mark_symbol() +
-  tooltip(all_values)
+qvis(mtcars, ~wt, ~mpg) + tooltip(all_values)
 
 # Display tooltip when objects are clicked
-ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
-  mark_symbol() +
-  click_tooltip(all_values)
+qvis(mtcars, ~wt, ~mpg) + click_tooltip(all_values)
 
 # Grab the mean and standard deviations of brushed values
 brushed_summary <- function(x) {
@@ -52,9 +48,7 @@ brushed_summary <- function(x) {
 }
 
 # Display tooltip when objects are brushed
-ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
-  mark_symbol(props(size.brush := 400)) +
-  brush_tooltip(brushed_summary)
+qvis(mtcars, ~wt, ~mpg, size.brush := 400) + brush_tooltip(brushed_summary)
 }
 }
 

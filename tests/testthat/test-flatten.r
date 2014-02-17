@@ -46,8 +46,8 @@ test_that("reactive source data only run once", {
   })
 
   p <- ggvis(rdf, props(x = ~x, y = ~y),
-    mark_path(),
-    mark_symbol())
+    layer_path(),
+    layer_point())
   nodes <- flatten(p)
 
   expect_equal(length(nodes), 2)

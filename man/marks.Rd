@@ -17,9 +17,9 @@
 \alias{marks}
 \title{Vega marks.}
 \usage{
-mark_symbol(props = NULL, data = NULL)
-
 mark_point(props = NULL, data = NULL)
+
+mark_symbol(props, data)
 
 layer_point(props = NULL, data = NULL)
 

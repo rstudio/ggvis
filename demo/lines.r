@@ -8,23 +8,23 @@ ggvis(df, props(x = ~x, y = ~y)) + mark_path()
 # Grouping, manually specified
 ggvis(df, by_group(z), props(x = ~x, y = ~y, stroke = ~z, fill := NA)) +
   mark_path() +
-  mark_symbol()
+  layer_point()
 
 # Data sorted by x
-ggvis(df, transform_sort(), props(x = ~x, y = ~y)) + mark_path() + mark_symbol()
+ggvis(df, transform_sort(), props(x = ~x, y = ~y)) + mark_path() + layer_point()
 # Data sorted by y
 ggvis(df, transform_sort(var = "y"), props(x = ~x, y = ~y)) +
   mark_path() +
-  mark_symbol()
+  layer_point()
 
 # Grouping with auto_split, and sorted
 ggvis(df, auto_split(), transform_sort(),
   props(x = ~x, y = ~y, stroke = ~z, fill := NA)) +
   mark_path() +
-  mark_symbol()
+  layer_point()
 
 
 # Using layer_line
 ggvis(df, props(x = ~x, y = ~y, stroke = ~z, fill := NA)) +
   layer_line() +
-  mark_symbol()
+  layer_point()

@@ -54,8 +54,8 @@
 #'  \code{\link{layer}}.
 #' @export
 #' @examples
-#' ggvis(mtcars, props(x = ~wt, y = ~mpg), mark_symbol(), layer_smooth())
-#' ggvis(mtcars, props(x = ~wt, y = ~mpg), mark_symbol(),
+#' ggvis(mtcars, props(x = ~wt, y = ~mpg), layer_point(), layer_smooth())
+#' ggvis(mtcars, props(x = ~wt, y = ~mpg), layer_point(),
 #'   layer_smooth(method = "lm", se = FALSE))
 #'
 #' slider <- input_slider(0.2, 1)
@@ -64,7 +64,7 @@
 #' # These are equivalent to combining transform_smooth with mark_path and
 #' # mark_area
 #' ggvis(mtcars, props(x = ~wt, y = ~mpg),
-#'   mark_symbol(),
+#'   layer_point(),
 #'   layer(transform_smooth(),
 #'     mark_area(props(x = ~x, y = ~y_lower__, y2 = ~y_upper__,
 #'       fillOpacity := 0.2)),

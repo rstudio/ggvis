@@ -28,12 +28,10 @@ input.
 }
 \examples{
 fill_text <- input_text(label = "Point color", value = "red")
-ggvis(mtcars, props(x = ~wt, y = ~mpg),
-  mark_symbol(props(fill := fill_text)))
+qvis(mtcars, ~wt, ~mpg, fill := fill_text)
 
 size_num <- input_numeric(label = "Point size", value = 25)
-ggvis(mtcars, props(x = ~wt, y = ~mpg),
-  mark_symbol(props(size := size_num)))
+qvis(mtcars, ~wt, ~mpg, size := size_num)
 }
 \seealso{
 Other interactive input: \code{\link{input_checkboxgroup}},

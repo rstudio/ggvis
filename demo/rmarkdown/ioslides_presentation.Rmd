@@ -19,13 +19,13 @@ knitr::opts_chunk$set(fig.width = 6,
 
 ```{r results='asis'}
 library(ggvis)
-ggvis(mtcars, props(x = ~wt, y = ~mpg)) + mark_symbol()
+ggvis(mtcars, props(x = ~wt, y = ~mpg)) + layer_point()
 ```
 
 ## Second Plot
 
 ```{r results='asis'}
 ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
-  mark_symbol() +
+  layer_point() +
   layer_smooth()
 ```

@@ -1,12 +1,12 @@
 library(ggvis)
 
 ggvis(mtcars, props(x = ~wt, y = ~mpg, fill = ~cyl)) +
-  mark_symbol()
+  layer_point()
 
 ggvis(mtcars, props(x = ~wt, y = ~mpg, fill = ~cyl)) +
-  mark_symbol() +
+  layer_point() +
   guide_axis("x", title = "Weight")
 
 ggvis(mtcars, props(x = ~wt, y = ~mpg, fill = ~cyl)) +
-  mark_symbol() +
+  layer_point() +
   guide_legend(fill = "fill", title = "Cylinders")

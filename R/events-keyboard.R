@@ -42,8 +42,7 @@ Keyboard <- setRefClass("Keyboard", contains = "EventBroker",
 #' size <- left_right(1, 801, value = 51, step = 50)
 #' opacity <- up_down(0, 1, value = 0.9, step = 0.05)
 #'
-#' ggvis(mtcars, props(x = ~mpg, y = ~wt, size := size, opacity := opacity)) +
-#'   mark_symbol()
+#' qvis(mtcars, ~mpg, ~wt, size := size, opacity := opacity)
 left_right <- function(min, max, value = (min + max) / 2,
                        step = (max - min) / 40) {
   handler("left_right", "keyboard",

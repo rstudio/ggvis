@@ -16,6 +16,6 @@ proj_data <- reactive({
 })
 
 ggvis(proj_data, props(x = ~X1, y = ~X2, fill = ~species)) +
-  mark_symbol() +
+  layer_point() +
   dscale("x", "numeric", domain = c(-1, 1)) +
   dscale("y", "numeric", domain = c(-1, 1))

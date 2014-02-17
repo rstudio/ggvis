@@ -44,7 +44,7 @@ controls like `input_slider()`:
 ```{r, results = 'asis'}
 ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
   layer_smooth(span = input_slider(0.5, 1, 1)) +
-  mark_symbol(props(size := input_slider(100, 1000)))
+  layer_point(props(size := input_slider(100, 1000)))
 ```
 
 As well as `input_slider()`, which produces a slider (or a double-ended range
@@ -93,8 +93,8 @@ the plot.
 
     ```{r, results = 'asis'}
     ggvis(mtcars, props(x = ~wt, y = ~mpg, size := input_slider(10, 1000)),
-      mark_symbol(props(fill := "red")),
-      mark_symbol(props(stroke := "black", fill := NA))
+      layer_point(props(fill := "red")),
+      layer_point(props(stroke := "black", fill := NA))
     )
     ```
 
@@ -103,8 +103,8 @@ the plot.
     ```{r, results = 'asis'}
     slider <- input_slider(10, 1000)
     ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
-      mark_symbol(props(fill := "red", size := slider)) +
-      mark_symbol(props(stroke := "black", fill := NA, size := slider))
+      layer_point(props(fill := "red", size := slider)) +
+      layer_point(props(stroke := "black", fill := NA, size := slider))
     ```
 
     This is a little more typing, but is more flexible.
@@ -117,12 +117,12 @@ control the size of the red and black points independently.
 ```{r, results = 'asis'}
 slider <- input_slider(100, 1000)
 ggvis(mtcars, props(x = ~wt, y = ~mpg),
-  mark_symbol(props(size := slider)),
-  mark_symbol(props(fill := "red", opacity := 0.5, size := slider)))
+  layer_point(props(size := slider)),
+  layer_point(props(fill := "red", opacity := 0.5, size := slider)))
 
 ggvis(mtcars, props(x = ~wt, y = ~mpg),
-  mark_symbol(props(size := input_slider(100, 1000))),
-  mark_symbol(props(fill := "red", size := input_slider(100, 1000))))
+  layer_point(props(size := input_slider(100, 1000))),
+  layer_point(props(fill := "red", size := input_slider(100, 1000))))
 ```
 
 ### Property mappings
@@ -187,7 +187,7 @@ with `ui.r`, and the third argument is the session object).
 ```{r, eval = FALSE}
 gv <- reactive({
   ggvis(mtcars, props(x = ~disp, y = ~mpg, size := input$size),
-    mark_symbol()
+    layer_point()
   )
 })
 observe_ggvis(gv, "my_plot", session)

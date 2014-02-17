@@ -9,7 +9,7 @@ shinyServer(function(input, output, session) {
 
   gv1 <- reactive({
     ggvis(diamonds, props(x = ~carat, y = ~price)) +
-      mark_symbol(props(fill := lb$fill_prop(), fillOpacity := 0.8,
+      layer_point(props(fill := lb$fill_prop(), fillOpacity := 0.8,
         fill.brush := "red")) +
       lb$brush_handler() +
       opts(width = 300, height = 300)
@@ -17,7 +17,7 @@ shinyServer(function(input, output, session) {
 
   gv2 <- reactive({
     ggvis(diamonds, props(x = ~table, y = ~depth)) +
-      mark_symbol(props(fill := lb$fill_prop(), fillOpacity := 0.8)) +
+      layer_point(props(fill := lb$fill_prop(), fillOpacity := 0.8)) +
       opts(width = 300, height = 300)
   })
 

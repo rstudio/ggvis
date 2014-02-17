@@ -54,7 +54,7 @@ changes.
 ## In server.r
 gv <- reactive({
   ggvis(mtcars, props(x = ~wt, y = ~mpg),
-    mark_symbol(),
+    layer_point(),
     layer_smooth(
       n = input_slider(2, 80, "Interpolation points", value = 5, step = 1),
       method = input_select(c("Linear" = "lm", "LOESS" = "loess"))

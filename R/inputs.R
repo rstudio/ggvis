@@ -9,10 +9,10 @@
 #' input_slider(0, 100)
 #' input_slider(0, 100, label = "binwidth")
 #' input_slider(0, 100, value = 50)
-#' 
+#'
 #' # Supply two values to value to make a double-ended sliders
 #' input_slider(0, 100, c(25, 75))
-#' 
+#'
 #' # You can use map to transform the outputs
 #' input_slider(-5, 5, label = "Log scale", map = function(x) 10 ^ x)
 input_slider <- function(min, max, value = min, step = NULL, round = FALSE,
@@ -48,7 +48,7 @@ input_slider <- function(min, max, value = min, step = NULL, round = FALSE,
 #' model_type <- input_checkbox(label = "Use flexible curve",
 #'   map = function(val) if(val) "loess" else "lm")
 #' layer_smooth(method = model_type)
-input_checkbox <- function(value = FALSE, label = "", 
+input_checkbox <- function(value = FALSE, label = "",
                            id = rand_id("checkbox_"), map = identity) {
 
   assert_that(is.string(label), is.string(id))
@@ -69,12 +69,10 @@ input_checkbox <- function(value = FALSE, label = "",
 #' @export
 #' @examples
 #' fill_text <- input_text(label = "Point color", value = "red")
-#' ggvis(mtcars, props(x = ~wt, y = ~mpg),
-#'   mark_symbol(props(fill := fill_text)))
+#' qvis(mtcars, ~wt, ~mpg, fill := fill_text)
 #'
 #' size_num <- input_numeric(label = "Point size", value = 25)
-#' ggvis(mtcars, props(x = ~wt, y = ~mpg),
-#'   mark_symbol(props(size := size_num)))
+#' qvis(mtcars, ~wt, ~mpg, size := size_num)
 input_text <- function(value, label = "", id = rand_id("text_"),
                        map = identity) {
 
@@ -98,7 +96,7 @@ input_numeric <- function(value, label = "", id = rand_id("text_"),
 }
 
 #' Create interactive control to select one (or more options) from a list.
-#' 
+#'
 #' \itemize{
 #'  \item \code{input_radiobuttons} only ever selects one value
 #'  \item \code{input_checkboxgroup} can alway select multiple values
@@ -116,12 +114,12 @@ input_numeric <- function(value, label = "", id = rand_id("text_"),
 #' input_select(c("a", "b", "c"))
 #' input_select(c("a", "b", "c"), multiple = TRUE)
 #' input_select(c("a", "b", "c"), selected = "c")
-#' 
+#'
 #' # If you want to select variable names, you need to convert
-#' # the output of the input to a name with map so that they get 
+#' # the output of the input to a name with map so that they get
 #' # computed correctly
 #' input_select(names(mtcars), map = as.name)
-#' 
+#'
 #' # Radio buttons
 #' input_radiobuttons(choices = c("Linear" = "lm", "LOESS" = "loess"),
 #'                    label = "Model type")
@@ -138,17 +136,17 @@ input_select <- function(choices, selected = NULL, multiple = FALSE,
   label = "", id = rand_id("select_"),
   map = identity) {
   assert_that(is.string(label), is.string(id))
-  
+
   args <- list(id, label, choices = choices, selected = selected,
     multiple = multiple)
-  
+
   if (is.null(selected)) {
     if (multiple) value <- ""
     else value <- choices[1]
   } else {
     value <- choices[selected]
   }
-  
+
   input("select", args, value, map, id)
 }
 
@@ -168,7 +166,7 @@ input_radiobuttons <- function(choices, selected = NULL, label = "",
     value <- choices[selected]
   }
 
-  input("radio_buttons", args, value, map, id, 
+  input("radio_buttons", args, value, map, id,
     control_f = "radioButtons")
 }
 

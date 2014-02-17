@@ -21,7 +21,7 @@ A layer to add a line.
 ggvis(mtcars,
   props(x = ~wt, y = ~mpg, stroke = ~factor(cyl)),
   layer_line(),
-  mark_symbol()
+  layer_point()
 )
 }
 \seealso{

@@ -28,7 +28,7 @@ Subset, summarise and mutate your data
 ggvis(mtcars,
    transform_subset(cyl > eval(input_slider(0, 10))),
    props(x = ~disp, y = ~mpg),
-   mark_symbol())
+   layer_point())
 
 # Dynamically compute box-cox transformation with transform_mutate
 bc <- function(x, lambda) {
@@ -38,6 +38,6 @@ bc_slider <- input_slider(-2, 2, 1, step = 0.1)
 ggvis(mtcars,
  transform_mutate(disp = bc(disp, eval(bc_slider))),
  props(x = ~disp, y = ~mpg),
- mark_symbol())
+ layer_point())
 }
 

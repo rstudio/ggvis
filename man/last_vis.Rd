@@ -9,7 +9,7 @@ Visualisations are saved whenever they are created or
 plotted.
 }
 \examples{
-ggvis(mtcars, props(x = ~mpg, y = ~cyl), mark_symbol())
+qvis(mtcars, ~mpg, ~cyl)
 str(last_vis())
 }
 

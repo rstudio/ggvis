@@ -6,7 +6,7 @@ mtc1 <- reactive({
   invalidateLater(2000, NULL);
   mtcars[sample(nrow(mtcars), 10), ]
 })
-ggvis(mtc1, props(x = ~wt, y = ~mpg)) + mark_symbol()
+ggvis(mtc1, props(x = ~wt, y = ~mpg)) + layer_point()
 
 # Rapidly changing dynamic example
 df <- data.frame(x = runif(20), y = runif(20))
@@ -19,7 +19,7 @@ mtc1 <- reactive({
   df
 })
 ggvis(mtc1, props(x = ~x, y = ~y)) +
-  mark_symbol() +
+  layer_point() +
   dscale("x", "numeric", domain = c(0, 1))
 
 # Two separate data sets, equal in the tree
@@ -32,8 +32,8 @@ mtc2 <- reactive({
   mtcars[sample(nrow(mtcars), 10), ]
 })
 ggvis(props(x = ~wt, y = ~mpg)) +
-  layer(mtc1, mark_symbol(props(stroke := "black", fill := "black"))) +
-  layer(mtc2, mark_symbol(props(fill := "red", size := 40)))
+  layer(mtc1, layer_point(props(stroke := "black", fill := "black"))) +
+  layer(mtc2, layer_point(props(fill := "red", size := 40)))
 
 # With a transform
 mtc1 <- reactive({
@@ -41,7 +41,7 @@ mtc1 <- reactive({
   mtcars[sample(nrow(mtcars), 10), ]
 })
 ggvis(mtc1, props(x = ~wt, y = ~mpg)) +
-  mark_symbol() +
+  layer_point() +
   layer_smooth()
 
 
@@ -56,7 +56,7 @@ ddat <- reactive({
   dat
 })
 ggvis(ddat, props(x = ~time, y = ~value, key := ~time)) +
-  mark_symbol() +
+  layer_point() +
   mark_path()
 
 

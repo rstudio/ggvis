@@ -21,16 +21,13 @@ qvis(data, ..., layers = character())
   raise an error.}
 
   \item{layers}{A character vector listing the names of
-  marks or layers to display on the plot. You can use
-  either the full name of the layer (e.g. "mark_path" or
-  "layer_smooth"), or just the final part (e.g. "line" or
-  "smooth"). If there is both a plain mark and a layer with
-  the same name, the layer will be used.
+  layers to display on the plot. You can use either the
+  full name of the layer (e.g. "layer_smooth"), or just the
+  final part (e.g. "smooth").
 
-  If \code{layers} is not supplied, it defaults to
-  \code{"\link{mark_point}"} if both \code{x} and \code{y}
-  are supplied.  If only \code{x} is supplied, it defaults
-  to \code{"\link{layer_histogram}"}.}
+  If \code{layers} is not supplied, it defaults to "point",
+  if both \code{x} and \code{y} are supplied. If only
+  \code{x} is supplied, it defaults to "histogram".}
 }
 \description{
 \code{qvis} is a succinct way of creating simple plots. It

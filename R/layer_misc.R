@@ -11,7 +11,7 @@
 #' ggvis(mtcars,
 #'   props(x = ~wt, y = ~mpg, stroke = ~factor(cyl)),
 #'   layer_line(),
-#'   mark_symbol()
+#'   layer_point()
 #' )
 layer_line <- function(..., sort = TRUE) {
   comps <- parse_components(..., drop_named = TRUE)

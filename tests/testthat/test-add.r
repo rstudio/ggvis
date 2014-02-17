@@ -10,29 +10,29 @@ test_that("Adding to ggvis objects", {
   # existing object.
 
   # Marks
-  p1 <- ggvis(mtcars, props(x = ~wt, y = ~mpg), mark_symbol(), mark_path())
+  p1 <- ggvis(mtcars, props(x = ~wt, y = ~mpg), layer_point(), mark_path())
   p2 <- ggvis(mtcars, props(x = ~wt, y = ~mpg))
-  p2 <- p2 + mark_symbol()
+  p2 <- p2 + layer_point()
   p2 <- p2 + mark_path()
   expect_equal(nsort(p1), nsort(p2))
 
   # Layers
-  p1 <- ggvis(mtcars, props(x = ~wt, y = ~mpg), mark_symbol(), layer_smooth())
+  p1 <- ggvis(mtcars, props(x = ~wt, y = ~mpg), layer_point(), layer_smooth())
   p2 <- ggvis(mtcars, props(x = ~wt, y = ~mpg))
-  p2 <- p2 + mark_symbol()
+  p2 <- p2 + layer_point()
   p2 <- p2 + layer_smooth()
   expect_equal(nsort(p1), nsort(p2))
 
   # Scales
   p1 <- ggvis(mtcars,
     props(x = ~wt, y = ~mpg, fill = ~factor(cyl), fillOpacity = ~hp),
-    mark_symbol(),
+    layer_point(),
     dscale("opacity", "numeric", range = c(0.2, 1)),
     dscale("x", "numeric", domain = c(1, 10))
   )
   p2 <- ggvis(mtcars,
     props(x = ~wt, y = ~mpg, fill = ~factor(cyl), fillOpacity = ~hp),
-    mark_symbol()
+    layer_point()
   )
   p2 <- p2 + dscale("opacity", "numeric", range = c(0.2, 1))
   p2 <- p2 + dscale("x", "numeric", domain = c(1, 10))
@@ -40,23 +40,23 @@ test_that("Adding to ggvis objects", {
 
   # Legends
   p1 <- ggvis(mtcars, props(x = ~wt, y = ~mpg, fill = ~cyl),
-    mark_symbol(),
+    layer_point(),
     guide_legend(fill = "fill", title = "Cylinders")
   )
   p2 <- ggvis(mtcars, props(x = ~wt, y = ~mpg, fill = ~cyl),
-    mark_symbol()
+    layer_point()
   )
   p2 <- p2 + guide_legend(fill = "fill", title = "Cylinders")
   expect_equal(nsort(p1), nsort(p2))
 
   # Axes
   p1 <- ggvis(mtcars, props(x = ~wt, y = ~mpg, fill = ~cyl),
-    mark_symbol(),
+    layer_point(),
     guide_axis("x", title = "Weight"),
     guide_axis("y", title = "Miles per gallon")
   )
   p2 <- ggvis(mtcars, props(x = ~wt, y = ~mpg, fill = ~cyl),
-    mark_symbol()
+    layer_point()
   )
   p2 <- p2 + guide_axis("x", title = "Weight")
   p2 <- p2 + guide_axis("y", title = "Miles per gallon")
@@ -64,18 +64,18 @@ test_that("Adding to ggvis objects", {
 
   # Props
   p1 <- ggvis(mtcars, props(x = ~wt, y = ~mpg, fill = ~cyl),
-    mark_symbol()
+    layer_point()
   )
-  p2 <- ggvis(mtcars, mark_symbol())
+  p2 <- ggvis(mtcars, layer_point())
   p2 <- p2 + props(x = ~wt, y = ~mpg)
   p2 <- p2 + props(fill = ~cyl)
   expect_equal(nsort(p1), nsort(p2))
 
   # Opts
-  p1 <- ggvis(mtcars, props(x = ~wt, y = ~mpg), mark_symbol(),
+  p1 <- ggvis(mtcars, props(x = ~wt, y = ~mpg), layer_point(),
               opts(width = 200, height = 100))
 
-  p2 <- ggvis(mtcars, props(x = ~wt, y = ~mpg), mark_symbol())
+  p2 <- ggvis(mtcars, props(x = ~wt, y = ~mpg), layer_point())
   p2 <- p2 + opts(width = 200)
   p2 <- p2 + opts(height = 100)
 
@@ -86,8 +86,8 @@ test_that("Adding to ggvis objects", {
 test_that("Adding to layer objects", {
   # Marks
   expect_equal(
-    layer() + mark_symbol() + mark_path(),
-    layer(mark_symbol(), mark_path())
+    layer() + layer_point() + mark_path(),
+    layer(layer_point(), mark_path())
   )
 
   # Props
@@ -112,13 +112,13 @@ test_that("Adding to layer objects", {
 test_that("Adding to mark objects", {
   # Props
   expect_equal(
-    nsort(mark_symbol() + props(x = ~wt) + props(y = ~mpg)),
-    nsort(mark_symbol(props(x = ~wt, y = ~mpg)))
+    nsort(layer_point() + props(x = ~wt) + props(y = ~mpg)),
+    nsort(layer_point(props(x = ~wt, y = ~mpg)))
   )
 
   expect_error(mark_path() + mark_rect())
-  expect_error(mark_symbol() + dscale("x", "numeric"))
-  expect_error(mark_symbol() + guide_axis("x"))
+  expect_error(layer_point() + dscale("x", "numeric"))
+  expect_error(layer_point() + guide_axis("x"))
   expect_error(mark_path() + guide_legend("fill"))
-  expect_error(mark_symbol() + opts())
+  expect_error(layer_point() + opts())
 })

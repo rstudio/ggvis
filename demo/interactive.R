@@ -2,7 +2,7 @@ library(ggvis)
 
 # Slider input in transform_smooth
 ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
-  mark_symbol() +
+  layer_point() +
   layer_smooth(method = "loess", formula = y ~ x,
     span = input_slider(0.2, 1, step = 0.05, label = "span")
   )
@@ -21,7 +21,7 @@ ggvis(mtcars, props(x = ~wt)) +
 
 # Example with value map function
 ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
-  mark_symbol() +
+  layer_point() +
   layer_smooth(
     n = input_select(
       choices = c("Two", "Six", "Eighty"),
@@ -32,7 +32,7 @@ ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
 
 # Checkbox input
 ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
-  mark_symbol(
+  layer_point(
     props(opacity := input_checkbox(label = "Semi-transparent",
                                    map = function(val) ifelse(val, .3, 1)))) +
   layer_smooth(
@@ -41,17 +41,17 @@ ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
 
 # Text input
 ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
-  mark_symbol(props(fill := input_text(label = "Point color", value = "red"))) +
+  layer_point(props(fill := input_text(label = "Point color", value = "red"))) +
   layer_smooth(method = input_text(label = "Model type", value = "loess"))
 
 # Numeric input
 ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
-  mark_symbol(props(size := input_numeric(value = 25, label = "Point size"))) +
+  layer_point(props(size := input_numeric(value = 25, label = "Point size"))) +
   layer_smooth(n = input_numeric(value = 5, label = "Interpolation points"))
 
 # Radio buttons
 ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
-  mark_symbol() +
+  layer_point() +
   layer_smooth(
     method = input_radiobuttons(c("LOESS" = "loess", "Linear" = "lm"),
       label = "Model type"),
@@ -62,7 +62,7 @@ ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
 
 # Checkbox group
 ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
-  mark_symbol(
+  layer_point(
     props(fill := input_checkboxgroup(
       choices = c("Red" = "r", "Green" = "g", "Blue" = "b"),
       label = "Point color components",
@@ -81,7 +81,7 @@ ggvis(mtcars, props(
     size := input_slider(10, 1000, 100, label = "Size"),
     opacity := input_slider(0, 1, 1, label = "Opacity")
   )) +
-  mark_symbol()
+  layer_point()
 
 
 # Constant values, on a scale
@@ -95,7 +95,7 @@ new_vals <- input_select(c("Set A" = "A", "Set B" = "B"),
   })
 
 ggvis(mtcars, props(x = ~wt, y = ~mpg, fill = new_vals)) +
-  mark_symbol()
+  layer_point()
 
 # Variable values, raw (not on a scale)
 mtc <- mtcars
@@ -106,7 +106,7 @@ ggvis(mtc, props(
     y = ~mpg,
     fill := input_select(c("colour1", "colour2"), map = as.name)
   )) +
-  mark_symbol()
+  layer_point()
 
 # Variable values
 ggvis(mtcars, props(
@@ -114,4 +114,4 @@ ggvis(mtcars, props(
     y = ~mpg,
     fill = input_select(c("mpg", "wt"), map = as.name)
   )) +
-  mark_symbol()
+  layer_point()

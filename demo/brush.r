@@ -2,7 +2,7 @@ library(ggvis)
 
 # Scatter plot with brushing
 ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
-  mark_symbol(props(size.brush := 400)) +
+  layer_point(props(size.brush := 400)) +
   layer_brush()
 
 # Bar graph with brushing
@@ -15,5 +15,5 @@ ggvis(pressure, props(x = ~temperature, y = ~pressure)) +
 data("diamonds", package="ggplot2")
 d <- diamonds[sample(nrow(diamonds), 10000), ]
 ggvis(d, props(x = ~carat, y = ~price)) +
-  mark_symbol(props(size := 40, fillOpacity := 0.02, fillOpacity.brush := 0.4)) +
+  layer_point(props(size := 40, fillOpacity := 0.02, fillOpacity.brush := 0.4)) +
   layer_brush()

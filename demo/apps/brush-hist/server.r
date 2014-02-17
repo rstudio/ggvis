@@ -26,7 +26,7 @@ shinyServer(function(input, output, session) {
     in_ranges <- lapply(ranges, function(range) {
       diamonds$carat > range$xmin__ & diamonds$carat < range$xmax__
     })
-    
+
     selected <- Reduce(`|`, in_ranges)
 
     # Return a character vector with colors for each TRUE and FALSE value
@@ -38,7 +38,7 @@ shinyServer(function(input, output, session) {
 
   scatter_gv <- reactive({
     ggvis(diamonds_brushed, props(x = ~depth, y = ~price)) +
-      mark_symbol(props(fill := ~colors, fillOpacity := 0.8))
+      layer_point(props(fill := ~colors, fillOpacity := 0.8))
   })
 
   # Set up observers for the spec and the data

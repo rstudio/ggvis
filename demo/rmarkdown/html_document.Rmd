@@ -22,12 +22,12 @@ To embed a ggvis plot just call `ggvis` and remember to specify `results='asis'`
 
 ```{r results='asis'}
 library(ggvis)
-ggvis(mtcars, props(x = ~wt, y = ~mpg)) + mark_symbol()
+ggvis(mtcars, props(x = ~wt, y = ~mpg)) + layer_point()
 ```
 
 
 ```{r results='asis'}
 ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
-  mark_symbol() +
+  layer_point() +
   layer_smooth()
 ```

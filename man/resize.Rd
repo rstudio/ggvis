@@ -15,12 +15,10 @@ An interactive input bound to resize events.
 \dontrun{
 # This example just prints out the current dimensions to the console
 print_info <- function(x) {
-  cat(str(x))
+  str(x)
 }
 
-ggvis(mtcars, props(x = ~mpg, y = ~wt)) +
-  mark_symbol() +
-  resize(print_info)
+qvis(mtcars, ~mpg, ~wt) + resize(print_info)
 }
 }
 

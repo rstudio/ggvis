@@ -39,8 +39,8 @@ is.ggvis_opts(x)
 Set options for a ggvis plot
 }
 \examples{
-ggvis(mtcars, props(x = ~wt, y = ~mpg), mark_symbol(),
-  opts(width = 300, height = 200, padding = padding(10, 10, 10, 10)))
+qvis(mtcars, ~wt, ~mpg) +
+  opts(width = 300, height = 200, padding = padding(10, 10, 10, 10))
 
 # Display the default options
 str(default_opts())
