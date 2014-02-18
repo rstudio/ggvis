@@ -95,9 +95,9 @@ nav.ggvis-control {
   float: right;
 }
 a.dropdown-toggle {
-  font-size: 15px;
+  font-size: 18px;
   text-decoration: none;
-  color: #999;
+  color: #aaa;
   cursor: pointer;
 }
 ul.dropdown {
@@ -111,14 +111,15 @@ ul.dropdown {
   opacity: 0.85;
   background-color: #fff;
   box-shadow: 2px 2px 6px #888888;
-  width: 180px;
-  margin-left: -180px;
+  width: 200px;
+  margin-left: -200px;
 }
 ul.dropdown li {
   list-style-type: none;
   padding: 5px 2px;
 }
 ul.dropdown li a {
+  color: #00f;
   text-decoration: none;
   padding: 2px 2px;
   cursor: pointer;
