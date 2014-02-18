@@ -297,10 +297,11 @@ ggvis = (function(_) {
     prototype.resizeToWindow = function(duration) {
       var $body = $('body');
       var $wrap = this.getWrapper();
+      // In some cases, parent of $wrap is the body, but sometimes it's a div.
+      var $wrapParent = $wrap.parent();
 
-      // Margin plus padding of body element
-      var extra_width = $body.outerWidth(true) - $body.width();
-      var extra_height = $body.outerHeight(true) - $body.height();
+      var extra_width = $body.outerWidth(true) - $wrapParent.width();
+      var extra_height = $body.outerHeight(true) - $wrapParent.height();
 
       // Resize the wrapper div to the window, inside of scrollbars if present
       // The wrapper has overflow:hidden so that objects inside of it won't
