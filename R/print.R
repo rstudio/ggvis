@@ -222,7 +222,7 @@ knitr_print <- function(x, dynamic = NA, id = rand_id("plot_"), minify = TRUE,
       ')
     )
   )
-  cat(format(body))
+  cat(format(body, indent = FALSE))
 }
 
 # Returns a shiny tagList with links to the needed JS and CSS files
