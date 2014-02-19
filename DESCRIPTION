@@ -21,6 +21,7 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
+Roxygen: list(wrap = FALSE)
 License: GPL-2
 Collate:
     'auto_split.R'
