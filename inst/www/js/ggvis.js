@@ -301,7 +301,9 @@ ggvis = (function(_) {
       var $wrapParent = $wrap.parent();
 
       var extra_width = $body.outerWidth(true) - $wrapParent.width();
-      var extra_height = $body.outerHeight(true) - $wrapParent.height();
+      // Use $body.height() here because dynamic plots may have controls that
+      // take some vertical space, which we need to take into account.
+      var extra_height = $body.outerHeight(true) - $body.height();
 
       // Resize the wrapper div to the window, inside of scrollbars if present
       // The wrapper has overflow:hidden so that objects inside of it won't
