@@ -66,7 +66,7 @@ show_spec <- function(x, pieces) {
 #' @importFrom RJSONIO toJSON
 #' @importFrom whisker whisker.render
 view_static <- function(x,
-                        renderer = getOption("ggvis.renderer", default="canvas"),
+                        renderer = getOption("ggvis.renderer", default = "svg"),
                         launch = interactive(),
                         id = rand_id("plot_"),
                         minify = TRUE) {
@@ -140,10 +140,29 @@ copy_www_resources <- function(paths, destdir) {
 #' @importFrom whisker whisker.render
 #' @importFrom shiny basicPage uiOutput mainPanel tags observe runApp stopApp renderUI
 view_dynamic <- function(x,
-                         renderer = getOption("ggvis.renderer", default="canvas"),
-                         launch = TRUE, port = NULL, id = rand_id("plot_"),
-                         minify = TRUE, quiet = TRUE) {
+    renderer = getOption("ggvis.renderer", default = "svg"),
+    id = rand_id("plot_"), minify = TRUE,
+    launch = TRUE, port = NULL, quiet = TRUE) {
 
+  app <- app_object(x, renderer = renderer, id = id, minify = minify)
+
+  if (launch) {
+    # Find number of control elements for the plot
+    n_controls <- length(controls(x))
+
+    # Request 70 vertical pixels for each pair of control items, since there are
+    # two on a row.
+    height <- 350 + 70 * ceiling(n_controls / 2)
+
+    shiny::runApp(app, port = port, quiet = quiet,
+      launch.browser = function(url) view_plot(url, height))
+  } else {
+    app
+  }
+}
+
+# Given a ggvis object, return an object that can be run as a Shiny app
+app_object <- function(x, renderer, id, minify) {
   if (!(renderer %in% c("canvas", "svg")))
     stop("renderer must be 'canvas' or 'svg'")
 
@@ -151,7 +170,7 @@ view_dynamic <- function(x,
   n_controls <- length(controls(x))
 
   if (n_controls == 0) {
-    ui <- basicPage(ggvis_output(id, shiny = TRUE, minify = minify))
+    ui <- shiny::basicPage(ggvis_output(id, shiny = TRUE, minify = minify))
 
   } else {
     ui <- sidebarBottomPage(
@@ -175,17 +194,7 @@ view_dynamic <- function(x,
     output$ggvis_controls <- renderControls(r_gv, session)
   }
 
-  app <- list(ui = ui, server = server)
-  if (launch) {
-    # Request 70 vertical pixels for each pair of control items, since there are
-    # two on a row.
-    height <- 350 + 70 * ceiling(n_controls / 2)
-
-    runApp(app, port = port, quiet = quiet,
-      launch.browser = function(url) view_plot(url, height))
-  } else {
-    app
-  }
+  list(ui = ui, server = server)
 }
 
 # View using either an internal viewer or fallback to utils::browseURL

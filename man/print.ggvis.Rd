@@ -7,11 +7,11 @@
 \method{print}{ggvis}(x, dynamic = NA, spec = getOption("ggvis.print_spec",
   FALSE), id = rand_id("plot_"), minify = TRUE, ...)
 
-view_static(x, renderer = getOption("ggvis.renderer", default = "canvas"),
+view_static(x, renderer = getOption("ggvis.renderer", default = "svg"),
   launch = interactive(), id = rand_id("plot_"), minify = TRUE)
 
-view_dynamic(x, renderer = getOption("ggvis.renderer", default = "canvas"),
-  launch = TRUE, port = NULL, id = rand_id("plot_"), minify = TRUE,
+view_dynamic(x, renderer = getOption("ggvis.renderer", default = "svg"),
+  id = rand_id("plot_"), minify = TRUE, launch = TRUE, port = NULL,
   quiet = TRUE)
 }
 \arguments{
