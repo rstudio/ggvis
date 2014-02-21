@@ -44,6 +44,9 @@ $(function(){ //DOM Ready
         html = data;
       }
 
+      // Make sure the wrapping div actually contains the floated divs inside
+      html = html + '\n<div style="clear:both;"></div>';
+
       Shiny.renderHtml(html, el);
       Shiny.initializeInputs(el);
       Shiny.bindAll(el);
