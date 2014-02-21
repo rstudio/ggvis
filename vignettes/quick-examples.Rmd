@@ -160,7 +160,7 @@ ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
   layer_smooth()
 ```
 
-With a linear model, and 95% confidence interval for the model.
+With a linear model, and 95% confidence interval for the model:
 
 ```{r, results = 'asis', message = FALSE}
 # qvis(mtcars, ~wt, ~mpg) + layer_smooth(method = "lm", se = TRUE)
@@ -179,7 +179,7 @@ ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
   layer_point(props(fill = ~factor(cyl)))
 ```
 
-Coloring points, and adding a smoother for each group. The grouping variable (which is applied before the `transform_smooth` is calculated) must be specified with `by_group()`.
+Coloring points, and adding a smoother for each group. The grouping variable (which is applied before the `transform_smooth` is calculated) must be specified with `by_group()`:
 
 ```{r, results = 'asis', message = FALSE}
 ggvis(mtcars, by_group(cyl), props(x = ~wt, y = ~mpg)) +
@@ -190,4 +190,4 @@ ggvis(mtcars, by_group(cyl), props(x = ~wt, y = ~mpg)) +
 
 # Interactive plots
 
-The following plots won't display correctly in this online document, but they will display correctly in
+The following plots won't display correctly in this online document, but they will display correctly when run from R.
