@@ -162,7 +162,10 @@ view_dynamic <- function(x,
 }
 
 # Given a ggvis object, return an object that can be run as a Shiny app
-app_object <- function(x, renderer, id, minify) {
+app_object <- function(x,
+    renderer = getOption("ggvis.renderer", default = "svg"),
+    id = rand_id("plot_"), minify = TRUE) {
+
   if (!(renderer %in% c("canvas", "svg")))
     stop("renderer must be 'canvas' or 'svg'")
 
