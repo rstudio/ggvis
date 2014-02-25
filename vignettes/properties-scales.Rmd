@@ -46,23 +46,34 @@ geom_point(aes(x = wt, y = mpg), colour = "red", size = 5)
 But in ggvis, everything is a property:
 
 ```{r}
-layer_path(props(x = ~wt, y = ~ mpg, stroke := "red", strokeWidth := 5))
+layer_path(props(x = ~wt, y = ~mpg, stroke := "red", strokeWidth := 5))
 ```
 
 This section introduces `props()`, a convenient function for creating property objects and binding them to property names. The next chapter shows you how to create the property objects by hand, giving you more control over the specification at the cost of some extra typing.
 
-### Setting vs mapping
+### Mapping vs setting (scaled vs unscaled)
 
-Props distinguishes between setting values to constants and mapping values to a variable based on whether you use `=` (mapping) or `:=` (setting). The syntax is designed to remind you that, like a linear model, the properties specification isn't using the value of the variable `wt`, but its name.
+In a data graphic, there is a mapping between values and visual properties. A value is something like 5, or "red", or the numbers in a column of a data frame. A visual property is something like the x-position, y-position, size, or color of a point, rectangle, or other visual object.
 
-* `props(x = ~displ, y = ~mpg)`: map x to engine displacement and y to miles
-  per gallon
+Compared to ggplot2, the controls in ggvis may be a little confusing. However, ggplot2 has a number of special cases that are handled under the hood. Once you get the hang of `props()`, you should find it simpler than `aes()` and various ways of setting aesthetics in ggplot2.
+
+The `props()` function creates objects that govern the relationship between values and properties. One important characteristic is whether the value-property relationship is *scaled* or *unscaled*. These are sometimes called *mapping* (for scaled values) and *setting* (unscaled values). When the relationship is scaled, the data values go through a mapping function that results in values in the visual property space.
+
+For example, suppose that you want to use a variable in a data set on the x axis, and the data values are numbers from 55 to 75. If the relationship is scaled, then the data value 55 is typically mapped to an x position on the left side of the plot, the data value 75 is mapped to an x position on the right side of the plot, and values in between are linearly mapped somewhere between those positions.
+
+If the relationship is unscaled, then the data values 55 to 75 would be used directly by the rendering engine. In the case of ggvis and Vega, a value of 55 means "55 pixels from the left edge", and a value of 75 means "75 pixels from the left edge". No matter how the plot is resized, those pixel positions would remain the same.
+
+The `props()` function uses the `=` operate for mapping (scaled), and the `:=` operator for setting (unscaled). It also uses the `~` operator to indicate that an expression should be evaluated in the data (and in ggvis, the data can change); without the `~` operator, the expression is evaluated immediately in the current environment. Generally speaking, you'll want to use `~` for variables in the data, and not use it for constant values.
+
+Here are some examples of how to use `=` (mapping) and `:=` (setting), as well as `~` (evaluated in data) or not.
+
+* `props(x = ~displ, y = ~mpg)`: map engine displacement (in the data) to x and miles
+  per gallon to y
 
 * `props(stroke := "red", fill := "blue")`: set the stroke colour to red and the
   fill colour to blue.
 
-* `props(x = ~displ, y := 10)`: map the x-position to displacement and set
-  the y position to 10 pixels.
+* `props(x = ~displ, y := 10)`: map displacement to xand set the y position to 10 pixels (for unscaled y values, the origin is at the top).
 
 Those examples follow a common pattern: `=` is always scaled, and `:=` is never scaled. `~` is always used with the name of the variable. What if you try the opposite?
 
