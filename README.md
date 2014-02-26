@@ -22,9 +22,9 @@ ggvis is not yet available on CRAN, but you can install it directly from github 
 devtools::install_github(c("hadley/testthat", "rstudio/shiny", "rstudio/ggvis"))
 ```
 
-Next, read the vignettes (`vignette(package = "ggvis")`), starting with
-`vignette("ggvis-basics")`. They're still a work in progress, but should
-help you understand the general layout of the package. Also check out the
+Please keep in mind that the vignettes may not build properly on your system because they require not-yet-released rmarkdown package (as opposed to the existing markdown package available on CRAN). You can view built versions of the documents online, at http://ggvis.rstudio.com/
+
+Also check out the
 various demos in the `demo/` directory. Get started with `demo/scatterplot.r`
 and then check out the the coolest demos, `demo/interactive.r` and
 `demo/tourr.r`.
