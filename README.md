@@ -5,8 +5,7 @@
 The goal of ggvis is to make it easy to describe interactive web graphics in
 R. It fuses the ideas of [ggplot2](http://github.com/hadley/ggplot2) and
 [shiny](http://github.com/rstudio/shiny), rendering graphics on the web with
-[vega](https://github.com/trifacta/vega) (so can draw on the canvas or using
-svg). It is less flexible than raw d3 or vega, but much more succinct and
+[vega](https://github.com/trifacta/vega) (so one can draw on the  [HTML5 canvas)[http://www.w3schools.com/html/html5_canvas.asp] or on [svg](http://www.w3schools.com/svg/) files). ggvis is less flexible than raw d3 or vega, but much more succinct and
 is tailored to the needs of exploratory data analysis.
 
 If you find a bug, please file a minimal reproducible example at
