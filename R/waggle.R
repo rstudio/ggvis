@@ -22,6 +22,7 @@ waggle <- function(min, max, value = (min + max) / 2, step = (max - min) / 50,
 }
 
 #' @export
+#' @importFrom shiny invalidateLater
 as.reactive.waggle <- function(x, session = NULL, ...) {
   if (is.null(session)) return(reactive(x$control_args$value))
 
