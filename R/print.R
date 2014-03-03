@@ -127,7 +127,7 @@ copy_www_resources <- function(paths, destdir) {
     if (file.info(src)$isdir) {
       file.copy(src, dirname(destfile), recursive = TRUE)
     } else {
-      file.copy(src, destfile)
+      file.copy(src, destfile, overwrite = TRUE)
     }
   }
 
