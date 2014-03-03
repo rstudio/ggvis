@@ -68,7 +68,7 @@
 
 /* For items in a dropdown menu that aren't links, make sure they display
    same as links. */
-.dropdown-menu .dropdown-item {
+.ggvis-dropdown-menu .ggvis-dropdown-item {
   display: block;
   padding: 3px 20px;
   clear: both;
@@ -90,13 +90,13 @@ nav.ggvis-control {
   position: relative;
   float: right;
 }
-a.dropdown-toggle {
+a.ggvis-dropdown-toggle {
   font-size: 18px;
   text-decoration: none;
   color: #aaa;
   cursor: pointer;
 }
-ul.dropdown {
+ul.ggvis-dropdown {
   display: none;
   text-align: right;
   position: absolute;
@@ -110,17 +110,17 @@ ul.dropdown {
   width: 200px;
   margin-left: -200px;
 }
-ul.dropdown li {
+ul.ggvis-dropdown li {
   list-style-type: none;
   padding: 5px 2px;
 }
-ul.dropdown li a {
+ul.ggvis-dropdown li a {
   color: #00f;
   text-decoration: none;
   padding: 2px 2px;
   cursor: pointer;
 }
-ul.dropdown li a.inactive {
+ul.ggvis-dropdown li a.inactive {
   color: black;
   cursor: initial;
 }

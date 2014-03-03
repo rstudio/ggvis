@@ -826,16 +826,16 @@ ggvis = (function(_) {
 $(function(){ //DOM Ready
 
   // Dropdown toggle
-  $('.dropdown-toggle').click(function(){
-    $(this).next('.dropdown').toggle();
+  $('.ggvis-dropdown-toggle').click(function(){
+    $(this).next('.ggvis-dropdown-toggle').toggle();
   });
 
   $(document).click(function(e) {
     var target = e.target;
     var $target = $(target);
-    if (!$target.is('.dropdown-toggle') &&
-        !$target.parents().is('.dropdown-toggle')) {
-      $('.dropdown').hide();
+    if (!$target.is('.ggvis-dropdown-toggle') &&
+        !$target.parents().is('.ggvis-dropdown-toggle')) {
+      $('.ggvis-dropdown').hide();
     }
   });
 

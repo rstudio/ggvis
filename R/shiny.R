@@ -232,8 +232,8 @@ mainTopPanel <- function(...) {
 #' @export
 ggvisControlGroup <- function(plot_id) {
   tags$nav(class = "ggvis-control",
-    tags$a(class = "dropdown-toggle", title = "Controls", "\u2699"),
-    tags$ul(class = "dropdown",
+    tags$a(class = "ggvis-dropdown-toggle", title = "Controls", "\u2699"),
+    tags$ul(class = "ggvis-dropdown",
       tags$li(
         "Renderer: ",
         tags$a(
