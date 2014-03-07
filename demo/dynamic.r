@@ -9,18 +9,12 @@ mtc1 <- reactive({
 ggvis(mtc1, props(x = ~wt, y = ~mpg)) + layer_point()
 
 # Rapidly changing dynamic example
-df <- data.frame(x = runif(20), y = runif(20))
-# Basic dynamic example
 mtc1 <- reactive({
-  invalidateLater(20, NULL);
-
-  df$x <<- df$x + runif(20, -0.05, 0.05)
-  df$y <<- df$y + runif(20, -0.05, 0.05)
-  df
+  invalidateLater(200, NULL);
+  mtcars[sample(nrow(mtcars), 10), ]
 })
-ggvis(mtc1, props(x = ~x, y = ~y)) +
-  layer_point() +
-  dscale("x", "numeric", domain = c(0, 1))
+ggvis(mtc1, props(x = ~wt, y = ~mpg)) + layer_point()
+df <- data.frame(x = runif(20), y = runif(20))
 
 # Two separate data sets, equal in the tree
 mtc1 <- reactive({
@@ -43,7 +37,6 @@ mtc1 <- reactive({
 ggvis(mtc1, props(x = ~wt, y = ~mpg)) +
   layer_point() +
   layer_smooth()
-
 
 # Data points moving from right to left
 # (currently transitions aren't quite right)
