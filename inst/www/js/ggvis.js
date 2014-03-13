@@ -193,7 +193,7 @@ ggvis = (function(_) {
         }
 
         self.removeHandlers();
-        self.handlers = self.addHandlers(self.spec.handlers);
+        self.addHandlers(self.spec.handlers);
 
         self.brush.enable();
 
