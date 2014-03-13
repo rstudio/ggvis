@@ -825,18 +825,9 @@ ggvis = (function(_) {
 
 $(function(){ //DOM Ready
 
-  // Dropdown toggle
-  $('.ggvis-dropdown-toggle').click(function(){
-    $(this).next('.ggvis-dropdown-toggle').toggle();
-  });
-
-  $(document).click(function(e) {
-    var target = e.target;
-    var $target = $(target);
-    if (!$target.is('.ggvis-dropdown-toggle') &&
-        !$target.parents().is('.ggvis-dropdown-toggle')) {
-      $('.ggvis-dropdown').hide();
-    }
+  // Gear dropdown menu
+  $("body").on("click", ".ggvis-dropdown-toggle", function(){
+    $(this).next(".ggvis-dropdown").toggle();
   });
 
   $("body").on("click", ".ggvis-download", function() {
