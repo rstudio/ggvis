@@ -484,7 +484,6 @@ ggvis = (function(_) {
       if (h_spec === [] || h_spec === undefined || h_spec === null)
         return;
 
-      var self = this;
       var h, HandlerClass;
 
       // Call the appropriate handlers
@@ -492,7 +491,7 @@ ggvis = (function(_) {
         h = h_spec[i];
         // Grab the appropriate handler class and instantiate it
         HandlerClass = ggvis.handlers[h.type];
-        self.handlers[i] = new HandlerClass(self, h);
+        this.handlers[i] = new HandlerClass(this, h);
       }
     };
 
