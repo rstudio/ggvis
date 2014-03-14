@@ -473,7 +473,7 @@ ggvis = (function(_) {
 
     prototype.removeHandlers = function() {
       for (var i=0; i<this.handlers.length; i++) {
-        this.handlers.remove();
+        this.handlers[i].remove();
       }
 
       this.handlers = [];
