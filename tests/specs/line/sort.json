@@ -1,7 +1,7 @@
 {
 	"data" : [
 		{
-			"name" : "df_176991690869283a6ffde232ed9aa63c_sort_e00e0dc",
+			"name" : "df_176991690869283a6ffde232ed9aa63c_sort_92bbbb53",
 			"format" : {
 				"type" : "csv",
 				"parse" : {
@@ -25,7 +25,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "df_176991690869283a6ffde232ed9aa63c_sort_e00e0dc",
+						"data" : "df_176991690869283a6ffde232ed9aa63c_sort_92bbbb53",
 						"field" : "data.x"
 					}
 				]
@@ -43,7 +43,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "df_176991690869283a6ffde232ed9aa63c_sort_e00e0dc",
+						"data" : "df_176991690869283a6ffde232ed9aa63c_sort_92bbbb53",
 						"field" : "data.y"
 					}
 				]
@@ -69,12 +69,12 @@
 				},
 				"ggvis" : {
 					"data" : {
-						"value" : "df_176991690869283a6ffde232ed9aa63c_sort_e00e0dc"
+						"value" : "df_176991690869283a6ffde232ed9aa63c_sort_92bbbb53"
 					}
 				}
 			},
 			"from" : {
-				"data" : "df_176991690869283a6ffde232ed9aa63c_sort_e00e0dc"
+				"data" : "df_176991690869283a6ffde232ed9aa63c_sort_92bbbb53"
 			}
 		}
 	],

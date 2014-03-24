@@ -1,9 +1,14 @@
 {
 	"data" : [
 		{
-			"name" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_6871cf8b_bin_c91d09e8_tree",
+			"name" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_16ebb52a_bin_1cb09fee_tree",
 			"format" : {
-				"type" : "treejson"
+				"type" : "treejson",
+				"parse" : {
+					"cyl" : "number",
+					"x" : "number",
+					"count__" : "number"
+				}
 			},
 			"values" : {
 				"children" : [
@@ -93,8 +98,8 @@
 			}
 		},
 		{
-			"name" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_6871cf8b_bin_c91d09e8",
-			"source" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_6871cf8b_bin_c91d09e8_tree",
+			"name" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_16ebb52a_bin_1cb09fee",
+			"source" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_16ebb52a_bin_1cb09fee_tree",
 			"transform" : [
 				{
 					"type" : "flatten"
@@ -118,7 +123,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_6871cf8b_bin_c91d09e8",
+						"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_16ebb52a_bin_1cb09fee",
 						"field" : "data.cyl"
 					}
 				]
@@ -136,7 +141,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_6871cf8b_bin_c91d09e8",
+						"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_16ebb52a_bin_1cb09fee",
 						"field" : "data.x"
 					}
 				]
@@ -154,7 +159,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_6871cf8b_bin_c91d09e8",
+						"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_16ebb52a_bin_1cb09fee",
 						"field" : "data.count__"
 					}
 				]
@@ -165,7 +170,7 @@
 		{
 			"type" : "group",
 			"from" : {
-				"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_6871cf8b_bin_c91d09e8_tree"
+				"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_16ebb52a_bin_1cb09fee_tree"
 			},
 			"marks" : [
 				{
@@ -187,7 +192,7 @@
 						},
 						"ggvis" : {
 							"data" : {
-								"value" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_6871cf8b_bin_c91d09e8_tree"
+								"value" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_16ebb52a_bin_1cb09fee_tree"
 							}
 						}
 					}

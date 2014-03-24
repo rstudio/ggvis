@@ -1,7 +1,7 @@
 {
 	"data" : [
 		{
-			"name" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_smooth_e09dd4c",
+			"name" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_smooth_92eb5b65",
 			"format" : {
 				"type" : "csv",
 				"parse" : {
@@ -25,7 +25,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_smooth_e09dd4c",
+						"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_smooth_92eb5b65",
 						"field" : "data.x"
 					}
 				]
@@ -43,7 +43,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_smooth_e09dd4c",
+						"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_smooth_92eb5b65",
 						"field" : "data.y"
 					}
 				]
@@ -72,12 +72,12 @@
 				},
 				"ggvis" : {
 					"data" : {
-						"value" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_smooth_e09dd4c"
+						"value" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_smooth_92eb5b65"
 					}
 				}
 			},
 			"from" : {
-				"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_smooth_e09dd4c"
+				"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_smooth_92eb5b65"
 			}
 		}
 	],
