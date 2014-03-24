@@ -131,6 +131,21 @@ format_vec_csv.POSIXt <- function(vec) floor(as.numeric(vec) * 1000)
 #' @export
 format_vec_csv.Date <- function(vec) as.numeric(as.POSIXct(vec)) * 1000
 
+
+# Format a vector for d3 json output
+format_vec_d3json <- function(vec) UseMethod("format_vec_d3json")
+#' @export
+format_vec_d3json.numeric <- function(vec) vec
+#' @export
+format_vec_d3json.character <- function(vec) vec
+#' @export
+format_vec_d3json.factor <- function(vec) as.character(vec)
+#' @export
+format_vec_d3json.POSIXt <- function(vec) floor(as.numeric(vec) * 1000)
+#' @export
+format_vec_d3json.Date <- function(vec) as.numeric(as.POSIXct(vec)) * 1000
+
+
 # Replace \ with \\, " with \", and add " to start and end
 quote_text <- function(txt) {
   txt <- gsub("\\\\", "\\\\\\\\", txt, fixed = TRUE)

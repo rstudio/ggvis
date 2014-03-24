@@ -29,7 +29,7 @@ Collate:
     'connect.R'
     'controls.R'
     'datasource.R'
-    'df_to_json.R'
+    'df_to_d3json.R'
     'utils.R'
     'events.R'
     'events-mouse.R'

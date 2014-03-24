@@ -161,12 +161,16 @@ as.vega.data.frame <- function(x, name, ...) {
 
 #' @export
 as.vega.split_df <- function(x, name, ...) {
-  data <- lapply(x, function(x) list(children = df_to_json(x)))
+  data <- lapply(x, function(x) list(children = df_to_d3json(x)))
 
   list(
     list(
       name = paste0(name, "_tree"),
-      format = list(type = "treejson"),
+      format = list(
+        type = "treejson",
+        # Figure out correct vega parsers for non-string columns
+        parse = unlist(lapply(x[[1]], vega_data_parser))
+      ),
       values = list(children = data)
      ),
     list(
