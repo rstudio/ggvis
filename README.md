@@ -2,11 +2,11 @@
 
 [![Build Status](https://travis-ci.org/rstudio/ggvis.png?branch=master)](https://travis-ci.org/rstudio/ggvis)
 
-The goal of ggvis is to make it easy to describe interactive web graphics in
-R. It fuses the ideas of [ggplot2](http://github.com/hadley/ggplot2) and
+The goal of ggvis is to make it easy to describe interactive web graphics in 
+R. It fuses the ideas of [ggplot2](http://github.com/hadley/ggplot2) and 
 [shiny](http://github.com/rstudio/shiny), rendering graphics on the web with
-[vega](https://github.com/trifacta/vega) (so can draw on the canvas or using
-svg). It is less flexible than raw d3 or vega, but much more succinct and
+[vega](https://github.com/trifacta/vega) (so one can draw using [HTML5 canvas](http://diveintohtml5.info/canvas.html) or
+[svg](http://en.wikipedia.org/wiki/Scalable_Vector_Graphics)). ggvis is less flexible than raw [d3](http://d3js.org/) or vega, but much more succinct and 
 is tailored to the needs of exploratory data analysis.
 
 If you find a bug, please file a minimal reproducible example at
