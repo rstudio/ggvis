@@ -2,7 +2,7 @@
 title: "Using ggvis with knitr and rmarkdown"
 author: Winston Chang
 output:
-  ggvis:::ioslides_presentation:
+  ioslides_presentation:
     widescreen: true
 ---
 
@@ -17,14 +17,14 @@ knitr::opts_chunk$set(fig.width = 6,
 
 ## First Plot
 
-```{r results='asis'}
+```{r}
 library(ggvis)
 ggvis(mtcars, props(x = ~wt, y = ~mpg)) + layer_point()
 ```
 
 ## Second Plot
 
-```{r results='asis'}
+```{r}
 ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
   layer_point() +
   layer_smooth()

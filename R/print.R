@@ -35,10 +35,6 @@ print.ggvis <- function(x, dynamic = NA,
     return(show_spec(x, spec))
   }
 
-  if (getOption("knitr.in.progress", FALSE)) {
-    return(knitr_print(x, dynamic, id = id, minify = minify, ...))
-  }
-
   if (is.na(dynamic)) dynamic <- is.dynamic(x) && interactive()
 
   if (dynamic) {
@@ -209,34 +205,6 @@ view_plot <- function(url, height) {
     utils::browseURL(url)
 }
 
-# Print from within a knitr document.
-# The knitr chunk must use the results="asis" option for this to work properly
-knitr_print <- function(x, dynamic = NA, id = rand_id("plot_"), minify = TRUE,
-                        ...) {
-
-  # Read knitr chunk options (if present) for default values
-  x$opts <- list(merge_opts(knitr_opts(), x$opts[[1]]))
-
-  if (is.na(dynamic)) dynamic <- is.dynamic(x)
-  if (dynamic) {
-    warning("Can't output dynamic/interactive ggvis plots in a knitr document.\n",
-      "Generating a static (non-dynamic, non-interactive) version of plot.")
-  }
-
-  spec <- as.vega(x, dynamic = FALSE)
-  vega_json <- toJSON(spec, pretty = TRUE)
-
-  body <- tagList(
-    ggvis_output(id, shiny = FALSE, minify = minify),
-    tags$script(type = "text/javascript",
-      paste0('var ', id, '_spec = ', vega_json, ';
-        ggvis.getPlot("', id, '").parseSpec(', id, '_spec);
-      ')
-    )
-  )
-  cat(format(body, indent = FALSE))
-}
-
 # Returns a shiny tagList with links to the needed JS and CSS files
 # @param prefix A prefix to add to the path (like "ggvis")
 # @param minify Use minified version of JS and CSS files.
@@ -287,3 +255,89 @@ html_head <- function(prefix = NULL, minify = TRUE, shiny = FALSE) {
 
   tags
 }
+
+
+#' @rdname print.ggvis
+#' @export
+knit_print.ggvis <- function(x) {
+
+  # Dynamic not currently supported
+  if (is.dynamic(x)) {
+    warning("Can't output dynamic/interactive ggvis plots in a knitr document.\n",
+            "Generating a static (non-dynamic, non-interactive) version of plot.")
+  }
+
+  # Read knitr chunk options (if present) for default values
+  x$opts <- list(merge_opts(knitr_opts(), x$opts[[1]]))
+
+  # Plot as JSON
+  spec <- as.vega(x, dynamic = FALSE)
+  vega_json <- toJSON(spec, pretty = TRUE)
+
+  # Plot as HTML
+  id = rand_id("plot_")
+  html <- tagList(
+    ggvis_output(id, shiny = FALSE),
+    tags$script(type = "text/javascript",
+                paste0('var ', id, '_spec = ', vega_json, ';
+                       ggvis.getPlot("', id, '").parseSpec(', id, '_spec);
+                       ')
+                )
+  )
+
+  # Define dependencies
+  dependencies <- list(
+    html_dependency(name = "jquery",
+                    version = "1.11.0",
+                    path = "lib/jquery",
+                    script = "jquery.min.js"),
+    html_dependency(name = "jquery-ui",
+                    version = "1.10.4",
+                    path = "lib/jquery-ui",
+                    script = "js/jquery-ui-1.10.4.custom.min.js",
+                    stylesheet = "css/smoothness/jquery-ui-1.10.4.custom.min.css"),
+    html_dependency(name = "d3",
+                    version = "3.4.1",
+                    path = "lib/d3",
+                    script = "d3.min.js"),
+    html_dependency(name = "vega",
+                    version = "1.3.3",
+                    path = "lib/vega",
+                    script = "vega.min.js"),
+    html_dependency(name = "lodash",
+                    version = "2.2.1",
+                    path = "lib/lodash",
+                    script = "lodash.min.js",
+                    head = "<script>var lodash = _.noConflict();</script>"),
+    html_dependency(name = "ggivs",
+                    version = packageVersion("ggvis"),
+                    path = "ggvis",
+                    script = "js/ggvis.js",
+                    stylesheet = "css/ggvis.css")
+  )
+
+  # Return knit_asis
+  structure(class = "knit_asis",
+            format(html, indent = FALSE),
+            knit_meta = dependencies
+  )
+}
+
+html_dependency <- function(name,
+                            version,
+                            path,
+                            meta = NULL,
+                            script = NULL,
+                            stylesheet = NULL,
+                            head = NULL) {
+  structure(class = "html_dependency", list(
+    name = name,
+    version = version,
+    path = system.file("www", path, package = "ggvis"),
+    meta = meta,
+    script = script,
+    stylesheet = stylesheet,
+    head = head
+  ))
+}
+

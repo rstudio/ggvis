@@ -63,7 +63,6 @@ Collate:
     'prop_band.R'
     'props.R'
     'qvis.R'
-    'rmarkdown_formats.R'
     'scale.R'
     'scale_defaults.R'
     'scale_ordinal.R'
