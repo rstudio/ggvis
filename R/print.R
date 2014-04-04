@@ -213,31 +213,31 @@ html_head <- function(prefix = NULL, minify = TRUE, shiny = FALSE) {
   if(minify) {
     tags <- tagList(
       # Shiny has its own copy of jQuery; duplicates can cause problems
-      if (!shiny) tags$script(src = "lib/jquery-1.11.0.min.js"),
+      if (!shiny) tags$script(src = "lib/jquery/jquery.min.js"),
       tags$script(src = "lib/jquery-ui/js/jquery-ui-1.10.4.custom.min.js"),
-      tags$script(charset = "utf-8", src = "lib/d3.min.js"),
-      tags$script(src = "lib/vega.min.js"),
-      tags$script(src = "lib/lodash.min.js"),
+      tags$script(charset = "utf-8", src = "lib/d3/d3.min.js"),
+      tags$script(src = "lib/vega/vega.min.js"),
+      tags$script(src = "lib/lodash/lodash.min.js"),
       tags$script("var lodash = _.noConflict();"),
-      tags$script(src = "js/ggvis.js"),
-      if (shiny) tags$script(src = "js/shiny-ggvis.js"),
+      tags$script(src = "ggvis/js/ggvis.js"),
+      if (shiny) tags$script(src = "ggvis/js/shiny-ggvis.js"),
       tags$link(rel = "stylesheet", type = "text/css",
         href = "lib/jquery-ui/css/smoothness/jquery-ui-1.10.4.custom.min.css"),
-      tags$link(rel = "stylesheet", type = "text/css", href = "css/ggvis.css")
+      tags$link(rel = "stylesheet", type = "text/css", href = "ggvis/css/ggvis.css")
     )
   } else {
     tags <- tagList(
-      if (!shiny) tags$script(src = "lib/jquery-1.11.0.js"),
+      if (!shiny) tags$script(src = "lib/jquery/jquery.js"),
       tags$script(src = "lib/jquery-ui/js/jquery-ui-1.10.4.custom.js"),
-      tags$script(charset = "utf-8", src = "lib/d3.js"),
-      tags$script(src = "lib/vega.js"),
-      tags$script(src = "lib/lodash.min.js"),
+      tags$script(charset = "utf-8", src = "lib/d3/d3.js"),
+      tags$script(src = "lib/vega/vega.js"),
+      tags$script(src = "lib/lodash/lodash.min.js"),
       tags$script("var lodash = _.noConflict();"),
-      tags$script(src = "js/ggvis.js"),
-      if (shiny) tags$script(src = "js/shiny-ggvis.js"),
+      tags$script(src = "ggvis/js/ggvis.js"),
+      if (shiny) tags$script(src = "ggvis/js/shiny-ggvis.js"),
       tags$link(rel = "stylesheet", type = "text/css",
         href = "lib/jquery-ui/css/smoothness/jquery-ui-1.10.4.custom.css"),
-      tags$link(rel = "stylesheet", type = "text/css", href = "css/ggvis.css")
+      tags$link(rel = "stylesheet", type = "text/css", href = "ggvis/css/ggvis.css")
     )
   }
 
