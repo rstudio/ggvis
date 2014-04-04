@@ -309,7 +309,7 @@ knit_print.ggvis <- function(x) {
                     path = "lib/lodash",
                     script = "lodash.min.js",
                     head = "<script>var lodash = _.noConflict();</script>"),
-    html_dependency(name = "ggivs",
+    html_dependency(name = "ggvis",
                     version = packageVersion("ggvis"),
                     path = "ggvis",
                     script = "js/ggvis.js",
