@@ -82,7 +82,6 @@
 #'   to the \code{.props} argument instead of messing around with
 #'   substitute. In other words, \code{.props} lets you opt out of the
 #'   non-standard evaluation that \code{props} does.
-#'   parse in a list of un
 #' @param inherit If \code{TRUE}, the defaults, will inherit from properties
 #'   from the parent layer If \code{FALSE}, it will start from nothing.
 #' @export
