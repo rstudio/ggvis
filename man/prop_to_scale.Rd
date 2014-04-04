@@ -6,8 +6,8 @@
 prop_to_scale(prop)
 }
 \arguments{
-  \item{prop}{character vector of property names. Any
-  unrecognised names are left unchanged.}
+\item{prop}{character vector of property names. Any unrecognised names
+are left unchanged.}
 }
 \value{
 character vector of default scale names.

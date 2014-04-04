@@ -9,17 +9,16 @@ connect(x, props, source = NULL, session = NULL)
 sluice(x, props, source = NULL, session = NULL)
 }
 \arguments{
-  \item{x}{a pipeline or pipe}
+\item{x}{a pipeline or pipe}
 
-  \item{properties}{a \code{\link{props}} object}
+\item{properties}{a \code{\link{props}} object}
 
-  \item{source}{the data source to start the pipeline. This
-  is used when the output from one pipeline into the input
-  of another. Methods must check if is a reactive object
-  and deal with appropriately.}
+\item{source}{the data source to start the pipeline. This is used when
+the output from one pipeline into the input of another. Methods must check
+if is a reactive object and deal with appropriately.}
 
-  \item{session}{the session object, for if this is called
-  within a Shiny application.}
+\item{session}{the session object, for if this is called within a Shiny
+application.}
 }
 \description{
 \code{connect} creates a reactive pipeline (starting with \code{NULL}),

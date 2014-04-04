@@ -9,12 +9,11 @@ as.vega(x, ...)
 \method{as.vega}{ggvis}(x, session = NULL, dynamic = FALSE, ...)
 }
 \arguments{
-  \item{x}{an object to convert to vega}
+\item{x}{an object to convert to vega}
 
-  \item{session}{a session object from shiny}
+\item{session}{a session object from shiny}
 
-  \item{dynamic}{whether to generate dynamic or static
-  spec}
+\item{dynamic}{whether to generate dynamic or static spec}
 }
 \value{
 a list. When converted to JSON, will be the type of structure

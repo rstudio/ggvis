@@ -12,16 +12,14 @@ is.pipeline(x)
 as.pipeline(x, ...)
 }
 \arguments{
-  \item{...}{a list of pipes}
+\item{...}{a list of pipes}
 
-  \item{.pipes}{if you already have the pipes in a list,
-  use this argument.}
+\item{.pipes}{if you already have the pipes in a list, use this argument.}
 
-  \item{x}{an object to test/coerce}
+\item{x}{an object to test/coerce}
 
-  \item{.id}{Use a specific ID for this pipeline instead of
-  an auto-generated one. This is primarily for internal
-  use.}
+\item{.id}{Use a specific ID for this pipeline instead of an auto-generated
+one. This is primarily for internal use.}
 }
 \description{
 A pipeline represents a sequence of data transformations, and is the key

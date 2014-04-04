@@ -13,22 +13,19 @@ observe_ggvis(r_gv, plot_id, session, ...)
 renderControls(r_gv, session = NULL)
 }
 \arguments{
-  \item{plot_id}{unique identifier to use for the div
-  containing the ggvis plot.}
+\item{plot_id}{unique identifier to use for the div containing the ggvis plot.}
 
-  \item{shiny}{Should this include headers for Shiny? For
-  dynamic and interactive plots, this should be TRUE;
-  otherwise FALSE.}
+\item{shiny}{Should this include headers for Shiny? For dynamic and
+interactive plots, this should be TRUE; otherwise FALSE.}
 
-  \item{minify}{If \code{TRUE}, use minified version of JS
-  and CSS files. This can be useful for debugging.}
+\item{minify}{If \code{TRUE}, use minified version of JS and CSS files. This
+can be useful for debugging.}
 
-  \item{r_gv}{A reactive expression which returns a ggvis
-  object.}
+\item{r_gv}{A reactive expression which returns a ggvis object.}
 
-  \item{session}{A Shiny session object.}
+\item{session}{A Shiny session object.}
 
-  \item{...}{Other arguments passed to \code{as.vega}.}
+\item{...}{Other arguments passed to \code{as.vega}.}
 }
 \description{
 It's easiest to learn by example: there are two shiny apps in

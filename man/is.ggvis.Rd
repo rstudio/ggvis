@@ -6,7 +6,7 @@
 is.ggvis(x)
 }
 \arguments{
-  \item{x}{an object to test}
+\item{x}{an object to test}
 }
 \description{
 Is an object a ggvis object?

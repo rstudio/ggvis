@@ -8,56 +8,55 @@ input_slider(min, max, value = min, step = NULL, round = FALSE,
   label = "", id = rand_id("slider_"), map = identity)
 }
 \arguments{
-  \item{min}{The minimum value (inclusive) that can be
+\item{min}{The minimum value (inclusive) that can be
   selected.}
 
-  \item{max}{The maximum value (inclusive) that can be
+\item{max}{The maximum value (inclusive) that can be
   selected.}
 
-  \item{value}{The initial value of the slider. A numeric
+\item{value}{The initial value of the slider. A numeric
   vector of length one will create a regular slider; a
   numeric vector of length two will create a double-ended
   range slider. A warning will be issued if the value
   doesn't fit between \code{min} and \code{max}.}
 
-  \item{step}{Specifies the interval between each
+\item{step}{Specifies the interval between each
   selectable value on the slider (\code{NULL} means no
   restriction).}
 
-  \item{round}{\code{TRUE} to round all values to the
+\item{round}{\code{TRUE} to round all values to the
   nearest integer; \code{FALSE} if no rounding is desired;
   or an integer to round to that number of digits (for
   example, 1 will round to the nearest 10, and -2 will
   round to the nearest .01). Any rounding will be applied
   after snapping to the nearest step.}
 
-  \item{format}{Customize format values in slider labels.
+\item{format}{Customize format values in slider labels.
   See
   \url{https://code.google.com/p/jquery-numberformatter/}
   for syntax details.}
 
-  \item{locale}{The locale to be used when applying
+\item{locale}{The locale to be used when applying
   \code{format}. See details.}
 
-  \item{ticks}{\code{FALSE} to hide tick marks, \code{TRUE}
+\item{ticks}{\code{FALSE} to hide tick marks, \code{TRUE}
   to show them according to some simple heuristics.}
 
-  \item{animate}{\code{TRUE} to show simple animation
+\item{animate}{\code{TRUE} to show simple animation
   controls with default settings; \code{FALSE} not to; or a
   custom settings list, such as those created using
   \code{animationOptions}.}
 
-  \item{label}{A descriptive label to be displayed with the
+\item{label}{A descriptive label to be displayed with the
   widget.}
 
-  \item{id}{a unique identifier for this interactive input
-  - used to de-duplicate the controls when the same input
-  is used in multiple places in a visualisation}
+\item{id}{a unique identifier for this interactive input - used to
+de-duplicate the controls when the same input is used in multiple places
+in a visualisation}
 
-  \item{map}{a function with a singe argument that takes
-  the value returned from the input control and converts it
-  to an argument useful for ggvis.  Defaults to
-  \code{identity}, leaving the output unchanged.}
+\item{map}{a function with a singe argument that takes the value returned
+from the input control and converts it to an argument useful for ggvis.
+Defaults to \code{identity}, leaving the output unchanged.}
 }
 \description{
 Create an interactive slider.

@@ -6,9 +6,9 @@
 linked_brush(keys = NULL, fill = "red")
 }
 \arguments{
-  \item{keys}{vector of all possible keys, if known.}
+\item{keys}{vector of all possible keys, if known.}
 
-  \item{fill}{brush colour}
+\item{fill}{brush colour}
 }
 \description{
 Create a linked brush object

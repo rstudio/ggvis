@@ -6,11 +6,10 @@
 transform_stack(direction = "y")
 }
 \arguments{
-  \item{direction}{The direction to stack. This is a
-  variable name after mapping, and must be either
-  \code{"y"} (the default) or \code{"x"}.  For example,
-  with \code{props(y = ~mpg)}, you would use \code{"y"},
-  not \code{"mpg"}.}
+\item{direction}{The direction to stack. This is a variable name after
+mapping, and must be either \code{"y"} (the default) or \code{"x"}.
+For example, with \code{props(y = ~mpg)}, you would use \code{"y"}, not
+\code{"mpg"}.}
 }
 \description{
 \code{transform_stack} is a data transformation that stacks values in a
@@ -18,26 +17,25 @@ a data object. Typically, y values are stacked at each unique x value,
 although it's also possible to stack x values at each unique y.
 }
 \section{Input}{
-  \code{transform_stack} takes a data frame or a split_df
-  as input.
+
+\code{transform_stack} takes a data frame or a split_df as input.
 }
 
 \section{Ouput}{
-  \code{transform_stack} returns a sorted data frame or
-  split_df with the same columns as the input as well as
-  columns named \code{ymin__} and \code{ymax__} (or
-  \code{xmin__} and \code{xmax__} if stacking x values).
-  These columns specify the upper and lower bounds of each
-  stacked object.
 
-  Note that \code{transform_stack} does not sort the
-  values. If you want to sort on another variable, you can
-  use \code{\link{transform_sort}} before stacking. This is
-  useful when, for example, your data is unsorted and you
-  want stacked bar chart where each stack of bars appears
-  in the same order.  Also, if you use \code{by_group}, it
-  will result in the data being sorted by the grouping
-  variables.
+
+\code{transform_stack} returns a sorted data frame or split_df with the same
+  columns as the input as well as columns named \code{ymin__} and
+  \code{ymax__} (or \code{xmin__} and \code{xmax__} if stacking x
+  values). These columns specify the upper and lower bounds of each stacked
+  object.
+
+ Note that \code{transform_stack} does not sort the values. If you want to
+ sort on another variable, you can use \code{\link{transform_sort}} before
+ stacking. This is useful when, for example, your data is unsorted and you
+ want stacked bar chart where each stack of bars appears in the same order.
+ Also, if you use \code{by_group}, it will result in the data being sorted
+ by the grouping variables.
 }
 \examples{
 # Collapse across hair & eye colour data across sex

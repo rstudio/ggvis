@@ -6,30 +6,28 @@
 transform_sort(..., var = "x")
 }
 \arguments{
-  \item{var}{The variables to sort on. This is the variable
-  name after mapping.  For example, with \code{props(x =
-  ~mpg)}, you would use \code{"x"}, not \code{"mpg"}.
-  Multiple variables can be used, as in \code{c("x",
-  "y")}.}
+\item{var}{The variables to sort on. This is the variable name after mapping.
+For example, with \code{props(x = ~mpg)}, you would use \code{"x"}, not
+\code{"mpg"}. Multiple variables can be used, as in \code{c("x", "y")}.}
 
-  \item{...}{Named arguments, which are passed along to the
-  \code{order()} function used for sorting. Unnamed
-  arguments will be dropped.}
+\item{...}{Named arguments, which are passed along to the \code{order()}
+function used for sorting. Unnamed arguments will be dropped.}
 }
 \description{
 \code{transform_sort} is a data transformation that sorts a data object based
 on one or more columns in the data.
 }
 \section{Input}{
-  \code{transform_sort} takes a data frame or a split_df as
-  input.
+
+\code{transform_sort} takes a data frame or a split_df as input.
 }
 
 \section{Ouput}{
-  \code{transform_sort} returns a sorted data frame or
-  split_df with the same columns as the input. In the case
-  of a split_df, each of the data frames contained within
-  is sorted.
+
+
+\code{transform_sort} returns a sorted data frame or split_df with the same
+  columns as the input. In the case of a split_df, each of the data frames
+  contained within is sorted.
 }
 \examples{
 # Compare the output from the unsorted vs. sorted data

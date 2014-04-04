@@ -6,7 +6,7 @@
 sidebarBottomPanel(...)
 }
 \arguments{
-  \item{...}{UI elements to include in the sidebar.}
+\item{...}{UI elements to include in the sidebar.}
 }
 \description{
 This is to be used with \code{link{sidebarBottomPage}}.

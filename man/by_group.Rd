@@ -6,13 +6,13 @@
 by_group(..., .vars = list(), .env = parent.frame())
 }
 \arguments{
-  \item{...}{Unquoted variable names or expressions
-  describe how to split up the dataset.}
+\item{...}{Unquoted variable names or expressions describe how to split
+up the dataset.}
 
-  \item{.vars}{a list of quoted expressions.}
+\item{.vars}{a list of quoted expressions.}
 
-  \item{.env}{environment in which to evalute expressions.
-  In ordinary use, the default is adequate.}
+\item{.env}{environment in which to evalute expressions. In ordinary use,
+the default is adequate.}
 }
 \description{
 Use \code{by_group} to split up a dataset into multiple pieces, and have

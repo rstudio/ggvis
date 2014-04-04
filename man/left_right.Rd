@@ -9,17 +9,16 @@ left_right(min, max, value = (min + max)/2, step = (max - min)/40)
 up_down(min, max, value = (min + max)/2, step = (max - min)/40)
 }
 \arguments{
-  \item{value}{The initial value before any keys are
-  pressed. Defaults to half-way between \code{min} and
-  \code{max}.}
+\item{value}{The initial value before any keys are pressed. Defaults to
+half-way between \code{min} and \code{max}.}
 
-  \item{step}{How much each key press changes \code{value}.
-  Defaults to 40 steps along range}
+\item{step}{How much each key press changes \code{value}. Defaults to
+40 steps along range}
 
-  \item{min}{The minimum value (inclusive) that can be
+\item{min}{The minimum value (inclusive) that can be
   selected.}
 
-  \item{max}{The maximum value (inclusive) that can be
+\item{max}{The maximum value (inclusive) that can be
   selected.}
 }
 \description{

@@ -6,7 +6,7 @@
 ggvisControlGroup(plot_id)
 }
 \arguments{
-  \item{plot_id}{Plot ID}
+\item{plot_id}{Plot ID}
 }
 \description{
 Controls for choosing a renderer and downloading an image.

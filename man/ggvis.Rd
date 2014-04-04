@@ -6,10 +6,9 @@
 ggvis(...)
 }
 \arguments{
-  \item{...}{components: data, \code{\link{props}},
-  \code{\link{layer}}es, \code{\link{marks}},
-  \code{\link{scales}}, \code{\link{axis}} or
-  \code{\link{legend}} objects.}
+\item{...}{components: data, \code{\link{props}}, \code{\link{layer}}es,
+\code{\link{marks}}, \code{\link{scales}}, \code{\link{axis}} or
+\code{\link{legend}} objects.}
 }
 \value{
 a \code{layer} object. Will display the plot when printed;

@@ -6,10 +6,9 @@
 datasource(data, name = deparse2(substitute(data)))
 }
 \arguments{
-  \item{data}{a data frame}
+\item{data}{a data frame}
 
-  \item{name}{the name of the data frame (used in error
-  messages etc.)}
+\item{name}{the name of the data frame (used in error messages etc.)}
 }
 \description{
 A data source implements a pointer (using a environment and a promise)

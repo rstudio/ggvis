@@ -6,15 +6,13 @@
 sidebarBottomPage(sidebarPanel, mainPanel, shiny_headers = TRUE)
 }
 \arguments{
-  \item{sidebarPanel}{The \code{\link{sidebarBottomPanel}}
-  containing input controls.}
+\item{sidebarPanel}{The \code{\link{sidebarBottomPanel}} containing input
+controls.}
 
-  \item{mainPanel}{The \code{\link{mainTopPanel}}
-  containing the main content.}
+\item{mainPanel}{The \code{\link{mainTopPanel}} containing the main content.}
 
-  \item{shiny_headers}{Should Shiny headers be embedded in
-  the page? This should be TRUE for interactive/dynamic
-  pages, FALSE for static pages.}
+\item{shiny_headers}{Should Shiny headers be embedded in the page? This
+should be TRUE for interactive/dynamic pages, FALSE for static pages.}
 }
 \description{
 This creates a page with a sidebar, where the sidebar moves to the bottom

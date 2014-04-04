@@ -6,16 +6,13 @@
 ggvis_message(session, type, data = NULL, id = NULL)
 }
 \arguments{
-  \item{session}{A session object.}
+\item{session}{A session object.}
 
-  \item{type}{A string representing the type of the
-  message.}
+\item{type}{A string representing the type of the message.}
 
-  \item{data}{An object (typically a list) containing
-  information for the client.}
+\item{data}{An object (typically a list) containing information for the client.}
 
-  \item{id}{A unique identifier for ggvis message handler
-  (optional).}
+\item{id}{A unique identifier for ggvis message handler (optional).}
 }
 \description{
 This will be sent to the client and passed to a handler in ggvis.messages on

@@ -9,25 +9,23 @@ prop(x, scale = NULL, offset = NULL, mult = NULL, env = parent.frame())
 is.prop(x)
 }
 \arguments{
-  \item{x}{The value of the property. This can be an atomic
-  vector (a constant), a name or quoted call (a variable),
-  a single-sided formula (a constant or variable depending
-  on its contents), or a delayed reactive (which can be
-  either variable or constant).}
+\item{x}{The value of the property. This can be an atomic vector
+(a constant), a name or quoted call (a variable), a single-sided
+formula (a constant or variable depending on its contents), or a delayed
+reactive (which can be either variable or constant).}
 
-  \item{scale}{If \code{TRUE} uses the default scale
-  associated with property; If \code{FALSE}, does not scale
-  the value. Otherwise supply a string to select a custom
-  scale. If \code{x} is an interactive input, then this
-  defaults to the scale parameter of the input.}
+\item{scale}{If \code{TRUE} uses the default scale associated with property;
+If \code{FALSE}, does not scale the value. Otherwise supply a string to
+select a custom scale. If \code{x} is an interactive input, then this
+defaults to the scale parameter of the input.}
 
-  \item{offset,mult}{Additive and multiplicate pixel offset
-  used to adjust scaled values. These are useful if you
-  want to place labels offset from points.}
+\item{offset,mult}{Additive and multiplicate pixel offset used to adjust
+scaled values. These are useful if you want to place labels offset from
+points.}
 
-  \item{env}{If \code{x} is a quoted call this provides the
-  environment in which to look for variables not in the
-  data. You should not need this in ordinary operation.}
+\item{env}{If \code{x} is a quoted call this provides the environment in
+which to look for variables not in the data. You should not need this in
+ordinary operation.}
 }
 \description{
 Properties are used to describe the visual properties of \link{marks}.

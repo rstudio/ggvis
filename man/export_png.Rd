@@ -9,13 +9,11 @@ export_png(x, envir = parent.frame(), file = NULL)
 export_svg(x, envir = parent.frame(), file = NULL)
 }
 \arguments{
-  \item{x}{A ggvis object.}
+\item{x}{A ggvis object.}
 
-  \item{envir}{The environment in which to evaluate
-  \code{gv}.}
+\item{envir}{The environment in which to evaluate \code{gv}.}
 
-  \item{file}{Output file name. If NULL, defaults to
-  "plot.svg" or "plot.png".}
+\item{file}{Output file name. If NULL, defaults to "plot.svg" or "plot.png".}
 }
 \description{
 This requires that the external program \code{vg2png} is installed. This is

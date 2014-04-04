@@ -6,7 +6,7 @@
 vector_type(x)
 }
 \arguments{
-  \item{x}{a vector}
+\item{x}{a vector}
 }
 \description{
 The \code{vector_type} collapses down the class of base vectors into

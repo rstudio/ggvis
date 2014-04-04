@@ -6,13 +6,12 @@
 transform(type, ..., dots = list())
 }
 \arguments{
-  \item{type}{A string representing type of transform.}
+\item{type}{A string representing type of transform.}
 
-  \item{dots}{A list of arguments to pass to the underlying
-  statistical transformation function.}
+\item{dots}{A list of arguments to pass to the underlying statistical
+transformation function.}
 
-  \item{...}{Other arguments to pass to the specific
-  transform.}
+\item{...}{Other arguments to pass to the specific transform.}
 }
 \description{
 A transform object is a \code{\link{pipe}} that represents a data
@@ -24,13 +23,16 @@ If you are a ggvis user, please use one of the more specific transform
 functions starting with the \code{transform_}.
 }
 \section{Important methods}{
-  An transform subclass should provide methods for:
 
-  \itemize{ \item \code{\link{compute}}: this method should
-  check props, perform the transformation, typically by
-  dispatching to another S3 generic based on the type of
-  input, and then add back in constant variables with
-  \code{preserve_constants}. }
+
+An transform subclass should provide methods for:
+
+\itemize{
+  \item \code{\link{compute}}: this method should check props, perform
+    the transformation, typically by dispatching to another S3 generic based
+    on the type of input, and then add back in constant variables with
+    \code{preserve_constants}.
+}
 }
 \keyword{internal}
 

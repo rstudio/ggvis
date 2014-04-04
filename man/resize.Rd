@@ -6,8 +6,7 @@
 resize(f)
 }
 \arguments{
-  \item{f}{A function which is called each time the plot
-  area is resized.}
+\item{f}{A function which is called each time the plot area is resized.}
 }
 \description{
 An interactive input bound to resize events.

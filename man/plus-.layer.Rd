@@ -6,9 +6,9 @@
 \method{+}{layer}(e1, e2)
 }
 \arguments{
-  \item{e1}{A layer object.}
+\item{e1}{A layer object.}
 
-  \item{e2}{Another object, of a type listed above.}
+\item{e2}{Another object, of a type listed above.}
 }
 \description{
 This operator lets you add objects to a ggvis layer object.

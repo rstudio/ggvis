@@ -6,13 +6,12 @@
 add_scale_defaults(scale, types, ...)
 }
 \arguments{
-  \item{scale}{scale name}
+\item{scale}{scale name}
 
-  \item{types}{a vector of property types, converted to
-  scale types by \code{\link{proptype_to_scale}}}
+\item{types}{a vector of property types, converted to scale types by
+\code{\link{proptype_to_scale}}}
 
-  \item{...}{other arguments to be passed onto the scale
-  function}
+\item{...}{other arguments to be passed onto the scale function}
 }
 \description{
 You can use this function to add new defaults

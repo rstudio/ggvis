@@ -6,7 +6,7 @@
 vega_data_parser(x)
 }
 \arguments{
-  \item{x}{A vector.}
+\item{x}{A vector.}
 }
 \description{
 This is used to specify the data type so that the appropriate parser is used

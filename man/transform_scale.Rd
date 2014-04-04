@@ -6,9 +6,9 @@
 transform_scale(add = 0, mult = 1)
 }
 \arguments{
-  \item{add}{constant to add to x}
+\item{add}{constant to add to x}
 
-  \item{mult}{constant to multiply x by}
+\item{mult}{constant to multiply x by}
 }
 \description{
 Transform scale: a simple transform for testing

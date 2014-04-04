@@ -9,16 +9,15 @@ split_df(data, split, env = NULL)
 is.split_df(x)
 }
 \arguments{
-  \item{data}{A data frame.}
+\item{data}{A data frame.}
 
-  \item{split}{A quoted expression or list of quoted
-  expressions which, when evaluated with \code{data} (and
-  optionally \code{env}), specifies the split groups.}
+\item{split}{A quoted expression or list of quoted expressions which, when
+evaluated with \code{data} (and optionally \code{env}), specifies the split
+groups.}
 
-  \item{env}{An enclosing environment in which to evaluate
-  \code{split}.}
+\item{env}{An enclosing environment in which to evaluate \code{split}.}
 
-  \item{x}{object to test for split_df-ness}
+\item{x}{object to test for split_df-ness}
 }
 \description{
 An split_df object represents a data frame that has been split into multiple

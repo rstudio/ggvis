@@ -6,8 +6,7 @@
 proptype_to_scale(type)
 }
 \arguments{
-  \item{type}{property type: numeric, ordinal, nominal,
-  logical or datetime.}
+\item{type}{property type: numeric, ordinal, nominal, logical or datetime.}
 }
 \description{
 Convert the type of a property to the type of it's default scale.

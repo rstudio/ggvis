@@ -6,9 +6,9 @@
 prop_domain(x, data)
 }
 \arguments{
-  \item{x}{property to dispatch on}
+\item{x}{property to dispatch on}
 
-  \item{data}{name of data set}
+\item{data}{name of data set}
 }
 \description{
 Property domain.

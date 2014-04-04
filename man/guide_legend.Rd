@@ -8,27 +8,24 @@ guide_legend(size = NULL, shape = NULL, fill = NULL, stroke = NULL,
   properties = NULL)
 }
 \arguments{
-  \item{size,shape,fill,stroke}{The name of the scale that
-  determines the legends size, shape, fill and stroke.}
+\item{size,shape,fill,stroke}{The name of the scale that determines the
+legends size, shape, fill and stroke.}
 
-  \item{orient}{The orientation of the legend. One of
-  "left" or "right". This determines how the legend is
-  positioned within the scene. The default is "right".}
+\item{orient}{The orientation of the legend. One of "left" or "right". This
+determines how the legend is positioned within the scene. The default is
+"right".}
 
-  \item{title}{A title for the legend. By default, it uses
-  the name the fields used in the legend. Use \code{""} to
-  suppress the title.}
+\item{title}{A title for the legend. By default, it uses the name the fields
+used in the legend. Use \code{""} to suppress the title.}
 
-  \item{format}{The formatting pattern for axis labels.
-  Vega uses D3's format pattern:
-  \url{https://github.com/mbostock/d3/wiki/Formatting}}
+\item{format}{The formatting pattern for axis labels. Vega uses D3's format
+pattern: \url{https://github.com/mbostock/d3/wiki/Formatting}}
 
-  \item{values}{Explicitly set the visible legend values.}
+\item{values}{Explicitly set the visible legend values.}
 
-  \item{properties}{Optional mark property definitions for
-  custom legend styling. Should be a named list (title,
-  label, symbols, gradient, legend) of
-  \code{\link{props}}.}
+\item{properties}{Optional mark property definitions for custom legend
+styling. Should be a named list (title, label, symbols, gradient, legend)
+of \code{\link{props}}.}
 }
 \description{
 Axis specifications allow you to either override the default legends,
@@ -38,10 +35,11 @@ or supply additional legends.
 More information about axes can be found in the "axes and legends" vignettes.
 }
 \section{Compared to ggplot2}{
-  In ggplot2, legend (and axis) properties are part of the
-  scales specification. In vega, they are separate, which
-  allows the specification of multiple legends, and more
-  flexible linkage between scales and legends.
+
+
+In ggplot2, legend (and axis) properties are part of the scales
+specification. In vega, they are separate, which allows the specification
+of multiple legends, and more flexible linkage between scales and legends.
 }
 \examples{
 guide_legend(size = "size")

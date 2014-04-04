@@ -11,30 +11,28 @@ opts(width = NULL, height = NULL, keep_aspect = NULL, resizable = NULL,
 is.ggvis_opts(x)
 }
 \arguments{
-  \item{width,height}{Width and height of plot, in pixels.
-  Default is 600x400.}
+\item{width,height}{Width and height of plot, in pixels. Default is 600x400.}
 
-  \item{keep_aspect}{Should the aspect ratio be preserved?
-  The default value is \code{FALSE}, or the value of
-  \code{getOption("ggvis.keep_aspect")}, if it is set.}
+\item{keep_aspect}{Should the aspect ratio be preserved? The default value
+is \code{FALSE}, or the value of \code{getOption("ggvis.keep_aspect")}, if
+it is set.}
 
-  \item{resizable}{If TRUE, allow the user to resize the
-  plot.  The default value is \code{TRUE}, or the value of
-  \code{getOption("ggvis.resizable")}, if it is set.}
+\item{resizable}{If TRUE, allow the user to resize the plot.
+The default value is \code{TRUE}, or the value of
+\code{getOption("ggvis.resizable")}, if it is set.}
 
-  \item{padding}{A padding object specifying padding on the
-  top, right, left, and bottom. See \code{\link{padding}}.}
+\item{padding}{A padding object specifying padding on the top, right, left,
+and bottom. See \code{\link{padding}}.}
 
-  \item{duration}{Duration of transitions, in
+\item{duration}{Duration of transitions, in milliseconds.}
+
+\item{renderer}{The renderer to use in the browser. Can be \code{"canvas"}
+(the default) or \code{"svg"}.}
+
+\item{hover_duration}{The amount of time for hover transitions, in
   milliseconds.}
 
-  \item{renderer}{The renderer to use in the browser. Can
-  be \code{"canvas"} (the default) or \code{"svg"}.}
-
-  \item{hover_duration}{The amount of time for hover
-  transitions, in milliseconds.}
-
-  \item{x}{an object to test for opts-ness.}
+\item{x}{an object to test for opts-ness.}
 }
 \description{
 Set options for a ggvis plot

@@ -6,12 +6,10 @@
 ggvisControlOutput(outputId, plotId = NULL)
 }
 \arguments{
-  \item{outputId}{The output variable to read the value
-  from.}
+\item{outputId}{The output variable to read the value from.}
 
-  \item{plotId}{An optional plot ID or vector of plot IDs.
-  The plots will have their .onControlOutput functions
-  called after the controls are drawn.}
+\item{plotId}{An optional plot ID or vector of plot IDs. The plots will
+have their .onControlOutput functions called after the controls are drawn.}
 }
 \description{
 This is effectively the same as \code{\link[shiny]{uiOutput}}, except that

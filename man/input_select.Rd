@@ -15,27 +15,26 @@ input_checkboxgroup(choices, selected = NULL, label = "",
   id = rand_id("radio_"), map = identity)
 }
 \arguments{
-  \item{choices}{List of values to select from. If elements
+\item{choices}{List of values to select from. If elements
   of the list are named then that name rather than the
   value is displayed to the user.}
 
-  \item{selected}{The initially selected value (or multiple
+\item{selected}{The initially selected value (or multiple
   values if \code{multiple = TRUE}). If not specified then
   defaults to the first value for single-select lists and
   no values for multiple select lists.}
 
-  \item{multiple}{Is selection of multiple items allowed?}
+\item{multiple}{Is selection of multiple items allowed?}
 
-  \item{label}{Display label for the control}
+\item{label}{Display label for the control}
 
-  \item{id}{a unique identifier for this interactive input
-  - used to de-duplicate the controls when the same input
-  is used in multiple places in a visualisation}
+\item{id}{a unique identifier for this interactive input - used to
+de-duplicate the controls when the same input is used in multiple places
+in a visualisation}
 
-  \item{map}{a function with a singe argument that takes
-  the value returned from the input control and converts it
-  to an argument useful for ggvis.  Defaults to
-  \code{identity}, leaving the output unchanged.}
+\item{map}{a function with a singe argument that takes the value returned
+from the input control and converts it to an argument useful for ggvis.
+Defaults to \code{identity}, leaving the output unchanged.}
 }
 \description{
 \itemize{

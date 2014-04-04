@@ -10,30 +10,24 @@ transform_density(..., adjust = 1, kernel = "gaussian", trim = FALSE,
 layer_density(..., area = TRUE)
 }
 \arguments{
-  \item{adjust}{Bandwidth adjustment. See
-  \code{\link{density}} for details.}
+\item{adjust}{Bandwidth adjustment. See \code{\link{density}} for details.}
 
-  \item{kernel}{Smoothing kernel. See \code{\link{density}}
-  for details.}
+\item{kernel}{Smoothing kernel. See \code{\link{density}} for details.}
 
-  \item{trim}{If \code{TRUE}, the default, density
-  estimates are trimmed to the actual range of the data.
-  If \code{FALSE}, they are extended by the default 3
-  bandwidths (as specified by the \code{cut} parameter to
-  \code{\link{density}}).}
+\item{trim}{If \code{TRUE}, the default, density estimates are trimmed to the
+actual range of the data.  If \code{FALSE}, they are extended by the
+default 3 bandwidths (as specified by the \code{cut} parameter to
+\code{\link{density}}).}
 
-  \item{n}{Number of points (along x) to use in the density
-  estimate.}
+\item{n}{Number of points (along x) to use in the density estimate.}
 
-  \item{na.rm}{If \code{TRUE} missing values will be
-  silently removed, otherwise they will be removed with a
-  warning.}
+\item{na.rm}{If \code{TRUE} missing values will be silently removed,
+otherwise they will be removed with a warning.}
 
-  \item{area}{Should there be a shaded region drawn under
-  the curve?}
+\item{area}{Should there be a shaded region drawn under the curve?}
 
-  \item{...}{Named arguments are passed on to the
-  transform, unnamed arguments are passed on to the layer.}
+\item{...}{Named arguments are passed on to the transform, unnamed
+arguments are passed on to the layer.}
 }
 \description{
 \code{transform_density} is a data transformation that computes a kernel
@@ -42,18 +36,24 @@ density estimate from a dataset. \code{layer_density} combines
 to display a smooth line and its standard errror.
 }
 \section{Input}{
-  Currently \code{transform_density} only works with data
-  frames and requires the following properties:
 
-  \itemize{ \item \code{x}, numeric, horizontal position }
+Currently \code{transform_density} only works with data frames and requires
+the following properties:
+
+\itemize{
+  \item \code{x}, numeric, horizontal position
+}
 }
 
 \section{Ouput}{
-  \code{transform_density} creates a data frame with
-  columns:
 
-  \itemize{ \item \code{x}: regularly spaced grid of
-  \code{n} locations \item \code{y}: density estimate }
+
+\code{transform_density} creates a data frame with columns:
+
+\itemize{
+ \item \code{x}: regularly spaced grid of \code{n} locations
+ \item \code{y}: density estimate
+}
 }
 \examples{
 # Basic density estimate

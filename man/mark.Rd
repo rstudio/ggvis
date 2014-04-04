@@ -9,11 +9,11 @@ mark(type, props, data = NULL)
 is.mark(x)
 }
 \arguments{
-  \item{type}{vega mark list}
+\item{type}{vega mark list}
 
-  \item{props}{list of properties}
+\item{props}{list of properties}
 
-  \item{data}{optional data pipeline}
+\item{data}{optional data pipeline}
 }
 \description{
 A mark object is a close mapping to a vega mark object. Vega marks

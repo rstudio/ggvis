@@ -6,11 +6,11 @@
 fullseq(range, size, ...)
 }
 \arguments{
-  \item{range}{range}
+\item{range}{range}
 
-  \item{size}{interval size}
+\item{size}{interval size}
 
-  \item{...}{other arguments passed on to methods}
+\item{...}{other arguments passed on to methods}
 }
 \description{
 Generate sequence of fixed size intervals covering range.

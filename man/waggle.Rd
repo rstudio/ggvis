@@ -6,19 +6,18 @@
 waggle(min, max, value = (min + max)/2, step = (max - min)/50, fps = 10)
 }
 \arguments{
-  \item{value}{Starting value. Defaults to half-way between
-  \code{min} and \code{max}.}
+\item{value}{Starting value. Defaults to half-way between \code{min} and
+\code{max}.}
 
-  \item{step}{How much value changes at each frame.
-  Defaults to 50 steps between min and max so it takes 5
-  seconds to waggle once.}
+\item{step}{How much value changes at each frame. Defaults to 50 steps
+between min and max so it takes 5 seconds to waggle once.}
 
-  \item{fps}{number of frames per second.}
+\item{fps}{number of frames per second.}
 
-  \item{min}{The minimum value (inclusive) that can be
+\item{min}{The minimum value (inclusive) that can be
   selected.}
 
-  \item{max}{The maximum value (inclusive) that can be
+\item{max}{The maximum value (inclusive) that can be
   selected.}
 }
 \description{

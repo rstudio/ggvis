@@ -6,7 +6,7 @@
 mainTopPanel(...)
 }
 \arguments{
-  \item{...}{UI elements to include in the main panel.}
+\item{...}{UI elements to include in the main panel.}
 }
 \description{
 This is to be used with \code{link{sidebarBottomPage}}.
