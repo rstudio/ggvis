@@ -85,13 +85,13 @@ knitr_opts <- function() {
   }
   get_opt <- knitr::opts_current$get
 
-  width = get_opt('fig.width') * get_opt('dpi')
-  height = get_opt('fig.height') * get_opt('dpi')
+  width <- get_opt('fig.width') * get_opt('dpi')
+  height <- get_opt('fig.height') * get_opt('dpi')
 
-  retina = get_opt('fig.retina')
+  retina <- get_opt('fig.retina')
   if (!is.null(retina)) {
-    width = width / retina
-    height = height / retina
+    width <- width / retina
+    height <- height / retina
   }
 
   opts(width = width, height = height)
