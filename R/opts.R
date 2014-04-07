@@ -78,25 +78,6 @@ default_opts <- function() {
 # Given a ggvis_opts object, merge it into default options
 add_default_opts <- function(x) merge_opts(default_opts(), x)
 
-# Get options from knitr, if present
-knitr_opts <- function() {
-  if (!is_installed("knitr")) {
-    stop("knitr must be installed to call this function.")
-  }
-  get_opt <- knitr::opts_current$get
-
-  width <- get_opt('fig.width') * get_opt('dpi')
-  height <- get_opt('fig.height') * get_opt('dpi')
-
-  retina <- get_opt('fig.retina')
-  if (!is.null(retina)) {
-    width <- width / retina
-    height <- height / retina
-  }
-
-  opts(width = width, height = height)
-}
-
 # Merge two opts() objects
 merge_opts <- function(a, b) {
   if (is.null(a)) return(b)

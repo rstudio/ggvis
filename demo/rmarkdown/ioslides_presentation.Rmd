@@ -11,7 +11,6 @@ output:
 # pixel dimensions.
 knitr::opts_chunk$set(fig.width = 6,
                       fig.height = 4,
-                      dpi = 100,
                       message = FALSE)
 ```
 
@@ -24,7 +23,7 @@ ggvis(mtcars, props(x = ~wt, y = ~mpg)) + layer_point()
 
 ## Second Plot
 
-```{r}
+```{r, fig.width = 5.5, fig.height = 3.5}
 ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
   layer_point() +
   layer_smooth()

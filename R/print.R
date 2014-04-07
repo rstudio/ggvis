@@ -259,7 +259,7 @@ html_head <- function(prefix = NULL, minify = TRUE, shiny = FALSE) {
 
 #' @rdname print.ggvis
 #' @export
-knit_print.ggvis <- function(x) {
+knit_print.ggvis <- function(x, options) {
 
   # Dynamic not currently supported
   if (is.dynamic(x)) {
@@ -267,8 +267,10 @@ knit_print.ggvis <- function(x) {
             "Generating a static (non-dynamic, non-interactive) version of plot.")
   }
 
-  # Read knitr chunk options (if present) for default values
-  x$opts <- list(merge_opts(knitr_opts(), x$opts[[1]]))
+  # Read knitr chunk options for output width and height
+  knitr_opts <- opts(width = options$out.width.px,
+                     height = options$out.height.px)
+  x$opts <- list(merge_opts(knitr_opts, x$opts[[1]]))
 
   # Plot as JSON
   spec <- as.vega(x, dynamic = FALSE)
