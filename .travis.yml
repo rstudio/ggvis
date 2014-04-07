@@ -21,6 +21,7 @@ install:
   - ./travis-tool.sh github_package hadley/testthat
   - ./travis-tool.sh github_package rstudio/shiny
   - ./travis-tool.sh github_package rstudio/rmarkdown
+  - ./travis-tool.sh github_package yihui/knitr
   - ./travis-tool.sh install_deps
 
 script: ./travis-tool.sh run_tests
