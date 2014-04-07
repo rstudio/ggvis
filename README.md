@@ -19,7 +19,7 @@ please join us on the mailing list: https://groups.google.com/group/ggvis.
 ggvis is not yet available on CRAN, but you can install it directly from github with the following code.
 
 ```R
-devtools::install_github(c("hadley/testthat", "rstudio/shiny", "rstudio/ggvis"))
+devtools::install_github(c("hadley/testthat", "rstudio/shiny", "rstudio/ggvis", "smbache/magrittr"))
 ```
 
 Please keep in mind that the vignettes may not build properly on your system because they require not-yet-released rmarkdown package (as opposed to the existing markdown package available on CRAN). You can view built versions of the documents online, at http://ggvis.rstudio.com/

@@ -7,7 +7,8 @@ Version: 0.1.0.99
 Author: RStudio, Inc.
 Maintainer: Winston Chang <winston@rstudio.com>
 Depends:
-    R (>= 2.15.1)
+    R (>= 2.15.1),
+    magrittr
 Imports:
     assertthat,
     whisker,
