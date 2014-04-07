@@ -2,20 +2,14 @@
 title: "Using ggvis with knitr and rmarkdown"
 output:
   html_document:
-    theme: united
-    highlight: textmate
+    fig_width: 4
+    fig_height: 2
 ---
 
 ```{r echo=FALSE}
 # Set up default dimensions. Width and height are multiplied by dpi to get
 # pixel dimensions.
 knitr::opts_chunk$set(fig.width = 4, fig.height = 3)
-```
-
-To knit this document and render it to HTML:
-
-```{r eval=FALSE}
-rmarkdown::render("html_document.Rmd")
 ```
 
 To embed a ggvis plot just call `ggvis`:
