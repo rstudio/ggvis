@@ -9,7 +9,7 @@ output:
 ```{r echo=FALSE}
 # Set up default dimensions. Width and height are multiplied by dpi to get
 # pixel dimensions.
-knitr::opts_chunk$set(fig.width = 4, fig.height = 3, dpi = 100)
+knitr::opts_chunk$set(fig.width = 4, fig.height = 3)
 ```
 
 To knit this document and render it to HTML:
@@ -26,7 +26,7 @@ ggvis(mtcars, props(x = ~wt, y = ~mpg)) + layer_point()
 ```
 
 
-```{r}
+```{r, fig.width = 8, fig.height = 6}
 ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
   layer_point() +
   layer_smooth()
