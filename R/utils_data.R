@@ -1,3 +1,24 @@
+# Calculate the data_id for a data object; if the object already has the data_id
+# attribute, simply return that.
+get_data_id <- function(data, prefix = "unnamed_data") {
+  if (!is.reactive(data)) stop("data object must be a reactive")
+
+  # If there's already aa data_id attribute, just return it
+  if (!is.null(attr(data, "data_id")))
+    return(attr(data, "data_id"))
+
+  paste0(prefix, "_", digest(data, algo = "crc32"))
+}
+
+# Add the appropriate data_id attribute to a data object, and return it
+add_data_id <- function(data, prefix = "unnamed_data") {
+  if (!is.reactive(data)) stop("data object must be a reactive")
+
+  attr(data, "data_id") <- get_data_id(data, prefix)
+  data
+}
+
+
 merge_df <- function(a, b) {
   if (is.null(a) || nrow(a) == 0 || ncol(a) == 0) return(b)
   if (is.null(b) || nrow(b) == 0 || ncol(b) == 0) return(a)

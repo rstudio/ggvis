@@ -3,28 +3,25 @@
 #'
 #' @export
 visualise <- function(data, props = NULL) {
-  
-  d_id <- paste0(deparse2(substitute(data)), "_",
-                 digest(data, algo = "crc32"))
 
+  data_prefix <- deparse2(substitute(data))
   # Make sure data is reactive
-  if (!is.reactive(data)) data <- reactive(data)
+  if (!is.reactive(data)) data <- as.reactive(data)
+
+  data <- add_data_id(data, prefix = data_prefix)
 
   datalist <- list()
-  datalist[[d_id]] <- data
-
-
-  p_id <- props_id(props)
+  datalist[[get_data_id(data)]] <- data
 
   proplist <- list()
-  proplist[[p_id]] <- props
+  proplist[[props_id(props)]] <- props
 
   structure(
     list(
       data = datalist,
-      cur_data_id = d_id,
       props = proplist,
-      cur_props_id = p_id
+      cur_data = data,
+      cur_props = props
     ),
     class = "ggvis"
   )
@@ -46,3 +43,4 @@ add_legend <- function(vis, legend) {
   vis$legends <- c(vis$legends, list(legend))
   vis
 }
+

@@ -7,18 +7,20 @@
 #' If you are a ggvis user, please use one of the more specific mark
 #' functions starting with the \code{mark_}.
 #'
-#' @param type vega mark list
-#' @param props list of properties
-#' @param data optional data pipeline
+#' @param type A string with the vega type.
+#' @param props A list of properties, created by \code{\link{props}}.
+#' @param data A reactive data object.
 #' @export
 #' @keywords internal
-mark <- function(type, props_id, data_id) {
+mark <- function(type, props, data) {
+  if (!is.ggvis_props(props)) stop("props must be a ggvis_props object")
+  if (!is.reactive(data)) stop("data must be a reactive")
 
   m <- structure(
     compact(list(
       type = type,
-      data_id = data_id,
-      props_id = props_id
+      data = data,
+      props = props
     )),
     class = c(paste0("mark_", type), "mark", "layer")
   )

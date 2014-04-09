@@ -57,7 +57,7 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
   structure(spec, data_table = data_table)
 }
 
-# Given a ggvis mark object and set of scales, output a vega mark object
+# Given a ggvis mark object, output a vega mark object
 #' @export
 as.vega.mark <- function(mark) {
   # Keep only the vega-specific fields, then remove the class, drop nulls,
@@ -75,18 +75,18 @@ as.vega.mark <- function(mark) {
 
   # HW: It seems less than ideal to have to inspect the data here, but
   # I'm not sure how else we can figure it out.
-  split <- is.split_df(isolate(mark$pipeline()))
+  split <- is.split_df(isolate(mark$data()))
 
   properties <- as.vega(props)
   properties$ggvis <- list()
 
   if (split) {
-    data <- paste0(mark$pipeline_id, "_tree")
-    properties$ggvis$data <- list(value = data)
+    data_id <- paste0(get_data_id(mark$data), "_tree")
+    properties$ggvis$data <- list(value = data_id)
 
     m <- list(
       type = "group",
-      from = list(data = data),
+      from = list(data = data_id),
       marks = list(
         list(
           type = mark$type,
@@ -96,13 +96,13 @@ as.vega.mark <- function(mark) {
     )
 
   } else {
-    data <- mark$pipeline_id
-    properties$ggvis$data <- list(value = data)
+    data_id <- get_data_id(mark$data)
+    properties$ggvis$data <- list(value = data_id)
 
     m <- list(
       type = mark$type,
       properties = properties,
-      from = list(data = data)
+      from = list(data = data_id)
     )
   }
 

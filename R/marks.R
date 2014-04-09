@@ -34,7 +34,9 @@ default_mark_properties.default <- function(mark) {
 
 #' @rdname marks
 #' @export
-mark_point <- function(props = NULL, data = NULL) mark("symbol", props = props, data = data)
+mark_point <- function(props = NULL, data = NULL) {
+  mark("symbol", props = props, data = data)
+}
 #' @export
 valid_mark_properties.mark_symbol <- function(mark) {
   c("x", "y", "opacity", "fill", "fillOpacity", "stroke", "strokeWidth",
@@ -51,10 +53,6 @@ mark_symbol <- function(props, data) {
   stop("mark_symbol is deprecated please use mark_point/layer_point instead",
     call. = FALSE)
 }
-
-#' @rdname marks
-#' @export
-layer_point <- mark_point
 
 #' @rdname marks
 #' @export
