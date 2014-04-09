@@ -217,3 +217,8 @@ merge_props <- function(parent = NULL, child = NULL) {
 
 is.formula <- function(x) inherits(x, "formula")
 
+
+# Given a props object, return a unique name for that set of props
+props_id <- function(x) {
+  digest(x, algo = "crc32")
+}

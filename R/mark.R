@@ -12,12 +12,13 @@
 #' @param data optional data pipeline
 #' @export
 #' @keywords internal
-mark <- function(type, props, data = NULL) {
+mark <- function(type, props_id, data_id) {
+
   m <- structure(
     compact(list(
       type = type,
-      data = as.pipeline(data),
-      props = props
+      data_id = data_id,
+      props_id = props_id
     )),
     class = c(paste0("mark_", type), "mark", "layer")
   )

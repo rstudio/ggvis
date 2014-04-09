@@ -61,12 +61,41 @@
 #' sluice(pipeline(mtcars, transform_sort()), props(x = ~mpg %% 10) )
 #'
 #' @export
-transform_sort <- function(..., var = "x") {
-  # Drop unnamed arguments
+transform_sort <- function(vis, ..., vars = "x") {
+  if (!is.ggvis(vis)) stop("First argument to transform must be a ggvis object.")
+
   dots <- list(...)
   dots <- dots[named(dots)]
 
-  transform("sort", var = var, dots = dots)
+  # Get the data and props from the parent
+  parent_data_id <- vis$cur_data_id
+  parent_props_id <- vis$cur_props_id
+
+  parent_data <- vis$data[[parent_data_id]]
+  parent_props <- vis$props[[parent_props_id]]
+
+
+  # Create the data for the current node
+  new_data <- reactive({
+    prop_names <- paste0(vars, ".update")
+    vapply(prop_names,
+      function(prop_name) check_prop(x, parent_props, data, prop_name),
+      logical(1)
+    )
+
+    output <- compute_sort(data, vars = parent_props[prop_names], dots = dots)
+    preserve_constants(data, output)
+  })
+
+  # Set the id for the current data - hash the options to this transform
+  data_id <- paste0(parent_data_id, "_transform_sort_",
+                    digest(list(dots, vars), algo = "crc32"))
+
+  # Save data and current data_id in the vis
+  vis$data[[data_id]] <- new_data
+  vis$cur_data_id <- data_id
+
+  vis
 }
 
 #' @export
@@ -74,29 +103,17 @@ format.transform_sort <- function(x, ...) {
   paste0(" -> sort()", param_string(x["var"]))
 }
 
-#' @export
-compute.transform_sort <- function(x, props, data) {
-  prop_names <- paste0(x$var, ".update")
-  vapply(prop_names,
-    function(prop_name) check_prop(x, props, data, prop_name),
-    logical(1)
-  )
-
-  output <- compute_sort(data, x, vars = props[prop_names])
-  preserve_constants(data, output)
-}
-
-compute_sort <- function(data, trans, vars) UseMethod("compute_sort")
+compute_sort <- function(data, vars, dots) UseMethod("compute_sort")
 
 #' @export
-compute_sort.split_df <- function(data, trans, vars) {
-  data[] <- lapply(data, compute_sort, trans = trans, vars = vars)
+compute_sort.split_df <- function(data, vars, dots) {
+  data[] <- lapply(data, compute_sort, vars = vars, dots = dots)
   data
 }
 
 #' @export
-compute_sort.data.frame <- function(data, trans, vars) {
+compute_sort.data.frame <- function(data, vars, dots) {
   cols <- lapply(vars, prop_value, data)
-  idx <- do.call(order, args = c(cols, trans$dots))
+  idx <- do.call(order, args = c(cols, dots))
   data[idx, ]
 }
