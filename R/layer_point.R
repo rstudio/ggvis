@@ -30,5 +30,5 @@ layer_point <- function(vis, props = NULL, data = NULL) {
     vis$props[[p_id]] <- props_id(props)
   }
 
-  add_child(vis, mark_point(props = props, data = data))
+  add_layer(vis, mark_point(props = props, data = data))
 }

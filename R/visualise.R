@@ -18,6 +18,7 @@ visualise <- function(data, props = NULL) {
 
   structure(
     list(
+      layers = list(),
       data = datalist,
       props = proplist,
       cur_data = data,
@@ -28,11 +29,11 @@ visualise <- function(data, props = NULL) {
 }
 
 
-# Add a child node (layer or mark) to a ggvis object
-add_child <- function(vis, child) {
-  if (!is.ggvis(vis)) stop("Object to add child to is not a ggvis object.")
+# Add a layer to a ggvis object
+add_layer <- function(vis, layer) {
+  if (!is.ggvis(vis)) stop("Object to add layer to is not a ggvis object.")
 
-  vis$children <- c(vis$children, list(child))
+  vis$layers <- c(vis$layers, list(layer))
   vis
 }
 
