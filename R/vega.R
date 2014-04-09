@@ -17,24 +17,27 @@ as.vega <- function(x, ...) {
 #' @param session a session object from shiny
 #' @param dynamic whether to generate dynamic or static spec
 as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
-  nodes <- flatten(x, session = session)
-  data_table <- extract_data(nodes)
-  data_table <- active_props(data_table, nodes)
 
-  data_names <- ls(data_table, all.names = TRUE)
+  data_ids <- extract_data_ids(x$layers)
+  data_table <- as.environment(x$data[data_ids])
+
+  # Wrap each of the reactive data objects in another reactive which returns
+  # only the columns that are actually used.
+  data_table <- active_props(data_table, x$layers)
+
   if (dynamic) {
-    datasets <- lapply(data_names, function(name) {
+    datasets <- lapply(data_ids, function(id) {
       # Don't provide data now, just the name
-      list(name = name)
+      list(name = id)
     })
   } else {
-    datasets <- unlist(lapply(data_names, function(name) {
-      data <- isolate(data_table[[name]]())
-      as.vega(data, name)
+    datasets <- unlist(lapply(data_ids, function(id) {
+      data <- isolate(data_table[[id]]())
+      as.vega(data, id)
     }), recursive = FALSE)
   }
 
-  scales <- add_default_scales(x, nodes, data_table)
+  scales <- add_default_scales(x, x$layers, data_table)
   axes <- add_default_axes(x$axes, scales)
   axes <- apply_axes_defaults(axes, scales)
   legends <- add_default_legends(x$legends, scales)
@@ -44,7 +47,7 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
   spec <- list(
     data = datasets,
     scales = unname(scales),
-    marks = lapply(nodes, as.vega),
+    marks = lapply(x$layers, as.vega),
     width = opts$width,
     height = opts$height,
     legends = lapply(legends, as.vega),

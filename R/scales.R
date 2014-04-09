@@ -45,24 +45,26 @@ merge_scales <- function(parent = NULL, child = NULL) {
 
 # Given a ggvis object, return all needed vega scales, with correct
 # domain values set.
-add_default_scales <- function(x, nodes, data_table) {
+add_default_scales <- function(x, layers, data_table) {
   
   scales <- x$scales
   
-  # Loop through each node, recording the usage of each scale
+  # Loop through each layer, recording the usage of each scale
   scale_types <- list()
   scale_uses <- list()
-  for (node in nodes) {
-    data <- isolate(data_table[[node$pipeline_id]]())
-    for (prop_n in names(node$props)) {
-      prop <- node$props[[prop_n]]
+  for (layer in layers) {
+    data_id <- get_data_id(layer$data)
+    data <- isolate(data_table[[data_id]]())
+
+    for (prop_n in names(layer$props)) {
+      prop <- layer$props[[prop_n]]
       scale <- prop_scale(prop, prop_to_scale(trim_propset(prop_n)))
       if (is.na(scale)) next
       
       type <- prop_type(data, prop, processed = TRUE)
       scale_types[[scale]] <- c(scale_types[[scale]], type)
       
-      use <- prop_domain(prop, node$pipeline_id)
+      use <- prop_domain(prop, data_id)
       if (!is.null(use)) {
         scale_uses[[scale]] <- c(scale_uses[[scale]], list(use))
       }

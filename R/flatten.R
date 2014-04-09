@@ -47,26 +47,24 @@ flatten <- function(node, parent = NULL, session = NULL) {
   }
 }
 
-extract_data <- function(nodes) {
-  data_table <- new.env(parent = emptyenv())
-  for (node in nodes) {
-    id <- node$pipeline_id
-    if (exists(id, data_table)) next
-
-    data_table[[id]] <- node$pipeline
-  }
-
-  data_table
+# Given a list of layers, return a character vector of all data ID's used.
+extract_data_ids <- function(layers) {
+  data_ids <- vapply(layers,
+    function(layer) get_data_id(layer$data),
+    character(1)
+  )
+  unique(data_ids)
 }
 
 # Create a new reactive dataset containing only the data actually used
 # by properties.
-active_props <- function(data, nodes) {
+active_props <- function(data, layers) {
   # Collect all props for given data
-  pipeline_id <- vapply(nodes, function(x) x$pipeline_id, character(1))
-  props <- lapply(nodes, function(x) x$props)
+  data_ids <- vapply(layers, function(layer) get_data_id(layer$data),
+                     character(1))
+  props <- lapply(layers, function(x) x$props)
 
-  props_by_id <- split(props, pipeline_id)
+  props_by_id <- split(props, data_ids)
   props_by_id <- lapply(props_by_id, unlist, recursive = FALSE)
 
   uprops_by_id <- lapply(props_by_id, function(props) {
