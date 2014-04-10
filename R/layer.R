@@ -1,3 +1,31 @@
+# Add a simple mark layer to a ggvis object.
+add_mark_layer <- function(vis, type = NULL, props = NULL, data = NULL,
+                           data_name = "unnamed_data") {
+  if (is.null(data)) {
+    data <- vis$cur_data
+
+  } else {
+    if (!is.reactive(data))
+      data <- as.reactive(data)
+
+    vis <- register_data(vis, data, prefix = ,
+                         update_current = FALSE)
+  }
+
+
+  # Calculate the props for this layer
+  if (is.null(props)) {
+    props <- vis$cur_props
+
+  } else {
+    # Merge new props into parent, and then register the props with the vis
+    props <- merge_props(vis$cur_props, props)
+    vis$props[[props_id(props)]] <- props
+  }
+
+  add_layer(vis, mark(type, props = props, data = data))
+}
+
 #' Create a new layer.
 #'
 #' Layers are used to describe the data hierarchy of ggvis. As well as
