@@ -2,7 +2,7 @@
 #'
 #' @import assertthat
 #' @export
-visualise <- function(data, props = NULL) {
+ggvis <- function(data, props = NULL) {
 
   data_prefix <- deparse2(substitute(data))
 
@@ -28,11 +28,6 @@ visualise <- function(data, props = NULL) {
     class = "ggvis"
   )
 }
-
-#' @export
-#' @rdname visualise
-visualize <- visualise
-
 
 #' Is an object a ggvis object?
 #'
