@@ -16,7 +16,7 @@ view_dynamic(x, renderer = getOption("ggvis.renderer", default = "svg"),
   id = rand_id("plot_"), minify = TRUE, launch = TRUE, port = NULL,
   quiet = TRUE)
 
-knit_print.ggvis(x)
+knit_print.ggvis(x, options)
 }
 \arguments{
 \item{x}{A ggvis object.}

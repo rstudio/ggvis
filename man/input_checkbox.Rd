@@ -7,8 +7,7 @@ input_checkbox(value = FALSE, label = "", id = rand_id("checkbox_"),
   map = identity)
 }
 \arguments{
-\item{value}{Initial value (\code{TRUE} or
-  \code{FALSE}).}
+\item{value}{Initial value (\code{TRUE} or \code{FALSE}).}
 
 \item{label}{Display label for the control.}
 

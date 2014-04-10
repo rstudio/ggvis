@@ -14,11 +14,9 @@ between min and max so it takes 5 seconds to waggle once.}
 
 \item{fps}{number of frames per second.}
 
-\item{min}{The minimum value (inclusive) that can be
-  selected.}
+\item{min}{The minimum value (inclusive) that can be selected.}
 
-\item{max}{The maximum value (inclusive) that can be
-  selected.}
+\item{max}{The maximum value (inclusive) that can be selected.}
 }
 \description{
 Waggle back and forth between two numbers

@@ -15,14 +15,12 @@ input_checkboxgroup(choices, selected = NULL, label = "",
   id = rand_id("radio_"), map = identity)
 }
 \arguments{
-\item{choices}{List of values to select from. If elements
-  of the list are named then that name rather than the
-  value is displayed to the user.}
+\item{choices}{List of values to select from. If elements of the list are
+named then that name rather than the value is displayed to the user.}
 
-\item{selected}{The initially selected value (or multiple
-  values if \code{multiple = TRUE}). If not specified then
-  defaults to the first value for single-select lists and
-  no values for multiple select lists.}
+\item{selected}{The initially selected value (or multiple values if
+\code{multiple = TRUE}). If not specified then defaults to the first value
+for single-select lists and no values for multiple select lists.}
 
 \item{multiple}{Is selection of multiple items allowed?}
 
