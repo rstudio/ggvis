@@ -5,11 +5,11 @@
 #'
 #' @param offset,mult Additive and multiplicate offsets used to adjust the
 #'   band size. For example, use \code{mult = 0.9} to make a bar take up
-#'   90% of the space allocated for its category.
+#'   90\% of the space allocated for its category.
 #' @export
 #' @examples
 #' df <- data.frame(label = c("a", "b", "c"), n = c(10, 9 , 4))
-#' 
+#'
 #' base <- ggvis(df, props(x = ~label, y2 = 0, y := ~n)) + mark_rect()
 #' base + props(width := band())
 #' base + props(width := band(offset = -1))
@@ -30,7 +30,7 @@ format.band <- function(x, ...) {
 print.band <- function(x, ...) cat(format(x, ...), "\n", sep = "")
 
 #' @rdname band
-#' @param x object to for band-ness
+#' @param x object to test for band-ness
 is.band <- function(x) inherits(x, "band")
 
 #' @export
