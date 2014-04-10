@@ -35,7 +35,7 @@ default_mark_properties.default <- function(mark) {
 #' @rdname marks
 #' @export
 mark_point <- function(vis, props = NULL, data = NULL) {
-  add_mark_layer(vis, "symbol", props, data, deparse2(substitute(data)))
+  add_mark(vis, "symbol", props, data, deparse2(substitute(data)))
 }
 #' @rdname marks
 #' @export
@@ -60,7 +60,7 @@ mark_symbol <- function(vis, props, data) {
 #' @rdname marks
 #' @export
 mark_image <- function(vis, props = NULL, data = NULL) {
-  add_mark_layer(vis, "image", props, data, deparse2(substitute(data)))
+  add_mark(vis, "image", props, data, deparse2(substitute(data)))
 }
 #' @rdname marks
 #' @export
@@ -79,7 +79,7 @@ default_mark_properties.mark_image <- function(mark) {
 #' @rdname marks
 #' @export
 mark_arc <- function(vis, props = NULL, data = NULL) {
-  add_mark_layer(vis, "arc", props, data, deparse2(substitute(data)))
+  add_mark(vis, "arc", props, data, deparse2(substitute(data)))
 }
 #' @rdname marks
 #' @export
@@ -99,7 +99,7 @@ default_mark_properties.mark_arc <- function(mark) {
 #' @rdname marks
 #' @export
 mark_area <- function(vis, props = NULL, data = NULL) {
-  add_mark_layer(vis, "area", props, data, deparse2(substitute(data)))
+  add_mark(vis, "area", props, data, deparse2(substitute(data)))
 }
 #' @rdname marks
 #' @export
@@ -118,7 +118,7 @@ default_mark_properties.mark_area <- function(mark) {
 #' @rdname marks
 #' @export
 mark_path <- function(vis, props = NULL, data = NULL) {
-  add_mark_layer(vis, "line", props, data, deparse2(substitute(data)))
+  add_mark(vis, "line", props, data, deparse2(substitute(data)))
 }
 #' @rdname marks
 #' @export
@@ -137,7 +137,7 @@ default_mark_properties.mark_line <- function(mark) {
 #' @export
 #' @rdname marks
 mark_rect <- function(vis, props = NULL, data = NULL) {
-  add_mark_layer(vis, "rect", props, data, deparse2(substitute(data)))
+  add_mark(vis, "rect", props, data, deparse2(substitute(data)))
 }
 #' @rdname marks
 #' @export
@@ -156,7 +156,7 @@ default_mark_properties.mark_rect <- function(mark) {
 #' @export
 #' @rdname marks
 mark_text <- function(vis, props = NULL, data = NULL) {
-  add_mark_layer(vis, "text", props, data, deparse2(substitute(data)))
+  add_mark(vis, "text", props, data, deparse2(substitute(data)))
 }
 #' @rdname marks
 #' @export

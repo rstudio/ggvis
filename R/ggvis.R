@@ -19,7 +19,7 @@ ggvis <- function(data, props = NULL) {
 
   structure(
     list(
-      layers = list(),
+      marks = list(),
       data = datalist,
       props = proplist,
       cur_data = data,
@@ -37,11 +37,31 @@ ggvis <- function(data, props = NULL) {
 is.ggvis <- function(x) inherits(x, "ggvis")
 
 
-# Add a layer to a ggvis object
-add_layer <- function(vis, layer) {
-  if (!is.ggvis(vis)) stop("Object to add layer to is not a ggvis object.")
+# Add a mark to a ggvis object.
+add_mark <- function(vis, type = NULL, props = NULL, data = NULL,
+                     data_name = "unnamed_data") {
 
-  vis$layers <- c(vis$layers, list(layer))
+  # Get the data object and register it if necessary
+  if (is.null(data)) {
+    data <- vis$cur_data
+
+  } else {
+    if (!is.reactive(data)) {
+      data <- as.reactive(data)
+    }
+    vis <- register_data(vis, data, prefix = data_name, update_current = FALSE)
+  }
+
+
+  # Calculate the props for this layer
+  new_props <- merge_props(vis$cur_props, props)
+
+  # Register the props with the vis if needed
+  if (!is.null(props)) {
+    vis <- register_props(vis, new_props)
+  }
+
+  vis$marks <- c(vis$marks, list(mark(type, props = new_props, data = data)))
   vis
 }
 
@@ -73,6 +93,22 @@ register_data <- function(vis, data, prefix = "unnamed_data",
 
   vis
 }
+
+
+# Register a property set object in the ggvis object's props list.
+# @param vis A ggvis object.
+# @param props A props object.
+# @param update_current Should the cur_props field be updated to this props object?
+register_props <- function(vis, props, update_current = FALSE) {
+  vis$props[[props_id(props)]] <- props
+
+  if (update_current) {
+    vis$cur_props <- props
+  }
+
+  vis
+}
+
 
 #' Tools to save and view static specs.
 #'

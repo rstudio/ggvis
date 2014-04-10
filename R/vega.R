@@ -18,12 +18,12 @@ as.vega <- function(x, ...) {
 #' @param dynamic whether to generate dynamic or static spec
 as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
 
-  data_ids <- extract_data_ids(x$layers)
+  data_ids <- extract_data_ids(x$marks)
   data_table <- as.environment(x$data[data_ids])
 
   # Wrap each of the reactive data objects in another reactive which returns
   # only the columns that are actually used.
-  data_table <- active_props(data_table, x$layers)
+  data_table <- active_props(data_table, x$marks)
 
   if (dynamic) {
     datasets <- lapply(data_ids, function(id) {
@@ -37,7 +37,7 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
     }), recursive = FALSE)
   }
 
-  scales <- add_default_scales(x, x$layers, data_table)
+  scales <- add_default_scales(x, x$marks, data_table)
   axes <- add_default_axes(x$axes, scales)
   axes <- apply_axes_defaults(axes, scales)
   legends <- add_default_legends(x$legends, scales)
@@ -47,7 +47,7 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
   spec <- list(
     data = datasets,
     scales = unname(scales),
-    marks = lapply(x$layers, as.vega),
+    marks = lapply(x$marks, as.vega),
     width = opts$width,
     height = opts$height,
     legends = lapply(legends, as.vega),
