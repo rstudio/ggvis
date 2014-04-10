@@ -44,6 +44,20 @@ print.ggvis <- function(x, dynamic = NA,
   }
 }
 
+
+#' Print out the structure of a ggvis object in a friendly format
+#' @export
+explain <- function (vis) {
+  cat("Layers:\n")
+  for (layer in vis$layers) {
+    cat(indent(format(layer), 2))
+  }
+  cat("Data objects:\n")
+  for (dat in vis$data) {
+    cat(indent(get_data_id(dat), 2), "\n")
+  }
+}
+
 show_spec <- function(x, pieces) {
   out <- as.vega(x, dynamic = FALSE)
 

@@ -35,6 +35,16 @@ drop_nulls <- function(x) {
   x[!vapply(x, is.null, FUN.VALUE=logical(1))]
 }
 
+# Given a string, indent every line by some number of spaces.
+# The exception is to not add spaces after a trailing \n.
+indent <- function(str, indent = 0) {
+  gsub("(^|\\n)(?!$)",
+    paste0("\\1", paste(rep(" ", indent), collapse = "")),
+    str,
+    perl = TRUE
+  )
+}
+
 # Given two named vectors, join them together, and keep only the last element
 # with a given name in the resulting vector. If b has any elements with the
 # same name as elements in a, the element in a is dropped. Also, if there are
