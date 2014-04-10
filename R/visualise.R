@@ -28,6 +28,10 @@ visualise <- function(data, props = NULL) {
   )
 }
 
+#' @export
+#' @rdname visualise
+visualize <- visualise
+
 
 # Add a layer to a ggvis object
 add_layer <- function(vis, layer) {
