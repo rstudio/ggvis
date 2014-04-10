@@ -45,18 +45,17 @@ transform <- function(type, ..., dots = list()) {
 #' @keywords internal
 compute <- function(x, props, data) UseMethod("compute")
 
-check_prop <- function(trans, props, data, prop_name, types = NULL) {
-  name <- class(trans)[[1]]
+check_prop <- function(trans_name, props, data, prop_name, types = NULL) {
   prop <- props[[prop_name]]
   
   if (is.null(prop)) {
-    stop(name, "() needs ", prop_name, " property", call. = FALSE)
+    stop(trans_name, "() needs ", prop_name, " property", call. = FALSE)
   }
   if (is.null(types)) return(invisible(TRUE))
   
   type <- prop_type(data, prop)
   if (!(type %in% types)) {
-    stop(name, "() needs ", prop_name, " property to be of type ",
+    stop(trans_name, "() needs ", prop_name, " property to be of type ",
       paste(types, collapse = "/"), call. = FALSE)
   }
   

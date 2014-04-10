@@ -67,40 +67,32 @@ transform_sort <- function(vis, ..., vars = "x") {
   dots <- list(...)
   dots <- dots[named(dots)]
 
-  # Get the data and props from the parent
-  parent_data_id <- vis$cur_data_id
-  parent_props_id <- vis$cur_props_id
-
-  parent_data <- vis$data[[parent_data_id]]
-  parent_props <- vis$props[[parent_props_id]]
-
+  # Get the current data and props from the parent
+  parent_data <- vis$cur_data
+  parent_props <- vis$cur_props
 
   # Create the data for the current node
   new_data <- reactive({
+    data <- parent_data()
     prop_names <- paste0(vars, ".update")
     vapply(prop_names,
-      function(prop_name) check_prop(x, parent_props, data, prop_name),
+      function(prop_name) check_prop("transform_sort", parent_props,
+                                     data, prop_name),
       logical(1)
     )
 
-    output <- compute_sort(data, vars = parent_props[prop_names], dots = dots)
+    output <- compute_sort(data, vars = parent_props[prop_names],
+                           dots = dots)
     preserve_constants(data, output)
   })
 
-  # Set the id for the current data - hash the options to this transform
-  data_id <- paste0(parent_data_id, "_transform_sort_",
-                    digest(list(dots, vars), algo = "crc32"))
-
-  # Save data and current data_id in the vis
-  vis$data[[data_id]] <- new_data
-  vis$cur_data_id <- data_id
+  # Save data and current data_id in the vis.
+  new_data <- add_data_id(new_data,
+    prefix = paste0(get_data_id(parent_data), "_transform_sort"))
+  vis$data[[get_data_id(new_data)]] <- new_data
+  vis$cur_data <- new_data
 
   vis
-}
-
-#' @export
-format.transform_sort <- function(x, ...) {
-  paste0(" -> sort()", param_string(x["var"]))
 }
 
 compute_sort <- function(data, vars, dots) UseMethod("compute_sort")
