@@ -49,3 +49,23 @@ add_legend <- function(vis, legend) {
   vis
 }
 
+
+# Register a data object in the ggvis object's data list.
+# This adds a data_id attribute to the data object, with the specified prefix.
+#
+# @param vis A ggvis object.
+# @param data A reactive data object.
+# @param prefix A prefix for the data ID.
+# @param update_current Should the cur_data field be updated to this data object?
+register_data <- function(vis, data, prefix = "unnamed_data",
+                     update_current = FALSE) {
+
+  data <- add_data_id(data, prefix)
+  vis$data[[get_data_id(data)]] <- data
+
+  if (update_current) {
+    vis$cur_data <- data
+  }
+
+  vis
+}

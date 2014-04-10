@@ -86,13 +86,10 @@ transform_sort <- function(vis, ..., vars = "x") {
     preserve_constants(data, output)
   })
 
-  # Save data and current data_id in the vis.
-  new_data <- add_data_id(new_data,
-    prefix = paste0(get_data_id(parent_data), "_transform_sort"))
-  vis$data[[get_data_id(new_data)]] <- new_data
-  vis$cur_data <- new_data
-
-  vis
+  # Save data in the vis object, updating current data.
+  register_data(vis, new_data,
+    prefix = paste0(get_data_id(parent_data), "_transform_sort"),
+    update_current = TRUE)
 }
 
 compute_sort <- function(data, vars, dots) UseMethod("compute_sort")
