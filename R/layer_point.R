@@ -27,7 +27,7 @@ layer_point <- function(vis, props = NULL, data = NULL) {
   } else {
     # Merge new props into parent, and then register the props with the vis
     props <- merge_props(vis$cur_props, props)
-    vis$props[[p_id]] <- props_id(props)
+    vis$props[[props_id(props)]] <- props_id(props)
   }
 
   add_layer(vis, mark_point(props = props, data = data))
