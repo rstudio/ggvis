@@ -10,13 +10,9 @@ layer_point <- function(vis, props = NULL, data = NULL) {
     if (!is.reactive(data))
       data <- as.reactive(data)
 
-
     # Register this data object in the vis object's data table
-    d_id <- paste0(deparse2(substitute(data)), "_",
-                   digest(data, algo = "crc32"))
-
-    attr(data, "data_id") <- d_id
-    vis$data[[d_id]] <- data
+    data <- set_data_id(data, prefix = deparse2(substitute(data)))
+    vis$data[[get_data_id(data)]] <- data
   }
 
 
