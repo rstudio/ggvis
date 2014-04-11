@@ -87,9 +87,11 @@ transform_sort <- function(vis, ..., vars = "x") {
   })
 
   # Save data in the vis object, updating current data.
-  register_data(vis, new_data,
+  register_data(vis,
+    new_data,
     prefix = paste0(get_data_id(parent_data), "_transform_sort"),
-    update_current = TRUE)
+    update_current = TRUE
+  )
 }
 
 compute_sort <- function(data, vars, dots) UseMethod("compute_sort")
