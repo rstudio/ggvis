@@ -104,8 +104,10 @@ transform_bin <- function(vis, ..., binwidth = guess(), origin = NULL,
 #' @export
 layer_histogram <- function(vis, ...) {
   vis %>%
-    transform_bin(...) %>%
-    mark_rect(props(x = ~xmin__, x2 = ~xmax__, y = ~count__, y2 = 0))
+    branch(
+      transform_bin(...) %>%
+      mark_rect(props(x = ~xmin__, x2 = ~xmax__, y = ~count__, y2 = 0))
+    )
 }
 
 #' @rdname transform_bin
@@ -113,16 +115,20 @@ layer_histogram <- function(vis, ...) {
 #' @inheritParams layer_histogram
 layer_freqpoly <- function(vis, ...) {
   vis %>%
-    transform_bin(...) %>%
-    mark_path(props(x = ~x, y = ~count__))
+    branch(
+      transform_bin(...) %>%
+      mark_path(props(x = ~x, y = ~count__))
+    )
 }
 
 #' @rdname transform_bin
 #' @export
 layer_barchart <- function(vis, ...) {
   vis %>%
-    transform_bin(...) %>%
-    mark_rect(props(x = ~x, width = band(mult = 0.9), y2 = ~count__, y = 0))
+    branch(
+      transform_bin(...) %>%
+      mark_rect(props(x = ~x, width = band(mult = 0.9), y2 = ~count__, y = 0))
+    )
 }
 
 # Bin complete dataset ---------------------------------------------------------
