@@ -261,16 +261,25 @@ html_head <- function(prefix = NULL, minify = TRUE, shiny = FALSE) {
 #' @export
 knit_print.ggvis <- function(x, options) {
 
-  # Dynamic not currently supported
-  if (is.dynamic(x)) {
-    warning("Can't output dynamic/interactive ggvis plots in a knitr document.\n",
-            "Generating a static (non-dynamic, non-interactive) version of plot.")
-  }
-
   # Read knitr chunk options for output width and height
   knitr_opts <- opts(width = options$out.width.px,
                      height = options$out.height.px)
   x$opts <- list(merge_opts(knitr_opts, x$opts[[1]]))
+
+  # if this is a dynamic object, check to see if we're rendering in a Shiny R
+  # Markdown document; emit a Shiny application if we are, and a warning if we
+  # aren't.
+  if (is.dynamic(x)) {
+    if (identical(knitr::opts_knit$get()$rmarkdown.runtime, "shiny")) {
+      app <- app_object(x)
+      return(knitr::knit_print(shiny::shinyApp(ui = app$ui,
+                                               server = app$server,
+                                               options = knitr_opts)))
+    } else {
+      warning("Can't output dynamic/interactive ggvis plots in a knitr document.\n",
+              "Generating a static (non-dynamic, non-interactive) version of plot.")
+    }
+  }
 
   # Plot as JSON
   spec <- as.vega(x, dynamic = FALSE)
