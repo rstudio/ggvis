@@ -13,4 +13,8 @@ test_that("defer() inserts argument in the right place", {
   # Other operators
   expect_equal(defer(a(1) + 2), function(.) a(., 1) + 2)
   expect_equal(defer(-a(1)), function(.) -a(., 1))
+
+  # Anonymous functions
+  expect_equal(defer((function(x) x+5)()), function(.) (function(x) x + 5)(.))
+  expect_equal(defer((function(x, y) x+y)(y)), function(.) (function(x, y) x+y)(., y))
 })

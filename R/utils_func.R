@@ -41,7 +41,7 @@ insert_arg <- function(expr, sym = ".") {
 }
 
 is.operator <- function(x) {
-  if (!is.symbol(x)) stop("x must be a symbol.")
+  if (!is.symbol(x)) return(FALSE)
 
   x <- as.character(x)
 
