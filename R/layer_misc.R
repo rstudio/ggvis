@@ -13,12 +13,17 @@
 #'   layer_line(),
 #'   layer_point()
 #' )
-layer_line <- function(..., sort = TRUE) {
+layer_line <- function(vis, ..., sort = TRUE) {
   comps <- parse_components(..., drop_named = TRUE)
 
-  layer(
-    auto_split(),
-    if (sort) transform_sort(...),
-    mark_path(comps$props)
-  )
+  cond_sort <- function(vis, sort, ...) {
+    if (sort) vis %>% transform_sort(...)
+    else vis
+  }
+
+  vis %>%
+    branch(
+      cond_sort(sort, ...) %>%
+      mark_path(comps$props)
+    )
 }
