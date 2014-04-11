@@ -269,10 +269,11 @@ knit_print.ggvis <- function(x, options) {
   x$opts <- list(merge_opts(knitr_opts, x$opts[[1]]))
 
   # if this is a dynamic object, check to see if we're rendering in a Shiny R
-  # Markdown document; emit a Shiny application if we are, and a warning if we
-  # aren't.
+  # Markdown document and have an appropriate version of Shiny; emit a Shiny
+  # application if we are, and a warning if we aren't.
   if (is.dynamic(x)) {
-    if (identical(knitr::opts_knit$get()$rmarkdown.runtime, "shiny")) {
+    if (identical(knitr::opts_knit$get()$rmarkdown.runtime, "shiny") &&
+        packageVersion("shiny") >= "0.9.1.9000") {
 
       # create the application object and allocate space for the controls
       app <- app_object(x)
