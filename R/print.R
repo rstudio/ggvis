@@ -130,6 +130,15 @@ copy_www_resources <- function(paths, destdir) {
   lapply(paths, copy_www_path)
 }
 
+# given a ggvis object, return the number of pixels to reserve for its controls.
+control_height <- function(x) {
+  n_controls <- length(controls(x))
+
+  # Request 70 vertical pixels for each pair of control items, since there are
+  # two on a row.
+  70 * ceiling(n_controls / 2)
+}
+
 #' @rdname print.ggvis
 #' @export
 #' @importFrom RJSONIO toJSON
@@ -143,15 +152,8 @@ view_dynamic <- function(x,
   app <- app_object(x, renderer = renderer, id = id, minify = minify)
 
   if (launch) {
-    # Find number of control elements for the plot
-    n_controls <- length(controls(x))
-
-    # Request 70 vertical pixels for each pair of control items, since there are
-    # two on a row.
-    height <- 350 + 70 * ceiling(n_controls / 2)
-
     shiny::runApp(app, port = port, quiet = quiet,
-      launch.browser = function(url) view_plot(url, height))
+      launch.browser = function(url) view_plot(url, 350 + control_height(x)))
   } else {
     app
   }
@@ -271,7 +273,10 @@ knit_print.ggvis <- function(x, options) {
   # aren't.
   if (is.dynamic(x)) {
     if (identical(knitr::opts_knit$get()$rmarkdown.runtime, "shiny")) {
+
+      # create the application object and allocate space for the controls
       app <- app_object(x)
+      knitr_opts$height <- knitr_opts$height + control_height(x)
       return(knitr::knit_print(shiny::shinyApp(ui = app$ui,
                                                server = app$server,
                                                options = knitr_opts)))
