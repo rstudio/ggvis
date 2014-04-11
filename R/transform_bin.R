@@ -62,78 +62,67 @@
 #' # Or
 #' pl <- pipeline(mtcars, transform_bin(10))
 #' sluice(pl, props(x = ~disp))
-transform_bin <- function(..., binwidth = guess(), origin = NULL, right = TRUE) {
-  transform("bin",
-    binwidth = binwidth,
-    origin = origin,
-    right = right
+transform_bin <- function(vis, ..., binwidth = guess(), origin = NULL,
+                          right = TRUE) {
+  if (!is.ggvis(vis)) stop("First argument to transform must be a ggvis object.")
+
+  dots <- list(...)
+  dots <- dots[named(dots)]
+
+  # Get the current data and props from the parent
+  parent_data <- vis$cur_data
+  parent_props <- vis$cur_props
+
+  new_data <- reactive({
+    data <- parent_data()
+
+    check_prop("transform_bin", parent_props, data, "x.update",
+      c("numeric", "datetime", "ordinal", "nominal"))
+
+    range <- prop_range(data, parent_props$x)
+    params <- bin_params(range, binwidth = binwidth, origin = origin,
+                         right = right)
+
+    output <- bin(data, x_var = parent_props$x, binwidth = params$binwidth,
+                  origin = params$origin, right = params$right)
+
+    # TODO: Check for zero-row output for other data types
+    if (is.data.frame(output) && nrow(output) == 0) return(output)
+
+    preserve_constants(data, output)
+  })
+
+  # Save data in the vis object, updating current data.
+  register_data(vis,
+    new_data,
+    prefix = paste0(get_data_id(parent_data), "_transform_sort"),
+    update_current = TRUE
   )
 }
 
 #' @rdname transform_bin
 #' @export
-layer_histogram <- function(...) {
-  layer(
-    transform_bin(...),
-    layer(
-      props(x = ~xmin__, x2 = ~xmax__, y = ~count__, y2 = 0),
-      mark_rect(),
-      ...,
-      drop_named = TRUE
-    )
-  )
+layer_histogram <- function(vis, ...) {
+  vis %>%
+    transform_bin(...) %>%
+    mark_rect(props(x = ~xmin__, x2 = ~xmax__, y = ~count__, y2 = 0))
 }
 
 #' @rdname transform_bin
 #' @export
 #' @inheritParams layer_histogram
-layer_freqpoly <- function(...) {
-  layer(
-    transform_bin(...),
-    layer(
-      props(x = ~x, y = ~count__),
-      mark_path(),
-      ...,
-      drop_named = TRUE
-    )
-  )
+layer_freqpoly <- function(vis, ...) {
+  vis %>%
+    transform_bin(...) %>%
+    mark_path(props(x = ~x, y = ~count__))
 }
 
 #' @rdname transform_bin
 #' @export
-layer_barchart <- function(...) {
-  layer(
-    transform_bin(...),
-    layer(
-      props(x = ~x, width = band(mult = 0.9), y2 = ~count__, y = 0),
-      mark_rect(),
-      ...,
-      drop_named = TRUE
-    )
-  )
-}
-
-#' @export
-format.transform_bin <- function(x, ...) {
-  paste0(" -> bin", param_string(x))
-}
-
-#' @export
-compute.transform_bin <- function(x, props, data) {
-  check_prop(x, props, data, "x.update",
-    c("numeric", "datetime", "ordinal", "nominal"))
-
-  range <- prop_range(data, props$x)
-  params <- bin_params(range, binwidth = x$binwidth, origin = x$origin,
-    right = x$right)
-
-  output <- bin(data, x_var = props$x,
-    binwidth = params$binwidth, origin = params$origin, right = params$right)
-
-  # TODO: Check for zero-row output for other data types
-  if (is.data.frame(output) && nrow(output) == 0) return(output)
-
-  preserve_constants(data, output)
+layer_barchart <- function(vis, ...) {
+  vis %>%
+    transform_bin(...) %>%
+    mark_rect(props(x = ~x, width = band(mult = 0.9), y2 = ~count__, y = 0))
 }
 
 # Bin complete dataset ---------------------------------------------------------
