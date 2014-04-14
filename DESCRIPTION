@@ -26,6 +26,7 @@ Roxygen: list(wrap = FALSE)
 License: GPL-2
 Collate:
     'auto_split.R'
+    'branch.R'
     'by_group.R'
     'connect.R'
     'controls.R'
@@ -81,6 +82,7 @@ Collate:
     'transform_sort.R'
     'transform_stack.R'
     'utils_data.R'
+    'utils_func.R'
     'utils_names.R'
     'utils_props.R'
     'utils_reactive.R'
