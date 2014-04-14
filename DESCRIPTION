@@ -26,7 +26,7 @@ VignetteBuilder: knitr
 Roxygen: list(wrap = FALSE)
 License: GPL-2
 Collate:
-    'auto_split.R'
+    'auto_group.R'
     'branch.R'
     'by_group.R'
     'connect.R'

@@ -21,22 +21,14 @@
 #' sluice(pipeline(mtcars, by_group(cyl)), props(x = ~disp, y = ~mpg))
 #' # Note that the props aren't used for splitting, but sluice() needs
 #' # props to be present to work.
-auto_split <- function() {
-  pipe(c("auto_split", "split"))
-}
+auto_group <- function(vis) {
+  parent_data <- vis$cur_data
+  parent_props <- vis$cur_props
 
-#' @export
-format.auto_split <- function(x, ...) {
-  " -> auto_split"
-}
-
-#' @export
-connect.auto_split <- function(x, props, source = NULL, session = NULL) {
-  source <- as.reactive(source)
-  reactive({
+  new_data <- reactive({
     # Get quoted expressions from props which are both variable and countable
-    data <- source()
-    countable <- vapply(props,
+    data <- parent_data()
+    countable <- vapply(parent_props,
       function(prop) prop$type == "variable" && prop_countable(data, prop),
       logical(1)
     )
@@ -44,11 +36,14 @@ connect.auto_split <- function(x, props, source = NULL, session = NULL) {
       return(data)
     }
 
-    split_vars <- lapply(unname(props[countable]), "[[", "value")
+    group_vars <- lapply(unname(parent_props[countable]), "[[", "value")
 
-    split_df(data, split_vars, env = x$env)
+    data %>% regroup(group_vars)
   })
-}
 
-#' @export
-empty.auto_split <- function(x) FALSE
+  register_data(vis,
+    new_data,
+    prefix = paste0(get_data_id(parent_data), "_auto_group"),
+    update_current = TRUE
+  )
+}

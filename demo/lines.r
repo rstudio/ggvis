@@ -29,9 +29,9 @@ df %>% ggvis(props(x = ~x, y = ~y)) %>%
   mark_path() %>%
   layer_point()
 
-# Grouping with auto_split, and sorted
+# Grouping with auto_group, and sorted
 df %>% ggvis(props(x = ~x, y = ~y, stroke = ~z, fill := NA)) %>%
-  auto_split() %>%
+  auto_group() %>%
   transform_sort() %>%
   mark_path() %>%
   layer_point()
