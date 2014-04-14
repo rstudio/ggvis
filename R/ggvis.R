@@ -4,15 +4,18 @@
 #' @export
 ggvis <- function(data, props = NULL) {
 
-  data_prefix <- deparse2(substitute(data))
-
-  # Make sure data is reactive
-  if (!is.reactive(data)) data <- as.reactive(data)
-
-  data <- add_data_id(data, prefix = data_prefix)
-
   datalist <- list()
-  datalist[[get_data_id(data)]] <- data
+
+  if (!is.null(data)) {
+    data_prefix <- deparse2(substitute(data))
+
+    # Make sure data is reactive
+    if (!is.reactive(data)) data <- as.reactive(data)
+
+    data <- add_data_id(data, prefix = data_prefix)
+
+    datalist[[get_data_id(data)]] <- data
+  }
 
   proplist <- list()
   proplist[[props_id(props)]] <- props
@@ -41,6 +44,9 @@ is.ggvis <- function(x) inherits(x, "ggvis")
 add_mark <- function(vis, type = NULL, props = NULL, data = NULL,
                      data_name = "unnamed_data") {
 
+  # Save current data
+  old_data <- vis$cur_data
+
   # Get the data object and register it if necessary
   if (is.null(data)) {
     data <- vis$cur_data
@@ -49,9 +55,8 @@ add_mark <- function(vis, type = NULL, props = NULL, data = NULL,
     if (!is.reactive(data)) {
       data <- as.reactive(data)
     }
-    vis <- register_data(vis, data, prefix = data_name, update_current = FALSE)
+    vis <- register_data(vis, data, prefix = data_name, update_current = TRUE)
   }
-
 
   # Calculate the props for this layer
   new_props <- merge_props(vis$cur_props, props)
@@ -61,7 +66,11 @@ add_mark <- function(vis, type = NULL, props = NULL, data = NULL,
     vis <- register_props(vis, new_props)
   }
 
-  vis$marks <- c(vis$marks, list(mark(type, props = new_props, data = data)))
+  vis$marks <- c(vis$marks, list(mark(type, props = new_props,
+                                      data = vis$cur_data)))
+
+  # Restore old data
+  vis$cur_data <- old_data
   vis
 }
 

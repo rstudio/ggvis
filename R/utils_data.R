@@ -1,6 +1,7 @@
 # Calculate the data_id for a data object; if the object already has the data_id
 # attribute, simply return that.
 get_data_id <- function(data, prefix = "unnamed_data") {
+  if (is.null(data)) return(NULL)
   if (!is.reactive(data)) stop("data object must be a reactive")
 
   # If there's already aa data_id attribute, just return it
@@ -12,6 +13,7 @@ get_data_id <- function(data, prefix = "unnamed_data") {
 
 # Add the appropriate data_id attribute to a data object, and return it
 add_data_id <- function(data, prefix = "unnamed_data") {
+  if (is.null(data)) return(NULL)
   if (!is.reactive(data)) stop("data object must be a reactive")
 
   attr(data, "data_id") <- get_data_id(data, prefix)
