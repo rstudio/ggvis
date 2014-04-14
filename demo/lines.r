@@ -3,28 +3,40 @@ library(ggvis)
 set.seed(1780)
 df <- data.frame(x = runif(12), y = runif(12), z = gl(3, 4))
 
-ggvis(df, props(x = ~x, y = ~y)) + mark_path()
+df %>% ggvis(props(x = ~x, y = ~y)) %>% mark_path()
 
 # Grouping, manually specified
-ggvis(df, by_group(z), props(x = ~x, y = ~y, stroke = ~z, fill := NA)) +
-  mark_path() +
+df %>% group_by(z) %>%
+  ggvis(props(x = ~x, y = ~y, stroke = ~z, fill := NA)) %>%
+  mark_path() %>%
+  layer_point()
+
+df %>%
+  ggvis(props(x = ~x, y = ~y, stroke = ~z, fill := NA)) %>%
+  group_by(z) %>%
+  mark_path() %>%
   layer_point()
 
 # Data sorted by x
-ggvis(df, transform_sort(), props(x = ~x, y = ~y)) + mark_path() + layer_point()
+df %>% ggvis(props(x = ~x, y = ~y)) %>%
+  transform_sort() %>%
+  mark_path() %>%
+  layer_point()
+
 # Data sorted by y
-ggvis(df, transform_sort(var = "y"), props(x = ~x, y = ~y)) +
-  mark_path() +
+df %>% ggvis(props(x = ~x, y = ~y)) %>%
+  transform_sort(vars = "y") %>%
+  mark_path() %>%
   layer_point()
 
 # Grouping with auto_split, and sorted
-ggvis(df, auto_split(), transform_sort(),
-  props(x = ~x, y = ~y, stroke = ~z, fill := NA)) +
-  mark_path() +
+df %>% ggvis(props(x = ~x, y = ~y, stroke = ~z, fill := NA)) %>%
+  auto_split() %>%
+  transform_sort() %>%
+  mark_path() %>%
   layer_point()
 
-
 # Using layer_line
-ggvis(df, props(x = ~x, y = ~y, stroke = ~z, fill := NA)) +
-  layer_line() +
+df %>% ggvis(df, props(x = ~x, y = ~y, stroke = ~z, fill := NA)) %>%
+  layer_line() %>%
   layer_point()
