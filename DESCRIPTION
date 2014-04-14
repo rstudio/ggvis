@@ -8,6 +8,7 @@ Author: RStudio, Inc.
 Maintainer: Winston Chang <winston@rstudio.com>
 Depends:
     R (>= 2.15.1),
+    dplyr,
     magrittr
 Imports:
     assertthat,
@@ -32,6 +33,7 @@ Collate:
     'controls.R'
     'datasource.R'
     'df_to_d3json.R'
+    'dplyr-group.R'
     'utils.R'
     'events.R'
     'events-mouse.R'
