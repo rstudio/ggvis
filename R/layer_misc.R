@@ -21,6 +21,8 @@ layer_line <- function(vis, ..., sort = TRUE) {
     else vis
   }
 
+  # FIXME: need to add back auto_split as first part of branch, once it's
+  # implemented.
   vis %>%
     branch(
       cond_sort(sort, ...) %>%
