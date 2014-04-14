@@ -119,8 +119,3 @@ trim_to_source <- function(x) {
 has_source <- function(x) {
   any(vapply(x, is_source, FUN.VALUE = logical(1)))
 }
-
-#' @export
-split_vars.pipeline <- function(x) {
-  unlist(lapply(x, split_vars), recursive = FALSE)
-}

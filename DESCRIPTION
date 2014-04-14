@@ -28,7 +28,6 @@ License: GPL-2
 Collate:
     'auto_group.R'
     'branch.R'
-    'by_group.R'
     'connect.R'
     'controls.R'
     'datasource.R'

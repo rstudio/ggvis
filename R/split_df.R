@@ -49,9 +49,6 @@ split_df.split_df <- function(data, split, env) {
 is.split_df <- function(x) inherits(x, "split_df")
 
 #' @export
-split_vars.split_df <- function(x) attr(x, "variables")
-
-#' @export
 as.data.frame.split_df <- function(x, row.names, optional, ...) {
   do.call(rbind, x)
 }
