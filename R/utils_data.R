@@ -11,7 +11,8 @@ get_data_id <- function(data, prefix = "unnamed_data") {
   paste0(prefix, "_", digest(data, algo = "crc32"))
 }
 
-# Add the appropriate data_id attribute to a data object, and return it
+# Add the appropriate data_id attribute to a data object, and return it.
+# The data id consists of a prefix plus a hash.
 add_data_id <- function(data, prefix = "unnamed_data") {
   if (is.null(data)) return(NULL)
   if (!is.reactive(data)) stop("data object must be a reactive")
