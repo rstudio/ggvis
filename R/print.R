@@ -130,6 +130,15 @@ copy_www_resources <- function(paths, destdir) {
   lapply(paths, copy_www_path)
 }
 
+# given a ggvis object, return the number of pixels to reserve for its controls.
+control_height <- function(x) {
+  n_controls <- length(controls(x))
+
+  # Request 70 vertical pixels for each pair of control items, since there are
+  # two on a row.
+  70 * ceiling(n_controls / 2)
+}
+
 #' @rdname print.ggvis
 #' @export
 #' @importFrom RJSONIO toJSON
@@ -143,15 +152,8 @@ view_dynamic <- function(x,
   app <- app_object(x, renderer = renderer, id = id, minify = minify)
 
   if (launch) {
-    # Find number of control elements for the plot
-    n_controls <- length(controls(x))
-
-    # Request 70 vertical pixels for each pair of control items, since there are
-    # two on a row.
-    height <- 350 + 70 * ceiling(n_controls / 2)
-
     shiny::runApp(app, port = port, quiet = quiet,
-      launch.browser = function(url) view_plot(url, height))
+      launch.browser = function(url) view_plot(url, 350 + control_height(x)))
   } else {
     app
   }
@@ -261,16 +263,29 @@ html_head <- function(prefix = NULL, minify = TRUE, shiny = FALSE) {
 #' @export
 knit_print.ggvis <- function(x, options) {
 
-  # Dynamic not currently supported
-  if (is.dynamic(x)) {
-    warning("Can't output dynamic/interactive ggvis plots in a knitr document.\n",
-            "Generating a static (non-dynamic, non-interactive) version of plot.")
-  }
-
   # Read knitr chunk options for output width and height
   knitr_opts <- opts(width = options$out.width.px,
                      height = options$out.height.px)
   x$opts <- list(merge_opts(knitr_opts, x$opts[[1]]))
+
+  # if this is a dynamic object, check to see if we're rendering in a Shiny R
+  # Markdown document and have an appropriate version of Shiny; emit a Shiny
+  # application if we are, and a warning if we aren't.
+  if (is.dynamic(x)) {
+    if (identical(knitr::opts_knit$get()$rmarkdown.runtime, "shiny") &&
+        packageVersion("shiny") >= "0.9.1.9000") {
+
+      # create the application object and allocate space for the controls
+      app <- app_object(x)
+      knitr_opts$height <- knitr_opts$height + control_height(x)
+      return(knitr::knit_print(shiny::shinyApp(ui = app$ui,
+                                               server = app$server,
+                                               options = knitr_opts)))
+    } else {
+      warning("Can't output dynamic/interactive ggvis plots in a knitr document.\n",
+              "Generating a static (non-dynamic, non-interactive) version of plot.")
+    }
+  }
 
   # Plot as JSON
   spec <- as.vega(x, dynamic = FALSE)
