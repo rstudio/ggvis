@@ -65,7 +65,7 @@ mtcars %>% ggvis(props(x = ~wt, y = ~mpg)) %>%
   layer_point(props(fill = ~factor(am), size := 25))
 
 # Same as previous, but also with (useless) grouping in the layers
-mtcars %>% group_by(cyl) %>%
+mtcars %>% group_by(factor(cyl)) %>%
   ggvis(props(x = ~wt, y = ~mpg)) %>%
   layer_point(props(stroke = ~factor(cyl), fill := NA)) %>%
   layer_point(props(fill = ~factor(am), size := 25))
