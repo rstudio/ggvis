@@ -24,6 +24,11 @@ df %>% ggvis(props(x = ~x, y = ~y)) %>%
   mark_path() %>%
   layer_point()
 
+# layer_line sorts and adds a mark_path
+df %>% ggvis(props(x = ~x, y = ~y)) %>%
+  layer_line() %>%
+  layer_point()
+
 # Data sorted by y
 df %>% ggvis(props(x = ~x, y = ~y)) %>%
   transform_sort(vars = "y") %>%
@@ -37,7 +42,7 @@ df %>% ggvis(props(x = ~x, y = ~y, stroke = ~z, fill := NA)) %>%
   mark_path() %>%
   layer_point()
 
-# Using layer_line
-df %>% ggvis(df, props(x = ~x, y = ~y, stroke = ~z, fill := NA)) %>%
+# Using layer_line, which sorts the data
+df %>% ggvis(props(x = ~x, y = ~y, stroke = ~z, fill := NA)) %>%
   layer_line() %>%
   layer_point()

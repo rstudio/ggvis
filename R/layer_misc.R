@@ -21,10 +21,9 @@ layer_line <- function(vis, ..., sort = TRUE) {
     else vis
   }
 
-  # FIXME: need to add back auto_split as first part of branch, once it's
-  # implemented.
   vis %>%
     branch(
+      auto_group() %>%
       cond_sort(sort, ...) %>%
       mark_path(comps$props)
     )
