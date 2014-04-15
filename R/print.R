@@ -47,7 +47,7 @@ print.ggvis <- function(x, dynamic = NA,
 
 #' Print out the structure of a ggvis object in a friendly format
 #' @export
-explain <- function (vis) {
+explain.ggvis <- function (vis) {
   cat("Marks:\n")
   for (mark in vis$marks) {
     cat(indent(format(mark), 2))
