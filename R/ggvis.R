@@ -2,7 +2,8 @@
 #'
 #' @import assertthat
 #' @export
-ggvis <- function(data, props = NULL) {
+ggvis <- function(data, ...) {
+  props <- props(...)
 
   datalist <- list()
 
