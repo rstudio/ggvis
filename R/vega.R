@@ -78,9 +78,12 @@ as.vega.mark <- function(mark) {
 
   # HW: It seems less than ideal to have to inspect the data here, but
   # I'm not sure how else we can figure it out.
-  split <- is.split_df(isolate(mark$data()))
+  split <- !is.null(groups(isolate(mark$data())))
 
   properties <- as.vega(props)
+
+  # Add the custom ggvis properties set for storing ggvis-specific information
+  # in the Vega spec.
   properties$ggvis <- list()
 
   if (split) {
@@ -163,8 +166,13 @@ as.vega.data.frame <- function(x, name, ...) {
 }
 
 #' @export
-as.vega.split_df <- function(x, name, ...) {
-  data <- lapply(x, function(x) list(children = df_to_d3json(x)))
+as.vega.grouped_df <- function(x, name, ...) {
+  # FIXME: This is effectively the same as dlply - is there a better way?
+  vars <- groups(x)
+  group_vals <- lapply(vars, function(var) x[[as.character(var)]] )
+  split_data <- unname(split(x, group_vals, drop = TRUE))
+
+  data <- lapply(split_data, function(x) list(children = df_to_d3json(x)))
 
   list(
     list(

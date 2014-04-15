@@ -103,7 +103,7 @@ apply_props.data.frame <- function(data, props) {
 }
 
 #' @export
-apply_props.split_df <- function(data, props) {
-  data[] <- lapply(data, apply_props, props)
-  data
+apply_props.grouped_df <- function(data, props) {
+  # FIXME: When dplyr issue #387 is fixed, remove the explicit class from method
+  dplyr::do(data, apply_props.data.frame(., props))
 }

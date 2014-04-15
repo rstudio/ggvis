@@ -11,6 +11,7 @@ df %>% group_by(z) %>%
   mark_path() %>%
   layer_point()
 
+# Grouping can happen after ggvis() call
 df %>%
   ggvis(props(x = ~x, y = ~y, stroke = ~z, fill := NA)) %>%
   group_by(z) %>%

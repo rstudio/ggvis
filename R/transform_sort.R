@@ -97,9 +97,9 @@ transform_sort <- function(vis, ..., vars = "x") {
 compute_sort <- function(data, vars, dots) UseMethod("compute_sort")
 
 #' @export
-compute_sort.split_df <- function(data, vars, dots) {
-  data[] <- lapply(data, compute_sort, vars = vars, dots = dots)
-  data
+compute_sort.grouped_df <- function(data, vars, dots) {
+  # FIXME: When dplyr issue #387 is fixed, remove the explicit class from method
+  dplyr::do(data, compute_sort.data.frame(., vars = vars, dots = dots))
 }
 
 #' @export
