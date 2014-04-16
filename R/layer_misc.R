@@ -16,15 +16,13 @@
 layer_line <- function(vis, ..., sort = TRUE) {
   comps <- parse_components(..., drop_named = TRUE)
 
-  cond_sort <- function(vis, sort, ...) {
-    if (sort) vis %>% transform_sort(...)
-    else vis
-  }
-
   vis %>%
     branch(
       auto_group() %>%
-      cond_sort(sort, ...) %>%
+      function(vis, sort, ...) {
+        if (sort) vis %>% transform_sort(...)
+        else vis
+      } %>%
       mark_path(comps$props)
     )
 }
