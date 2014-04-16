@@ -83,8 +83,9 @@ transform_bin <- function(vis, ..., binwidth = guess(), origin = NULL,
     params <- bin_params(range, binwidth = binwidth, origin = origin,
                          right = right)
 
-    output <- bin(data, x_var = parent_props$x, binwidth = params$binwidth,
-                  origin = params$origin, right = params$right)
+    output <- compute_bin(data, x_var = parent_props$x,
+                          binwidth = params$binwidth, origin = params$origin,
+                          right = params$right)
 
     # TODO: Check for zero-row output for other data types
     if (is.data.frame(output) && nrow(output) == 0) return(output)
@@ -133,16 +134,15 @@ layer_barchart <- function(vis, ...) {
 
 # Bin complete dataset ---------------------------------------------------------
 
-bin <- function(data, ...) UseMethod("bin")
+compute_bin <- function(data, ...) UseMethod("compute_bin")
 
 #' @export
-bin.split_df <- function(data, x_var, ...) {
-  data[] <- lapply(data, bin, x_var = x_var, ...)
-  data
+compute_bin.grouped_df <- function(data, x_var, ...) {
+  dplyr::do(data, compute_bin(., x_var, ...))
 }
 
 #' @export
-bin.data.frame <- function(data, x_var, ...) {
+compute_bin.data.frame <- function(data, x_var, ...) {
   x_val <- remove_missing(prop_value(x_var, data))
   bin_vector(x_val, ...)
 }

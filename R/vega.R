@@ -180,7 +180,7 @@ as.vega.grouped_df <- function(x, name, ...) {
       format = list(
         type = "treejson",
         # Figure out correct vega parsers for non-string columns
-        parse = unlist(lapply(x[[1]], vega_data_parser))
+        parse = unlist(lapply(x, vega_data_parser))
       ),
       values = list(children = data)
      ),
