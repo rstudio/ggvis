@@ -43,7 +43,6 @@ auto_group <- function(vis) {
 
   register_data(vis,
     new_data,
-    prefix = paste0(get_data_id(parent_data), "_auto_group"),
-    update_current = TRUE
+    prefix = paste0(get_data_id(parent_data), "_auto_group")
   )
 }

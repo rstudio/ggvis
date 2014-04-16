@@ -10,8 +10,7 @@ regroup.ggvis <- function(x, value) {
 
   register_data(x,
     new_data,
-    prefix = paste0(get_data_id(parent_data), "_group"),
-    update_current = TRUE
+    prefix = paste0(get_data_id(parent_data), "_group")
   )
 }
 
@@ -22,7 +21,6 @@ ungroup.ggvis <- function(x) {
 
   register_data(x,
     new_data,
-    prefix = paste0(get_data_id(parent_data), "_ungroup"),
-    update_current = TRUE
+    prefix = paste0(get_data_id(parent_data), "_ungroup")
   )
 }

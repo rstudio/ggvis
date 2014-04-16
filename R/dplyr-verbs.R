@@ -5,8 +5,7 @@ summarise.ggvis <- function(.data, ...) {
 
   register_data(.data,
     new_data,
-    prefix = paste0(get_data_id(parent_data), "_summarise"),
-    update_current = TRUE
+    prefix = paste0(get_data_id(parent_data), "_summarise")
   )
 }
 
@@ -17,8 +16,7 @@ mutate.ggvis <- function(.data, ...) {
 
   register_data(.data,
     new_data,
-    prefix = paste0(get_data_id(parent_data), "_mutate"),
-    update_current = TRUE
+    prefix = paste0(get_data_id(parent_data), "_mutate")
   )
 }
 
@@ -29,8 +27,7 @@ arrange.ggvis <- function(.data, ...) {
 
   register_data(.data,
     new_data,
-    prefix = paste0(get_data_id(parent_data), "_arrange"),
-    update_current = TRUE
+    prefix = paste0(get_data_id(parent_data), "_arrange")
   )
 }
 
@@ -42,7 +39,6 @@ select.ggvis <- function(.data, ...) {
   register_data(.data,
     new_data,
     prefix = paste0(get_data_id(parent_data), "_select"),
-    update_current = TRUE
   )
 }
 
@@ -53,8 +49,7 @@ filter.ggvis <- function(.data, ...) {
 
   register_data(.data,
     new_data,
-    prefix = paste0(get_data_id(parent_data), "_filter"),
-    update_current = TRUE
+    prefix = paste0(get_data_id(parent_data), "_filter")
   )
 }
 

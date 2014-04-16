@@ -92,7 +92,7 @@ add_legend <- function(vis, legend) {
 # @param prefix A prefix for the data ID.
 # @param update_current Should the cur_data field be updated to this data object?
 register_data <- function(vis, data, prefix = "unnamed_data",
-                     update_current = FALSE) {
+                          update_current = TRUE) {
 
   data <- add_data_id(data, prefix)
   vis$data[[get_data_id(data)]] <- data
@@ -109,7 +109,7 @@ register_data <- function(vis, data, prefix = "unnamed_data",
 # @param vis A ggvis object.
 # @param props A props object.
 # @param update_current Should the cur_props field be updated to this props object?
-register_props <- function(vis, props, update_current = FALSE) {
+register_props <- function(vis, props, update_current = TRUE) {
   vis$props[[props_id(props)]] <- props
 
   if (update_current) {
