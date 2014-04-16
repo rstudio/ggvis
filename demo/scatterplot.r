@@ -4,8 +4,8 @@ library(ggvis)
 mtcars %>% ggvis(x = ~wt, y = ~mpg) %>% layer_point()
 
 # Variable transformations
-mtcars %>% ggvis(props(x = ~wt, y = ~wt/mpg)) %>% layer_point()
-mtcars %>% ggvis(props(x = ~factor(cyl), y = ~mpg)) %>% layer_point()
+mtcars %>% ggvis(x = ~wt, y = ~wt/mpg) %>% layer_point()
+mtcars %>% ggvis(x = ~factor(cyl), y = ~mpg) %>% layer_point()
 
 # With colour
 # continuous:
@@ -56,7 +56,7 @@ mtc1 <- mtcars[1:10, ]
 mtc2 <- mtcars[11:20, ]
 ggvis(NULL, x = ~wt, y = ~mpg) %>%
   layer_point(props(stroke := "black", fill := "black"), data = mtc1) %>%
-  layer_point(props(fill := "red", size := 40), mtc2)
+  layer_point(props(fill := "red", size := 40), data = mtc2)
 
 # Scatter plot with one set of points with `cyl` mapped to stroke,
 # and another set with `am` mapped to fill
