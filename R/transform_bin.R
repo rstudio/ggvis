@@ -246,7 +246,8 @@ bin_vector.numeric <- function(x, weight = NULL, ..., binwidth = 1,
 bin_vector.POSIXt <- function(x, weight = NULL, ..., binwidth = 1,
                               origin = NULL, right = TRUE) {
   # Convert times to raw numbers (seconds since UNIX epoch), and call bin.numeric
-  results <- bin(as.numeric(x), weight, binwidth, origin, right)
+  results <- bin_vector(as.numeric(x), weight = weight, binwidth = binwidth,
+    origin = origin, right = right)
 
   # Convert some columns from numeric back to POSIXct objects
   time_cols <- c("x", "xmin__", "xmax__")
