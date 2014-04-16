@@ -80,20 +80,57 @@
 #' # and sluicing data through it
 #' sluice(pipeline(mtcars, transform_smooth(n = 5L)),
 #'   props(x = ~disp, y = ~mpg))
-transform_smooth <- function(..., method = guess(), formula = guess(), se = TRUE,
-                             level = 0.95, n = 80L, na.rm = FALSE) {
+transform_smooth <- function(vis, ..., method = guess(), formula = guess(),
+                             se = TRUE, level = 0.95, n = 80L, na.rm = FALSE) {
+
+  if (!is.ggvis(vis)) stop("First argument to transform must be a ggvis object.")
 
   # Drop unnamed arguments
   dots <- list(...)
   dots <- dots[named(dots)]
 
-  transform("smooth", method = method, formula = formula, se = se,
-    level = level, n = n, na.rm = na.rm, dots = dots)
+  # Get the current data and props from the parent
+  parent_data <- vis$cur_data
+  parent_props <- vis$cur_props
+
+  new_data <- reactive({
+    data <- parent_data()
+
+    check_prop("transform_smooth", parent_props, data, "x.update",
+               c("numeric", "datetime"))
+    check_prop("transform_smooth", parent_props, data, "y.update", "numeric")
+
+    if (is.guess(method)) {
+      method <- guess_cache(method, "method",
+        if (max_rows(data) > 1000) "gam" else "loess")
+    }
+    if (method == "gam") try_require("mgcv")
+
+    if (is.guess(formula)) {
+      formula <- guess_cache(formula, "formula", {
+        f <- if (method == "gam") y ~ s(x) else y ~ x
+        environment(f) <- globalenv()
+        f
+      })
+    }
+
+    output <- compute_smooth(data, parent_props$x.update, parent_props$y.update,
+                             method, formula, se, level, n, na.rm, dots)
+
+    preserve_constants(data, output)
+  })
+
+  # Save data in the vis object, updating current data.
+  register_data(vis,
+    new_data,
+    prefix = paste0(get_data_id(parent_data), "_transform_smooth"),
+    update_current = TRUE
+  )
 }
 
 #' @rdname transform_smooth
 #' @export
-layer_smooth <- function(..., se = FALSE) {
+layer_smooth <- function(vis, ..., se = FALSE) {
   comps <- parse_components(..., drop_named = TRUE)
 
   line_props <-  merge_props(props(x = ~x, y = ~y, strokeWidth := 2), comps$props)
@@ -105,63 +142,41 @@ layer_smooth <- function(..., se = FALSE) {
   line_props <- drop_props(line_props, c("fill", "fillOpacity"))
   se_props <- drop_props(se_props, c("stroke", "strokeOpacity"))
 
-  layer(
-    transform_smooth(..., se = se),
-    layer(
-      comps$data,
-      comps$marks,
-      if (!identical(se, FALSE)) mark_area(se_props),
+  vis %>%
+    branch(
+      transform_smooth(..., se = se) %>%
+      function(vis) {
+        if (!identical(se, FALSE)) vis %>% mark_area(se_props)
+        else vis
+      } %>%
       mark_path(line_props)
     )
-  )
+}
+
+
+compute_smooth <- function(data, x_var, y_var, method, formula, se, level, n,
+                   na.rm, dots) {
+  UseMethod("compute_smooth")
 }
 
 #' @export
-format.transform_smooth <- function(x, ...) {
-  paste0(" -> smooth()", param_string(x[c("method", "formula")]))
+compute_smooth.grouped_df <- function(data, trans, x_var, y_var, method, formula, se,
+                              level, n, na.rm, dots) {
+  dplyr::do(data, compute_smooth(., trans, x_var, y_var, method, formula, se,
+                                 level, n, na.rm, dots))
 }
 
 #' @export
-compute.transform_smooth <- function(x, props, data) {
-  check_prop(x, props, data, "x.update", c("numeric", "datetime"))
-  check_prop(x, props, data, "y.update", "numeric")
+compute_smooth.data.frame <- function(data, x_var, y_var, method, formula, se,
+                              level, n, na.rm, dots) {
+  assert_that(is.formula(formula))
+  assert_that(is.flag(se))
+  assert_that(is.numeric(level), length(level) == 1, level >= 0, level <= 1)
+  assert_that(length(n) == 1, n >= 0)
+  assert_that(is.flag(na.rm))
 
-  if (is.guess(x$method)) {
-    x$method <- guess_cache(x$method, "method",
-      if (max_rows(data) > 1000) "gam" else "loess")
-  }
-  if (x$method == "gam") try_require("mgcv")
 
-  if (is.guess(x$formula)) {
-    x$formula <- guess_cache(x$formula, "formula", {
-      f <- if (x$method == "gam") y ~ s(x) else y ~ x
-      environment(f) <- globalenv()
-      f
-    })
-  }
-
-  output <- smooth(data, x, x_var = props$x.update, y_var = props$y.update)
-  preserve_constants(data, output)
-}
-
-smooth <- function(data, trans, x_var, y_var) UseMethod("smooth")
-
-#' @export
-smooth.split_df <- function(data, trans, x_var, y_var) {
-  data[] <- lapply(data, smooth, trans = trans, x_var = x_var, y_var = y_var)
-  data
-}
-
-#' @export
-smooth.data.frame <- function(data, trans, x_var, y_var) {
-  assert_that(is.formula(trans$formula))
-  assert_that(is.flag(trans$se))
-  assert_that(is.numeric(trans$level), length(trans$level) == 1,
-              trans$level >= 0, trans$level <= 1)
-  assert_that(length(trans$n) == 1, trans$n >= 0)
-  assert_that(is.flag(trans$na.rm))
-
-  env <- new.env(parent = environment(trans$formula))
+  env <- new.env(parent = environment(formula))
   old_x_val <- prop_value(x_var, data)
   env$data <- remove_missing(data.frame(
     x = as.numeric(old_x_val),
@@ -169,13 +184,12 @@ smooth.data.frame <- function(data, trans, x_var, y_var) {
   ))
 
   # Create model call and combine with ... captured earlier
-  call <- c(list(as.name(trans$method), trans$formula, data = quote(data)),
-    trans$dots)
+  call <- c(list(as.name(method), formula, data = quote(data)), dots)
   model <- eval(as.call(call), env)
 
   # Make prediction
-  x_grid <- seq(min(env$data$x), max(env$data$x), length = trans$n)
-  pred <- predict_df(model, x_grid, trans$se, trans$level)
+  x_grid <- seq(min(env$data$x), max(env$data$x), length = n)
+  pred <- predict_df(model, x_grid, se, level)
 
   # Coerce x value back to the original type, if applicable.
   # This may need to be abstracted out later, so other transforms can use it.
@@ -232,7 +246,6 @@ max_rows <- function(x) UseMethod("max_rows")
 #' @export
 max_rows.data.frame <- function(x) nrow(x)
 #' @export
-max_rows.split_df <- function(x) {
-  rows <- vapply(x, nrow, integer(1))
-  max(rows)
+max_rows.grouped_df <- function(x) {
+  mtcars %>% group_by(cyl) %>% group_size() %>% max()
 }
