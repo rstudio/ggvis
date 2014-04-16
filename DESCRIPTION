@@ -74,7 +74,6 @@ Collate:
     'scale_time.R'
     'scales.R'
     'shiny.R'
-    'split_df.R'
     'transform.R'
     'transform_bin.R'
     'transform_density.R'
