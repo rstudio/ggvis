@@ -64,7 +64,7 @@ add_mark <- function(vis, type = NULL, props = NULL, data = NULL,
 
   # Register the props with the vis if needed
   if (!is.null(props)) {
-    vis <- register_props(vis, new_props)
+    vis <- register_props(vis, new_props, update_current = FALSE)
   }
 
   vis$marks <- c(vis$marks, list(mark(type, props = new_props,
