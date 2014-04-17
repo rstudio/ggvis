@@ -19,7 +19,7 @@ layer_line <- function(vis, ..., sort = TRUE) {
   vis %>%
     branch(
       auto_group() %>%
-      function(vis, sort, ...) {
+      function(vis, ...) {
         if (sort) vis %>% transform_sort(...)
         else vis
       } %>%
