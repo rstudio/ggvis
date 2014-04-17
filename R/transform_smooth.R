@@ -160,9 +160,9 @@ compute_smooth <- function(data, x_var, y_var, method, formula, se, level, n,
 }
 
 #' @export
-compute_smooth.grouped_df <- function(data, trans, x_var, y_var, method, formula, se,
+compute_smooth.grouped_df <- function(data, x_var, y_var, method, formula, se,
                               level, n, na.rm, dots) {
-  dplyr::do(data, compute_smooth(., trans, x_var, y_var, method, formula, se,
+  dplyr::do(data, compute_smooth(., x_var, y_var, method, formula, se,
                                  level, n, na.rm, dots))
 }
 
