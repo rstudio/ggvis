@@ -1,6 +1,9 @@
 #' Visualise a data set with a ggvis graphic.
 #'
+#' @param data A data object.
+#' @param ... Property mappings.
 #' @import assertthat
+#' @importFrom shiny reactiveValues
 #' @export
 ggvis <- function(data, ...) {
   props <- props(...)
@@ -11,7 +14,10 @@ ggvis <- function(data, ...) {
     data_prefix <- deparse2(substitute(data))
 
     # Make sure data is reactive
-    if (!is.reactive(data)) data <- as.reactive(data)
+    if (!is.reactive(data)) {
+      static_data <- data
+      data <- function() static_data
+    }
 
     data <- add_data_id(data, prefix = data_prefix)
 

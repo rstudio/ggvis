@@ -7,7 +7,7 @@
 #'
 #' @param x A ggvis object.
 #' @param dynamic Uses \code{view_dynamic} if \code{TRUE}, \code{view_static} if
-#'   \code{FALSE}. The default, \code{NA}, chooses automatically based on the
+#'   \code{FALSE}. The default, \code{NULL}, chooses automatically based on the
 #'   presence of reactives or interactive inputs in \code{x}.
 #' @param spec If \code{TRUE}, override usual printing and instead print
 #'   the json plot spec. If a character vector, will display just those
@@ -24,7 +24,7 @@
 #' @keywords internal
 #' @method print ggvis
 #' @export
-print.ggvis <- function(x, dynamic = NA,
+print.ggvis <- function(x, dynamic = NULL,
                         spec = getOption("ggvis.print_spec", FALSE),
                         id = rand_id("plot_"), minify = TRUE, ...) {
 
@@ -35,7 +35,7 @@ print.ggvis <- function(x, dynamic = NA,
     return(show_spec(x, spec))
   }
 
-  if (is.na(dynamic)) dynamic <- is.dynamic(x) && interactive()
+  if (is.null(dynamic)) dynamic <- is.dynamic(x) && interactive()
 
   if (dynamic) {
     view_dynamic(x, id = id, minify = minify, ...)

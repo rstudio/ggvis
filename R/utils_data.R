@@ -2,7 +2,7 @@
 # attribute, simply return that.
 get_data_id <- function(data, prefix = "unnamed_data") {
   if (is.null(data)) return(NULL)
-  if (!is.reactive(data)) stop("data object must be a reactive")
+  if (!is.function(data)) stop("data object must be a reactive or a function.")
 
   # If there's already aa data_id attribute, just return it
   if (!is.null(attr(data, "data_id")))
@@ -15,7 +15,7 @@ get_data_id <- function(data, prefix = "unnamed_data") {
 # The data id consists of a prefix plus a hash.
 add_data_id <- function(data, prefix = "unnamed_data") {
   if (is.null(data)) return(NULL)
-  if (!is.reactive(data)) stop("data object must be a reactive")
+  if (!is.function(data)) stop("data object must be a reactive or a function.")
 
   attr(data, "data_id") <- get_data_id(data, prefix)
   data

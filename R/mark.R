@@ -14,7 +14,7 @@
 #' @keywords internal
 mark <- function(type, props, data) {
   if (!is.ggvis_props(props)) stop("props must be a ggvis_props object")
-  if (!is.reactive(data)) stop("data must be a reactive")
+  if (!is.function(data)) stop("data object must be a reactive or a function.")
 
   m <- structure(
     compact(list(

@@ -5,26 +5,13 @@
 is.dynamic <- function(x) UseMethod("is.dynamic")
 
 #' @export
-is.dynamic.layer <- function(x) {
-  is.dynamic(x$data) || 
-    is.dynamic(x$props) || 
-    any_apply(x$children, is.dynamic) ||
-    length(x$handlers) > 0
+is.dynamic.ggvis <- function(x) {
+  any_apply(x$data, is.dynamic) || any_apply(x$props, is.dynamic)
 }
 
 #' @export
-is.dynamic.pipeline <- function(x, ...) {
+is.dynamic.ggvis_props <- function(x, ...) {
   any_apply(x, is.dynamic)
-}
-#' @export
-is.dynamic.ggvis_props <- is.dynamic.pipeline
-
-#' @export
-is.dynamic.datasource_reactive <- function(x) TRUE
-
-#' @export
-is.dynamic.transform <- function(x, ...) {
-  any_apply(x, is.dynamic) || any_apply(x$dots, is.dynamic)
 }
 
 #' @export
