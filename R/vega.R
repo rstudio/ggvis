@@ -22,7 +22,8 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
   data_table <- as.environment(x$data[data_ids])
 
   # Wrap each of the reactive data objects in another reactive which returns
-  # only the columns that are actually used.
+  # only the columns that are actually used, and adds any calculated columns
+  # that are used in the props.
   data_table <- active_props(data_table, x$marks)
 
   if (dynamic) {

@@ -129,6 +129,7 @@ empty <- function(x) UseMethod("empty")
 #' @export
 empty.default <- function(x) length(x) == 0
 
+# Convert a list to a data frame, quickly
 quickdf <- function(list) {
   if (length(list) == 0) return(data.frame())
 
