@@ -118,7 +118,7 @@ props <- function(..., .props = NULL, inherit = TRUE) {
   # If named, use regular evaluation and scale
   scaled <- lapply(args[named(args)], function(x) {
     val <- eval(x, env)
-    prop(val, scale = TRUE)
+    prop(val, scale = TRUE, label = as.character(x))
   })
 
   # If unnamed, check that it uses := and don't scale
@@ -126,7 +126,7 @@ props <- function(..., .props = NULL, inherit = TRUE) {
     check_unscaled_form(x)
 
     val <- eval(x[[3]], env)
-    prop(val, scale = FALSE)
+    prop(val, scale = FALSE, label = as.character(x[[3]]))
   })
   names(unscaled) <- vapply(args[!named(args)], function(x) as.character(x[[2]]),
     character(1))

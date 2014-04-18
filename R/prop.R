@@ -19,6 +19,7 @@
 #' @param env If \code{x} is a quoted call this provides the environment in
 #'   which to look for variables not in the data. You should not need this in
 #'   ordinary operation.
+#' @param label A label for this prop to use for reporting errors.
 #' @seealso \code{\link{props}} to manage multiple properties and to
 #'   succintly create the most common types.
 #' @export
@@ -38,7 +39,7 @@
 #' # Don't scale variable (i.e. it already makes sense in the visual space)
 #' prop(quote(colour), scale = FALSE)
 prop <- function(x, scale = NULL, offset = NULL, mult = NULL,
-                 env = parent.frame()) {
+                 env = parent.frame(), label = NULL) {
 
   if (is.prop(x)) return(x)
 
@@ -68,7 +69,8 @@ prop <- function(x, scale = NULL, offset = NULL, mult = NULL,
     scale <- scale %||% TRUE
 
   } else {
-    stop("Unknown input to prop", call = FALSE)
+    if (is.null(label)) label <- deparse(substitute(label))
+    stop("Unknown input to prop: ", label, call. = FALSE)
   }
 
   structure(
