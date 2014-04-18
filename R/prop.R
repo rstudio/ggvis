@@ -55,17 +55,14 @@ prop <- function(x, scale = NULL, offset = NULL, mult = NULL,
     assert_that(length(x) == 1)
     # Constants don't need to capture environment
     env <- NULL
-    dr <- NULL
     scale <- scale %||% FALSE
 
-  } else if (is.input(x)) {
+  } else if (is.reactive(x)) {
     type <- "reactive"
-    dr <- x
-    x <- function() stop("Delayed reactive has not yet been advanced!")
+    reactive_label(x) <- paste0("reactive_", digest(x, algo = "crc32"))
     scale <- scale %||% FALSE
   } else if (is.quoted(x)) {
     type <- "variable"
-    dr <- NULL
     scale <- scale %||% TRUE
 
   } else {
@@ -75,7 +72,6 @@ prop <- function(x, scale = NULL, offset = NULL, mult = NULL,
 
   structure(
     list(value = x,
-      dr = dr,
       type = type,
       scale = scale,
       offset = offset,
@@ -124,7 +120,7 @@ prop_name <- function(x) UseMethod("prop_name")
 prop_name.default <- function(x) {
   switch(x$type,
     constant = "",
-    reactive = x$dr$id,
+    reactive = safe_vega_var(reactive_label(x$value)),
     variable = safe_vega_var(x$value))
 }
 
@@ -193,7 +189,7 @@ prop_domain.default <- function(x, data) {
 as.character.prop <- function(x, ...) {
   switch(x$type,
     constant = as.character(x$value),
-    reactive = x$dr$id,
+    reactive = reactive_label(x$value),
     variable = deparse2(x$value)
   )
 }
