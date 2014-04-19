@@ -65,7 +65,7 @@ as.reactive.reactive_proxy <- function(x, session = NULL, ...) {
     if (length(keys) == 0) {
       x$rv$keys <- NULL
     } else {
-      x$rv$keys <- keys + 1
+      x$rv$keys <- keys
     }
   })
   session$onSessionEnded(function() {
