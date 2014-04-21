@@ -71,6 +71,9 @@ transform_sort <- function(vis, ..., vars = "x") {
   parent_data <- vis$cur_data
   parent_props <- vis$cur_props
 
+  # Register reactive arguments
+  vis <- register_reactives(vis, c(dots, vars))
+
   # Create the data for the current node
   new_data <- reactive({
     data <- parent_data()

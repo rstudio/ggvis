@@ -93,6 +93,9 @@ transform_smooth <- function(vis, ..., method = guess(), formula = guess(),
   parent_data <- vis$cur_data
   parent_props <- vis$cur_props
 
+  # Register reactive arguments
+  vis <- register_reactives(vis, c(dots, method, formula, se, level, n, na.rm))
+
   new_data <- reactive({
     data <- parent_data()
 

@@ -127,8 +127,11 @@ register_props <- function(vis, props, update_current = TRUE) {
 # @param vis A ggvis object.
 # @param reactives A list of reactives.
 register_reactives <- function(vis, reactives = NULL) {
-  labels <- vapply(reactives, reactive_label, character(1))
+  # Drop any objects from the 'reactives' list which aren't actually reactive
+  reactives <- reactives[vapply(reactives, is.reactive, logical(1))]
+
   # Only add reactives whose labels aren't already registered
+  labels <- vapply(reactives, reactive_label, character(1))
   keep_idx <- !(labels %in% names(vis$reactives))
 
   vis$reactives[labels[keep_idx]] <- reactives[keep_idx]

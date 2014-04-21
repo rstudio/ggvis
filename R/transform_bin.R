@@ -73,6 +73,9 @@ transform_bin <- function(vis, ..., binwidth = guess(), origin = NULL,
   parent_data <- vis$cur_data
   parent_props <- vis$cur_props
 
+  # Register reactive arguments
+  vis <- register_reactives(vis, c(dots, binwidth, origin, right))
+
   new_data <- reactive({
     data <- parent_data()
 
