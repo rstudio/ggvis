@@ -80,8 +80,8 @@ transform_bin <- function(vis, ..., binwidth = guess(), origin = NULL,
       c("numeric", "datetime", "ordinal", "nominal"))
 
     range <- prop_range(data, parent_props$x)
-    params <- bin_params(range, binwidth = binwidth, origin = origin,
-                         right = right)
+    params <- bin_params(value(range), binwidth = value(binwidth),
+                         origin = value(origin), right = value(right))
 
     output <- compute_bin(data, x_var = parent_props$x,
                           binwidth = params$binwidth, origin = params$origin,

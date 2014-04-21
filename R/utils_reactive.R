@@ -32,3 +32,9 @@ extract_reactives.prop <- function(x, session = NULL, ...) {
   else
     NULL
 }
+
+# Get the value of a reactive or non-reactive object.
+value <- function(x) {
+  if (is.reactive(x)) x()
+  else x
+}

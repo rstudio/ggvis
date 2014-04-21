@@ -115,7 +115,9 @@ transform_smooth <- function(vis, ..., method = guess(), formula = guess(),
     }
 
     output <- compute_smooth(data, parent_props$x.update, parent_props$y.update,
-                             method, formula, se, level, n, na.rm, dots)
+                             value(method), value(formula), value(se),
+                             value(level), value(n), value(na.rm),
+                             lapply(dots, value))
 
     preserve_constants(data, output)
   })

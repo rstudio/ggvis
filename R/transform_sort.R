@@ -74,7 +74,7 @@ transform_sort <- function(vis, ..., vars = "x") {
   # Create the data for the current node
   new_data <- reactive({
     data <- parent_data()
-    prop_names <- paste0(vars, ".update")
+    prop_names <- paste0(value(vars), ".update")
     vapply(prop_names,
       function(prop_name) check_prop("transform_sort", parent_props,
                                      data, prop_name),
@@ -82,7 +82,7 @@ transform_sort <- function(vis, ..., vars = "x") {
     )
 
     output <- compute_sort(data, vars = parent_props[prop_names],
-                           dots = dots)
+                           dots = lapply(dots, value))
     preserve_constants(data, output)
   })
 
