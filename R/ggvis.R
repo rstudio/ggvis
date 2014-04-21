@@ -6,9 +6,17 @@
 #' @importFrom shiny reactiveValues
 #' @export
 ggvis <- function(data, ...) {
-  props <- props(...)
-
-  datalist <- list()
+  vis <- structure(
+    list(
+      marks = list(),
+      data = list(),
+      props = list(),
+      reactives = list(),
+      cur_data = NULL,
+      cur_props = NULL
+    ),
+    class = "ggvis"
+  )
 
   if (!is.null(data)) {
     data_prefix <- deparse2(substitute(data))
@@ -19,24 +27,13 @@ ggvis <- function(data, ...) {
       data <- function() static_data
     }
 
-    data <- add_data_id(data, prefix = data_prefix)
-
-    datalist[[get_data_id(data)]] <- data
+    vis <- register_data(vis, data, prefix = data_prefix)
   }
 
-  proplist <- list()
-  proplist[[props_id(props)]] <- props
+  props <- props(...)
+  vis <- register_props(vis, props)
 
-  structure(
-    list(
-      marks = list(),
-      data = datalist,
-      props = proplist,
-      cur_data = data,
-      cur_props = props
-    ),
-    class = "ggvis"
-  )
+  vis
 }
 
 #' Is an object a ggvis object?
@@ -122,9 +119,21 @@ register_props <- function(vis, props, update_current = TRUE) {
     vis$cur_props <- props
   }
 
+  vis <- register_reactives(vis, extract_reactives(props))
   vis
 }
 
+# Register a list of reactives in the ggvis object's reactives list
+# @param vis A ggvis object.
+# @param reactives A list of reactives.
+register_reactives <- function(vis, reactives = NULL) {
+  labels <- vapply(reactives, reactive_label, character(1))
+  # Only add reactives whose labels aren't already registered
+  keep_idx <- !(labels %in% names(vis$reactives))
+
+  vis$reactives[labels[keep_idx]] <- reactives[keep_idx]
+  vis
+}
 
 #' Tools to save and view static specs.
 #'

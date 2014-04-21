@@ -15,3 +15,20 @@ reactive_label <- function(x) {
   attr(x, "observable")$.label <- value
   x
 }
+
+
+# Pull reactives out of various types of objects
+extract_reactives <- function(x) UseMethod("extract_reactives")
+
+#' @export
+extract_reactives.ggvis_props <- function(x) {
+  compact(lapply(x, extract_reactives))
+}
+
+#' @export
+extract_reactives.prop <- function(x, session = NULL, ...) {
+  if (x$type == "reactive")
+    x$value
+  else
+    NULL
+}

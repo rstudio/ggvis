@@ -56,6 +56,10 @@ explain.ggvis <- function (vis) {
   for (dat in vis$data) {
     cat(indent(get_data_id(dat), 2), "\n")
   }
+  cat("Reactive inputs:\n")
+  for (reactive in vis$reactives) {
+    cat(indent(reactive_label(reactive), 2), "\n")
+  }
 }
 
 show_spec <- function(x, pieces) {
