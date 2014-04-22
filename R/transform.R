@@ -142,17 +142,3 @@ transform_type <- function(transform) {
   type <- classes[grep("^transform_", classes)][1]
   sub("^transform_", "", type)
 }
-
-#' @export
-connect.transform <- function(x, props, source = NULL, session = NULL) {
-  x <- init_inputs(x, session)
-  x$dots <- init_inputs(x$dots, session)
-
-  reactive({
-    x_now <- eval_reactives(x)
-    x_now$dots <- eval_reactives(x$dots)
-    if (is.function(source)) source <- source()
-
-    compute(x_now, props, source)
-  })
-}

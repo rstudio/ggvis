@@ -204,7 +204,8 @@ app_object <- function(x,
 
   server <- function(input, output, session) {
     r_gv <- reactive(x)
-    # Set up observers for the spec and the data
+    # Set up observers for the spec and the data, and for connecting inputs
+    # to reactives.
     observe_ggvis(r_gv, id, session, renderer)
 
     # User interface elements (in the sidebar). These must be added dynamically

@@ -51,16 +51,3 @@ is_source.datasource <- function(x) TRUE
 
 #' @export
 pipe_id.datasource <- function(x, props) paste0(x$name, "_", x$hash)
-
-# Connect methods --------------------------------------------------------------
-
-#' @export
-#' @importFrom shiny reactive
-connect.datasource <- function(x, props, source = NULL, session = NULL) {
-  reactive(x$env$data)
-}
-#' @export
-connect.datasource_reactive <- function(x, props, source = NULL, session = NULL) {
-  x$env$data
-}
-

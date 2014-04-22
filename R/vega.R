@@ -38,6 +38,9 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
     }), recursive = FALSE)
   }
 
+  # Get named list of reactivevalues val objects
+  input_vals <- extract_input_vals(x$reactives)
+
   scales <- add_default_scales(x, x$marks, data_table)
   axes <- add_default_axes(x$axes, scales)
   axes <- apply_axes_defaults(axes, scales)
@@ -58,7 +61,7 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
     handlers = lapply(handlers(x), as.vega)
   )
 
-  structure(spec, data_table = data_table)
+  structure(spec, data_table = data_table, input_vals = input_vals)
 }
 
 # Given a ggvis mark object, output a vega mark object

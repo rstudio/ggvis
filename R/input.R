@@ -134,3 +134,13 @@ eval_reactives <- function(x) {
   x[is_function] <- lapply(x[is_function], function(f) f())
   x
 }
+
+# Given a list of reactives, return a list of input val objects from the
+# reactives.
+extract_input_vals <- function(reactives) {
+  compact(lapply(reactives, extract_input_val))
+}
+
+extract_input_val <- function(x) {
+  attr(x, "val")
+}

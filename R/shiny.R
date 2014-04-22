@@ -90,18 +90,16 @@ observe_ggvis <- function(r_gv, plot_id, session, ...) {
 
   observe_spec(r_spec, plot_id, session)
   observe_data(r_spec, plot_id, session)
+  observe_inputs(r_spec, plot_id, session)
 }
 
 # Create an observer for a reactive vega spec
 observe_spec <- function(r_spec, id, session) {
-  obs <- observe({
+  observe({
     session$sendCustomMessage("ggvis_vega_spec", list(
       plotId = id,
       spec = r_spec()
     ))
-  })
-  session$onSessionEnded(function() {
-    obs$suspend()
   })
 }
 
@@ -110,9 +108,10 @@ observe_data <- function(r_spec, id, session) {
   # A list for keeping track of each data observer
   data_observers <- list()
 
-  obs_all <- observe({
+  observe({
     # If data_observers list is nonempty, that means there are old observers
-    # which need to be suspended before we create new ones.
+    # which need to be suspended before we create new ones. This can happen when
+    # the reactive containing the ggvis() call is invalidated.
     for (obs in data_observers) obs$suspend()
     data_observers <<- list()
 
@@ -137,18 +136,35 @@ observe_data <- function(r_spec, id, session) {
             value = as.vega(data_reactive(), data_name)
           ))
         })
-        session$onSessionEnded(function() {
-          obs$suspend()
-        })
 
         # Track this data observer
         data_observers[[length(data_observers) + 1]] <<- obs
       })
     }
   })
-  session$onSessionEnded(function() {
-    obs_all$suspend()
-  })
+}
+
+# Set up observers for reactive inputs
+observe_inputs <- function(r_spec, id, session) {
+  # FIXME: This presently only works with inputs that are in the initial plot
+  #   but if the reactive containing the ggvis() call is re-run, no observers
+  #   connecting new inputs will be added.
+  input_vals <- isolate(attr(r_spec(), "input_vals"))
+
+  for (name in names(input_vals)) {
+    local({
+      # Capture variable for correct scoping
+      id <- name
+
+      val <- input_vals[[id]]
+      observe({
+        value <- session$input[[id]]
+        if (!is.null(value)) {
+          val$x <- value
+        }
+      })
+    })
+  }
 }
 
 #' @rdname shiny

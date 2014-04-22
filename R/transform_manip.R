@@ -63,20 +63,6 @@ transform_mutate <- function(..., .env = parent.frame()) {
 # transform_manip methods ------------------------------------------------------
 
 #' @export
-connect.transform_manip <- function(x, props, source = NULL, session = NULL) {
-  inputs <- lapply(x$inputs, as.reactive, session = session)
-
-  reactive({
-    if (is.function(source)) source <- source()
-
-    values <- lapply(inputs, function(f) f())
-    env <- list2env(values, parent = x$env)
-
-    manip(x, source, x$expr, env)
-  })
-}
-
-#' @export
 is.dynamic.transform_manip <- function(x) {
   length(x$inputs) > 0
 }

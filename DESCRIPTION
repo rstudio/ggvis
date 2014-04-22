@@ -28,7 +28,6 @@ License: GPL-2
 Collate:
     'auto_group.R'
     'branch.R'
-    'connect.R'
     'controls.R'
     'datasource.R'
     'df_to_d3json.R'

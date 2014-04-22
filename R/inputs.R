@@ -32,6 +32,7 @@ input_slider <- function(min, max, value = min, step = NULL, round = FALSE,
 
   class(res) <- c("input", class(res))
   attr(res, "val") <- val
+  attr(res, "input_id") <- id
 
   res
 }
