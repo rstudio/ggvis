@@ -22,11 +22,18 @@ input_slider <- function(min, max, value = min, step = NULL, round = FALSE,
 
   assert_that(is.string(label), is.string(id))
 
-  args <- list(id, label, min = min, max = max, value = value, step = step,
-      round = round, format = format, locale = locale, ticks = ticks,
-      animate = animate)
+  val <- reactiveValues(x = map(value))
+  res <- reactive(map(val$x))
+  reactive_label(res) <- id
 
-  input("slider", args, value, map, id)
+  attr(res, "controls") <- shiny::sliderInput(id, label, min = min, max = max,
+    value = value, step = step, round = round, format = format, locale = locale,
+    ticks = ticks, animate = animate)
+
+  class(res) <- c("input", class(res))
+  attr(res, "val") <- val
+
+  res
 }
 
 #' Create an interactive checkbox.
