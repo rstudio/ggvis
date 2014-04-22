@@ -155,7 +155,7 @@ observe_data <- function(r_spec, id, session) {
 #' @export
 renderControls <- function(r_gv, session = NULL) {
   renderUI({
-    controls <- controls(r_gv(), session)
+    controls <- extract_controls(r_gv())
     if (empty(controls)) {
       NULL
     } else {

@@ -150,7 +150,7 @@ copy_www_resources <- function(paths, destdir) {
 
 # given a ggvis object, return the number of pixels to reserve for its controls.
 control_height <- function(x) {
-  n_controls <- length(controls(x))
+  n_controls <- length(extract_controls(x))
 
   # Request 70 vertical pixels for each pair of control items, since there are
   # two on a row.
@@ -186,7 +186,7 @@ app_object <- function(x,
     stop("renderer must be 'canvas' or 'svg'")
 
   # Find number of control elements for the plot
-  n_controls <- length(controls(x))
+  n_controls <- length(extract_controls(x))
 
   if (n_controls == 0) {
     ui <- shiny::basicPage(ggvis_output(id, shiny = TRUE, minify = minify))

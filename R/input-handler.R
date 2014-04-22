@@ -49,9 +49,6 @@ format.handler <- function(x, ...) {
 #' @rdname handler
 is.handler <- function(x) inherits(x, "handler")
 
-#' @export
-controls.handler <- function(x, session = NULL, ...) NULL
-
 # Code to extract handlers -----------------------------------------------------
 
 # Extract all handlers from a ggvis object. This shares a lot of code with

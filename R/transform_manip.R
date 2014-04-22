@@ -81,11 +81,6 @@ is.dynamic.transform_manip <- function(x) {
   length(x$inputs) > 0
 }
 
-#' @export
-controls.transform_manip <- function(x) {
-  controls.list(x$inputs)
-}
-
 # individual implementations ---------------------------------------------------
 
 manip <- function(x, data, expr, env) UseMethod("manip")

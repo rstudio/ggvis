@@ -81,11 +81,6 @@ print.reactive_proxy <- function(x, ...) {
 }
 
 #' @export
-controls.reactive_proxy <- function(x, session = NULL, ...) {
-  NULL
-}
-
-#' @export
 extract_layer.linked_brush <- function(x, ...) {
   comps <- parse_components(..., drop_named = TRUE)
 

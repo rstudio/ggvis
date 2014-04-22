@@ -51,12 +51,6 @@ input <- function(subclass, control_args = list(), value = NULL,
 is.input <- function(x) inherits(x, "input")
 
 #' @export
-controls.input <- function(x, session = NULL) {
-  control <- do.call(x$control_f, x$control_args)
-  setNames(list(control), x$id)
-}
-
-#' @export
 format.input <- function(x, ...) {
   control <- as.call(c(as.name(x$control_f), x$control_args))
   control_s <- paste0(deparse(control), collapse = "\n")
