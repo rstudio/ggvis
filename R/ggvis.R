@@ -3,7 +3,7 @@
 #' @param data A data object.
 #' @param ... Property mappings.
 #' @import assertthat
-#' @importFrom shiny reactiveValues
+#' @importFrom shiny reactiveValues reactive
 #' @export
 ggvis <- function(data, ...) {
   vis <- structure(
@@ -45,6 +45,7 @@ is.ggvis <- function(x) inherits(x, "ggvis")
 
 
 # Add a mark to a ggvis object.
+#' @importFrom shiny is.reactive
 add_mark <- function(vis, type = NULL, props = NULL, data = NULL,
                      data_name = "unnamed_data") {
 
@@ -130,11 +131,24 @@ register_reactives <- function(vis, reactives = NULL) {
   # Drop any objects from the 'reactives' list which aren't actually reactive
   reactives <- reactives[vapply(reactives, is.reactive, logical(1))]
 
-  # Only add reactives whose labels aren't already registered
-  labels <- vapply(reactives, reactive_label, character(1))
-  keep_idx <- !(labels %in% names(vis$reactives))
+  for (reactive in reactives) {
+    vis <- register_reactive(vis, reactive)
+  }
+  vis
+}
 
-  vis$reactives[labels[keep_idx]] <- reactives[keep_idx]
+register_reactive <- function(vis, reactive) {
+  # Add reactive id if needed
+  if (is.null(reactive_id(reactive))) {
+    reactive_id(reactive) <- paste0("reactive_", digest(reactive, algo = "crc32"))
+  }
+
+  label <- reactive_id(reactive)
+
+  # Don't add if already registered
+  if (label %in% names(vis$reactives)) return()
+
+  vis$reactives[[label]] <- reactive
   vis
 }
 

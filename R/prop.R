@@ -59,7 +59,7 @@ prop <- function(x, scale = NULL, offset = NULL, mult = NULL,
 
   } else if (is.reactive(x)) {
     type <- "reactive"
-    reactive_label(x) <- paste0("reactive_", digest(x, algo = "crc32"))
+    reactive_id(x) <- paste0("reactive_", digest(x, algo = "crc32"))
     scale <- scale %||% FALSE
   } else if (is.quoted(x)) {
     type <- "variable"
@@ -120,7 +120,7 @@ prop_name <- function(x) UseMethod("prop_name")
 prop_name.default <- function(x) {
   switch(x$type,
     constant = "",
-    reactive = safe_vega_var(reactive_label(x$value)),
+    reactive = safe_vega_var(reactive_id(x$value)),
     variable = safe_vega_var(x$value))
 }
 
@@ -189,7 +189,7 @@ prop_domain.default <- function(x, data) {
 as.character.prop <- function(x, ...) {
   switch(x$type,
     constant = as.character(x$value),
-    reactive = reactive_label(x$value),
+    reactive = reactive_id(x$value),
     variable = deparse2(x$value)
   )
 }

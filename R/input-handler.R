@@ -8,7 +8,6 @@
 #'   class so this must always be provided.
 #' @param listener name of the js listener (with corresponding R event broker)
 #'   that this handler is associated with
-#' @inheritParams input
 #' @examples
 #' p <- qvis(mtcars, ~mpg, ~wt, size := left_right(1, 100))
 #' p$props$size.update$dr
