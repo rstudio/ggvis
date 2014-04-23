@@ -103,6 +103,10 @@ transform_smooth <- function(vis, ..., method = guess(), formula = guess(),
                c("numeric", "datetime"))
     check_prop("transform_smooth", parent_props, data, "y.update", "numeric")
 
+    # Need to get values of these vars here because they may be modified
+    method <- value(method)
+    formula <- value(formula)
+
     if (is.guess(method)) {
       method <- guess_cache(method, "method",
         if (max_rows(data) > 1000) "gam" else "loess")
@@ -118,7 +122,7 @@ transform_smooth <- function(vis, ..., method = guess(), formula = guess(),
     }
 
     output <- compute_smooth(data, parent_props$x.update, parent_props$y.update,
-                             value(method), value(formula), value(se),
+                             method, formula, value(se),
                              value(level), value(n), value(na.rm),
                              lapply(dots, value))
 
