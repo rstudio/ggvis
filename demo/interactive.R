@@ -1,15 +1,15 @@
 library(ggvis)
 
 # Slider input in transform_smooth
-ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
-  layer_point() +
+mtcars %>% ggvis(x = ~wt, y = ~mpg) %>%
+  layer_point() %>%
   layer_smooth(method = "loess", formula = y ~ x,
-    span = input_slider(0.2, 1, step = 0.05, label = "span")
+    span = input_slider(0.2, 1, value = 0.5, step = 0.05, label = "span")
   )
 
 
 # Slider and select input in transform_density
-ggvis(mtcars, props(x = ~wt)) +
+mtcars %>% ggvis(x = ~wt) %>%
   layer_density(
     adjust = input_slider(.1, 2, value = 1, step = .1, label = "Bandwidth adjustment"),
     kernel = input_select(
@@ -20,8 +20,8 @@ ggvis(mtcars, props(x = ~wt)) +
   )
 
 # Example with value map function
-ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
-  layer_point() +
+mtcars %>% ggvis(x = ~wt, y = ~mpg) %>%
+  layer_point() %>%
   layer_smooth(
     n = input_select(
       choices = c("Two", "Six", "Eighty"),
@@ -31,27 +31,27 @@ ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
   )
 
 # Checkbox input
-ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
+mtcars %>% ggvis(x = ~wt, y = ~mpg) %>%
   layer_point(
     props(opacity := input_checkbox(label = "Semi-transparent",
-                                   map = function(val) ifelse(val, .3, 1)))) +
+                                    map = function(val) ifelse(val, .3, 1)))) %>%
   layer_smooth(
     method = input_checkbox(label = "LOESS (curve) model fit",
                             map = function(val) ifelse(val, "loess", "lm")))
 
 # Text input
-ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
-  layer_point(props(fill := input_text(label = "Point color", value = "red"))) +
+mtcars %>% ggvis(x = ~wt, y = ~mpg) %>%
+  layer_point(props(fill := input_text(label = "Point color", value = "red"))) %>%
   layer_smooth(method = input_text(label = "Model type", value = "loess"))
 
 # Numeric input
-ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
-  layer_point(props(size := input_numeric(value = 25, label = "Point size"))) +
+mtcars %>% ggvis(x = ~wt, y = ~mpg) %>%
+  layer_point(props(size := input_numeric(value = 25, label = "Point size"))) %>%
   layer_smooth(n = input_numeric(value = 5, label = "Interpolation points"))
 
 # Radio buttons
-ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
-  layer_point() +
+mtcars %>% ggvis(x = ~wt, y = ~mpg) %>%
+  layer_point() %>%
   layer_smooth(
     method = input_radiobuttons(c("LOESS" = "loess", "Linear" = "lm"),
       label = "Model type"),
@@ -61,7 +61,7 @@ ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
   )
 
 # Checkbox group
-ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
+mtcars %>% ggvis(x = ~wt, y = ~mpg) %>%
   layer_point(
     props(fill := input_checkboxgroup(
       choices = c("Red" = "r", "Green" = "g", "Blue" = "b"),
@@ -74,13 +74,13 @@ ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
 
 # Reactive properties -------------------------------------------------------
 # Constant values, raw (not on a scale)
-ggvis(mtcars, props(
+mtcars %>% ggvis(
     x = ~wt,
     y = ~mpg,
     fill := input_select(c("red", "blue"), label = "Color"),
     size := input_slider(10, 1000, 100, label = "Size"),
     opacity := input_slider(0, 1, 1, label = "Opacity")
-  )) +
+  ) %>%
   layer_point()
 
 
@@ -94,24 +94,24 @@ new_vals <- input_select(c("Set A" = "A", "Set B" = "B"),
     rep(vals, length = nrow(mtcars))
   })
 
-ggvis(mtcars, props(x = ~wt, y = ~mpg, fill = new_vals)) +
+mtcars %>% ggvis(x = ~wt, y = ~mpg, fill = new_vals) %>%
   layer_point()
 
 # Variable values, raw (not on a scale)
 mtc <- mtcars
 mtc$colour1 <- c("red", "black")
 mtc$colour2 <- c("blue", "gray")
-ggvis(mtc, props(
+mtc %>% ggvis(
     x = ~wt,
     y = ~mpg,
     fill := input_select(c("colour1", "colour2"), map = as.name)
-  )) +
+  ) %>%
   layer_point()
 
 # Variable values
-ggvis(mtcars, props(
+mtcars %>% ggvis(
     x = ~wt,
     y = ~mpg,
     fill = input_select(c("mpg", "wt"), map = as.name)
-  )) +
+  ) %>%
   layer_point()
