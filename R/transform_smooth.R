@@ -4,7 +4,28 @@
 #' \code{mark_area} to display a smooth line and its standard error.
 #'
 #' @export
-layer_smooth <- function(vis, props = NULL, formula = NULL, ..., se = FALSE) {
+#' @examples
+#' # Or do it directly with layer_smooth()
+#' mtcars %>% ggvis(~wt, ~mpg) %>% layer_smooth()
+#' mtcars %>% ggvis(~wt, ~mpg) %>% layer_point() %>%
+#'   layer_smooth(method = "lm", se = FALSE)
+#'
+#' mtcars %>% ggvis(~wt, ~mpg) %>% layer_point() %>%
+#'   layer_smooth(span = input_slider(0.2, 1))
+#'
+#' # These are equivalent to combining transform_smooth with mark_path and
+#' # mark_area
+#' mtcars %>%
+#'   ggvis(~wt, ~mpg) %>%
+#'   layer_point() %>%
+#'   transform_smooth() %>%
+#'   mark_area(props(x = ~x, y = ~y_lower__, y2 = ~y_upper__,
+#'    fillOpacity := 0.2)) %>%
+#'   mark_path(props(x = ~x, y = ~y))
+#'
+#' # You can also combine other data transformations like splitting
+#' mtcars %>% ggvis(~wt, ~mpg, stroke = ~cyl) %>% group_by(cyl) %>%
+#'   layer_smooth(method = "lm")layer_smooth <- function(vis, props = NULL, formula = NULL, ..., se = FALSE) {
 
   # If formula not supplied, guess it from the x and y props.
   if (is.null(formula)) {
@@ -82,29 +103,7 @@ layer_smooth <- function(vis, props = NULL, formula = NULL, ..., se = FALSE) {
 #'
 #' # Plot the results
 #' mtcars %>% smooth(mpg ~ wt) %>% ggvis(~pred_, ~resp_) %>% layer_line()
-#' mtcars %>% ggvis() %>% smooth(mpg ~ wt) %>% layer_line(props(~pred_, resp_))
-#'
-#' # Or do it directly with layer_smooth()
-#' mtcars %>% ggvis(~wt, ~mpg) %>% layer_smooth()
-#' mtcars %>% ggvis(~wt, ~mpg) %>% layer_point() %>%
-#'   layer_smooth(method = "lm", se = FALSE)
-#'
-#' mtcars %>% ggvis(~wt, ~mpg) %>% layer_point() %>%
-#'   layer_smooth(span = input_slider(0.2, 1))
-#'
-#' # These are equivalent to combining transform_smooth with mark_path and
-#' # mark_area
-#' mtcars %>%
-#'   ggvis(~wt, ~mpg) %>%
-#'   layer_point() %>%
-#'   transform_smooth() %>%
-#'   mark_area(props(x = ~x, y = ~y_lower__, y2 = ~y_upper__,
-#'    fillOpacity := 0.2)) %>%
-#'   mark_path(props(x = ~x, y = ~y))
-#'
-#' # You can also combine other data transformations like splitting
-#' mtcars %>% ggvis(~wt, ~mpg, stroke = ~cyl) %>% group_by(cyl) %>%
-#'   layer_smooth(method = "lm")
+#' mtcars %>% ggvis() %>% smooth(mpg ~ wt) %>% layer_line(props(~pred_, ~resp_))
 smooth <- function(x, formula, ..., method = NULL, se = TRUE,
                    level = 0.95, n = 80L) {
   UseMethod("smooth")
