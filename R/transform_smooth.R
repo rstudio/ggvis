@@ -54,87 +54,76 @@
 #'  \code{\link{layer}}.
 #' @export
 #' @examples
-#' ggvis(mtcars, props(x = ~wt, y = ~mpg), layer_point(), layer_smooth())
-#' ggvis(mtcars, props(x = ~wt, y = ~mpg), layer_point(),
-#'   layer_smooth(method = "lm", se = FALSE))
+#' mtcars %>% ggvis(~wt, ~mpg) %>% layer_point() %>% layer_smooth()
+#' mtcars %>% ggvis(~wt, ~mpg) %>% layer_point() %>%
+#'   layer_smooth(method = "lm", se = FALSE)
 #'
-#' slider <- input_slider(0.2, 1)
-#' qvis(mtcars, ~wt, ~mpg, layers = "smooth", span = slider)
+#' mtcars %>% ggvis(~wt, ~mpg) %>% layer_point() %>%
+#'   layer_smooth(span = input_slider(0.2, 1))
 #'
 #' # These are equivalent to combining transform_smooth with mark_path and
 #' # mark_area
-#' ggvis(mtcars, props(x = ~wt, y = ~mpg),
-#'   layer_point(),
-#'   layer(transform_smooth(),
-#'     mark_area(props(x = ~x, y = ~y_lower__, y2 = ~y_upper__,
-#'       fillOpacity := 0.2)),
-#'     mark_path(props(x = ~x, y = ~y))
-#'   )
-#' )
+#' mtcars %>%
+#'   ggvis(~wt, ~mpg) %>%
+#'   layer_point() %>%
+#'   transform_smooth() %>%
+#'   mark_area(props(x = ~x, y = ~y_lower__, y2 = ~y_upper__,
+#'    fillOpacity := 0.2)) %>%
+#'   mark_path(props(x = ~x, y = ~y))
 #'
 #' # You can also combine other data transformations like splitting
-#' ggvis(mtcars, props(x = ~wt, y = ~mpg, stroke = ~cyl), by_group(cyl),
-#'    layer_smooth(method = "lm"))
-#'
-#' # You can see the results of a transformation by creating your own pipeline
-#' # and sluicing data through it
-#' sluice(pipeline(mtcars, transform_smooth(n = 5L)),
-#'   props(x = ~disp, y = ~mpg))
-transform_smooth <- function(vis, ..., method = guess(), formula = guess(),
+#' mtcars %>% ggvis(~wt, ~mpg, stroke = ~cyl) %>% group_by(cyl) %>%
+#'   layer_smooth(method = "lm")
+transform_smooth <- function(vis, ..., method = NULL, formula = NULL,
                              se = TRUE, level = 0.95, n = 80L, na.rm = FALSE) {
+  assert_that(is.ggvis(vis))
 
-  if (!is.ggvis(vis)) stop("First argument to transform must be a ggvis object.")
-
-  # Drop unnamed arguments
+  # Register reactive arguments
   dots <- list(...)
   dots <- dots[named(dots)]
+  vis <- register_reactives(vis, c(dots, method, formula, se, level, n, na.rm))
 
   # Get the current data and props from the parent
   parent_data <- vis$cur_data
   parent_props <- vis$cur_props
 
-  # Register reactive arguments
-  vis <- register_reactives(vis, c(dots, method, formula, se, level, n, na.rm))
+  # Compute default values
+  if (is.null(method)) {
+    data <- shiny::isolate(parent_data())
+    method <- if (max_rows(data) > 1000) "gam" else "loess"
+    notify_guess(method)
+  }
+  if (method == "gam") try_require("mgcv")
 
+  if (is.null(formula)) {
+    formula <- if (method == "gam") y ~ s(x) else y ~ x
+    environment(formula) <- globalenv()
+    notify_guess(formula)
+  }
+
+  # Generate reactive transformation
   new_data <- reactive({
     data <- parent_data()
 
     check_prop("transform_smooth", parent_props, data, "x.update",
-               c("numeric", "datetime"))
+      c("numeric", "datetime"))
     check_prop("transform_smooth", parent_props, data, "y.update", "numeric")
 
-    # Need to get values of these vars here because they may be modified
-    method <- value(method)
-    formula <- value(formula)
-
-    if (is.guess(method)) {
-      method <- guess_cache(method, "method",
-        if (max_rows(data) > 1000) "gam" else "loess")
-    }
-    if (method == "gam") try_require("mgcv")
-
-    if (is.guess(formula)) {
-      formula <- guess_cache(formula, "formula", {
-        f <- if (method == "gam") y ~ s(x) else y ~ x
-        environment(f) <- globalenv()
-        f
-      })
-    }
-
     output <- compute_smooth(data, parent_props$x.update, parent_props$y.update,
-                             method, formula, value(se),
-                             value(level), value(n), value(na.rm),
-                             lapply(dots, value))
+      value(method), value(formula), value(se), value(level), value(n),
+      value(na.rm), lapply(dots, value))
 
     preserve_constants(data, output)
   })
 
   # Save data in the vis object, updating current data.
-  register_data(vis,
-    new_data,
-    prefix = paste0(get_data_id(parent_data), "_transform_smooth"),
-    update_current = TRUE
-  )
+  # FIXME: modify register_data so this creates informative name.
+  # Maybe use slashes to make the data hierarchy more clear?
+  register_data(vis, new_data, "_transform_smooth")
+}
+
+notify_guess <- function(x) {
+  message("Guessing ", deparse(substitute(x)), " = ", format(x))
 }
 
 #' @rdname transform_smooth
