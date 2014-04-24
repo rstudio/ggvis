@@ -151,20 +151,17 @@ observe_inputs <- function(r_spec, id, session) {
   #   connecting new inputs will be added.
   input_vals <- isolate(attr(r_spec(), "input_vals"))
 
-  for (name in names(input_vals)) {
-    local({
-      # Capture variable for correct scoping
-      id <- name
-
-      val <- input_vals[[id]]
-      observe({
-        value <- session$input[[id]]
-        if (!is.null(value)) {
-          val$x <- value
-        }
-      })
+  observe_input <- function(id) {
+    val <- input_vals[[id]]
+    observe({
+      value <- session$input[[id]]
+      if (!is.null(value)) {
+        val$x <- value
+      }
     })
   }
+
+  lapply(names(input_vals), observe_input)
 }
 
 #' @rdname shiny
