@@ -23,6 +23,11 @@ dot_names <- function(...) {
   nms
 }
 
+make_call <- function(f, ..., .args = list()) {
+  if (is.character(f)) f <- as.name(f)
+  as.call(c(f, ..., .args))
+}
+
 deparse2 <- function(x) paste(deparse(x, 500L), collapse = "")
 
 names2 <- function(x) names(x) %||% rep("", length(x))
