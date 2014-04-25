@@ -25,7 +25,8 @@
 #'
 #' # You can also combine other data transformations like splitting
 #' mtcars %>% ggvis(~wt, ~mpg, stroke = ~cyl) %>% group_by(cyl) %>%
-#'   layer_smooth(method = "lm")layer_smooth <- function(vis, props = NULL, formula = NULL, ..., se = FALSE) {
+#'   layer_smooth(method = "lm")
+layer_smooth <- function(vis, props = NULL, formula = NULL, ..., se = FALSE) {
 
   # If formula not supplied, guess it from the x and y props.
   if (is.null(formula)) {
