@@ -2,10 +2,11 @@
 #'
 #' @param data A data object.
 #' @param ... Property mappings.
+#' @param env Environment in which to evaluate properties.
 #' @import assertthat
 #' @importFrom shiny reactiveValues reactive
 #' @export
-ggvis <- function(data, ...) {
+ggvis <- function(data, ..., env = parent.frame()) {
   vis <- structure(
     list(
       marks = list(),
@@ -30,7 +31,7 @@ ggvis <- function(data, ...) {
     vis <- register_data(vis, data, prefix = data_prefix)
   }
 
-  props <- props(...)
+  props <- props(..., env = env)
   vis <- register_props(vis, props)
 
   vis

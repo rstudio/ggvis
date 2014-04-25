@@ -84,6 +84,7 @@
 #'   non-standard evaluation that \code{props} does.
 #' @param inherit If \code{TRUE}, the defaults, will inherit from properties
 #'   from the parent layer If \code{FALSE}, it will start from nothing.
+#' @param env The environment in which to evaluate variable properties.
 #' @export
 #' @examples
 #' # Set to constant values
@@ -110,10 +111,9 @@
 #' props(.props = list(x = 1, y = 2))
 #' props(.props = list(x = ~mpg, y = ~cyl))
 #' props(.props = list(quote(x := ~mpg)))
-props <- function(..., .props = NULL, inherit = TRUE) {
+props <- function(..., .props = NULL, inherit = TRUE, env = parent.frame()) {
   check_empty_args()
   args <- props_default_names(c(dots(...), .props))
-  env <- parent.frame()
 
   # If named, use regular evaluation and scale
   scaled <- lapply(args[named(args)], function(x) {
