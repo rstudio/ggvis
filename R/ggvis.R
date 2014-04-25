@@ -4,7 +4,7 @@
 #' @param ... Property mappings.
 #' @param env Environment in which to evaluate properties.
 #' @import assertthat
-#' @importFrom shiny reactiveValues reactive
+#' @importFrom shiny reactiveValues reactive isolate
 #' @export
 ggvis <- function(data, ..., env = parent.frame()) {
   vis <- structure(
