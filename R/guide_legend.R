@@ -27,17 +27,20 @@
 #' @export
 #' @examples
 #' guide_legend(size = "size")
-guide_legend <- function(size = NULL, shape = NULL, fill = NULL, stroke = NULL,
-                   orient = "right", title = NULL, format = NULL, values = NULL,
-                   properties = NULL) {
+guide_legend <- function(vis, size = NULL, shape = NULL, fill = NULL,
+                         stroke = NULL, orient = "right", title = NULL,
+                         format = NULL, values = NULL, properties = NULL) {
 
   orient <- match.arg(orient, c("right", "left"))
 
-  structure(compact(list(
+  legend <- structure(compact(list(
       size = size, shape = shape, fill = fill, stroke = stroke,
       orient = orient, title = title, format = format, values = values,
       properties = properties
   )), class = "vega_legend")
+
+  vis$legends <- c(vis$legends, list(legend))
+  vis
 }
 
 add_default_legends <- function(legends, scales) {
