@@ -8,7 +8,7 @@ mtcars %>% ggvis(x = ~wt, y = ~mpg, fill = ~factor(cyl), fillOpacity = ~hp) %>%
 # Unscaled values in the data
 mtc <- mtcars
 mtc$color <- c("red", "teal", "#cccccc", "tan")
-ggvis(mtc, props(x = ~wt, y = ~mpg, fill := ~color)) + layer_point()
+mtc %>% ggvis(x = ~wt, y = ~mpg, fill := ~color) %>% layer_point()
 
 # Unscaled constant
-ggvis(mtcars, props(x = ~wt, y = ~mpg, fill := "red")) + layer_point()
+mtcars %>% ggvis(x = ~wt, y = ~mpg, fill := "red") %>% layer_point()
