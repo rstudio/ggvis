@@ -2,7 +2,7 @@
 #'
 #' A scale object is a close mapping to a vega mark object. Vega scales
 #' are documented in \url{https://github.com/trifacta/vega/wiki/Scales}.
-#' 
+#'
 #' This function is designed to be used by authors of new types of scale.
 #' If you are a ggvis user, please use one of the more specific scale
 #' functions starting with the \code{scale_}.
@@ -88,13 +88,7 @@ named_list <- function(names, ...) {
 is.scale <- function(x) inherits(x, "scale")
 
 #' @export
-format.scale <- function(x, ...) {
-  params <- param_string(x, collapse = FALSE)
-  param_s <- paste0(" ", format(paste0(names(params), ":")), " ", format(params), "\n",
-    collapse = "")
-
-  paste0("<", class(x)[1], ">\n", param_s)
-}
+format.scale <- format.vega_axis
 
 #' @export
-print.scale <- function(x, ...) cat(format(x, ...), "\n", sep = "")
+print.scale <- print.vega_axis

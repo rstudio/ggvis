@@ -103,3 +103,9 @@ apply_legends_defaults <- function(vis) {
   }
   vis
 }
+
+#' @export
+format.vega_legend <- format.vega_axis
+
+#' @export
+print.vega_legend <- print.vega_axis

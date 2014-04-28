@@ -47,23 +47,39 @@ print.ggvis <- function(x, dynamic = NA,
 
 #' Print out the structure of a ggvis object in a friendly format
 #' @export
-explain.ggvis <- function (vis) {
+explain.ggvis <- function (x, ...) {
   cat("Marks:\n")
-  for (mark in vis$marks) {
+  for (mark in x$marks) {
     cat(indent(format(mark), 2))
   }
   cat("Data objects:\n")
-  for (dat in vis$data) {
+  for (dat in x$data) {
     cat(indent(get_data_id(dat), 2), "\n")
   }
   cat("Reactives:\n")
-  for (reactive in vis$reactives) {
+  for (reactive in x$reactives) {
     cat(indent(reactive_id(reactive), 2))
     if (is.input(reactive)) {
       cat(" (input: ", input_id(reactive), ")", sep = "")
     }
     cat("\n")
   }
+  cat("Scales:\n")
+  for (scale in x$scales) {
+    cat(indent(format(scale), 2))
+    cat("\n")
+  }
+  cat("Axes:\n")
+  for (axis in x$axes) {
+    cat(indent(format(axis), 2))
+    cat("\n")
+  }
+  cat("Legends:\n")
+  for (legend in x$legends) {
+    cat(indent(format(legend), 2))
+    cat("\n")
+  }
+
 }
 
 show_spec <- function(x, pieces) {

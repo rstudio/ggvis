@@ -140,3 +140,15 @@ apply_axes_defaults <- function(vis) {
   }
   vis
 }
+
+#' @export
+format.vega_axis <- function(x) {
+  params <- param_string(x, collapse = FALSE)
+  param_s <- paste0("  ", format(paste0(names(params), ":")), " ", format(params),
+    collapse = "\n")
+
+  paste0("<", class(x)[1], ">\n", param_s)
+}
+
+#' @export
+print.vega_axis <- function(x, ...) cat(format(x, ...), "\n", sep = "")
