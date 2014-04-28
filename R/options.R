@@ -26,65 +26,45 @@
 #' str(default_opts())
 #'
 #' @export
-opts <- function(width = NULL, height = NULL, keep_aspect = NULL,
+set_options <- function(vis, width = NULL, height = NULL, keep_aspect = NULL,
                  resizable = NULL, padding = NULL, duration = NULL,
                  renderer = NULL, hover_duration = NULL) {
 
-  structure(
-    compact(list(
-      width = width,
-      height = height,
-      keep_aspect = keep_aspect,
-      resizable = resizable,
-      padding = padding,
-      duration = duration,
-      renderer = renderer,
-      hover_duration = hover_duration
-    )),
-    class = "ggvis_opts"
-  )
+  options <- compact(list(
+    width = width,
+    height = height,
+    keep_aspect = keep_aspect,
+    resizable = resizable,
+    padding = padding,
+    duration = duration,
+    renderer = renderer,
+    hover_duration = hover_duration
+  ))
+
+  add_options(vis, options)
 }
-
-#' @export
-as.vega.ggvis_opts <- function(x) x
-
-
-#' @rdname opts
-#' @export
-#' @param x an object to test for opts-ness.
-is.ggvis_opts <- function(x) inherits(x, "ggvis_opts")
 
 #' Default options
 #'
 #' This returns an object containing the default options for ggvis.
 #'
 #' @export
-default_opts <- function() {
-  structure(
-    list(
-      width = 600,
-      height = 400,
-      keep_aspect = getOption("ggvis.keep_aspect", FALSE),
-      resizable = getOption("ggvis.resizable", TRUE),
-      padding = padding(),
-      duration = 250,
-      renderer = getOption("ggvis.renderer", "svg"),
-      hover_duration = 0
-    ),
-    class = "ggvis_opts"
+default_options <- function() {
+  list(
+    width = 600,
+    height = 400,
+    keep_aspect = getOption("ggvis.keep_aspect", FALSE),
+    resizable = getOption("ggvis.resizable", TRUE),
+    padding = padding(),
+    duration = 250,
+    renderer = getOption("ggvis.renderer", "svg"),
+    hover_duration = 0
   )
 }
 
 # Given a ggvis_opts object, merge it into default options
-add_default_opts <- function(x) merge_opts(default_opts(), x)
-
-# Merge two opts() objects
-merge_opts <- function(a, b) {
-  if (is.null(a)) return(b)
-  if (is.null(b)) return(a)
-  stopifnot(is.ggvis_opts(a), is.ggvis_opts(b))
-
-  structure(modifyList(a, b), class = "ggvis_opts")
+add_default_options <- function(vis) {
+  add_options(vis, default_options(), replace = FALSE)
 }
 
 #' Define padding.

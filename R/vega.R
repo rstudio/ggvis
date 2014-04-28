@@ -48,18 +48,18 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
   x <- apply_axes_defaults(x)
   x <- add_default_legends(x)
   x <- apply_legends_defaults(x)
-  opts <- add_default_opts(x$opts[[1]] %||% opts())
+  x <- add_default_options(x)
 
   spec <- list(
     data = datasets,
     scales = unname(x$scales),
     marks = lapply(x$marks, as.vega),
-    width = opts$width,
-    height = opts$height,
+    width = x$options$width,
+    height = x$options$height,
     legends = lapply(x$legends, as.vega),
     axes = lapply(x$axes, as.vega),
-    padding = as.vega(opts$padding),
-    ggvis_opts = as.vega(opts),
+    padding = as.vega(x$options$padding),
+    ggvis_opts = x$options,
     handlers = lapply(handlers(x), as.vega)
   )
 

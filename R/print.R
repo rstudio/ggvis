@@ -79,7 +79,12 @@ explain.ggvis <- function (x, ...) {
     cat(indent(format(legend), 2))
     cat("\n")
   }
+  cat("Options:\n")
+  params <- param_string(x$options, collapse = FALSE)
+  cat(paste0("  ", format(paste0(names(params), ":")), " ", format(params),
+      collapse = "\n"))
 
+  cat("\n")
 }
 
 show_spec <- function(x, pieces) {
@@ -303,9 +308,9 @@ html_head <- function(prefix = NULL, minify = TRUE, shiny = FALSE) {
 knit_print.ggvis <- function(x, options) {
 
   # Read knitr chunk options for output width and height
-  knitr_opts <- opts(width = options$out.width.px,
+  knitr_opts <- list(width = options$out.width.px,
                      height = options$out.height.px)
-  x$opts <- list(merge_opts(knitr_opts, x$opts[[1]]))
+  x <- add_options(x, knitr_opts, replace = FALSE)
 
   # if this is a dynamic object, check to see if we're rendering in a Shiny R
   # Markdown document and have an appropriate version of Shiny; emit a Shiny

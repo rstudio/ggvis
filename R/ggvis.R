@@ -16,6 +16,7 @@ ggvis <- function(data, ..., env = parent.frame()) {
       scales = list(),
       axes = list(),
       legends = list(),
+      options = list(),
       cur_data = NULL,
       cur_props = NULL
     ),
@@ -102,6 +103,17 @@ add_axis <- function(vis, axis) {
   if (!is.ggvis(vis)) stop("Object to add legend to is not a ggvis object.")
 
   vis$axes <- c(vis$axes, list(axis))
+  vis
+}
+
+# If replace is TRUE, new options overwrite existing options; if FALSE, they don't.
+add_options <- function(vis, options, replace = TRUE) {
+  if (!is.ggvis(vis)) stop("Object to add legend to is not a ggvis object.")
+  if (replace) {
+    vis$options <- merge_vectors(vis$options, options)
+  } else {
+    vis$options <- merge_vectors(options, vis$options)
+  }
   vis
 }
 

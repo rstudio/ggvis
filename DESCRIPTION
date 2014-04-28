@@ -58,7 +58,7 @@ Collate:
     'mark.R'
     'marks.R'
     'message.R'
-    'opts.R'
+    'options.R'
     'pipe.R'
     'pipeline.R'
     'print.R'
