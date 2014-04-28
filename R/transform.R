@@ -37,7 +37,7 @@ preserve_constants.grouped_df <- function(input, output) {
   is_constant <- constant_vars(input)
 
   # Get data frame of constants with one row per group
-  constants <- input %>% do(`[`(., 1, is_constant, drop = FALSE))
+  constants <- do(input, `[`(., 1, is_constant, drop = FALSE))
 
   group_vars <- unlist(lapply(groups(constants), as.character))
   # From input, drop any columns that also exist in output, except grouping
@@ -66,11 +66,12 @@ constant_vars.data.frame <- function(data) {
 #' @export
 constant_vars.grouped_df <- function(data) {
   # Get number of groups
-  n <- data %>% group_size() %>% length()
+  n <- length(group_size(data))
 
   # Get a list of boolean vectors
   # FIXME: When dplyr #397 is fixed, this can be simplified.
-  vecs <- data %>% do(constant_var__ = constant_vars(.)) %>% `[[`("constant_var__")
+  vecs <- do(data, constant_var__ = constant_vars(.))
+  vecs <- vecs[["constant_var__"]]
 
   # Don't create ridiculously long column names
   names(vecs) <- seq_len(length(vecs))

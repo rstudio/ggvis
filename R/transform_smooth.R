@@ -250,6 +250,4 @@ max_rows <- function(x) UseMethod("max_rows")
 #' @export
 max_rows.data.frame <- function(x) nrow(x)
 #' @export
-max_rows.grouped_df <- function(x) {
-  x %>% group_size() %>% max()
-}
+max_rows.grouped_df <- function(x) max(group_size(x))

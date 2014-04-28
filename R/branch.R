@@ -3,7 +3,7 @@
 #' @export
 branch <- function(vis, expr, env = parent.frame()) {
   fun <- defer(substitute(expr), env, quoted = TRUE)
-  vis %>% branch_f(fun)
+  branch_f(vis, fun)
 }
 
 
