@@ -4,16 +4,16 @@
 \alias{mark}
 \title{Create a new "mark" object.}
 \usage{
-mark(type, props, data = NULL)
+mark(type, props, data)
 
 is.mark(x)
 }
 \arguments{
-\item{type}{vega mark list}
+\item{type}{A string with the vega type.}
 
-\item{props}{list of properties}
+\item{props}{A list of properties, created by \code{\link{props}}.}
 
-\item{data}{optional data pipeline}
+\item{data}{A reactive data object.}
 }
 \description{
 A mark object is a close mapping to a vega mark object. Vega marks

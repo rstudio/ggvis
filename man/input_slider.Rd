@@ -39,15 +39,8 @@ according to some simple heuristics.}
   settings; \code{FALSE} not to; or a custom settings list, such as those
   created using \code{animationOptions}.}
 
-\item{label}{A descriptive label to be displayed with the widget.}
-
-\item{id}{a unique identifier for this interactive input - used to
-de-duplicate the controls when the same input is used in multiple places
-in a visualisation}
-
-\item{map}{a function with a singe argument that takes the value returned
-from the input control and converts it to an argument useful for ggvis.
-Defaults to \code{identity}, leaving the output unchanged.}
+\item{label}{A descriptive label to be displayed with the widget, or
+\code{NULL}.}
 }
 \description{
 Create an interactive slider.

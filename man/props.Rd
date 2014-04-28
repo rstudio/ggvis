@@ -5,7 +5,7 @@
 \alias{props}
 \title{Manage a list of properties.}
 \usage{
-props(..., .props = NULL, inherit = TRUE)
+props(..., .props = NULL, inherit = TRUE, env = parent.frame())
 
 ":="(prop, value)
 
@@ -26,6 +26,8 @@ non-standard evaluation that \code{props} does.}
 
 \item{inherit}{If \code{TRUE}, the defaults, will inherit from properties
 from the parent layer If \code{FALSE}, it will start from nothing.}
+
+\item{env}{The environment in which to evaluate variable properties.}
 
 \item{prop,value}{Name of property and the unscaled value that should
 be mapped to it.}

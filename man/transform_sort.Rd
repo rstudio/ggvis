@@ -3,7 +3,7 @@
 \alias{transform_sort}
 \title{Transformation: sort the data}
 \usage{
-transform_sort(..., var = "x")
+transform_sort(vis, ..., vars = "x")
 }
 \arguments{
 \item{var}{The variables to sort on. This is the variable name after mapping.

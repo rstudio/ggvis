@@ -6,13 +6,13 @@
 \alias{transform_bin}
 \title{Transformation: bin continuous variable.}
 \usage{
-transform_bin(..., binwidth = guess(), origin = NULL, right = TRUE)
+transform_bin(vis, ..., binwidth = guess(), origin = NULL, right = TRUE)
 
-layer_histogram(...)
+layer_histogram(vis, ...)
 
-layer_freqpoly(...)
+layer_freqpoly(vis, ...)
 
-layer_barchart(...)
+layer_barchart(vis, ...)
 }
 \arguments{
 \item{binwidth}{The width of the bins. The default is \code{guess()}, which

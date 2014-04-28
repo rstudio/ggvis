@@ -3,7 +3,7 @@
 \alias{layer_line}
 \title{A layer to add a line.}
 \usage{
-layer_line(..., sort = TRUE)
+layer_line(vis, ..., sort = TRUE)
 }
 \arguments{
 \item{sort}{Should the data be sorted? If \code{TRUE} (the default), a

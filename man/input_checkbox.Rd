@@ -10,14 +10,6 @@ input_checkbox(value = FALSE, label = "", id = rand_id("checkbox_"),
 \item{value}{Initial value (\code{TRUE} or \code{FALSE}).}
 
 \item{label}{Display label for the control.}
-
-\item{id}{a unique identifier for this interactive input - used to
-de-duplicate the controls when the same input is used in multiple places
-in a visualisation}
-
-\item{map}{a function with a singe argument that takes the value returned
-from the input control and converts it to an argument useful for ggvis.
-Defaults to \code{identity}, leaving the output unchanged.}
 }
 \description{
 Create an interactive checkbox.

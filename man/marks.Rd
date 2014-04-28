@@ -18,35 +18,35 @@
 \alias{marks}
 \title{Vega marks.}
 \usage{
-mark_point(props = NULL, data = NULL)
+mark_point(vis, props = NULL, data = NULL)
 
-mark_symbol(props, data)
+layer_point(vis, props = NULL, data = NULL)
 
-layer_point(props = NULL, data = NULL)
+mark_symbol(vis, props, data)
 
-mark_image(props = NULL, data = NULL)
+mark_image(vis, props = NULL, data = NULL)
 
-layer_image(props = NULL, data = NULL)
+layer_image(vis, props = NULL, data = NULL)
 
-mark_arc(props = NULL, data = NULL)
+mark_arc(vis, props = NULL, data = NULL)
 
-layer_arc(props = NULL, data = NULL)
+layer_arc(vis, props = NULL, data = NULL)
 
-mark_area(props = NULL, data = NULL)
+mark_area(vis, props = NULL, data = NULL)
 
-layer_area(props = NULL, data = NULL)
+layer_area(vis, props = NULL, data = NULL)
 
-mark_path(props = NULL, data = NULL)
+mark_path(vis, props = NULL, data = NULL)
 
-layer_path(props = NULL, data = NULL)
+layer_path(vis, props = NULL, data = NULL)
 
-mark_rect(props = NULL, data = NULL)
+mark_rect(vis, props = NULL, data = NULL)
 
-layer_rect(props = NULL, data = NULL)
+layer_rect(vis, props = NULL, data = NULL)
 
-mark_text(props = NULL, data = NULL)
+mark_text(vis, props = NULL, data = NULL)
 
-layer_text(props = NULL, data = NULL)
+layer_text(vis, props = NULL, data = NULL)
 }
 \arguments{
 \item{props}{A \code{\link{props}} object, named according to the
