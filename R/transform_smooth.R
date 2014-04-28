@@ -96,12 +96,12 @@ guess_formula <- function(vis, props, method) {
 #' @param n the number of grid points to use in the prediction
 #' @param ... arguments passed on to \code{method} function
 #' @return A data frame with columns:
-#'  \item \code{resp_}: regularly spaced grid of \code{n} locations
-#'  \item \code{pred_}: predicted value from smooth
-#'  \item \code{pred_lwr_} and \code{pred_upr_}: upper and lower bounds of
-#'    confidence interval (if \code{se = TRUE})
-#'  \item \code{pred_se_}: the standard error (width of the confidence interval)
-#'    (if \code{se = TRUE})
+#'  \item{\code{resp_}}{regularly spaced grid of \code{n} locations}
+#'  \item{\code{pred_}}{predicted value from smooth}
+#'  \item{\code{pred_lwr_} and \code{pred_upr_}}{upper and lower bounds of
+#'    confidence interval (if \code{se = TRUE})}
+#'  \item{\code{pred_se_}}{the standard error (width of the confidence interval)
+#'    (if \code{se = TRUE})}
 #' @export
 #' @examples
 #' mtcars %>% smooth(mpg ~ wt, n = 10)
