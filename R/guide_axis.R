@@ -1,4 +1,4 @@
-#' Generate a vega axis specification
+#' Add a vega axis specification to a ggvis plot
 #'
 #' Axis specifications allow you to either override the default axes,
 #' or additional axes.
@@ -49,8 +49,13 @@
 #'   \url{https://github.com/trifacta/vega/wiki/Axes}
 #' @export
 #' @examples
-#' guide_axis("x")
-#' guide_axis("x", properties = list(ticks = props(stroke = "red")))
+#' mtcars %>% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) %>%
+#'   layer_point() %>%
+#'   set_guide_axis("x", title = "Weight", orient = "top")
+#'
+#' mtcars %>% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) %>%
+#'   layer_point() %>%
+#'   set_guide_axis("x", properties = list(ticks = props(stroke = "red")))
 set_guide_axis <- function(vis, type, scale = type, orient = NULL, title = NULL,
                            title_offset = NULL, format = NULL, ticks = NULL,
                            values = NULL, subdivide = NULL, tick_padding = NULL,

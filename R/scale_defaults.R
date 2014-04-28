@@ -1,5 +1,7 @@
-#' Create a default scale for a given property and variable type.
+#' Add a default scale to a ggvis plot
 #'
+#' This creates a default scale for a given property and variable type, and adds
+#' it to a ggvis plot.
 #' Default scales depend on both the property (e.g. fill, x, opacity) and
 #' the type of variable (e.g. numeric, nominal, ordinal). For this reason
 #' \code{default_scale} implements a crude S3-like double dispatch mechanism,
@@ -50,13 +52,17 @@
 #'   multiple scales for stroke or fill, or (god forbid) a secondary y scale.
 #' @export
 #' @examples
-#' default_scale("x", "numeric")
-#' default_scale("fillOpacity", "numeric")
-#' default_scale("stroke", "nominal")
+#' p <- mtcars %>%
+#'   ggvis(x = ~wt, y = ~mpg, fill = ~factor(cyl), stroke = ~hp) %>%
+#'   layer_point()
+#'
+#' p %>% set_default_scale("x", "numeric")
+#' p %>% set_default_scale("stroke", "numeric")
+#' p %>% set_default_scale("stroke", "nominal")
 #'
 #' # You can also supply additional arguments or override the defaults
-#' default_scale("x", "numeric", trans = "log")
-#' default_scale("stroke", "nominal", range = c("red", "blue"))
+#' p %>% default_scale("x", "numeric", trans = "log")
+#' p %>% set_default_scale("stroke", "nominal", range = c("red", "blue"))
 set_default_scale <- function(vis, prop, type, ..., name = NULL) {
   scale <- default_scale(prop, type, ..., name = name)
   add_scale(vis, scale)

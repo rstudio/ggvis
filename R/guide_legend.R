@@ -1,4 +1,4 @@
-#' Generate a vega legend specification
+#' Add a vega legend specification to a ggvis plot
 #'
 #' Axis specifications allow you to either override the default legends, 
 #' or supply additional legends. 
@@ -27,7 +27,9 @@
 #'   of \code{\link{props}}.
 #' @export
 #' @examples
-#' guide_legend(size = "size")
+#' mtcars %>% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) %>%
+#'   layer_point() %>%
+#'   set_guide_legend(fill = "fill", title = "Cylinders")
 set_guide_legend <- function(vis, size = NULL, shape = NULL, fill = NULL,
                          stroke = NULL, orient = "right", title = NULL,
                          format = NULL, values = NULL, properties = NULL) {

@@ -19,11 +19,11 @@
 #'   setting global options.
 #' @seealso \code{link{default_opts}} to see the default options.
 #' @examples
-#' qvis(mtcars, ~wt, ~mpg) +
-#'   opts(width = 300, height = 200, padding = padding(10, 10, 10, 10))
+#' qvis(mtcars, ~wt, ~mpg) %>%
+#'   set_options(width = 300, height = 200, padding = padding(10, 10, 10, 10))
 #'
 #' # Display the default options
-#' str(default_opts())
+#' str(ggvis:::default_options())
 #'
 #' @export
 set_options <- function(vis, width = NULL, height = NULL, keep_aspect = NULL,
