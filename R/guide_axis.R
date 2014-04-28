@@ -1,16 +1,17 @@
 #' Generate a vega axis specification
 #'
-#' Axis specifications allow you to either override the default axes, 
-#' or additional axes. 
-#' 
+#' Axis specifications allow you to either override the default axes,
+#' or additional axes.
+#'
 #' More information about axes can be found in the "axes and legends" vignettes.
 #'
 #' @section Compared to ggplot2:
-#' 
-#' In ggplot2, axis (and legend) properties are part of the scales 
-#' specification. In vega, they are separate, which allows the specification
-#' of multiple axes, and more flexible linkage between scales and axes. 
 #'
+#' In ggplot2, axis (and legend) properties are part of the scales
+#' specification. In vega, they are separate, which allows the specification
+#' of multiple axes, and more flexible linkage between scales and axes.
+#'
+#' @param vis A ggvis object.
 #' @param type The type of axis. Either x or y.
 #' @param scale The name of the scale backing the axis component. Defaults to
 #'   the scale type - you will need to specify if you want (e.g.) a scale
@@ -44,12 +45,28 @@
 #' @param properties Optional mark property definitions for custom axis styling.
 #'   Should be a named list (ticks, majorTicks, minorTicks, labels and axis) of
 #'   \code{\link{props}}.
-#' @seealso Vega axis documentation: 
+#' @seealso Vega axis documentation:
 #'   \url{https://github.com/trifacta/vega/wiki/Axes}
 #' @export
 #' @examples
 #' guide_axis("x")
 #' guide_axis("x", properties = list(ticks = props(stroke = "red")))
+set_guide_axis <- function(vis, type, scale = type, orient = NULL, title = NULL,
+                           title_offset = NULL, format = NULL, ticks = NULL,
+                           values = NULL, subdivide = NULL, tick_padding = NULL,
+                           tick_size_major = NULL, tick_size_minor = tick_size_major,
+                           tick_size_end = tick_size_major, offset = NULL,
+                           layer = "back", grid = TRUE, properties = list()) {
+
+  axis <- guide_axis(type, scale, orient, title, title_offset, format, ticks,
+                     values, subdivide, tick_padding, tick_size_major,
+                     tick_size_minor, tick_size_end, offset,
+                     layer, grid, properties)
+
+  add_axis(vis, axis)
+}
+
+# Create an axis object.
 guide_axis <- function(type, scale = type, orient = NULL, title = NULL,
                  title_offset = NULL, format = NULL, ticks = NULL,
                  values = NULL, subdivide = NULL, tick_padding = NULL,
@@ -79,7 +96,11 @@ guide_axis <- function(type, scale = type, orient = NULL, title = NULL,
   )), class = "vega_axis")
 }
 
-add_default_axes <- function(axes, scales) {
+
+add_default_axes <- function(vis) {
+  axes <- vis$axes
+  scales <- vis$scales
+
   present <- vapply(axes, "[[", "scale", FUN.VALUE = character(1))
   missing <- setdiff(intersect(names(scales), c("x", "y")), present)
 
@@ -87,11 +108,17 @@ add_default_axes <- function(axes, scales) {
     axes[[scale]] <- guide_axis(scale)
   }
 
-  unname(axes)
+  for (axis in axes) {
+    vis <- add_axis(vis, axis)
+  }
+  vis
 }
 
 # Some axis settings require examining the scale
-apply_axes_defaults <- function(axes, scales) {
+apply_axes_defaults <- function(vis) {
+  axes <- vis$axes
+  scales <- vis$scales
+
   lapply(axes, function(axis) {
     scale <- scales[[axis$scale]]
 
@@ -107,4 +134,9 @@ apply_axes_defaults <- function(axes, scales) {
 
     axis
   })
+
+  for (axis in axes) {
+    vis <- add_axis(vis, axis)
+  }
+  vis
 }

@@ -13,6 +13,9 @@ ggvis <- function(data, ..., env = parent.frame()) {
       data = list(),
       props = list(),
       reactives = list(),
+      scales = list(),
+      axes = list(),
+      legends = list(),
       cur_data = NULL,
       cur_props = NULL
     ),
@@ -80,6 +83,13 @@ add_mark <- function(vis, type = NULL, props = NULL, data = NULL,
   vis
 }
 
+add_scale <- function(vis, scale) {
+  if (!is.ggvis(vis)) stop("Object to add legend to is not a ggvis object.")
+
+  # Use the 'name' field as the name
+  vis$scales[[scale$name]] <- scale
+  vis
+}
 
 add_legend <- function(vis, legend) {
   if (!is.ggvis(vis)) stop("Object to add legend to is not a ggvis object.")
@@ -88,6 +98,12 @@ add_legend <- function(vis, legend) {
   vis
 }
 
+add_axis <- function(vis, axis) {
+  if (!is.ggvis(vis)) stop("Object to add legend to is not a ggvis object.")
+
+  vis$axes <- c(vis$axes, list(axis))
+  vis
+}
 
 # Register a data object in the ggvis object's data list.
 # This adds a data_id attribute to the data object, with the specified prefix.

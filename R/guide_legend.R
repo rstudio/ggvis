@@ -11,6 +11,7 @@
 #' specification. In vega, they are separate, which allows the specification
 #' of multiple legends, and more flexible linkage between scales and legends.
 #'
+#' @param vis A ggvis object.
 #' @param size,shape,fill,stroke The name of the scale that determines the
 #'   legends size, shape, fill and stroke.
 #' @param orient The orientation of the legend. One of "left" or "right". This
@@ -27,38 +28,53 @@
 #' @export
 #' @examples
 #' guide_legend(size = "size")
-guide_legend <- function(vis, size = NULL, shape = NULL, fill = NULL,
+set_guide_legend <- function(vis, size = NULL, shape = NULL, fill = NULL,
+                         stroke = NULL, orient = "right", title = NULL,
+                         format = NULL, values = NULL, properties = NULL) {
+
+  legend <- guide_legend(size, shape, fill, stroke, orient, title, format,
+                         values, properties)
+
+  add_legend(vis, legend)
+}
+
+# Create a legend object.
+guide_legend <- function(size = NULL, shape = NULL, fill = NULL,
                          stroke = NULL, orient = "right", title = NULL,
                          format = NULL, values = NULL, properties = NULL) {
 
   orient <- match.arg(orient, c("right", "left"))
 
-  legend <- structure(compact(list(
+  structure(compact(list(
       size = size, shape = shape, fill = fill, stroke = stroke,
       orient = orient, title = title, format = format, values = values,
       properties = properties
   )), class = "vega_legend")
-
-  vis$legends <- c(vis$legends, list(legend))
-  vis
 }
 
-add_default_legends <- function(legends, scales) {
+add_default_legends <- function(vis) {
+  legends <- vis$legends
+  scales <- vis$scales
+
   legs <- c("size", "shape", "fill", "stroke")
   present <- unlist(lapply(legends, function(x) x[legs]))
 
   missing <- setdiff(intersect(names(scales), legs), present)
 
   for (scale in missing) {
-    args <- setNames(list(scale), scales[[scale]]$name)
-    legends[[scale]] <- do.call(guide_legend, args)
+    args <- list(vis)
+    args[[scales[[scale]]$name]] <- scale
+    vis <- do.call(set_guide_legend, args)
   }
 
-  unname(legends)
+  vis
 }
 
 # Some legend settings require examining the scale
-apply_legends_defaults <- function(legends, scales) {
+apply_legends_defaults <- function(vis) {
+  legends <- vis$legends
+  scales <- vis$scales
+
   legs <- c("size", "shape", "fill", "stroke")
 
   lapply(legends, function(legend) {
@@ -81,4 +97,9 @@ apply_legends_defaults <- function(legends, scales) {
 
     legend
   })
+
+  for (legend in legends) {
+    vis <- add_legend(vis, legend)
+  }
+  vis
 }

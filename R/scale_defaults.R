@@ -34,6 +34,7 @@
 #' You can add your own defaults (or override existing) by calling
 #' \code{\link{add_scale_defaults}}: just be aware that this is a global setting.
 #'
+#' @param vis A ggvis object.
 #' @param prop A vega property name.
 #' @param type A variable type.  One of datetime, numeric, ordinal, nominal,
 #'   logical.
@@ -56,6 +57,15 @@
 #' # You can also supply additional arguments or override the defaults
 #' default_scale("x", "numeric", trans = "log")
 #' default_scale("stroke", "nominal", range = c("red", "blue"))
+set_default_scale <- function(vis, prop, type, ..., name = NULL) {
+  scale <- default_scale(prop, type, ..., name = name)
+  add_scale(vis, scale)
+}
+#' @export
+#' @rdname set_default_scale
+set_dscale <- set_default_scale
+
+# Create a default scale object
 default_scale <- function(prop, type, ..., name = NULL) {
   check_empty_args()
   assert_that(is.string(prop), is.string(type))
@@ -75,9 +85,6 @@ default_scale <- function(prop, type, ..., name = NULL) {
   supplied <- list(name = name %||% scale, ...)
   do.call(f, merge_vectors(default$values, supplied))
 }
-#' @export
-#' @rdname default_scale
-dscale <- default_scale
 
 #' Convert the name of a property to the name of it's default scale.
 #'

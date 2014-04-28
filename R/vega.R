@@ -41,21 +41,23 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
   # Get named list of reactivevalues val objects
   input_vals <- extract_input_vals(x$reactives)
 
-  scales <- add_default_scales(x, x$marks, data_table)
-  axes <- add_default_axes(x$axes, scales)
-  axes <- apply_axes_defaults(axes, scales)
-  legends <- add_default_legends(x$legends, scales)
-  legends <- apply_legends_defaults(legends, scales)
+  # Each of these operations results in a more completely specified (and still
+  # valid) ggvis object
+  x <- add_default_scales(x, data_table)
+  x <- add_default_axes(x)
+  x <- apply_axes_defaults(x)
+  x <- add_default_legends(x)
+  x <- apply_legends_defaults(x)
   opts <- add_default_opts(x$opts[[1]] %||% opts())
 
   spec <- list(
     data = datasets,
-    scales = unname(scales),
+    scales = unname(x$scales),
     marks = lapply(x$marks, as.vega),
     width = opts$width,
     height = opts$height,
-    legends = lapply(legends, as.vega),
-    axes = lapply(axes, as.vega),
+    legends = lapply(x$legends, as.vega),
+    axes = lapply(x$axes, as.vega),
     padding = as.vega(opts$padding),
     ggvis_opts = as.vega(opts),
     handlers = lapply(handlers(x), as.vega)
