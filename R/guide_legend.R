@@ -98,9 +98,8 @@ apply_legends_defaults <- function(vis) {
     legend
   })
 
-  for (legend in legends) {
-    vis <- add_legend(vis, legend)
-  }
+  # Replace the original legends with the new ones
+  vis$legends <- legends
   vis
 }
 

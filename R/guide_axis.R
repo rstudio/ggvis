@@ -135,9 +135,8 @@ apply_axes_defaults <- function(vis) {
     axis
   })
 
-  for (axis in axes) {
-    vis <- add_axis(vis, axis)
-  }
+  # Replace the original axes with the new ones
+  vis$axes <- axes
   vis
 }
 
