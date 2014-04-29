@@ -80,11 +80,12 @@ explain.ggvis <- function (x, ...) {
     cat("\n")
   }
   cat("Options:\n")
-  params <- param_string(x$options, collapse = FALSE)
-  cat(paste0("  ", format(paste0(names(params), ":")), " ", format(params),
-      collapse = "\n"))
-
-  cat("\n")
+  if (length(x$options) > 0) {
+    params <- param_string(x$options, collapse = FALSE)
+    cat(paste0("  ", format(paste0(names(params), ":")), " ", format(params),
+        collapse = "\n"))
+    cat("\n")
+  }
 }
 
 show_spec <- function(x, pieces) {
