@@ -29,12 +29,12 @@ standard errors is not consistent acrossing modelling frameworks.}
 }
 \value{
 A data frame with columns:
- \item{\code{resp_}}: regularly spaced grid of \code{n} locations
- \item{\code{pred_}}: predicted value from smooth
- \item{\code{pred_lwr_}} and \code{pred_upr_}: upper and lower bounds of
-   confidence interval (if \code{se = TRUE})
- \item{\code{pred_se_}}: the standard error (width of the confidence interval)
-   (if \code{se = TRUE})
+ \item{\code{resp_}}{regularly spaced grid of \code{n} locations}
+ \item{\code{pred_}}{predicted value from smooth}
+ \item{\code{pred_lwr_} and \code{pred_upr_}}{upper and lower bounds of
+   confidence interval (if \code{se = TRUE})}
+ \item{\code{pred_se_}}{the standard error (width of the confidence interval)
+   (if \code{se = TRUE})}
 }
 \description{
 Fit a 1d model, then compute predictions and (optionally) standard errors
