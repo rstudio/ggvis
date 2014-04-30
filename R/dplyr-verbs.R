@@ -1,3 +1,10 @@
+#' Dplyr verbs for ggvis
+#'
+#' @name dplyr-ggvis
+#' @keywords internal
+NULL
+
+#' @rdname dplyr-ggvis
 #' @export
 summarise.ggvis <- function(.data, ...) {
   parent_data <- .data$cur_data
@@ -9,6 +16,7 @@ summarise.ggvis <- function(.data, ...) {
   )
 }
 
+#' @rdname dplyr-ggvis
 #' @export
 mutate.ggvis <- function(.data, ...) {
   parent_data <- .data$cur_data
@@ -20,6 +28,7 @@ mutate.ggvis <- function(.data, ...) {
   )
 }
 
+#' @rdname dplyr-ggvis
 #' @export
 arrange.ggvis <- function(.data, ...) {
   parent_data <- .data$cur_data
@@ -31,6 +40,7 @@ arrange.ggvis <- function(.data, ...) {
   )
 }
 
+#' @rdname dplyr-ggvis
 #' @export
 select.ggvis <- function(.data, ...) {
   parent_data <- .data$cur_data
@@ -42,6 +52,7 @@ select.ggvis <- function(.data, ...) {
   )
 }
 
+#' @rdname dplyr-ggvis
 #' @export
 filter.ggvis <- function(.data, ...) {
   parent_data <- .data$cur_data
