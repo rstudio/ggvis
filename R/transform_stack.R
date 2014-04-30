@@ -70,6 +70,8 @@ transform_stack <- function(direction = "y") {
 }
 
 
+#' Stack overlapping data.
+#'
 #' @export
 #' @param x A data object
 #' @param stack_var A string specifying the stacking variable.
