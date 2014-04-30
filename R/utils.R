@@ -109,7 +109,7 @@ compact <- function(x) {
 }
 
 param_string <- function(x, collapse = TRUE) {
-  is_reactive <- vapply(x, is.reactive, logical(1))
+  is_reactive <- vapply(x, shiny::is.reactive, logical(1))
   is_env <- vapply(x, is.environment, logical(1))
   is_string <- vapply(x, is.character, logical(1))
 

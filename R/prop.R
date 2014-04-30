@@ -57,7 +57,7 @@ prop <- function(x, scale = NULL, offset = NULL, mult = NULL,
     env <- NULL
     scale <- scale %||% FALSE
 
-  } else if (is.reactive(x)) {
+  } else if (shiny::is.reactive(x)) {
     type <- "reactive"
     reactive_id(x) <- paste0("reactive_", digest::digest(x, algo = "crc32"))
     scale <- scale %||% FALSE

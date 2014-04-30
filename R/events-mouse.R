@@ -111,11 +111,11 @@ as.reactive.tooltip <- function(x, session = NULL, ...) {
 
   h <- Hover(session, id = x$id)
 
-  obs_out <- observe({
+  obs_out <- shiny::observe({
     h$mouse_out()
     hide_tooltip(session)
   })
-  obs_over <- observe({
+  obs_over <- shiny::observe({
     hover <- h$mouse_over()
     if (is.null(hover$data)) {
       hide_tooltip(session)
@@ -151,7 +151,7 @@ click_tooltip <- function(f) {
 as.reactive.click_tooltip <- function(x, session = NULL, ...) {
   h <- Click(session, id = x$id)
 
-  obs <- observe({
+  obs <- shiny::observe({
     click <- h$mouse_click()
     if (is.null(click$data)) {
       hide_tooltip(session)

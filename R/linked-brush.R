@@ -14,7 +14,6 @@ linked_brush <- function(keys = NULL, fill = "red") {
   LinkedBrush(keys = keys, fill = fill)
 }
 
-#' @importFrom shiny reactiveValues
 LinkedBrush <- setRefClass("LinkedBrush",
   fields = c("keys", "fill", "rv", "brush", "id"),
   methods = list(
@@ -25,7 +24,7 @@ LinkedBrush <- setRefClass("LinkedBrush",
 
       id <<- rand_id()
 
-      rv <<- reactiveValues()
+      rv <<- shiny::reactiveValues()
       rv$keys <<- character()
     },
 
@@ -59,7 +58,7 @@ as.reactive.reactive_proxy <- function(x, session = NULL, ...) {
   if (is.null(session)) return(reactive(x$default))
 
   brush <- Brush(session, id = x$id)
-  brush_obs <- observe({
+  brush_obs <- shiny::observe({
     moved <- brush$brush_move()
     keys <- sapply(moved$items, "[[", "key__")
     if (length(keys) == 0) {

@@ -49,7 +49,7 @@ resize <- function(f) {
 as.reactive.resize <- function(x, session = NULL, ...) {
   h <- Resize(session, id = x$id)
 
-  obs <- observe({
+  obs <- shiny::observe({
     r <- h$resize()
     if (is.null(r)) return()
 

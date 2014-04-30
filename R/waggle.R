@@ -22,9 +22,8 @@ waggle <- function(min, max, value = (min + max) / 2, step = (max - min) / 50,
 }
 
 #' @export
-#' @importFrom shiny invalidateLater
 as.reactive.waggle <- function(x, session = NULL, ...) {
-  if (is.null(session)) return(reactive(x$control_args$value))
+  if (is.null(session)) return(shiny::reactive(x$control_args$value))
 
   value <- x$control_args$value
   step <- x$control_args$step
@@ -33,8 +32,8 @@ as.reactive.waggle <- function(x, session = NULL, ...) {
   fps <- x$control_args$fps
 
   direction <- 1
-  reactive({
-    invalidateLater(1000 / fps, NULL)
+  shiny::reactive({
+    shiny::invalidateLater(1000 / fps, NULL)
 
     next_value <- value + direction * step
     if (next_value < min || next_value > max) {

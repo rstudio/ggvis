@@ -23,7 +23,7 @@ create_input <- function(id = rand_id("input_"), default = default,
 
   # Create a reactivevalues object to store the value. When a plot is rendered,
   # an observer will be set up to push values into val$x.
-  val <- reactiveValues(x = default)
+  val <- shiny::reactiveValues(x = default)
   # A reactive to wrap the reactive value
   res <- reactive({
     map(val$x)

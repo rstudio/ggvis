@@ -33,7 +33,7 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
     })
   } else {
     datasets <- unlist(lapply(data_ids, function(id) {
-      data <- isolate(data_table[[id]]())
+      data <- shiny::isolate(data_table[[id]]())
       as.vega(data, id)
     }), recursive = FALSE)
   }
@@ -95,7 +95,7 @@ as.vega.mark <- function(mark) {
 
   # HW: It seems less than ideal to have to inspect the data here, but
   # I'm not sure how else we can figure it out.
-  split <- !is.null(dplyr::groups(isolate(mark$data())))
+  split <- !is.null(dplyr::groups(shiny::isolate(mark$data())))
 
   properties <- as.vega(props)
 

@@ -15,7 +15,7 @@ shinyServer(function(input, output, session) {
     str(input$ggvis_plot1_hover)
   })
 
-  observe({
+  shiny::observe({
     hover <- input$ggvis_plot1_hover
 
     # Initially, hover is null. Later, after mousing out of a mark, hover$data

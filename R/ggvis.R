@@ -4,7 +4,7 @@
 #' @param ... Property mappings.
 #' @param env Environment in which to evaluate properties.
 #' @import assertthat
-#' @importFrom shiny reactiveValues reactive isolate
+#' @importFrom shiny reactive
 #' @export
 ggvis <- function(data, ..., env = parent.frame()) {
   vis <- structure(
@@ -27,7 +27,7 @@ ggvis <- function(data, ..., env = parent.frame()) {
     data_prefix <- deparse2(substitute(data))
 
     # Make sure data is reactive
-    if (!is.reactive(data)) {
+    if (!shiny::is.reactive(data)) {
       static_data <- data
       data <- function() static_data
     }
@@ -50,7 +50,6 @@ is.ggvis <- function(x) inherits(x, "ggvis")
 
 
 # Add a mark to a ggvis object.
-#' @importFrom shiny is.reactive
 add_mark <- function(vis, type = NULL, props = NULL, data = NULL,
                      data_name = "unnamed_data") {
 
@@ -62,7 +61,7 @@ add_mark <- function(vis, type = NULL, props = NULL, data = NULL,
     data <- vis$cur_data
 
   } else {
-    if (!is.reactive(data)) {
+    if (!shiny::is.reactive(data)) {
       data <- as.reactive(data)
     }
     vis <- register_data(vis, data, prefix = data_name, update_current = TRUE)
@@ -158,7 +157,7 @@ register_props <- function(vis, props, update_current = TRUE) {
 # @param reactives A list of reactives.
 register_reactives <- function(vis, reactives = NULL) {
   # Drop any objects from the 'reactives' list which aren't actually reactive
-  reactives <- reactives[vapply(reactives, is.reactive, logical(1))]
+  reactives <- reactives[vapply(reactives, shiny::is.reactive, logical(1))]
 
   for (reactive in reactives) {
     vis <- register_reactive(vis, reactive)
@@ -193,14 +192,13 @@ register_reactive <- function(vis, reactive) {
 save_spec <- function(path, x = last_vis(), ...) {
   assert_that(is.ggvis(x), is.string(path))
 
-  json <- toJSON(as.vega(x, ...), pretty = TRUE)
+  json <- RJSONIO::toJSON(as.vega(x, ...), pretty = TRUE)
   writeLines(json, path)
 }
 
-#' @importFrom RJSONIO fromJSON
 #' @rdname save_spec
 view_spec <- function(path, ...) {
   contents <- paste0(readLines(path), collapse = "\n")
-  spec <- fromJSON(contents)
+  spec <- RJSONIO::fromJSON(contents)
   view_static(spec)
 }

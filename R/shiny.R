@@ -40,7 +40,6 @@
 NULL
 
 #' @rdname shiny
-#' @importFrom shiny addResourcePath singleton tagList div
 #' @param plot_id unique identifier to use for the div containing the ggvis plot.
 #' @param shiny Should this include headers for Shiny? For dynamic and
 #'   interactive plots, this should be TRUE; otherwise FALSE.
@@ -49,11 +48,11 @@ NULL
 #' @export
 ggvis_output <- function(plot_id, shiny = TRUE, minify = TRUE) {
   container <-
-    div(id = paste0(plot_id, "-container"), class = "ggvis-output-container",
+    shiny::div(id = paste0(plot_id, "-container"), class = "ggvis-output-container",
       # Div containing the plot
-      div(id = plot_id, class = "ggvis-output"),
+      shiny::div(id = plot_id, class = "ggvis-output"),
 
-      div(class = "plot-gear-icon",
+      shiny::div(class = "plot-gear-icon",
         ggvisControlGroup(plot_id)
       )
     )
@@ -61,11 +60,11 @@ ggvis_output <- function(plot_id, shiny = TRUE, minify = TRUE) {
 
   if (shiny) {
     suppressMessages(
-      addResourcePath("ggvis", system.file("www", package = "ggvis"))
+      shiny::addResourcePath("ggvis", system.file("www", package = "ggvis"))
     )
 
-    tagList(
-      singleton(tags$head(
+    shiny::tagList(
+      shiny::singleton(tags$head(
         html_head(prefix = "ggvis", minify = minify, shiny = TRUE)
       )),
       container
@@ -82,11 +81,11 @@ ggvis_output <- function(plot_id, shiny = TRUE, minify = TRUE) {
 #' @param ... Other arguments passed to \code{as.vega}.
 #' @export
 observe_ggvis <- function(r_gv, plot_id, session, ...) {
-  if (!is.reactive(r_gv)) {
+  if (!shiny::is.reactive(r_gv)) {
     stop("observe_ggvis requires a reactive expression that returns a ggvis object",
       call. = FALSE)
   }
-  r_spec <- reactive(as.vega(r_gv(), session = session, dynamic = TRUE, ...))
+  r_spec <- shiny::reactive(as.vega(r_gv(), session = session, dynamic = TRUE, ...))
 
   observe_spec(r_spec, plot_id, session)
   observe_data(r_spec, plot_id, session)
@@ -95,7 +94,7 @@ observe_ggvis <- function(r_gv, plot_id, session, ...) {
 
 # Create an observer for a reactive vega spec
 observe_spec <- function(r_spec, id, session) {
-  observe({
+  shiny::observe({
     session$sendCustomMessage("ggvis_vega_spec", list(
       plotId = id,
       spec = r_spec()
@@ -108,7 +107,7 @@ observe_data <- function(r_spec, id, session) {
   # A list for keeping track of each data observer
   data_observers <- list()
 
-  observe({
+  shiny::observe({
     # If data_observers list is nonempty, that means there are old observers
     # which need to be suspended before we create new ones. This can happen when
     # the reactive containing the ggvis() call is invalidated.
@@ -127,7 +126,7 @@ observe_data <- function(r_spec, id, session) {
         # between the different iterations
         data_name <- name
 
-        obs <- observe({
+        obs <- shiny::observe({
           data_reactive <- get(data_name, data_table)
 
           session$sendCustomMessage("ggvis_data", list(
@@ -149,11 +148,11 @@ observe_inputs <- function(r_spec, id, session) {
   # FIXME: This presently only works with inputs that are in the initial plot
   #   but if the reactive containing the ggvis() call is re-run, no observers
   #   connecting new inputs will be added.
-  input_vals <- isolate(attr(r_spec(), "input_vals"))
+  input_vals <- shiny::isolate(attr(r_spec(), "input_vals"))
 
   observe_input <- function(id) {
     val <- input_vals[[id]]
-    observe({
+    shiny::observe({
       value <- session$input[[id]]
       if (!is.null(value)) {
         val$x <- value
@@ -167,14 +166,14 @@ observe_inputs <- function(r_spec, id, session) {
 #' @rdname shiny
 #' @export
 renderControls <- function(r_gv, session = NULL) {
-  renderUI({
+  shiny::renderUI({
     controls <- extract_controls(r_gv())
     if (empty(controls)) {
       NULL
     } else {
       # Wrap each control in a div, for layout purposes
-      tagList(
-        lapply(controls, function(x) div(x, class = "ggvis-input-container"))
+      shiny::tagList(
+        lapply(controls, function(x) shiny::div(x, class = "ggvis-input-container"))
       )
     }
   })
@@ -191,21 +190,20 @@ renderControls <- function(r_gv, session = NULL) {
 #' @param mainPanel The \code{\link{mainTopPanel}} containing the main content.
 #' @param shiny_headers Should Shiny headers be embedded in the page? This
 #'   should be TRUE for interactive/dynamic pages, FALSE for static pages.
-#' @importFrom shiny bootstrapPage
 #' @export
 #' @examples
 #' sidebarBottomPage
 sidebarBottomPage <- function(sidebarPanel, mainPanel, shiny_headers = TRUE) {
-  content <- div(
+  content <- shiny::div(
     class = "container-fluid",
-    div(class = "row-fluid",
+    shiny::div(class = "row-fluid",
       mainPanel,
       sidebarPanel
     )
   )
 
   if (shiny_headers) {
-    bootstrapPage(content)
+    shiny::bootstrapPage(content)
   } else {
     content
   }
@@ -218,7 +216,7 @@ sidebarBottomPage <- function(sidebarPanel, mainPanel, shiny_headers = TRUE) {
 #' @param ... UI elements to include in the sidebar.
 #' @export
 sidebarBottomPanel <- function(...) {
-  div(class = "span4 sidebar-bottom",
+  shiny::div(class = "span4 sidebar-bottom",
     tags$form(class = "well well-small",
       ...
     )
@@ -233,7 +231,7 @@ sidebarBottomPanel <- function(...) {
 #' @param ... UI elements to include in the main panel.
 #' @export
 mainTopPanel <- function(...) {
-  div(class = "span8 main-top",
+  shiny::div(class = "span8 main-top",
     ...
   )
 }
@@ -292,10 +290,10 @@ ggvisControlGroup <- function(plot_id) {
 #' @export
 ggvisControlOutput <- function(outputId, plotId = NULL) {
   if (is.null(plotId)) {
-    div(id = outputId, class = "ggvis-control-output")
+    shiny::div(id = outputId, class = "ggvis-control-output")
 
   } else {
-    div(
+    shiny::div(
       id = outputId,
       class = "ggvis-control-output",
       `data-plot-id` = paste(plotId, collapse = " ")

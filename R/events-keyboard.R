@@ -53,7 +53,7 @@ left_right <- function(min, max, value = (min + max) / 2,
 
 #' @export
 as.reactive.left_right <- function(x, session = NULL, ...) {
-  if (is.null(session)) return(reactive(x$control_args$value))
+  if (is.null(session)) return(shiny::reactive(x$control_args$value))
 
   k <- Keyboard(session, id = x$id)
   modify_value_with_keys(k, x$control_args$value,
@@ -74,7 +74,7 @@ up_down <- function(min, max, value = (min + max) / 2,
 
 #' @export
 as.reactive.up_down <- function(x, session = NULL, ...) {
-  if (is.null(session)) return(reactive(x$control_args$value))
+  if (is.null(session)) return(shiny::reactive(x$control_args$value))
 
   k <- Keyboard(session, id = x$id)
   modify_value_with_keys(k, x$control_args$value,
@@ -88,7 +88,7 @@ modify_value_with_keys <- function(k, val, ..., .key_funs = list()) {
   stopifnot(is(k, "Keyboard"))
 
   k$bindings <- names(key_funs)
-  reactive({
+  shiny::reactive({
     press <- k$key_press()
     if (is.null(press)) return(val)
     if (!(press$value %in% names(key_funs))) return(val)

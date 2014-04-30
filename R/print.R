@@ -98,7 +98,7 @@ show_spec <- function(x, pieces) {
     out <- out[pieces]
   }
 
-  json <- toJSON(out, pretty = TRUE)
+  json <- RJSONIO::toJSON(out, pretty = TRUE)
   cat(gsub("\t", " ", json), "\n", sep = "")
 
   invisible()
@@ -106,8 +106,6 @@ show_spec <- function(x, pieces) {
 
 #' @rdname print.ggvis
 #' @export
-#' @importFrom RJSONIO toJSON
-#' @importFrom whisker whisker.render
 view_static <- function(x,
                         renderer = getOption("ggvis.renderer", default = "svg"),
                         launch = interactive(),
@@ -121,7 +119,7 @@ view_static <- function(x,
   dir.create(temp_dir)
 
   spec <- as.vega(x, dynamic = FALSE)
-  vega_json <- toJSON(spec, pretty = TRUE)
+  vega_json <- RJSONIO::toJSON(spec, pretty = TRUE)
 
   template <- paste(readLines(system.file('index.html', package='ggvis')),
     collapse='\n')
@@ -137,7 +135,7 @@ view_static <- function(x,
 
   copy_www_resources(www_paths, temp_dir)
 
-  body <- tagList(
+  body <- shiny::tagList(
     ggvis_output(id, shiny = FALSE),
     tags$script(type = "text/javascript",
       paste0('
@@ -150,7 +148,7 @@ view_static <- function(x,
   body <- format(body)
 
   html_file <- file.path(temp_dir, "plot.html")
-  writeLines(whisker.render(template, list(head = head, body = body)),
+  writeLines(whisker::whisker.render(template, list(head = head, body = body)),
     con = html_file)
 
   if (launch) view_plot(html_file, 350)
@@ -188,9 +186,6 @@ control_height <- function(x) {
 
 #' @rdname print.ggvis
 #' @export
-#' @importFrom RJSONIO toJSON
-#' @importFrom whisker whisker.render
-#' @importFrom shiny basicPage uiOutput mainPanel tags observe runApp stopApp renderUI
 view_dynamic <- function(x,
     renderer = getOption("ggvis.renderer", default = "svg"),
     id = rand_id("plot_"), minify = TRUE,
@@ -259,9 +254,10 @@ view_plot <- function(url, height) {
 # @param prefix A prefix to add to the path (like "ggvis")
 # @param minify Use minified version of JS and CSS files.
 # @param shiny Include shiny-related ggvis files?
+#' @importFrom shiny tags
 html_head <- function(prefix = NULL, minify = TRUE, shiny = FALSE) {
   if(minify) {
-    tags <- tagList(
+    tags <- shiny::tagList(
       # Shiny has its own copy of jQuery; duplicates can cause problems
       if (!shiny) tags$script(src = "lib/jquery/jquery.min.js"),
       tags$script(src = "lib/jquery-ui/js/jquery-ui-1.10.4.custom.min.js"),
@@ -276,7 +272,7 @@ html_head <- function(prefix = NULL, minify = TRUE, shiny = FALSE) {
       tags$link(rel = "stylesheet", type = "text/css", href = "ggvis/css/ggvis.css")
     )
   } else {
-    tags <- tagList(
+    tags <- shiny::tagList(
       if (!shiny) tags$script(src = "lib/jquery/jquery.js"),
       tags$script(src = "lib/jquery-ui/js/jquery-ui-1.10.4.custom.js"),
       tags$script(charset = "utf-8", src = "lib/d3/d3.js"),
@@ -337,11 +333,11 @@ knit_print.ggvis <- function(x, options) {
 
   # Plot as JSON
   spec <- as.vega(x, dynamic = FALSE)
-  vega_json <- toJSON(spec, pretty = TRUE)
+  vega_json <- RJSONIO::toJSON(spec, pretty = TRUE)
 
   # Plot as HTML
   id = rand_id("plot_")
-  html <- tagList(
+  html <- shiny::tagList(
     ggvis_output(id, shiny = FALSE),
     tags$script(type = "text/javascript",
                 paste0('var ', id, '_spec = ', vega_json, ';

@@ -33,7 +33,6 @@ mark <- function(type, props, data) {
 #' @rdname mark
 is.mark <- function(x) inherits(x, "mark")
 
-#' @importFrom utils adist
 check_mark_props <- function(mark, props) {
   props <- trim_propset(props)
   valid <- valid_mark_properties(mark)
@@ -41,7 +40,7 @@ check_mark_props <- function(mark, props) {
   invalid <- setdiff(props, valid)
   if (length(invalid) == 0) return(invisible(TRUE))
 
-  ldist <- adist(invalid, valid, ignore.case = TRUE, partial = FALSE,
+  ldist <- utils::adist(invalid, valid, ignore.case = TRUE, partial = FALSE,
     costs = c(ins = 0.5, sub = 1, del = 2))
 
   closest <- apply(ldist, 1, min)

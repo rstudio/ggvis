@@ -1,6 +1,5 @@
 #' Create an interactive slider.
 #'
-#' @importFrom shiny sliderInput
 #' @inheritParams shiny::sliderInput
 #' @param id A unique identifier for this input. Usually generated
 #'   automatically.
@@ -35,7 +34,6 @@ input_slider <- function(min, max, value = min, step = NULL, round = FALSE,
 
 #' Create an interactive checkbox.
 #'
-#' @importFrom shiny checkboxInput
 #' @inheritParams shiny::checkboxInput
 #' @inheritParams input_slider
 #' @family interactive input
@@ -65,7 +63,6 @@ input_checkbox <- function(value = FALSE, label = "",
 #' \code{input_numeric} only allows numbers and comes with a spin box control.
 #' \code{input_text} allows any type of input.
 #'
-#' @importFrom shiny textInput
 #' @inheritParams shiny::textInput
 #' @inheritParams input_slider
 #' @family interactive input
@@ -86,7 +83,6 @@ input_text <- function(value, label = "", id = rand_id("text_"),
 
 #' @rdname input_text
 #' @export
-#' @importFrom shiny numericInput
 input_numeric <- function(value, label = "", id = rand_id("numeric_"),
                           map = identity) {
 
@@ -104,7 +100,6 @@ input_numeric <- function(value, label = "", id = rand_id("numeric_"),
 #'    otherwise the user can select multiple by using modifier keys
 #' }
 #'
-#' @importFrom shiny selectInput
 #' @inheritParams shiny::selectInput
 #' @inheritParams input_slider
 #' @family interactive input
@@ -152,7 +147,6 @@ input_select <- function(choices, selected = NULL, multiple = FALSE,
 
 #' @rdname input_select
 #' @export
-#' @importFrom shiny radioButtons
 input_radiobuttons <- function(choices, selected = NULL, label = "",
                                id = rand_id("radio_"), map = identity) {
 
@@ -172,7 +166,6 @@ input_radiobuttons <- function(choices, selected = NULL, label = "",
 
 #' @rdname input_select
 #' @export
-#' @importFrom shiny checkboxGroupInput
 input_checkboxgroup <- function(choices, selected = NULL, label = "",
                                 id = rand_id("radio_"), map = identity) {
 

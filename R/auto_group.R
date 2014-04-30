@@ -26,7 +26,7 @@ auto_group <- function(vis) {
   parent_data <- vis$cur_data
   parent_props <- vis$cur_props
 
-  new_data <- reactive({
+  new_data <- shiny::reactive({
     # Get quoted expressions from props which are both variable and countable
     data <- parent_data()
     countable <- vapply(parent_props,

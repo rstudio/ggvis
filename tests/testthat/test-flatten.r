@@ -27,7 +27,7 @@ test_that("data flows through pipeline", {
   expect_equal(length(nodes), 1)
   pipeline <- nodes[[1]]$pipeline
 
-  expect_equal(isolate(pipeline()), df)
+  expect_equal(shiny::isolate(pipeline()), df)
 })
 
 test_that("no data is an error", {
@@ -52,7 +52,7 @@ test_that("reactive source data only run once", {
 
   expect_equal(length(nodes), 2)
 
-  expect_equal(isolate(nodes[[1]]$pipeline()), df)
-  expect_equal(isolate(nodes[[2]]$pipeline()), df)
+  expect_equal(shiny::isolate(nodes[[1]]$pipeline()), df)
+  expect_equal(shiny::isolate(nodes[[2]]$pipeline()), df)
   expect_equal(runs, 1)
 })

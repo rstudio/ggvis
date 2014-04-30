@@ -36,7 +36,7 @@ brush_tooltip <- function(f) {
 as.reactive.brush_tooltip <- function(x, session = NULL, ...) {
   h <- Brush(session, id = x$id)
 
-  obs <- observe({
+  obs <- shiny::observe({
     brush <- h$brush_move()
     if (is.null(brush$items) || length(brush$items) == 0) {
       hide_tooltip(session)
@@ -56,7 +56,7 @@ as.reactive.brush_tooltip <- function(x, session = NULL, ...) {
     obs$suspend()
   })
 
-  reactive({ NULL })
+  shiny::reactive({ NULL })
 }
 
 #' @export
