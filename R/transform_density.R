@@ -25,12 +25,12 @@
 #' PlantGrowth %>% ggvis(~weight, stroke = ~group) %>% group_by(group) %>%
 #'   layer_densities()
 layer_densities <- function(vis, ..., kernel = "gaussian", adjust = 1,
-                                    density_args = list(), area = TRUE) {
+                            density_args = list(), area = TRUE) {
 
   x_var <- as.character(vis$cur_props$x.update$value)
   props <- stroke_fill_defaults(props(...),
     stroke = props(~pred_, ~resp_),
-    fill =   props(~pred_, ~resp_, y2 = 0, fillOpacity := 0.2)
+    fill   = props(~pred_, ~resp_, y2 = 0, fillOpacity := 0.2)
   )
 
   pipeline <- function(x) {
