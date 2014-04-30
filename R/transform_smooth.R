@@ -6,6 +6,20 @@
 #' the model is a smooth loess curve whose smoothness is controlled by the
 #' \code{span} parameter.
 #'
+#' @param vis Visualisation to modify
+#' @param ... Visual properties. Stroke properties control only affect line,
+#'   fill properties only affect standard error band.
+#' @param model Name of the model as a string, e.g. \code{"loess"}, \code{"lm"},
+#'   or \code{"MASS::rlm"}. Must be the name of a function that produces a
+#'   standard model object with a \code{\link{predict}} method. For
+#'   \code{layer_smooth} this is always "loess".
+#' @param formula Model formula. If not supplied, guessed from the visual
+#'   properties, constructing \code{y ~ x}.
+#' @param model_args A list of additional arguments passed on to the
+#'   \code{model} function.
+#' @param se Also display a point-wise standard error band? Defaults to
+#'   \code{FALSE} because interpretation is non-trivial.
+#' @param span For \code{layer_smooth}, the span of the loess smoother.
 #' @export
 #' @examples
 #' mtcars %>% ggvis(~wt, ~mpg) %>% layer_smooths()
@@ -20,7 +34,7 @@
 #'   layer_smooths(span = 0.2)
 #' mtcars %>% ggvis(~wt, ~mpg) %>% layer_points() %>%
 #'   layer_smooths(span = 1)
-#' # Or map to a control and modify interactively
+#' # Map to an input to modify interactively
 #' mtcars %>% ggvis(~wt, ~mpg) %>% layer_point() %>%
 #'   layer_smooths(span = input_slider(0.2, 1))
 #'
