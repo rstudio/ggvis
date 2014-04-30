@@ -3,7 +3,7 @@
 \alias{qvis}
 \title{Quick vis: a succint way of generating simple ggvis plot specifications.}
 \usage{
-qvis(data, ..., layers = "guess")
+qvis(data, ...)
 }
 \arguments{
 \item{data}{The data set where}
@@ -17,13 +17,6 @@ qvis(data, ..., layers = "guess")
 
   The first two unnamed components are taken to be \code{x} and \code{y}.
   Any additional unnamed components will raise an error.}
-
-\item{layers}{A character vector listing the names of layers to
-  display on the plot. You can use either the full name of the layer
-  (e.g. "layer_smooth"), or just the final part (e.g. "smooth").
-
-  If \code{layers} is not supplied, it defaults to "guess". See
-  \code{\link{layer_guess}} for details.}
 }
 \description{
 \code{qvis} is a succinct way of creating simple plots. It achieves this
@@ -47,12 +40,12 @@ mtcars \%>\% qvis(~mpg, ~wt)
 mtcars \%>\% qvis(~mpg, ~wt, fill = ~cyl)
 mtcars \%>\% qvis(~mpg, ~wt, fill := "red")
 
+# Scatterplot + smoother
+mtcars \%>\% qvis(~mpg, ~wt) \%>\% layer_smooths()
+
 # Basic histogram
 mtcars \%>\% qvis(~mpg)
 mtcars \%>\% qvis(~mpg, binwidth = 2)
-
-# Scatterplot + smoother
-mtcars \%>\% qvis(~mpg, ~wt, layers = c("points", "smooths"))
 
 # It's not currently possible to create a plot of variables
 # stored only in the local environment

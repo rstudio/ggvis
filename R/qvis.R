@@ -24,12 +24,6 @@
 #'
 #'   The first two unnamed components are taken to be \code{x} and \code{y}.
 #'   Any additional unnamed components will raise an error.
-#' @param layers A character vector listing the names of layers to
-#'   display on the plot. You can use either the full name of the layer
-#'   (e.g. "layer_smooth"), or just the final part (e.g. "smooth").
-#'
-#'   If \code{layers} is not supplied, it defaults to "guess". See
-#'   \code{\link{layer_guess}} for details.
 #' @export
 #' @examples
 #' # A basic scatterplot
@@ -37,63 +31,28 @@
 #' mtcars %>% qvis(~mpg, ~wt, fill = ~cyl)
 #' mtcars %>% qvis(~mpg, ~wt, fill := "red")
 #'
+#' # Scatterplot + smoother
+#' mtcars %>% qvis(~mpg, ~wt) %>% layer_smooths()
+#'
 #' # Basic histogram
 #' mtcars %>% qvis(~mpg)
 #' mtcars %>% qvis(~mpg, binwidth = 2)
-#'
-#' # Scatterplot + smoother
-#' mtcars %>% qvis(~mpg, ~wt, layers = c("points", "smooths"))
 #'
 #' # It's not currently possible to create a plot of variables
 #' # stored only in the local environment
 #' x <- runif(10)
 #' y <- runif(10)
 #' \dontrun{environment() %>% qvis(~x, ~y)}
-qvis <- function(data, ..., layers = "guess") {
+qvis <- function(data, ...) {
   args <- dots(...)
-  props_args <- props_default_names(args[is_props(args)])
+  props_args <- args[is_props(args)]
   layer_args <- args[!is_props(args)]
 
   props <- props(.props = props_args)
+
   vis <- register_props(ggvis(data), props)
-
-  for (layer in layers) {
-    vis <- add_layer(vis, layer, layer_args)
-  }
-
+  vis <- do_call("layer_guess", quote(vis), .args = layer_args)
   vis
-}
-
-# TODO: make sure this uses the right scoping so that it will find layers
-# defined in other packages and in the global environment.
-add_layer <- function(vis, name, args = list()) {
-  fname <- paste0("layer_", name)
-
-  if (!exists(fname, mode = "function")) {
-    stop("Couldn't find layer called ", fname, call. = FALSE)
-  }
-
-  layer_f <- get(fname, mode = "function")
-  do_call(layer_f, quote(vis), .args = args)
-}
-
-props_default_names <- function(args) {
-  new_names <- names2(args)
-
-  missing <- new_names == "" & !vapply(args, uses_colon_equals, logical(1))
-  n_missing <- sum(missing)
-
-  if (n_missing == 0) return(args)
-
-  if (n_missing == 1) {
-    new_names[missing] <- "x"
-  } else if (n_missing == 2) {
-    new_names[missing] <- c("x", "y")
-  } else {
-    stop("Only at most two properties can be unnamed", call. = FALSE)
-  }
-
-  setNames(args, new_names)
 }
 
 # A quoted call is a prop if it's unnamed, or named and in the list of known

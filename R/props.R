@@ -222,3 +222,22 @@ is.formula <- function(x) inherits(x, "formula")
 props_id <- function(x) {
   digest::digest(x, algo = "crc32")
 }
+
+props_default_names <- function(args) {
+  new_names <- names2(args)
+
+  missing <- new_names == "" & !vapply(args, uses_colon_equals, logical(1))
+  n_missing <- sum(missing)
+
+  if (n_missing == 0) return(args)
+
+  if (n_missing == 1) {
+    new_names[missing] <- "x"
+  } else if (n_missing == 2) {
+    new_names[missing] <- c("x", "y")
+  } else {
+    stop("Only at most two properties can be unnamed", call. = FALSE)
+  }
+
+  setNames(args, new_names)
+}
