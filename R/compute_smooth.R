@@ -28,17 +28,17 @@
 #'    (if \code{se = TRUE})}
 #' @export
 #' @examples
-#' mtcars %>% smooth(mpg ~ wt, n = 10)
-#' mtcars %>% smooth(mpg ~ wt, n = 10, se = TRUE)
-#' mtcars %>% group_by(cyl) %>% smooth(mpg ~ wt, n = 10)
+#' mtcars %>% compute_smooth(mpg ~ wt, n = 10)
+#' mtcars %>% compute_smooth(mpg ~ wt, n = 10, se = TRUE)
+#' mtcars %>% group_by(cyl) %>% compute_smooth(mpg ~ wt, n = 10)
 #'
 #' # Override method to suppress message or change approach
-#' mtcars %>% smooth(mpg ~ wt, n = 10, method = "loess")
-#' mtcars %>% smooth(mpg ~ wt, n = 10, method = "lm")
+#' mtcars %>% compute_smooth(mpg ~ wt, n = 10, method = "loess")
+#' mtcars %>% compute_smooth(mpg ~ wt, n = 10, method = "lm")
 #'
 #' # Plot the results
-#' mtcars %>% smooth(mpg ~ wt) %>% ggvis(~pred_, ~resp_) %>% layer_line()
-#' mtcars %>% ggvis() %>% smooth(mpg ~ wt) %>% layer_line(props(~pred_, ~resp_))
+#' mtcars %>% compute_smooth(mpg ~ wt) %>% ggvis(~pred_, ~resp_) %>% layer_paths()
+#' mtcars %>% ggvis() %>% compute_smooth(mpg ~ wt) %>% layer_paths(~pred_, ~resp_)
 compute_smooth <- function(x, formula, ..., method = NULL, se = FALSE,
                            level = 0.95, n = 80L) {
   UseMethod("compute_smooth")
@@ -84,7 +84,7 @@ compute_smooth.ggvis <- function(x, formula, ..., method = NULL, se = FALSE,
 
   new_data <- reactive({
     data <- x$cur_data()
-    output <- do_call("smooth", quote(data), .args = values(args))
+    output <- do_call("compute_smooth", quote(data), .args = values(args))
     preserve_constants(data, output)
   })
 
