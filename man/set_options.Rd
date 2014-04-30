@@ -39,7 +39,7 @@ qvis(mtcars, ~wt, ~mpg) \%>\%
   set_options(width = 300, height = 200, padding = padding(10, 10, 10, 10))
 
 # Display the default options
-str(ggvis:::default_options())
+str(default_options())
 }
 \seealso{
 \code{link{getOption}} and \code{link{options}}, for getting and

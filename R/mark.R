@@ -1,4 +1,4 @@
-  #' Create a new "mark" object.
+#' Create a new "mark" object.
 #'
 #' A mark object is a close mapping to a vega mark object. Vega marks
 #' are documented in \url{https://github.com/trifacta/vega/wiki/Marks}.

@@ -24,7 +24,7 @@
 #'   set_options(width = 300, height = 200, padding = padding(10, 10, 10, 10))
 #'
 #' # Display the default options
-#' str(ggvis:::default_options())
+#' str(default_options())
 #'
 #' @export
 set_options <- function(vis, width = NULL, height = NULL, keep_aspect = NULL,
@@ -50,6 +50,7 @@ set_options <- function(vis, width = NULL, height = NULL, keep_aspect = NULL,
 #' This returns an object containing the default options for ggvis.
 #'
 #' @export
+#' @keywords internal
 default_options <- function() {
   list(
     width = 600,

@@ -8,4 +8,5 @@ default_options()
 \description{
 This returns an object containing the default options for ggvis.
 }
+\keyword{internal}
 
