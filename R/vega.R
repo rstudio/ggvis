@@ -66,6 +66,17 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
   structure(spec, data_table = data_table, input_vals = input_vals)
 }
 
+
+# Given a list of layers, return a character vector of all data ID's used.
+extract_data_ids <- function(layers) {
+  data_ids <- vapply(layers,
+    function(layer) get_data_id(layer$data),
+    character(1)
+  )
+  unique(data_ids)
+}
+
+
 # Given a ggvis mark object, output a vega mark object
 #' @export
 as.vega.mark <- function(mark) {
