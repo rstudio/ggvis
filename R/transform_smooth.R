@@ -6,11 +6,11 @@
 #'
 #' @export
 #' @examples
-#' mtcars %>% ggvis(~wt, ~mpg) %>% layer_smooth()
-#' mtcars %>% ggvis(~wt, ~mpg) %>% layer_smooth(se = T)
+#' mtcars %>% ggvis(~wt, ~mpg) %>% layer_smooths()
+#' mtcars %>% ggvis(~wt, ~mpg) %>% layer_smooths(se = T)
 #'
 #' # Control the wiggliness of the loess smoother with the span parameter
-#' mtcars %>% ggvis(~wt, ~mpg) %>% layer_point() %>%
+#' mtcars %>% ggvis(~wt, ~mpg) %>% layer_points() %>%
 #'   layer_smooth(span = 0.2)
 #' # Or map to a control and modify interactively
 #' mtcars %>% ggvis(~wt, ~mpg) %>% layer_point() %>%
@@ -19,8 +19,8 @@
 #' # Use other modelling functions
 #' mtcars %>% ggvis(~wt, ~mpg) %>%
 #'   layer_point() %>%
-#'   layer_smooth(method = "lm") %>%
-#'   layer_smooth(method = "MASS::rlm", props(stroke := "red"))
+#'   layer_smooths(method = "lm") %>%
+#'   layer_smooths(method = "MASS::rlm", stroke := "red")
 #'
 #' # layer_smooth() is just smooth() + mark_path()
 #' mtcars %>% ggvis(~wt, ~mpg) %>% layer_smooth()
@@ -32,7 +32,7 @@
 #'
 #' # Run smooth outside of a visualisation to see what variables you get
 #' mtcars %>% smooth(mpg ~ wt)
-layer_smooth <- function(vis, props = NULL, ..., formula = NULL, method = NULL,
+layer_smooths <- function(vis, props = NULL, ..., formula = NULL, method = NULL,
                          se = FALSE) {
 
   method <- method %||% guess_method(isolate(vis$cur_data()))
@@ -51,9 +51,9 @@ layer_smooth <- function(vis, props = NULL, ..., formula = NULL, method = NULL,
   pipeline <- function(x) {
     x <- smooth(x, formula = formula, method = method, se = se, ...)
     if (identical(se, TRUE)) {
-      x <- mark_area(x, se_props)
+      x <- emit_ribbons(x, se_props)
     }
-    x <- mark_path(x, line_props)
+    x <- emit_paths(x, line_props)
     x
   }
   branch_f(vis, pipeline)

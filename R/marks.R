@@ -40,6 +40,16 @@ mark_point <- function(vis, props = NULL, data = NULL) {
 #' @rdname marks
 #' @export
 layer_point <- mark_point
+#' @rdname marks
+#' @export
+emit_points <- function(vis, props) {
+  add_mark(vis, "symbol", props)
+}
+#' @rdname marks
+#' @export
+layer_points <- function(vis, ..., data = NULL) {
+  add_mark(vis, "symbol", props(...), data, deparse2(substitute(data)))
+}
 #' @export
 valid_mark_properties.mark_symbol <- function(mark) {
   c("x", "y", "opacity", "fill", "fillOpacity", "stroke", "strokeWidth",
@@ -65,6 +75,18 @@ mark_image <- function(vis, props = NULL, data = NULL) {
 #' @rdname marks
 #' @export
 layer_image <- mark_image
+#' @rdname marks
+#' @export
+emit_images <- function(vis, props) {
+  add_mark(vis, "image", props)
+}
+#' @rdname marks
+#' @export
+layer_images <- function(vis, ..., data = NULL) {
+  add_mark(vis, "image", props(...), data, deparse2(substitute(data)))
+}
+
+
 #' @export
 valid_mark_properties.mark_image <- function(mark) {
   c("x", "y", "opacity", "fill", "fillOpacity", "stroke", "strokeWidth",
@@ -84,6 +106,17 @@ mark_arc <- function(vis, props = NULL, data = NULL) {
 #' @rdname marks
 #' @export
 layer_arc <- mark_arc
+#' @rdname marks
+#' @export
+emit_arcs <- function(vis, props) {
+  add_mark(vis, "arc", props)
+}
+#' @rdname marks
+#' @export
+layer_arcs <- function(vis, ..., data = NULL) {
+  add_mark(vis, "arc", props(...), data, deparse2(substitute(data)))
+}
+
 #' @export
 valid_mark_properties.mark_arc <- function(mark) {
   c("x", "y", "opacity", "fill", "fillOpacity", "stroke", "strokeWidth",
@@ -104,6 +137,17 @@ mark_area <- function(vis, props = NULL, data = NULL) {
 #' @rdname marks
 #' @export
 layer_area <- mark_area
+#' @rdname marks
+#' @export
+emit_ribbons <- function(vis, props) {
+  add_mark(vis, "area", props)
+}
+#' @rdname marks
+#' @export
+layer_ribbons <- function(vis, ..., data = NULL) {
+  add_mark(vis, "area", props(...), data, deparse2(substitute(data)))
+}
+
 #' @export
 valid_mark_properties.mark_area <- function(mark) {
   c("x", "y", "y2", "height", "opacity", "fill", "fillOpacity", "stroke",
@@ -123,6 +167,17 @@ mark_path <- function(vis, props = NULL, data = NULL) {
 #' @rdname marks
 #' @export
 layer_path <- mark_path
+#' @rdname marks
+#' @export
+emit_paths <- function(vis, props) {
+  add_mark(vis, "line", props)
+}
+#' @rdname marks
+#' @export
+layer_paths <- function(vis, ..., data = NULL) {
+  add_mark(vis, "line", props(...), data, deparse2(substitute(data)))
+}
+
 #' @export
 valid_mark_properties.mark_line <- function(mark) {
   c("x", "y", "opacity", "fill", "fillOpacity", "stroke", "strokeWidth",
@@ -142,6 +197,17 @@ mark_rect <- function(vis, props = NULL, data = NULL) {
 #' @rdname marks
 #' @export
 layer_rect <- mark_rect
+#' @rdname marks
+#' @export
+emit_rects <- function(vis, props) {
+  add_mark(vis, "rect", props)
+}
+#' @rdname marks
+#' @export
+layer_rects <- function(vis, ..., data = NULL) {
+  add_mark(vis, "rect", props(...), data, deparse2(substitute(data)))
+}
+
 #' @export
 valid_mark_properties.mark_rect <- function(mark) {
   c("x", "x2", "y", "y2", "width", "height", "opacity", "fill", "fillOpacity", "stroke",
@@ -160,7 +226,15 @@ mark_text <- function(vis, props = NULL, data = NULL) {
 }
 #' @rdname marks
 #' @export
-layer_text <- mark_text
+emit_text <- function(vis, props) {
+  add_mark(vis, "text", props)
+}
+#' @rdname marks
+#' @export
+layer_text <- function(vis, ..., data = NULL) {
+  add_mark(vis, "symbol", props(...), data, deparse2(substitute(data)))
+}
+
 #' @export
 valid_mark_properties.mark_text <- function(mark) {
   c("x", "y", "text", "opacity", "fill", "fillOpacity", "stroke",
