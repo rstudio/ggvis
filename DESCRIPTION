@@ -28,6 +28,7 @@ License: GPL-2
 Collate:
     'auto_group.R'
     'branch.R'
+    'compute_smooth.R'
     'controls.R'
     'df_to_d3json.R'
     'dplyr-group.R'
@@ -52,6 +53,7 @@ Collate:
     'last_vis.R'
     'layer_guess.R'
     'layer_line.R'
+    'layer_smooths.R'
     'linked-brush.R'
     'mark.R'
     'marks.R'
@@ -74,7 +76,6 @@ Collate:
     'transform_bin.R'
     'transform_density.R'
     'transform_manip.R'
-    'transform_smooth.R'
     'transform_sort.R'
     'transform_stack.R'
     'utils_data.R'

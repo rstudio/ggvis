@@ -2,7 +2,7 @@
 \name{layer_model_predictions}
 \alias{layer_model_predictions}
 \alias{layer_smooths}
-\title{Overlay model predictions or a smooth curve}
+\title{Overlay model predictions or a smooth curve.}
 \usage{
 layer_model_predictions(vis, ..., model, formula = NULL, model_args = NULL,
   se = FALSE)

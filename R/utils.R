@@ -189,3 +189,8 @@ try_require <- function(pkg) {
       call. = FALSE)
   }
 }
+
+
+notify_guess <- function(x) {
+  message("Guessing ", deparse(substitute(x)), " = ", format(x))
+}
