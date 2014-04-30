@@ -25,7 +25,7 @@ arrange.ggvis(.data, ...)
 
 select.ggvis(.data, ...)
 
-filter.ggvis(.data, ...)
+\method{filter}{ggvis}(.data, ...)
 }
 \description{
 Dplyr verbs for ggvis

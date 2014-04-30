@@ -146,7 +146,7 @@ apply_axes_defaults <- function(vis) {
 }
 
 #' @export
-format.vega_axis <- function(x) {
+format.vega_axis <- function(x, ...) {
   params <- param_string(x, collapse = FALSE)
   param_s <- paste0("  ", format(paste0(names(params), ":")), " ", format(params),
     collapse = "\n")
