@@ -19,12 +19,7 @@
 #'
 #' # Control stroke and fill
 #' faithful %>% ggvis(~waiting) %>%
-#'   layer_densities(
-#'      stroke := "#cc3333",
-#'      strokeWidth := 3,
-#'      fill := "#666699",
-#'      fillOpacity := 0.6
-#'    )
+#'   layer_densities(stroke := "red", fill := "red")
 #'
 #' # With groups
 #' PlantGrowth %>% ggvis(~weight, stroke = ~group) %>% group_by(group) %>%
@@ -33,25 +28,19 @@ layer_densities <- function(vis, ..., kernel = "gaussian", adjust = 1,
                                     density_args = list(), area = TRUE) {
 
   x_var <- as.character(vis$cur_props$x.update$value)
-
-  # Line shouldn't get fill-related props, and area shouldn't get
-  # stroke-related props.
-  props <- props(...)
-  line_props <- merge_props(props(x = ~pred_, y = ~resp_), props)
-  line_props <- drop_props(line_props, c("fill", "fillOpacity"))
-
-  area_props <- merge_props(props(x = ~pred_, y = ~resp_, y2 = 0, fillOpacity := 0.2),
-    props)
-  area_props <- drop_props(area_props, c("stroke", "strokeOpacity"))
+  props <- stroke_fill_defaults(props(...),
+    stroke = props(~pred_, ~resp_),
+    fill =   props(~pred_, ~resp_, y2 = 0, fillOpacity := 0.2)
+  )
 
   pipeline <- function(x) {
     x <- do_call("compute_density", quote(x), x_var = x_var, kernel = kernel,
       adjust = adjust, .args = density_args)
 
     if (identical(area, TRUE)) {
-      x <- emit_ribbons(x, area_props)
+      x <- emit_ribbons(x, props$fill)
     }
-    x <- emit_paths(x, line_props)
+    x <- emit_paths(x, props$stroke)
     x
   }
   branch_f(vis, pipeline)

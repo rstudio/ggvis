@@ -57,26 +57,19 @@ layer_model_predictions <- function(vis, ..., model, formula = NULL,
                                     model_args = NULL, se = FALSE) {
 
   formula <- formula %||% guess_formula(vis$cur_props, model)
-
-  # Construct default properties. Line shouldn't get fill-related props,
-  # and se shouldn't get stroke-related props.
-  props <- props(...)
-  line_props <- merge_props(props(x = ~pred_, y = ~resp_, strokeWidth := 2),
-    props)
-  line_props <- drop_props(line_props, c("fill", "fillOpacity"))
-
-  se_props <- merge_props(props(x = ~pred_, y = ~resp_lwr_, y2 = ~resp_upr_,
-    fillOpacity := 0.2), props)
-  se_props <- drop_props(se_props, c("stroke", "strokeOpacity"))
+  props <- stroke_fill_defaults(props(...),
+    stroke = props(~pred_, ~resp_, strokeWidth := 2),
+    fill =   props(~pred_, ~resp_lwr_, y2 = ~resp_upr_, fillOpacity := 0.2)
+  )
 
   pipeline <- function(x) {
     x <- do_call("smooth", quote(x), formula = formula, method = model, se = se,
       .args = model_args)
 
     if (identical(se, TRUE)) {
-      x <- emit_ribbons(x, se_props)
+      x <- emit_ribbons(x, props$fill)
     }
-    x <- emit_paths(x, line_props)
+    x <- emit_paths(x, props$stroke)
     x
   }
   branch_f(vis, pipeline)

@@ -35,3 +35,13 @@ drop_props <- function(props, drop) {
   pnames <- trim_propset(names(props))
   props[!(pnames %in% drop)]
 }
+
+stroke_fill_defaults <- function(props, stroke_defaults = list(), fill_defaults = list()) {
+  stroke_props <- merge_props(stroke_defaults, props)
+  stroke_props <- drop_props(stroke_props, c("fill", "fillOpacity"))
+
+  fill_props <- merge_props(fill_defaults, props)
+  fill_props <- drop_props(fill_props, c("stroke", "strokeOpacity"))
+
+  list(stroke = stroke_props, fill = fill_props)
+}
