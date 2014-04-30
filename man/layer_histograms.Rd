@@ -9,10 +9,12 @@ layer_histograms(vis, ..., binwidth = NULL, origin = NULL, right = TRUE)
 
 layer_freqpolys(vis, ..., binwidth = NULL, origin = NULL, right = TRUE)
 
-layer_bars(vis, ...)
+layer_bars(vis, ..., right = TRUE)
 }
 \arguments{
 \item{vis}{Visualisation to modify}
+
+\item{...}{Visual properties used to override defaults.}
 
 \item{binwidth}{The width of the bins. The default is \code{NULL}, which
 yields 30 bins that cover the range of the data. You should always override

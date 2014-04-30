@@ -7,6 +7,8 @@ layer_guess(vis, ...)
 }
 \arguments{
 \item{vis}{The visualisation to add the new layer to.}
+
+\item{...}{Other arguments passed on individual layers.}
 }
 \description{
 \code{layer_guess} provides the magic behind the default behaviour of
@@ -16,8 +18,8 @@ layer_guess(vis, ...)
 
 
 \itemize{
-  \item Continuous x, \code{\link{layer_histogram}}
-  \item Categorical x, \code{\link{layer_barchart}}
+  \item Continuous x, \code{\link{layer_histograms}}
+  \item Categorical x, \code{\link{layer_bars}}
   \item Continuous x and y, \code{\link{layer_points}}
 }
 }

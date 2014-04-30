@@ -82,7 +82,7 @@ transform_stack <- function(direction = "y") {
 #' # Shouldn't use or affect existing grouping
 #' mtcars %>% cbind(count = 1) %>% group_by(am) %>% compute_stack(count, cyl)
 #'
-#' If given a ggvis object, will use x variable for stacking by default
+#' # If given a ggvis object, will use x variable for stacking by default
 #' mtcars %>% ggvis(x = ~cyl, y = ~wt) %>%
 #'   compute_stack() %>%
 #'   mark_rect(props(x = ~cyl - 0.5, x2 = ~cyl + 0.5,

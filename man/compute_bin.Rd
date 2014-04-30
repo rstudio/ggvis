@@ -10,6 +10,8 @@ compute_bin(x, x_var, w_var = NULL, binwidth = NULL, origin = NULL,
 \item{x}{Dataset-like object to smooth. Built-in methods for data frames,
 grouped data frames and ggvis visualisations.}
 
+\item{x_var,w_var}{Names of x and weight variables.}
+
 \item{binwidth}{The width of the bins. The default is \code{NULL}, which
 yields 30 bins that cover the range of the data. You should always override
 this value, exploring multiple widths to find the best to illustrate the

@@ -75,7 +75,6 @@ Collate:
     'scales.R'
     'shiny.R'
     'transform.R'
-    'transform_bin.R'
     'transform_density.R'
     'transform_manip.R'
     'transform_sort.R'
