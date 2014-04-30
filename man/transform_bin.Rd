@@ -17,17 +17,6 @@ layer_barchart(vis, ...)
 \arguments{
 \item{vis}{Visualisation to modify}
 
-\item{binwidth}{The width of the bins. The default is \code{guess()}, which
-yields 30 bins that cover the range of the data. You should always override
-this value, exploring multiple widths to find the best to illustrate the
-stories in your data.}
-
-\item{origin}{The initial position of the left-most bin. If \code{NULL}, the
-the default, will use the smallest value in the dataset.}
-
-\item{right}{Should bins be right-open, left-closed, or
-right-closed, left-open}
-
 \item{...}{For \code{transform_bin}: ignored, all transforms must use
 named arguments.  For \code{layer_histogram}: named arguments are
 passed on to the transform, unnamed arguments are passed on to the layer.}
@@ -46,20 +35,6 @@ following properties:
 
 \itemize{
   \item \code{x}, numeric, the values to bin and count
-}
-}
-
-\section{Ouput}{
-
-
-\code{transform_bin} creates a data frame with columns:
-
-\itemize{
- \item \code{count__}: the number of points
- \item \code{x}: mid-point of bin
- \item \code{xmin__}: left boundary of bin
- \item \code{xmax__}: right boundary of bin
- \item \code{width__}: width of bin
 }
 }
 \examples{

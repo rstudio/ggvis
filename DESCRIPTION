@@ -28,6 +28,7 @@ License: GPL-2
 Collate:
     'auto_group.R'
     'branch.R'
+    'compute_bin.R'
     'compute_smooth.R'
     'controls.R'
     'df_to_d3json.R'
@@ -51,6 +52,7 @@ Collate:
     'inputs.R'
     'is_dynamic.R'
     'last_vis.R'
+    'layer-bin.R'
     'layer_guess.R'
     'layer_line.R'
     'layer_smooths.R'
