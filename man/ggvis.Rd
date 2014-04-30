@@ -15,4 +15,8 @@ ggvis(data, ..., env = parent.frame())
 \description{
 Visualise a data set with a ggvis graphic.
 }
+\examples{
+ggvis(mtcars, ~mpg, ~wt)
+mtcars \%>\% ggvis(~mpg, ~wt)
+}
 

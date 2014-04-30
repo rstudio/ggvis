@@ -9,21 +9,11 @@
 #' @param ... Named arguments are passed on to \code{\link{transform_sort}};
 #'   unnamed arguments are not used.
 #' @examples
-#' ggvis(mtcars,
-#'   props(x = ~wt, y = ~mpg, stroke = ~factor(cyl)),
-#'   layer_line(),
-#'   layer_point()
-#' )
+#' mtcars %>% ggvis(~wt, ~mpg, stroke = ~factor(cyl)) %>% layer_line()
 layer_line <- function(vis, ..., sort = TRUE) {
-  comps <- parse_components(..., drop_named = TRUE)
-
-  vis %>%
-    branch(
-      auto_group() %>%
-      function(vis, ...) {
-        if (sort) vis %>% transform_sort(...)
-        else vis
-      } %>%
-      mark_path(comps$props)
-    )
+  branch_f(vis, function(x) {
+    x <- auto_group(x)
+    if (sort) x <- transform_sort(x)
+    emit_paths(x, props(...))
+  })
 }

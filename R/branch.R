@@ -10,6 +10,7 @@ branch <- function(vis, expr, env = parent.frame()) {
 #' @param fun A function that takes a single argument, the current
 #'   visualisation as input, and returns a modified visualisation.
 #' @export
+#' @keywords internal
 branch_f <- function(vis, fun) {
   # Save current data and props
   old_data  <- vis$cur_data

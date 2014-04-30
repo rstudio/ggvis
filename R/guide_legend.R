@@ -1,13 +1,13 @@
 #' Add a vega legend specification to a ggvis plot
 #'
-#' Axis specifications allow you to either override the default legends, 
-#' or supply additional legends. 
-#' 
+#' Axis specifications allow you to either override the default legends,
+#' or supply additional legends.
+#'
 #' More information about axes can be found in the "axes and legends" vignettes.
 #'
 #' @section Compared to ggplot2:
-#' 
-#' In ggplot2, legend (and axis) properties are part of the scales 
+#'
+#' In ggplot2, legend (and axis) properties are part of the scales
 #' specification. In vega, they are separate, which allows the specification
 #' of multiple legends, and more flexible linkage between scales and legends.
 #'
@@ -28,7 +28,7 @@
 #' @export
 #' @examples
 #' mtcars %>% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) %>%
-#'   layer_point() %>%
+#'   layer_points() %>%
 #'   set_guide_legend(fill = "fill", title = "Cylinders")
 set_guide_legend <- function(vis, size = NULL, shape = NULL, fill = NULL,
                          stroke = NULL, orient = "right", title = NULL,

@@ -6,6 +6,9 @@
 #' @import assertthat
 #' @importFrom shiny reactive
 #' @export
+#' @examples
+#' ggvis(mtcars, ~mpg, ~wt)
+#' mtcars %>% ggvis(~mpg, ~wt)
 ggvis <- function(data, ..., env = parent.frame()) {
   vis <- structure(
     list(

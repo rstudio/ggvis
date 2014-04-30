@@ -19,11 +19,7 @@ unnamed arguments are not used.}
 A layer to add a line.
 }
 \examples{
-ggvis(mtcars,
-  props(x = ~wt, y = ~mpg, stroke = ~factor(cyl)),
-  layer_line(),
-  layer_point()
-)
+mtcars \%>\% ggvis(~wt, ~mpg, stroke = ~factor(cyl)) \%>\% layer_line()
 }
 \seealso{
 \code{link{mark_path}}

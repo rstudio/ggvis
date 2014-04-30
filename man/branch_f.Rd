@@ -14,4 +14,5 @@ visualisation as input, and returns a modified visualisation.}
 \description{
 Create a branch, given a function
 }
+\keyword{internal}
 

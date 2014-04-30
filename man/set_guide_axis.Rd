@@ -75,11 +75,11 @@ of multiple axes, and more flexible linkage between scales and axes.
 }
 \examples{
 mtcars \%>\% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) \%>\%
-  layer_point() \%>\%
+  layer_points() \%>\%
   set_guide_axis("x", title = "Weight", orient = "top")
 
 mtcars \%>\% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) \%>\%
-  layer_point() \%>\%
+  layer_points() \%>\%
   set_guide_axis("x", properties = list(ticks = props(stroke = "red")))
 }
 \seealso{

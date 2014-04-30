@@ -12,16 +12,12 @@
 #' mtcars2$cyl <- factor(mtcars2$cyl)
 #'
 #' # One line
-#' ggvis(mtcars2, props(x = ~disp, y = ~mpg, stroke = ~cyl)) +
-#'   mark_path()
+#' mtcars2 %>% ggvis(~disp,  ~mpg, stroke = ~cyl) %>% layer_paths()
 #' # One line for each level of cyl
-#' ggvis(mtcars2, auto_group(), props(x = ~disp, y = ~mpg, stroke = ~cyl)) +
-#'   mark_path()
-#'
-#' # This shows the data generated using by_group
-#' sluice(pipeline(mtcars, group_by(cyl)), props(x = ~disp, y = ~mpg))
-#' # Note that the props aren't used for splitting, but sluice() needs
-#' # props to be present to work.
+#' mtcars2 %>% ggvis(~disp,  ~mpg, stroke = ~cyl) %>% group_by(cyl) %>%
+#'   layer_paths()
+#' mtcars2 %>% ggvis(~disp,  ~mpg, stroke = ~cyl) %>% auto_group() %>%
+#'   layer_paths()
 auto_group <- function(vis) {
   parent_data <- vis$cur_data
   parent_props <- vis$cur_props
