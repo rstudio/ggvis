@@ -1,9 +1,24 @@
+#' Pipe graphics
+#'
+#' Like dplyr, ggvis also uses the pipe function, \code{\%>\%} to turn
+#' function composition into a series of imperative statements.
+#'
+#' @export
+#' @rdname pipe
+#' @examples
+#' # Instead of
+#' layer_points(ggvis(mtcars, ~mpg, ~wt))
+#' # you can write
+#' mtcars %>% ggvis(~mpg, ~wt) %>% layer_points()
+`%>%` <- magrittr::`%>%`
+
+
 #' Create new "pipe" object.
 #'
 #' A pipe object represents a component in a \code{\link{pipeline}}. Pipes
 #' provide a declarative specification of interactive behaviour, and define
 #' the behaviour of each component in the data hierarchy.
-#' 
+#'
 #' This function is designed to be used by authors of new types of pipes.
 #' If you are a ggvis user, please use an existing pipe: a data frame,
 #' a transform, a mark, or a layer
