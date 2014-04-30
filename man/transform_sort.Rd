@@ -6,7 +6,9 @@
 transform_sort(vis, ..., vars = "x")
 }
 \arguments{
-\item{var}{The variables to sort on. This is the variable name after mapping.
+\item{vis}{The visualisation to modify.}
+
+\item{vars}{The variables to sort on. This is the variable name after mapping.
 For example, with \code{props(x = ~mpg)}, you would use \code{"x"}, not
 \code{"mpg"}. Multiple variables can be used, as in \code{c("x", "y")}.}
 

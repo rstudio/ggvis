@@ -1,9 +1,9 @@
 #' Create an ordinal scale.
-#' 
+#'
 #' A ordinal scale controls the mapping of ordinal and nominal variables to
-#' visual properties. 
-#' 
-#' Generally, you should create new scales with \code{\link{dscale}} because 
+#' visual properties.
+#'
+#' Generally, you should create new scales with \code{dscale} because
 #' that will automatically set the range to a reasonable default, and it will
 #' automatically pick the correct type of scale given the variable type.
 #'
@@ -30,7 +30,7 @@
 #' @examples
 #' scale_ordinal("x")
 #' dscale("x", "nominal")
-#' 
+#'
 #' scale_ordinal("x", padding = 0.5, points = FALSE)
 #' dscale("x", "nominal", points = FALSE)
 scale_ordinal <- function(name, points = TRUE, padding = NULL, sort = TRUE,

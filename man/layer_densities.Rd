@@ -7,7 +7,19 @@ layer_densities(vis, ..., kernel = "gaussian", adjust = 1,
   density_args = list(), area = TRUE)
 }
 \arguments{
+\item{vis}{The visualisation to modify}
+
+\item{...}{Visual properties, passed on to \code{\link{props}}.}
+
+\item{adjust}{Multiple the default bandwidth by this amount. Useful for
+controlling wiggliness of density.}
+
+\item{density_args}{Other arguments passed on to
+\code{\link{compute_density}} and thence to \code{\link{density}}.}
+
 \item{area}{Should there be a shaded region drawn under the curve?}
+
+\item{kernel}{Smoothing kernel. See \code{\link{density}} for details.}
 }
 \description{
 \code{transform_density} is a data transformation that computes a kernel

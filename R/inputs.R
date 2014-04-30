@@ -2,6 +2,10 @@
 #'
 #' @importFrom shiny sliderInput
 #' @inheritParams shiny::sliderInput
+#' @param id A unique identifier for this input. Usually generated
+#'   automatically.
+#' @param map A function with single argument \code{x}, the value of the
+#'   control on the client. Returns a modified value.
 #' @family interactive input
 #' @export
 #' @examples
@@ -33,6 +37,7 @@ input_slider <- function(min, max, value = min, step = NULL, round = FALSE,
 #'
 #' @importFrom shiny checkboxInput
 #' @inheritParams shiny::checkboxInput
+#' @inheritParams input_slider
 #' @family interactive input
 #' @export
 #' @examples
@@ -62,6 +67,7 @@ input_checkbox <- function(value = FALSE, label = "",
 #'
 #' @importFrom shiny textInput
 #' @inheritParams shiny::textInput
+#' @inheritParams input_slider
 #' @family interactive input
 #' @export
 #' @examples
@@ -100,6 +106,7 @@ input_numeric <- function(value, label = "", id = rand_id("numeric_"),
 #'
 #' @importFrom shiny selectInput
 #' @inheritParams shiny::selectInput
+#' @inheritParams input_slider
 #' @family interactive input
 #' @export
 #' @examples

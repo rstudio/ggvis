@@ -5,6 +5,13 @@
 #' \code{transform_density} with \code{mark_path} and \code{mark_area}
 #' to display a smooth line and its standard errror.
 #'
+#' @param vis The visualisation to modify
+#' @param ... Visual properties, passed on to \code{\link{props}}.
+#' @param adjust Multiple the default bandwidth by this amount. Useful for
+#'   controlling wiggliness of density.
+#' @inheritParams compute_density
+#' @param density_args Other arguments passed on to
+#'   \code{\link{compute_density}} and thence to \code{\link{density}}.
 #' @param area Should there be a shaded region drawn under the curve?
 #' @export
 #' @examples
@@ -48,17 +55,23 @@ layer_densities <- function(vis, ..., kernel = "gaussian", adjust = 1,
 
 #' Compute density of data.
 #'
-#' @return A data frame with columns:
-#'  \item{pred_}{regularly spaced grid of \code{n} locations}
-#'  \item{resp_}{density estimate}
+#' @param x Dataset (data frame, \code{grouped_df} or ggvis) object to work
+#'   with.
+#' @param x_var,weight_var Names of variables to use for x position, and for
+#'   weights.
 #' @param kernel Smoothing kernel. See \code{\link{density}} for details.
 #' @param trim If \code{TRUE}, the default, density estimates are trimmed to the
 #'   actual range of the data.  If \code{FALSE}, they are extended by the
 #'   default 3 bandwidths (as specified by the \code{cut} parameter to
 #'   \code{\link{density}}).
+#' @param ... Additional arguments passed on to \code{\link{density}}.
 #' @param n Number of points (along x) to use in the density estimate.
 #' @param na.rm If \code{TRUE} missing values will be silently removed,
 #'   otherwise they will be removed with a warning.
+#' @return A data frame with columns:
+#'  \item{pred_}{regularly spaced grid of \code{n} locations}
+#'  \item{resp_}{density estimate}
+#' @export
 #' @examples
 #' mtcars %>% compute_density("mpg", n = 5)
 #' mtcars %>% group_by(cyl) %>% compute_density("mpg", n = 5)

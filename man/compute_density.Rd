@@ -7,12 +7,20 @@ compute_density(x, x_var, weight_var = NULL, kernel = "gaussian",
   trim = FALSE, n = 256L, na.rm = FALSE, ...)
 }
 \arguments{
+\item{x}{Dataset (data frame, \code{grouped_df} or ggvis) object to work
+with.}
+
+\item{x_var,weight_var}{Names of variables to use for x position, and for
+weights.}
+
 \item{kernel}{Smoothing kernel. See \code{\link{density}} for details.}
 
 \item{trim}{If \code{TRUE}, the default, density estimates are trimmed to the
 actual range of the data.  If \code{FALSE}, they are extended by the
 default 3 bandwidths (as specified by the \code{cut} parameter to
 \code{\link{density}}).}
+
+\item{...}{Additional arguments passed on to \code{\link{density}}.}
 
 \item{n}{Number of points (along x) to use in the density estimate.}
 

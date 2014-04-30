@@ -2,15 +2,15 @@
 #'
 #' A pipeline represents a sequence of data transformations, and is the key
 #' data structure that underlies the data hierarchy. The most important method
-#' for a pipeline is \code{\link{connect}}, which connects together the 
+#' for a pipeline is \code{connect}, which connects together the
 #' multiple pipelines that underlying a ggvis graphic to create a reactive
 #' pipeline which is automatically updated when the underlying data changes.
-#' 
-#' This function allows you to explicitly connect a series of 
+#'
+#' This function allows you to explicitly connect a series of
 #' \code{\link{pipe}} objects into a pipeline. You should never need to call
 #' it explicitly as \code{\link{ggvis}} and \code{\link{layer}} automatically
 #' create a pipeline using \code{as.pipeline}.
-#' 
+#'
 #' @param ... a list of pipes
 #' @param .pipes if you already have the pipes in a list, use this argument.
 #' @param x an object to test/coerce

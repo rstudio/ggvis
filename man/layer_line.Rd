@@ -10,6 +10,8 @@ layer_line(vis, ..., sort = TRUE)
 \code{\link{transform_sort}} will be used. By default, this will sort the
 data on the x variable.}
 
+\item{vis}{Visualisation to modify.}
+
 \item{...}{Named arguments are passed on to \code{\link{transform_sort}};
 unnamed arguments are not used.}
 }

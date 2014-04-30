@@ -7,6 +7,9 @@ smooth(x, formula, ..., method = NULL, se = FALSE, level = 0.95,
   n = 80L)
 }
 \arguments{
+\item{x}{Dataset-like object to smooth. Built-in methods for data frames,
+grouped data frames and ggvis visualisations.}
+
 \item{method}{Model fitting function to use - it must support R's standard
 modelling interface, taking a formula and data frame as input, and
 returning predictions with \code{\link{predict}}. If not supplied, will

@@ -8,6 +8,12 @@ input_slider(min, max, value = min, step = NULL, round = FALSE,
   label = "", id = rand_id("slider_"), map = identity)
 }
 \arguments{
+\item{id}{A unique identifier for this input. Usually generated
+automatically.}
+
+\item{map}{A function with single argument \code{x}, the value of the
+control on the client. Returns a modified value.}
+
 \item{min}{The minimum value (inclusive) that can be selected.}
 
 \item{max}{The maximum value (inclusive) that can be selected.}

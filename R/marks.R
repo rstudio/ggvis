@@ -10,9 +10,10 @@
 #' a filled property. \code{mark_point} is an alias to \code{mark_symbol}.
 #'
 #' @template properties
+#' @param vis Visualisation to modify
 #' @name marks
 #' @seealso The "marks" vignette.
-#' @param props A \code{\link{props}} object, named according to the
+#' @param props,... A \code{\link{props}} object, named according to the
 #'   properties listed below.
 #' @param data An optional dataset, if you want to override the usual data
 #'   inheritance for this mark.

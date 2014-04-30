@@ -1,6 +1,3 @@
-#' Create a branch, given an expression
-#'
-#' @export
 branch <- function(vis, expr, env = parent.frame()) {
   fun <- defer(substitute(expr), env, quoted = TRUE)
   branch_f(vis, fun)
@@ -9,6 +6,9 @@ branch <- function(vis, expr, env = parent.frame()) {
 
 #' Create a branch, given a function
 #'
+#' @param vis The ggvis visualisation to modify.
+#' @param fun A function that takes a single argument, the current
+#'   visualisation as input, and returns a modified visualisation.
 #' @export
 branch_f <- function(vis, fun) {
   # Save current data and props

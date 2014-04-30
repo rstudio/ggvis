@@ -3,7 +3,12 @@
 \alias{explain.ggvis}
 \title{Print out the structure of a ggvis object in a friendly format}
 \usage{
-explain.ggvis(x, ...)
+\method{explain}{ggvis}(x, ...)
+}
+\arguments{
+\item{x}{Visualisation to explain}
+
+\item{...}{Needed for compatibility with generic. Ignored by this method.}
 }
 \description{
 Print out the structure of a ggvis object in a friendly format

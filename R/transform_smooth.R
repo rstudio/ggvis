@@ -105,6 +105,8 @@ guess_formula <- function(props, method, quiet = FALSE) {
 #' Fit a 1d model, then compute predictions and (optionally) standard errors
 #' over an evenly spaced grid.
 #'
+#' @param x Dataset-like object to smooth. Built-in methods for data frames,
+#'   grouped data frames and ggvis visualisations.
 #' @param method Model fitting function to use - it must support R's standard
 #'   modelling interface, taking a formula and data frame as input, and
 #'   returning predictions with \code{\link{predict}}. If not supplied, will

@@ -15,6 +15,16 @@ class so this must always be provided.}
 
 \item{listener}{name of the js listener (with corresponding R event broker)
 that this handler is associated with}
+
+\item{control_args}{List of additional options.}
+
+\item{value}{default value}
+
+\item{map}{a function to map values}
+
+\item{id}{unique identifier.}
+
+\item{x}{Object to test.}
 }
 \description{
 This is currently a subclass on input, but it should probably be the

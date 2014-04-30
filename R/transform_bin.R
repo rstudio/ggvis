@@ -26,6 +26,7 @@
 #'  \item \code{width__}: width of bin
 #' }
 #'
+#' @param vis Visualisation to modify
 #' @param binwidth The width of the bins. The default is \code{guess()}, which
 #'   yields 30 bins that cover the range of the data. You should always override
 #'   this value, exploring multiple widths to find the best to illustrate the

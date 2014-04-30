@@ -46,6 +46,9 @@ print.ggvis <- function(x, dynamic = NA,
 
 
 #' Print out the structure of a ggvis object in a friendly format
+#'
+#' @param x Visualisation to explain
+#' @param ... Needed for compatibility with generic. Ignored by this method.
 #' @export
 explain.ggvis <- function (x, ...) {
   cat("Marks:\n")

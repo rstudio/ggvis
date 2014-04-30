@@ -88,7 +88,9 @@ emit_text(vis, props)
 layer_text(vis, ..., data = NULL)
 }
 \arguments{
-\item{props}{A \code{\link{props}} object, named according to the
+\item{vis}{Visualisation to modify}
+
+\item{props,...}{A \code{\link{props}} object, named according to the
 properties listed below.}
 
 \item{data}{An optional dataset, if you want to override the usual data

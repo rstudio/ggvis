@@ -5,6 +5,7 @@
 #' @param sort Should the data be sorted? If \code{TRUE} (the default), a
 #'   \code{\link{transform_sort}} will be used. By default, this will sort the
 #'   data on the x variable.
+#' @param vis Visualisation to modify.
 #' @param ... Named arguments are passed on to \code{\link{transform_sort}};
 #'   unnamed arguments are not used.
 #' @examples

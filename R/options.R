@@ -1,5 +1,6 @@
 #' Set options for a ggvis plot
 #'
+#' @param vis Visualisation to modify
 #' @param width,height Width and height of plot, in pixels. Default is 600x400.
 #' @param keep_aspect Should the aspect ratio be preserved? The default value
 #'   is \code{FALSE}, or the value of \code{getOption("ggvis.keep_aspect")}, if

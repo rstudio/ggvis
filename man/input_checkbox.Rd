@@ -10,6 +10,12 @@ input_checkbox(value = FALSE, label = "", id = rand_id("checkbox_"),
 \item{value}{Initial value (\code{TRUE} or \code{FALSE}).}
 
 \item{label}{Display label for the control.}
+
+\item{id}{A unique identifier for this input. Usually generated
+automatically.}
+
+\item{map}{A function with single argument \code{x}, the value of the
+control on the client. Returns a modified value.}
 }
 \description{
 Create an interactive checkbox.

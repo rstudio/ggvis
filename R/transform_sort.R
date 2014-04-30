@@ -12,7 +12,8 @@
 #'   columns as the input. In the case of a split_df, each of the data frames
 #'   contained within is sorted.
 #'
-#' @param var The variables to sort on. This is the variable name after mapping.
+#' @param vis The visualisation to modify.
+#' @param vars The variables to sort on. This is the variable name after mapping.
 #'   For example, with \code{props(x = ~mpg)}, you would use \code{"x"}, not
 #'   \code{"mpg"}. Multiple variables can be used, as in \code{c("x", "y")}.
 #' @param ... Named arguments, which are passed along to the \code{order()}

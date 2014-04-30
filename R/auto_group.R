@@ -4,7 +4,8 @@
 #' specified by props, and have each piece rendered by the same mark.
 #'
 #' @export
-#' @seealso To manually specify grouping variables, see \code{\link{by_group}}.
+#' @param vis The ggvis visualisation to modify.
+#' @seealso To manually specify grouping variables, see \code{\link{group_by}}.
 #' @examples
 #' # Make cyl a factor (as it really should be)
 #' mtcars2 <- mtcars
@@ -14,11 +15,11 @@
 #' ggvis(mtcars2, props(x = ~disp, y = ~mpg, stroke = ~cyl)) +
 #'   mark_path()
 #' # One line for each level of cyl
-#' ggvis(mtcars2, auto_split(), props(x = ~disp, y = ~mpg, stroke = ~cyl)) +
+#' ggvis(mtcars2, auto_group(), props(x = ~disp, y = ~mpg, stroke = ~cyl)) +
 #'   mark_path()
 #'
 #' # This shows the data generated using by_group
-#' sluice(pipeline(mtcars, by_group(cyl)), props(x = ~disp, y = ~mpg))
+#' sluice(pipeline(mtcars, group_by(cyl)), props(x = ~disp, y = ~mpg))
 #' # Note that the props aren't used for splitting, but sluice() needs
 #' # props to be present to work.
 auto_group <- function(vis) {

@@ -15,6 +15,8 @@ layer_freqpoly(vis, ...)
 layer_barchart(vis, ...)
 }
 \arguments{
+\item{vis}{Visualisation to modify}
+
 \item{binwidth}{The width of the bins. The default is \code{guess()}, which
 yields 30 bins that cover the range of the data. You should always override
 this value, exploring multiple widths to find the best to illustrate the

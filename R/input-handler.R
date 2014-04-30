@@ -8,6 +8,10 @@
 #'   class so this must always be provided.
 #' @param listener name of the js listener (with corresponding R event broker)
 #'   that this handler is associated with
+#' @param control_args List of additional options.
+#' @param value default value
+#' @param map a function to map values
+#' @param id unique identifier.
 #' @examples
 #' p <- qvis(mtcars, ~mpg, ~wt, size := left_right(1, 100))
 #' p$props$size.update$dr
@@ -46,6 +50,7 @@ format.handler <- function(x, ...) {
 
 #' @export
 #' @rdname handler
+#' @param x Object to test.
 is.handler <- function(x) inherits(x, "handler")
 
 # Code to extract handlers -----------------------------------------------------

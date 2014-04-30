@@ -12,6 +12,12 @@ input_numeric(value, label = "", id = rand_id("numeric_"), map = identity)
 \item{value}{Initial value}
 
 \item{label}{Display label for the control}
+
+\item{id}{A unique identifier for this input. Usually generated
+automatically.}
+
+\item{map}{A function with single argument \code{x}, the value of the
+control on the client. Returns a modified value.}
 }
 \description{
 \code{input_numeric} only allows numbers and comes with a spin box control.

@@ -49,7 +49,7 @@ A ordinal scale controls the mapping of ordinal and nominal variables to
 visual properties.
 }
 \details{
-Generally, you should create new scales with \code{\link{dscale}} because
+Generally, you should create new scales with \code{dscale} because
 that will automatically set the range to a reasonable default, and it will
 automatically pick the correct type of scale given the variable type.
 }

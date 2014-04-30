@@ -40,7 +40,7 @@ predictions and the standard error from a linear model. In ggplot2, you
 had to use \code{geom_smooth()}, which was a special geom that combined a
 line and a ribbon. With ggvis, you can do it yourself by using two marks
 nested inside a layer: (and in fact, this is exactly how
-\code{\link{layer_smooth}}) works.
+\code{\link{layer_smooths}}) works.
 
 \code{
 ggvis(mtcars, props(x = ~disp, y = ~mpg),

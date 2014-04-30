@@ -5,6 +5,12 @@
 \usage{
 branch_f(vis, fun)
 }
+\arguments{
+\item{vis}{The ggvis visualisation to modify.}
+
+\item{fun}{A function that takes a single argument, the current
+visualisation as input, and returns a modified visualisation.}
+}
 \description{
 Create a branch, given a function
 }

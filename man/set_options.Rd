@@ -8,6 +8,8 @@ set_options(vis, width = NULL, height = NULL, keep_aspect = NULL,
   hover_duration = NULL)
 }
 \arguments{
+\item{vis}{Visualisation to modify}
+
 \item{width,height}{Width and height of plot, in pixels. Default is 600x400.}
 
 \item{keep_aspect}{Should the aspect ratio be preserved? The default value

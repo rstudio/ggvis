@@ -24,7 +24,7 @@ one. This is primarily for internal use.}
 \description{
 A pipeline represents a sequence of data transformations, and is the key
 data structure that underlies the data hierarchy. The most important method
-for a pipeline is \code{\link{connect}}, which connects together the
+for a pipeline is \code{connect}, which connects together the
 multiple pipelines that underlying a ggvis graphic to create a reactive
 pipeline which is automatically updated when the underlying data changes.
 }
