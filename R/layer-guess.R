@@ -15,8 +15,11 @@
 #' @export
 #' @examples
 #' # A scatterplot:
+#' mtcars %>% qvis(~mpg, ~wt)
 #' mtcars %>% ggvis(~mpg, ~wt) %>% layer_guess()
+#'
 #' # A histogram:
+#' mtcars %>% qvis(~mpg)
 #' mtcars %>% ggvis(~mpg) %>% layer_guess()
 layer_guess <- function(vis, ...) {
   props <- vis$cur_props

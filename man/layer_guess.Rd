@@ -23,8 +23,11 @@ layer_guess(vis, ...)
 }
 \examples{
 # A scatterplot:
+mtcars \%>\% qvis(~mpg, ~wt)
 mtcars \%>\% ggvis(~mpg, ~wt) \%>\% layer_guess()
+
 # A histogram:
+mtcars \%>\% qvis(~mpg)
 mtcars \%>\% ggvis(~mpg) \%>\% layer_guess()
 }
 
