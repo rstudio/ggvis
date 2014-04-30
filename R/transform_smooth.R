@@ -190,7 +190,7 @@ smooth.ggvis <- function(x, formula, ..., method = NULL, se = FALSE,
 
   new_data <- reactive({
     data <- x$cur_data()
-    output <- do.call("smooth", c(list(x = data), lapply(args, value)))
+    output <- do_call("smooth", quote(data), .args = values(args))
     preserve_constants(data, output)
   })
 

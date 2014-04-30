@@ -38,3 +38,4 @@ value <- function(x) {
   if (is.reactive(x)) x()
   else x
 }
+values <- function(x) lapply(x, value)

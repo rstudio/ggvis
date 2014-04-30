@@ -27,6 +27,11 @@ make_call <- function(f, ..., .args = list()) {
   if (is.character(f)) f <- as.name(f)
   as.call(c(f, ..., .args))
 }
+do_call <- function(f, ..., .args = list(), .env = parent.frame()) {
+  call <- make_call(f, ..., .args)
+  eval(call, .env)
+}
+
 
 deparse2 <- function(x) paste(deparse(x, 500L), collapse = "")
 

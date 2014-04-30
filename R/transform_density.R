@@ -5,24 +5,63 @@
 #' \code{transform_density} with \code{mark_path} and \code{mark_area}
 #' to display a smooth line and its standard errror.
 #'
-#' @section Input:
-#' Currently \code{transform_density} only works with data frames and requires
-#' the following properties:
+#' @param area Should there be a shaded region drawn under the curve?
+#' @export
+#' @examples
+#' # Basic density estimate
+#' faithful %>% ggvis(~waiting) %>% layer_densities()
+#' faithful %>% ggvis(~waiting) %>% layer_densities(area = FALSE)
 #'
-#' \itemize{
-#'   \item \code{x}, numeric, horizontal position
-#' }
+#' # Control bandwidth with adjust
+#' faithful %>% ggvis(~waiting) %>% layer_densities(adjust = .25)
+#' faithful %>% ggvis(~waiting) %>%
+#'   layer_densities(adjust = input_slider(0.1, 5))
 #'
-#' @section Ouput:
+#' # Control stroke and fill
+#' faithful %>% ggvis(~waiting) %>%
+#'   layer_densities(
+#'      stroke := "#cc3333",
+#'      strokeWidth := 3,
+#'      fill := "#666699",
+#'      fillOpacity := 0.6
+#'    )
 #'
-#' \code{transform_density} creates a data frame with columns:
+#' # With groups
+#' PlantGrowth %>% ggvis(~weight, stroke = ~group) %>% group_by(group) %>%
+#'   layer_densities()
+layer_densities <- function(vis, ..., kernel = "gaussian", adjust = 1,
+                                    density_args = list(), area = TRUE) {
+
+  x_var <- as.character(vis$cur_props$x.update$value)
+
+  # Line shouldn't get fill-related props, and area shouldn't get
+  # stroke-related props.
+  props <- props(...)
+  line_props <- merge_props(props(x = ~pred_, y = ~resp_), props)
+  line_props <- drop_props(line_props, c("fill", "fillOpacity"))
+
+  area_props <- merge_props(props(x = ~pred_, y = ~resp_, y2 = 0, fillOpacity := 0.2),
+    props)
+  area_props <- drop_props(area_props, c("stroke", "strokeOpacity"))
+
+  pipeline <- function(x) {
+    x <- do_call("compute_density", quote(x), x_var = x_var, kernel = kernel,
+      adjust = adjust, .args = density_args)
+
+    if (identical(area, TRUE)) {
+      x <- emit_ribbons(x, area_props)
+    }
+    x <- emit_paths(x, line_props)
+    x
+  }
+  branch_f(vis, pipeline)
+}
+
+#' Compute density of data.
 #'
-#' \itemize{
-#'  \item \code{x}: regularly spaced grid of \code{n} locations
-#'  \item \code{y}: density estimate
-#' }
-#'
-#' @param adjust Bandwidth adjustment. See \code{\link{density}} for details.
+#' @return A data frame with columns:
+#'  \item \code{pred_}: regularly spaced grid of \code{n} locations
+#'  \item \code{resp_}: density estimate
 #' @param kernel Smoothing kernel. See \code{\link{density}} for details.
 #' @param trim If \code{TRUE}, the default, density estimates are trimmed to the
 #'   actual range of the data.  If \code{FALSE}, they are extended by the
@@ -31,114 +70,65 @@
 #' @param n Number of points (along x) to use in the density estimate.
 #' @param na.rm If \code{TRUE} missing values will be silently removed,
 #'   otherwise they will be removed with a warning.
-#' @export
 #' @examples
-#' # Basic density estimate
-#' ggvis(faithful, props(x = ~waiting), layer_density())
-#'
-#' # Smaller bandwidth
-#' ggvis(faithful, props(x = ~waiting, fill :="lightblue"),
-#'   layer_density(adjust = .25)
-#' )
-#'
-#' # Control stroke and fill
-#' ggvis(faithful, props(x = ~waiting),
-#'   layer_density(props(stroke := "#cc3333", strokeWidth := 3,
-#'     fill := "#666699", fillOpacity := 0.6))
-#' )
-#'
-#' # With groups
-#' ggvis(PlantGrowth, by_group(group),
-#'   props(x = ~weight, stroke = ~group, fill = ~group, fillOpacity := 0.2),
-#'   layer_density()
-#' )
-#'
-#' # Using various arguments: adjust na.rm, n, area, kernel
-#' mtc <- mtcars
-#' mtc$mpg[5:10] <- NA
-#' ggvis(mtc,
-#'   props(x = ~mpg, y = ~mpg),
-#'   layer_density(adjust = 0.3, n = 100, area = FALSE, kernel = "rectangular",
-#'     props(stroke := "#cc0000"))
-#' )
-#'
-#'
-transform_density <- function(..., adjust = 1, kernel = "gaussian",
-                             trim = FALSE, n = 200L, na.rm = FALSE) {
-  # Drop unnamed arguments
-  dots <- list(...)
-  dots <- dots[named(dots)]
+#' mtcars %>% compute_density("mpg", n = 5)
+#' mtcars %>% group_by(cyl) %>% compute_density("mpg", n = 5)
+#' mtcars %>% ggvis(~mpg) %>% compute_density("mpg", n = 5)
+compute_density <- function(x, x_var, weight_var = NULL, kernel = "gaussian",
+                            trim = FALSE, n = 256L, na.rm = FALSE, ...) {
 
-  transform("density", adjust = adjust, kernel = kernel, trim = trim, n = n,
-    na.rm = na.rm, dots = dots)
-}
-
-#' @rdname transform_density
-#' @export
-#' @param area Should there be a shaded region drawn under the curve?
-#' @param ... Named arguments are passed on to the transform, unnamed
-#'   arguments are passed on to the layer.
-layer_density <- function(..., area = TRUE) {
-  comps <- parse_components(..., drop_named = TRUE)
-
-  line_props <- merge_props(props(x = ~x, y = ~y), comps$props)
-  area_props <- merge_props(props(x = ~x, y = ~y, y2 = 0, fillOpacity := 0.2),
-    comps$props)
-
-  # Line shouldn't get fill-related props, and area shouldn't get
-  # stroke-related props.
-  line_props <- drop_props(line_props, c("fill", "fillOpacity"))
-  area_props <- drop_props(area_props, c("stroke", "strokeOpacity"))
-
-  layer(
-    transform_density(...),
-    layer(
-      comps$data,
-      comps$marks,
-      if (area) mark_area(area_props),
-      mark_path(line_props)
-    )
-  )
+  UseMethod("compute_density")
 }
 
 #' @export
-format.transform_density <- function(x, ...) {
-  paste0(" -> density()", param_string(x[c("adjust", "kernel")]))
-}
+compute_density.data.frame <- function(x, x_var, weight_var = NULL,
+                                       kernel = "gaussian",
+                                       trim = FALSE, n = 256L,
+                                       na.rm = FALSE, ...) {
 
-#' @export
-compute.transform_density <- function(x, props, data) {
-  check_prop(x, props, data, "x.update", "numeric")
-
-  output <- compute_density(data, x, x_var = props$x.update, y_var = props$y.update)
-  preserve_constants(data, output)
-}
-
-compute_density <- function(data, trans, x_var, y_var) UseMethod("compute_density")
-
-#' @export
-compute_density.split_df <- function(data, trans, x_var, y_var) {
-  data[] <- lapply(data, compute_density, trans = trans, x_var = x_var,
-    y_var = y_var)
-  data
-}
-
-#' @export
-compute_density.data.frame <- function(data, trans, x_var, y_var) {
-  assert_that(is.numeric(trans$adjust), length(trans$adjust) == 1)
-  assert_that(length(trans$n) == 1, trans$n >= 0)
-  assert_that(is.flag(trans$na.rm))
-
-  x_vals <- remove_missing(prop_value(x_var, data), warn_na = !trans$na.rm)
-
-  # Build up argument list for density()
-  args <- c(list(x_vals, adjust = trans$adjust, kernel = trans$kernel,
-    n = trans$n), trans$dots)
-  if (trans$trim) {
-    args$from <- min(x_vals)
-    args$to   <- max(x_vals)
+  # Extract variables from data frame
+  x_vals <- x[[x_var]]
+  if (!is.null(weight_var)) {
+    w_vals <- x[[weight_var]]
+  } else {
+    w_vals <- NULL
   }
 
-  dens <- do.call(density, args)
-  as.data.frame(dens[c("x", "y")])
+  # Build call to density()
+  call <- make_call("density", quote(x_vals), weights = quote(w_vals),
+    kernel = kernel, n = n, na.rm = na.rm, ...)
+
+  if (trim) {
+    call$from <- min(x_vals)
+    call$to   <- max(x_vals)
+  }
+  dens <- eval(call)
+
+  # Standardise output
+  data.frame(pred_ = dens$x, resp_ = dens$y)
+}
+
+#' @export
+compute_density.grouped_df <- function(x, x_var, weight_var = NULL,
+                                       kernel = "gaussian", trim = FALSE,
+                                       n = 256L, na.rm = FALSE, ...) {
+  dplyr::do(x, compute_density(., x_var = x_var, weight_var = weight_var,
+    kernel = kernel, trim = trim, n = n, na.rm = na.rm, ...))
+}
+
+#' @export
+compute_density.ggvis <- function(x, x_var, weight_var = NULL,
+                                  kernel = "gaussian", trim = FALSE,
+                                  n = 256L, na.rm = FALSE, ...) {
+  args <- list(x_var = x_var, weight_var = weight_var, kernel = kernel,
+    trim = trim, n = n, na.rm = na.rm, ...)
+  x <- register_reactives(x, args)
+
+  new_data <- reactive({
+    data <- x$cur_data()
+    output <- do_call("compute_density", quote(data), .args = values(args))
+    preserve_constants(data, output)
+  })
+
+  register_data(x, new_data, "compute_density")
 }
