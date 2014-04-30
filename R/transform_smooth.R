@@ -70,9 +70,8 @@ layer_model_predictions <- function(vis, ..., model, formula = NULL,
   se_props <- drop_props(se_props, c("stroke", "strokeOpacity"))
 
   pipeline <- function(x) {
-    smooth_args <- c(list(x = x, formula = formula, method = model, se = se),
-      model_args)
-    x <- do.call("smooth", smooth_args)
+    x <- do_call("smooth", quote(x), formula = formula, method = model, se = se,
+      .args = model_args)
 
     if (identical(se, TRUE)) {
       x <- emit_ribbons(x, se_props)
