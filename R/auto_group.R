@@ -34,7 +34,6 @@ auto_group <- function(vis) {
     }
 
     group_vars <- lapply(unname(parent_props[countable]), "[[", "value")
-
     dplyr::regroup(data, group_vars)
   })
 

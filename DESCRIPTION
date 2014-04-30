@@ -50,7 +50,7 @@ Collate:
     'inputs.R'
     'is_dynamic.R'
     'last_vis.R'
-    'layer_misc.R'
+    'layer_line.R'
     'linked-brush.R'
     'mark.R'
     'marks.R'

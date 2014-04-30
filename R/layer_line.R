@@ -1,4 +1,4 @@
-#' A layer to add a line.
+#' Layer lines on a plot.
 #'
 #' @seealso \code{link{mark_path}}
 #' @export
@@ -9,8 +9,13 @@
 #' @param ... Named arguments are passed on to \code{\link{transform_sort}};
 #'   unnamed arguments are not used.
 #' @examples
-#' mtcars %>% ggvis(~wt, ~mpg, stroke = ~factor(cyl)) %>% layer_line()
-layer_line <- function(vis, ..., sort = TRUE) {
+#' mtcars2 <- dplyr::mutate(mtcars, cyl = factor(cyl))
+#' mtcars2 %>% ggvis(~wt, ~mpg, stroke = ~cyl) %>% layer_lines()
+#'
+#' # Equivalent to
+#' mtcars2 %>% ggvis(~wt, ~mpg, stroke = ~cyl) %>%
+#'   group_by(cyl) %>% transform_sort() %>% layer_paths()
+layer_lines <- function(vis, ..., sort = TRUE) {
   branch_f(vis, function(x) {
     x <- auto_group(x)
     if (sort) x <- transform_sort(x)
