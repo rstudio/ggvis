@@ -1,7 +1,7 @@
 #' @export
 summarise.ggvis <- function(.data, ...) {
   parent_data <- .data$cur_data
-  new_data <- reactive(summarise(parent_data(), ...))
+  new_data <- reactive(dplyr::summarise(parent_data(), ...))
 
   register_data(.data,
     new_data,
@@ -12,7 +12,7 @@ summarise.ggvis <- function(.data, ...) {
 #' @export
 mutate.ggvis <- function(.data, ...) {
   parent_data <- .data$cur_data
-  new_data <- reactive(mutate(parent_data(), ...))
+  new_data <- reactive(dplyr::mutate(parent_data(), ...))
 
   register_data(.data,
     new_data,
@@ -23,7 +23,7 @@ mutate.ggvis <- function(.data, ...) {
 #' @export
 arrange.ggvis <- function(.data, ...) {
   parent_data <- .data$cur_data
-  new_data <- reactive(arrange(parent_data(), ...))
+  new_data <- reactive(dplyr::arrange(parent_data(), ...))
 
   register_data(.data,
     new_data,
@@ -34,7 +34,7 @@ arrange.ggvis <- function(.data, ...) {
 #' @export
 select.ggvis <- function(.data, ...) {
   parent_data <- .data$cur_data
-  new_data <- reactive(select(parent_data(), ...))
+  new_data <- reactive(dplyr::select(parent_data(), ...))
 
   register_data(.data,
     new_data,
@@ -45,7 +45,7 @@ select.ggvis <- function(.data, ...) {
 #' @export
 filter.ggvis <- function(.data, ...) {
   parent_data <- .data$cur_data
-  new_data <- reactive(filter(parent_data(), ...))
+  new_data <- reactive(dplyr::filter(parent_data(), ...))
 
   register_data(.data,
     new_data,

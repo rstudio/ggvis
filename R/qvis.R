@@ -63,7 +63,7 @@ qvis <- function(data, ..., layers = character()) {
       layers <- "point"
     } else {
       if (prop_countable(data, props$x)) {
-        scale <- dscale("x", "nominal", range = "width", padding = 0,
+        scale <- set_dscale("x", "nominal", range = "width", padding = 0,
           points = FALSE)
         layers <- "barchart"
       } else {

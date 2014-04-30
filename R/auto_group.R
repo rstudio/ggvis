@@ -39,7 +39,7 @@ auto_group <- function(vis) {
 
     group_vars <- lapply(unname(parent_props[countable]), "[[", "value")
 
-    regroup(data, group_vars)
+    dplyr::regroup(data, group_vars)
   })
 
   register_data(vis,

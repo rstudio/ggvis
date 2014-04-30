@@ -37,9 +37,9 @@ preserve_constants.grouped_df <- function(input, output) {
   is_constant <- constant_vars(input)
 
   # Get data frame of constants with one row per group
-  constants <- do(input, `[`(., 1, is_constant, drop = FALSE))
+  constants <- dplyr::do(input, `[`(., 1, is_constant, drop = FALSE))
 
-  group_vars <- unlist(lapply(groups(constants), as.character))
+  group_vars <- unlist(lapply(dplyr::groups(constants), as.character))
   # From input, drop any columns that also exist in output, except grouping
   # vars. This is so that can later do a join without duplicate columns.
   keep_vars <- setdiff(names(constants), setdiff(names(output), group_vars))
@@ -47,9 +47,10 @@ preserve_constants.grouped_df <- function(input, output) {
   # FIXME: The following do.call is necessary because of dplyr issue #398.
   # It would be less clunky to do this, but it loses grouping:
   # constants <- constants[, keep_vars, drop = FALSE]
-  constants <- do.call(select, c(list(constants), groups(constants)))
+  constants <- do_call(quote(dplyr::select), quote(constants),
+    .args = dplyr::groups(constants))
 
-  left_join(constants, output, by = group_vars)
+  dplyr::left_join(constants, output, by = group_vars)
 }
 
 
@@ -66,11 +67,11 @@ constant_vars.data.frame <- function(data) {
 #' @export
 constant_vars.grouped_df <- function(data) {
   # Get number of groups
-  n <- length(group_size(data))
+  n <- length(dplyr::group_size(data))
 
   # Get a list of boolean vectors
   # FIXME: When dplyr #397 is fixed, this can be simplified.
-  vecs <- do(data, constant_var__ = constant_vars(.))
+  vecs <- dplyr::do(data, constant_var__ = constant_vars(.))
   vecs <- vecs[["constant_var__"]]
 
   # Don't create ridiculously long column names

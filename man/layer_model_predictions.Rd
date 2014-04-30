@@ -42,6 +42,9 @@ the model is a smooth loess curve whose smoothness is controlled by the
 mtcars \%>\% ggvis(~wt, ~mpg) \%>\% layer_smooths()
 mtcars \%>\% ggvis(~wt, ~mpg) \%>\% layer_smooths(se = T)
 
+# Use group by to display multiple smoothes
+mtcars \%>\% ggvis(~wt, ~mpg) \%>\% group_by(cyl) \%>\% layer_smooths()
+
 # Control appearance with props
 mtcars \%>\% ggvis(~wt, ~mpg) \%>\%
   layer_smooths(se = T, stroke := "red", fill := "red", strokeWidth := 5)

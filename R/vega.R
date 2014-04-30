@@ -84,7 +84,7 @@ as.vega.mark <- function(mark) {
 
   # HW: It seems less than ideal to have to inspect the data here, but
   # I'm not sure how else we can figure it out.
-  split <- !is.null(groups(isolate(mark$data())))
+  split <- !is.null(dplyr::groups(isolate(mark$data())))
 
   properties <- as.vega(props)
 
@@ -174,7 +174,7 @@ as.vega.data.frame <- function(x, name, ...) {
 #' @export
 as.vega.grouped_df <- function(x, name, ...) {
   # FIXME: This is effectively the same as dlply - is there a better way?
-  vars <- groups(x)
+  vars <- dplyr::groups(x)
   group_vals <- lapply(vars, function(var) x[[as.character(var)]] )
   split_data <- unname(split(x, group_vals, drop = TRUE))
 

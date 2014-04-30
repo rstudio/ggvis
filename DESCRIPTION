@@ -7,8 +7,7 @@ Version: 0.1.0.99
 Author: RStudio, Inc.
 Maintainer: Winston Chang <winston@rstudio.com>
 Depends:
-    R (>= 2.15.1),
-    dplyr (>= 0.1.3.0.99)
+    R (>= 2.15.1)
 Imports:
     assertthat,
     whisker,
@@ -16,7 +15,8 @@ Imports:
     digest,
     shiny (>= 0.8.0.99),
     methods,
-    magrittr
+    magrittr,
+    dplyr (>= 0.1.3.0.99)
 Suggests:
     mgcv,
     testthat (>= 0.7.1.99),

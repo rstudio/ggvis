@@ -25,6 +25,9 @@
 #' mtcars %>% ggvis(~wt, ~mpg) %>% layer_smooths()
 #' mtcars %>% ggvis(~wt, ~mpg) %>% layer_smooths(se = T)
 #'
+#' # Use group by to display multiple smoothes
+#' mtcars %>% ggvis(~wt, ~mpg) %>% group_by(cyl) %>% layer_smooths()
+#'
 #' # Control appearance with props
 #' mtcars %>% ggvis(~wt, ~mpg) %>%
 #'   layer_smooths(se = T, stroke := "red", fill := "red", strokeWidth := 5)
@@ -175,6 +178,8 @@ smooth.grouped_df <- function(x, formula, ..., method = NULL, se = FALSE,
     level = level, n = n, ...))
 }
 
+globalVariables(".")
+
 #' @export
 smooth.ggvis <- function(x, formula, ..., method = NULL, se = FALSE,
                          level = 0.95, n = 80L) {
@@ -276,4 +281,4 @@ max_rows <- function(x) UseMethod("max_rows")
 #' @export
 max_rows.data.frame <- function(x) nrow(x)
 #' @export
-max_rows.grouped_df <- function(x) max(group_size(x))
+max_rows.grouped_df <- function(x) max(dplyr::group_size(x))
