@@ -69,66 +69,89 @@ transform_stack <- function(direction = "y") {
   transform("stack", direction = direction)
 }
 
-#' @export
-format.transform_stack <- function(x, ...) {
-  paste0(" -> stack()", param_string(x$direction))
-}
 
 #' @export
-compute.transform_stack <- function(x, props, data) {
-  stack_prop <- x$direction
-  group_prop <- if (x$direction == "x") "y" else "x"
-
-  stack_prop <- paste0(stack_prop, ".update")
-  group_prop <- paste0(group_prop, ".update")
-
-  check_prop(x, props, data, stack_prop, "numeric")
-  check_prop(x, props, data, group_prop)
-
-  output <- compute_stack(data, x, props[[stack_prop]], props[[group_prop]])
-  preserve_constants(data, output)
-}
-
-compute_stack <- function(data, trans, stack_var, group_var) {
+#' @param x A data object
+#' @param stack_var A string specifying the stacking variable.
+#' @param group_var A string specifying the grouping variable.
+#' @examples
+#' mtcars %>% cbind(count = 1) %>% compute_stack(count, cyl)
+#'
+#' # Shouldn't use or affect existing grouping
+#' mtcars %>% cbind(count = 1) %>% group_by(am) %>% compute_stack(count, cyl)
+#'
+#' If given a ggvis object, will use x variable for stacking by default
+#' mtcars %>% ggvis(x = ~cyl, y = ~wt) %>%
+#'   compute_stack() %>%
+#'   mark_rect(props(x = ~cyl - 0.5, x2 = ~cyl + 0.5,
+#'                   y = ~stack_upr_, y2 = ~stack_lwr_))
+compute_stack <- function(x, stack_var = NULL, group_var = NULL, ...) {
   UseMethod("compute_stack")
 }
 
 #' @export
-compute_stack.split_df <- function(data, trans, stack_var, group_var) {
-  # Record split variables
-  vars <- split_vars(data)
+compute_stack.grouped_df <- function(x, stack_var = NULL, group_var = NULL, ...) {
+  # Save original groups, and restore after stacking
+  old_groups <- dplyr::groups(x)
+  x <- dplyr::ungroup(x)
 
-  # Unsplit the data and compute stacking
-  df <- as.data.frame(data)
-  df <- compute_stack(df, trans, stack_var, group_var)
+  compute_stack(x, stack_var, group_var)
 
-  # Re-split the data
-  split_df(df, vars, emptyenv())
+  dplyr::regroup(x, old_groups)
 }
 
 #' @export
-compute_stack.data.frame <- function(data, trans, stack_var, group_var) {
-  # Get the x and y values (these are named as if we're stacking y, but it
-  # will work when stacking x - we just need to rename at end)
-  x <- prop_value(group_var, data)
-  y <- prop_value(stack_var, data)
+compute_stack.data.frame <- function(x, stack_var = NULL, group_var = NULL, ...) {
+  x <- do_call(dplyr::group_by, quote(x), group_var)
 
-  # Split y by x
-  y_split <- split(y, x)
+  # FIXME: This is a workaround for dplyr issue #412
+  lag <- dplyr::lag
 
-  # Stack y var at each x
-  ymax__ <- lapply(y_split, cumsum)
-  ymin__ <- lapply(ymax__, function(x) c(0, x[-length(x)]))
+  # FIXME: mutate evaluates in this function's environment, which isn't right.
+  # This is like mutate(x, stack_upr_ = cumsum(stack_var),
+  #                     stack_lwr_ = lag(stack_upr_))
+  # but with value of stack_var in the right place.
+  x <- do_call(dplyr::mutate, quote(x),
+    stack_upr_ = call("cumsum", stack_var),
+    stack_lwr_ = quote(lag(stack_upr_, default = 0))
+  )
 
-  # Convert back to vector
-  ymax__ <- unsplit(ymax__, x)
-  ymin__ <- unsplit(ymin__, x)
+  x <- dplyr::ungroup(x)
+}
 
-  # Add the y lower and upper values to the data frame
-  if (trans$direction == "y") {
-    cbind(data, ymin__, ymax__)
-  } else {
-    # If we were actually stacking along x, change names to use x instead
-    cbind(data, xmin__ = ymin__, xmax__ = ymax__)
+#' @export
+compute_stack.ggvis <- function(x, stack_var = NULL, group_var = NULL, ...) {
+  # Try to figure out the stack_var and group_var, if not explicitly
+  if (is.null(stack_var)) {
+    if (!is.null(x$cur_props) &&
+        !is.null(x$cur_props$y.update) &&
+        x$cur_props$y.update$type == "variable") {
+
+      stack_var <- x$cur_props$y.update$value
+
+    } else {
+      stop("Need stack_var or a variable y.update property")
+    }
   }
+
+  if (is.null(group_var)) {
+    if(!is.null(x$cur_props) &&
+       !is.null(x$cur_props$x.update) &&
+       x$cur_props$x.update$type == "variable") {
+
+      group_var <- x$cur_props$x.update$value
+
+    } else {
+      stop("Need group_var or a variable x.update property")
+    }
+  }
+
+  parent_data <- x$cur_data
+
+  new_data <- reactive({
+    data <- parent_data()
+    do_call("compute_stack", quote(data), quote(stack_var), quote(group_var))
+  })
+
+  register_data(x, new_data, "compute_stack")
 }
