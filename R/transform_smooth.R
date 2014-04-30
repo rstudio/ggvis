@@ -1,45 +1,52 @@
-#' Overlay a smooth curve
+#' Overlay model predictions or a smooth curve
 #'
-#' \code{layer_smooth} combines \code{\link{smooth}} with \code{mark_path} and
-#' \code{mark_area} to display 1d model fit to the data in order to smooth it.
-#' It optionally displays the standard error.
+#' \code{layer_model_predictions} fits a model to the data and draw it with
+#' \code{layer_paths} and, optionally, \code{layer_ribbons}.
+#' \code{layer_smooths} is a special case of layering model predictions where
+#' the model is a smooth loess curve whose smoothness is controlled by the
+#' \code{span} parameter.
 #'
 #' @export
 #' @examples
 #' mtcars %>% ggvis(~wt, ~mpg) %>% layer_smooths()
 #' mtcars %>% ggvis(~wt, ~mpg) %>% layer_smooths(se = T)
 #'
-#' # Control the wiggliness of the loess smoother with the span parameter
+#' # Control appearance with props
+#' mtcars %>% ggvis(~wt, ~mpg) %>%
+#'   layer_smooths(se = T, stroke := "red", fill := "red", strokeWidth := 5)
+#'
+#' # Control the wiggliness with span. Default is 0.75
 #' mtcars %>% ggvis(~wt, ~mpg) %>% layer_points() %>%
-#'   layer_smooth(span = 0.2)
+#'   layer_smooths(span = 0.2)
+#' mtcars %>% ggvis(~wt, ~mpg) %>% layer_points() %>%
+#'   layer_smooths(span = 1)
 #' # Or map to a control and modify interactively
 #' mtcars %>% ggvis(~wt, ~mpg) %>% layer_point() %>%
-#'   layer_smooth(span = input_slider(0.2, 1))
+#'   layer_smooths(span = input_slider(0.2, 1))
 #'
-#' # Use other modelling functions
+#' # Use other modelling functions with layer_model_predictions
 #' mtcars %>% ggvis(~wt, ~mpg) %>%
 #'   layer_point() %>%
-#'   layer_smooths(method = "lm") %>%
-#'   layer_smooths(method = "MASS::rlm", stroke := "red")
+#'   layer_model_predictions(model = "lm") %>%
+#'   layer_model_predictions(model = "MASS::rlm", stroke := "red")
 #'
-#' # layer_smooth() is just smooth() + mark_path()
-#' mtcars %>% ggvis(~wt, ~mpg) %>% layer_smooth()
-#' mtcars %>%
-#'   ggvis(~wt, ~mpg) %>%
-#'   layer_point() %>%
-#'   smooth(mpg ~ wt) %>%
-#'   mark_path(props(~pred_, ~resp_, strokeWidth := 2))
-#'
+#' # layer_smooths() is just smooth() + layer_paths()
 #' # Run smooth outside of a visualisation to see what variables you get
 #' mtcars %>% smooth(mpg ~ wt)
-layer_smooths <- function(vis, props = NULL, ..., formula = NULL, method = NULL,
-                         se = FALSE) {
+#'
+#' mtcars %>%
+#'   ggvis(~wt, ~mpg) %>%
+#'   layer_points() %>%
+#'   smooth(mpg ~ wt) %>%
+#'   layer_paths(~pred_, ~resp_, strokeWidth := 2)
+layer_model_predictions <- function(vis, ..., model, formula = NULL,
+                                    model_args = NULL, se = FALSE) {
 
-  method <- method %||% guess_method(isolate(vis$cur_data()))
-  formula <- formula %||% guess_formula(vis, vis$cur_props, method)
+  formula <- formula %||% guess_formula(vis$cur_props, model)
 
   # Construct default properties. Line shouldn't get fill-related props,
   # and se shouldn't get stroke-related props.
+  props <- props(...)
   line_props <- merge_props(props(x = ~pred_, y = ~resp_, strokeWidth := 2),
     props)
   line_props <- drop_props(line_props, c("fill", "fillOpacity"))
@@ -49,7 +56,10 @@ layer_smooths <- function(vis, props = NULL, ..., formula = NULL, method = NULL,
   se_props <- drop_props(se_props, c("stroke", "strokeOpacity"))
 
   pipeline <- function(x) {
-    x <- smooth(x, formula = formula, method = method, se = se, ...)
+    smooth_args <- c(list(x = x, formula = formula, method = model, se = se),
+      model_args)
+    x <- do.call("smooth", smooth_args)
+
     if (identical(se, TRUE)) {
       x <- emit_ribbons(x, se_props)
     }
@@ -59,7 +69,15 @@ layer_smooths <- function(vis, props = NULL, ..., formula = NULL, method = NULL,
   branch_f(vis, pipeline)
 }
 
-guess_formula <- function(vis, props, method) {
+#' @export
+#' @rdname layer_model_predictions
+layer_smooths <- function(vis, ..., span = 0.75, se = FALSE) {
+  formula <- guess_formula(vis$cur_props, "loess", quiet = TRUE)
+  layer_model_predictions(vis, ..., model = "loess", formula = formula,
+    model_args = list(span = span), se = se)
+}
+
+guess_formula <- function(props, method, quiet = FALSE) {
   # FIXME: what's the right way to do this in general?
   vars <- list(
     x = props$x.update$value,
@@ -72,7 +90,7 @@ guess_formula <- function(vis, props, method) {
     f <- substitute(y ~ x, vars)
   }
   formula <- eval(f, parent.frame())
-  notify_guess(formula)
+  if (!quiet) notify_guess(formula)
   formula
 }
 
