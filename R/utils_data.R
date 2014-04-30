@@ -8,7 +8,7 @@ get_data_id <- function(data, prefix = "unnamed_data") {
   if (!is.null(attr(data, "data_id")))
     return(attr(data, "data_id"))
 
-  paste0(prefix, "_", digest(data, algo = "crc32"))
+  paste0(prefix, "_", digest::digest(data, algo = "crc32"))
 }
 
 # Add the appropriate data_id attribute to a data object, and return it.
