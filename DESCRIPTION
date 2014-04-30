@@ -75,7 +75,6 @@ Collate:
     'transform_bin.R'
     'transform_density.R'
     'transform_manip.R'
-    'transform_scale.R'
     'transform_smooth.R'
     'transform_sort.R'
     'transform_stack.R'
