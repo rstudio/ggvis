@@ -3,7 +3,7 @@
 \alias{explain.ggvis}
 \title{Print out the structure of a ggvis object in a friendly format}
 \usage{
-\method{explain}{ggvis}(x, ...)
+explain.ggvis(x, ...)
 }
 \description{
 Print out the structure of a ggvis object in a friendly format

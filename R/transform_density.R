@@ -49,8 +49,8 @@ layer_densities <- function(vis, ..., kernel = "gaussian", adjust = 1,
 #' Compute density of data.
 #'
 #' @return A data frame with columns:
-#'  \item \code{pred_}: regularly spaced grid of \code{n} locations
-#'  \item \code{resp_}: density estimate
+#'  \item{pred_}{regularly spaced grid of \code{n} locations}
+#'  \item{resp_}{density estimate}
 #' @param kernel Smoothing kernel. See \code{\link{density}} for details.
 #' @param trim If \code{TRUE}, the default, density estimates are trimmed to the
 #'   actual range of the data.  If \code{FALSE}, they are extended by the

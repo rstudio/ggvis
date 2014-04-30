@@ -21,8 +21,8 @@ otherwise they will be removed with a warning.}
 }
 \value{
 A data frame with columns:
- \item \code{pred_}: regularly spaced grid of \code{n} locations
- \item \code{resp_}: density estimate
+ \item{pred_}{regularly spaced grid of \code{n} locations}
+ \item{resp_}{density estimate}
 }
 \description{
 Compute density of data.
