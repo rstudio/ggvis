@@ -4,6 +4,7 @@
 #' function composition into a series of imperative statements.
 #'
 #' @export
+#' @param lhs,rhs A visualisation and a function to apply to it
 #' @rdname pipe
 #' @examples
 #' # Instead of
