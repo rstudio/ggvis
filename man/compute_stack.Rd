@@ -16,15 +16,30 @@ compute_stack(x, stack_var = NULL, group_var = NULL, ...)
 Stack overlapping data.
 }
 \examples{
-mtcars \%>\% cbind(count = 1) \%>\% compute_stack(count, cyl)
+mtcars \%>\% cbind(count = 1) \%>\% compute_stack("count", "cyl")
 
 # Shouldn't use or affect existing grouping
-mtcars \%>\% cbind(count = 1) \%>\% group_by(am) \%>\% compute_stack(count, cyl)
+mtcars \%>\% cbind(count = 1) \%>\% group_by(am) \%>\% compute_stack("count", "cyl")
 
 # If given a ggvis object, will use x variable for stacking by default
 mtcars \%>\% ggvis(x = ~cyl, y = ~wt) \%>\%
   compute_stack() \%>\%
   mark_rect(props(x = ~cyl - 0.5, x2 = ~cyl + 0.5,
                   y = ~stack_upr_, y2 = ~stack_lwr_))
+
+# Collapse across hair & eye colour data across sex
+hec <- as.data.frame(xtabs(Freq ~ Hair + Eye, HairEyeColor))
+hec \%>\% compute_stack("Freq", "Hair")
+
+# Without stacking - bars overlap
+hec \%>\% ggvis(~Hair, ~Freq, fill = ~Eye, fillOpacity := 0.5) \%>\%
+  set_dscale("x", "nominal", range = "width", padding = 0, points = FALSE) \%>\%
+  layer_rects(y2 = 0, width = band())
+
+# With stacking
+hec \%>\% ggvis(~Hair, ~Freq, fill = ~Eye, fillOpacity := 0.5) \%>\%
+  compute_stack() \%>\%
+  set_dscale("x", "nominal", range = "width", padding = 0, points = FALSE) \%>\%
+  layer_rects(y = ~stack_lwr_, y2 = ~stack_upr_, width = band())
 }
 
