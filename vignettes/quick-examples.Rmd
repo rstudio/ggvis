@@ -39,14 +39,14 @@ head(mtcars)
 
 A basic scatter plot:
 
-```{r, results = 'asis', message = FALSE}
+```{r, message = FALSE}
 mtcars %>% qvis(~wt, ~mpg)
 mtcars %>% ggvis(~wt, ~mpg) %>% layer_points()
 ```
 
 Smaller points, a different shape, a different outline (stroke) color, and empty fill:
 
-```{r, results = 'asis', message = FALSE}
+```{r, message = FALSE}
 mtcars %>% 
   qvis(~wt, ~mpg, size := 25, shape := "diamond", stroke := "red", fill := NA)
 mtcars %>% 
@@ -66,7 +66,7 @@ head(pressure)
 
 When the variable on the x axis is continuous (e.g., numeric or date-time):
 
-```{r, results = 'asis', message = FALSE, fig.width = 4}
+```{r, message = FALSE, fig.width = 4}
 # Note that y2 is the bottom of the bar, and the width is specified in pixels
 pressure %>% 
   ggvis(~temperature, ~pressure, y2 = 0) %>% 
@@ -77,7 +77,7 @@ In the previous example, the width of each bar was specified in pixels. If you c
 
 Instead of setting the width in pixels, it's possible to set the width in the scaled data space, by specifying the `x` and `x2` values for each bar.In this example, each bar is 20 wide in the x scale, so the bars touch:
 
-```{r, results = 'asis', message = FALSE, fig.width = 4}
+```{r, message = FALSE, fig.width = 4}
 pressure %>% 
   ggvis(~temperature - 10, x2 = ~temperature + 10, ~pressure, y2 = 0) %>% 
   layer_rects()
@@ -85,7 +85,7 @@ pressure %>%
 
 When the variable on the x axis is categorical (e.g., factor or character):
 
-```{r, results = 'asis', message = FALSE, fig.width = 4}
+```{r, message = FALSE, fig.width = 4}
 # First, modify the pressure data set so that the x variable is a factor
 pressure2 <- pressure %>% mutate(temperature = factor(temperature))
 
@@ -98,13 +98,13 @@ pressure2 %>% ggvis(~temperature, ~pressure) %>%
 
 ## Line graphs
 
-```{r, results = 'asis', message = FALSE}
+```{r, message = FALSE}
 pressure %>% ggvis(~temperature, ~pressure) %>% layer_lines()
 ```
 
 Lines with points:
 
-```{r, results = 'asis', message = FALSE}
+```{r, message = FALSE}
 pressure %>% qvis(~temperature, ~pressure) %>% layer_lines()
 pressure %>% ggvis(~temperature, ~pressure) %>%
   layer_points() %>% 
@@ -123,14 +123,14 @@ head(faithful)
 
 Basic histogram:
 
-```{r, results = 'asis', message = FALSE}
+```{r, message = FALSE}
 faithful %>% qvis(~eruptions)
 faithful %>% ggvis(~eruptions) %>% layer_histograms()
 ```
 
 Modify the fill color and binwidth, and add titles for the axes, since the automatic titles aren't very informative:
 
-```{r, results = 'asis', message = FALSE}
+```{r, message = FALSE}
 faithful %>% ggvis(~eruptions, fill := "#fff8dc") %>%
   layer_histograms(binwidth = 0.25) %>%
   set_guide_axis("x", title = "eruptions") %>%
@@ -141,7 +141,7 @@ faithful %>% ggvis(~eruptions, fill := "#fff8dc") %>%
 
 Adding a smooth line
 
-```{r, results = 'asis', message = FALSE}
+```{r, message = FALSE}
 mtcars %>% qvis(~wt, ~mpg) %>% layer_smooths()
 
 mtcars %>% 
@@ -152,7 +152,7 @@ mtcars %>%
 
 With a linear model, and 95% confidence interval for the model:
 
-```{r, results = 'asis', message = FALSE}
+```{r, message = FALSE}
 mtcars %>% qvis(~wt, ~mpg) %>% layer_model_predictions(model = "lm", se = TRUE)
 mtcars %>% 
   ggvis(~wt, ~mpg) %>%
@@ -164,13 +164,13 @@ mtcars %>%
 
 Coloring points by a variable:
 
-```{r, results = 'asis', message = FALSE}
+```{r, message = FALSE}
 mtcars %>% ggvis(~wt, ~mpg) %>% layer_points(fill = ~factor(cyl))
 ```
 
 Coloring points, and adding a smoother for each group. The grouping variable (which is applied before the `transform_smooth` is calculated) must be specified with `group_by()`:
 
-```{r, results = 'asis', message = FALSE}
+```{r, message = FALSE}
 mtcars %>% ggvis(~wt, ~mpg) %>% 
   layer_points(fill = ~factor(cyl)) %>% 
   group_by(cyl) %>% 
