@@ -16,10 +16,10 @@ active_props <- function(data, layers) {
     setNames(props[ok], names[ok])
   })
 
-  reactive_prop <- function(props, data) {
+  reactive_prop <- function(props, parent_data) {
     force(props)
-    force(data)
-    reactive(apply_props(data(), props))
+    force(parent_data)
+    reactive(apply_props(parent_data(), props))
   }
 
   data_out <- new.env(parent = emptyenv())

@@ -139,6 +139,28 @@ register_data <- function(vis, data, prefix = "unnamed_data",
   vis
 }
 
+register_computation <- function(vis, args, name, transform = NULL) {
+  vis <- register_reactives(vis, args)
+
+  if (is.null(transform)) return(vis)
+
+  parent_data <- vis$cur_data
+  id <- paste0(get_data_id(parent_data), "/", name)
+
+  if (shiny::is.reactive(parent_data) || any_apply(args, shiny::is.reactive)) {
+    new_data <- reactive(transform(parent_data(), values(args)))
+  } else {
+    new_data <- function() transform(parent_data(), args)
+  }
+
+  new_data <- add_data_id(new_data, id)
+  vis$data[[get_data_id(new_data)]] <- new_data
+  vis$cur_data <- new_data
+
+  vis
+}
+
+
 
 # Register a property set object in the ggvis object's props list.
 # @param vis A ggvis object.

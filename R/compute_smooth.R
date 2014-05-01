@@ -80,17 +80,11 @@ compute_smooth.ggvis <- function(x, formula, ..., method = NULL, se = FALSE,
                                  level = 0.95, n = 80L) {
   args <- list(formula = formula, method = method, se = se, level = level,
     n = n, ...)
-  x <- register_reactives(x, args)
 
-  new_data <- reactive({
-    data <- x$cur_data()
-    output <- do_call("compute_smooth", quote(data), .args = values(args))
+  register_computation(x, args, "smooth", function(data, args) {
+    output <- do_call("compute_smooth", quote(data), .args = args)
     preserve_constants(data, output)
   })
-
-  # FIXME: modify register_data so this creates informative name.
-  # Maybe use slashes to make the data hierarchy more clear?
-  register_data(x, new_data, "_transform_smooth")
 }
 
 guess_method <- function(data) {
