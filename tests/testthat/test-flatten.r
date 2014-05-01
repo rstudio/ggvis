@@ -18,18 +18,6 @@ test_that("props inherited from parent", {
   expect_equal(props$y.update$value, 2)
 })
 
-test_that("data flows through pipeline", {
-  df <- data.frame(x = 1, y = 2)
-  p <- ggvis(df, props(x = ~x, y = ~y),
-    layer(layer(layer(layer(layer(mark_path()))))))
-  nodes <- flatten(p)
-
-  expect_equal(length(nodes), 1)
-  pipeline <- nodes[[1]]$pipeline
-
-  expect_equal(shiny::isolate(pipeline()), df)
-})
-
 test_that("no data is an error", {
   p <- ggvis(NULL, props(x = ~x, y = ~y),
     layer(layer(layer(layer(layer(mark_path()))))))
