@@ -14,14 +14,14 @@ knitr::opts_chunk$set(fig.width = 4, fig.height = 3)
 
 To embed a ggvis plot just call `ggvis`:
 
-```{r}
+```{r, message = FALSE}
 library(ggvis)
-ggvis(mtcars, props(x = ~wt, y = ~mpg)) + layer_point()
+mtcars %>% ggvis(x = ~wt, y = ~mpg) %>% layer_points()
 ```
 
 
 ```{r, fig.width = 8, fig.height = 6}
-ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
-  layer_point() +
-  layer_smooth()
+mtcars %>% ggvis(x = ~wt, y = ~mpg) %>%
+  layer_points() %>%
+  layer_smooths()
 ```

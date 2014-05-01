@@ -16,15 +16,15 @@ knitr::opts_chunk$set(fig.width = 6,
 
 ## First Plot
 
-```{r}
+```{r, message = FALSE}
 library(ggvis)
-ggvis(mtcars, props(x = ~wt, y = ~mpg)) + layer_point()
+mtcars %>% ggvis(x = ~wt, y = ~mpg) %>% layer_points()
 ```
 
 ## Second Plot
 
 ```{r, fig.width = 5.5, fig.height = 3.5}
-ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
-  layer_point() +
-  layer_smooth()
+mtcars %>% ggvis(x = ~wt, y = ~mpg) %>%
+  layer_points() %>%
+  layer_smooths()
 ```
