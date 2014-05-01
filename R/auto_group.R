@@ -19,26 +19,17 @@
 #' mtcars2 %>% ggvis(~disp,  ~mpg, stroke = ~cyl) %>% auto_group() %>%
 #'   layer_paths()
 auto_group <- function(vis) {
-  parent_data <- vis$cur_data
-  parent_props <- vis$cur_props
 
-  new_data <- shiny::reactive({
-    # Get quoted expressions from props which are both variable and countable
-    data <- parent_data()
-    countable <- vapply(parent_props,
-      function(prop) prop$type == "variable" && prop_countable(data, prop),
-      logical(1)
-    )
-    if (!any(countable)) {
-      return(data)
-    }
+  # Figure out grouping variable
+  data <- isolate(vis$cur_data())
+  props <- vis$cur_props
 
-    group_vars <- lapply(unname(parent_props[countable]), "[[", "value")
-    dplyr::regroup(data, group_vars)
-  })
-
-  register_data(vis,
-    new_data,
-    prefix = paste0(get_data_id(parent_data), "_auto_group")
+  countable <- vapply(props,
+    function(prop) prop$type == "variable" && prop_countable(data, prop),
+    logical(1)
   )
+  if (!any(countable)) return(vis)
+
+  group_vars <- lapply(unname(props[countable]), "[[", "value")
+  regroup(vis, group_vars)
 }
