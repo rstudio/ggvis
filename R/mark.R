@@ -15,26 +15,23 @@ mark <- function(type, props, data) {
   if (is.null(data)) stop("No data supplied to mark.", call. = FALSE)
   if (!is.function(data)) stop("data object must be a reactive or a function.")
 
-  m <- structure(
-    compact(list(
-      type = type,
-      data = data,
-      props = props
-    )),
-    class = c(paste0("mark_", type), "mark", "layer")
-  )
+  # Check that names are correct, then merge in defaults
+  check_mark_props(type, names(props))
+  props <- merge_props(default_props[[type]], props)
 
-  check_mark_props(m, names(m$props))
-  m
+  # FIXME: check that mark has all the props needed to draw something
+  # FIXME: check that the variables in the prop can be found in data
+
+  structure(list(type = type, data = data, props = props), class = "mark")
 }
 
 #' @rdname mark
 #' @export
 is.mark <- function(x) inherits(x, "mark")
 
-check_mark_props <- function(mark, props) {
+check_mark_props <- function(type, props) {
   props <- trim_propset(props)
-  valid <- valid_mark_properties(mark)
+  valid <- valid_props[[type]]
 
   invalid <- setdiff(props, valid)
   if (length(invalid) == 0) return(invisible(TRUE))
@@ -56,7 +53,6 @@ check_mark_props <- function(mark, props) {
   stop("Unknown properties: ", paste0(invalid, collapse = ", "), ".\n", suggest,
     call. = FALSE)
 }
-
 
 #' @export
 format.mark <- function(x, ...) {

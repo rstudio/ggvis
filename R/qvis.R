@@ -63,10 +63,3 @@ is_props <- function(xs) {
   unnamed | prop_name | uses_colon
 }
 
-# valid_props <- apropos("valid_mark_properties.mark_")
-# dput(sort(unique(unlist(lapply(valid_props, function(f) match.fun(f)())))))
-known_props <- c("align", "angle", "baseline", "dx", "dy", "endAngle",
-  "fill", "fillOpacity", "font", "fontSize", "fontStyle", "fontWeight",
-  "height", "innerRadius", "interpolate", "key", "opacity", "outerRadius",
-  "shape", "size", "startAngle", "stroke", "strokeOpacity", "strokeWidth",
-  "tension", "text", "url", "width", "x", "x2", "y", "y2")

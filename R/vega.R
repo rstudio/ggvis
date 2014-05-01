@@ -82,25 +82,18 @@ extract_data_ids <- function(layers) {
 as.vega.mark <- function(mark) {
   # Keep only the vega-specific fields, then remove the class, drop nulls,
   # and convert to proper format for vega properties.
-  defaults <- default_mark_properties(mark)
-  props <- merge_props(defaults, mark$props)
 
   # Pull out key from props, if present
-  key <- props$key
-  if (!is.null(key)) {
-    props$key <- NULL
-  }
-
-  # HW: It seems less than ideal to have to inspect the data here, but
-  # I'm not sure how else we can figure it out.
-  split <- !is.null(dplyr::groups(shiny::isolate(mark$data())))
-
-  properties <- as.vega(props)
+  key <- mark$props$key
+  mark$props$key <- NULL
 
   # Add the custom ggvis properties set for storing ggvis-specific information
   # in the Vega spec.
+  properties <- as.vega(mark$props)
   properties$ggvis <- list()
 
+  # FIXME: dispatch on the class of mark$data()
+  split <- !is.null(dplyr::groups(shiny::isolate(mark$data())))
   if (split) {
     data_id <- paste0(get_data_id(mark$data), "_tree")
     properties$ggvis$data <- list(value = data_id)

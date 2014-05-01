@@ -14,7 +14,7 @@ test_that("plot the same regardless of order data/props added", {
   data  <- lapply(marks, function(x) x$data())
 
   for (i in seq_along(marks)) {
-    expect_equal(props[[i]], props(~x, ~y))
+    expect_equal(props[[i]][c("x.update", "y.update")], props(~x, ~y))
     expect_equal(data[[i]], df)
   }
 })

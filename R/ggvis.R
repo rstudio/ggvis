@@ -98,6 +98,7 @@ add_mark <- function(vis, type = NULL, props = NULL, data = NULL,
 
   vis <- add_data(vis, data, data_name)
   vis <- add_props(vis, .props = props)
+
   vis$marks <- c(vis$marks, list(
     mark(type, props = vis$cur_props, data = vis$cur_data))
   )

@@ -7,7 +7,7 @@ test_that("props inherited from parent", {
 
   props <- p$marks[[1]]$props
 
-  expect_equal(sort(names(props)), c("x.update", "y.update"))
+  expect_equal(sort(names(props)), c("stroke.update", "x.update", "y.update"))
   expect_equal(props$x.update$value, 3)
   expect_equal(props$y.update$value, 2)
 })
