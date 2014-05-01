@@ -45,10 +45,14 @@ add_props <- function(vis, ..., .props = NULL, inherit = TRUE,
                       env = parent.frame()) {
   cur_props <- vis$cur_props
   new_props <- props(..., .props = .props, inherit = inherit, env = env)
+  both_props <- merge_props(cur_props, new_props)
 
-  register_props(vis, merge_props(cur_props, new_props))
+  vis$props[[props_id(props)]] <- both_props
+  vis$cur_props <- both_props
+
+  vis <- register_reactives(vis, extract_reactives(both_props))
+  vis
 }
-
 
 #' Add dataset to a visualisation
 #'
@@ -178,21 +182,6 @@ register_computation <- function(vis, args, name, transform = NULL) {
   vis$data[[get_data_id(new_data)]] <- new_data
   vis$cur_data <- new_data
 
-  vis
-}
-
-# Register a property set object in the ggvis object's props list.
-# @param vis A ggvis object.
-# @param props A props object.
-# @param update_current Should the cur_props field be updated to this props object?
-register_props <- function(vis, props, update_current = TRUE) {
-  vis$props[[props_id(props)]] <- props
-
-  if (update_current) {
-    vis$cur_props <- props
-  }
-
-  vis <- register_reactives(vis, extract_reactives(props))
   vis
 }
 

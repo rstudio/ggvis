@@ -48,9 +48,7 @@ qvis <- function(data, ...) {
   props_args <- args[is_props(args)]
   layer_args <- args[!is_props(args)]
 
-  props <- props(.props = props_args)
-
-  vis <- register_props(ggvis(data), props)
+  vis <- add_props(ggvis(data), .props = props_args)
   vis <- do_call(layer_guess, quote(vis), .args = layer_args)
   vis
 }
