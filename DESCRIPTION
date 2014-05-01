@@ -76,7 +76,6 @@ Collate:
     'scales.R'
     'shiny.R'
     'transform.R'
-    'transform_manip.R'
     'utils_data.R'
     'utils_func.R'
     'utils_names.R'

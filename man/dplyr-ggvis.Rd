@@ -28,7 +28,8 @@ select.ggvis(.data, ...)
 \method{filter}{ggvis}(.data, ...)
 }
 \description{
-Dplyr verbs for ggvis.
+Reactive components must be wrapped in \code{eval} - this makes it
+possible to separate out the non-standard evaluation of dplyr and ggvis.
 }
 \examples{
 library(dplyr)
@@ -39,6 +40,21 @@ base \%>\% group_by(cyl) \%>\% summarise(mpg = mean(mpg)) \%>\%
 base \%>\% filter(mpg > 25) \%>\% layer_points(fill := "red")
 
 base \%>\% mutate(cyl = jitter(cyl)) \%>\% layer_points(fill := "red")
+
+#' # Dynamically restrict range using filter
+mtcars \%>\% ggvis(~disp, ~mpg) \%>\%
+   filter(cyl > eval(input_slider(0, 10))) \%>\%
+   layer_points()
+
+# Dynamically compute box-cox transformation with transform_mutate
+bc <- function(x, lambda) {
+  if (abs(lambda) < 1e-6) log(x) else (x ^ lambda - 1) / lambda
+}
+bc_slider <- input_slider(-2, 2, 1, step = 0.1)
+mtcars \%>\%
+ ggvis(~disp, ~mpg) \%>\%
+ mutate(disp = bc(disp, eval(bc_slider))) \%>\%
+ layer_points()
 }
 \keyword{internal}
 
