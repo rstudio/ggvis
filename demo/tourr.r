@@ -15,7 +15,7 @@ proj_data <- reactive({
   data.frame(center(mat %*% step$proj), species = flea$species)
 })
 
-ggvis(proj_data, props(x = ~X1, y = ~X2, fill = ~species)) +
-  layer_point() +
-  dscale("x", "numeric", domain = c(-1, 1)) +
-  dscale("y", "numeric", domain = c(-1, 1))
+proj_data %>% ggvis(~X1, ~X2, fill = ~species) %>%
+  layer_points() %>%
+  set_dscale("x", "numeric", domain = c(-1, 1)) %>%
+  set_dscale("y", "numeric", domain = c(-1, 1))
