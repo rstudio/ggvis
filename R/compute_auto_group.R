@@ -31,5 +31,5 @@ auto_group <- function(vis) {
   if (!any(countable)) return(vis)
 
   group_vars <- lapply(unname(props[countable]), "[[", "value")
-  regroup(vis, group_vars)
+  dplyr::regroup(vis, group_vars)
 }
