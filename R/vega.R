@@ -91,8 +91,6 @@ as.vega.mark <- function(mark) {
     props$key <- NULL
   }
 
-  check_mark_props(mark, names(props))
-
   # HW: It seems less than ideal to have to inspect the data here, but
   # I'm not sure how else we can figure it out.
   split <- !is.null(dplyr::groups(shiny::isolate(mark$data())))
