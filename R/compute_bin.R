@@ -62,7 +62,7 @@ compute_bin.ggvis <- function(x, x_var, w_var = NULL, binwidth = NULL,
     origin = origin, right = right)
 
   register_computation(x, args, "bin", function(data, args) {
-    output <- do_call("compute_bin", quote(data), .args = args)
+    output <- do_call(compute_bin, quote(data), .args = args)
     preserve_constants(data, output)
   })
 }

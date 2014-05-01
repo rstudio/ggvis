@@ -21,7 +21,7 @@ layer_lines <- function(vis, ..., sort = TRUE) {
 
   branch_f(vis, function(x) {
     x <- auto_group(x)
-    if (sort) x <- do_call(quote(dplyr::arrange), quote(x), x_var)
+    if (sort) x <- do_call(dplyr::arrange, quote(x), x_var)
     emit_paths(x, props(...))
   })
 }

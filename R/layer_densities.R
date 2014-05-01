@@ -41,7 +41,7 @@ layer_densities <- function(vis, ..., kernel = "gaussian", adjust = 1,
   )
 
   pipeline <- function(x) {
-    x <- do_call("compute_density", quote(x), x_var = x_var, kernel = kernel,
+    x <- do_call(compute_density, quote(x), x_var = x_var, kernel = kernel,
       adjust = adjust, .args = density_args)
 
     if (identical(area, TRUE)) {

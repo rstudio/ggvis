@@ -28,6 +28,8 @@ make_call <- function(f, ..., .args = list()) {
   as.call(c(f, ..., .args))
 }
 do_call <- function(f, ..., .args = list(), .env = parent.frame(), .debug = FALSE) {
+  f <- substitute(f)
+
   call <- make_call(f, ..., .args)
   if (.debug) print(call)
   eval(call, .env)

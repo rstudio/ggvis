@@ -35,7 +35,7 @@ groups.ggvis <- function(x) {
 #' @rdname dplyr-ggvis
 regroup.ggvis <- function(x, value) {
   register_computation(x, list(), "regroup", function(data, args) {
-    do_call(quote(dplyr::regroup), quote(data), quote(value))
+    do_call(dplyr::regroup, quote(data), quote(value))
   })
 }
 
@@ -43,7 +43,7 @@ regroup.ggvis <- function(x, value) {
 #' @rdname dplyr-ggvis
 ungroup.ggvis <- function(x) {
   register_computation(x, list(), "ungroup", function(data, args) {
-    do_call(quote(dplyr::ungroup), quote(data))
+    do_call(dplyr::ungroup, quote(data))
   })
 }
 
@@ -53,7 +53,7 @@ ungroup.ggvis <- function(x) {
 summarise.ggvis <- function(.data, ...) {
   dots <- dots(...)
   register_computation(.data, list(), "summarise", function(data, args) {
-    do_call(quote(dplyr::summarise), quote(data), .args = dots)
+    do_call(dplyr::summarise, quote(data), .args = dots)
   })
 }
 
@@ -62,7 +62,7 @@ summarise.ggvis <- function(.data, ...) {
 mutate.ggvis <- function(.data, ...) {
   dots <- dots(...)
   register_computation(.data, list(), "mutate", function(data, args) {
-    do_call(quote(dplyr::mutate), quote(data), .args = dots)
+    do_call(dplyr::mutate, quote(data), .args = dots)
   })
 }
 
@@ -71,7 +71,7 @@ mutate.ggvis <- function(.data, ...) {
 arrange.ggvis <- function(.data, ...) {
   dots <- dots(...)
   register_computation(.data, list(), "arrange", function(data, args) {
-    do_call(quote(dplyr::arrange), quote(data), .args = dots)
+    do_call(dplyr::arrange, quote(data), .args = dots)
   })
 }
 
@@ -80,7 +80,7 @@ arrange.ggvis <- function(.data, ...) {
 select.ggvis <- function(.data, ...) {
   dots <- dots(...)
   register_computation(.data, list(), "select", function(data, args) {
-    do_call(quote(dplyr::select), quote(data), .args = dots)
+    do_call(dplyr::select, quote(data), .args = dots)
   })
 }
 
@@ -91,7 +91,7 @@ select.ggvis <- function(.data, ...) {
 filter.ggvis <- function(.data, ...) {
   dots <- dots(...)
   register_computation(.data, list(), "filter", function(data, args) {
-    do_call(quote(dplyr::filter), quote(data), .args = dots)
+    do_call(dplyr::filter, quote(data), .args = dots)
   })
 }
 

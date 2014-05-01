@@ -57,7 +57,7 @@ compute_stack.data.frame <- function(x, stack_var = NULL, group_var = NULL) {
   # This is like mutate(x, stack_upr_ = cumsum(stack_var),
   #                     stack_lwr_ = lag(stack_upr_))
   # but with value of stack_var in the right place.
-  x <- do_call(quote(dplyr::mutate), quote(x),
+  x <- do_call(dplyr::mutate, quote(x),
     stack_upr_ = call("cumsum", as.name(stack_var)),
     stack_lwr_ = quote(lag(stack_upr_, default = 0))
   )
@@ -96,7 +96,7 @@ compute_stack.ggvis <- function(x, stack_var = NULL, group_var = NULL) {
   args <- list(stack_var = stack_var, group_var = group_var)
 
   register_computation(x, args, "stack", function(data, args) {
-    output <- do_call("compute_stack", quote(data), .args = args)
+    output <- do_call(compute_stack, quote(data), .args = args)
     preserve_constants(data, output)
   })
 }

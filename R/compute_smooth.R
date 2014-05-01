@@ -82,7 +82,7 @@ compute_smooth.ggvis <- function(x, formula, ..., method = NULL, se = FALSE,
     n = n, ...)
 
   register_computation(x, args, "smooth", function(data, args) {
-    output <- do_call("compute_smooth", quote(data), .args = args)
+    output <- do_call(compute_smooth, quote(data), .args = args)
     preserve_constants(data, output)
   })
 }

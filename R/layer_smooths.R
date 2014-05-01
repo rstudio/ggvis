@@ -66,7 +66,7 @@ layer_model_predictions <- function(vis, ..., model, formula = NULL,
   )
 
   pipeline <- function(x) {
-    x <- do_call("compute_smooth", quote(x), formula = formula, method = model,
+    x <- do_call(compute_smooth, quote(x), formula = formula, method = model,
       se = se, .args = model_args)
 
     if (identical(se, TRUE)) {
