@@ -6,9 +6,9 @@ diamonds <- diamonds[sample(1:nrow(diamonds), 1000), ]
 shinyServer(function(input, output, session) {
 
   hist_gv <- reactive({
-    ggvis(diamonds, props(x = ~carat)) +
-      layer_histogram(props(fill.brush := "red"), binwidth = 0.1) +
-      layer_brush() +
+    diamonds %>% ggvis(~carat) %>%
+      layer_histograms(fill.brush := "red", binwidth = 0.1) %>%
+      layer_brush() %>%
       opts(height = 200)
   })
 

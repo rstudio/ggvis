@@ -6,10 +6,10 @@ diamonds <- diamonds[sample(1:nrow(diamonds), 1000), ]
 shinyServer(function(input, output, session) {
 
   gv <- reactive({
-    ggvis(mtcars, props(x = ~wt, y = ~mpg, fill.brush := "blue")) +
-      layer_point() +
-      layer_brush() +
-      opts(brush_delay = 100)
+    mtcars %>% ggvis(~wt, ~mpg, fill.brush := "blue") %>%
+      layer_points() %>%
+      layer_brush() %>%
+      set_options(brush_delay = 100)
   })
 
   # Set up observers for the spec and the data

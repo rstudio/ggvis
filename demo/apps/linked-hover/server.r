@@ -3,8 +3,8 @@ data(diamonds, package = "ggplot2")
 shinyServer(function(input, output, session) {
 
   hist_gv <- reactive({
-    ggvis(diamonds, props(x = ~carat)) +
-      layer_histogram(props(fill.hover := "red"), binwidth = 0.1)
+    diamonds %>% ggvis(~carat) %>%
+      layer_histograms(fill.hover := "red", binwidth = 0.1)
   })
 
   # Set up observers for the spec and the data
@@ -32,10 +32,11 @@ shinyServer(function(input, output, session) {
 
   # Sub-histogram
   hist2_gv <- reactive({
-    ggvis(values$diamonds, props(x = ~carat)) +
-      layer_histogram(
-        props(fill.hover := "red"),
-        binwidth = 0.01, drop = TRUE, right = FALSE
+    values$diamonds %>% ggvis(~carat) %>%
+      layer_histograms(
+        fill.hover := "red",
+        binwidth = 0.01,
+        right = FALSE
       )
   })
 
