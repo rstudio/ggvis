@@ -201,3 +201,11 @@ notify_guess <- function(x, explanation = NULL) {
   )
   message(msg)
 }
+
+
+any_apply <- function(xs, f) {
+  for (x in xs) {
+    if (f(x)) return(TRUE)
+  }
+  FALSE
+}

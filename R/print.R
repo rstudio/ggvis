@@ -44,6 +44,14 @@ print.ggvis <- function(x, dynamic = NA,
   }
 }
 
+#' Determine if an ggvis is dynamic (i.e. needs to be run in a shiny app)
+#'
+#' @export
+#' @keywords internal
+is.dynamic <- function(x) {
+  any_apply(x$data, is.reactive) || length(x$reactives) > 0
+}
+
 
 #' Print out the structure of a ggvis object in a friendly format
 #'

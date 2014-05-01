@@ -49,7 +49,6 @@ Collate:
     'input-handler.R'
     'input.R'
     'inputs.R'
-    'is_dynamic.R'
     'last_vis.R'
     'layer.R'
     'layer_bins.R'
