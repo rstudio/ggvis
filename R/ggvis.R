@@ -156,7 +156,8 @@ register_computation <- function(vis, args, name, transform = NULL) {
   if (shiny::is.reactive(parent_data) || any_apply(args, shiny::is.reactive)) {
     new_data <- reactive(transform(parent_data(), values(args)))
   } else {
-    new_data <- function() transform(parent_data(), args)
+    cache <- transform(parent_data(), args)
+    new_data <- function() cache
   }
 
   new_data <- add_data_id(new_data, id)
