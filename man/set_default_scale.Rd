@@ -69,7 +69,7 @@ You can add your own defaults (or override existing) by calling
 \examples{
 p <- mtcars \%>\%
   ggvis(x = ~wt, y = ~mpg, fill = ~factor(cyl), stroke = ~hp) \%>\%
-  layer_point()
+  layer_points()
 
 p \%>\% set_default_scale("x", "numeric")
 p \%>\% set_default_scale("stroke", "numeric")

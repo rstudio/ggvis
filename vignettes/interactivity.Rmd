@@ -184,7 +184,7 @@ with `ui.r`, and the third argument is the session object).
 
 ```{r, eval = FALSE}
 gv <- reactive({
-  mtcars %>% ggvis(~disp, ~mpg, size := input$size) %>% layer_point()
+  mtcars %>% ggvis(~disp, ~mpg, size := input$size) %>% layer_points()
 })
 observe_ggvis(gv, "my_plot", session)
 ```

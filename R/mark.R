@@ -4,14 +4,12 @@
 #' are documented in \url{https://github.com/trifacta/vega/wiki/Marks}.
 #'
 #' This function is designed to be used by authors of new types of mark.
-#' If you are a ggvis user, please use one of the more specific mark
-#' functions starting with the \code{mark_}.
 #'
 #' @param type A string with the vega type.
 #' @param props A list of properties, created by \code{\link{props}}.
 #' @param data A reactive data object.
-#' @export
 #' @keywords internal
+#' @export
 mark <- function(type, props, data) {
   if (!is.ggvis_props(props)) stop("props must be a ggvis_props object")
   if (!is.function(data) && !is.null(data)) stop("data object must be a reactive or a function.")
@@ -29,8 +27,8 @@ mark <- function(type, props, data) {
   m
 }
 
-#' @export
 #' @rdname mark
+#' @export
 is.mark <- function(x) inherits(x, "mark")
 
 check_mark_props <- function(mark, props) {

@@ -7,81 +7,39 @@
 \alias{emit_rects}
 \alias{emit_ribbons}
 \alias{emit_text}
-\alias{layer_arc}
 \alias{layer_arcs}
-\alias{layer_area}
-\alias{layer_image}
 \alias{layer_images}
-\alias{layer_path}
 \alias{layer_paths}
-\alias{layer_point}
 \alias{layer_points}
-\alias{layer_rect}
 \alias{layer_rects}
 \alias{layer_ribbons}
 \alias{layer_text}
-\alias{mark_arc}
-\alias{mark_area}
-\alias{mark_image}
-\alias{mark_path}
-\alias{mark_point}
-\alias{mark_rect}
-\alias{mark_symbol}
-\alias{mark_text}
 \alias{marks}
 \title{Vega marks.}
 \usage{
-mark_point(vis, props = NULL, data = NULL)
-
-layer_point(vis, props = NULL, data = NULL)
-
 emit_points(vis, props)
 
 layer_points(vis, ..., data = NULL)
-
-mark_symbol(vis, props, data)
-
-mark_image(vis, props = NULL, data = NULL)
-
-layer_image(vis, props = NULL, data = NULL)
 
 emit_images(vis, props)
 
 layer_images(vis, ..., data = NULL)
 
-mark_arc(vis, props = NULL, data = NULL)
-
-layer_arc(vis, props = NULL, data = NULL)
-
 emit_arcs(vis, props)
 
 layer_arcs(vis, ..., data = NULL)
-
-mark_area(vis, props = NULL, data = NULL)
-
-layer_area(vis, props = NULL, data = NULL)
 
 emit_ribbons(vis, props)
 
 layer_ribbons(vis, ..., data = NULL)
 
-mark_path(vis, props = NULL, data = NULL)
-
-layer_path(vis, props = NULL, data = NULL)
-
 emit_paths(vis, props)
 
 layer_paths(vis, ..., data = NULL)
 
-mark_rect(vis, props = NULL, data = NULL)
-
-layer_rect(vis, props = NULL, data = NULL)
-
 emit_rects(vis, props)
 
 layer_rects(vis, ..., data = NULL)
-
-mark_text(vis, props = NULL, data = NULL)
 
 emit_text(vis, props)
 

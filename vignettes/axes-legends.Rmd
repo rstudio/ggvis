@@ -84,7 +84,7 @@ mtcars %>% ggvis(~wt, ~mpg) %>%
 ## Axis
 
 ```{r, results = 'asis'}
-mtcars %>% ggvis(~wt, ~mpg) %>% layer_point()
+mtcars %>% ggvis(~wt, ~mpg) %>% layer_points()
 
 mtcars %>% ggvis(~wt, ~mpg) %>% layer_points() %>%
   add_guide_axis("x", title = "Weight") %>%

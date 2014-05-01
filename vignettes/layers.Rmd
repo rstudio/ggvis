@@ -68,7 +68,7 @@ you'll usually set the data in top-level plot object, and usually only override
 props in the mark.
 
 ```{r}
-mtcars %>% ggvis(x = ~wt, y = ~mpg, stroke := "red") %>% layer_point()
+mtcars %>% ggvis(x = ~wt, y = ~mpg, stroke := "red") %>% layer_points()
 mtcars %>% ggvis() %>% layer_points(x = ~wt, y = ~mpg, stroke := "red")
 ```
 
@@ -139,7 +139,7 @@ you increase height, it's mapped like a y variable so bigger values are further
 away.
 
 ```{r}
-df %>% ggvis(~x, ~y, height := prop(80, scale = "y")) %>% layer_area()
+df %>% ggvis(~x, ~y, height := prop(80, scale = "y")) %>% layer_ribbons()
 
 df <- data.frame(x = 1:10, y = (1:10) ^ 2)
 df %>% ggvis(~x, ~y) %>%

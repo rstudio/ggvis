@@ -35,14 +35,6 @@ default_mark_properties.default <- function(mark) {
 
 #' @rdname marks
 #' @export
-mark_point <- function(vis, props = NULL, data = NULL) {
-  add_mark(vis, "symbol", props, data, deparse2(substitute(data)))
-}
-#' @rdname marks
-#' @export
-layer_point <- mark_point
-#' @rdname marks
-#' @export
 emit_points <- function(vis, props) {
   add_mark(vis, "symbol", props)
 }
@@ -61,21 +53,6 @@ default_mark_properties.mark_symbol <- function(mark) {
   props(fill := "#000000", size := 50)
 }
 
-#' @rdname marks
-#' @export
-mark_symbol <- function(vis, props, data) {
-  stop("mark_symbol is deprecated please use mark_point/layer_point instead",
-    call. = FALSE)
-}
-
-#' @rdname marks
-#' @export
-mark_image <- function(vis, props = NULL, data = NULL) {
-  add_mark(vis, "image", props, data, deparse2(substitute(data)))
-}
-#' @rdname marks
-#' @export
-layer_image <- mark_image
 #' @rdname marks
 #' @export
 emit_images <- function(vis, props) {
@@ -101,14 +78,6 @@ default_mark_properties.mark_image <- function(mark) {
 
 #' @rdname marks
 #' @export
-mark_arc <- function(vis, props = NULL, data = NULL) {
-  add_mark(vis, "arc", props, data, deparse2(substitute(data)))
-}
-#' @rdname marks
-#' @export
-layer_arc <- mark_arc
-#' @rdname marks
-#' @export
 emit_arcs <- function(vis, props) {
   add_mark(vis, "arc", props)
 }
@@ -117,7 +86,6 @@ emit_arcs <- function(vis, props) {
 layer_arcs <- function(vis, ..., data = NULL) {
   add_mark(vis, "arc", props(...), data, deparse2(substitute(data)))
 }
-
 #' @export
 valid_mark_properties.mark_arc <- function(mark) {
   c("x", "y", "opacity", "fill", "fillOpacity", "stroke", "strokeWidth",
@@ -129,15 +97,6 @@ default_mark_properties.mark_arc <- function(mark) {
   props(fill := "#333333")
 }
 
-
-#' @rdname marks
-#' @export
-mark_area <- function(vis, props = NULL, data = NULL) {
-  add_mark(vis, "area", props, data, deparse2(substitute(data)))
-}
-#' @rdname marks
-#' @export
-layer_area <- mark_area
 #' @rdname marks
 #' @export
 emit_ribbons <- function(vis, props) {
@@ -159,15 +118,6 @@ default_mark_properties.mark_area <- function(mark) {
   props(fill := "#333333")
 }
 
-
-#' @rdname marks
-#' @export
-mark_path <- function(vis, props = NULL, data = NULL) {
-  add_mark(vis, "line", props, data, deparse2(substitute(data)))
-}
-#' @rdname marks
-#' @export
-layer_path <- mark_path
 #' @rdname marks
 #' @export
 emit_paths <- function(vis, props) {
@@ -189,15 +139,6 @@ default_mark_properties.mark_line <- function(mark) {
   props(stroke := "#000000")
 }
 
-
-#' @export
-#' @rdname marks
-mark_rect <- function(vis, props = NULL, data = NULL) {
-  add_mark(vis, "rect", props, data, deparse2(substitute(data)))
-}
-#' @rdname marks
-#' @export
-layer_rect <- mark_rect
 #' @rdname marks
 #' @export
 emit_rects <- function(vis, props) {
@@ -219,12 +160,6 @@ default_mark_properties.mark_rect <- function(mark) {
   props(stroke := "#000000", fill := "#333333")
 }
 
-
-#' @export
-#' @rdname marks
-mark_text <- function(vis, props = NULL, data = NULL) {
-  add_mark(vis, "text", props, data, deparse2(substitute(data)))
-}
 #' @rdname marks
 #' @export
 emit_text <- function(vis, props) {

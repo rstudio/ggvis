@@ -21,8 +21,6 @@ are documented in \url{https://github.com/trifacta/vega/wiki/Marks}.
 }
 \details{
 This function is designed to be used by authors of new types of mark.
-If you are a ggvis user, please use one of the more specific mark
-functions starting with the \code{mark_}.
 }
 \keyword{internal}
 

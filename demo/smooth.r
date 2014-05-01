@@ -18,7 +18,7 @@ mtcars %>% ggvis(x = ~wt, y = ~mpg) %>%
 
 # Scatter plot with lm model line
 mtcars %>% ggvis(x = ~wt, y = ~mpg) %>%
-  layer_point() %>%
+  layer_points() %>%
   layer_model_predictions(stroke := "red", model = "lm")
 
 # Scatterplot with lm and loess

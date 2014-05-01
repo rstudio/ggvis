@@ -85,11 +85,11 @@ ggvis(props(x = ~long, y = ~lat)) +
   layer(
     Minard.troops,
     props(size = ~survivors, stroke = ~direction),
-    layer_point()
+    layer_points()
   ) +
   layer(
     Minard.cities,
-    layer_point(),
+    layer_points(),
     layer_text(props(text := ~city, dx := 5, dy := -5))
   )
 ```

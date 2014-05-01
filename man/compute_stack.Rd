@@ -24,8 +24,8 @@ mtcars \%>\% cbind(count = 1) \%>\% group_by(am) \%>\% compute_stack("count", "c
 # If given a ggvis object, will use x variable for stacking by default
 mtcars \%>\% ggvis(x = ~cyl, y = ~wt) \%>\%
   compute_stack() \%>\%
-  mark_rect(props(x = ~cyl - 0.5, x2 = ~cyl + 0.5,
-                  y = ~stack_upr_, y2 = ~stack_lwr_))
+  layer_rects(x = ~cyl - 0.5, x2 = ~cyl + 0.5, y = ~stack_upr_,
+    y2 = ~stack_lwr_)
 
 # Collapse across hair & eye colour data across sex
 hec <- as.data.frame(xtabs(Freq ~ Hair + Eye, HairEyeColor))

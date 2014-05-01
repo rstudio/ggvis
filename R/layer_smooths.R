@@ -38,12 +38,12 @@
 #' mtcars %>% ggvis(~wt, ~mpg) %>% layer_points() %>%
 #'   layer_smooths(span = 1)
 #' # Map to an input to modify interactively
-#' mtcars %>% ggvis(~wt, ~mpg) %>% layer_point() %>%
+#' mtcars %>% ggvis(~wt, ~mpg) %>% layer_points() %>%
 #'   layer_smooths(span = input_slider(0.2, 1))
 #'
 #' # Use other modelling functions with layer_model_predictions
 #' mtcars %>% ggvis(~wt, ~mpg) %>%
-#'   layer_point() %>%
+#'   layer_points() %>%
 #'   layer_model_predictions(model = "lm") %>%
 #'   layer_model_predictions(model = "MASS::rlm", stroke := "red")
 #'
