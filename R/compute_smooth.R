@@ -131,6 +131,7 @@ pred_grid.loess <- function(model, data, n = 80, se = FALSE, level = 0.95) {
   }
 }
 
+#' @export
 pred_grid.lm <- function(model, data, n = 80, se = FALSE, level = 0.95) {
   x_var <- attr(terms(model), "term.labels")
   if (length(x_var) > 1) {
