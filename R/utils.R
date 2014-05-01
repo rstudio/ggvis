@@ -27,8 +27,9 @@ make_call <- function(f, ..., .args = list()) {
   if (is.character(f)) f <- as.name(f)
   as.call(c(f, ..., .args))
 }
-do_call <- function(f, ..., .args = list(), .env = parent.frame()) {
+do_call <- function(f, ..., .args = list(), .env = parent.frame(), .debug = FALSE) {
   call <- make_call(f, ..., .args)
+  if (.debug) print(call)
   eval(call, .env)
 }
 

@@ -30,5 +30,15 @@ select.ggvis(.data, ...)
 \description{
 Dplyr verbs for ggvis
 }
+\examples{
+library(dplyr)
+base <- mtcars \%>\% ggvis(~mpg, ~cyl) \%>\% layer_points()
+base \%>\% group_by(cyl) \%>\% summarise(mpg = mean(mpg)) \%>\%
+  layer_points(fill := "red", size := 100)
+
+base \%>\% filter(mpg > 25) \%>\% layer_points(fill := "red")
+
+base \%>\% mutate(cyl = jitter(cyl)) \%>\% layer_points(fill := "red")
+}
 \keyword{internal}
 

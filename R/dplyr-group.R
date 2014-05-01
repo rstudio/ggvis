@@ -18,23 +18,15 @@ groups.ggvis <- function(x) {
 #' @export
 #' @rdname dplyr-ggvis
 regroup.ggvis <- function(x, value) {
-  parent_data <- x$cur_data
-  new_data <- shiny::reactive(dplyr::regroup(parent_data(), value))
-
-  register_data(x,
-    new_data,
-    prefix = paste0(get_data_id(parent_data), "_group")
-  )
+  register_computation(x, list(), "regroup", function(data, args) {
+    do_call(quote(dplyr::regroup), quote(data), quote(value))
+  })
 }
 
 #' @export
 #' @rdname dplyr-ggvis
 ungroup.ggvis <- function(x) {
-  parent_data <- x$cur_data
-  new_data <- shiny::reactive(dplyr::ungroup(parent_data()))
-
-  register_data(x,
-    new_data,
-    prefix = paste0(get_data_id(parent_data), "_ungroup")
-  )
+  register_computation(x, list(), "ungroup", function(data, args) {
+    do_call(quote(dplyr::ungroup), quote(data))
+  })
 }
