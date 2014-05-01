@@ -69,29 +69,8 @@ compute_stack.data.frame <- function(x, stack_var = NULL, group_var = NULL) {
 compute_stack.ggvis <- function(x, stack_var = NULL, group_var = NULL) {
   # Try to figure out the stack_var and group_var, if not explicitly
 
-  if (is.null(stack_var)) {
-    if (!is.null(x$cur_props) &&
-        !is.null(x$cur_props$y.update) &&
-        x$cur_props$y.update$type == "variable") {
-
-      stack_var <- as.character(x$cur_props$y.update$value)
-
-    } else {
-      stop("Need stack_var or a variable y.update property")
-    }
-  }
-
-  if (is.null(group_var)) {
-    if(!is.null(x$cur_props) &&
-       !is.null(x$cur_props$x.update) &&
-       x$cur_props$x.update$type == "variable") {
-
-      group_var <- as.character(x$cur_props$x.update$value)
-
-    } else {
-      stop("Need group_var or a variable x.update property")
-    }
-  }
+  group_var <- group_var %||% as.character(find_prop_var(x$cur_props, "x.update"))
+  stack_var <- stack_var %||% as.character(find_prop_var(x$cur_props, "y.update"))
 
   args <- list(stack_var = stack_var, group_var = group_var)
 
@@ -99,4 +78,17 @@ compute_stack.ggvis <- function(x, stack_var = NULL, group_var = NULL) {
     output <- do_call(compute_stack, quote(data), .args = args)
     preserve_constants(data, output)
   })
+}
+
+find_prop_var <- function(props, name) {
+  prop <- props[[name]]
+  if (is.null(prop)) {
+    stop("Can't find prop ", name, call. = FALSE)
+  }
+
+  if (prop$type != "variable") {
+    stop("Visual property ", name, " is not a variable", call. = FALSE)
+  }
+
+  prop$value
 }

@@ -87,10 +87,9 @@ layer_smooths <- function(vis, ..., span = 0.75, se = FALSE) {
 }
 
 guess_formula <- function(props, method, quiet = FALSE) {
-  # FIXME: what's the right way to do this in general?
   vars <- list(
-    x = props$x.update$value,
-    y = props$y.update$value
+    x = find_prop_var(props, "x.update"),
+    y = find_prop_var(props, "y.update")
   )
 
   if (identical(method, "gam")) {
