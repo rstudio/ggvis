@@ -86,6 +86,12 @@ add_mark <- function(vis, type = NULL, props = NULL, data = NULL,
   vis
 }
 
+#' Add arbitrary scales to ggvis.
+#'
+#' @param vis Visualisation to modify.
+#' @param scale Scale object
+#' @keywords internal
+#' @export
 add_scale <- function(vis, scale) {
   if (!is.ggvis(vis)) stop("Object to add legend to is not a ggvis object.")
 

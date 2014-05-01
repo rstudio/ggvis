@@ -1,8 +1,5 @@
 ---
 title: Properties and scales
-output:
-  ggvis:::html_document:
-    toc: true
 ---
 
 <!--
@@ -45,8 +42,8 @@ geom_point(aes(x = wt, y = mpg), colour = "red", size = 5)
 
 But in ggvis, everything is a property:
 
-```{r}
-layer_path(props(x = ~wt, y = ~mpg, stroke := "red", strokeWidth := 5))
+```{r, eval = FALSE}
+layer_paths(x = ~wt, y = ~mpg, stroke := "red", strokeWidth := 5)
 ```
 
 This section introduces `props()`, a convenient function for creating property objects and binding them to property names. The next chapter shows you how to create the property objects by hand, giving you more control over the specification at the cost of some extra typing.
@@ -83,10 +80,10 @@ It's also possible provide a scaled constant instead of a raw constant.
 That's useful when you want to label different layers in a plot:
 
 ```{r, eval = FALSE}
-ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
-  layer_point() +
-  layer_smooth(props(stroke = "lm"), method = "lm") +
-  layer_smooth(props(stroke = "loess"))
+mtcars %>% ggvis(x = ~wt, y = ~mpg) %>%
+  layer_points() %>%
+  layer_model_predictions(model = "lm", stroke = "lm") %>%
+  layer_smooths(stroke = "loess")
 ```
 
 (Note: this isn't currently supported in ggvis because of a limitation
@@ -98,25 +95,9 @@ Not all marks support all properties. The complete list of all properties is
 available in `?marks`, and mark functions will check that you've supplied them
 valid properties, and will endeavour to provide you a helpful suggestion:
 
-```{r, eval = FALSE}
-layer_line(props(strke = ~cyl))
-# Error: Unknown properties: strke.
-# Did you mean: stroke?
-```
-
-Note that properties supplied to `ggvis` or `layer` can't be checked
-automatically on creation, because they may be modified by other nodes along
-the pipeline (or the node structure of the graph, including the marks, might
-be changed after plot creation). These will only be checked once the plot
-is rendered.
-
-```{r, eval = FALSE}
-# No error on creation
-p <- ggvis(mtcars, props(x = ~disp, y = ~mpg, strke = ~cyl), layer_point())
-# Error when attempt to display it
-print(p)
-# Error message currently not informative: see
-# https://github.com/rstudio/ggvis/issues/31 for progress
+```{r, error = TRUE}
+mtcars %>% ggvis() %>% layer_lines(strke = ~cyl)
+mtcars %>% ggvis(strke = ~cyl) %>% layer_lines()
 ```
 
 ### Capture of local variables
@@ -124,13 +105,14 @@ print(p)
 Variable properties can refer to both variables in the dataset and variables in
 the local environment:
 
-```{r, results = 'asis'}
+```{r}
 df <- data.frame(x = 1:10)
 f <- function(n) {
-  ggvis(df, props(x = ~x, y = ~x ^ n), layer_path())
+  df %>% ggvis(x = ~x, y = ~x ^ n) %>% layer_paths()
 }
 f(1)
 f(2)
+f(4)
 ```
 
 Technically, ggvis uses the environment captured by the formula when it is
@@ -191,12 +173,12 @@ Like in ggplot2, scales control the mapping between data values and values
 interpreted by the drawing device. Scales are added to the top-level plot
 specification and are usually created with `dscale` (short for default scale):
 
-```{r, results = 'asis'}
+```{r}
 # Override the default data limits:
-ggvis(mtcars, props(x = ~disp, y = ~wt)) +
-  layer_point() +
-  dscale("x", "numeric", domain = c(50, 500), nice = FALSE) +
-  dscale("y", "numeric", domain = c(0, 6), nice = FALSE)
+mtcars %>% ggvis(~disp, ~wt) %>%
+  layer_points() %>%
+  set_dscale("x", "numeric", domain = c(50, 500), nice = FALSE) %>%
+  set_dscale("y", "numeric", domain = c(0, 6), nice = FALSE)
 ```
 
 Compared to ggplot2, ggvis has far fewer scales (3 vs 70), with each function
@@ -256,17 +238,17 @@ Because the range of a scale is usually determined by the type of variable,
 ggvis provides the `dscale` function to automatically retrieve a default scale
 given a property name and variable type:
 
-```{r}
-dscale("x", "numeric")
-dscale("y", "numeric")
-dscale("shape", "nominal")
+```{r, eval = FALSE}
+set_dscale(vis, "x", "numeric")
+set_dscale(vis, "y", "numeric")
+set_dscale(vis, "shape", "nominal")
 ```
 
 You can also provide other arguments to the underlying scale:
 
-```{r}
-dscale("x", "numeric", domain = c(10, 100))
-dscale("x", "numeric", trans = "log")
+```{r, eval = FALSE}
+set_dscale(vis, "x", "numeric", domain = c(10, 100))
+set_dscale(vis, "x", "numeric", trans = "log")
 ```
 
 So `dscale()` is usually a better way to create new scales that starting from
@@ -278,13 +260,12 @@ You can add your own scales for properties that don't otherwise have defaults.
 For example, imagine you wanted to use the font of a label to represent some
 data. There's no default scale for font, but you could create one yourself:
 
-```{r, results = 'asis'}
+```{r}
 df <- data.frame(x = runif(5), y = runif(5),
   labels = c("a", "b", "b", "a", "b"))
-ggvis(df, props(x = ~x, y = ~y, text := ~labels, font = ~labels,
-    fontSize := 40)) +
-  layer_text() +
-  scale_ordinal("font", range = c("Helvetica Neue", "Times New Roman"))
+df %>% ggvis(~x, ~y, text := ~labels, font = ~labels, fontSize := 40) %>%
+  layer_text() %>%
+  add_scale(scale_ordinal("font", range = c("Helvetica Neue", "Times New Roman")))
 ```
 
 Note the use of `text := ~labels`: we don't want to scale the labels - the raw values already make sense in the visual space.
@@ -296,14 +277,14 @@ more scales than the default. You could do this in order to create a dual-axis
 chart (which is generally a bad idea - read [this paper][dual-axis] for more details).
 If you do this, you will also need to add a scale object.
 
-```{r, results = 'asis'}
-ggvis(mtcars, props(y = ~mpg)) +
-  layer_point(props(x = prop(~disp, scale = "xdisp"))) +
-  layer_point(props(x = prop(~wt, scale = "xwt"), fill := "blue")) +
-  dscale("x", "numeric", name = "xdisp") +
-  dscale("x", "numeric", name = "xwt") +
-  guide_axis("x", "xdisp", orient = "bottom") +
-  guide_axis("x", "xwt", orient = "bottom", offset = 20, properties =
+```{r}
+mtcars %>% ggvis(y = ~mpg) %>%
+  layer_points(x = prop(~disp, scale = "xdisp")) %>%
+  layer_points(x = prop(~wt, scale = "xwt"), fill := "blue") %>% 
+  set_dscale("x", "numeric", name = "xdisp") %>%
+  set_dscale("x", "numeric", name = "xwt") %>%
+  add_guide_axis("x", "xdisp", orient = "bottom") %>%
+  add_guide_axis("x", "xwt", orient = "bottom", offset = 20, properties =
     list(labels = props(fill := "blue")))
 ```
 
@@ -313,16 +294,20 @@ You could also force ggplot2 to use the same scale for properties that would
 otherwise use different scales. I'm not sure of a useful example of this,
 except to force `stroke` and `fill` to use the same scale:
 
-```{r, results = 'asis'}
+```{r}
 df <- data.frame(x = 1:5, y = 1:5, a = runif(5), b = -runif(5))
-p <- props(x = ~x, y = ~y, stroke = ~a, fill = ~b, strokeWidth := 5, size := 1000)
-ggvis(df, p, layer_point(),
-  guide_legend(fill = "stroke", properties = list(legend = props(y := 50)))
-)
 
-p2 <- props(x = ~x, y = ~y, stroke = ~a, fill = prop(~b, scale = "stroke"),
-  strokeWidth := 5, size := 1000)
-ggvis(df, p2, layer_point())
+df %>% 
+  ggvis(x = ~x, y = ~y, stroke = ~a, fill = ~b, 
+    strokeWidth := 5, size := 1000) %>%
+  layer_points() %>%
+  add_guide_legend(fill = "stroke", properties = list(legend = props(y := 50)))
+
+df %>% 
+  ggvis(x = ~x, y = ~y, stroke = ~a, fill = prop(~b, scale = "stroke"), 
+    strokeWidth := 5, size := 1000) %>%
+  layer_points() %>%
+  add_guide_legend(fill = "stroke", properties = list(legend = props(y := 50)))
 ```
 
 In this case we don't need to manually add the correct scale, because ggvis
