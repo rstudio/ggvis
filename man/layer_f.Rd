@@ -12,7 +12,16 @@ layer_f(vis, fun)
 visualisation as input, and returns a modified visualisation.}
 }
 \description{
-Create a new layering function.
+The layer function is run, and then the state before the code was run
+is restored - this allows layers to be effectively isolated from
+the rest of the plot.
+}
+\examples{
+mtcars \%>\% ggvis(~mpg) \%>\%
+  layer_f(function(v) {
+     v \%>\% compute_bin("mpg") \%>\% layer_points(x = ~x_, y = ~count_)
+  }) \%>\%
+  layer_points(y = ~wt)
 }
 \keyword{internal}
 
