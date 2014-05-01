@@ -26,7 +26,6 @@ VignetteBuilder: knitr
 Roxygen: list(wrap = FALSE)
 License: GPL-2
 Collate:
-    'branch.R'
     'compute_auto_group.R'
     'compute_bin.R'
     'compute_density.R'
@@ -52,6 +51,7 @@ Collate:
     'inputs.R'
     'is_dynamic.R'
     'last_vis.R'
+    'layer.R'
     'layer_bins.R'
     'layer_densities.R'
     'layer_guess.R'

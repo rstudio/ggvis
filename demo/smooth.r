@@ -3,10 +3,8 @@ library(ggvis)
 # Scatter plot with loess model line
 mtcars %>% ggvis(x = ~wt, y = ~mpg) %>%
   layer_point() %>%
-  branch(
-    transform_smooth(se = F) %>%
-    mark_path(props(x = ~x, y = ~y, stroke := "red"))
-  )
+  transform_smooth(se = F) %>%
+  mark_path(props(x = ~x, y = ~y, stroke := "red"))
 
 # Or with shorthand layer_smooth
 mtcars %>% ggvis(x = ~wt, y = ~mpg) %>%

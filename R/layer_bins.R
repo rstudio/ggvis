@@ -24,7 +24,7 @@ layer_histograms <- function(vis, ..., binwidth = NULL, origin = NULL,
   params <- bin_params(value(range), binwidth = value(binwidth),
     origin = value(origin), right = value(right))
 
-  branch_f(vis, function(x) {
+  layer_f(vis, function(x) {
     x <- compute_bin(x, as.character(x_var$value), binwidth = params$binwidth,
       origin = params$origin, right = params$right)
     x <- emit_rects(x, rect_props)
@@ -43,7 +43,7 @@ layer_freqpolys <- function(vis, ..., binwidth = NULL, origin = NULL,
   params <- bin_params(value(range), binwidth = value(binwidth),
     origin = value(origin), right = value(right))
 
-  branch_f(vis, function(x) {
+  layer_f(vis, function(x) {
     x <- compute_bin(x, as.character(x_var$value), binwidth = params$binwidth,
       origin = params$origin, right = params$right)
     x <- emit_paths(x, path_props)
@@ -59,7 +59,7 @@ layer_bars <- function(vis, ..., right = TRUE) {
 
   x_var <- vis$cur_props$x.update
 
-  branch_f(vis, function(x) {
+  layer_f(vis, function(x) {
     x <- compute_bin(x, as.character(x_var$value), binwidth = 1,
       origin = 0.5, right = right)
     x <- emit_rects(x, rect_props)

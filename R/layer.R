@@ -1,17 +1,11 @@
-branch <- function(vis, expr, env = parent.frame()) {
-  fun <- defer(substitute(expr), env, quoted = TRUE)
-  branch_f(vis, fun)
-}
-
-
-#' Create a branch, given a function
+#' Create a new layering function.
 #'
 #' @param vis The ggvis visualisation to modify.
 #' @param fun A function that takes a single argument, the current
 #'   visualisation as input, and returns a modified visualisation.
 #' @export
 #' @keywords internal
-branch_f <- function(vis, fun) {
+layer_f <- function(vis, fun) {
   # Save current data and props
   old_data  <- vis$cur_data
   old_props <- vis$cur_props

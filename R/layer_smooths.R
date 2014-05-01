@@ -75,7 +75,7 @@ layer_model_predictions <- function(vis, ..., model, formula = NULL,
     x <- emit_paths(x, props$stroke)
     x
   }
-  branch_f(vis, pipeline)
+  layer_f(vis, pipeline)
 }
 
 #' @export

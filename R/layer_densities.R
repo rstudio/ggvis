@@ -50,5 +50,5 @@ layer_densities <- function(vis, ..., kernel = "gaussian", adjust = 1,
     x <- emit_paths(x, props$stroke)
     x
   }
-  branch_f(vis, pipeline)
+  layer_f(vis, pipeline)
 }

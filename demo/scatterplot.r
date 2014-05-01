@@ -34,11 +34,6 @@ mtcars %>% ggvis(x = ~wt, y = ~mpg) %>%
   layer_point() %>%
   layer_point(props(fill := "red", size := 25))
 
-# Multiple nested layers
-mtcars %>% ggvis(x = ~wt, y = ~mpg) %>%
-  branch(layer_point()) %>%
-  branch(branch(layer_point(props(fill := "red", size := 25))))
-
 # Two marks at different levels of the tree, with different mappings for a
 # variable
 mtcars %>% ggvis(x = ~wt, y = ~mpg) %>%
