@@ -1,8 +1,5 @@
 ---
 title: ggvis basics
-output:
-  ggvis:::html_document:
-    toc: true
 ---
 
 <!--
@@ -46,36 +43,42 @@ We'll start with `qvis()` because it lets us make graphics very quickly. You can
 
 A basic `qvis()` call creates a scatterplot. It has three arguments: a data set, the variable displayed on the x-axis and the variable on the y-axis.
 
-```{r, results = 'asis'}
+```{r}
 qvis(mtcars, ~wt, ~mpg)
 ```
 
 (If you're not using RStudio, you'll notice that this plot opens in your web browser. That's because all ggvis graphics are web graphics, and need to be shown in the browser. RStudio includes a built-in browser so it can show you the plots directly.)
 
+Normally, we'll use the `%>%` (pronounced pipe) to feed the data into the first argument of `qvis()`. This isn't so important here, but will make more complicated graphics much easier to express:
+
+```{r}
+mtcars %>% qvis(~wt, ~mpg)
+```
+
 If you only supply a dataset and an x-position, `qvis()` will draw a barchart or histogram depending on whether the x variable is categorical or continuous. We use `~` before the variable name to indicate that we don't want to literally use the value of the `wt` variable (which doesn't exist), but instead we want we want to use the `wt` variable inside in the dataset.
 
-```{r, results = 'asis'}
+```{r}
 # A histogram
-qvis(mtcars, ~wt)
+mtcars %>% qvis(~wt)
 # A barchart
-qvis(mtcars, ~factor(cyl))
+mtcars %>% qvis(~factor(cyl))
 ```
 
 You can add more variables to the plot by mapping them to other visual properties like `fill`, `stroke`, `size` and `shape`.
 
-```{r, results = 'asis'}
-qvis(mtcars, ~wt, ~mpg, stroke = ~vs)
-qvis(mtcars, ~wt, ~mpg, fill = ~vs)
-qvis(mtcars, ~wt, ~mpg, size = ~vs)
-qvis(mtcars, ~wt, ~mpg, shape = ~factor(cyl))
+```{r}
+mtcars %>% qvis(~wt, ~mpg, stroke = ~vs)
+mtcars %>% qvis(~wt, ~mpg, fill = ~vs)
+mtcars %>% qvis(~wt, ~mpg, size = ~vs)
+mtcars %>% qvis(~wt, ~mpg, shape = ~factor(cyl))
 ```
 
 If you want to make the points a fixed colour or size, you need to use `:=` instead of `=`. The `:=` operator means to use a raw, unscaled value. This seems like something that `qvis()` should be able to figure out by itself, but making it explicit allows you to create some useful plots that you couldn't otherwise. See the [properties and scales](properties-scales.html) for more details.
 
-```{r, results = 'asis'}
-qvis(mtcars, ~wt, ~mpg, fill := "red", stroke := "black")
-qvis(mtcars, ~wt, ~mpg, size := 300)
-qvis(mtcars, ~wt, ~mpg, shape := "cross")
+```{r}
+mtcars %>% qvis(~wt, ~mpg, fill := "red", stroke := "black")
+mtcars %>% qvis(~wt, ~mpg, size := 300)
+mtcars %>% qvis(~wt, ~mpg, shape := "cross")
 ```
 
 ## Interaction
@@ -84,18 +87,18 @@ As well as mapping visual properties to variables, or setting them to specific v
 
 The following example allows you to control the size and opacity of points with two sliders:
 
-```{r, results = 'asis'}
+```{r}
 slider_s <- input_slider(10, 100)
 slider_o <- input_slider(0, 1, value = 0.5)
 
-qvis(mtcars, ~wt, ~mpg, size := slider_s, opacity := slider_o)
+mtcars %>% qvis(~wt, ~mpg, size := slider_s, opacity := slider_o)
 ```
 
 You can also connect interactive components to other plot parameters like the binwidth of a histogram:
 
-```{r, results = 'asis'}
+```{r}
 binwidth <- input_slider(0, 2, value = 1, step = 0.1)
-qvis(mtcars, ~wt, binwidth = binwidth)
+mtcars %>% qvis(~wt, binwidth = binwidth)
 ```
 
 Behind the scenes, interactive plots are built with [shiny](http://www.rstudio.com/shiny/), and you can currently only have one running at a time in a given R session. To finish with a plot, press the stop button in Rstudio, or close the browser window and then press Ctrl + C in R.
@@ -104,22 +107,24 @@ As well as `input_slider()`, ggvis provides `input_checkbox()`, `input_checkboxg
 
 You can also use keyboard controls with `left_right()` and `up_down()`. Press the left and right arrows to control the size of the points in the next example.
 
-```{r, results = 'asis'}
+```{r}
 keys_s <- left_right(10, 1000, step = 50)
-qvis(mtcars, ~wt, ~mpg, size := keys_s, opacity := 0.5)
+mtcars %>% qvis(~wt, ~mpg, size := keys_s, opacity := 0.5)
 ```
 
 You can also add on more complex types of interaction like tooltips:
 
-```{r, results = 'asis'}
-qvis(mtcars, ~wt, ~mpg) + tooltip(function(df) df$wt)
+```{r}
+mtcars %>% qvis(~wt, ~mpg) %>% tooltip(function(df) df$wt)
 ```
 
 You'll learn more about complex interaction in the [interactivity](interactivity.html) vignette.
 
 ## Layers
 
-The previous examples showed how to make scatterplots and barcharts, but of course you can create many other types of visualisations. You change the visualisation using the `layers` parameter. There are two types of layer:
+The previous examples showed how to make scatterplots and barcharts. To create more advanced visualisations, you'll need to use `ggvis()`. `ggvis()` works almost identically to `qvis()` but it doesn't automatically layer on any data - you'll need to do that yourself.
+
+There are two types of layer:
 
 * Simple, which include primitives like points, lines and rectangles.
 
@@ -127,45 +132,45 @@ The previous examples showed how to make scatterplots and barcharts, but of cour
 
 There are five simple layers:
 
-* Points, `layer_point()`. This is the default layer when you use`qvis()`
+* Points, `layer_points()`. This is the default layer when you use`qvis()`
   with two variables. It has properties `x`, `y`, `shape`, `stroke`, `fill`,
   `strokeOpacity`, `fillOpacity`, and `opacity`.
 
-    ```{r, results = 'asis'}
-    qvis(mtcars, ~wt, ~mpg)
-    qvis(mtcars, ~wt, ~mpg, layers = "point")
+    ```{r}
+    mtcars %>% qvis(~wt, ~mpg)
+    mtcars %>% ggvis(~wt, ~mpg) %>% layer_points()
     ```
 
-* Paths and polygons, `layer_path()`.
+* Paths and polygons, `layer_paths()`.
 
-    ```{r, results = 'asis'}
+    ```{r}
     df <- data.frame(x = 1:10, y = runif(10))
-    qvis(df, ~x, ~y, layers = "path")
+    df %>% ggvis(~x, ~y) %>% layer_paths()
     ```
 
     If you supply a `fill`, you'll get a polygon
 
-    ```{r, results = 'asis'}
+    ```{r}
     t <- seq(0, 2 * pi, length = 100)
     df <- data.frame(x = sin(t), y = cos(t))
-    qvis(df, ~x, ~y, fill := "red", layers = "path")
+    df %>% ggvis(~x, ~y) %>% layer_paths(fill := "red")
     ```
 
-* Filled areas, `layer_area()`. Use properties `y` and `y2` to control the
+* Filled areas, `layer_ribbons()`. Use properties `y` and `y2` to control the
   extent of the area.
 
-    ```{r, results = 'asis'}
+    ```{r}
     df <- data.frame(x = 1:10, y = runif(10))
-    qvis(df, ~x, ~y, layers = "area")
-    qvis(df, ~x, ~y + 0.1, y2 = ~y - 0.1, layers = "area")
+    df %>% ggvis(~x, ~y) %>% layer_ribbons()
+    df %>% ggvis(~x, ~y + 0.1, y2 = ~y - 0.1) %>% layer_ribbons()
     ```
 
-* Rectangles, `layer_rect()`. The location and size of the rectangle is
+* Rectangles, `layer_rects()`. The location and size of the rectangle is
   controlled by the `x`, `x2`, `y` and `y2` properties.
 
-    ```{r, results = 'asis'}
+    ```{r}
     df <- data.frame(x1 = runif(5), x2 = runif(5), y1 = runif(5), y2 = runif(5))
-    qvis(df, ~x1, ~y1, x2 = ~x2, y2 = ~y2, fillOpacity := 0.1, layers = "rect")
+    df %>% ggvis(~x1, ~y1, x2 = ~x2, y2 = ~y2, fillOpacity := 0.1) %>% layer_rects()
     ```
 
 * Text, `layer_text()`. The text layer has many new options to control the
@@ -174,95 +179,72 @@ There are five simple layers:
   name), `fontSize` (size in pixels), `fontWeight` (e.g. bold or normal),
   `fontStyle` (e.g. italic or normal.)
 
-    ```{r, results = 'asis'}
+    ```{r}
     df <- data.frame(x = 3:1, y = c(1, 3, 2), label = c("a", "b", "c"))
-    qvis(df, ~x, ~y, text := ~label, layers = "text")
-    qvis(df, ~x, ~y, text := ~label, layers = "text", fontSize := 50)
-    qvis(df, ~x, ~y, text := ~label, layers = "text", angle := 45)
+    df %>% ggvis(~x, ~y, text := ~label) %>% layer_text()
+    df %>% ggvis(~x, ~y, text := ~label) %>% layer_text(fontSize := 50)
+    df %>% ggvis(~x, ~y, text := ~label) %>% layer_text(angle := 45)
     ```
 
 Four richer layers are:
 
-* `layer_line()` which automatically orders by the x variable:
+* `layer_lines()` which automatically orders by the x variable:
 
-    ```{r, results = 'asis'}
+    ```{r}
     t <- seq(0, 2 * pi, length = 20)
     df <- data.frame(x = sin(t), y = cos(t))
-    qvis(df, ~x, ~y, layers = "path")
-    qvis(df, ~x, ~y, layers = "line")
+    df %>% ggvis(~x, ~y) %>% layer_paths()
+    df %>% ggvis(~x, ~y) %>% layer_lines()
     ```
 
-* `layer_histogram()` and `layer_barchart()` which allow you to explore the
+* `layer_histograms()` and `layer_barcharts()` which allow you to explore the
   distribution of continuous and discrete variables respectively. It bins
   the data then displays the results with `layer_rect()`. This is the default
   layer when `qvis()` is called with a dataset and an `x` variable.
 
-    ```{r, results = 'asis'}
-    qvis(mtcars, ~wt)
-    qvis(mtcars, ~wt, layers = "histogram")
+    ```{r}
+    mtcars %>% qvis(~wt)
+    mtcars %>% ggvis(~wt) %>% layer_histograms()
     ```
 
-    The most important parameter to `layer_histogram()` is the bin width:
+    The most important parameter to `layer_histograms()` is the bin width:
 
-    ```{r, results = 'asis'}
-    qvis(mtcars, ~wt, binwidth = 1)
-    qvis(mtcars, ~wt, binwidth = 0.1)
+    ```{r}
+    mtcars %>% qvis(~wt, binwidth = 1)
+    mtcars %>% qvis(~wt, binwidth = 0.1)
     ```
 
-* `layer_smooth()` fits a smooth model to the data, and displays predictions
+* `layer_smooths()` fits a smooth model to the data, and displays predictions
   with a line and confidence interval. It's useful to highlight the trend
   in noisy data:
 
-    ```{r, results = 'asis'}
-    qvis(mtcars, ~wt, ~mpg, layers = "smooth")
+    ```{r}
+    mtcars %>% ggvis(~wt, ~mpg) %>% layer_smooths()
     ```
 
     You can control the degree of wiggliness with the span parameter:
 
-    ```{r, results = 'asis'}
+    ```{r}
     span <- input_slider(0.2, 1, value = 0.75)
-    qvis(mtcars, ~wt, ~mpg, layers = "smooth", span = span)
+    mtcars %>% ggvis(~wt, ~mpg) %>% layer_smooths(span = span)
     ```
 
 You can learn more about layers in the [layers](layers.html) vignette.
 
 ## Multiple layers
 
-Rich graphics can be created by combining multiple layers on the same plot. There are two ways to combine layers. The first and simplest way is to provide a vector of layer names to `layer`:
+Rich graphics can be created by combining multiple layers on the same plot. This easier to do: just use multiple layer functions:
 
-```{r, results = 'asis'}
-qvis(mtcars, ~wt, ~mpg, layers = c("smooth", "point"))
-```
-
-This is ok for very simple plots, but it's fundamentally limited because you can't use different properties or parameters on different layers. A more flexible approach is to add layers to a base plot:
-
-```{r, results = 'asis'}
-qvis(mtcars, ~wt, ~mpg) + layer_smooth()
+```{r}
+mtcars %>% ggvis(~wt, ~mpg) %>% layer_smoooths() %>% layer_points()
 ```
 
 You could use this approach to add two smoothers with varying degrees of wiggliness:
 
-```{r, results = 'asis'}
-qvis(mtcars, ~wt, ~mpg) +
-  layer_smooth(span = 1, se = FALSE) +
-  layer_smooth(span = 0.3, se = FALSE)
-```
-
-There's an important difference between `qvis()` and individual layers. `qvis()` does some magic to guess whether an argument is a property or an argument to a transformation. The individual layers don't use this magic, so you need to identify properties by wrapping them in `props()`:
-
-```{r, results = 'asis'}
-qvis(mtcars, ~wt, ~mpg, layers = c("point", "smooth"), stroke := "red")
-
-qvis(mtcars, ~wt, ~mpg) +
-  layer_smooth(props(stroke := "red"))
-```
-
-It's confusing to read code that refers to properties in two different ways, so when you start adding on more complex layers it's better to switch from `qvis()` to `ggvis()`:
-
-```{r, results = 'asis'}
-ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
-  layer_point() +
-  layer_smooth(props(stroke := "red"))
+```{r}
+mtcars %>% ggvis(~wt, ~mpg) %>%
+  layer_smooths(span = 1) %>%
+  layer_smooths(span = 0.3, stroke := "red")
 ```
 
 You'll learn more about building up rich hierarchical graphics in [data hierarchy](data-hierarchy.html).

@@ -233,7 +233,7 @@ emit_text <- function(vis, props) {
 #' @rdname marks
 #' @export
 layer_text <- function(vis, ..., data = NULL) {
-  add_mark(vis, "symbol", props(...), data, deparse2(substitute(data)))
+  add_mark(vis, "text", props(...), data, deparse2(substitute(data)))
 }
 
 #' @export
