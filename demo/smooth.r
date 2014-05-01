@@ -2,39 +2,39 @@ library(ggvis)
 
 # Scatter plot with loess model line
 mtcars %>% ggvis(x = ~wt, y = ~mpg) %>%
-  layer_point() %>%
-  transform_smooth(se = F) %>%
-  mark_path(props(x = ~x, y = ~y, stroke := "red"))
+  layer_points() %>%
+  compute_smooth(mpg ~ wt, se = F) %>%
+  mark_path(props(x = ~pred_, y = ~resp_, stroke := "red"))
 
 # Or with shorthand layer_smooth
 mtcars %>% ggvis(x = ~wt, y = ~mpg) %>%
-  layer_point() %>%
-  layer_smooth(props(stroke := "red"))
+  layer_points() %>%
+  layer_smooths(stroke := "red")
 
 # With confidence region
 mtcars %>% ggvis(x = ~wt, y = ~mpg) %>%
-  layer_point() %>%
-  layer_smooth(props(stroke := "red"), se = TRUE)
+  layer_points() %>%
+  layer_smooths(stroke := "red", se = TRUE)
 
 # Scatter plot with lm model line
 mtcars %>% ggvis(x = ~wt, y = ~mpg) %>%
   layer_point() %>%
-  layer_smooth(props(stroke := "red"), method = "lm")
+  layer_model_predictions(stroke := "red", model = "lm")
 
 # Scatterplot with lm and loess
 mtcars %>% ggvis(x = ~wt, y = ~mpg) %>%
-  layer_point() %>%
-  layer_smooth(props(stroke := "blue")) %>%
-  layer_smooth(props(stroke := "red"), method = "lm")
+  layer_points() %>%
+  layer_smooths(stroke := "blue") %>%
+  layer_model_predictions(stroke := "red", model = "lm")
 
-# Scatter plot with linear model for each level of cyl
+# Scatter plot with smooth for each level of cyl
 mtcars %>% ggvis(x = ~wt, y = ~mpg, stroke = ~factor(cyl)) %>%
   group_by(cyl) %>%
-  layer_point() %>%
-  layer_smooth(method = "lm")
+  layer_points() %>%
+  layer_smooths()
 
-# Scatter plot with linear model for each level of cyl, but only points coloured
+# Scatter plot with smooth for each level of cyl, but only points coloured
 mtcars %>% ggvis(x = ~wt, y = ~mpg) %>%
   group_by(cyl) %>%
-  layer_point(props(fill = ~factor(cyl))) %>%
-  layer_smooth(method = "lm")
+  layer_points(fill = ~factor(cyl)) %>%
+  layer_smooths()
