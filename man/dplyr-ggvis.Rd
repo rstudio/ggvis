@@ -41,12 +41,12 @@ base \%>\% filter(mpg > 25) \%>\% layer_points(fill := "red")
 
 base \%>\% mutate(cyl = jitter(cyl)) \%>\% layer_points(fill := "red")
 
-#' # Dynamically restrict range using filter
+# Dynamically restrict range using filter
 mtcars \%>\% ggvis(~disp, ~mpg) \%>\%
    filter(cyl > eval(input_slider(0, 10))) \%>\%
    layer_points()
 
-# Dynamically compute box-cox transformation with transform_mutate
+# Dynamically compute box-cox transformation with mutate
 bc <- function(x, lambda) {
   if (abs(lambda) < 1e-6) log(x) else (x ^ lambda - 1) / lambda
 }
