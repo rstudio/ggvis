@@ -49,7 +49,7 @@ print.ggvis <- function(x, dynamic = NA,
 #' @export
 #' @keywords internal
 is.dynamic <- function(x) {
-  any_apply(x$data, is.reactive) || length(x$reactives) > 0
+  any_apply(x$data, shiny::is.reactive) || length(x$reactives) > 0
 }
 
 
