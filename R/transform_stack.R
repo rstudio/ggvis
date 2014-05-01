@@ -30,12 +30,12 @@
 #'   compute_stack() %>%
 #'   set_dscale("x", "nominal", range = "width", padding = 0, points = FALSE) %>%
 #'   layer_rects(y = ~stack_lwr_, y2 = ~stack_upr_, width = band())
-compute_stack <- function(x, stack_var = NULL, group_var = NULL, ...) {
+compute_stack <- function(x, stack_var = NULL, group_var = NULL) {
   UseMethod("compute_stack")
 }
 
 #' @export
-compute_stack.grouped_df <- function(x, stack_var = NULL, group_var = NULL, ...) {
+compute_stack.grouped_df <- function(x, stack_var = NULL, group_var = NULL) {
   # Save original groups, and restore after stacking
   old_groups <- dplyr::groups(x)
 
@@ -47,7 +47,7 @@ compute_stack.grouped_df <- function(x, stack_var = NULL, group_var = NULL, ...)
 }
 
 #' @export
-compute_stack.data.frame <- function(x, stack_var = NULL, group_var = NULL, ...) {
+compute_stack.data.frame <- function(x, stack_var = NULL, group_var = NULL) {
   x <- dplyr::regroup(x, list(as.name(group_var)))
 
   # FIXME: This is a workaround for dplyr issue #412
@@ -66,7 +66,7 @@ compute_stack.data.frame <- function(x, stack_var = NULL, group_var = NULL, ...)
 }
 
 #' @export
-compute_stack.ggvis <- function(x, stack_var = NULL, group_var = NULL, ...) {
+compute_stack.ggvis <- function(x, stack_var = NULL, group_var = NULL) {
   # Try to figure out the stack_var and group_var, if not explicitly
 
   if (is.null(stack_var)) {

@@ -3,7 +3,7 @@
 \alias{compute_stack}
 \title{Stack overlapping data.}
 \usage{
-compute_stack(x, stack_var = NULL, group_var = NULL, ...)
+compute_stack(x, stack_var = NULL, group_var = NULL)
 }
 \arguments{
 \item{x}{A data object}
