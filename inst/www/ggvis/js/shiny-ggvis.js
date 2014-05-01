@@ -40,14 +40,17 @@ $(function(){ //DOM Ready
       var html;
       if (data === null) {
         html = '';
-      } else {
+      } else if (typeof(data) == 'string') {
         html = data;
+      } else if (typeof(data) == 'object') {
+        html = data.html;
+        dependencies = data.deps;
       }
 
       // Make sure the wrapping div actually contains the floated divs inside
       html = html + '\n<div style="clear:both;"></div>';
 
-      Shiny.renderHtml(html, el);
+      Shiny.renderHtml(html, el, dependencies);
       Shiny.initializeInputs(el);
       Shiny.bindAll(el);
 
