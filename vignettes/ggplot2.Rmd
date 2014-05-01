@@ -4,7 +4,6 @@ output:
   html_document
 ---
 
-
 <!--
 %\VignetteEngine{knitr}
 %\VignetteIndexEntry{ggvis vs ggplot2}
@@ -21,8 +20,14 @@ borrows from many familiar concepts.  Note that ggvis is still very young,
 and many of the interfaces are likely to change as we learn more about what
 works well.
 
-* Basic naming conversions: layer -> node, geom -> mark, stat -> transform,
-aes -> props, ggplot2 -> ggvis, geom + stat -> layer.
+* Basic naming conversions: 
+    * layer, geom -> layer function
+    * stat -> compute function
+    * `aes()` -> `props()`
+    * `ggplot()` -> `ggvis()`
+  
+* ggvis has a function interface so you combine components using `%>%`, 
+  not `+` as in ggplot2.
 
 * Facetting is not currently supported, and when it is supported, it's more
   like to resemble [embedded plots](http://vita.had.co.nz/papers/embedded-plots.html)
@@ -30,10 +35,10 @@ aes -> props, ggplot2 -> ggvis, geom + stat -> layer.
 
 * In ggplot2, the definition of a geom was somewhat blurred, because of things
   like `geom_histogram()` which combined `geom_bar()` with `stat_bin()`. The
-  distinction is more clear in ggvis: pure geoms correspond to marks, and
-  combined geoms and stats correspond to layers.
+  distinction is more clear in ggvis: pure geoms correspond to `emit_*` which
+  emit marks, and combined geoms and stats correspond to layers.
 
-* The ggvis function `qvis` is analogous to ggplot2's `qplot`.
+* The ggvis function `qvis()` is analogous to ggplot2's `qplot()`.
 
 * Vega provides a smaller set of scales than ggplot2 (just ordinal,
   quantitative, and time), but they are much more flexible than ggplot2 scales,
