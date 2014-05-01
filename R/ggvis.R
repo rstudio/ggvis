@@ -27,12 +27,28 @@ ggvis <- function(data = NULL, ..., env = parent.frame()) {
   )
 
   vis <- add_data(vis, data, deparse2(substitute(data)))
-
-  props <- props(..., env = env)
-  vis <- register_props(vis, props)
-
+  vis <- add_props(vis, ..., env = env)
   vis
 }
+
+
+#' Add visual properties to a visualisation
+#'
+#' @param vis Visualisation to modify.
+#' @param ... Named visual properties.
+#' @export
+#' @examples
+#' mtcars %>% ggvis(~wt, ~mpg) %>% layer_points()
+#' mtcars %>% ggvis() %>% add_props(~wt, ~mpg) %>% layer_points()
+#' mtcars %>% ggvis(~wt) %>% add_props(y = ~mpg) %>% layer_points()
+add_props <- function(vis, ..., .props = NULL, inherit = TRUE,
+                      env = parent.frame()) {
+  cur_props <- vis$cur_props
+  new_props <- props(..., .props = .props, inherit = inherit, env = env)
+
+  register_props(vis, merge_props(cur_props, new_props))
+}
+
 
 #' Add dataset to a visualisation
 #'
@@ -70,23 +86,17 @@ add_mark <- function(vis, type = NULL, props = NULL, data = NULL,
 
   # Save current data
   old_data <- vis$cur_data
+  old_props <- vis$cur_props
 
   vis <- add_data(vis, data, data_name)
-  data <- vis$cur_data
-
-  # Calculate the props for this layer
-  new_props <- merge_props(vis$cur_props, props)
-
-  # Register the props with the vis if needed
-  if (!is.null(props)) {
-    vis <- register_props(vis, new_props, update_current = FALSE)
-  }
-
-  vis$marks <- c(vis$marks, list(mark(type, props = new_props,
-                                      data = vis$cur_data)))
+  vis <- add_props(vis, .props = props)
+  vis$marks <- c(vis$marks, list(
+    mark(type, props = vis$cur_props, data = vis$cur_data))
+  )
 
   # Restore old data
   vis$cur_data <- old_data
+  vis$cur_props <- old_props
   vis
 }
 
@@ -170,8 +180,6 @@ register_computation <- function(vis, args, name, transform = NULL) {
 
   vis
 }
-
-
 
 # Register a property set object in the ggvis object's props list.
 # @param vis A ggvis object.
