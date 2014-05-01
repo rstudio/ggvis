@@ -44,7 +44,6 @@ Collate:
     'flatten.R'
     'full_seq.R'
     'ggvis.R'
-    'guess.R'
     'guide_axis.R'
     'guide_legend.R'
     'input-handler.R'
