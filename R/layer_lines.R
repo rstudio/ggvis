@@ -14,11 +14,14 @@
 #'
 #' # Equivalent to
 #' mtcars2 %>% ggvis(~wt, ~mpg, stroke = ~cyl) %>%
-#'   group_by(cyl) %>% transform_sort() %>% layer_paths()
+#'   group_by(cyl) %>% arrange(wt) %>% layer_paths()
 layer_lines <- function(vis, ..., sort = TRUE) {
+
+  x_var <- vis$cur_props$x$value
+
   branch_f(vis, function(x) {
     x <- auto_group(x)
-    if (sort) x <- transform_sort(x)
+    if (sort) x <- do_call(quote(dplyr::arrange), quote(x), x_var)
     emit_paths(x, props(...))
   })
 }
