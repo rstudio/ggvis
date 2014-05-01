@@ -15,11 +15,9 @@ half-way between \code{min} and \code{max}.}
 \item{step}{How much each key press changes \code{value}. Defaults to
 40 steps along range}
 
-\item{min}{The minimum value (inclusive) that can be
-  selected.}
+\item{min}{The minimum value (inclusive) that can be selected.}
 
-\item{max}{The maximum value (inclusive) that can be
-  selected.}
+\item{max}{The maximum value (inclusive) that can be selected.}
 }
 \description{
 Interactive inputs bound to arrow keys.
