@@ -167,3 +167,6 @@ quote_text <- function(txt) {
   txt <- gsub('"', '\\\\"', txt, fixed = TRUE)
   paste0('"', txt, '"')
 }
+
+
+cur_data <- function(x) shiny::isolate(x$cur_data())

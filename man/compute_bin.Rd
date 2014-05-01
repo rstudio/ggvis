@@ -35,12 +35,12 @@ A data frame with columns:
 Bin and count data.
 }
 \examples{
-mtcars \%>\% compute_bin("mpg")
-mtcars \%>\% compute_bin("mpg", binwidth = 10)
-mtcars \%>\% group_by(cyl) \%>\% compute_bin("mpg", binwidth = 10)
+mtcars \%>\% compute_bin(~mpg)
+mtcars \%>\% compute_bin(~mpg, binwidth = 10)
+mtcars \%>\% group_by(cyl) \%>\% compute_bin(~mpg, binwidth = 10)
 
 # It doesn't matter whether you transform inside or outside of a vis
-mtcars \%>\% compute_bin("mpg") \%>\% ggvis(~ x_, ~ count_) \%>\% layer_paths()
-mtcars \%>\% ggvis(~ x_, ~ count_) \%>\% compute_bin("mpg") \%>\% layer_paths()
+mtcars \%>\% compute_bin(~mpg) \%>\% ggvis(~ x_, ~ count_) \%>\% layer_paths()
+mtcars \%>\% ggvis(~ x_, ~ count_) \%>\% compute_bin(~mpg) \%>\% layer_paths()
 }
 

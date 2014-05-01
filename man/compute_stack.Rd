@@ -16,10 +16,10 @@ compute_stack(x, stack_var = NULL, group_var = NULL)
 Stack overlapping data.
 }
 \examples{
-mtcars \%>\% cbind(count = 1) \%>\% compute_stack("count", "cyl")
+mtcars \%>\% cbind(count = 1) \%>\% compute_stack(~count, ~cyl)
 
 # Shouldn't use or affect existing grouping
-mtcars \%>\% cbind(count = 1) \%>\% group_by(am) \%>\% compute_stack("count", "cyl")
+mtcars \%>\% cbind(count = 1) \%>\% group_by(am) \%>\% compute_stack(~count, ~cyl)
 
 # If given a ggvis object, will use x variable for stacking by default
 mtcars \%>\% ggvis(x = ~cyl, y = ~wt) \%>\%
@@ -29,7 +29,7 @@ mtcars \%>\% ggvis(x = ~cyl, y = ~wt) \%>\%
 
 # Collapse across hair & eye colour data across sex
 hec <- as.data.frame(xtabs(Freq ~ Hair + Eye, HairEyeColor))
-hec \%>\% compute_stack("Freq", "Hair")
+hec \%>\% compute_stack(~Freq, ~Hair)
 
 # Without stacking - bars overlap
 hec \%>\% ggvis(~Hair, ~Freq, fill = ~Eye, fillOpacity := 0.5) \%>\%

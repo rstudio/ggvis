@@ -5,10 +5,10 @@
 #' @param stack_var A string specifying the stacking variable.
 #' @param group_var A string specifying the grouping variable.
 #' @examples
-#' mtcars %>% cbind(count = 1) %>% compute_stack("count", "cyl")
+#' mtcars %>% cbind(count = 1) %>% compute_stack(~count, ~cyl)
 #'
 #' # Shouldn't use or affect existing grouping
-#' mtcars %>% cbind(count = 1) %>% group_by(am) %>% compute_stack("count", "cyl")
+#' mtcars %>% cbind(count = 1) %>% group_by(am) %>% compute_stack(~count, ~cyl)
 #'
 #' # If given a ggvis object, will use x variable for stacking by default
 #' mtcars %>% ggvis(x = ~cyl, y = ~wt) %>%
@@ -18,7 +18,7 @@
 #'
 #' # Collapse across hair & eye colour data across sex
 #' hec <- as.data.frame(xtabs(Freq ~ Hair + Eye, HairEyeColor))
-#' hec %>% compute_stack("Freq", "Hair")
+#' hec %>% compute_stack(~Freq, ~Hair)
 #'
 #' # Without stacking - bars overlap
 #' hec %>% ggvis(~Hair, ~Freq, fill = ~Eye, fillOpacity := 0.5) %>%
@@ -36,6 +36,8 @@ compute_stack <- function(x, stack_var = NULL, group_var = NULL) {
 
 #' @export
 compute_stack.grouped_df <- function(x, stack_var = NULL, group_var = NULL) {
+  assert_that(is.formula(stack_var), is.formula(group_var))
+
   # Save original groups, and restore after stacking
   old_groups <- dplyr::groups(x)
 
@@ -48,7 +50,9 @@ compute_stack.grouped_df <- function(x, stack_var = NULL, group_var = NULL) {
 
 #' @export
 compute_stack.data.frame <- function(x, stack_var = NULL, group_var = NULL) {
-  x <- dplyr::regroup(x, list(as.name(group_var)))
+  assert_that(is.formula(stack_var), is.formula(group_var))
+
+  x <- do_call(dplyr::regroup, quote(x), list(list(group_var[[2]])))
 
   # FIXME: This is a workaround for dplyr issue #412
   lag <- dplyr::lag
@@ -58,7 +62,7 @@ compute_stack.data.frame <- function(x, stack_var = NULL, group_var = NULL) {
   #                     stack_lwr_ = lag(stack_upr_))
   # but with value of stack_var in the right place.
   x <- do_call(dplyr::mutate, quote(x),
-    stack_upr_ = call("cumsum", as.name(stack_var)),
+    stack_upr_ = call("cumsum", stack_var[[2]]),
     stack_lwr_ = quote(lag(stack_upr_, default = 0))
   )
 
@@ -69,8 +73,8 @@ compute_stack.data.frame <- function(x, stack_var = NULL, group_var = NULL) {
 compute_stack.ggvis <- function(x, stack_var = NULL, group_var = NULL) {
   # Try to figure out the stack_var and group_var, if not explicitly
 
-  group_var <- group_var %||% as.character(find_prop_var(x$cur_props, "x.update"))
-  stack_var <- stack_var %||% as.character(find_prop_var(x$cur_props, "y.update"))
+  group_var <- group_var %||% find_prop_var(x$cur_props, "x.update")
+  stack_var <- stack_var %||% find_prop_var(x$cur_props, "y.update")
 
   args <- list(stack_var = stack_var, group_var = group_var)
 
@@ -79,6 +83,7 @@ compute_stack.ggvis <- function(x, stack_var = NULL, group_var = NULL) {
     preserve_constants(data, output)
   })
 }
+
 
 find_prop_var <- function(props, name) {
   prop <- props[[name]]
@@ -90,5 +95,16 @@ find_prop_var <- function(props, name) {
     stop("Visual property ", name, " is not a variable", call. = FALSE)
   }
 
-  prop$value
+  formula(prop)
+}
+
+
+#' @export
+formula.prop <- function(x) {
+  eval(substitute(~x, list(x = x$value)), x$env)
+}
+
+eval_vector <- function(x, f) UseMethod("eval_vector")
+eval_vector.data.frame <- function(x, f) {
+  eval(f[[2]], x, environment(f))
 }

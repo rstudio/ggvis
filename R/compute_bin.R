@@ -19,13 +19,13 @@
 #'  \item{xmax_}{right boundary of bin}
 #'  \item{width_}{width of bin}
 #' @examples
-#' mtcars %>% compute_bin("mpg")
-#' mtcars %>% compute_bin("mpg", binwidth = 10)
-#' mtcars %>% group_by(cyl) %>% compute_bin("mpg", binwidth = 10)
+#' mtcars %>% compute_bin(~mpg)
+#' mtcars %>% compute_bin(~mpg, binwidth = 10)
+#' mtcars %>% group_by(cyl) %>% compute_bin(~mpg, binwidth = 10)
 #'
 #' # It doesn't matter whether you transform inside or outside of a vis
-#' mtcars %>% compute_bin("mpg") %>% ggvis(~ x_, ~ count_) %>% layer_paths()
-#' mtcars %>% ggvis(~ x_, ~ count_) %>% compute_bin("mpg") %>% layer_paths()
+#' mtcars %>% compute_bin(~mpg) %>% ggvis(~ x_, ~ count_) %>% layer_paths()
+#' mtcars %>% ggvis(~ x_, ~ count_) %>% compute_bin(~mpg) %>% layer_paths()
 compute_bin <- function(x, x_var, w_var = NULL, binwidth = NULL,
                         origin = NULL, right = TRUE) {
   UseMethod("compute_bin")
@@ -34,11 +34,13 @@ compute_bin <- function(x, x_var, w_var = NULL, binwidth = NULL,
 #' @export
 compute_bin.data.frame <- function(x, x_var, w_var = NULL, binwidth = NULL,
                                    origin = NULL, right = TRUE) {
-  x_val <- x[[x_var]]
+  assert_that(is.formula(x_var))
+
+  x_val <- eval_vector(x, x_var)
   if (is.null(w_var)) {
     w_val <- NULL
   } else {
-    w_val <- x[[w_var]]
+    w_val <- eval_vector(x, w_var)
   }
 
   params <- bin_params(range(x_val), binwidth = binwidth, origin = origin,

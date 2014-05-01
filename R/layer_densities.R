@@ -34,7 +34,7 @@
 layer_densities <- function(vis, ..., kernel = "gaussian", adjust = 1,
                             density_args = list(), area = TRUE) {
 
-  x_var <- as.character(find_prop_var(cur_props, "x.update"))
+  x_var <- find_prop_var(vis$cur_props, "x.update")
   props <- stroke_fill_defaults(props(...),
     stroke = props(~pred_, ~resp_),
     fill   = props(~pred_, ~resp_, y2 = 0, fillOpacity := 0.2)

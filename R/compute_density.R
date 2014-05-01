@@ -2,7 +2,7 @@
 #'
 #' @param x Dataset (data frame, \code{grouped_df} or ggvis) object to work
 #'   with.
-#' @param x_var,weight_var Names of variables to use for x position, and for
+#' @param x_var,w_var Names of variables to use for x position, and for
 #'   weights.
 #' @param kernel Smoothing kernel. See \code{\link{density}} for details.
 #' @param trim If \code{TRUE}, the default, density estimates are trimmed to the
@@ -21,33 +21,35 @@
 #' mtcars %>% compute_density("mpg", n = 5)
 #' mtcars %>% group_by(cyl) %>% compute_density("mpg", n = 5)
 #' mtcars %>% ggvis(~mpg) %>% compute_density("mpg", n = 5)
-compute_density <- function(x, x_var, weight_var = NULL, kernel = "gaussian",
+compute_density <- function(x, x_var, w_var = NULL, kernel = "gaussian",
                             trim = FALSE, n = 256L, na.rm = FALSE, ...) {
 
   UseMethod("compute_density")
 }
 
 #' @export
-compute_density.data.frame <- function(x, x_var, weight_var = NULL,
+compute_density.data.frame <- function(x, x_var, w_var = NULL,
                                        kernel = "gaussian",
                                        trim = FALSE, n = 256L,
                                        na.rm = FALSE, ...) {
 
+  assert_that(is.formula(x_var))
+
   # Extract variables from data frame
-  x_vals <- x[[x_var]]
-  if (!is.null(weight_var)) {
-    w_vals <- x[[weight_var]]
+  x_val <- eval_vector(x, x_var)
+  if (is.null(w_var)) {
+    w_val <- NULL
   } else {
-    w_vals <- NULL
+    w_val <- eval_vector(x, w_var)
   }
 
   # Build call to density()
-  call <- make_call("density", quote(x_vals), weights = quote(w_vals),
+  call <- make_call("density", quote(x_val), weights = quote(w_val),
     kernel = kernel, n = n, na.rm = na.rm, ...)
 
   if (trim) {
-    call$from <- min(x_vals)
-    call$to   <- max(x_vals)
+    call$from <- min(x_val)
+    call$to   <- max(x_val)
   }
   dens <- eval(call)
 
@@ -56,18 +58,18 @@ compute_density.data.frame <- function(x, x_var, weight_var = NULL,
 }
 
 #' @export
-compute_density.grouped_df <- function(x, x_var, weight_var = NULL,
+compute_density.grouped_df <- function(x, x_var, w_var = NULL,
                                        kernel = "gaussian", trim = FALSE,
                                        n = 256L, na.rm = FALSE, ...) {
-  dplyr::do(x, compute_density(., x_var = x_var, weight_var = weight_var,
+  dplyr::do(x, compute_density(., x_var = x_var, w_var = w_var,
     kernel = kernel, trim = trim, n = n, na.rm = na.rm, ...))
 }
 
 #' @export
-compute_density.ggvis <- function(x, x_var, weight_var = NULL,
+compute_density.ggvis <- function(x, x_var, w_var = NULL,
                                   kernel = "gaussian", trim = FALSE,
                                   n = 256L, na.rm = FALSE, ...) {
-  args <- list(x_var = x_var, weight_var = weight_var, kernel = kernel,
+  args <- list(x_var = x_var, w_var = w_var, kernel = kernel,
     trim = trim, n = n, na.rm = na.rm, ...)
 
   register_computation(x, args, "density", function(data, args) {

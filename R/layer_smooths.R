@@ -49,12 +49,12 @@
 #'
 #' # layer_smooths() is just smooth() + layer_paths()
 #' # Run smooth outside of a visualisation to see what variables you get
-#' mtcars %>% smooth(mpg ~ wt)
+#' mtcars %>% compute_smooth(mpg ~ wt)
 #'
 #' mtcars %>%
 #'   ggvis(~wt, ~mpg) %>%
 #'   layer_points() %>%
-#'   smooth(mpg ~ wt) %>%
+#'   compute_smooth(mpg ~ wt) %>%
 #'   layer_paths(~pred_, ~resp_, strokeWidth := 2)
 layer_model_predictions <- function(vis, ..., model, formula = NULL,
   model_args = NULL, se = FALSE) {
@@ -88,8 +88,8 @@ layer_smooths <- function(vis, ..., span = 0.75, se = FALSE) {
 
 guess_formula <- function(props, method, quiet = FALSE) {
   vars <- list(
-    x = find_prop_var(props, "x.update"),
-    y = find_prop_var(props, "y.update")
+    x = find_prop_var(props, "x.update")[[2]],
+    y = find_prop_var(props, "y.update")[[2]]
   )
 
   if (identical(method, "gam")) {
