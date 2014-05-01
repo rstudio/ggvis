@@ -21,8 +21,8 @@
 auto_group <- function(vis) {
 
   # Figure out grouping variable
-  data <- shiny::isolate(vis$cur_data())
-  props <- vis$cur_props
+  data <- cur_data(vis)
+  props <- cur_props(vis)
 
   countable <- vapply(props,
     function(prop) prop$type == "variable" && prop_countable(data, prop),

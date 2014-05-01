@@ -170,3 +170,4 @@ quote_text <- function(txt) {
 
 
 cur_data <- function(x) shiny::isolate(x$cur_data())
+cur_props <- function(x) x$cur_props

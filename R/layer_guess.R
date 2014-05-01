@@ -24,7 +24,7 @@
 #' mtcars %>% ggvis(~mpg) %>% layer_guess()
 layer_guess <- function(vis, ...) {
   props <- vis$cur_props
-  data <- shiny::isolate(vis$cur_data())
+  data <- cur_data(vis)
 
   if ("y.update" %in% names(props)) {
     layer_points(vis, ...)

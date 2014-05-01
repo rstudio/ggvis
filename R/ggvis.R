@@ -43,9 +43,8 @@ ggvis <- function(data = NULL, ..., env = parent.frame()) {
 #' mtcars %>% ggvis(~wt) %>% add_props(y = ~mpg) %>% layer_points()
 add_props <- function(vis, ..., .props = NULL, inherit = TRUE,
                       env = parent.frame()) {
-  cur_props <- vis$cur_props
   new_props <- props(..., .props = .props, inherit = inherit, env = env)
-  both_props <- merge_props(cur_props, new_props)
+  both_props <- merge_props(cur_props(vis), new_props)
 
   vis$props[[props_id(props)]] <- both_props
   vis$cur_props <- both_props
