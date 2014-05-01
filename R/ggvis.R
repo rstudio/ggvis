@@ -26,22 +26,24 @@ ggvis <- function(data = NULL, ..., env = parent.frame()) {
     class = "ggvis"
   )
 
-  if (!is.null(data)) {
-    data_prefix <- deparse2(substitute(data))
-
-    # Make sure data is reactive
-    if (!shiny::is.reactive(data)) {
-      static_data <- data
-      data <- function() static_data
-    }
-
-    vis <- register_data(vis, data, prefix = data_prefix)
-  }
+  vis <- add_data(vis, data, deparse2(substitute(data)))
 
   props <- props(..., env = env)
   vis <- register_props(vis, props)
 
   vis
+}
+
+add_data <- function(vis, data, name = deparse2(substitute(data))) {
+  if (is.null(data)) return(vis)
+
+  # Make sure data is reactive
+  if (!shiny::is.reactive(data)) {
+    static_data <- data
+    data <- function() static_data
+  }
+
+  register_data(vis, data, prefix = name)
 }
 
 #' Is an object a ggvis object?
@@ -59,16 +61,8 @@ add_mark <- function(vis, type = NULL, props = NULL, data = NULL,
   # Save current data
   old_data <- vis$cur_data
 
-  # Get the data object and register it if necessary
-  if (is.null(data)) {
-    data <- vis$cur_data
-
-  } else {
-    if (!shiny::is.reactive(data)) {
-      data <- as.reactive(data)
-    }
-    vis <- register_data(vis, data, prefix = data_name, update_current = TRUE)
-  }
+  vis <- add_data(vis, data, data_name)
+  data <- vis$cur_data
 
   # Calculate the props for this layer
   new_props <- merge_props(vis$cur_props, props)

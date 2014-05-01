@@ -32,7 +32,6 @@ brush_tooltip <- function(f) {
   handler("brush_tooltip", "brush", list(f = f))
 }
 
-#' @export
 as.reactive.brush_tooltip <- function(x, session = NULL, ...) {
   h <- Brush(session, id = x$id)
 

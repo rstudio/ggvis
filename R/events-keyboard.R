@@ -51,7 +51,6 @@ left_right <- function(min, max, value = (min + max) / 2,
   )
 }
 
-#' @export
 as.reactive.left_right <- function(x, session = NULL, ...) {
   if (is.null(session)) return(shiny::reactive(x$control_args$value))
 
@@ -72,7 +71,6 @@ up_down <- function(min, max, value = (min + max) / 2,
   )
 }
 
-#' @export
 as.reactive.up_down <- function(x, session = NULL, ...) {
   if (is.null(session)) return(shiny::reactive(x$control_args$value))
 

@@ -105,7 +105,6 @@ tooltip <- function(f) {
   handler("tooltip", "hover", list(f = f))
 }
 
-#' @export
 as.reactive.tooltip <- function(x, session = NULL, ...) {
   if (is.null(session)) return()
 
@@ -147,7 +146,6 @@ click_tooltip <- function(f) {
   handler("click_tooltip", "click", list(f = f))
 }
 
-#' @export
 as.reactive.click_tooltip <- function(x, session = NULL, ...) {
   h <- Click(session, id = x$id)
 

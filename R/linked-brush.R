@@ -53,7 +53,6 @@ reactive_proxy <- function(rv, name, default, trans = identity, id = rand_id()) 
     class = c("reactive_proxy", "input"))
 }
 
-#' @export
 as.reactive.reactive_proxy <- function(x, session = NULL, ...) {
   if (is.null(session)) return(reactive(x$default))
 

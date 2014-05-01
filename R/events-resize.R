@@ -45,7 +45,6 @@ resize <- function(f) {
   handler("resize", "resize", list(f = f))
 }
 
-#' @export
 as.reactive.resize <- function(x, session = NULL, ...) {
   h <- Resize(session, id = x$id)
 
