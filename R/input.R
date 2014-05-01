@@ -63,7 +63,7 @@ input_id <- function(x) {
   attr(x, "input_id")
 }
 
-`input_id-` <- function(x, value) {
+`input_id<-` <- function(x, value) {
   attr(x, "input_id") <- value
   x
 }
