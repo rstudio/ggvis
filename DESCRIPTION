@@ -26,16 +26,15 @@ VignetteBuilder: knitr
 Roxygen: list(wrap = FALSE)
 License: GPL-2
 Collate:
-    'auto_group.R'
     'branch.R'
+    'compute_auto_group.R'
     'compute_bin.R'
     'compute_density.R'
+    'compute_dplyr.R'
     'compute_smooth.R'
     'compute_stack.R'
     'controls.R'
     'df_to_d3json.R'
-    'dplyr-group.R'
-    'dplyr-verbs.R'
     'utils.R'
     'events.R'
     'events-mouse.R'
