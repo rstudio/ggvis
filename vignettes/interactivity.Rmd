@@ -1,8 +1,5 @@
 ---
 title: Interactivity
-output:
-  ggvis:::html_document:
-    toc: true
 ---
 
 <!--
@@ -41,10 +38,11 @@ A plot with basic interactive controls looks very similar to a static plot.
 You just replace constant values with functions that produce interactive
 controls like `input_slider()`:
 
-```{r, results = 'asis'}
-ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
-  layer_smooth(span = input_slider(0.5, 1, 1)) +
-  layer_point(props(size := input_slider(100, 1000)))
+```{r}
+mtcars %>%
+  ggvis(~wt, ~mpg) %>%
+  layer_smooths(span = input_slider(0.5, 1, 1)) %>%
+  layer_points(size := input_slider(100, 1000))
 ```
 
 As well as `input_slider()`, which produces a slider (or a double-ended range
@@ -91,20 +89,20 @@ the plot.
 
 1.  Use the regular property inheritance structure:
 
-    ```{r, results = 'asis'}
-    ggvis(mtcars, props(x = ~wt, y = ~mpg, size := input_slider(10, 1000)),
-      layer_point(props(fill := "red")),
-      layer_point(props(stroke := "black", fill := NA))
-    )
+    ```{r}
+    mtcars %>%
+      ggvis(~wt, ~mpg, size := input_slider(10, 1000)) %>%
+      layer_points(fill := "red") %>%
+      layer_points(stroke := "black", fill := NA)
     ```
 
 2. Create the input and assign it to a variable:
 
-    ```{r, results = 'asis'}
+    ```{r}
     slider <- input_slider(10, 1000)
-    ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
-      layer_point(props(fill := "red", size := slider)) +
-      layer_point(props(stroke := "black", fill := NA, size := slider))
+    mtcars %>% ggvis(~wt, ~mpg) %>%
+      layer_points(fill := "red", size := slider) %>%
+      layer_points(stroke := "black", fill := NA, size := slider)
     ```
 
     This is a little more typing, but is more flexible.
@@ -114,15 +112,15 @@ used for both layers - it controls the size of both the red and the black
 points. In the second plot, you get two independent sliders which allow you to
 control the size of the red and black points independently.
 
-```{r, results = 'asis'}
+```{r}
 slider <- input_slider(100, 1000)
-ggvis(mtcars, props(x = ~wt, y = ~mpg),
-  layer_point(props(size := slider)),
-  layer_point(props(fill := "red", opacity := 0.5, size := slider)))
+mtcars %>% ggvis(~wt, ~mpg) %>%
+  layer_points(size := slider) %>% 
+  layer_points(fill := "red", opacity := 0.5, size := slider)
 
-ggvis(mtcars, props(x = ~wt, y = ~mpg),
-  layer_point(props(size := input_slider(100, 1000))),
-  layer_point(props(fill := "red", size := input_slider(100, 1000))))
+mtcars %>% ggvis(~wt, ~mpg) %>%
+  layer_points(size := input_slider(100, 1000)) %>% 
+  layer_points(fill := "red", size := input_slider(100, 1000))
 ```
 
 ### Property mappings
@@ -186,9 +184,7 @@ with `ui.r`, and the third argument is the session object).
 
 ```{r, eval = FALSE}
 gv <- reactive({
-  ggvis(mtcars, props(x = ~disp, y = ~mpg, size := input$size),
-    layer_point()
-  )
+  mtcars %>% ggvis(~disp, ~mpg, size := input$size) %>% layer_point()
 })
 observe_ggvis(gv, "my_plot", session)
 ```

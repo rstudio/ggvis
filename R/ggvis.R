@@ -199,7 +199,7 @@ register_reactive <- function(vis, reactive) {
   label <- reactive_id(reactive)
 
   # Don't add if already registered
-  if (label %in% names(vis$reactives)) return()
+  if (label %in% names(vis$reactives)) return(vis)
 
   vis$reactives[[label]] <- reactive
   vis
