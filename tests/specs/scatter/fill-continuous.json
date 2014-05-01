@@ -1,7 +1,7 @@
 {
 	"data" : [
 		{
-			"name" : "df_5d6dccca750b57e8b95a60db154cdb8e",
+			"name" : "df_7d600f5e",
 			"format" : {
 				"type" : "csv",
 				"parse" : {
@@ -26,7 +26,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "df_5d6dccca750b57e8b95a60db154cdb8e",
+						"data" : "df_7d600f5e",
 						"field" : "data.x"
 					}
 				]
@@ -44,7 +44,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "df_5d6dccca750b57e8b95a60db154cdb8e",
+						"data" : "df_7d600f5e",
 						"field" : "data.y"
 					}
 				]
@@ -65,7 +65,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "df_5d6dccca750b57e8b95a60db154cdb8e",
+						"data" : "df_7d600f5e",
 						"field" : "data.z"
 					}
 				]
@@ -95,12 +95,12 @@
 				},
 				"ggvis" : {
 					"data" : {
-						"value" : "df_5d6dccca750b57e8b95a60db154cdb8e"
+						"value" : "df_7d600f5e"
 					}
 				}
 			},
 			"from" : {
-				"data" : "df_5d6dccca750b57e8b95a60db154cdb8e"
+				"data" : "df_7d600f5e"
 			}
 		}
 	],
@@ -109,8 +109,7 @@
 	"legends" : [
 		{
 			"fill" : "fill",
-			"orient" : "right",
-			"title" : "z"
+			"orient" : "right"
 		}
 	],
 	"axes" : [
@@ -119,16 +118,14 @@
 			"scale" : "x",
 			"orient" : "bottom",
 			"layer" : "back",
-			"grid" : true,
-			"title" : "x"
+			"grid" : true
 		},
 		{
 			"type" : "y",
 			"scale" : "y",
 			"orient" : "left",
 			"layer" : "back",
-			"grid" : true,
-			"title" : "y"
+			"grid" : true
 		}
 	],
 	"padding" : null,

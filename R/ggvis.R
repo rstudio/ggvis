@@ -207,7 +207,7 @@ register_reactive <- function(vis, reactive) {
 #' @param ... other arguments passed to \code{as.vega}
 #' @keywords internal
 #' @export
-save_spec <- function(path, x = last_vis(), ...) {
+save_spec <- function(x, path, ...) {
   assert_that(is.ggvis(x), is.string(path))
 
   json <- RJSONIO::toJSON(as.vega(x, ...), pretty = TRUE)

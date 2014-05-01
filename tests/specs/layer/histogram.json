@@ -1,16 +1,16 @@
 {
 	"data" : [
 		{
-			"name" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_bin_3d0bf789",
+			"name" : "mtcars_a90e789a/bin_efdfe8fd",
 			"format" : {
 				"type" : "csv",
 				"parse" : {
-					"xmin__" : "number",
-					"xmax__" : "number",
-					"count__" : "number"
+					"xmin_" : "number",
+					"xmax_" : "number",
+					"count_" : "number"
 				}
 			},
-			"values" : "\"xmin__\",\"xmax__\",\"count__\"\n0,1,0\n1,2,4\n2,3,8\n3,4,16\n4,5,1\n5,6,3\n6,7,0"
+			"values" : "\"xmin_\",\"xmax_\",\"count_\"\n0,1,0\n1,2,4\n2,3,8\n3,4,16\n4,5,1\n5,6,3\n6,7,0"
 		}
 	],
 	"scales" : [
@@ -26,12 +26,12 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_bin_3d0bf789",
-						"field" : "data.xmin__"
+						"data" : "mtcars_a90e789a/bin_efdfe8fd",
+						"field" : "data.xmin_"
 					},
 					{
-						"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_bin_3d0bf789",
-						"field" : "data.xmax__"
+						"data" : "mtcars_a90e789a/bin_efdfe8fd",
+						"field" : "data.xmax_"
 					}
 				]
 			}
@@ -48,8 +48,8 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_bin_3d0bf789",
-						"field" : "data.count__"
+						"data" : "mtcars_a90e789a/bin_efdfe8fd",
+						"field" : "data.count_"
 					}
 				]
 			}
@@ -68,15 +68,15 @@
 					},
 					"x" : {
 						"scale" : "x",
-						"field" : "data.xmin__"
+						"field" : "data.xmin_"
 					},
 					"x2" : {
 						"scale" : "x",
-						"field" : "data.xmax__"
+						"field" : "data.xmax_"
 					},
 					"y" : {
 						"scale" : "y",
-						"field" : "data.count__"
+						"field" : "data.count_"
 					},
 					"y2" : {
 						"scale" : "y",
@@ -85,12 +85,12 @@
 				},
 				"ggvis" : {
 					"data" : {
-						"value" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_bin_3d0bf789"
+						"value" : "mtcars_a90e789a/bin_efdfe8fd"
 					}
 				}
 			},
 			"from" : {
-				"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_bin_3d0bf789"
+				"data" : "mtcars_a90e789a/bin_efdfe8fd"
 			}
 		}
 	],
@@ -103,16 +103,14 @@
 			"scale" : "x",
 			"orient" : "bottom",
 			"layer" : "back",
-			"grid" : true,
-			"title" : "xmin__"
+			"grid" : true
 		},
 		{
 			"type" : "y",
 			"scale" : "y",
 			"orient" : "left",
 			"layer" : "back",
-			"grid" : true,
-			"title" : "count__"
+			"grid" : true
 		}
 	],
 	"padding" : null,
