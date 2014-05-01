@@ -3,7 +3,7 @@
 \alias{ggvis}
 \title{Visualise a data set with a ggvis graphic.}
 \usage{
-ggvis(data, ..., env = parent.frame())
+ggvis(data = NULL, ..., env = parent.frame())
 }
 \arguments{
 \item{data}{A data object.}
