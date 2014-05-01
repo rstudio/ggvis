@@ -130,15 +130,6 @@ to_csv.data.frame <- function(x, header = TRUE) {
   rows
 }
 
-#' @export
-to_csv.split_df <- function(x, header = TRUE) {
-  headers <- logical(length(x))
-  # If we want a header, only add it for the first data frame in the split_df
-  if (header) headers[1] <- TRUE
-
-  paste(mapply(to_csv, x, header = headers), collapse = "\n")
-}
-
 # Format a vector for csv output
 format_vec_csv <- function(vec) UseMethod("format_vec_csv")
 #' @export
