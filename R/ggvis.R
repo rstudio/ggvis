@@ -34,6 +34,16 @@ ggvis <- function(data = NULL, ..., env = parent.frame()) {
   vis
 }
 
+#' Add dataset to a visualisation
+#'
+#' @param vis Visualisation to modify.
+#' @param data Data set to add.
+#' @param name Data of data - optional, but helps produce informative
+#'  error messages.
+#' @export
+#' @examples
+#' mtcars %>% ggvis(~mpg, ~wt) %>% layer_points()
+#' NULL %>% ggvis(~mpg, ~wt) %>% add_data(mtcars) %>% layer_points()
 add_data <- function(vis, data, name = deparse2(substitute(data))) {
   if (is.null(data)) return(vis)
 
