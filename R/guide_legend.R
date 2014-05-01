@@ -29,8 +29,8 @@
 #' @examples
 #' mtcars %>% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) %>%
 #'   layer_points() %>%
-#'   set_guide_legend(fill = "fill", title = "Cylinders")
-set_guide_legend <- function(vis, size = NULL, shape = NULL, fill = NULL,
+#'   add_guide_legend(fill = "fill", title = "Cylinders")
+add_guide_legend <- function(vis, size = NULL, shape = NULL, fill = NULL,
                          stroke = NULL, orient = "right", title = NULL,
                          format = NULL, values = NULL, properties = NULL) {
 
@@ -66,7 +66,7 @@ add_default_legends <- function(vis) {
   for (scale in missing) {
     args <- list(vis)
     args[[scales[[scale]]$name]] <- scale
-    vis <- do.call(set_guide_legend, args)
+    vis <- do.call(add_guide_legend, args)
   }
 
   vis

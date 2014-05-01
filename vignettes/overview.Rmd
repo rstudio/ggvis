@@ -30,8 +30,8 @@ Histogram:
 # Histogram
 faithful %>% ggvis(~eruptions, fill := "#ffffdd", fill.hover := "#eebbbb") %>%
   layer_histograms() %>%
-  set_guide_axis("x", title = "eruptions") %>%
-  set_guide_axis("y", title = "count")
+  add_guide_axis("x", title = "eruptions") %>%
+  add_guide_axis("y", title = "count")
 ```
 
 Scatterplot with model fit line and interactive control:

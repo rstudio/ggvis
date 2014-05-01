@@ -51,12 +51,12 @@
 #' @examples
 #' mtcars %>% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) %>%
 #'   layer_points() %>%
-#'   set_guide_axis("x", title = "Weight", orient = "top")
+#'   add_guide_axis("x", title = "Weight", orient = "top")
 #'
 #' mtcars %>% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) %>%
 #'   layer_points() %>%
-#'   set_guide_axis("x", properties = list(ticks = props(stroke = "red")))
-set_guide_axis <- function(vis, type, scale = type, orient = NULL, title = NULL,
+#'   add_guide_axis("x", properties = list(ticks = props(stroke = "red")))
+add_guide_axis <- function(vis, type, scale = type, orient = NULL, title = NULL,
                            title_offset = NULL, format = NULL, ticks = NULL,
                            values = NULL, subdivide = NULL, tick_padding = NULL,
                            tick_size_major = NULL, tick_size_minor = tick_size_major,

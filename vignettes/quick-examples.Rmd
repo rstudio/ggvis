@@ -133,8 +133,8 @@ Modify the fill color and binwidth, and add titles for the axes, since the autom
 ```{r, message = FALSE}
 faithful %>% ggvis(~eruptions, fill := "#fff8dc") %>%
   layer_histograms(binwidth = 0.25) %>%
-  set_guide_axis("x", title = "eruptions") %>%
-  set_guide_axis("y", title = "count")
+  add_guide_axis("x", title = "eruptions") %>%
+  add_guide_axis("y", title = "count")
 ```
 
 ## Regression lines
