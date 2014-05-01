@@ -1,7 +1,5 @@
 ---
 title: "ggvis overview"
-output:
-  ggvis:::html_document
 ---
 
 <!--
@@ -28,21 +26,22 @@ Data manipulation and transformation are done in R, and the graphics are rendere
 
 Histogram:
 
-```{r, results = 'asis', echo = FALSE, message = FALSE, fig.width = 4}
+```{r, echo = FALSE, message = FALSE, fig.width = 4}
 # Histogram
-ggvis(faithful, props(x = ~eruptions, fill := "#ffffdd", fill.hover := "#eebbbb")) +
-  layer_histogram() +
-  guide_axis("x", title = "eruptions") +
-  guide_axis("y", title = "count")
+faithful %>% ggvis(~eruptions, fill := "#ffffdd", fill.hover := "#eebbbb") %>%
+  layer_histograms() %>%
+  set_guide_axis("x", title = "eruptions") %>%
+  set_guide_axis("y", title = "count")
 ```
 
 Scatterplot with model fit line and interactive control:
 
-```{r, results = 'asis', echo = FALSE, message = FALSE}
+```{r, echo = FALSE, message = FALSE}
 # Scatter plot with model fit line
-ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
-  layer_point() +
-  layer_smooth(se = TRUE)
+mtcars %>% 
+  ggvis(~wt, ~mpg) %>% 
+  layer_points() %>%
+  layer_smooths()
 ```
 
 ## Getting started with ggvis
