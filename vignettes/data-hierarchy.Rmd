@@ -1,7 +1,5 @@
 ---
 title: "Data hierarchy"
-output:
-  html_document
 ---
 
 <!--
@@ -43,62 +41,7 @@ stat multiple times.
 ## Data pipeline
 
 A ggvis specification creates a data pipeline that flows from the starting
-node to all of the leaves (marks). There are two ways to create a data
-pipeline:
-
-* explicitly with pipeline: `pipeline(mtcars, transform_bin())`
-
-* implicitly in ggvis/node: `ggvis(mtcars, transform_bin())`
-  The data pipeline is stored in the data element of the ggvis_node object.
-
-To see how a pipeline works, we'll create some explicitly and then flow
-`flow()` properties down them pipeline and see what happens.
-Since pipelines can also contain reactive data sources, this has to be done in
-a reactive environment. To avoid this complication, we'll use `sluice()` which
-sets up everything we need.
-
-In this section we'll explore explicitly creating pipelines to help understand
-what is going on behind the scenes. We'll start with a very simple pipeline that just contains a dataset. Sluicing it just returns the data as is.
-
-```{r}
-df <- data.frame(x = 1:9, grp = rep(1:3, each = 3))
-
-# A dataset has a name, and unique id (hash) in bracket
-a <- pipeline(df)
-a
-sluice(a, props(x = ~x))
-```
-
-The next two pipelines add a data transformation. `b1` summarises the data
-by binning it. `b2` splits the data into pieces according to the value of the
-`grp` variable. `b2` returns a special data structure called a `split_df`:
-transforms need to be written specifically to understand how to operate with
-this datastructure. Slucing the pipeline performs those transformations:
-
-```{r}
-b1 <- pipeline(df, transform_bin(binwidth = 3))
-b1
-b2 <- pipeline(df, by_group(grp))
-b2
-
-sluice(b1, props(x = ~x))
-sluice(b2, props(x = ~x))
-```
-
-Finally, `c` combines the operation of `b1` and `b2`, first splitting the data into pieces, then summarising each group with binned counts:
-
-```{r}
-c <- pipeline(df, by_group(grp), transform_bin(binwidth = 3))
-c
-sluice(c, props(x = ~x))
-```
-
-Note that pipeline will automatically remove redundancies from a pipeline:
-
-```{r}
-pipeline(mtcars, sleep)
-pipeline(mtcars, by_group(cyl), sleep)
-```
+node to all of the leaves (marks). 
 
 ## Combining props
 
