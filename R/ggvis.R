@@ -9,7 +9,7 @@
 #' @examples
 #' ggvis(mtcars, ~mpg, ~wt)
 #' mtcars %>% ggvis(~mpg, ~wt)
-ggvis <- function(data, ..., env = parent.frame()) {
+ggvis <- function(data = NULL, ..., env = parent.frame()) {
   vis <- structure(
     list(
       marks = list(),
