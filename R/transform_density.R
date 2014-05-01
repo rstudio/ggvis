@@ -124,13 +124,9 @@ compute_density.ggvis <- function(x, x_var, weight_var = NULL,
                                   n = 256L, na.rm = FALSE, ...) {
   args <- list(x_var = x_var, weight_var = weight_var, kernel = kernel,
     trim = trim, n = n, na.rm = na.rm, ...)
-  x <- register_reactives(x, args)
 
-  new_data <- reactive({
-    data <- x$cur_data()
+  register_computation(x, args, "density", function(data, args) {
     output <- do_call("compute_density", quote(data), .args = values(args))
     preserve_constants(data, output)
   })
-
-  register_data(x, new_data, "compute_density")
 }

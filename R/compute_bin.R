@@ -58,18 +58,13 @@ compute_bin.grouped_df <- function(x, x_var, w_var = NULL, binwidth = NULL,
 #' @export
 compute_bin.ggvis <- function(x, x_var, w_var = NULL, binwidth = NULL,
                               origin = NULL, right = TRUE) {
-
   args <- list(x_var = x_var, w_var = w_var, binwidth = binwidth,
     origin = origin, right = right)
-  x <- register_reactives(x, args)
 
-  new_data <- reactive({
-    data <- x$cur_data()
-    output <- do_call("compute_bin", quote(data), .args = values(args))
+  register_computation(x, args, "bin", function(data, args) {
+    output <- do_call("compute_bin", quote(data), .args = args)
     preserve_constants(data, output)
   })
-
-  register_data(x, new_data, "_transform_smooth")
 }
 
 # Compute parameters -----------------------------------------------------------

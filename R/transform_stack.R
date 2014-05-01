@@ -93,12 +93,10 @@ compute_stack.ggvis <- function(x, stack_var = NULL, group_var = NULL) {
     }
   }
 
-  parent_data <- x$cur_data
+  args <- list(stack_var = stack_var, group_var = group_var)
 
-  new_data <- reactive({
-    data <- parent_data()
-    do_call("compute_stack", quote(data), quote(stack_var), quote(group_var))
+  register_computation(x, args, "stack", function(data, args) {
+    output <- do_call("compute_stack", quote(data), .args = args)
+    preserve_constants(data, output)
   })
-
-  register_data(x, new_data, "compute_stack")
 }
