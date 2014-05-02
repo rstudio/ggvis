@@ -1,41 +1,6 @@
 #' @include events.R
 NULL
 
-#' Event broker for hover events.
-#'
-#' The hover event broker is useful if you want your shiny app to respond
-#' to hover events (\code{mouse_out} and \code{mouse_over}) in a custom
-#' way.
-#'
-#' @seealso \code{\link{tooltip}} for a custom wrapper that uses hover
-#'   events to display tooltips.
-#' @export
-#' @importFrom methods setRefClass
-Hover <- setRefClass("Hover", contains = "EventBroker",
-  methods = list(
-    mouse_out = function() {
-      "A reactive value that changes every time the mouse moves off the
-      previously selected data mark.
-      Returns a list containing:
-        * plot_id: The ID of the ggvis plot."
-
-      listen_for("mouse_out")
-    },
-    mouse_over = function() {
-      "A reactive value that changes every time the mouse moves on a mark.
-      Returns a list containing:
-        * plot_id: The ID of the ggvis plot.
-        * data: a list of the data underlying the mark that is hovered over.
-          There is an item for each variable in the data, as well as a field
-          named `key__`.
-        * pagex: The x position of the mouse relative to the page.
-        * pagey: The y position of the mouse relative to the page."
-
-      listen_for("mouse_over")
-    }
-  )
-)
-
 #' Event broker for click events.
 #'
 #' The click event broker is useful if you want your shiny app to respond
@@ -76,7 +41,9 @@ Click <- setRefClass("Click", contains = "EventBroker",
 #' }
 #'
 #' # Display tooltip when hovering over objects
-#' qvis(mtcars, ~wt, ~mpg) + tooltip(all_values)
+#' mtcars %>% ggvis(x = ~wt, y = ~mpg, size.hover := 400) %>%
+#'   layer_points() %>%
+#'   add_tooltip(all_values)
 #'
 #' # Display tooltip when objects are clicked
 #' qvis(mtcars, ~wt, ~mpg) + click_tooltip(all_values)
@@ -99,43 +66,45 @@ Click <- setRefClass("Click", contains = "EventBroker",
 #' # Display tooltip when objects are brushed
 #' qvis(mtcars, ~wt, ~mpg, size.brush := 400) + brush_tooltip(brushed_summary)
 #' }
-tooltip <- function(f) {
-  stopifnot(is.function(f))
+add_tooltip <- function(vis, f, id = rand_id()) {
+  if (!is.function(f)) stop("f must be a function")
 
-  handler("tooltip", "hover", list(f = f))
-}
+  connect <- function(session) {
+    # FIXME: These should use the plot ID as the prefix
+    # Shiny input IDs to to listen for
+    mouse_out_id  <- paste0("ggvis_", id, "_mouse_out")
+    mouse_over_id <- paste0("ggvis_", id, "_mouse_over")
 
-as.reactive.tooltip <- function(x, session = NULL, ...) {
-  if (is.null(session)) return()
-
-  h <- Hover(session, id = x$id)
-
-  obs_out <- shiny::observe({
-    h$mouse_out()
-    hide_tooltip(session)
-  })
-  obs_over <- shiny::observe({
-    hover <- h$mouse_over()
-    if (is.null(hover$data)) {
+    shiny::observe({
+      session$input[[mouse_out_id]]
       hide_tooltip(session)
-      return()
-    }
+    })
 
-    html <- x$control_args$f(hover$data)
+    shiny::observe({
+      hover <- session$input[[mouse_over_id]]
 
-    show_tooltip(session,
-      pagex = hover$pagex + 5,
-      pagey = hover$pagey + 5,
-      html = html
-    )
-  })
+      if (is.null(hover$data)) {
+        hide_tooltip(session)
+        return()
+      }
 
-  session$onSessionEnded(function() {
-    obs_out$suspend()
-    obs_over$suspend()
-  })
+      html <- f(hover$data)
 
-  reactive({ NULL })
+      show_tooltip(session,
+        pagex = hover$pagex + 5,
+        pagey = hover$pagey + 5,
+        html = html
+      )
+    })
+  }
+
+  # FIXME: path is unused?
+  # This gets inserted into the Vega spec
+  spec <- list(id = id, type = "hover", path = "path_string")
+
+  broker <- create_broker(reactive(NULL), connect = connect, spec = spec)
+
+  register_reactive(vis, broker)
 }
 
 #' @export
