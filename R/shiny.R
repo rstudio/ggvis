@@ -89,7 +89,7 @@ observe_ggvis <- function(r_gv, plot_id, session, ...) {
 
   observe_spec(r_spec, plot_id, session)
   observe_data(r_spec, plot_id, session)
-  observe_brokers(r_spec, plot_id, session)
+  connect_brokers(r_spec, plot_id, session)
 }
 
 # Create an observer for a reactive vega spec
@@ -143,27 +143,13 @@ observe_data <- function(r_spec, id, session) {
   })
 }
 
-# Set up observers for reactive inputs from the brokers
-observe_brokers <- function(r_spec, plot_id, session) {
-  # FIXME: This presently only works with inputs that are in the initial plot
-  #   but if the reactive containing the ggvis() call is re-run, no observers
-  #   connecting new inputs will be added.
+# Run the connect function for each broker
+connect_brokers <- function(r_spec, plot_id, session) {
   brokers <- shiny::isolate(attr(r_spec(), "brokers"))
 
-  observe_input <- function(vals, id) {
-    force(vals)
-    force(id)
-    shiny::observe({
-      value <- session$input[[id]]
-      if (!is.null(value)) {
-        vals[[id]] <- value
-      }
-    })
-  }
-
   for (broker in brokers) {
-    for (input_id in broker$input_ids) {
-      observe_input(broker$vals, input_id)
+    if (!is.null(broker$connect)) {
+      broker$connect(session)
     }
   }
 }

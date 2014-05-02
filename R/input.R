@@ -31,5 +31,16 @@ create_input <- function(id = rand_id("input_"), default = NULL,
     map(vals[[id]])
   })
 
-  create_broker(res, vals = vals, input_ids = id, controls = controls)
+  # This function is run at render time. It takes values from session$input$foo
+  # and pushes them into val$foo.
+  connect <- function(session) {
+    observe({
+      value <- session$input[[id]]
+      if (!is.null(value)) {
+        vals[[id]] <- value
+      }
+    })
+  }
+
+  create_broker(res, connect = connect, controls = controls)
 }
