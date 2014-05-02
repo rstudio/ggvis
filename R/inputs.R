@@ -17,12 +17,18 @@
 #'
 #' # You can use map to transform the outputs
 #' input_slider(-5, 5, label = "Log scale", map = function(x) 10 ^ x)
-input_slider <- function(min, max, value = min, step = NULL, round = FALSE,
-                         format = "#,##0.#####", locale = "us", ticks = TRUE,
-                         animate = FALSE, label = "", id = rand_id("slider_"),
-                         map = identity) {
+input_slider <- function(min, max, value = (min + max) / 2, step = NULL,
+                         round = FALSE, format = "#,##0.#####", locale = "us",
+                         ticks = TRUE, animate = FALSE, label = "",
+                         id = rand_id("slider_"), map = identity) {
 
   assert_that(is.string(label), is.string(id))
+
+  if (!is.null(step)) {
+    min <- round_any(min, step, floor)
+    max <- round_any(max, step, ceiling)
+    value <- round_any(value, step)
+  }
 
   control <- shiny::sliderInput(id, label, min = min, max = max,
     value = value, step = step, round = round, format = format, locale = locale,
