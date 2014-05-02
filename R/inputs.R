@@ -25,9 +25,7 @@ input_slider <- function(min, max, value = (min + max) / 2, step = NULL,
   assert_that(is.string(label), is.string(id))
 
   if (!is.null(step)) {
-    min <- round_any(min, step, floor)
-    max <- round_any(max, step, ceiling)
-    value <- round_any(value, step)
+    value <- round_any(value - min, step) + min
   }
 
   control <- shiny::sliderInput(id, label, min = min, max = max,
