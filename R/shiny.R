@@ -151,10 +151,12 @@ observe_brokers <- function(r_spec, plot_id, session) {
   brokers <- shiny::isolate(attr(r_spec(), "brokers"))
 
   observe_input <- function(vals, id) {
+    force(vals)
+    force(id)
     shiny::observe({
       value <- session$input[[id]]
       if (!is.null(value)) {
-        isolate(vals[[id]] <- value)
+        vals[[id]] <- value
       }
     })
   }
