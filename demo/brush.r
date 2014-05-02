@@ -13,8 +13,8 @@ brushed_summary <- function(x) {
   })
 }
 # Scatter plot with brushing
-ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
-  layer_point(props(size.brush := 400)) +
+mtcars %>% ggvis(x = ~wt, y = ~mpg) %>%
+  layer_points(props(size.brush := 400)) %>%
   brush_tooltip(brushed_summary)
 
 # Bar graph with brushing
