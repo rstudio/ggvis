@@ -33,13 +33,3 @@ create_input <- function(id = rand_id("input_"), default = NULL,
 
   create_broker(res, vals = vals, input_ids = id, controls = controls)
 }
-
-
-input_id <- function(x) {
-  attr(x, "input_id")
-}
-
-`input_id<-` <- function(x, value) {
-  attr(x, "input_id") <- value
-  x
-}
