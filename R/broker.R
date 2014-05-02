@@ -29,7 +29,7 @@ create_broker <- function(r, vals = NULL, input_ids = NULL, observers = NULL,
   if (!shiny::is.reactivevalues(vals)) stop("vals must be a reactivevalues object.")
 
   # If passed bare observer or control, wrap them into list
-  if (!is.null(observers) && inherits(obs, "Observer")) {
+  if (!is.null(observers) && inherits(observers, "Observer")) {
     observers <- list(observers)
   }
   if (!is.null(controls) && inherits(controls, "shiny.tag")) {
