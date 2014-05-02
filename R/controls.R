@@ -7,11 +7,11 @@ extract_controls.ggvis <- function(x) {
 }
 
 #' @export
-extract_controls.reactive <- function(x) {
-  if (!has_controls(x)) return(NULL)
+extract_controls.broker <- function(x) {
+  broker <- attr(x, "broker")
 
-  attr(x, "controls")
+  broker$controls
 }
 
-# Reports whether an object has controls
-has_controls <- function(x) !is.null(attr(x, "controls"))
+#' @export
+extract_controls.default <- function(x) NULL

@@ -38,8 +38,7 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
     }), recursive = FALSE)
   }
 
-  # Get named list of reactivevalues val objects
-  input_vals <- extract_input_vals(x$reactives)
+  brokers <- extract_brokers(x$reactives)
 
   # Each of these operations results in a more completely specified (and still
   # valid) ggvis object
@@ -63,7 +62,7 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
     handlers = lapply(handlers(x), as.vega)
   )
 
-  structure(spec, data_table = data_table, input_vals = input_vals)
+  structure(spec, data_table = data_table, brokers = brokers)
 }
 
 

@@ -25,8 +25,10 @@ extract_reactives.prop <- function(x, session = NULL, ...) {
 }
 
 # Get the value of a reactive or non-reactive object.
-value <- function(x) {
-  if (shiny::is.reactive(x)) x()
-  else x
-}
+value <- function(x) UseMethod("value")
+#' @export
+value.default <- function(x) x
+#' @export
+value.reactive <- function(x) x()
+
 values <- function(x) lapply(x, value)

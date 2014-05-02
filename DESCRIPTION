@@ -26,6 +26,7 @@ VignetteBuilder: knitr
 Roxygen: list(wrap = FALSE)
 License: GPL-2
 Collate:
+    'broker.R'
     'compute_auto_group.R'
     'compute_bin.R'
     'compute_density.R'

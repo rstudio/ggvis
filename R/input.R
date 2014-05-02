@@ -18,46 +18,22 @@
 #' @param controls A Shiny HTML tag object representing the UI for the controls.
 #' @export
 #' @keywords internal
-create_input <- function(id = rand_id("input_"), default = default,
+create_input <- function(id = rand_id("input_"), default = NULL,
                          map = identity, controls = NULL) {
 
   # Create a reactivevalues object to store the value. When a plot is rendered,
   # an observer will be set up to push values into val$x.
-  val <- shiny::reactiveValues(x = default)
+  vals <- shiny::reactiveValues()
+  vals[[id]] <- default
+
   # A reactive to wrap the reactive value
   res <- reactive({
-    map(val$x)
+    map(vals[[id]])
   })
 
-  # The input_id will be used to connect input$foo to this object's val$x
-  attr(res, "input_id") <- id
-  attr(res, "val") <- val
-  # HTML controls
-  attr(res, "controls") <- controls
-  class(res) <- c("input", class(res))
-
-  res
+  create_broker(res, vals = vals, input_ids = id, controls = controls)
 }
 
-
-#' Determine if an object is an input object
-#'
-#' @param x An object to test.
-#' @export
-is.input <- function(x) inherits(x, "input")
-
-# Given a list of reactives, return a list of input val objects from the
-# reactives.
-extract_input_vals <- function(reactives) {
-  vals <- lapply(reactives, extract_input_val)
-  # Get the input IDs, which are different from the reactive IDs
-  names(vals) <- lapply(reactives, input_id)
-  compact(vals)
-}
-
-extract_input_val <- function(x) {
-  attr(x, "val")
-}
 
 input_id <- function(x) {
   attr(x, "input_id")
