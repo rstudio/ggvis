@@ -38,6 +38,6 @@ mtcars \%>\% ggvis(~mpg) \%>\% layer_freqpolys(binwidth = 2)
 
 # These are equivalent to combining compute_bin with the corresponding
 # mark
-mtcars \%>\% compute_bin("mpg") \%>\% ggvis(~x_, ~count_) \%>\% layer_paths()
+mtcars \%>\% compute_bin(~mpg) \%>\% ggvis(~x_, ~count_) \%>\% layer_paths()
 }
 

@@ -3,14 +3,14 @@
 \alias{compute_density}
 \title{Compute density of data.}
 \usage{
-compute_density(x, x_var, weight_var = NULL, kernel = "gaussian",
-  trim = FALSE, n = 256L, na.rm = FALSE, ...)
+compute_density(x, x_var, w_var = NULL, kernel = "gaussian", trim = FALSE,
+  n = 256L, na.rm = FALSE, ...)
 }
 \arguments{
 \item{x}{Dataset (data frame, \code{grouped_df} or ggvis) object to work
 with.}
 
-\item{x_var,weight_var}{Names of variables to use for x position, and for
+\item{x_var,w_var}{Names of variables to use for x position, and for
 weights.}
 
 \item{kernel}{Smoothing kernel. See \code{\link{density}} for details.}

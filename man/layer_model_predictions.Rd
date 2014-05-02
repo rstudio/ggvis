@@ -66,12 +66,12 @@ mtcars \%>\% ggvis(~wt, ~mpg) \%>\%
 
 # layer_smooths() is just smooth() + layer_paths()
 # Run smooth outside of a visualisation to see what variables you get
-mtcars \%>\% smooth(mpg ~ wt)
+mtcars \%>\% compute_smooth(mpg ~ wt)
 
 mtcars \%>\%
   ggvis(~wt, ~mpg) \%>\%
   layer_points() \%>\%
-  smooth(mpg ~ wt) \%>\%
+  compute_smooth(mpg ~ wt) \%>\%
   layer_paths(~pred_, ~resp_, strokeWidth := 2)
 }
 

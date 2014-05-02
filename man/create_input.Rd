@@ -3,7 +3,7 @@
 \alias{create_input}
 \title{Create a new interactive "input" object.}
 \usage{
-create_input(id = rand_id("input_"), default = default, map = identity,
+create_input(id = rand_id("input_"), default = NULL, map = identity,
   controls = NULL)
 }
 \arguments{
