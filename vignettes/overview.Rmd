@@ -16,17 +16,23 @@ opts_chunk$set(fig.width = 2.5, fig.height = 1.5, dpi = 100)
 
 ggvis is a data visualization package for R which lets you:
 
-* Declaratively describe data graphics with a syntax that is similar to ggplot2.
-* View and interact with the graphics on your local computer, or use them in an interactive web application with [Shiny](http://www.rstudio.com/shiny/).
+* Declaratively describe data graphics with a syntax similar in spirit to 
+  ggplot2.
 
-Data manipulation and transformation are done in R, and the graphics are rendered in a web browser, using [Vega](https://github.com/trifacta/vega/). For RStudio users, ggvis graphics display in a viewer panel, which is possible because RStudio is a web browser.
+* Create rich interactive graphics that you can play with locally in Rstudio
+  or in your browser.
 
+* Leverage [shiny](http://www.rstudio.com/shiny/)'s infrastructure to publish
+  interactive graphics usable from any browser (either within your company
+  or to the world).
+
+The goal is to combine the best of R (e.g. every modelling function you can imagine) and the best of the web (everyone has a web browser). Data manipulation and transformation are done in R, and the graphics are rendered in a web browser, using [Vega](https://github.com/trifacta/vega/). For RStudio users, ggvis graphics display in a viewer panel, which is possible because RStudio is a web browser.
 
 ## Examples of ggvis graphics
 
 Histogram:
 
-```{r, echo = FALSE, message = FALSE, fig.width = 4}
+```{r, echo = FALSE, fig.width = 4}
 # Histogram
 faithful %>% ggvis(~eruptions, fill := "#ffffdd", fill.hover := "#eebbbb") %>%
   layer_histograms() %>%
@@ -34,31 +40,31 @@ faithful %>% ggvis(~eruptions, fill := "#ffffdd", fill.hover := "#eebbbb") %>%
   add_guide_axis("y", title = "count")
 ```
 
-Scatterplot with model fit line and interactive control:
+Scatterplot with smooth curve and interactive control:
 
-```{r, echo = FALSE, message = FALSE}
+```{r, echo = FALSE}
 # Scatter plot with model fit line
 mtcars %>% 
   ggvis(~wt, ~mpg) %>% 
   layer_points() %>%
-  layer_smooths()
+  layer_smooths(span = input_slider(0.1, 1, 0.75))
 ```
 
 ## Getting started with ggvis
 
-* See some [quick examples](quick-examples.html)
-* Learn [ggvis basics](ggvis-basics.html)
-* Read more about [interactive graphics](interactivity.html)
+* See some [recipes](cookbook.html) for common tasks.
+* Learn [ggvis basics](ggvis-basics.html).
+* Read more about [interactive graphics](interactivity.html).
 
 ## More advanced topics
 
-* How to control [axes and legends](axes-legends.html)
-* How to use [properties and scales](properties-scales.html)
-* Learn about [layers](layers.html)
-* Plumbing: about ggvis's [data hierarchy](data-hierarchy.html)
+* How to control [axes and legends](axes-legends.html).
+* How to use [properties and scales](properties-scales.html).
+* Learn about [layers](layers.html).
+* Plumbing: about ggvis's [data hierarchy](data-hierarchy.html).
 
 ## More about ggvis
 
-* Differences and similarities to [ggplot2](ggplot2.html)
-* The relationship between ggvis and [Vega](vega.html)
+* Differences and similarities to [ggplot2](ggplot2.html).
+* The relationship between ggvis and [Vega](vega.html).
 
