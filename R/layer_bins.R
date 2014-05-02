@@ -21,8 +21,8 @@ layer_histograms <- function(vis, ..., binwidth = NULL, origin = NULL,
 
   x_var <- find_prop_var(vis$cur_props, "x.update")
   x_val <- eval_vector(cur_data(vis), x_var)
-  params <- bin_params(range(x_val, na.rm = TRUE), binwidth = value(binwidth),
-    origin = value(origin), right = value(right))
+  params <- bin_params(range(x_val, na.rm = TRUE), binwidth = binwidth,
+    origin = origin, right = right)
 
   layer_f(vis, function(x) {
     x <- compute_bin(x, x_var, binwidth = params$binwidth,
