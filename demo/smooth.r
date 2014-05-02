@@ -4,7 +4,7 @@ library(ggvis)
 mtcars %>% ggvis(x = ~wt, y = ~mpg) %>%
   layer_points() %>%
   compute_smooth(mpg ~ wt, se = F) %>%
-  mark_path(props(x = ~pred_, y = ~resp_, stroke := "red"))
+  layer_paths(x = ~pred_, y = ~resp_, stroke := "red")
 
 # Or with shorthand layer_smooth
 mtcars %>% ggvis(x = ~wt, y = ~mpg) %>%
