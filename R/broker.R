@@ -61,16 +61,16 @@ format.broker <- function(x) {
   b <- attr(x, "broker")
   str <- ""
   if (!is.null(b$input_ids)) {
-    str <- paste0(str, "  Inputs: ", paste(b$input_ids, collapse = ", "))
+    str <- paste0(str, "  Inputs: ", paste(b$input_ids, collapse = ", "), "\n")
   }
   if (!is.null(b$observers)) {
-    str <- paste0(str, "\n  ", "Observers: ", length(b$observers))
+    str <- paste0(str, "  Observers: ", length(b$observers), "\n")
   }
   if (!is.null(b$controls)) {
-    str <- paste0(str, "\n  ", "Controls: ", length(b$controls))
+    str <- paste0(str, "  Controls: ", length(b$controls), "\n")
   }
   if (!is.null(b$spec)) {
-    str <- paste0(str, "\n  ", "Spec object: ", length(b$spec))
+    str <- paste0(str, "  Spec object: ", length(b$spec), "\n")
   }
 
   str

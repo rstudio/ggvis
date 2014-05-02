@@ -73,8 +73,9 @@ explain.ggvis <- function (x, ...) {
     if (is.broker(reactive)) {
       cat(" <Broker>\n")
       cat(indent(format(reactive), 2))
+    } else {
+      cat("\n")
     }
-    cat("\n")
   }
   cat("Scales:\n")
   for (scale in x$scales) {
