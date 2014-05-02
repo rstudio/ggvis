@@ -70,8 +70,9 @@ explain.ggvis <- function (x, ...) {
   cat("Reactives:\n")
   for (reactive in x$reactives) {
     cat(indent(reactive_id(reactive), 2))
-    if (is.input(reactive)) {
-      cat(" (input: ", input_id(reactive), ")", sep = "")
+    if (is.broker(reactive)) {
+      cat(" (Broker)\n")
+      cat(indent(format(reactive), 2))
     }
     cat("\n")
   }

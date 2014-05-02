@@ -54,15 +54,22 @@ is.broker <- function(x) inherits(x, "broker")
 
 #' @export
 format.broker <- function(x) {
+  b <- attr(x, "broker")
   str <- ""
-  if (!is.null(input_ids)) {
-    str <- paste0(str, "\n", paste(input_ids, collapse = ", "))
+  if (!is.null(b$input_ids)) {
+    str <- paste0(str, "  Inputs: ", paste(b$input_ids, collapse = ", "))
   }
-  if (!is.null(observers)) {
-
-
+  if (!is.null(b$observers)) {
+    str <- paste0(str, "\n  ", "Observers: ", length(b$observers))
+  }
+  if (!is.null(b$controls)) {
+    str <- paste0(str, "\n  ", "Controls: ", length(b$controls))
+  }
+  if (!is.null(b$spec)) {
+    str <- paste0(str, "\n  ", "Spec object: ", length(b$spec))
   }
 
+  str
 }
 
 
