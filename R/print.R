@@ -71,7 +71,7 @@ explain.ggvis <- function (x, ...) {
   for (reactive in x$reactives) {
     cat(indent(reactive_id(reactive), 2))
     if (is.broker(reactive)) {
-      cat(" (Broker)\n")
+      cat(" <Broker>\n")
       cat(indent(format(reactive), 2))
     }
     cat("\n")

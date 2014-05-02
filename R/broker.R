@@ -1,24 +1,28 @@
-# * val
-# * reactives (list)
-#   * [default] reactive 1 + input_id
-#   * reactive 2 + input_id
-# * observers (list)
-#   * observer 1 + input_id
-#   * observer 2 + input_id
-# * controls (list)
-#   * Control 1
-#   * control 2
-# * stuff to put in spec
-
-# @param r A reactive expression
-# @param vals A reactiveValues object
-# @param input_ids A character vector of input IDs. These input IDs will be
-#   present in session$input, as well as in val, and in the as.vega stage,
-#   observers will be created which push values from session$input to val,
-#   for each ID.
-# @param observers An observer, or a list of observers
-# @param controls An HTML control, or a list of HTML controls
-# @param spec Object to put in the Vega spec
+#' Create a broker object
+#'
+#' A broker is a subclass of reactive. It can hold extra information to
+#' facilitate (or broker) communication between the client and the server.
+#' For example, an input broker may contain HTML controls to be emitted on the
+#' client web page, as well as a reactivevalues object and an input_id, which
+#' are used by the server to connect the input values sent from the client with
+#' the reactive expression.
+#'
+#' Other types of brokers are possible. Another broker may create reactive
+#' observers and add information to the Vega spec, instead of having HTML
+#' controls. In this case, a reactive expression is still needed, although
+#' it can be a dummy value, like \code{reactive(NULL)}.
+#'
+#' @param r A reactive expression.
+#' @param vals A reactiveValues object.
+#' @param input_ids A character vector of input IDs. These input IDs will be
+#'   present in session$input, as well as in val, and in the as.vega stage,
+#'   observers will be created which push values from session$input to val,
+#'   for each ID.
+#' @param observers An observer, or a list of observers.
+#' @param controls An HTML control, or a list of HTML controls.
+#' @param spec Object to put in the Vega spec.
+#' @export
+#' @keywords internal
 create_broker <- function(r, vals = NULL, input_ids = NULL, observers = NULL,
                           controls = NULL, spec = NULL) {
   if (!shiny::is.reactive(r)) stop("r must be a reactive expression.")
