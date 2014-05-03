@@ -98,9 +98,8 @@ add_tooltip <- function(vis, f, id = rand_id()) {
     })
   }
 
-  # FIXME: path is unused?
   # This gets inserted into the Vega spec
-  spec <- list(id = id, type = "hover", path = "path_string")
+  spec <- list(id = id, type = "hover")
 
   broker <- create_broker(reactive(NULL), connect = connect, spec = spec)
 
