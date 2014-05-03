@@ -1,32 +1,3 @@
-#' @include events.R
-NULL
-
-#' Event broker for click events.
-#'
-#' The click event broker is useful if you want your shiny app to respond
-#' to click events (\code{mouse_click} in a custom way.
-#'
-#' @seealso \code{\link{click_tooltip}} for a custom wrapper that can use click
-#'   events to display tooltips.
-#' @export
-#' @importFrom methods setRefClass
-Click <- setRefClass("Click", contains = "EventBroker",
-  methods = list(
-    mouse_click = function() {
-      "A reactive value that changes every time the mouse is clicked.
-      Returns a list containing:
-        * plot_id: The ID of the ggvis plot.
-        * data: a list of the data underlying the mark that is hovered over.
-          There is an item for each variable in the data, as well as a field
-          named `key__`.
-        * pagex: The x position of the mouse relative to the page.
-        * pagey: The y position of the mouse relative to the page."
-
-      listen_for("mouse_click")
-    }
-  )
-)
-
 #' Display tooltips
 #'
 #' @param f A function that takes a single argument as input. This argument
@@ -43,10 +14,13 @@ Click <- setRefClass("Click", contains = "EventBroker",
 #' # Display tooltip when hovering over objects
 #' mtcars %>% ggvis(x = ~wt, y = ~mpg, size.hover := 400) %>%
 #'   layer_points() %>%
-#'   add_tooltip(all_values)
+#'   add_hover_tooltip(all_values)
 #'
 #' # Display tooltip when objects are clicked
-#' qvis(mtcars, ~wt, ~mpg) + click_tooltip(all_values)
+#' mtcars %>% ggvis(x = ~wt, y = ~mpg, size := 400) %>%
+#'   layer_points() %>%
+#'   add_click_tooltip(all_values)
+#'
 #'
 #' # Grab the mean and standard deviations of brushed values
 #' brushed_summary <- function(x) {
@@ -66,7 +40,7 @@ Click <- setRefClass("Click", contains = "EventBroker",
 #' # Display tooltip when objects are brushed
 #' qvis(mtcars, ~wt, ~mpg, size.brush := 400) + brush_tooltip(brushed_summary)
 #' }
-add_tooltip <- function(vis, f, id = rand_id()) {
+add_hover_tooltip <- function(vis, f, id = rand_id()) {
   if (!is.function(f)) stop("f must be a function")
 
   connect <- function(session) {
@@ -108,36 +82,38 @@ add_tooltip <- function(vis, f, id = rand_id()) {
 
 #' @export
 #' @rdname tooltip
-click_tooltip <- function(f) {
-  stopifnot(is.function(f))
+add_click_tooltip <- function(vis, f, id = rand_id()) {
+  if (!is.function(f)) stop("f must be a function")
 
-  handler("click_tooltip", "click", list(f = f))
-}
+  connect <- function(session) {
+    # FIXME: These should use the plot ID as the prefix
+    # Shiny input IDs to to listen for
+    mouse_click_id  <- paste0("ggvis_", id, "_mouse_click")
 
-as.reactive.click_tooltip <- function(x, session = NULL, ...) {
-  h <- Click(session, id = x$id)
+    shiny::observe({
+      click <- session$input[[mouse_click_id]]
 
-  obs <- shiny::observe({
-    click <- h$mouse_click()
-    if (is.null(click$data)) {
-      hide_tooltip(session)
-      return()
-    }
+      if (is.null(click$data)) {
+        hide_tooltip(session)
+        return()
+      }
 
-    html <- x$control_args$f(click$data)
+      html <- f(click$data)
 
-    show_tooltip(session,
-      pagex = click$pagex + 5,
-      pagey = click$pagey + 5,
-      html = html
-    )
-  })
+      show_tooltip(session,
+        pagex = click$pagex + 5,
+        pagey = click$pagey + 5,
+        html = html
+      )
+    })
+  }
 
-  session$onSessionEnded(function() {
-    obs$suspend()
-  })
+  # This gets inserted into the Vega spec
+  spec <- list(id = id, type = "click")
 
-  reactive({ NULL })
+  broker <- create_broker(reactive(NULL), connect = connect, spec = spec)
+
+  register_reactive(vis, broker)
 }
 
 #' Send a message to the client to show or hide a tooltip
