@@ -41,8 +41,13 @@ ggvis <- function(data = NULL, ..., env = parent.frame()) {
 #' mtcars %>% ggvis(~wt, ~mpg) %>% layer_points()
 #' mtcars %>% ggvis() %>% add_props(~wt, ~mpg) %>% layer_points()
 #' mtcars %>% ggvis(~wt) %>% add_props(y = ~mpg) %>% layer_points()
-add_props <- function(vis, ..., .props = NULL, inherit = TRUE,
+add_props <- function(vis, ..., .props = NULL, inherit = NULL,
                       env = parent.frame()) {
+
+  # Get value of inherit from inherit arg, then .props$inherit, then TRUE
+  if (!is.null(.props)) inherit <- attr(.props, "inherit")
+  inherit <- inherit %||% TRUE
+
   new_props <- props(..., .props = .props, inherit = inherit, env = env)
   both_props <- merge_props(cur_props(vis), new_props)
 
