@@ -119,14 +119,16 @@ valid_props <- list(
 known_props <- sort(unique(unlist(valid_props)))
 globalVariables(known_props)
 
-#' @include utils.R props.R prop.R utils_props.R
-default_props <- list(
-  arc =    props(fill := "#333333"),
-  area =   props(fill := "#333333"),
-  line =   props(stroke := "#000000"),
-  image =  props(fill := "#000000"),
-  rect =   props(stroke := "#000000", fill := "#333333"),
-  symbol = props(fill := "#000000", size := 50),
-  text =   props(fill := "#333333")
-)
+default_props <- function(type) {
+  switch(type,
+    arc =    props(fill := "#333333"),
+    area =   props(fill := "#333333"),
+    line =   props(stroke := "#000000"),
+    image =  props(fill := "#000000"),
+    rect =   props(stroke := "#000000", fill := "#333333"),
+    symbol = props(fill := "#000000", size := 50),
+    text =   props(fill := "#333333"),
+    stop("Unknown type")
+  )
+}
 

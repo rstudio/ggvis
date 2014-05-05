@@ -17,7 +17,7 @@ mark <- function(type, props, data) {
 
   # Check that names are correct, then merge in defaults
   check_mark_props(type, names(props))
-  props <- merge_props(default_props[[type]], props)
+  props <- merge_props(default_props(type), props)
 
   # FIXME: check that mark has all the props needed to draw something
   # FIXME: check that the variables in the prop can be found in data
