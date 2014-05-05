@@ -38,8 +38,6 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
     }), recursive = FALSE)
   }
 
-  brokers <- extract_brokers(x$reactives)
-
   # Each of these operations results in a more completely specified (and still
   # valid) ggvis object
   x <- add_default_scales(x, data_table)
@@ -59,10 +57,11 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
     axes = lapply(x$axes, as.vega),
     padding = as.vega(x$options$padding),
     ggvis_opts = x$options,
-    handlers = unname(lapply(x$reactives, as.vega))
+    handlers = x$handlers
   )
 
-  structure(spec, data_table = data_table, brokers = brokers)
+  structure(spec, data_table = data_table, controls = x$controls,
+            connectors = x$connectors)
 }
 
 

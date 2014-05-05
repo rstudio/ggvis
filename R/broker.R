@@ -67,7 +67,3 @@ format.broker <- function(x) {
 extract_brokers <- function(reactives) {
   compact(lapply(reactives, function(x) attr(x, "broker")))
 }
-
-# Extract the spec portion of a broker
-#' @export
-as.vega.broker <- function(x) attr(x, "broker")$spec

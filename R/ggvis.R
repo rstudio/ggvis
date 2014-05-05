@@ -19,6 +19,9 @@ ggvis <- function(data = NULL, ..., env = parent.frame()) {
       scales = list(),
       axes = list(),
       legends = list(),
+      controls = list(),
+      connectors = list(),
+      handlers = list(),
       options = list(),
       cur_data = NULL,
       cur_props = NULL
@@ -199,6 +202,36 @@ register_reactive <- function(vis, reactive) {
   if (label %in% names(vis$reactives)) return(vis)
 
   vis$reactives[[label]] <- reactive
+
+  # If it's a broker, add controls, connector, and spec as needed
+  if (is.broker(reactive)) {
+    broker <- attr(reactive, "broker")
+
+    vis <- register_controls(vis, broker$controls)
+    vis <- register_connector(vis, broker$connect)
+    vis <- register_handler(vis, broker$spec)
+  }
+
+  vis
+}
+
+# Takes a list of controls
+register_controls <- function(vis, controls) {
+  # If passed a bare control, wrap it into a list
+  if (!is.null(controls) && inherits(controls, "shiny.tag")) {
+    controls <- list(controls)
+  }
+  vis$controls <- c(vis$controls, controls)
+  vis
+}
+
+register_connector <- function(vis, connector) {
+  vis$connectors <- c(vis$connectors, connector)
+  vis
+}
+
+register_handler <- function(vis, handler) {
+  vis$handlers <- c(vis$handlers, list(handler))
   vis
 }
 

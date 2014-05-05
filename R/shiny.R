@@ -89,7 +89,7 @@ observe_ggvis <- function(r_gv, plot_id, session, ...) {
 
   observe_spec(r_spec, plot_id, session)
   observe_data(r_spec, plot_id, session)
-  connect_brokers(r_spec, plot_id, session)
+  exec_connectors(r_spec, plot_id, session)
 }
 
 # Create an observer for a reactive vega spec
@@ -143,13 +143,13 @@ observe_data <- function(r_spec, id, session) {
   })
 }
 
-# Run the connect function for each broker
-connect_brokers <- function(r_spec, plot_id, session) {
-  brokers <- shiny::isolate(attr(r_spec(), "brokers"))
+# Run the connector functions
+exec_connectors <- function(r_spec, plot_id, session) {
+  connectors <- shiny::isolate(attr(r_spec(), "connectors"))
 
-  lapply(brokers, function(broker) {
-    if (!is.null(broker$connect)) {
-      broker$connect(session)
+  lapply(connectors, function(connect) {
+    if (!is.null(connect)) {
+      connect(session)
     }
   })
 }
@@ -158,7 +158,7 @@ connect_brokers <- function(r_spec, plot_id, session) {
 #' @export
 renderControls <- function(r_gv, session = NULL) {
   shiny::renderUI({
-    controls <- extract_controls(r_gv())
+    controls <- r_gv()$controls
     if (empty(controls)) {
       NULL
     } else {
