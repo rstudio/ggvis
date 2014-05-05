@@ -119,7 +119,7 @@ valid_props <- list(
 known_props <- sort(unique(unlist(valid_props)))
 globalVariables(known_props)
 
-#' @include props.R prop.R utils_props.R
+#' @include utils.R props.R prop.R utils_props.R
 default_props <- list(
   arc =    props(fill := "#333333"),
   area =   props(fill := "#333333"),

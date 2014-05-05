@@ -1,97 +1,112 @@
-#' @include events.R
-NULL
-
-#' Event broker for keyboard events.
-#'
-#' The hover event broker is useful if you want your shiny app to respond
-#' to keyboard events: \code{key_down}, \code{key_press} and \code{key_up}.
-#'
-#' @param bindings A character vector describing the keyboard bindings
-#'   to listen to. The keyboard event handling in ggvis is implemented with
-#'   \href{mousetrap}{http://craig.is/killing/mice} so you can specify keys
-#'   like \code{c("C", "Shift + X", "F2", "up"))}
-#' @seealso \code{\link{left_right}} to easily
-#'   control values in a ggvis object with the arrow keys.
-#' @export
-#' @importFrom methods setRefClass
-Keyboard <- setRefClass("Keyboard", contains = "EventBroker",
-  fields = list("bindings" = "character"),
-  methods = list(
-    key_press = function() {
-      "A reactive value changed when any key is pressed.
-      Returns a list containing:
-        * value: A string representation of the key that was pressed."
-
-      listen_for("key_press")
-    },
-    as_vega = function(...) {
-      c(callSuper(), list(keys = bindings))
-    }
-  )
-)
-
 #' Interactive inputs bound to arrow keys.
 #'
-#' @inheritParams shiny::sliderInput
+#' @param min A minimum value.
+#' @param max A maximum value.
 #' @param value The initial value before any keys are pressed. Defaults to
 #'   half-way between \code{min} and \code{max}.
 #' @param step How much each key press changes \code{value}. Defaults to
 #'   40 steps along range
 #' @export
 #' @examples
-#' size <- left_right(1, 801, value = 51, step = 50)
+#' size <- add_left_right(1, 801, value = 51, step = 50)
 #' opacity <- up_down(0, 1, value = 0.9, step = 0.05)
 #'
-#' qvis(mtcars, ~mpg, ~wt, size := size, opacity := opacity)
+#' mtcars %>% ggvis(~mpg, ~wt, size := size, opacity := opacity) %>%
+#'   layer_points()
 left_right <- function(min, max, value = (min + max) / 2,
-                       step = (max - min) / 40) {
-  handler("left_right", "keyboard",
-    list(min = min, max = max, value = value, step = step),
-    value = value
-  )
+                       step = (max - min) / 40,
+                       id = rand_id()) {
+
+  # Given the key_press object and current value, return the next value
+  map <- function(key_press, current_value) {
+    key <- key_press$value
+
+    if (key == "left") {
+      pmax(min, current_value - step)
+    } else if (key == "right") {
+      pmin(max, current_value + step)
+    } else {
+      current_value
+    }
+  }
+
+  create_keyboard_event(map, value, id)
 }
 
-as.reactive.left_right <- function(x, session = NULL, ...) {
-  if (is.null(session)) return(shiny::reactive(x$control_args$value))
-
-  k <- Keyboard(session, id = x$id)
-  modify_value_with_keys(k, x$control_args$value,
-    left =  function(i) pmax(x$control_args$min, i - x$control_args$step),
-    right = function(i) pmin(x$control_args$max, i + x$control_args$step)
-  )
-}
-
-#' @export
-#' @rdname left_right
 up_down <- function(min, max, value = (min + max) / 2,
-  step = (max - min) / 40) {
-  handler("up_down", "keyboard",
-    list(min = min, max = max, value = value, step = step),
-    value = value
-  )
+                    step = (max - min) / 40,
+                    id = rand_id()) {
+
+  map <- function(key_press, current_value) {
+    key <- key_press$value
+
+    if (key == "down") {
+      pmax(min, current_value - step)
+    } else if (key == "up") {
+      pmin(max, current_value + step)
+    } else {
+      current_value
+    }
+  }
+
+  create_keyboard_event(map, value, id)
 }
 
-as.reactive.up_down <- function(x, session = NULL, ...) {
-  if (is.null(session)) return(shiny::reactive(x$control_args$value))
+#' Event broker for keyboard events.
+#'
+#' The keyboard event broker is useful if you want your shiny app to respond
+#' to keyboard events: \code{key_down}, \code{key_press} and \code{key_up}.
+#' This returns a broker object, similar to \code{\link{create_input}}.
+#'
+#' The \code{map} function takes a \code{key_press} list object which is
+#' converted from the JSON object sent from the client, and the current value
+#' of this reactive. Keyboard events differ from inputs in that when a key
+#' is pressed, the new value can depend on the previous value. For example,
+#' pressing the right arrow might increment the value each time. The value of
+#' an input contrast, in contrast, takes the value directly from the client,
+#' without using the previous value. The map function for keyboard events
+#' therefore take the \code{current_value} as an argument.
+#'
+#' The \code{map} function takes two arguments. The first is a list containing
+#' an item named \code{value}, which is a string representation of the key that
+#' was pressed. The second is the current value of the reactive.
+#'
+#' The keyboard event handling in ggvis is implemented with
+#'   \href{mousetrap}{http://craig.is/killing/mice}, so you can specify keys
+#'   like \code{c("C", "Shift + X", "F2", "up"))}.
+#'
+#' Also, unlike inputs, keyboard events add no HTML controls, but they do add
+#' an object to insert into the Vega spec.
+#'
+#' @param map A function which takes the key_press list object (a list
+create_keyboard_event <- function(map, default = NULL, id = rand_id()) {
+  if (!is.function(map)) stop("map must be a function")
 
-  k <- Keyboard(session, id = x$id)
-  modify_value_with_keys(k, x$control_args$value,
-    up =  function(i) pmax(x$control_args$min, i - x$control_args$step),
-    down = function(i) pmin(x$control_args$max, i + x$control_args$step)
-  )
-}
+  key_press_id  <- paste0("ggvis_", id, "_key_press")
 
-modify_value_with_keys <- function(k, val, ..., .key_funs = list()) {
-  key_funs <- c(list(...), .key_funs)
-  stopifnot(is(k, "Keyboard"))
+  vals <- shiny::reactiveValues()
+  vals[[key_press_id]] <- default
 
-  k$bindings <- names(key_funs)
-  shiny::reactive({
-    press <- k$key_press()
-    if (is.null(press)) return(val)
-    if (!(press$value %in% names(key_funs))) return(val)
-
-    val <<- key_funs[[press$value]](val)
-    val
+  # A reactive to wrap the reactive value
+  res <- reactive({
+    vals[[key_press_id]]
   })
+
+  # This function is run at render time. It takes the values from 
+  connect <- function(session) {
+    observe({
+      key_press <- session$input[[key_press_id]]
+
+      if (!is.null(key_press)) {
+        # Get the current value of the reactive, without taking a dependency
+        current_value <- isolate(vals[[key_press_id]])
+
+        vals[[key_press_id]] <- map(key_press, current_value)
+      }
+
+    })
+  }
+
+  spec <- list(id = id, type = "keyboard")
+  create_broker(res, connect = connect, spec = spec)
 }

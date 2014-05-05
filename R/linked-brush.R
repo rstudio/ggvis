@@ -3,6 +3,7 @@
 #' @param keys vector of all possible keys, if known.
 #' @param fill brush colour
 #' @export
+#' @importFrom methods setRefClass
 #' @examples
 #' lb <- linked_brush(keys = 1:nrow(mtcars))
 #' qvis(mtcars, ~disp, ~mpg, fill := lb$fill_prop(), size.brush := 400) + lb$brush_handler()
@@ -78,7 +79,6 @@ print.reactive_proxy <- function(x, ...) {
   cat("<reactive_proxy>", " ", x$name, "\n", sep = "")
 }
 
-#' @export
 extract_layer.linked_brush <- function(x, ...) {
   comps <- parse_components(..., drop_named = TRUE)
 
