@@ -72,7 +72,6 @@ explain.ggvis <- function (x, ...) {
     cat(indent(reactive_id(reactive), 2))
     if (is.broker(reactive)) {
       cat(" <Broker>\n")
-      cat(indent(format(reactive), 2))
     } else {
       cat("\n")
     }
@@ -90,6 +89,21 @@ explain.ggvis <- function (x, ...) {
   cat("Legends:\n")
   for (legend in x$legends) {
     cat(indent(format(legend), 2))
+    cat("\n")
+  }
+  cat("HTML controls:\n")
+  for (control_name in names(x$controls)) {
+    cat(indent(control_name, 2))
+    cat("\n")
+  }
+  cat("Client-side handlers:\n")
+  for (handler in x$handlers) {
+    cat(indent(paste0("<", handler$type, "> ", handler$id), 2))
+    cat("\n")
+  }
+  cat("Connector functions:\n")
+  for (connector in x$connectors) {
+    cat(indent(connector_label(connector), 2))
     cat("\n")
   }
   cat("Options:\n")

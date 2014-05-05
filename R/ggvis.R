@@ -217,8 +217,10 @@ register_reactive <- function(vis, reactive) {
 
 # Takes a list of controls
 register_controls <- function(vis, controls) {
+  if (empty(controls)) return(vis)
+
   # If passed a bare control, wrap it into a list
-  if (!is.null(controls) && inherits(controls, "shiny.tag")) {
+  if (inherits(controls, "shiny.tag")) {
     controls <- list(controls)
   }
   vis$controls <- c(vis$controls, controls)
@@ -231,6 +233,8 @@ register_connector <- function(vis, connector) {
 }
 
 register_handler <- function(vis, handler) {
+  if(empty(handler)) return(vis)
+
   vis$handlers <- c(vis$handlers, list(handler))
   vis
 }

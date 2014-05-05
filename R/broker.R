@@ -25,6 +25,7 @@ create_broker <- function(r, controls = NULL, connect = NULL, spec = NULL) {
   # If passed a bare control, wrap it into a list
   if (!is.null(controls) && inherits(controls, "shiny.tag")) {
     controls  <- list(controls)
+    names(controls) <- paste0("unnamed input ", seq_len(length(controls)))
   }
 
   class(r) <- c("broker", class(r))
@@ -38,27 +39,17 @@ create_broker <- function(r, controls = NULL, connect = NULL, spec = NULL) {
   r
 }
 
-
 #' Determine if an object is a broker object
 #'
 #' @param x An object to test.
 #' @export
 is.broker <- function(x) inherits(x, "broker")
 
-#' @export
-format.broker <- function(x) {
-  b <- attr(x, "broker")
-  str <- ""
-  if (!is.null(b$controls)) {
-    str <- paste0(str, "  Controls: ", length(b$controls), "\n")
-  }
-  if (!is.null(b$connect)) {
-    str <- paste0(str, "  Connect function: yes\n")
-  }
-  if (!is.null(b$spec)) {
-    str <- paste0(str, "  Spec object: ", length(b$spec), "\n")
-  }
+# Get the label of a connector function
+connector_label <- function(x) attr(x, "label")
 
-  str
+# Set the label of a connector function
+`connector_label<-` <- function(x, value) {
+  attr(x, "label") <- value
+  x
 }
-

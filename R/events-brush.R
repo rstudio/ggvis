@@ -24,6 +24,7 @@ add_brush_tooltip <- function(vis, f, id = rand_id()) {
       )
     })
   }
+  connector_label(connect) <- paste("brush", id)
 
   spec <- list(id = id, type = "brush")
 

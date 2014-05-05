@@ -25,6 +25,7 @@ add_resize <- function(vis, f, id = rand_id()) {
       f(r)
     })
   }
+  connector_label(connect) <- paste("resize", id)
 
   # This gets inserted into the Vega spec
   spec <- list(id = id, type = "resize")

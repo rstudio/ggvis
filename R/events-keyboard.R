@@ -106,6 +106,7 @@ create_keyboard_event <- function(map, default = NULL, id = rand_id()) {
 
     })
   }
+  connector_label(connect) <- paste("key_press", id)
 
   spec <- list(id = id, type = "keyboard")
   create_broker(res, connect = connect, spec = spec)

@@ -41,6 +41,11 @@ create_input <- function(id = rand_id("input_"), default = NULL,
       }
     })
   }
+  connector_label(connect) <- paste0("<", id, ">")
 
-  create_broker(res, connect = connect, controls = controls)
+  # Wrap the shiny tag object into a list
+  controls_l <- list()
+  controls_l[[id]] <- controls
+
+  create_broker(res, connect = connect, controls = controls_l)
 }

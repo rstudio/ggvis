@@ -73,6 +73,7 @@ add_hover_tooltip <- function(vis, f, id = rand_id()) {
       )
     })
   }
+  connector_label(connect) <- paste("hover", id)
 
   # This gets inserted into the Vega spec
   spec <- list(id = id, type = "hover")
@@ -109,6 +110,7 @@ add_click_tooltip <- function(vis, f, id = rand_id()) {
       )
     })
   }
+  connector_label(connect) <- paste("click", id)
 
   # This gets inserted into the Vega spec
   spec <- list(id = id, type = "click")
