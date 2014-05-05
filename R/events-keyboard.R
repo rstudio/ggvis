@@ -8,7 +8,7 @@
 #'   40 steps along range
 #' @export
 #' @examples
-#' size <- add_left_right(1, 801, value = 51, step = 50)
+#' size <- left_right(1, 801, value = 51, step = 50)
 #' opacity <- up_down(0, 1, value = 0.9, step = 0.05)
 #'
 #' mtcars %>% ggvis(~mpg, ~wt, size := size, opacity := opacity) %>%
