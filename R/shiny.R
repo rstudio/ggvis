@@ -147,11 +147,11 @@ observe_data <- function(r_spec, id, session) {
 connect_brokers <- function(r_spec, plot_id, session) {
   brokers <- shiny::isolate(attr(r_spec(), "brokers"))
 
-  for (broker in brokers) {
+  lapply(brokers, function(broker) {
     if (!is.null(broker$connect)) {
       broker$connect(session)
     }
-  }
+  })
 }
 
 #' @rdname shiny
