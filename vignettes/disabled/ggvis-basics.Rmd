@@ -136,7 +136,7 @@ You can also add on more complex types of interaction like tooltips:
 ```{r}
 mtcars %>% ggvis(~wt, ~mpg) %>% 
   layer_points() %>% 
-  tooltip(function(df) df$wt)
+  add_hover_tooltip(function(df) df$wt)
 ```
 
 You'll learn more about complex interaction in the [interactivity](interactivity.html) vignette.
