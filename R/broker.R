@@ -62,8 +62,3 @@ format.broker <- function(x) {
   str
 }
 
-
-# Given a list of reactives, extract the broker objects from attributes
-extract_brokers <- function(reactives) {
-  compact(lapply(reactives, function(x) attr(x, "broker")))
-}
