@@ -6,6 +6,10 @@
 waggle(min, max, value = (min + max)/2, step = (max - min)/50, fps = 10)
 }
 \arguments{
+\item{min}{A minimum value.}
+
+\item{max}{A maximum value.}
+
 \item{value}{Starting value. Defaults to half-way between \code{min} and
 \code{max}.}
 
@@ -13,18 +17,14 @@ waggle(min, max, value = (min + max)/2, step = (max - min)/50, fps = 10)
 between min and max so it takes 5 seconds to waggle once.}
 
 \item{fps}{number of frames per second.}
-
-\item{min}{The minimum value (inclusive) that can be selected.}
-
-\item{max}{The maximum value (inclusive) that can be selected.}
 }
 \description{
 Waggle back and forth between two numbers
 }
 \examples{
 span <- waggle(0.2, 1)
-ggvis(mtcars, props(~mpg, ~wt)) +
- layer_point() +
+mtcars \%>\% ggvis(~mpg, ~wt) \%>\%
+ layer_point() \%>\%
  layer_smooth(span = span, method = "loess", formula = y ~ x)
 }
 

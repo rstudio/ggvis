@@ -3,7 +3,7 @@
 \alias{add_props}
 \title{Add visual properties to a visualisation}
 \usage{
-add_props(vis, ..., .props = NULL, inherit = TRUE, env = parent.frame())
+add_props(vis, ..., .props = NULL, inherit = NULL, env = parent.frame())
 }
 \arguments{
 \item{vis}{Visualisation to modify.}

@@ -3,22 +3,16 @@
 \alias{create_broker}
 \title{Create a broker object}
 \usage{
-create_broker(r, vals = NULL, input_ids = NULL, observers = NULL,
-  controls = NULL, spec = NULL)
+create_broker(r, controls = NULL, connect = NULL, spec = NULL)
 }
 \arguments{
 \item{r}{A reactive expression.}
 
-\item{vals}{A reactiveValues object.}
-
-\item{input_ids}{A character vector of input IDs. These input IDs will be
-present in session$input, as well as in val, and in the as.vega stage,
-observers will be created which push values from session$input to val,
-for each ID.}
-
-\item{observers}{An observer, or a list of observers.}
-
 \item{controls}{An HTML control, or a list of HTML controls.}
+
+\item{connect}{A function to run at render time. This function takes the
+Shiny \code{session} object as its only argument, and is used to connect
+the session with the broker object.}
 
 \item{spec}{Object to put in the Vega spec.}
 }
@@ -26,9 +20,8 @@ for each ID.}
 A broker is a subclass of reactive. It can hold extra information to
 facilitate (or broker) communication between the client and the server.
 For example, an input broker may contain HTML controls to be emitted on the
-client web page, as well as a reactivevalues object and an input_id, which
-are used by the server to connect the input values sent from the client with
-the reactive expression.
+client web page, as well as a function to connect the inputs from the client
+to the reactive expression.
 }
 \details{
 Other types of brokers are possible. Another broker may create reactive
