@@ -1,31 +1,3 @@
-#' @include events.R
-NULL
-
-#' Event broker for resize events.
-#'
-#' The resize event broker is useful if you want your shiny app to respond
-#' to resize events.
-#'
-#' @export
-#' @importFrom methods setRefClass
-Resize <- setRefClass("Resize", contains = "EventBroker",
-  methods = list(
-    resize = function() {
-      "A reactive value changes when the plot is resized.
-      Returns a list containing:
-        * plot_id: The ID of the ggvis plot.
-        * width: Width of the plot in pixels.
-        * height: Height of the plot in pixels.
-        * padding: A list containing `left`, `right`, `top`, `bottom`, which is
-          the padding in pixels for each side. The padding is inside of the
-          width and height values.
-        "
-
-      listen_for("resize")
-    }
-  )
-)
-
 #' An interactive input bound to resize events.
 #'
 #' @param f A function which is called each time the plot area is resized.
@@ -38,26 +10,25 @@ Resize <- setRefClass("Resize", contains = "EventBroker",
 #'   str(x)
 #' }
 #'
-#' qvis(mtcars, ~mpg, ~wt) + resize(print_info)
+#' mtcars %>% ggvis(~mpg, ~wt) %>% layer_points() %>% add_resize(print_info)
 #' }
-resize <- function(f) {
-  stopifnot(is.function(f))
-  handler("resize", "resize", list(f = f))
-}
+add_resize <- function(vis, f, id = rand_id()) {
+  if (!is.function(f)) stop("f must be a function")
 
-as.reactive.resize <- function(x, session = NULL, ...) {
-  h <- Resize(session, id = x$id)
+  connect <- function(session) {
+    resize_id <- paste0("ggvis_", id, "_resize")
 
-  obs <- shiny::observe({
-    r <- h$resize()
-    if (is.null(r)) return()
+    shiny::observe({
+      r <- session$input[[resize_id]]
+      if (is.null(r)) return()
 
-    x$control_args$f(r)
-  })
+      f(r)
+    })
+  }
 
-  session$onSessionEnded(function() {
-    obs$suspend()
-  })
+  # This gets inserted into the Vega spec
+  spec <- list(id = id, type = "resize")
+  broker <- create_broker(reactive(NULL), connect = connect, spec = spec)
 
-  reactive({ NULL })
+  register_reactive(vis, broker)
 }
