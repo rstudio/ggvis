@@ -32,15 +32,15 @@ add_brush_tooltip <- function(vis, f, id = rand_id()) {
 
   vis <- register_reactive(vis, broker)
 
+  vis <- layer_f(vis, function(v) {
+    v <- add_data(v, data.frame(x = 0, y = 0, width = 0, height = 0),
+                  "ggvis_brush", add_hash = FALSE)
+    emit_rects(v, props(x := ~x, y := ~y,
+                        width := ~width, height := ~height,
+                        fill := "black", fillOpacity := 0.2,
+                        stroke := "black", strokeOpacity := 0.6,
+                        inherit = FALSE))
+  })
 
-  # FIXME: the data needs have id = "ggvis_brush" for Vega. Also, should have
-  #   0 width and height
-  dummy_rect <- data.frame(x = 0, y = 0, width = 100, height = 100)
-
-  vis <- layer_rects(vis, x := ~x, y := ~y,
-                     width := ~width, height := ~height,
-                     fill := "black", fillOpacity := 0.2,
-                     stroke := "black", strokeOpacity := 0.6,
-                     inherit = FALSE, data = dummy_rect)
   vis
 }
