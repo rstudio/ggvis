@@ -1,6 +1,6 @@
 # Calculate the data_id for a data object; if the object already has the data_id
 # attribute, simply return that.
-get_data_id <- function(data, prefix = "unnamed_data") {
+get_data_id <- function(data, prefix = "unnamed_data", add_hash = FALSE) {
   if (is.null(data)) return(NULL)
   if (!is.function(data)) stop("data object must be a reactive or a function.")
 
@@ -8,16 +8,20 @@ get_data_id <- function(data, prefix = "unnamed_data") {
   if (!is.null(attr(data, "data_id")))
     return(attr(data, "data_id"))
 
+  if (!add_hash)
+    return(prefix)
+
   paste0(prefix, "_", digest::digest(data, algo = "crc32"))
 }
 
 # Add the appropriate data_id attribute to a data object, and return it.
-# The data id consists of a prefix plus a hash.
-add_data_id <- function(data, prefix = "unnamed_data") {
+# The data id consists of a prefix plus (if add_hash is TRUE) a hash.
+# @param add_hash Add an automatically-created add_hash to the data ID?
+add_data_id <- function(data, prefix = "unnamed_data", add_hash = TRUE) {
   if (is.null(data)) return(NULL)
   if (!is.function(data)) stop("data object must be a reactive or a function.")
 
-  attr(data, "data_id") <- get_data_id(data, prefix)
+  attr(data, "data_id") <- get_data_id(data, prefix, add_hash)
   data
 }
 

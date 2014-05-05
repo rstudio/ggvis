@@ -67,11 +67,13 @@ add_props <- function(vis, ..., .props = NULL, inherit = NULL,
 #' @param data Data set to add.
 #' @param name Data of data - optional, but helps produce informative
 #'  error messages.
+#' @param add_hash Add a hash of the object as a suffix to the data ID?
 #' @export
 #' @examples
 #' mtcars %>% ggvis(~mpg, ~wt) %>% layer_points()
 #' NULL %>% ggvis(~mpg, ~wt) %>% add_data(mtcars) %>% layer_points()
-add_data <- function(vis, data, name = deparse2(substitute(data))) {
+add_data <- function(vis, data, name = deparse2(substitute(data)),
+                     add_hash = TRUE) {
   if (is.null(data)) return(vis)
 
   # Make sure data is reactive
@@ -80,7 +82,7 @@ add_data <- function(vis, data, name = deparse2(substitute(data))) {
     data <- function() static_data
   }
 
-  data <- add_data_id(data, name)
+  data <- add_data_id(data, name, add_hash = add_hash)
   vis$data[[get_data_id(data)]] <- data
   vis$cur_data <- data
 
