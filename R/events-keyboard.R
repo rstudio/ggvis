@@ -33,6 +33,8 @@ left_right <- function(min, max, value = (min + max) / 2,
   create_keyboard_event(map, value, id)
 }
 
+#' @export
+#' @rdname left_right
 up_down <- function(min, max, value = (min + max) / 2,
                     step = (max - min) / 40,
                     id = rand_id()) {
@@ -92,7 +94,7 @@ create_keyboard_event <- function(map, default = NULL, id = rand_id()) {
     vals[[key_press_id]]
   })
 
-  # This function is run at render time. It takes the values from 
+  # This function is run at render time. It takes the values from
   connect <- function(session) {
     observe({
       key_press <- session$input[[key_press_id]]
