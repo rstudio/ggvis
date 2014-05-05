@@ -38,7 +38,9 @@
 #' }
 #'
 #' # Display tooltip when objects are brushed
-#' qvis(mtcars, ~wt, ~mpg, size.brush := 400) + brush_tooltip(brushed_summary)
+#' mtcars %>% ggvis(x = ~wt, y = ~mpg, size.brush := 400) %>%
+#'   layer_points() %>%
+#'   add_brush_tooltip(brushed_summary)
 #' }
 add_hover_tooltip <- function(vis, f, id = rand_id()) {
   if (!is.function(f)) stop("f must be a function")
