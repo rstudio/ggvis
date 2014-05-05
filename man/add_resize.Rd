@@ -6,13 +6,13 @@
 add_resize(vis, f, id = rand_id())
 }
 \arguments{
-\item{f}{A function which is called each time the plot area is resized.}
+\item{f}{A function which is called each time the plot is resized.}
 }
 \description{
 An interactive input bound to resize events.
 }
 \examples{
-\dontrun{
+\donttest{
 # This example just prints out the current dimensions to the console
 print_info <- function(x) {
   str(x)

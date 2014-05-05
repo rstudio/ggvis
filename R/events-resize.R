@@ -1,10 +1,9 @@
 #' An interactive input bound to resize events.
 #'
-#' @param f A function which is called each time the plot area is resized.
-#'
+#' @param f A function which is called each time the plot is resized.
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # This example just prints out the current dimensions to the console
 #' print_info <- function(x) {
 #'   str(x)
