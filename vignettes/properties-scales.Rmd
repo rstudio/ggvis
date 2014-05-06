@@ -95,9 +95,11 @@ Not all marks support all properties. The complete list of all properties is
 available in `?marks`, and mark functions will check that you've supplied them
 valid properties, and will endeavour to provide you a helpful suggestion:
 
-```{r, error = TRUE}
+```{r, eval = FALSE}
 mtcars %>% ggvis() %>% layer_lines(strke = ~cyl)
+#> Error: Unknown properties: strke. Did you mean: stroke?
 mtcars %>% ggvis(strke = ~cyl) %>% layer_lines()
+#> Error: Unknown properties: strke. Did you mean: stroke?
 ```
 
 ### Capture of local variables
