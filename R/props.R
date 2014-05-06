@@ -204,12 +204,12 @@ is.ggvis_props <- function(x) inherits(x, "ggvis_props")
 # merge_props(props(x = ~x), props(x = ~y))
 # merge_props(props(x = ~x, y = 1), props(x = ~y))
 # merge_props(props(x = ~x, y = 1), props(x = ~y, inherit = FALSE))
-merge_props <- function(parent = NULL, child = NULL) {
+merge_props <- function(parent = NULL, child = NULL, inherit = attr(child, "inherit")) {
   if (is.null(parent)) return(child)
   if (is.null(child)) return(parent)
   stopifnot(is.ggvis_props(parent), is.ggvis_props(child))
 
-  if (identical(attr(child, "inherit"), FALSE)) return(child)
+  if (identical(inherit, FALSE)) return(child)
 
   structure(merge_vectors(parent, child), inherit = attr(parent, "inherit"),
     class = "ggvis_props")
