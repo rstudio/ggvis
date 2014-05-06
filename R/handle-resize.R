@@ -1,4 +1,4 @@
-#' An interactive input bound to resize events.
+#' Handlers and interactive inputs for plot sizing.
 #'
 #' @param vis Visualisation to listen to.
 #' @param on_resize Callback function with arguments:
@@ -15,7 +15,8 @@
 #'   layer_points() %>%
 #'   handle_resize(function(width, height, ...) cat(width, "x", height, "\n"))
 #'
-#' # Not very useful example
+#' # Use plot_width() and plot_height() to dynamically get the plot size
+#' # inside the plot.
 #' mtcars %>% ggvis(~mpg, ~wt) %>% layer_text(text := plot_width())
 #' mtcars %>% ggvis(~mpg, ~wt) %>% layer_text(text := plot_height())
 handle_resize <- function(vis, on_resize) {

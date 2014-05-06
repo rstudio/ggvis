@@ -3,7 +3,7 @@
 \alias{handle_resize}
 \alias{plot_height}
 \alias{plot_width}
-\title{An interactive input bound to resize events.}
+\title{Handlers and interactive inputs for plot sizing.}
 \usage{
 handle_resize(vis, on_resize)
 
@@ -23,7 +23,7 @@ plot_height(vis)
 }}
 }
 \description{
-An interactive input bound to resize events.
+Handlers and interactive inputs for plot sizing.
 }
 \examples{
 # This example just prints out the current dimensions to the console
@@ -31,7 +31,8 @@ mtcars \%>\% ggvis(~mpg, ~wt) \%>\%
   layer_points() \%>\%
   handle_resize(function(width, height, ...) cat(width, "x", height, "\\n"))
 
-# Not very useful example
+# Use plot_width() and plot_height() to dynamically get the plot size
+# inside the plot.
 mtcars \%>\% ggvis(~mpg, ~wt) \%>\% layer_text(text := plot_width())
 mtcars \%>\% ggvis(~mpg, ~wt) \%>\% layer_text(text := plot_height())
 }
