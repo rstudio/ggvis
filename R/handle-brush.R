@@ -4,6 +4,7 @@
 #' @param on_move Callback function called with arguments \code{value} and
 #'   \code{session} every time the brush moves. Value is a list of points
 #'   under the brush.
+#' @param fill Colour of the brush.
 #' @export
 #' @examples
 #' # Display tooltip when objects are brushed
@@ -13,7 +14,7 @@
 #'     show_tooltip(session, pagex = value$pagex2 + 5,
 #'      pagey = value$pagey1 + 5, html = length(value$items))
 #'   })
-handle_brush <- function(vis, on_move = NULL) {
+handle_brush <- function(vis, on_move = NULL, fill = "black") {
   check_callback(on_move, c("value", "session"))
 
   connect <- function(session, plot_id) {
@@ -28,17 +29,17 @@ handle_brush <- function(vis, on_move = NULL) {
   )
   vis <- register_reactive(vis, broker)
 
-  layer_brush(vis)
+  layer_brush(vis, fill = fill)
 }
 
-layer_brush <- function(vis) {
+layer_brush <- function(vis, fill = "black") {
   layer_f(vis, function(v) {
     init <- data.frame(x = 0, y = 0, width = 0, height = 0)
     v <- add_data(v, init, "ggvis_brush", add_hash = FALSE)
     emit_rects(v, props(x := ~x, y := ~y,
       width := ~width, height := ~height,
-      fill := "black", fillOpacity := 0.2,
-      stroke := "black", strokeOpacity := 0.6,
+      fill := fill, fillOpacity := 0.2,
+      stroke := fill, strokeOpacity := 0.6,
       inherit = FALSE))
   })
 }

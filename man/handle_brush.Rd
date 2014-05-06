@@ -3,7 +3,7 @@
 \alias{handle_brush}
 \title{Handle brush events on a visualisation.}
 \usage{
-handle_brush(vis, on_move = NULL)
+handle_brush(vis, on_move = NULL, fill = "black")
 }
 \arguments{
 \item{vis}{Visualisation to listen to.}
@@ -11,6 +11,8 @@ handle_brush(vis, on_move = NULL)
 \item{on_move}{Callback function called with arguments \code{value} and
 \code{session} every time the brush moves. Value is a list of points
 under the brush.}
+
+\item{fill}{Colour of the brush.}
 }
 \description{
 Handle brush events on a visualisation.
