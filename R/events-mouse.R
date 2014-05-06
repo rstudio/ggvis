@@ -4,6 +4,7 @@
 #'   will be a list containing the data in the mark currently under the
 #'   mouse. It should return a string containing HTML.
 #' @export
+#' @rdname tooltip
 #' @examples
 #' \dontrun{
 #' all_values <- function(x) {
