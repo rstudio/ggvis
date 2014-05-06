@@ -29,12 +29,15 @@
 #'   layer_densities(stroke := "red", fill := "red")
 #'
 #' # With groups
-#' PlantGrowth %>% ggvis(~weight, stroke = ~group) %>% group_by(group) %>%
+#' PlantGrowth %>% ggvis(~weight, fill = ~group) %>% group_by(group) %>%
 #'   layer_densities()
+#' PlantGrowth %>% ggvis(~weight, stroke = ~group) %>% group_by(group) %>%
+#'   layer_densities(strokeWidth := 3, area = FALSE)
 layer_densities <- function(vis, ..., kernel = "gaussian", adjust = 1,
                             density_args = list(), area = TRUE) {
 
   x_var <- find_prop_var(vis$cur_props, "x.update")
+
   props <- stroke_fill_defaults(props(...),
     stroke = props(~pred_, ~resp_),
     fill   = props(~pred_, ~resp_, y2 = 0, fillOpacity := 0.2)

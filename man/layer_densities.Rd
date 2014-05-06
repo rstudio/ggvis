@@ -42,7 +42,9 @@ faithful \%>\% ggvis(~waiting) \%>\%
   layer_densities(stroke := "red", fill := "red")
 
 # With groups
-PlantGrowth \%>\% ggvis(~weight, stroke = ~group) \%>\% group_by(group) \%>\%
+PlantGrowth \%>\% ggvis(~weight, fill = ~group) \%>\% group_by(group) \%>\%
   layer_densities()
+PlantGrowth \%>\% ggvis(~weight, stroke = ~group) \%>\% group_by(group) \%>\%
+  layer_densities(strokeWidth := 3, area = FALSE)
 }
 
