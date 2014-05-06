@@ -23,7 +23,7 @@ mutate.ggvis(.data, ...)
 
 arrange.ggvis(.data, ...)
 
-\method{select}{ggvis}(.data, ...)
+select.ggvis(.data, ...)
 
 \method{filter}{ggvis}(.data, ...)
 }
