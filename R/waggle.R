@@ -12,14 +12,14 @@
 #' span <- waggle(0.2, 1)
 #' mtcars %>% ggvis(~mpg, ~wt) %>%
 #'  layer_points() %>%
-#'  layer_model_predictions(span = span, model = "loess", formula = y ~ x)
+#'  layer_smooths(span = span)
 waggle <- function(min, max, value = (min + max) / 2, step = (max - min) / 50,
                    fps = 10) {
 
   vals <- shiny::reactiveValues()
   vals$x <- value
 
-  connect <- function(session) {
+  connect <- function(session, plot_id) {
     direction <- 1
     shiny::observe({
       shiny::invalidateLater(1000 / fps, NULL)

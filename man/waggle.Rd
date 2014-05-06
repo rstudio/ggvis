@@ -25,6 +25,6 @@ Waggle back and forth between two numbers
 span <- waggle(0.2, 1)
 mtcars \%>\% ggvis(~mpg, ~wt) \%>\%
  layer_points() \%>\%
- layer_model_predictions(span = span, model = "loess", formula = y ~ x)
+ layer_smooths(span = span)
 }
 
