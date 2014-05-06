@@ -1,4 +1,5 @@
 library(ggvis)
+library(dplyr) # For arrange function
 
 set.seed(1780)
 df <- data.frame(x = runif(12), y = runif(12), z = gl(3, 4))
@@ -39,10 +40,10 @@ df %>% ggvis(x = ~x, y = ~y) %>%
 df %>% ggvis(x = ~x, y = ~y, stroke = ~z, fill := NA) %>%
   auto_group() %>%
   arrange(x) %>%
-  layer_path() %>%
+  layer_paths() %>%
   layer_points()
 
-# Using layer_line, which sorts the data
+# Using layer_lines, which sorts the data
 df %>% ggvis(x = ~x, y = ~y, stroke = ~z, fill := NA) %>%
   layer_lines() %>%
   layer_points()

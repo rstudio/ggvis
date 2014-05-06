@@ -14,18 +14,18 @@ brushed_summary <- function(x) {
 }
 # Scatter plot with brushing
 mtcars %>% ggvis(x = ~wt, y = ~mpg) %>%
-  layer_points(props(size.brush := 400)) %>%
-  brush_tooltip(brushed_summary)
+  layer_points(size.brush := 400) %>%
+  add_brush_tooltip(brushed_summary)
 
 # Bar graph with brushing
-ggvis(pressure, props(x = ~temperature, y = ~pressure)) +
-  dscale("x", "nominal", range = "width", padding = 0, points = FALSE) +
-  mark_rect(props(y2 = 0, width = band(), fill.brush := "red")) +
-  brush_tooltip(brushed_summary)
+pressure %>% ggvis(x = ~temperature, y = ~pressure) %>%
+  set_dscale("x", "nominal", range = "width", padding = 0, points = FALSE) %>%
+  layer_rects(y2 = 0, width = band(), fill.brush := "red") %>%
+  add_brush_tooltip(brushed_summary)
 
 # Brushing with 10000 points
 data("diamonds", package="ggplot2")
 d <- diamonds[sample(nrow(diamonds), 10000), ]
-ggvis(d, props(x = ~carat, y = ~price)) +
-  layer_point(props(size := 40, fillOpacity := 0.02, fillOpacity.brush := 0.4)) +
-  brush_tooltip(brushed_summary)
+d %>% ggvis(x = ~carat, y = ~price) %>%
+  layer_points(size := 40, fillOpacity := 0.02, fillOpacity.brush := 0.4) %>%
+  add_brush_tooltip(brushed_summary)

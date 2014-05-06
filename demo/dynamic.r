@@ -20,7 +20,8 @@ mtc1 <- reactive({
 })
 mtc1 %>% ggvis(x = ~x, y = ~y) %>%
   layer_points() %>%
-  set_dscale("x", "numeric", domain = c(0, 1))
+  set_dscale("x", "numeric", domain = c(0, 1)) %>%
+  set_options(duration = 0)
 
 # Two separate data sets, equal in the tree
 mtc1 <- reactive({
@@ -45,7 +46,6 @@ mtc1 %>% ggvis(x = ~wt, y = ~mpg) %>%
   layer_smooths()
 
 # Data points moving from right to left
-# (currently transitions aren't quite right)
 set.seed(430)
 dat <- data.frame(time = 1:10, value = runif(10))
 ddat <- reactive({
@@ -90,11 +90,11 @@ dat <- data.frame(
   value = runif(12)
 )
 ddat <- reactive({
-  invalidateLater(3000, NULL)
+  invalidateLater(2000, NULL)
   dat$value <<- runif(12)
   dat
 })
 ddat %>% ggvis(x = ~g1, y = ~value, fill = ~g2, fillOpacity := 0.5) %>%
   compute_stack() %>%
   set_dscale("x", "nominal", range = "width", padding = 0, points = FALSE) %>%
-  layer_rects(y = ~y_lwr_, y2 = ~y_upr_, width = band())
+  layer_rects(y = ~stack_lwr_, y2 = ~stack_upr_, width = band())

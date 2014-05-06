@@ -2,7 +2,7 @@ library(ggvis)
 
 # Histogram, fully specified
 mtcars %>% ggvis(x = ~wt) %>%
-  compute_bin("wt", binwidth = 1) %>%
+  compute_bin(~wt, binwidth = 1) %>%
   layer_rects(x = ~xmin_, x2 = ~xmax_, y = ~count_, y2 = 0)
 
 # Or using shorthand layer
@@ -22,10 +22,10 @@ diamonds %>% ggvis(x = ~table) %>% layer_histograms()
 # Stacked histogram
 diamonds %>% ggvis(x = ~table, fill = ~cut) %>%
   group_by(cut) %>%
-  compute_bin("table", binwidth = 1) %>%
-  compute_stack("count_", "x_") %>%
-  mark_rect(props(x = ~xmin_, x2 = ~xmax_, y = ~stack_lwr_, y2 = ~stack_upr_,
-                  fillOpacity := 0.6))
+  compute_bin(~table, binwidth = 1) %>%
+  compute_stack(~count_, ~x_) %>%
+  layer_rects(x = ~xmin_, x2 = ~xmax_, y = ~stack_lwr_, y2 = ~stack_upr_,
+              fillOpacity := 0.6)
 
 # Histogram of dates
 set.seed(2934)
