@@ -10,7 +10,7 @@
 #'
 #' # Equivalent to
 #' mtcars2 %>% ggvis(~wt, ~mpg, stroke = ~cyl) %>%
-#'   group_by(cyl) %>% arrange(wt) %>% layer_paths()
+#'   group_by(cyl) %>% dplyr::arrange(wt) %>% layer_paths()
 layer_lines <- function(vis, ...) {
 
   x_var <- vis$cur_props$x$value

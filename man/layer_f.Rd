@@ -19,7 +19,7 @@ the rest of the plot.
 \examples{
 mtcars \%>\% ggvis(~mpg) \%>\%
   layer_f(function(v) {
-     v \%>\% compute_bin("mpg") \%>\% layer_points(x = ~x_, y = ~count_)
+     v \%>\% compute_bin(~mpg) \%>\% layer_points(x = ~x_, y = ~count_)
   }) \%>\%
   layer_points(y = ~wt)
 }

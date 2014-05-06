@@ -36,8 +36,8 @@ A data frame with columns:
 Compute density of data.
 }
 \examples{
-mtcars \%>\% compute_density("mpg", n = 5)
-mtcars \%>\% group_by(cyl) \%>\% compute_density("mpg", n = 5)
-mtcars \%>\% ggvis(~mpg) \%>\% compute_density("mpg", n = 5)
+mtcars \%>\% compute_density(~mpg, n = 5)
+mtcars \%>\% group_by(cyl) \%>\% compute_density(~mpg, n = 5)
+mtcars \%>\% ggvis(~mpg) \%>\% compute_density(~mpg, n = 5)
 }
 

@@ -55,14 +55,27 @@ input_select(names(mtcars), map = as.name)
 input_radiobuttons(choices = c("Linear" = "lm", "LOESS" = "loess"),
                    label = "Model type")
 input_radiobuttons(choices = c("Linear" = "lm", "LOESS" = "loess"),
-                   selected = "LOESS",
+                   selected = "loess",
                    label = "Model type")
 
-# Used in a layer_smooth
-layer_smooth(model = input_radiobuttons(
-  choices = c("Linear" = "lm", "LOESS" = "loess"),
-              selected = "LOESS",
-              label = "Model type"))
+# Used in layer_model_predictions
+mtcars \%>\% ggvis(~wt, ~mpg) \%>\%
+  layer_model_predictions(model = input_radiobuttons(
+    choices = c("Linear" = "lm", "LOESS" = "loess"),
+    selected = "loess",
+    label = "Model type"))
+
+# Checkbox group
+mtcars \%>\% ggvis(x = ~wt, y = ~mpg) \%>\%
+  layer_points(
+    fill := input_checkboxgroup(
+      choices = c("Red" = "r", "Green" = "g", "Blue" = "b"),
+      label = "Point color components",
+      map = function(val) {
+        rgb(0.8 * "r" \%in\% val, 0.8 * "g" \%in\% val, 0.8 * "b" \%in\% val)
+      }
+    )
+  )
 }
 \seealso{
 Other interactive input: \code{\link{input_checkbox}};
