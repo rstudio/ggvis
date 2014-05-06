@@ -25,8 +25,6 @@ setup_callback <- function(f, id, session) {
 
   shiny::observe({
     value <- session$input[[id]]
-
-    if (is.null(value)) return() # Skip first value, which is always NULL
     f(value, session)
   })
 }
