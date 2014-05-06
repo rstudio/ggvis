@@ -79,6 +79,8 @@ up_down <- function(min, max, value = (min + max) / 2,
 #' an object to insert into the Vega spec.
 #'
 #' @param map A function which takes the key_press list object (a list
+#' @param default Default value before first key pressed
+#' @noRd
 create_keyboard_event <- function(map, default = NULL) {
   if (!is.function(map)) stop("map must be a function")
 
@@ -95,12 +97,12 @@ create_keyboard_event <- function(map, default = NULL) {
     key_press_id  <- paste0(plot_id, "_key_press")
     print(key_press_id)
 
-    observe({
+    shiny::observe({
       key_press <- session$input[[key_press_id]]
 
       if (!is.null(key_press)) {
         # Get the current value of the reactive, without taking a dependency
-        current_value <- isolate(vals$x)
+        current_value <- shiny::isolate(vals$x)
 
         vals$x <- map(key_press, current_value)
       }

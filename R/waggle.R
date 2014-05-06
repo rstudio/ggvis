@@ -19,17 +19,12 @@ waggle <- function(min, max, value = (min + max) / 2, step = (max - min) / 50,
   vals <- shiny::reactiveValues()
   vals$x <- value
 
-  # A reactive to wrap the reactive value
-  res <- reactive({
-    vals$x
-  })
-
   connect <- function(session) {
     direction <- 1
     shiny::observe({
       shiny::invalidateLater(1000 / fps, NULL)
 
-      next_value <- isolate(vals$x) + direction * step
+      next_value <- shiny::isolate(vals$x) + direction * step
       if (next_value < min || next_value > max) {
         direction <<- -1 * direction
         next_value <- pmax(pmin(next_value, max), min)
@@ -39,5 +34,5 @@ waggle <- function(min, max, value = (min + max) / 2, step = (max - min) / 50,
     })
   }
 
-  create_broker(res, connect = connect)
+  create_broker(reactive(vals$x), connect = connect)
 }

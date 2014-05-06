@@ -34,7 +34,7 @@ create_input <- function(id = rand_id("input_"), default = NULL,
   # This function is run at render time. It takes values from session$input$foo
   # and pushes them into val$foo.
   connect <- function(session, plot_id) {
-    observe({
+    shiny::observe({
       value <- session$input[[id]]
       if (!is.null(value)) {
         vals$x <- value
