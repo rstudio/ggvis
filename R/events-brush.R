@@ -4,7 +4,6 @@ add_brush_tooltip <- function(vis, f) {
   if (!is.function(f)) stop("f must be a function")
 
   connect <- function(session, plot_id) {
-    # FIXME: These should use the plot ID as the prefix
     # Shiny input IDs to to listen for
     brush_move_id  <- paste0(plot_id, "_brush_move")
 
