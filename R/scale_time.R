@@ -19,11 +19,17 @@
 #' @family vega scales
 #' @export
 #' @examples
-#' scale_time("x", nice = "year")
-#' dscale("x", "datetime", nice = "year")
+#' set.seed(2934)
+#' dat <- data.frame(times = as.POSIXct("2013-07-01", tz = "GMT") +
+#'                           rnorm(200) * 60 * 60 * 24 * 7)
+#' p <- dat %>% ggvis(x = ~times) %>% layer_histograms()
+#' p
 #'
-#' scale_time("y", utc = TRUE)
-#' dscale("y", "datetime", utc = TRUE)
+#' scale_time("x", nice = "year")
+#' p %>% set_dscale("x", "datetime", nice = "year")
+#'
+#' scale_time("x", utc = TRUE)
+#' p %>% set_dscale("x", "datetime", utc = TRUE)
 scale_time <- function(name, utc = FALSE, clamp = FALSE, nice = NULL,
                        domain = NULL, range = NULL, reverse = FALSE,
                        round = FALSE) {

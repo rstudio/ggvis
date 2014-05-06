@@ -54,11 +54,13 @@ that will automatically set the range to a reasonable default, and it will
 automatically pick the correct type of scale given the variable type.
 }
 \examples{
+p <- mtcars \%>\% ggvis(~wt, ~mpg) \%>\% layer_points()
+
 scale_ordinal("x")
-dscale("x", "nominal")
+p \%>\% set_dscale("x", "nominal")
 
 scale_ordinal("x", padding = 0.5, points = FALSE)
-dscale("x", "nominal", points = FALSE)
+p \%>\% set_dscale("x", "nominal", points = FALSE)
 }
 \seealso{
 \url{https://github.com/trifacta/vega/wiki/Scales#ordinal-scale-properties}

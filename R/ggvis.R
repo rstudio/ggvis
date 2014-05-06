@@ -38,7 +38,7 @@ ggvis <- function(data = NULL, ..., env = parent.frame()) {
 #' Add visual properties to a visualisation
 #'
 #' @param vis Visualisation to modify.
-#' @param ... Named visual properties.
+#' @inheritParams props
 #' @export
 #' @examples
 #' mtcars %>% ggvis(~wt, ~mpg) %>% layer_points()

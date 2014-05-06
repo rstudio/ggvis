@@ -61,7 +61,7 @@
 #' p %>% set_default_scale("stroke", "nominal")
 #'
 #' # You can also supply additional arguments or override the defaults
-#' p %>% default_scale("x", "numeric", trans = "log")
+#' p %>% set_default_scale("x", "numeric", trans = "log")
 #' p %>% set_default_scale("stroke", "nominal", range = c("red", "blue"))
 set_default_scale <- function(vis, prop, type, ..., name = NULL) {
   scale <- default_scale(prop, type, ..., name = name)

@@ -11,8 +11,8 @@
 #' @examples
 #' span <- waggle(0.2, 1)
 #' mtcars %>% ggvis(~mpg, ~wt) %>%
-#'  layer_point() %>%
-#'  layer_smooth(span = span, method = "loess", formula = y ~ x)
+#'  layer_points() %>%
+#'  layer_model_predictions(span = span, model = "loess", formula = y ~ x)
 waggle <- function(min, max, value = (min + max) / 2, step = (max - min) / 50,
                    fps = 10) {
 

@@ -75,8 +75,9 @@ add_default_options <- function(vis) {
 #'   be a single number, "auto", or "strict"
 #' @export
 #' @examples
-#' opts(padding = padding())
-#' opts(padding = padding(10, 10, 10, 10))
+#' p <- mtcars %>% ggvis(~wt, ~mpg) %>% layer_points()
+#' p %>% set_options(padding = padding())
+#' p %>% set_options(padding = padding(10, 10, 10, 10))
 padding <- function(top = NULL, right = NULL, bottom = NULL, left = NULL) {
   assert_that(is_padding(top), is_padding(right), is_padding(bottom),
     is_padding(left))

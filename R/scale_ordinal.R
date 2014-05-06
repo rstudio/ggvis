@@ -28,11 +28,13 @@
 #' @export
 #' @family vega scales
 #' @examples
+#' p <- mtcars %>% ggvis(~wt, ~mpg) %>% layer_points()
+#'
 #' scale_ordinal("x")
-#' dscale("x", "nominal")
+#' p %>% set_dscale("x", "nominal")
 #'
 #' scale_ordinal("x", padding = 0.5, points = FALSE)
-#' dscale("x", "nominal", points = FALSE)
+#' p %>% set_dscale("x", "nominal", points = FALSE)
 scale_ordinal <- function(name, points = TRUE, padding = NULL, sort = TRUE,
                           domain = NULL, range = NULL, reverse = FALSE,
                           round = FALSE) {

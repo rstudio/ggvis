@@ -22,14 +22,16 @@
 #' @family vega scales
 #' @export
 #' @examples
+#' p <- mtcars %>% ggvis(~wt, ~mpg) %>% layer_points()
+#'
 #' scale_quantitative("y")
-#' dscale("y", "numeric")
+#' p %>% set_dscale("y", "numeric")
 #'
 #' scale_quantitative("y", "pow", 0.5)
-#' dscale("y", "numeric", trans = "pow", exp = 0.5)
+#' p %>% set_dscale("y", "numeric", trans = "pow", exp = 0.5)
 #'
 #' scale_quantitative("x", clamp = TRUE, nice = FALSE, zero = TRUE)
-#' dscale("x", "numeric", clamp = TRUE, nice = FALSE, zero = TRUE)
+#' p %>% set_dscale("x", "numeric", clamp = TRUE, nice = FALSE, zero = TRUE)
 scale_quantitative <- function(name, trans = "linear", exponent = NULL,
                                clamp = FALSE, nice = TRUE, zero = FALSE,
                                domain = NULL, range = NULL, reverse = FALSE,

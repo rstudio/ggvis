@@ -4,13 +4,13 @@
 #' @param fill brush colour
 #' @export
 #' @importFrom methods setRefClass
-#' @examples
-#' lb <- linked_brush(keys = 1:nrow(mtcars))
-#' qvis(mtcars, ~disp, ~mpg, fill := lb$fill_prop(), size.brush := 400) + lb$brush_handler()
-#'
-#' ggvis(mtcars, props(x = ~disp, y = ~mpg, fill := lb$fill_prop(), size.brush := 400)) +
-#'   layer_point() +
-#'   lb$brush_handler()
+# @examples
+# lb <- linked_brush(keys = 1:nrow(mtcars))
+# qvis(mtcars, ~disp, ~mpg, fill := lb$fill_prop(), size.brush := 400) + lb$brush_handler()
+#
+# ggvis(mtcars, props(x = ~disp, y = ~mpg, fill := lb$fill_prop(), size.brush := 400)) +
+#   layer_point() +
+#   lb$brush_handler()
 linked_brush <- function(keys = NULL, fill = "red") {
   LinkedBrush(keys = keys, fill = fill)
 }

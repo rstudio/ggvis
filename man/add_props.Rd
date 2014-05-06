@@ -8,7 +8,22 @@ add_props(vis, ..., .props = NULL, inherit = NULL, env = parent.frame())
 \arguments{
 \item{vis}{Visualisation to modify.}
 
-\item{...}{Named visual properties.}
+\item{...}{A set of name-value pairs. The name should be a valid vega
+  property.
+
+  The first two unnamed components are taken to be \code{x} and \code{y}.
+  Any additional unnamed components will raise an error.}
+
+\item{.props}{When calling \code{props} from other functions, you'll
+often have a list of quoted function functions. You can pass that function
+to the \code{.props} argument instead of messing around with
+substitute. In other words, \code{.props} lets you opt out of the
+non-standard evaluation that \code{props} does.}
+
+\item{inherit}{If \code{TRUE}, the defaults, will inherit from properties
+from the parent layer If \code{FALSE}, it will start from nothing.}
+
+\item{env}{The environment in which to evaluate variable properties.}
 }
 \description{
 Add visual properties to a visualisation
