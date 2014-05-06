@@ -20,7 +20,7 @@ lb <- linked_brush(keys = 1:nrow(mtcars), "red")
 mtcars \%>\%
  ggvis(~disp, ~mpg) \%>\%
  layer_points(fill := lb$fill(), size.brush := 400) \%>\%
- function(vis) lb$input(vis)
+ lb$input()
 
 # Display one layer with all points and another layer with selected points
 # library(dplyr)
