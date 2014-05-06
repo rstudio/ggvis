@@ -11,11 +11,11 @@
 #'
 #' mtcars %>% ggvis(~mpg, ~wt) %>% layer_points() %>% add_resize(print_info)
 #' }
-add_resize <- function(vis, f, id = rand_id()) {
+add_resize <- function(vis, f) {
   if (!is.function(f)) stop("f must be a function")
 
-  connect <- function(session) {
-    resize_id <- paste0("ggvis_", id, "_resize")
+  connect <- function(session, plot_id) {
+    resize_id <- paste0(plot_id, "_resize")
 
     shiny::observe({
       r <- session$input[[resize_id]]
@@ -24,10 +24,10 @@ add_resize <- function(vis, f, id = rand_id()) {
       f(r)
     })
   }
-  connector_label(connect) <- paste("resize", id)
+  connector_label(connect) <- "resize"
 
   # This gets inserted into the Vega spec
-  spec <- list(id = id, type = "resize")
+  spec <- list(type = "resize")
   broker <- create_broker(reactive(NULL), connect = connect, spec = spec)
 
   register_reactive(vis, broker)

@@ -127,10 +127,6 @@ $(function(){ //DOM Ready
       this.plot = plot;
       this.h_spec = h_spec;
 
-      // jQuery event ID for naming event handlers and removing later
-      this._eventId = "ggvis_" + h_spec.id;
-      // The prefix to the shiny input name
-      this._inputId = "ggvis_" + h_spec.id + "_key_press";
       // Used for keeping track of number of key events. Needed so that Shiny
       // will send info when same key is pressed multiple times in a row.
       this._counter = 0;
@@ -138,14 +134,14 @@ $(function(){ //DOM Ready
       var self = this;
 
       // keypress handler works for regular character keys
-      $(document).on("keypress." + this._eventId, function(e) {
+      $(document).on("keypress." + this.plot.plotId, function(e) {
         var str = String.fromCharCode(e.which);
         self._sendValue(str);
       });
 
       // keydown handler for special keys that aren't caught by keypress,
       // like arrows
-      $(document).on("keydown." + this._eventId, function(e) {
+      $(document).on("keydown." + this.plot.plotId, function(e) {
         var str = keycodes[e.which];
         if (str) {
           self._sendValue(str);
@@ -168,13 +164,13 @@ $(function(){ //DOM Ready
     var prototype = keyboard.prototype;
 
     prototype.remove = function() {
-      $(document).off("keypress." + this._eventId);
-      $(document).off("keydown." + this._eventId);
+      $(document).off("keypress." + this.plot.plotId);
+      $(document).off("keydown." + this.plot.plotId);
     };
 
     prototype._sendValue = function(str) {
       this._counter++;
-      Shiny.onInputChange(this._inputId, {
+      Shiny.onInputChange(this.plot.plotId + "_key_press", {
         value: str,
         _nonce: this._counter
       });
@@ -192,29 +188,25 @@ $(function(){ //DOM Ready
       this.plot = plot;
       this.h_spec = h_spec;
 
-      // Event ID for naming event handlers and removing later
-      this._eventId = "ggvis_" + h_spec.id;
-      // The prefix to the shiny input name
-      this._inputIdPrefix = "ggvis_" + h_spec.id;
       // Used for keeping track of number of events. Needed so that Shiny
       // will send info when mouse_out event happens multiple times.
       this._nonce_counter = 0;
 
-      plot.chart.on("mouseover." + this._eventId, this._createMouseOverHandler());
-      plot.chart.on("mouseout."  + this._eventId, this._createMouseOutHandler());
+      plot.chart.on("mouseover." + this.plot.plotId, this._createMouseOverHandler());
+      plot.chart.on("mouseout."  + this.plot.plotId, this._createMouseOutHandler());
     };
 
     var prototype = hover.prototype;
 
     prototype.remove = function() {
-      this.plot.chart.off("mouseover." + this._eventId);
-      this.plot.chart.off("mouseout."  + this._eventId);
+      this.plot.chart.off("mouseover." + this.plot.plotId);
+      this.plot.chart.off("mouseout."  + this.plot.plotId);
     };
 
     prototype._createMouseOverHandler = function() {
       var self = this;
       return function(event, item) {
-        Shiny.onInputChange(self._inputIdPrefix + "_mouse_over",
+        Shiny.onInputChange(self.plot.plotId + "_mouse_over",
           {
             plot_id: self.plot.plotId,
             data: item.datum.data,
@@ -231,7 +223,7 @@ $(function(){ //DOM Ready
       var self = this;
       return function(event, item) {
         /* jshint unused: false */
-        Shiny.onInputChange(self._inputIdPrefix + "_mouse_out",
+        Shiny.onInputChange(self.plot.plotId + "_mouse_out",
           {
             plot_id: self.plot.plotId,
             _nonce: self._nonce_counter
@@ -252,27 +244,23 @@ $(function(){ //DOM Ready
       this.plot = plot;
       this.h_spec = h_spec;
 
-      // Event ID for naming event handlers and removing later
-      this._eventId = "ggvis_" + h_spec.id;
-      // The prefix to the shiny input name
-      this._inputIdPrefix = "ggvis_" + h_spec.id;
       // Used for keeping track of number of events. Needed so that Shiny
       // will send info when mouse_out event happens multiple times.
       this._nonce_counter = 0;
 
-      plot.chart.on("click." + this._eventId, this._createMouseClickHandler());
+      plot.chart.on("click." + this.plot.plotId, this._createMouseClickHandler());
     };
 
     var prototype = click.prototype;
 
     prototype.remove = function() {
-      this.plot.chart.off("click."  + this._eventId);
+      this.plot.chart.off("click."  + this.plot.plotId);
     };
 
     prototype._createMouseClickHandler = function() {
       var self = this;
       return function(event, item) {
-        Shiny.onInputChange(self._inputIdPrefix + "_mouse_click",
+        Shiny.onInputChange(self.plot.plotId + "_mouse_click",
           {
             plot_id: self.plot.plotId,
             data: item.datum.data,
@@ -297,24 +285,19 @@ $(function(){ //DOM Ready
       this.plot = plot;
       this.h_spec = h_spec;
 
-      // Event ID for naming event handlers and removing later
-      this._eventId = "ggvis_" + h_spec.id;
-      // The prefix to the shiny input name
-      this._inputIdPrefix = "ggvis_" + h_spec.id;
-
       var policy = h_spec.policy || "debounce";
       var policy_fun = _[policy];
       var delay = h_spec.delay || 100;
 
       var brushHandler = policy_fun(this._createBrushHandler(), delay);
 
-      plot.brush.on("updateItems." + this._eventId, brushHandler);
+      plot.brush.on("updateItems." + this.plot.plotId, brushHandler);
     };
 
     var prototype = brush.prototype;
 
     prototype.remove = function() {
-      this.plot.brush.off("updateItems." + this._eventId);
+      this.plot.brush.off("updateItems." + this.plot.plotId);
     };
 
     // Send information about the current brush
@@ -335,7 +318,7 @@ $(function(){ //DOM Ready
         info.pagey1 = info.y1 + offset.top  + padding.top;
         info.pagey2 = info.y2 + offset.top  + padding.top;
 
-        Shiny.onInputChange(self._inputIdPrefix + "_brush_move", info);
+        Shiny.onInputChange(self.plot.plotId + "_brush_move", info);
       };
     };
 
@@ -351,25 +334,20 @@ $(function(){ //DOM Ready
       this.plot = plot;
       this.h_spec = h_spec;
 
-      // Event ID for naming event handlers and removing later
-      this._eventId = "ggvis_" + h_spec.id;
-      // The prefix to the shiny input name
-      this._inputIdPrefix = "ggvis_" + h_spec.id;
-
-      this.plot.on("resize." + this._eventId, this._createResizeHandler());
+      this.plot.on("resize." + this.plot.plotId, this._createResizeHandler());
     };
 
     var prototype = resize.prototype;
 
     prototype.remove = function() {
-      this.plot.off("resize." + this._eventId);
+      this.plot.off("resize." + this.plot.plotId);
     };
 
     // Returns a function which takes an event
     prototype._createResizeHandler = function() {
       var self = this;
       return function(event) {
-        Shiny.onInputChange(self._inputIdPrefix + "_resize",
+        Shiny.onInputChange(self.plot.plotId + "_resize",
           {
             plot_id: self.plot.plotId,
             width: event.width,

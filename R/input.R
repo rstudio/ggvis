@@ -24,20 +24,20 @@ create_input <- function(id = rand_id("input_"), default = NULL,
   # Create a reactivevalues object to store the value. When a plot is rendered,
   # an observer will be set up to push values into val$x.
   vals <- shiny::reactiveValues()
-  vals[[id]] <- default
+  vals$x <- default
 
   # A reactive to wrap the reactive value
   res <- reactive({
-    map(vals[[id]])
+    map(vals$x)
   })
 
   # This function is run at render time. It takes values from session$input$foo
   # and pushes them into val$foo.
-  connect <- function(session) {
+  connect <- function(session, plot_id) {
     observe({
       value <- session$input[[id]]
       if (!is.null(value)) {
-        vals[[id]] <- value
+        vals$x <- value
       }
     })
   }

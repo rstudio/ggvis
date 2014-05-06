@@ -14,8 +14,7 @@
 #' mtcars %>% ggvis(~mpg, ~wt, size := size, opacity := opacity) %>%
 #'   layer_points()
 left_right <- function(min, max, value = (min + max) / 2,
-                       step = (max - min) / 40,
-                       id = rand_id()) {
+                       step = (max - min) / 40) {
 
   # Given the key_press object and current value, return the next value
   map <- function(key_press, current_value) {
@@ -30,14 +29,13 @@ left_right <- function(min, max, value = (min + max) / 2,
     }
   }
 
-  create_keyboard_event(map, value, id)
+  create_keyboard_event(map, value)
 }
 
 #' @export
 #' @rdname left_right
 up_down <- function(min, max, value = (min + max) / 2,
-                    step = (max - min) / 40,
-                    id = rand_id()) {
+                    step = (max - min) / 40) {
 
   map <- function(key_press, current_value) {
     key <- key_press$value
@@ -51,7 +49,7 @@ up_down <- function(min, max, value = (min + max) / 2,
     }
   }
 
-  create_keyboard_event(map, value, id)
+  create_keyboard_event(map, value)
 }
 
 #' Event broker for keyboard events.
@@ -81,35 +79,36 @@ up_down <- function(min, max, value = (min + max) / 2,
 #' an object to insert into the Vega spec.
 #'
 #' @param map A function which takes the key_press list object (a list
-create_keyboard_event <- function(map, default = NULL, id = rand_id()) {
+create_keyboard_event <- function(map, default = NULL) {
   if (!is.function(map)) stop("map must be a function")
 
-  key_press_id  <- paste0("ggvis_", id, "_key_press")
-
   vals <- shiny::reactiveValues()
-  vals[[key_press_id]] <- default
+  vals$x <- default
 
   # A reactive to wrap the reactive value
   res <- reactive({
-    vals[[key_press_id]]
+    vals$x
   })
 
-  # This function is run at render time. It takes the values from
-  connect <- function(session) {
+  # This function is run at render time.
+  connect <- function(session, plot_id) {
+    key_press_id  <- paste0(plot_id, "_key_press")
+    print(key_press_id)
+
     observe({
       key_press <- session$input[[key_press_id]]
 
       if (!is.null(key_press)) {
         # Get the current value of the reactive, without taking a dependency
-        current_value <- isolate(vals[[key_press_id]])
+        current_value <- isolate(vals$x)
 
-        vals[[key_press_id]] <- map(key_press, current_value)
+        vals$x <- map(key_press, current_value)
       }
 
     })
   }
-  connector_label(connect) <- paste("key_press", id)
+  connector_label(connect) <- "key_press"
 
-  spec <- list(id = id, type = "keyboard")
+  spec <- list(type = "keyboard")
   create_broker(res, connect = connect, spec = spec)
 }

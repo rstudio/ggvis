@@ -149,7 +149,7 @@ exec_connectors <- function(r_spec, plot_id, session) {
 
   lapply(connectors, function(connect) {
     if (!is.null(connect)) {
-      connect(session)
+      connect(session, plot_id)
     }
   })
 }

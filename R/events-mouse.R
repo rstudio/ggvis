@@ -42,14 +42,13 @@
 #'   layer_points() %>%
 #'   add_brush_tooltip(brushed_summary)
 #' }
-add_hover_tooltip <- function(vis, f, id = rand_id()) {
+add_hover_tooltip <- function(vis, f) {
   if (!is.function(f)) stop("f must be a function")
 
-  connect <- function(session) {
-    # FIXME: These should use the plot ID as the prefix
+  connect <- function(session, plot_id) {
     # Shiny input IDs to to listen for
-    mouse_out_id  <- paste0("ggvis_", id, "_mouse_out")
-    mouse_over_id <- paste0("ggvis_", id, "_mouse_over")
+    mouse_out_id  <- paste0(plot_id, "_mouse_out")
+    mouse_over_id <- paste0(plot_id, "_mouse_over")
 
     shiny::observe({
       session$input[[mouse_out_id]]
@@ -73,10 +72,10 @@ add_hover_tooltip <- function(vis, f, id = rand_id()) {
       )
     })
   }
-  connector_label(connect) <- paste("hover", id)
+  connector_label(connect) <- "hover"
 
   # This gets inserted into the Vega spec
-  spec <- list(id = id, type = "hover")
+  spec <- list(type = "hover")
 
   broker <- create_broker(reactive(NULL), connect = connect, spec = spec)
 
@@ -85,13 +84,12 @@ add_hover_tooltip <- function(vis, f, id = rand_id()) {
 
 #' @export
 #' @rdname tooltip
-add_click_tooltip <- function(vis, f, id = rand_id()) {
+add_click_tooltip <- function(vis, f) {
   if (!is.function(f)) stop("f must be a function")
 
-  connect <- function(session) {
-    # FIXME: These should use the plot ID as the prefix
-    # Shiny input IDs to to listen for
-    mouse_click_id  <- paste0("ggvis_", id, "_mouse_click")
+  connect <- function(session, plot_id) {
+    # Shiny input ID to to listen for
+    mouse_click_id  <- paste0(plot_id, "_mouse_click")
 
     shiny::observe({
       click <- session$input[[mouse_click_id]]
@@ -110,10 +108,10 @@ add_click_tooltip <- function(vis, f, id = rand_id()) {
       )
     })
   }
-  connector_label(connect) <- paste("click", id)
+  connector_label(connect) <- "click"
 
   # This gets inserted into the Vega spec
-  spec <- list(id = id, type = "click")
+  spec <- list(type = "click")
 
   broker <- create_broker(reactive(NULL), connect = connect, spec = spec)
 
