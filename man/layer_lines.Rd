@@ -19,7 +19,7 @@ mtcars2 \%>\% ggvis(~wt, ~mpg, stroke = ~cyl) \%>\% layer_lines()
 
 # Equivalent to
 mtcars2 \%>\% ggvis(~wt, ~mpg, stroke = ~cyl) \%>\%
-  group_by(cyl) \%>\% arrange(wt) \%>\% layer_paths()
+  group_by(cyl) \%>\% dplyr::arrange(wt) \%>\% layer_paths()
 }
 \seealso{
 \code{link{mark_path}}

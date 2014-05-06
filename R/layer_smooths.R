@@ -23,14 +23,14 @@
 #' @export
 #' @examples
 #' mtcars %>% ggvis(~wt, ~mpg) %>% layer_smooths()
-#' mtcars %>% ggvis(~wt, ~mpg) %>% layer_smooths(se = T)
+#' mtcars %>% ggvis(~wt, ~mpg) %>% layer_smooths(se = TRUE)
 #'
 #' # Use group by to display multiple smoothes
 #' mtcars %>% ggvis(~wt, ~mpg) %>% group_by(cyl) %>% layer_smooths()
 #'
 #' # Control appearance with props
 #' mtcars %>% ggvis(~wt, ~mpg) %>%
-#'   layer_smooths(se = T, stroke := "red", fill := "red", strokeWidth := 5)
+#'   layer_smooths(se = TRUE, stroke := "red", fill := "red", strokeWidth := 5)
 #'
 #' # Control the wiggliness with span. Default is 0.75
 #' mtcars %>% ggvis(~wt, ~mpg) %>% layer_points() %>%
