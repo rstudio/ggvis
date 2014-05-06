@@ -8,7 +8,7 @@ test_that("compute_stack works as expected", {
   )
 
   # Basic stacking: stack y value at each x
-  stacked <- dat %>% compute_stack("val", "g1") %>% as.data.frame()
+  stacked <- dat %>% compute_stack(~val, ~g1) %>% as.data.frame()
   expected <- data.frame(
     stack_lwr_ = c(0,1,3,0,4,0,6,13),
     stack_upr_ = c(1,3,6,4,9,6,13,21)
@@ -17,7 +17,7 @@ test_that("compute_stack works as expected", {
   expect_equal(stacked[c("stack_lwr_", "stack_upr_")], expected)
 
   # With grouping
-  stacked <- dat %>% group_by(g2) %>% compute_stack("val", "g1") %>%
+  stacked <- dat %>% group_by(g2) %>% compute_stack(~val, ~g1) %>%
     as.data.frame()
   expected <- expected[order(dat$g2), ] %>% as.data.frame()
   expected <- expected[order(dat$g2), ] %>% as.data.frame()
