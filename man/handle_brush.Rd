@@ -8,7 +8,7 @@ handle_brush(vis, on_move = NULL)
 \arguments{
 \item{vis}{Visualisation to listen to.}
 
-\item{on_move}{Callback functions called with arguments \code{value} and
+\item{on_move}{Callback function called with arguments \code{value} and
 \code{session} every time the brush moves. Value is a list of points
 under the brush.}
 }
