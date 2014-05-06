@@ -1,3 +1,23 @@
+#' # Grab the mean and standard deviations of brushed values
+#' brushed_summary <- function(x) {
+#'  if(is.null(x) || length(x) == 0) return(NULL)
+#'  # Get the names of variables other than "key__"
+#'  names <- setdiff(names(x[[1]]), "key__")
+#'
+#'  # Print out the mean and sd for each variable
+#'  lines <- lapply(names, function(name) {
+#'    vals <- vapply(x, `[[`, name, FUN.VALUE = numeric(1))
+#'    paste0(name, ": ", round(mean(vals), 2), " (", round(sd(vals), 2), ")")
+#'  })
+#'
+#'  paste0(lines, collapse = "<br />")
+#' }
+#'
+#' # Display tooltip when objects are brushed
+#' mtcars %>% ggvis(x = ~wt, y = ~mpg, size.brush := 400) %>%
+#'   layer_points() %>%
+#'   add_brush_tooltip(brushed_summary)
+#' }
 #' @export
 #' @rdname tooltip
 add_brush_tooltip <- function(vis, f) {
