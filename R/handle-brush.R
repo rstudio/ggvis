@@ -1,7 +1,7 @@
 #' Handle brush events on a visualisation.
 #'
 #' @param vis Visualisation to listen to.
-#' @param on_move Callback functions called with arguments \code{value} and
+#' @param on_move Callback function called with arguments \code{value} and
 #'   \code{session} every time the brush moves. Value is a list of points
 #'   under the brush.
 #' @export
