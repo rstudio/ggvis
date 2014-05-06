@@ -127,9 +127,9 @@ extract_inputs <- function(x, env = parent.frame()) {
   if (is.call(x) && identical(x[[1]], quote(eval))) {
     stopifnot(length(x) == 2)
     input <- eval(x[[2]], env)
-    stopifnot(is.input(input))
 
-    nm <- attr(input, "input_id")
+    stopifnot(is.broker(input))
+    nm <- names(attr(input, "broker")$controls)
 
     return(list(
       expr = substitute(args$nm, list(nm = as.name(nm))),
