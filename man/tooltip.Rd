@@ -5,6 +5,6 @@
 \usage{
 add_brush_tooltip(vis, f, id = rand_id())
 
-add_click_tooltip(vis, f, id = rand_id())
+add_click_tooltip(vis, f)
 }
 

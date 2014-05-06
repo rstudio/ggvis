@@ -4,11 +4,9 @@
 \alias{up_down}
 \title{Interactive inputs bound to arrow keys.}
 \usage{
-left_right(min, max, value = (min + max)/2, step = (max - min)/40,
-  id = rand_id())
+left_right(min, max, value = (min + max)/2, step = (max - min)/40)
 
-up_down(min, max, value = (min + max)/2, step = (max - min)/40,
-  id = rand_id())
+up_down(min, max, value = (min + max)/2, step = (max - min)/40)
 }
 \arguments{
 \item{min}{A minimum value.}

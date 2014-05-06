@@ -3,7 +3,7 @@
 \alias{create_keyboard_event}
 \title{Event broker for keyboard events.}
 \usage{
-create_keyboard_event(map, default = NULL, id = rand_id())
+create_keyboard_event(map, default = NULL)
 }
 \arguments{
 \item{map}{A function which takes the key_press list object (a list}

@@ -3,7 +3,7 @@
 \alias{add_resize}
 \title{An interactive input bound to resize events.}
 \usage{
-add_resize(vis, f, id = rand_id())
+add_resize(vis, f)
 }
 \arguments{
 \item{f}{A function which is called each time the plot is resized.}

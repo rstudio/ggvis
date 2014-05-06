@@ -3,7 +3,7 @@
 \alias{add_hover_tooltip}
 \title{Display tooltips}
 \usage{
-add_hover_tooltip(vis, f, id = rand_id())
+add_hover_tooltip(vis, f)
 }
 \arguments{
 \item{f}{A function that takes a single argument as input. This argument
