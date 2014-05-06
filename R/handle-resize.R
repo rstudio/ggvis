@@ -19,20 +19,9 @@
 #' mtcars %>% ggvis(~mpg, ~wt) %>% layer_text(text := plot_width())
 #' mtcars %>% ggvis(~mpg, ~wt) %>% layer_text(text := plot_height())
 handle_resize <- function(vis, on_resize) {
-  check_callback(on_resize, c("width", "height", "padding", "session"))
-
-  connect <- function(session, plot_id) {
-    id <- paste0(plot_id, "_resize")
-    shiny::observe({
-      value <- session$input[[id]]
-      on_resize(width = value$width, height = value$height,
-        padding = value$padding, session = value$session)
-    })
-  }
-
   broker <- create_broker(
     reactive(NULL),
-    connect = connect,
+    connect = connect_resize(on_resize),
     spec = list(type = "resize")
   )
   register_reactive(vis, broker)
@@ -44,19 +33,13 @@ handle_resize <- function(vis, on_resize) {
 plot_width <- function(vis) {
   vals <- shiny::reactiveValues()
   vals$x <- 100
-
-  connect <- function(session, plot_id) {
-    id <- paste0(plot_id, "_resize")
-    shiny::observe({
-      value <- session$input[[id]]$width
-      if (is.null(value)) return()
-      vals$x <- value
-    })
+  on_resize <- function(width, ...) {
+    vals$x <- width
   }
 
   create_broker(
     reactive(vals$x),
-    connect = connect,
+    connect = connect_resize(on_resize),
     spec = list(type = "resize")
   )
 }
@@ -66,20 +49,29 @@ plot_width <- function(vis) {
 plot_height <- function(vis) {
   vals <- shiny::reactiveValues()
   vals$x <- 100
-
-  connect <- function(session, plot_id) {
-    id <- paste0(plot_id, "_resize")
-    shiny::observe({
-      value <- session$input[[id]]$height
-      if (is.null(value)) return()
-      vals$x <- value
-    })
+  on_resize <- function(height, ...) {
+    vals$x <- height
   }
 
   create_broker(
     reactive(vals$x),
-    connect = connect,
+    connect = connect_resize(on_resize),
     spec = list(type = "resize")
   )
 }
 
+
+connect_resize <- function(on_resize) {
+  check_callback(on_resize, c("width", "height", "padding", "session"))
+
+  function(session, plot_id) {
+    id <- paste0(plot_id, "_resize")
+    shiny::observe({
+      value <- session$input[[id]]
+      if (is.null(value)) return()
+
+      on_resize(width = value$width, height = value$height,
+        padding = value$padding, session = value$session)
+    })
+  }
+}
