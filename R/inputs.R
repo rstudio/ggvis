@@ -47,13 +47,15 @@ input_slider <- function(min, max, value = (min + max) / 2, step = NULL,
 #' input_checkbox(label = "Confidence interval")
 #' input_checkbox(label = "Confidence interval", value = TRUE)
 #'
-#' # Used in a layer_smooth
-#' layer_smooth(se = input_checkbox(label = "Confidence interval"))
+#' # Used in layer_smooths
+#' mtcars %>% ggvis(~wt, ~mpg) %>%
+#'   layer_smooths(se = input_checkbox(label = "Confidence interval"))
 #'
 #' # Used with a map function, to convert the boolean to another type of value
 #' model_type <- input_checkbox(label = "Use flexible curve",
 #'   map = function(val) if(val) "loess" else "lm")
-#' layer_smooth(method = model_type)
+#' mtcars %>% ggvis(~wt, ~mpg) %>%
+#'   layer_model_predictions(model = model_type)
 input_checkbox <- function(value = FALSE, label = "",
                            id = rand_id("checkbox_"), map = identity) {
 
@@ -73,10 +75,10 @@ input_checkbox <- function(value = FALSE, label = "",
 #' @export
 #' @examples
 #' fill_text <- input_text(label = "Point color", value = "red")
-#' qvis(mtcars, ~wt, ~mpg, fill := fill_text)
+#' mtcars %>% qvis(~wt, ~mpg, fill := fill_text)
 #'
 #' size_num <- input_numeric(label = "Point size", value = 25)
-#' qvis(mtcars, ~wt, ~mpg, size := size_num)
+#' mtcars %>% qvis(~wt, ~mpg, size := size_num)
 input_text <- function(value, label = "", id = rand_id("text_"),
                        map = identity) {
 
@@ -123,14 +125,27 @@ input_numeric <- function(value, label = "", id = rand_id("numeric_"),
 #' input_radiobuttons(choices = c("Linear" = "lm", "LOESS" = "loess"),
 #'                    label = "Model type")
 #' input_radiobuttons(choices = c("Linear" = "lm", "LOESS" = "loess"),
-#'                    selected = "LOESS",
+#'                    selected = "loess",
 #'                    label = "Model type")
 #'
-#' # Used in a layer_smooth
-#' layer_smooth(model = input_radiobuttons(
-#'   choices = c("Linear" = "lm", "LOESS" = "loess"),
-#'               selected = "LOESS",
-#'               label = "Model type"))
+#' # Used in layer_model_predictions
+#' mtcars %>% ggvis(~wt, ~mpg) %>%
+#'   layer_model_predictions(model = input_radiobuttons(
+#'     choices = c("Linear" = "lm", "LOESS" = "loess"),
+#'     selected = "loess",
+#'     label = "Model type"))
+#'
+#' # Checkbox group
+#' mtcars %>% ggvis(x = ~wt, y = ~mpg) %>%
+#'   layer_points(
+#'     fill := input_checkboxgroup(
+#'       choices = c("Red" = "r", "Green" = "g", "Blue" = "b"),
+#'       label = "Point color components",
+#'       map = function(val) {
+#'         rgb(0.8 * "r" %in% val, 0.8 * "g" %in% val, 0.8 * "b" %in% val)
+#'       }
+#'     )
+#'   )
 input_select <- function(choices, selected = NULL, multiple = FALSE,
                          label = "", id = rand_id("select_"), map = identity) {
 
@@ -143,7 +158,7 @@ input_select <- function(choices, selected = NULL, multiple = FALSE,
     if (multiple) value <- ""
     else value <- choices[1]
   } else {
-    value <- choices[selected]
+    value <- selected
   }
 
   create_input(id, value, map, control)
@@ -162,7 +177,7 @@ input_radiobuttons <- function(choices, selected = NULL, label = "",
   if (is.null(selected)) {
     value <- choices[1]
   } else {
-    value <- choices[selected]
+    value <- selected
   }
 
   create_input(id, value, map, control)
@@ -181,7 +196,7 @@ input_checkboxgroup <- function(choices, selected = NULL, label = "",
   if (is.null(selected)) {
     value <- character(0)
   } else {
-    value <- choices[selected]
+    value <- selected
   }
 
   create_input(id, value, map, control)
