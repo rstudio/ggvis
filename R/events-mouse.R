@@ -119,21 +119,3 @@ add_click_tooltip <- function(vis, f) {
   register_reactive(vis, broker)
 }
 
-#' Send a message to the client to show or hide a tooltip
-#'
-#' @param session A Shiny session object.
-#' @param pagex x position of the tooltip box on the page.
-#' @param pagey y position of the tooltip box on the page.
-#' @param html HTML to display in the tooltip box.
-#'
-#' @export
-show_tooltip <- function(session, pagex = 0, pagey = 0, html = "") {
-  ggvis_message(session, "show_tooltip",
-    list(pagex = pagex, pagey = pagey, html = html))
-}
-
-#' @rdname show_tooltip
-#' @export
-hide_tooltip <- function(session) {
-  ggvis_message(session, "hide_tooltip")
-}
