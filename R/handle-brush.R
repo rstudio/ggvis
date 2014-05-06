@@ -28,7 +28,10 @@ handle_brush <- function(vis, on_move = NULL) {
   )
   vis <- register_reactive(vis, broker)
 
-  # Add layer to draw brush
+  layer_brush(vis)
+}
+
+layer_brush <- function(vis) {
   layer_f(vis, function(v) {
     init <- data.frame(x = 0, y = 0, width = 0, height = 0)
     v <- add_data(v, init, "ggvis_brush", add_hash = FALSE)
