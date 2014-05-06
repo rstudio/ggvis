@@ -27,7 +27,8 @@ emit_points <- function(vis, props) {
 #' @rdname marks
 #' @export
 layer_points <- function(vis, ..., data = NULL) {
-  add_mark(vis, "symbol", props(...), data, deparse2(substitute(data)))
+  add_mark(vis, "symbol", props(..., env = parent.frame()), data,
+    deparse2(substitute(data)))
 }
 
 #' @rdname marks
@@ -38,11 +39,9 @@ emit_images <- function(vis, props) {
 #' @rdname marks
 #' @export
 layer_images <- function(vis, ..., data = NULL) {
-  add_mark(vis, "image", props(...), data, deparse2(substitute(data)))
+  add_mark(vis, "image", props(..., env = parent.frame()), data,
+    deparse2(substitute(data)))
 }
-
-
-
 
 #' @rdname marks
 #' @export
@@ -52,7 +51,8 @@ emit_arcs <- function(vis, props) {
 #' @rdname marks
 #' @export
 layer_arcs <- function(vis, ..., data = NULL) {
-  add_mark(vis, "arc", props(...), data, deparse2(substitute(data)))
+  add_mark(vis, "arc", props(..., env = parent.frame()), data,
+    deparse2(substitute(data)))
 }
 
 
@@ -64,7 +64,8 @@ emit_ribbons <- function(vis, props) {
 #' @rdname marks
 #' @export
 layer_ribbons <- function(vis, ..., data = NULL) {
-  add_mark(vis, "area", props(...), data, deparse2(substitute(data)))
+  add_mark(vis, "area", props(..., env = parent.frame()), data,
+    deparse2(substitute(data)))
 }
 
 #' @rdname marks
@@ -75,7 +76,8 @@ emit_paths <- function(vis, props) {
 #' @rdname marks
 #' @export
 layer_paths <- function(vis, ..., data = NULL) {
-  add_mark(vis, "line", props(...), data, deparse2(substitute(data)))
+  add_mark(vis, "line", props(..., env = parent.frame()), data,
+    deparse2(substitute(data)))
 }
 
 #' @rdname marks
@@ -86,7 +88,8 @@ emit_rects <- function(vis, props) {
 #' @rdname marks
 #' @export
 layer_rects <- function(vis, ..., data = NULL) {
-  add_mark(vis, "rect", props(...), data, deparse2(substitute(data)))
+  add_mark(vis, "rect", props(..., env = parent.frame()), data,
+    deparse2(substitute(data)))
 }
 
 #' @rdname marks
@@ -97,7 +100,8 @@ emit_text <- function(vis, props) {
 #' @rdname marks
 #' @export
 layer_text <- function(vis, ..., data = NULL) {
-  add_mark(vis, "text", props(...), data, deparse2(substitute(data)))
+  add_mark(vis, "text", props(..., env = parent.frame()), data,
+    deparse2(substitute(data)))
 }
 
 colour <- c("stroke", "strokeOpacity", "fill", "fillOpacity", "opacity",
