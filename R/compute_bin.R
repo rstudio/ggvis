@@ -176,18 +176,6 @@ bin_vector.POSIXt <- function(x, weight = NULL, ..., binwidth = 1,
   results
 }
 
-#' @export
-bin_vector.factor <- function(x, weight = NULL, ...) {
-  tbl <- table(x, exclude = NULL)
-  df <- as.data.frame(tbl)
-
-  data.frame(
-    count_ = df[[2]],
-    x_ = as.character(df[[1]]),
-    stringsAsFactors = FALSE
-  )
-}
-
 bin_out <- function(count = numeric(0), x = numeric(0), width = numeric(0),
                     xmin = x - width / 2, xmax = x + width / 2) {
   data.frame(
