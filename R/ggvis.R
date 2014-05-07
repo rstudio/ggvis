@@ -80,8 +80,9 @@ add_data <- function(vis, data, name = deparse2(substitute(data))) {
     data <- function() static_data
   }
 
-  data_id(data) <- name
-  vis$data[[name]] <- data
+  id <- paste0(name, length(vis$data))
+  data_id(data) <- id
+  vis$data[[id]] <- data
   vis$cur_data <- data
 
   vis
@@ -161,10 +162,8 @@ register_computation <- function(vis, args, name, transform = NULL) {
   if (is.null(transform)) return(vis)
 
   parent_data <- vis$cur_data
-  # For the ID, append to the parent's ID, along with a hash of the transform's
-  # arguments.
-  id <- paste0(data_id(parent_data), "/", name, "_",
-               digest::digest(args, algo = "crc32"))
+  # For the ID, append to the parent's ID, along with a unique number.
+  id <- paste0(data_id(parent_data), "/", name, length(vis$data))
 
   if (shiny::is.reactive(parent_data) || any_apply(args, shiny::is.reactive)) {
     new_data <- reactive(transform(parent_data(), values(args)))
