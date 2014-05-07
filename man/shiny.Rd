@@ -8,9 +8,9 @@
 \usage{
 ggvisOutput(plot_id, shiny = TRUE, minify = TRUE)
 
-render_ggvis(gv, session, plot_id, controls_id = NULL, ...)
+render_ggvis(vis, session, plot_id, controls_id = NULL, ...)
 
-render_controls(gv, session, controls_id)
+render_controls(vis, session, controls_id)
 }
 \arguments{
 \item{plot_id}{unique identifier to use for the div containing the ggvis plot.}
@@ -21,7 +21,7 @@ interactive plots, this should be TRUE; otherwise FALSE.}
 \item{minify}{If \code{TRUE}, use minified version of JS and CSS files. This
 can be useful for debugging.}
 
-\item{gv}{A ggvis object, or a reactive expression that returns a ggvis
+\item{vis}{A ggvis object, or a reactive expression that returns a ggvis
 object.}
 
 \item{session}{A Shiny session object.}

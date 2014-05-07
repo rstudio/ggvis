@@ -83,21 +83,23 @@ ggvisOutput <- function(plot_id, shiny = TRUE, minify = TRUE) {
 }
 
 #' @rdname shiny
-#' @param gv A ggvis object, or a reactive expression that returns a ggvis
+#' @param vis A ggvis object, or a reactive expression that returns a ggvis
 #'   object.
 #' @param session A Shiny session object.
 #' @param ... Other arguments passed to \code{as.vega}.
 #' @export
-render_ggvis <- function(gv, session, plot_id, controls_id = NULL, ...) {
-  if (!shiny::is.reactive(gv) && !is.ggvis(gv)) {
-    stop("observe_ggvis requires a ggvis object or a reactive expression that returns a ggvis object",
+render_ggvis <- function(vis, session, plot_id, controls_id = NULL, ...) {
+  if (is.reactive(vis)) {
+    visf <- vis
+  } else if (is.ggvis(vis)) {
+    visf <- function() vis
+  } else {
+    stop("render_ggvis requires a ggvis object or a reactive expression that returns a ggvis object",
       call. = FALSE)
   }
 
   r_spec <- shiny::reactive({
-    if (is.reactive(gv)) vis <- gv()
-    else                 vis <- gv
-    as.vega(vis, session = session, dynamic = TRUE, ...)
+    as.vega(visf(), session = session, dynamic = TRUE, ...)
   })
 
   observe_spec(r_spec, plot_id, session)
@@ -105,10 +107,10 @@ render_ggvis <- function(gv, session, plot_id, controls_id = NULL, ...) {
   exec_connectors(r_spec, plot_id, session)
 
   if (!is.null(controls_id)) {
-    render_controls(gv, session, controls_id)
+    render_controls(vis, session, controls_id)
   }
 
-  gv
+  vis
 }
 
 # Create an observer for a reactive vega spec
@@ -176,18 +178,26 @@ exec_connectors <- function(r_spec, plot_id, session) {
 #' @param controls_id Unique identifier for controls div.
 #' @rdname shiny
 #' @export
-render_controls <- function(gv, session, controls_id) {
-  if (is.reactive(gv)) gv <- gv()
-  if (!is.ggvis(gv)) stop("gv is not a ggvis object.", call. = FALSE)
+render_controls <- function(vis, session, controls_id) {
+  if (is.reactive(vis)) {
+    visf <- vis
+  } else if (is.ggvis(vis)) {
+    visf <- function() vis
+  } else {
+    stop("render_controls requires a ggvis object or a reactive expression that returns a ggvis object",
+      call. = FALSE)
+  }
 
-  controls <- gv$controls
-  if (empty(controls)) return()
+  shiny::observe({
+    controls <- visf()$controls
+    if (empty(controls)) return()
 
-  # Wrap each control in a div, for layout purposes
-  divs <- lapply(controls, shiny::div,  class = "ggvis-input-container")
-  session$output[[controls_id]] <- shiny::renderUI(shiny::tagList(divs))
+    # Wrap each control in a div, for layout purposes
+    divs <- lapply(controls, shiny::div,  class = "ggvis-input-container")
+    session$output[[controls_id]] <- shiny::renderUI(shiny::tagList(divs))
+  })
 
-  gv
+  vis
 }
 
 
