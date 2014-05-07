@@ -18,7 +18,16 @@ handle_brush <- function(vis, on_move = NULL, fill = "black") {
   check_callback(on_move, c("value", "session"))
 
   connect <- function(session, plot_id) {
-    setup_callback(on_move, paste0(plot_id, "_brush_move"), session)
+    id <- paste0(plot_id, "_brush_move")
+    shiny::observe({
+      value <- session$input[[id]]
+      if (is.null(value)) return()
+
+      browser()
+
+      on_resize(width = value$width, height = value$height,
+        padding = value$padding, session = value$session)
+    })
   }
   connector_label(connect) <- "brush"
 
@@ -35,7 +44,7 @@ handle_brush <- function(vis, on_move = NULL, fill = "black") {
 layer_brush <- function(vis, fill = "black") {
   layer_f(vis, function(v) {
     init <- data.frame(x = 0, y = 0, width = 0, height = 0)
-    v <- add_data(v, init, "ggvis_brush", add_hash = FALSE)
+    v <- add_data(v, init, "ggvis_brush")
     emit_rects(v, props(x := ~x, y := ~y,
       width := ~width, height := ~height,
       fill := fill, fillOpacity := 0.2,
