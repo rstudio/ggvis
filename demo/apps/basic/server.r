@@ -9,8 +9,7 @@ shinyServer(function(input, output, session) {
   mtc %>%
     ggvis(~wt, ~mpg) %>%
     layer_points() %>%
-    render_ggvis(session, "plot") %>%
-    render_controls(session, "plot_ui")
+    render_ggvis(session, "plot", "plot_ui")
 
   output$mtc_table <- renderTable({
     mtc()[, c("wt", "mpg")]

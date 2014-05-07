@@ -8,9 +8,9 @@
 \usage{
 ggvis_output(plot_id, shiny = TRUE, minify = TRUE)
 
-render_ggvis(gv, session, plot_id, ...)
+render_ggvis(gv, session, plot_id, controls_id = NULL, ...)
 
-render_controls(gv, session, id)
+render_controls(gv, session, controls_id)
 }
 \arguments{
 \item{plot_id}{unique identifier to use for the div containing the ggvis plot.}
@@ -27,6 +27,8 @@ object.}
 \item{session}{A Shiny session object.}
 
 \item{...}{Other arguments passed to \code{as.vega}.}
+
+\item{controls_id}{Unique identifier for controls div.}
 }
 \description{
 It's easiest to learn by example: there are many shiny apps in

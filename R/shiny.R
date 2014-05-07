@@ -80,7 +80,7 @@ ggvis_output <- function(plot_id, shiny = TRUE, minify = TRUE) {
 #' @param session A Shiny session object.
 #' @param ... Other arguments passed to \code{as.vega}.
 #' @export
-render_ggvis <- function(gv, session, plot_id, ...) {
+render_ggvis <- function(gv, session, plot_id, controls_id = NULL, ...) {
   if (!shiny::is.reactive(gv) && !is.ggvis(gv)) {
     stop("observe_ggvis requires a ggvis object or a reactive expression that returns a ggvis object",
       call. = FALSE)
@@ -95,6 +95,10 @@ render_ggvis <- function(gv, session, plot_id, ...) {
   observe_spec(r_spec, plot_id, session)
   observe_data(r_spec, plot_id, session)
   exec_connectors(r_spec, plot_id, session)
+
+  if (!is.null(controls_id)) {
+    render_controls(gv, session, controls_id)
+  }
 
   gv
 }
@@ -161,9 +165,10 @@ exec_connectors <- function(r_spec, plot_id, session) {
   })
 }
 
+#' @param controls_id Unique identifier for controls div.
 #' @rdname shiny
 #' @export
-render_controls <- function(gv, session, id) {
+render_controls <- function(gv, session, controls_id) {
   if (is.reactive(gv)) gv <- gv()
   if (!is.ggvis(gv)) stop("gv is not a ggvis object.", call. = FALSE)
 
@@ -172,7 +177,7 @@ render_controls <- function(gv, session, id) {
 
   # Wrap each control in a div, for layout purposes
   divs <- lapply(controls, shiny::div,  class = "ggvis-input-container")
-  session$output[[id]] <- shiny::renderUI(shiny::tagList(divs))
+  session$output[[controls_id]] <- shiny::renderUI(shiny::tagList(divs))
 
   gv
 }
