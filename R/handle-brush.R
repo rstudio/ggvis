@@ -35,7 +35,7 @@ handle_brush <- function(vis, on_move = NULL, fill = "black") {
 layer_brush <- function(vis, fill = "black") {
   layer_f(vis, function(v) {
     init <- data.frame(x = 0, y = 0, width = 0, height = 0)
-    v <- add_data(v, init, "ggvis_brush", add_hash = FALSE)
+    v <- add_data(v, init, "ggvis_brush")
     emit_rects(v, props(x := ~x, y := ~y,
       width := ~width, height := ~height,
       fill := fill, fillOpacity := 0.2,
