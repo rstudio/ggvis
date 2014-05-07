@@ -61,6 +61,7 @@ watch_mouse <- function(session, id, fun) {
   shiny::observe({
     value <- session$input[[id]]
     if (is.null(value)) return()
+    if (!is.list(value$data)) return() # axis ticks/labels etc
 
     df <- value$data
     class(df) <- "data.frame"
