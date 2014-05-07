@@ -44,10 +44,10 @@
 #'   }
 #' ))
 #' }
-#' @name shiny
+#' @name shiny-ggvis
 NULL
 
-#' @rdname shiny
+#' @rdname shiny-ggvis
 #' @param plot_id unique identifier to use for the div containing the ggvis plot.
 #' @param shiny Should this include headers for Shiny? For dynamic and
 #'   interactive plots, this should be TRUE; otherwise FALSE.
@@ -83,7 +83,7 @@ ggvisOutput <- function(plot_id, shiny = TRUE, minify = TRUE) {
   }
 }
 
-#' @rdname shiny
+#' @rdname shiny-ggvis
 #' @param vis A ggvis object, or a reactive expression that returns a ggvis
 #'   object.
 #' @param session A Shiny session object.
@@ -182,7 +182,7 @@ exec_connectors <- function(r_spec, plot_id, session) {
 }
 
 #' @param controls_id Unique identifier for controls div.
-#' @rdname shiny
+#' @rdname shiny-ggvis
 #' @export
 bind_shiny_ui <- function(vis, controls_id,
                           session = shiny::getDefaultReactiveDomain()) {
