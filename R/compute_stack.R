@@ -83,28 +83,3 @@ compute_stack.ggvis <- function(x, stack_var = NULL, group_var = NULL) {
     preserve_constants(data, output)
   })
 }
-
-
-find_prop_var <- function(props, name) {
-  prop <- props[[name]]
-  if (is.null(prop)) {
-    stop("Can't find prop ", name, call. = FALSE)
-  }
-
-  if (prop$type != "variable") {
-    stop("Visual property ", name, " is not a variable", call. = FALSE)
-  }
-
-  formula(prop)
-}
-
-
-#' @export
-formula.prop <- function(x) {
-  eval(substitute(~x, list(x = x$value)), x$env)
-}
-
-eval_vector <- function(x, f) UseMethod("eval_vector")
-eval_vector.data.frame <- function(x, f) {
-  eval(f[[2]], x, environment(f))
-}

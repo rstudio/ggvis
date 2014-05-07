@@ -288,3 +288,8 @@ prop_range.split_df <- function(data, var, na.rm = TRUE) {
     FUN.VALUE = numeric(2))
   range(ranges)
 }
+
+#' @export
+formula.prop <- function(x) {
+  eval(substitute(~x, list(x = x$value)), x$env)
+}
