@@ -163,8 +163,11 @@ exec_connectors <- function(r_spec, plot_id, session) {
 #' @rdname shiny
 #' @export
 renderControls <- function(r_gv, session = NULL) {
+  if (is.reactive(r_gv)) {
+    r_gv <- r_gv()
+  }
   shiny::renderUI({
-    controls <- r_gv()$controls
+    controls <- r_gv$controls
     if (empty(controls)) {
       NULL
     } else {
