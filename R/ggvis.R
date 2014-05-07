@@ -67,11 +67,15 @@ add_props <- function(vis, ..., .props = NULL, inherit = NULL,
 #' @param data Data set to add.
 #' @param name Data of data - optional, but helps produce informative
 #'  error messages.
+#' @param add_suffix Should a unique suffix be added to the data object's ID?
+#'   This should only be FALSE when the spec requires a data set with a
+#'    specific name.
 #' @export
 #' @examples
 #' mtcars %>% ggvis(~mpg, ~wt) %>% layer_points()
 #' NULL %>% ggvis(~mpg, ~wt) %>% add_data(mtcars) %>% layer_points()
-add_data <- function(vis, data, name = deparse2(substitute(data))) {
+add_data <- function(vis, data, name = deparse2(substitute(data)),
+                     add_suffix = TRUE) {
   if (is.null(data)) return(vis)
 
   # Make sure data is reactive
@@ -80,9 +84,9 @@ add_data <- function(vis, data, name = deparse2(substitute(data))) {
     data <- function() static_data
   }
 
-  id <- paste0(name, length(vis$data))
-  data_id(data) <- id
-  vis$data[[id]] <- data
+  if (add_suffix) name <- paste0(name, length(vis$data))
+  data_id(data) <- name
+  vis$data[[name]] <- data
   vis$cur_data <- data
 
   vis

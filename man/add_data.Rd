@@ -3,7 +3,7 @@
 \alias{add_data}
 \title{Add dataset to a visualisation}
 \usage{
-add_data(vis, data, name = deparse2(substitute(data)))
+add_data(vis, data, name = deparse2(substitute(data)), add_suffix = TRUE)
 }
 \arguments{
 \item{vis}{Visualisation to modify.}
@@ -12,6 +12,10 @@ add_data(vis, data, name = deparse2(substitute(data)))
 
 \item{name}{Data of data - optional, but helps produce informative
 error messages.}
+
+\item{add_suffix}{Should a unique suffix be added to the data object's ID?
+This should only be FALSE when the spec requires a data set with a
+ specific name.}
 }
 \description{
 Add dataset to a visualisation
