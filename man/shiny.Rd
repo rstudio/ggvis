@@ -62,7 +62,7 @@ supply the name of the placeholder as the third argument:
 \code{p \%>\% render_ggvis(session, "plot")}
 }
 \examples{
-\dontest{
+\donttest{
 # Simplest possible app:
 shiny::runApp(list(
   ui = bootstrapPage(

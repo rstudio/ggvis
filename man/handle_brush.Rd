@@ -17,10 +17,6 @@ handle_brush(vis, on_move = NULL, fill = "black")
  \item{session}{The session, used to communicate with the browser}
 }}
 
-\item{on_move}{Callback function called with arguments \code{value} and
-\code{session} every time the brush moves. Value is a list of points
-under the brush.}
-
 \item{fill}{Colour of the brush.}
 }
 \description{

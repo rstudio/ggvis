@@ -27,7 +27,7 @@
 #'
 #' \code{p \%>\% render_ggvis(session, "plot")}
 #' @examples
-#' \dontest{
+#' \donttest{
 #' # Simplest possible app:
 #' shiny::runApp(list(
 #'   ui = bootstrapPage(
@@ -89,7 +89,7 @@ ggvisOutput <- function(plot_id, shiny = TRUE, minify = TRUE) {
 #' @param ... Other arguments passed to \code{as.vega}.
 #' @export
 render_ggvis <- function(vis, session, plot_id, controls_id = NULL, ...) {
-  if (is.reactive(vis)) {
+  if (shiny::is.reactive(vis)) {
     visf <- vis
   } else if (is.ggvis(vis)) {
     visf <- function() vis
@@ -179,7 +179,7 @@ exec_connectors <- function(r_spec, plot_id, session) {
 #' @rdname shiny
 #' @export
 render_controls <- function(vis, session, controls_id) {
-  if (is.reactive(vis)) {
+  if (shiny::is.reactive(vis)) {
     visf <- vis
   } else if (is.ggvis(vis)) {
     visf <- function() vis

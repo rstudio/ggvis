@@ -9,10 +9,6 @@
 #'    \item{plot_loc}{Location of the brush with respect to the plot}
 #'    \item{session}{The session, used to communicate with the browser}
 #'   }
-
-#' @param on_move Callback function called with arguments \code{value} and
-#'   \code{session} every time the brush moves. Value is a list of points
-#'   under the brush.
 #' @param fill Colour of the brush.
 #' @export
 #' @examples
