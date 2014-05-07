@@ -237,7 +237,7 @@ app_object <- function(x,
   n_controls <- length(x$controls)
 
   if (n_controls == 0) {
-    ui <- shiny::basicPage(ggvis_output(id, shiny = TRUE, minify = minify))
+    ui <- shiny::basicPage(ggvisOutput(id, shiny = TRUE, minify = minify))
 
   } else {
     ui <- sidebarBottomPage(
