@@ -18,7 +18,7 @@ controls are drawn.
 }
 \details{
 \code{ggvisControlOutput} is intended to be used with
-\code{\link{renderControls}} on the server side.
+\code{\link{render_controls}} on the server side.
 }
 \examples{
 ggvisControlOutput("plot1")

@@ -13,7 +13,7 @@ shinyServer(function(input, output, session) {
   })
 
   # Set up observers for the spec and the data
-  observe_ggvis(hist_gv, "plot1", session)
+  render_ggvis(hist_gv, session, "plot1")
 
   diamonds_brushed <- reactive({
     ranges <- input$ggvis_plot1_brush$items
@@ -41,7 +41,7 @@ shinyServer(function(input, output, session) {
   })
 
   # Set up observers for the spec and the data
-  observe_ggvis(scatter_gv, "plot2", session)
+  render_ggvis(scatter_gv, session, "plot2")
 
   # Print the object that was sent over
   output$brush_data <- renderPrint({

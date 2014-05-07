@@ -254,12 +254,12 @@ app_object <- function(x,
     r_gv <- reactive(x)
     # Set up observers for the spec and the data, and for connecting inputs
     # to reactives.
-    observe_ggvis(r_gv, id, session, renderer)
+    render_ggvis(r_gv, session, id, renderer)
 
     # User interface elements (in the sidebar). These must be added dynamically
     # (instead of being rendered statically in ui) because they are unique to
     # each session.
-    output$ggvis_controls <- renderControls(r_gv, session)
+    render_controls(r_gv, session, "ggvis_controls")
   }
 
   list(ui = ui, server = server)

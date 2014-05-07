@@ -178,15 +178,15 @@ main differences:
 ## Shiny apps
 
 If you know how to create a Shiny app already, adding a ggvis plot is easy. In
-`server.r`, create a reactive ggvis object, and call `observeGgvis()`. The
-first argument is the plot object, the second is the plot id (needs to match
-with `ui.r`, and the third argument is the session object).
+`server.r`, create a reactive ggvis object, and call `render_ggvis()`. The
+first argument is the plot object, the second is the session, and the third is the plot id (needs to match with `ui.r`).
 
 ```{r, eval = FALSE}
-gv <- reactive({
-  mtcars %>% ggvis(~disp, ~mpg, size := input$size) %>% layer_points()
-})
-observe_ggvis(gv, "my_plot", session)
+mtcars %>% 
+  ggvis(~disp, ~mpg, size := input$size) %>% 
+  layer_points() %>%
+  render_ggvis(session, "ggvis") %>%
+  render_controls(session, "ggvis")
 ```
 
 Create `ui.r` as usual, using `ggvisOutput()` to place the ggvis plot on the
@@ -198,7 +198,8 @@ shinyUI(pageWithSidebar(
     sliderInput("size", "Area", 10, 1000),
   ),
   mainPanel(
-    uiOutput("ggvis_ui")
+    uiOutput("ggvis_ui"),
+    ggvisOutput("ggvis")
   )
 ))
 ```

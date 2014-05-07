@@ -10,11 +10,11 @@
 #'   \item Use \code{ggvis_output} in \code{ui.r} to insert a placeholder
 #'   (a div with id) for a ggvis graphic.
 #'
-#'   \item Use \code{observe_ggvis} in \code{server.r} to insert a ggvis object
+#'   \item Use \code{render_ggvis} in \code{server.r} to insert a ggvis object
 #'   into a shiny app and set up the observers to notify the client side
 #'   whenever the plot data or spec changes.
 #'
-#'   \item If the plot uses interactive inputs, use \code{renderControls} to
+#'   \item If the plot uses interactive inputs, use \code{render_controls} to
 #'   insert those controls into the ui.
 #' }
 #' @examples
@@ -25,13 +25,13 @@
 #'     uiOutput("controls"),
 #'     ggvis_output("p")
 #'   ),
-#'   server = function(input, output, session) {
-#'     p <- mtcars %>%
+#'   server = function(..., session) {
+#'     mtcars %>%
 #'       ggvis(~wt, ~mpg) %>%
 #'       layer_points() %>%
-#'       layer_smooths(span = input_slider(0, 1))
-#'     observe_ggvis(p, "p", session)
-#'     output$controls <- renderControls(p)
+#'       layer_smooths(span = input_slider(0, 1)) %>%
+#'       render_ggvis(session, "p") %>%
+#'       render_controls(session, "controls")
 #'   }
 #' ))
 #' }
@@ -80,7 +80,7 @@ ggvis_output <- function(plot_id, shiny = TRUE, minify = TRUE) {
 #' @param session A Shiny session object.
 #' @param ... Other arguments passed to \code{as.vega}.
 #' @export
-observe_ggvis <- function(gv, plot_id, session, ...) {
+render_ggvis <- function(gv, session, plot_id, ...) {
   if (!shiny::is.reactive(gv) && !is.ggvis(gv)) {
     stop("observe_ggvis requires a ggvis object or a reactive expression that returns a ggvis object",
       call. = FALSE)
@@ -163,7 +163,7 @@ exec_connectors <- function(r_spec, plot_id, session) {
 
 #' @rdname shiny
 #' @export
-render_controls <- function(gv, id, session) {
+render_controls <- function(gv, session, id) {
   if (is.reactive(gv)) gv <- gv()
   if (!is.ggvis(gv)) stop("gv is not a ggvis object.", call. = FALSE)
 
@@ -172,27 +172,9 @@ render_controls <- function(gv, id, session) {
 
   # Wrap each control in a div, for layout purposes
   divs <- lapply(controls, shiny::div,  class = "ggvis-input-container")
-  browser()
   session$output[[id]] <- shiny::renderUI(shiny::tagList(divs))
 
   gv
-}
-
-renderControls <- function(r_gv, session = NULL) {
-  if (is.reactive(r_gv)) {
-    r_gv <- r_gv()
-  }
-  shiny::renderUI({
-    controls <- r_gv$controls
-    if (empty(controls)) {
-      NULL
-    } else {
-      # Wrap each control in a div, for layout purposes
-      shiny::tagList(
-        lapply(controls, function(x) shiny::div(x, class = "ggvis-input-container"))
-      )
-    }
-  })
 }
 
 
@@ -296,7 +278,7 @@ ggvisControlGroup <- function(plot_id) {
 #' controls are drawn.
 #'
 #' \code{ggvisControlOutput} is intended to be used with
-#' \code{\link{renderControls}} on the server side.
+#' \code{\link{render_controls}} on the server side.
 #'
 #' @param outputId The output variable to read the value from.
 #' @param plotId An optional plot ID or vector of plot IDs. The plots will
