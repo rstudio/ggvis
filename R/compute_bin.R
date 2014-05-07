@@ -1,8 +1,9 @@
-#' Bin and count data.
+#' Bin data along a continuous variable
 #'
-#' @param x Dataset-like object to smooth. Built-in methods for data frames,
+#' @param x Dataset-like object to bin. Built-in methods for data frames,
 #'   grouped data frames and ggvis visualisations.
-#' @param x_var,w_var Names of x and weight variables.
+#' @param x_var,w_var Names of x and weight variables. The x variable must be
+#'   continuous.
 #' @param binwidth The width of the bins. The default is \code{NULL}, which
 #'   yields 30 bins that cover the range of the data. You should always override
 #'   this value, exploring multiple widths to find the best to illustrate the
@@ -10,7 +11,12 @@
 #' @param origin The initial position of the left-most bin. If \code{NULL}, the
 #'   the default, will use the smallest value in the dataset.
 #' @param right Should bins be right-open, left-closed, or
-#'   right-closed, left-open
+#'   right-closed, left-open.
+#' @seealso \code{\link{compute_count}} For counting cases at specific locations
+#'   of a continuous variable. This is useful when the variable is continuous
+#'   but the data is granular.
+#' @seealso \code{\link{compute_tabulate}} For counting cases at each value
+#'   of a categorical variable.
 #' @export
 #' @return A data frame with columns:
 #'  \item{count_}{the number of points}
@@ -24,7 +30,7 @@
 #' mtcars %>% group_by(cyl) %>% compute_bin(~mpg, binwidth = 10)
 #'
 #' # It doesn't matter whether you transform inside or outside of a vis
-#' mtcars %>% compute_bin(~mpg) %>% ggvis(~ x_, ~ count_) %>% layer_paths()
+#' mtcars %>% compute_bin(~mpg) %>% ggvis(~x_, ~count_) %>% layer_paths()
 #' mtcars %>% ggvis(~ x_, ~ count_) %>% compute_bin(~mpg) %>% layer_paths()
 compute_bin <- function(x, x_var, w_var = NULL, binwidth = NULL,
                         origin = NULL, right = TRUE) {
