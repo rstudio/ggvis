@@ -1,7 +1,7 @@
 {
 	"data" : [
 		{
-			"name" : "df_e00f8d25",
+			"name" : "df",
 			"format" : {
 				"type" : "csv",
 				"parse" : {
@@ -56,7 +56,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "df_e00f8d25",
+						"data" : "df",
 						"field" : "data.x"
 					}
 				]
@@ -86,12 +86,12 @@
 				},
 				"ggvis" : {
 					"data" : {
-						"value" : "df_e00f8d25"
+						"value" : "df"
 					}
 				}
 			},
 			"from" : {
-				"data" : "df_e00f8d25"
+				"data" : "df"
 			}
 		}
 	],

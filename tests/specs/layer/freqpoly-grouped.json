@@ -1,7 +1,7 @@
 {
 	"data" : [
 		{
-			"name" : "mtcars_e4a7d324/regroup_10600750/bin_8a0ccdbf_tree",
+			"name" : "mtcars/regroup_4262323b/bin_53048d33_tree",
 			"format" : {
 				"type" : "treejson",
 				"parse" : {
@@ -98,8 +98,8 @@
 			}
 		},
 		{
-			"name" : "mtcars_e4a7d324/regroup_10600750/bin_8a0ccdbf",
-			"source" : "mtcars_e4a7d324/regroup_10600750/bin_8a0ccdbf_tree",
+			"name" : "mtcars/regroup_4262323b/bin_53048d33",
+			"source" : "mtcars/regroup_4262323b/bin_53048d33_tree",
 			"transform" : [
 				{
 					"type" : "flatten"
@@ -123,7 +123,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "mtcars_e4a7d324/regroup_10600750/bin_8a0ccdbf",
+						"data" : "mtcars/regroup_4262323b/bin_53048d33",
 						"field" : "data.cyl"
 					}
 				]
@@ -141,7 +141,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "mtcars_e4a7d324/regroup_10600750/bin_8a0ccdbf",
+						"data" : "mtcars/regroup_4262323b/bin_53048d33",
 						"field" : "data.x_"
 					}
 				]
@@ -159,7 +159,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "mtcars_e4a7d324/regroup_10600750/bin_8a0ccdbf",
+						"data" : "mtcars/regroup_4262323b/bin_53048d33",
 						"field" : "data.count_"
 					}
 				]
@@ -170,7 +170,7 @@
 		{
 			"type" : "group",
 			"from" : {
-				"data" : "mtcars_e4a7d324/regroup_10600750/bin_8a0ccdbf_tree"
+				"data" : "mtcars/regroup_4262323b/bin_53048d33_tree"
 			},
 			"marks" : [
 				{
@@ -192,7 +192,7 @@
 						},
 						"ggvis" : {
 							"data" : {
-								"value" : "mtcars_e4a7d324/regroup_10600750/bin_8a0ccdbf_tree"
+								"value" : "mtcars/regroup_4262323b/bin_53048d33_tree"
 							}
 						}
 					}

@@ -1,7 +1,7 @@
 {
 	"data" : [
 		{
-			"name" : "df_b518e316",
+			"name" : "df",
 			"format" : {
 				"type" : "csv",
 				"parse" : {
@@ -24,7 +24,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "df_b518e316",
+						"data" : "df",
 						"field" : "data.x"
 					}
 				]
@@ -42,7 +42,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "df_b518e316",
+						"data" : "df",
 						"field" : "data.x"
 					}
 				]
@@ -71,12 +71,12 @@
 				},
 				"ggvis" : {
 					"data" : {
-						"value" : "df_b518e316"
+						"value" : "df"
 					}
 				}
 			},
 			"from" : {
-				"data" : "df_b518e316"
+				"data" : "df"
 			}
 		}
 	],

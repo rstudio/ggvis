@@ -1,7 +1,7 @@
 {
 	"data" : [
 		{
-			"name" : "mtcars_2086b509/regroup_614fc7fa/smooth_26f872a5_tree",
+			"name" : "mtcars/regroup_4262323b/smooth_baeb5c7f_tree",
 			"format" : {
 				"type" : "treejson",
 				"parse" : {
@@ -1228,8 +1228,8 @@
 			}
 		},
 		{
-			"name" : "mtcars_2086b509/regroup_614fc7fa/smooth_26f872a5",
-			"source" : "mtcars_2086b509/regroup_614fc7fa/smooth_26f872a5_tree",
+			"name" : "mtcars/regroup_4262323b/smooth_baeb5c7f",
+			"source" : "mtcars/regroup_4262323b/smooth_baeb5c7f_tree",
 			"transform" : [
 				{
 					"type" : "flatten"
@@ -1250,7 +1250,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "mtcars_2086b509/regroup_614fc7fa/smooth_26f872a5",
+						"data" : "mtcars/regroup_4262323b/smooth_baeb5c7f",
 						"field" : "data.pred_"
 					}
 				]
@@ -1268,7 +1268,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "mtcars_2086b509/regroup_614fc7fa/smooth_26f872a5",
+						"data" : "mtcars/regroup_4262323b/smooth_baeb5c7f",
 						"field" : "data.resp_"
 					}
 				]
@@ -1279,7 +1279,7 @@
 		{
 			"type" : "group",
 			"from" : {
-				"data" : "mtcars_2086b509/regroup_614fc7fa/smooth_26f872a5_tree"
+				"data" : "mtcars/regroup_4262323b/smooth_baeb5c7f_tree"
 			},
 			"marks" : [
 				{
@@ -1299,11 +1299,14 @@
 							},
 							"strokeWidth" : {
 								"value" : 2
+							},
+							"fill" : {
+								"value" : "transparent"
 							}
 						},
 						"ggvis" : {
 							"data" : {
-								"value" : "mtcars_2086b509/regroup_614fc7fa/smooth_26f872a5_tree"
+								"value" : "mtcars/regroup_4262323b/smooth_baeb5c7f_tree"
 							}
 						}
 					}

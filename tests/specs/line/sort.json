@@ -1,7 +1,7 @@
 {
 	"data" : [
 		{
-			"name" : "df_22c943f9/arrange_6790d03b",
+			"name" : "df/arrange_7b410007",
 			"format" : {
 				"type" : "csv",
 				"parse" : {
@@ -25,7 +25,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "df_22c943f9/arrange_6790d03b",
+						"data" : "df/arrange_7b410007",
 						"field" : "data.x"
 					}
 				]
@@ -43,7 +43,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "df_22c943f9/arrange_6790d03b",
+						"data" : "df/arrange_7b410007",
 						"field" : "data.y"
 					}
 				]
@@ -69,12 +69,12 @@
 				},
 				"ggvis" : {
 					"data" : {
-						"value" : "df_22c943f9/arrange_6790d03b"
+						"value" : "df/arrange_7b410007"
 					}
 				}
 			},
 			"from" : {
-				"data" : "df_22c943f9/arrange_6790d03b"
+				"data" : "df/arrange_7b410007"
 			}
 		}
 	],

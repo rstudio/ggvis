@@ -1,7 +1,7 @@
 {
 	"data" : [
 		{
-			"name" : "df_d357cc32",
+			"name" : "df",
 			"format" : {
 				"type" : "csv",
 				"parse" : {
@@ -24,7 +24,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "df_d357cc32",
+						"data" : "df",
 						"field" : "data.factor(x)"
 					}
 				]
@@ -42,7 +42,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "df_d357cc32",
+						"data" : "df",
 						"field" : "data.x/y"
 					}
 				]
@@ -71,12 +71,12 @@
 				},
 				"ggvis" : {
 					"data" : {
-						"value" : "df_d357cc32"
+						"value" : "df"
 					}
 				}
 			},
 			"from" : {
-				"data" : "df_d357cc32"
+				"data" : "df"
 			}
 		}
 	],

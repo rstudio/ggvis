@@ -1,7 +1,7 @@
 {
 	"data" : [
 		{
-			"name" : "df_39239651",
+			"name" : "df",
 			"format" : {
 				"type" : "csv",
 				"parse" : {
@@ -25,7 +25,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "df_39239651",
+						"data" : "df",
 						"field" : "data.x"
 					}
 				]
@@ -43,7 +43,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "df_39239651",
+						"data" : "df",
 						"field" : "data.y"
 					}
 				]
@@ -69,12 +69,12 @@
 				},
 				"ggvis" : {
 					"data" : {
-						"value" : "df_39239651"
+						"value" : "df"
 					}
 				}
 			},
 			"from" : {
-				"data" : "df_39239651"
+				"data" : "df"
 			}
 		}
 	],

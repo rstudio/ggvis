@@ -1,7 +1,7 @@
 {
 	"data" : [
 		{
-			"name" : "df_fa871ec",
+			"name" : "df",
 			"format" : {
 				"type" : "csv",
 				"parse" : {
@@ -26,7 +26,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "df_fa871ec",
+						"data" : "df",
 						"field" : "data.y"
 					}
 				]
@@ -44,7 +44,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "df_fa871ec",
+						"data" : "df",
 						"field" : "data.z"
 					}
 				]
@@ -62,11 +62,11 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "df_fa871ec",
+						"data" : "df",
 						"field" : "data.x"
 					},
 					{
-						"data" : "df_fa871ec",
+						"data" : "df",
 						"field" : "data.x"
 					}
 				]
@@ -95,12 +95,12 @@
 				},
 				"ggvis" : {
 					"data" : {
-						"value" : "df_fa871ec"
+						"value" : "df"
 					}
 				}
 			},
 			"from" : {
-				"data" : "df_fa871ec"
+				"data" : "df"
 			}
 		},
 		{
@@ -124,12 +124,12 @@
 				},
 				"ggvis" : {
 					"data" : {
-						"value" : "df_fa871ec"
+						"value" : "df"
 					}
 				}
 			},
 			"from" : {
-				"data" : "df_fa871ec"
+				"data" : "df"
 			}
 		}
 	],

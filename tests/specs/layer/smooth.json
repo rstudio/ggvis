@@ -1,7 +1,7 @@
 {
 	"data" : [
 		{
-			"name" : "mtcars_896424f2/smooth_28f53ced",
+			"name" : "mtcars/smooth_b0cafd8a",
 			"format" : {
 				"type" : "csv",
 				"parse" : {
@@ -25,7 +25,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "mtcars_896424f2/smooth_28f53ced",
+						"data" : "mtcars/smooth_b0cafd8a",
 						"field" : "data.pred_"
 					}
 				]
@@ -43,7 +43,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "mtcars_896424f2/smooth_28f53ced",
+						"data" : "mtcars/smooth_b0cafd8a",
 						"field" : "data.resp_"
 					}
 				]
@@ -68,16 +68,19 @@
 					},
 					"strokeWidth" : {
 						"value" : 2
+					},
+					"fill" : {
+						"value" : "transparent"
 					}
 				},
 				"ggvis" : {
 					"data" : {
-						"value" : "mtcars_896424f2/smooth_28f53ced"
+						"value" : "mtcars/smooth_b0cafd8a"
 					}
 				}
 			},
 			"from" : {
-				"data" : "mtcars_896424f2/smooth_28f53ced"
+				"data" : "mtcars/smooth_b0cafd8a"
 			}
 		}
 	],
