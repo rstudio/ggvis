@@ -24,7 +24,7 @@ all_values <- function(x) {
   paste0(names(x), ": ", format(x), collapse = "<br />")
 }
 
-base <- mtcars \%>\% ggvis(x = ~wt, y = ~mpg, size.hover := 400) \%>\%
+base <- mtcars \%>\% ggvis(x = ~wt, y = ~mpg) \%>\%
   layer_points()
 base \%>\% add_tooltip(all_values, "hover")
 base \%>\% add_tooltip(all_values, "click")

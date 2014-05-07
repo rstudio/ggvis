@@ -13,7 +13,7 @@
 #'   paste0(names(x), ": ", format(x), collapse = "<br />")
 #' }
 #'
-#' base <- mtcars %>% ggvis(x = ~wt, y = ~mpg, size.hover := 400) %>%
+#' base <- mtcars %>% ggvis(x = ~wt, y = ~mpg) %>%
 #'   layer_points()
 #' base %>% add_tooltip(all_values, "hover")
 #' base %>% add_tooltip(all_values, "click")
@@ -21,15 +21,15 @@
 add_tooltip <- function(vis, html, on = c("hover", "click")) {
   on <- match.arg(on)
 
-  show_tooltip2 <- function(value, session) {
-    if (is.null(value$data)) {
+  show_tooltip2 <- function(data, location, session, ...) {
+    if (is.null(data)) {
       hide_tooltip(session)
       return()
     }
-    html <- html(value$data)
-    show_tooltip(session, value$pagex + 5, value$pagey + 5, html)
+    html <- html(data)
+    show_tooltip(session, location$x + 5, location$y + 5, html)
   }
-  hide_tooltip2 <- function(value, session) {
+  hide_tooltip2 <- function(session) {
     hide_tooltip(session)
   }
 
