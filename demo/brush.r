@@ -1,25 +1,21 @@
 library(ggvis)
 #simple summary brush tooltip
-x_bar = "x&#772;"
-sigma_hat = "&sigma;&#770;"
-brushed_summary <- function(value, session) {
-  if(is.null(value) || length(value) == 0 || length(value$items) == 0) {
-    return(NULL)
-  }
-  # Looking at the first element only, get names other than key__
-  names <- setdiff(names(value$items[[1]]), "key__")
+x_bar <- "x&#772;"
+sigma_hat <- "&sigma;&#770;"
 
-  lines <- lapply(names, function(name) {
-    vals <-  vapply(value$items, `[[`, name, FUN.VALUE= numeric(1))
-    str <- paste0(name, ": ", x_bar, "=", round(mean(vals), 2), " ",
-                  sigma_hat, "=", round(sd(vals), 2), "<BR>")
-  })
+brushed_summary <- function(items, session, page_loc, ...) {
+  if (nrow(items) == 0) return()
 
-  show_tooltip(session,
-    pagex = value$pagex2 + 5,
-    pagey = value$pagey1 + 5,
-    html = lines
-  )
+  items$key__ <- NULL
+  lines <- Map(function(name, vals) {
+    paste0(name, ": ",
+      x_bar, " = ", round(mean(vals), 2), " ",
+      sigma_hat, " = ", round(sd(vals), 2)
+    )
+  }, names(items), items)
+  html <- paste(unlist(lines), collapse = "<br />\n")
+
+  show_tooltip(session, page_loc$r + 5, page_loc$t, html)
 }
 
 # Scatter plot with brushing

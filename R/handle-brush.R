@@ -1,6 +1,15 @@
 #' Handle brush events on a visualisation.
 #'
 #' @param vis Visualisation to listen to.
+#' @param on_move Callback function with arguments:
+#'   \describe{
+#'    \item{items}{A data frame containing information about the items
+#'      under the plot. An empty data.frame if no points under the brush.}
+#'    \item{page_loc}{Location of the brush with repsect to the page}
+#'    \item{plot_loc}{Location of the brush with respect to the plot}
+#'    \item{session}{The session, used to communicate with the browser}
+#'   }
+
 #' @param on_move Callback function called with arguments \code{value} and
 #'   \code{session} every time the brush moves. Value is a list of points
 #'   under the brush.
@@ -10,12 +19,11 @@
 #' # Display tooltip when objects are brushed
 #' mtcars %>% ggvis(x = ~wt, y = ~mpg, size.brush := 400) %>%
 #'   layer_points() %>%
-#'   handle_brush(function(value, session) {
-#'     show_tooltip(session, pagex = value$pagex2 + 5,
-#'      pagey = value$pagey1 + 5, html = length(value$items))
+#'   handle_brush(function(items, page_loc, session, ...) {
+#'     show_tooltip(session, page_loc$r + 5, page_loc$t, html = nrow(items))
 #'   })
 handle_brush <- function(vis, on_move = NULL, fill = "black") {
-  check_callback(on_move, c("value", "session"))
+  check_callback(on_move, c("items", "plot_loc", "page_loc", "session"))
 
   connect <- function(session, plot_id) {
     id <- paste0(plot_id, "_brush_move")
@@ -23,10 +31,29 @@ handle_brush <- function(vis, on_move = NULL, fill = "black") {
       value <- session$input[[id]]
       if (is.null(value)) return()
 
-      browser()
+      if (length(value$items) > 0) {
+        # FIXME: figure out more efficient way to do this
+        dfs <- lapply(value$items, function(x) {
+          class(x) <- "data.frame"
+          attr(x, "row.names") <- .set_row_names(1L)
+          x
+        })
+        items <- dplyr::rbind_all(dfs)
+      } else {
+        items <- data.frame()
+      }
 
-      on_resize(width = value$width, height = value$height,
-        padding = value$padding, session = value$session)
+      page_loc <- list(
+        t = value$pagey1, r = value$pagex2,
+        b = value$pagey2, l = value$pagex1
+      )
+      plot_loc <- list(
+        t = value$y1, r = value$x2,
+        b = value$y2, l = value$x1
+      )
+
+      on_move(items = items, page_loc = page_loc, plot_loc = plot_loc,
+        session = session)
     })
   }
   connector_label(connect) <- "brush"

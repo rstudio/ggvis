@@ -3,24 +3,11 @@ library(ggvis)
 data(diamonds, package = "ggplot2")
 diamonds <- diamonds[sample(1:nrow(diamonds), 1000), ]
 
-brush_summary <- function(items) {
-  if (length(items) == 0) {
-    return(data.frame(wt = numeric(0), mpg = numeric(0)))
-  }
-
-  data.frame(
-    wt  = vapply(items, `[[`, "wt",  FUN.VALUE = numeric(1)),
-    mpg = vapply(items, `[[`, "mpg", FUN.VALUE = numeric(1))
-  )
-}
-
 shinyServer(function(input, output, session) {
-  under_brush <- function(value, ...) {
-    df <- brush_summary(value$items)
-
+  under_brush <- function(items, ...) {
     output$brush_data <- renderPrint({
-      cat("Number of points selected: ", nrow(df), "\n\n")
-      print(summary(df))
+      cat("Number of points selected: ", nrow(items), "\n\n")
+      print(summary(items))
     })
   }
 

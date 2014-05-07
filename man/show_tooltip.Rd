@@ -4,16 +4,16 @@
 \alias{show_tooltip}
 \title{Send a message to the client to show or hide a tooltip}
 \usage{
-show_tooltip(session, pagex = 0, pagey = 0, html = "")
+show_tooltip(session, l = 0, t = 0, html = "")
 
 hide_tooltip(session)
 }
 \arguments{
 \item{session}{A Shiny session object.}
 
-\item{pagex}{x position of the tooltip box on the page.}
+\item{l}{Pixel location of left edge of tooltip (relative to page)}
 
-\item{pagey}{y position of the tooltip box on the page.}
+\item{t}{Pixel location of top edge of tooltip (relative to page)}
 
 \item{html}{HTML to display in the tooltip box.}
 }

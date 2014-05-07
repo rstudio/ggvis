@@ -8,6 +8,15 @@ handle_brush(vis, on_move = NULL, fill = "black")
 \arguments{
 \item{vis}{Visualisation to listen to.}
 
+\item{on_move}{Callback function with arguments:
+\describe{
+ \item{items}{A data frame containing information about the items
+   under the plot. An empty data.frame if no points under the brush.}
+ \item{page_loc}{Location of the brush with repsect to the page}
+ \item{plot_loc}{Location of the brush with respect to the plot}
+ \item{session}{The session, used to communicate with the browser}
+}}
+
 \item{on_move}{Callback function called with arguments \code{value} and
 \code{session} every time the brush moves. Value is a list of points
 under the brush.}
@@ -21,9 +30,8 @@ Handle brush events on a visualisation.
 # Display tooltip when objects are brushed
 mtcars \%>\% ggvis(x = ~wt, y = ~mpg, size.brush := 400) \%>\%
   layer_points() \%>\%
-  handle_brush(function(value, session) {
-    show_tooltip(session, pagex = value$pagex2 + 5,
-     pagey = value$pagey1 + 5, html = length(value$items))
+  handle_brush(function(items, page_loc, session, ...) {
+    show_tooltip(session, page_loc$r + 5, page_loc$t, html = nrow(items))
   })
 }
 

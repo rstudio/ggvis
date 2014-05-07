@@ -28,10 +28,10 @@ linked_brush <- function(keys, fill = "red") {
   rv <- shiny::reactiveValues(under_brush = character())
 
   input <- function(vis) {
-    save_keys <- function(value, session) {
+    save_keys <- function(items, ...) {
       if (is.null(value)) return()
 
-      keys <- sapply(value$items, "[[", "key__")
+      keys <- items$key__
       if (is.numeric(keys)) {
         keys <- as.character(keys + 1)
       }

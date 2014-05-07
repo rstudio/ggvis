@@ -27,11 +27,7 @@ add_tooltip <- function(vis, html, on = c("hover", "click")) {
       return()
     }
     html <- html(value$data)
-    show_tooltip(session,
-      pagex = value$pagex + 5,
-      pagey = value$pagey + 5,
-      html = html
-    )
+    show_tooltip(session, value$pagex + 5, value$pagey + 5, html)
   }
   hide_tooltip2 <- function(value, session) {
     hide_tooltip(session)
@@ -46,14 +42,14 @@ add_tooltip <- function(vis, html, on = c("hover", "click")) {
 #' Send a message to the client to show or hide a tooltip
 #'
 #' @param session A Shiny session object.
-#' @param pagex x position of the tooltip box on the page.
-#' @param pagey y position of the tooltip box on the page.
+#' @param l Pixel location of left edge of tooltip (relative to page)
+#' @param t Pixel location of top edge of tooltip (relative to page)
 #' @param html HTML to display in the tooltip box.
 #'
 #' @export
-show_tooltip <- function(session, pagex = 0, pagey = 0, html = "") {
+show_tooltip <- function(session, l = 0, t = 0, html = "") {
   ggvis_message(session, "show_tooltip",
-    list(pagex = pagex, pagey = pagey, html = html))
+    list(pagex = l, pagey = t, html = html))
 }
 
 #' @rdname show_tooltip
