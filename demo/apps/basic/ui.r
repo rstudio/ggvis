@@ -6,7 +6,7 @@ shinyUI(pageWithSidebar(
     uiOutput("plot_ui")
   ),
   mainPanel(
-    ggvis_output("plot"),
+    ggvisOutput("plot"),
     tableOutput("mtc_table")
   )
 ))

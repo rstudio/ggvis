@@ -160,7 +160,7 @@ view_static <- function(x,
   copy_www_resources(www_paths, temp_dir)
 
   body <- shiny::tagList(
-    ggvis_output(id, shiny = FALSE),
+    ggvisOutput(id, shiny = FALSE),
     tags$script(type = "text/javascript",
       paste0('
         var ', id, '_spec = ', vega_json, ';
@@ -245,7 +245,7 @@ app_object <- function(x,
         ggvisControlOutput("ggvis_controls", id)
       ),
       mainTopPanel(
-        ggvis_output(id, shiny = TRUE)
+        ggvisOutput(id, shiny = TRUE)
       )
     )
   }
@@ -356,7 +356,7 @@ knit_print.ggvis <- function(x, options) {
   # Plot as HTML
   id = rand_id("plot_")
   html <- shiny::tagList(
-    ggvis_output(id, shiny = FALSE),
+    ggvisOutput(id, shiny = FALSE),
     tags$script(type = "text/javascript",
                 paste0('var ', id, '_spec = ', vega_json, ';
                        ggvis.getPlot("', id, '").parseSpec(', id, '_spec);
