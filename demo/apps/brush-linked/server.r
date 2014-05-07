@@ -13,12 +13,12 @@ shinyServer(function(input, output, session) {
       fill.brush := "red") %>%
     lb$input() %>%
     set_options(width = 300, height = 300) %>%
-    render_ggvis("plot1") # Very important!
+    bind_shiny("plot1") # Very important!
 
   diamonds %>%
     ggvis(~table, ~depth) %>%
     layer_points(fill := lb$fill(), fillOpacity := 0.8) %>%
     set_options(width = 300, height = 300) %>%
-    render_ggvis("plot2")
+    bind_shiny("plot2")
 
 })

@@ -7,5 +7,5 @@ shinyServer(function(input, output, session) {
       set_dscale("x", "numeric", domain = input$x_domain, nice = FALSE, clamp = TRUE) %>%
       set_dscale("y", "numeric", domain = input$y_domain, nice = FALSE, clamp = TRUE)
   }) %>%
-    render_ggvis("zoom")
+  bind_shiny("zoom")
 })

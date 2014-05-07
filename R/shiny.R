@@ -2,7 +2,7 @@
 #'
 #' Embedding ggvis in a shiny app is easy. You need to make a place for it in
 #' your \code{ui.r} with \code{ggvisOutput}, and tell your \code{server.r}
-#' where to draw it with \code{render_ggvis}. It's easiest to learn by example:
+#' where to draw it with \code{bind_shiny}. It's easiest to learn by example:
 #' there are many shiny apps in \code{demo/apps/} that you can learn from.
 #'
 #' @section Client-side:
@@ -18,14 +18,14 @@
 #' When you run ggvis plot interactively, it is automatically plotted because
 #' it triggers the default print method. In shiny apps, you need to
 #' explicitly render the plot to a specific placeholder with
-#' \code{render_ggvis}:
+#' \code{bind_shiny}:
 #'
-#' \code{p \%>\% render_ggvis("plot")}
+#' \code{p \%>\% bind_shiny("plot")}
 #'
 #' If the plot has controls, and you've reserved space for them in the UI,
 #' supply the name of the placeholder as the third argument:
 #'
-#' \code{p \%>\% render_ggvis("plot")}
+#' \code{p \%>\% bind_shiny("plot", "plot_ui")}
 #' @examples
 #' \donttest{
 #' # Simplest possible app:
@@ -40,7 +40,7 @@
 #'       ggvis(~wt, ~mpg) %>%
 #'       layer_points() %>%
 #'       layer_smooths(span = input_slider(0, 1)) %>%
-#'       render_ggvis("p", "p_ui")
+#'       bind_shiny("p", "p_ui")
 #'   }
 #' ))
 #' }
@@ -89,10 +89,10 @@ ggvisOutput <- function(plot_id, shiny = TRUE, minify = TRUE) {
 #' @param session A Shiny session object.
 #' @param ... Other arguments passed to \code{as.vega}.
 #' @export
-render_ggvis <- function(vis, plot_id, controls_id = NULL, ...,
-                         session = shiny::getDefaultReactiveDomain()) {
+bind_shiny <- function(vis, plot_id, controls_id = NULL, ...,
+                       session = shiny::getDefaultReactiveDomain()) {
   if (is.null(session)) {
-    stop("render_controls() must be run inside a shiny app.", call. = FALSE)
+    stop("bind_shiny() must be run inside a shiny app.", call. = FALSE)
   }
 
   if (shiny::is.reactive(vis)) {
@@ -100,7 +100,7 @@ render_ggvis <- function(vis, plot_id, controls_id = NULL, ...,
   } else if (is.ggvis(vis)) {
     visf <- function() vis
   } else {
-    stop("render_ggvis requires a ggvis object or a reactive expression that returns a ggvis object",
+    stop("bind_shiny requires a ggvis object or a reactive expression that returns a ggvis object",
       call. = FALSE)
   }
 
@@ -113,7 +113,7 @@ render_ggvis <- function(vis, plot_id, controls_id = NULL, ...,
   exec_connectors(r_spec, plot_id, session)
 
   if (!is.null(controls_id)) {
-    render_controls(vis, controls_id, session = session)
+    bind_shiny(vis, controls_id, session = session)
   }
 
   vis
@@ -184,10 +184,10 @@ exec_connectors <- function(r_spec, plot_id, session) {
 #' @param controls_id Unique identifier for controls div.
 #' @rdname shiny
 #' @export
-render_controls <- function(vis, controls_id,
-                            session = shiny::getDefaultReactiveDomain()) {
+bind_shiny_ui <- function(vis, controls_id,
+                          session = shiny::getDefaultReactiveDomain()) {
   if (is.null(session)) {
-    stop("render_controls() must be run inside a shiny app.", call. = FALSE)
+    stop("bind_shiny_ui() must be run inside a shiny app.", call. = FALSE)
   }
 
   if (shiny::is.reactive(vis)) {
@@ -195,7 +195,7 @@ render_controls <- function(vis, controls_id,
   } else if (is.ggvis(vis)) {
     visf <- function() vis
   } else {
-    stop("render_controls requires a ggvis object or a reactive expression that returns a ggvis object",
+    stop("bind_shiny_ui requires a ggvis object or a reactive expression that returns a ggvis object",
       call. = FALSE)
   }
 
@@ -312,7 +312,7 @@ ggvisControlGroup <- function(plot_id) {
 #' controls are drawn.
 #'
 #' \code{ggvisControlOutput} is intended to be used with
-#' \code{\link{render_controls}} on the server side.
+#' \code{\link{bind_shiny}} on the server side.
 #'
 #' @param outputId The output variable to read the value from.
 #' @param plotId An optional plot ID or vector of plot IDs. The plots will

@@ -252,7 +252,7 @@ app_object <- function(x,
 
   server <- function(input, output, session) {
     r_gv <- reactive(x)
-    render_ggvis(r_gv, session = session, plot_id = id,
+    bind_shiny(r_gv, session = session, plot_id = id,
       controls_id = "ggvis_controls", renderer = renderer)
   }
 
