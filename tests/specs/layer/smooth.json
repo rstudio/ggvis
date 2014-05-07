@@ -1,7 +1,7 @@
 {
 	"data" : [
 		{
-			"name" : "mtcars/smooth_b0cafd8a",
+			"name" : "mtcars0/smooth1",
 			"format" : {
 				"type" : "csv",
 				"parse" : {
@@ -25,7 +25,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "mtcars/smooth_b0cafd8a",
+						"data" : "mtcars0/smooth1",
 						"field" : "data.pred_"
 					}
 				]
@@ -43,7 +43,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "mtcars/smooth_b0cafd8a",
+						"data" : "mtcars0/smooth1",
 						"field" : "data.resp_"
 					}
 				]
@@ -75,12 +75,12 @@
 				},
 				"ggvis" : {
 					"data" : {
-						"value" : "mtcars/smooth_b0cafd8a"
+						"value" : "mtcars0/smooth1"
 					}
 				}
 			},
 			"from" : {
-				"data" : "mtcars/smooth_b0cafd8a"
+				"data" : "mtcars0/smooth1"
 			}
 		}
 	],

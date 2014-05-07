@@ -1,7 +1,7 @@
 {
 	"data" : [
 		{
-			"name" : "mtcars/regroup_4262323b/bin_53048d33_tree",
+			"name" : "mtcars0/regroup1/bin2_tree",
 			"format" : {
 				"type" : "treejson",
 				"parse" : {
@@ -98,8 +98,8 @@
 			}
 		},
 		{
-			"name" : "mtcars/regroup_4262323b/bin_53048d33",
-			"source" : "mtcars/regroup_4262323b/bin_53048d33_tree",
+			"name" : "mtcars0/regroup1/bin2",
+			"source" : "mtcars0/regroup1/bin2_tree",
 			"transform" : [
 				{
 					"type" : "flatten"
@@ -123,7 +123,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "mtcars/regroup_4262323b/bin_53048d33",
+						"data" : "mtcars0/regroup1/bin2",
 						"field" : "data.cyl"
 					}
 				]
@@ -141,7 +141,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "mtcars/regroup_4262323b/bin_53048d33",
+						"data" : "mtcars0/regroup1/bin2",
 						"field" : "data.x_"
 					}
 				]
@@ -159,7 +159,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "mtcars/regroup_4262323b/bin_53048d33",
+						"data" : "mtcars0/regroup1/bin2",
 						"field" : "data.count_"
 					}
 				]
@@ -170,7 +170,7 @@
 		{
 			"type" : "group",
 			"from" : {
-				"data" : "mtcars/regroup_4262323b/bin_53048d33_tree"
+				"data" : "mtcars0/regroup1/bin2_tree"
 			},
 			"marks" : [
 				{
@@ -192,7 +192,7 @@
 						},
 						"ggvis" : {
 							"data" : {
-								"value" : "mtcars/regroup_4262323b/bin_53048d33_tree"
+								"value" : "mtcars0/regroup1/bin2_tree"
 							}
 						}
 					}

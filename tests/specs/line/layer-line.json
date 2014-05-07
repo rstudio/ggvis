@@ -1,7 +1,7 @@
 {
 	"data" : [
 		{
-			"name" : "df/regroup_4262323b/arrange_7b410007_tree",
+			"name" : "df0/regroup1/arrange2_tree",
 			"format" : {
 				"type" : "treejson",
 				"parse" : {
@@ -87,8 +87,8 @@
 			}
 		},
 		{
-			"name" : "df/regroup_4262323b/arrange_7b410007",
-			"source" : "df/regroup_4262323b/arrange_7b410007_tree",
+			"name" : "df0/regroup1/arrange2",
+			"source" : "df0/regroup1/arrange2_tree",
 			"transform" : [
 				{
 					"type" : "flatten"
@@ -109,7 +109,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "df/regroup_4262323b/arrange_7b410007",
+						"data" : "df0/regroup1/arrange2",
 						"field" : "data.x"
 					}
 				]
@@ -127,7 +127,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "df/regroup_4262323b/arrange_7b410007",
+						"data" : "df0/regroup1/arrange2",
 						"field" : "data.y"
 					}
 				]
@@ -144,7 +144,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "df/regroup_4262323b/arrange_7b410007",
+						"data" : "df0/regroup1/arrange2",
 						"field" : "data.z"
 					}
 				]
@@ -155,7 +155,7 @@
 		{
 			"type" : "group",
 			"from" : {
-				"data" : "df/regroup_4262323b/arrange_7b410007_tree"
+				"data" : "df0/regroup1/arrange2_tree"
 			},
 			"marks" : [
 				{
@@ -177,7 +177,7 @@
 						},
 						"ggvis" : {
 							"data" : {
-								"value" : "df/regroup_4262323b/arrange_7b410007_tree"
+								"value" : "df0/regroup1/arrange2_tree"
 							}
 						}
 					}

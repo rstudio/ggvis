@@ -1,7 +1,7 @@
 {
 	"data" : [
 		{
-			"name" : "mtcars/regroup_4262323b/smooth_baeb5c7f_tree",
+			"name" : "mtcars0/regroup1/smooth2_tree",
 			"format" : {
 				"type" : "treejson",
 				"parse" : {
@@ -1228,8 +1228,8 @@
 			}
 		},
 		{
-			"name" : "mtcars/regroup_4262323b/smooth_baeb5c7f",
-			"source" : "mtcars/regroup_4262323b/smooth_baeb5c7f_tree",
+			"name" : "mtcars0/regroup1/smooth2",
+			"source" : "mtcars0/regroup1/smooth2_tree",
 			"transform" : [
 				{
 					"type" : "flatten"
@@ -1250,7 +1250,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "mtcars/regroup_4262323b/smooth_baeb5c7f",
+						"data" : "mtcars0/regroup1/smooth2",
 						"field" : "data.pred_"
 					}
 				]
@@ -1268,7 +1268,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "mtcars/regroup_4262323b/smooth_baeb5c7f",
+						"data" : "mtcars0/regroup1/smooth2",
 						"field" : "data.resp_"
 					}
 				]
@@ -1279,7 +1279,7 @@
 		{
 			"type" : "group",
 			"from" : {
-				"data" : "mtcars/regroup_4262323b/smooth_baeb5c7f_tree"
+				"data" : "mtcars0/regroup1/smooth2_tree"
 			},
 			"marks" : [
 				{
@@ -1306,7 +1306,7 @@
 						},
 						"ggvis" : {
 							"data" : {
-								"value" : "mtcars/regroup_4262323b/smooth_baeb5c7f_tree"
+								"value" : "mtcars0/regroup1/smooth2_tree"
 							}
 						}
 					}
