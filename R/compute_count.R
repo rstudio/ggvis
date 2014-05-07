@@ -14,6 +14,10 @@
 #'  \item{xmin_}{left boundary of bin}
 #'  \item{xmax_}{right boundary of bin}
 #'  \item{width_}{width of bin}
+#'
+#' The width of each "bin" is set to the resolution of the data -- that is, the
+#' smallest difference between two x values.
+#'
 #' @examples
 #' mtcars %>% compute_count(~cyl)
 #'
