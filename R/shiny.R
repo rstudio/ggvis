@@ -76,16 +76,22 @@ ggvis_output <- function(plot_id, shiny = TRUE, minify = TRUE) {
 }
 
 #' @rdname shiny
-#' @param r_gv A reactive expression which returns a ggvis object.
+#' @param gv A ggvis object, or a reactive expression that returns a ggvis
+#'   object.
 #' @param session A Shiny session object.
 #' @param ... Other arguments passed to \code{as.vega}.
 #' @export
-observe_ggvis <- function(r_gv, plot_id, session, ...) {
-  if (!shiny::is.reactive(r_gv)) {
-    stop("observe_ggvis requires a reactive expression that returns a ggvis object",
+observe_ggvis <- function(gv, plot_id, session, ...) {
+  if (!shiny::is.reactive(gv) && !is.ggvis(gv)) {
+    stop("observe_ggvis requires a ggvis object or a reactive expression that returns a ggvis object",
       call. = FALSE)
   }
-  r_spec <- shiny::reactive(as.vega(r_gv(), session = session, dynamic = TRUE, ...))
+
+  r_spec <- shiny::reactive({
+    if (is.reactive(gv)) vis <- gv()
+    else                 vis <- gv
+    as.vega(vis, session = session, dynamic = TRUE, ...)
+  })
 
   observe_spec(r_spec, plot_id, session)
   observe_data(r_spec, plot_id, session)
