@@ -13,5 +13,5 @@ shinyServer(function(input, output, session) {
         print(summary(items))
       })
     }) %>%
-    render_ggvis(session, "plot1")
+    render_ggvis("plot1")
 })

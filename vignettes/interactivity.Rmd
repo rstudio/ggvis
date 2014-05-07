@@ -185,8 +185,7 @@ first argument is the plot object, the second is the session, and the third is t
 mtcars %>% 
   ggvis(~disp, ~mpg, size := input$size) %>% 
   layer_points() %>%
-  render_ggvis(session, "ggvis") %>%
-  render_controls(session, "ggvis")
+  render_ggvis("ggvis", "ggvis_ui")
 ```
 
 Create `ui.r` as usual, using `ggvisOutput()` to place the ggvis plot on the

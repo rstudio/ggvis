@@ -20,16 +20,17 @@
 #' explicitly render the plot to a specific placeholder with
 #' \code{render_ggvis}:
 #'
-#' \code{p \%>\% render_ggvis(session, "plot")}
+#' \code{p \%>\% render_ggvis("plot")}
 #'
 #' If the plot has controls, and you've reserved space for them in the UI,
 #' supply the name of the placeholder as the third argument:
 #'
-#' \code{p \%>\% render_ggvis(session, "plot")}
+#' \code{p \%>\% render_ggvis("plot")}
 #' @examples
 #' \donttest{
 #' # Simplest possible app:
-#' shiny::runApp(list(
+#' library(shiny)
+#' runApp(list(
 #'   ui = bootstrapPage(
 #'     ggvisOutput("p"),
 #'     uiOutput("p_ui")
@@ -39,7 +40,7 @@
 #'       ggvis(~wt, ~mpg) %>%
 #'       layer_points() %>%
 #'       layer_smooths(span = input_slider(0, 1)) %>%
-#'       render_ggvis(session, "p", "p_ui")
+#'       render_ggvis("p", "p_ui")
 #'   }
 #' ))
 #' }
@@ -88,7 +89,12 @@ ggvisOutput <- function(plot_id, shiny = TRUE, minify = TRUE) {
 #' @param session A Shiny session object.
 #' @param ... Other arguments passed to \code{as.vega}.
 #' @export
-render_ggvis <- function(vis, session, plot_id, controls_id = NULL, ...) {
+render_ggvis <- function(vis, plot_id, controls_id = NULL, ...,
+                         session = shiny::getDefaultReactiveDomain()) {
+  if (is.null(session)) {
+    stop("render_controls() must be run inside a shiny app.", call. = FALSE)
+  }
+
   if (shiny::is.reactive(vis)) {
     visf <- vis
   } else if (is.ggvis(vis)) {
@@ -107,7 +113,7 @@ render_ggvis <- function(vis, session, plot_id, controls_id = NULL, ...) {
   exec_connectors(r_spec, plot_id, session)
 
   if (!is.null(controls_id)) {
-    render_controls(vis, session, controls_id)
+    render_controls(vis, controls_id, session = session)
   }
 
   vis
@@ -178,7 +184,12 @@ exec_connectors <- function(r_spec, plot_id, session) {
 #' @param controls_id Unique identifier for controls div.
 #' @rdname shiny
 #' @export
-render_controls <- function(vis, session, controls_id) {
+render_controls <- function(vis, controls_id,
+                            session = shiny::getDefaultReactiveDomain()) {
+  if (is.null(session)) {
+    stop("render_controls() must be run inside a shiny app.", call. = FALSE)
+  }
+
   if (shiny::is.reactive(vis)) {
     visf <- vis
   } else if (is.ggvis(vis)) {

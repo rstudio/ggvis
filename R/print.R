@@ -252,8 +252,8 @@ app_object <- function(x,
 
   server <- function(input, output, session) {
     r_gv <- reactive(x)
-    render_ggvis(r_gv, session, id, controls_id = "ggvis_controls",
-      renderer = renderer)
+    render_ggvis(r_gv, session = session, plot_id = id,
+      controls_id = "ggvis_controls", renderer = renderer)
   }
 
   list(ui = ui, server = server)

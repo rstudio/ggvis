@@ -8,9 +8,10 @@
 \usage{
 ggvisOutput(plot_id, shiny = TRUE, minify = TRUE)
 
-render_ggvis(vis, session, plot_id, controls_id = NULL, ...)
+render_ggvis(vis, plot_id, controls_id = NULL, ...,
+  session = shiny::getDefaultReactiveDomain())
 
-render_controls(vis, session, controls_id)
+render_controls(vis, controls_id, session = shiny::getDefaultReactiveDomain())
 }
 \arguments{
 \item{plot_id}{unique identifier to use for the div containing the ggvis plot.}
@@ -54,12 +55,12 @@ it triggers the default print method. In shiny apps, you need to
 explicitly render the plot to a specific placeholder with
 \code{render_ggvis}:
 
-\code{p \%>\% render_ggvis(session, "plot")}
+\code{p \%>\% render_ggvis("plot")}
 
 If the plot has controls, and you've reserved space for them in the UI,
 supply the name of the placeholder as the third argument:
 
-\code{p \%>\% render_ggvis(session, "plot")}
+\code{p \%>\% render_ggvis("plot")}
 }
 \examples{
 \donttest{
