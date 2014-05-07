@@ -1,7 +1,7 @@
 {
 	"data" : [
 		{
-			"name" : "mtcars/bin_baef4c5d",
+			"name" : "mtcars0/bin1",
 			"format" : {
 				"type" : "csv",
 				"parse" : {
@@ -26,11 +26,11 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "mtcars/bin_baef4c5d",
+						"data" : "mtcars0/bin1",
 						"field" : "data.xmin_"
 					},
 					{
-						"data" : "mtcars/bin_baef4c5d",
+						"data" : "mtcars0/bin1",
 						"field" : "data.xmax_"
 					}
 				]
@@ -48,7 +48,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "mtcars/bin_baef4c5d",
+						"data" : "mtcars0/bin1",
 						"field" : "data.count_"
 					}
 				]
@@ -85,12 +85,12 @@
 				},
 				"ggvis" : {
 					"data" : {
-						"value" : "mtcars/bin_baef4c5d"
+						"value" : "mtcars0/bin1"
 					}
 				}
 			},
 			"from" : {
-				"data" : "mtcars/bin_baef4c5d"
+				"data" : "mtcars0/bin1"
 			}
 		}
 	],
