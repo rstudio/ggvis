@@ -1,6 +1,6 @@
 #' Connect a ggvis graphic to a shiny app.
 #'
-#' It's easiest to learn by example: there are two shiny apps in
+#' It's easiest to learn by example: there are many shiny apps in
 #' \code{demo/apps/} that you can learn from.
 #'
 #' @details
@@ -18,23 +18,22 @@
 #'   insert those controls into the ui.
 #' }
 #' @examples
-#' \dontrun{
-#' ## In server.r
-#' gv <- reactive({
-#'   ggvis(mtcars, props(x = ~wt, y = ~mpg),
-#'     layer_point(),
-#'     layer_smooth(
-#'       n = input_slider(2, 80, "Interpolation points", value = 5, step = 1),
-#'       method = input_select(c("Linear" = "lm", "LOESS" = "loess"))
-#'     )
-#'   )
-#' })
-#'
-#' output$controls <- renderControls(gv)
-#'
-#'
-#' ## In ui.r
-#' ggvisControlOutput("controls")
+#' \dontest{
+#' # Simplest possible app:
+#' shiny::runApp(list(
+#'   ui = bootstrapPage(
+#'     uiOutput("controls"),
+#'     ggvis_output("p")
+#'   ),
+#'   server = function(input, output, session) {
+#'     p <- mtcars %>%
+#'       ggvis(~wt, ~mpg) %>%
+#'       layer_points() %>%
+#'       layer_smooths(span = input_slider(0, 1))
+#'     observe_ggvis(p, "p", session)
+#'     output$controls <- renderControls(p)
+#'   }
+#' ))
 #' }
 #' @name shiny
 NULL
@@ -96,6 +95,8 @@ observe_ggvis <- function(gv, plot_id, session, ...) {
   observe_spec(r_spec, plot_id, session)
   observe_data(r_spec, plot_id, session)
   exec_connectors(r_spec, plot_id, session)
+
+  gv
 }
 
 # Create an observer for a reactive vega spec
@@ -162,6 +163,21 @@ exec_connectors <- function(r_spec, plot_id, session) {
 
 #' @rdname shiny
 #' @export
+render_controls <- function(gv, id, session) {
+  if (is.reactive(gv)) gv <- gv()
+  if (!is.ggvis(gv)) stop("gv is not a ggvis object.", call. = FALSE)
+
+  controls <- gv$controls
+  if (empty(controls)) return()
+
+  # Wrap each control in a div, for layout purposes
+  divs <- lapply(controls, shiny::div,  class = "ggvis-input-container")
+  browser()
+  session$output[[id]] <- shiny::renderUI(shiny::tagList(divs))
+
+  gv
+}
+
 renderControls <- function(r_gv, session = NULL) {
   if (is.reactive(r_gv)) {
     r_gv <- r_gv()

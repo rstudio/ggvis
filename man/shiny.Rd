@@ -8,7 +8,7 @@
 \usage{
 ggvis_output(plot_id, shiny = TRUE, minify = TRUE)
 
-observe_ggvis(r_gv, plot_id, session, ...)
+observe_ggvis(gv, plot_id, session, ...)
 
 renderControls(r_gv, session = NULL)
 }
@@ -21,14 +21,15 @@ interactive plots, this should be TRUE; otherwise FALSE.}
 \item{minify}{If \code{TRUE}, use minified version of JS and CSS files. This
 can be useful for debugging.}
 
-\item{r_gv}{A reactive expression which returns a ggvis object.}
+\item{gv}{A ggvis object, or a reactive expression that returns a ggvis
+object.}
 
 \item{session}{A Shiny session object.}
 
 \item{...}{Other arguments passed to \code{as.vega}.}
 }
 \description{
-It's easiest to learn by example: there are two shiny apps in
+It's easiest to learn by example: there are many shiny apps in
 \code{demo/apps/} that you can learn from.
 }
 \details{
@@ -47,23 +48,22 @@ There are two required components and one optional component:
 }
 }
 \examples{
-\dontrun{
-## In server.r
-gv <- reactive({
-  ggvis(mtcars, props(x = ~wt, y = ~mpg),
-    layer_point(),
-    layer_smooth(
-      n = input_slider(2, 80, "Interpolation points", value = 5, step = 1),
-      method = input_select(c("Linear" = "lm", "LOESS" = "loess"))
-    )
-  )
-})
-
-output$controls <- renderControls(gv)
-
-
-## In ui.r
-ggvisControlOutput("controls")
+\dontest{
+# Simplest possible app:
+shiny::runApp(list(
+  ui = bootstrapPage(
+    uiOutput("controls"),
+    ggvis_output("p")
+  ),
+  server = function(input, output, session) {
+    p <- mtcars \%>\%
+      ggvis(~wt, ~mpg) \%>\%
+      layer_points() \%>\%
+      layer_smooths(span = input_slider(0, 1))
+    observe_ggvis(p, "p", session)
+    output$controls <- renderControls(p)
+  }
+))
 }
 }
 
