@@ -28,16 +28,9 @@ linked_brush <- function(keys, fill = "red") {
   rv <- shiny::reactiveValues(under_brush = character())
 
   input <- function(vis) {
-    save_keys <- function(items, ...) {
-      if (is.null(value)) return()
-
-      keys <- items$key__
-      if (is.numeric(keys)) {
-        keys <- as.character(keys + 1)
-      }
-      rv$under_brush <- keys
-    }
-    handle_brush(vis, save_keys, fill = fill)
+    handle_brush(vis, fill = fill, on_move = function(items, ...) {
+      rv$under_brush <- items$key__
+    })
   }
 
   output_selected <- function() {

@@ -17,7 +17,8 @@
 #' @export
 #' @examples
 #' # Display tooltip when objects are brushed
-#' mtcars %>% ggvis(x = ~wt, y = ~mpg, size.brush := 400) %>%
+#' mtcars %>%
+#'   ggvis(x = ~wt, y = ~mpg, size.brush := 400) %>%
 #'   layer_points() %>%
 #'   handle_brush(function(items, page_loc, session, ...) {
 #'     show_tooltip(session, page_loc$r + 5, page_loc$t, html = nrow(items))
@@ -31,18 +32,7 @@ handle_brush <- function(vis, on_move = NULL, fill = "black") {
       value <- session$input[[id]]
       if (is.null(value)) return()
 
-      if (length(value$items) > 0) {
-        # FIXME: figure out more efficient way to do this
-        dfs <- lapply(value$items, function(x) {
-          class(x) <- "data.frame"
-          attr(x, "row.names") <- .set_row_names(1L)
-          x
-        })
-        items <- dplyr::rbind_all(dfs)
-      } else {
-        items <- data.frame()
-      }
-
+      items <- tidy_items(value$items)
       page_loc <- list(
         t = value$pagey1, r = value$pagex2,
         b = value$pagey2, l = value$pagex1
@@ -78,4 +68,23 @@ layer_brush <- function(vis, fill = "black") {
       stroke := fill, strokeOpacity := 0.6,
       inherit = FALSE))
   })
+}
+
+tidy_items <- function(items) {
+  if (length(items) == 0) {
+    return(data.frame(keys__ = character()))
+  }
+
+  # FIXME: figure out more efficient way to do this
+  dfs <- lapply(items, function(x) {
+    class(x) <- "data.frame"
+    attr(x, "row.names") <- .set_row_names(1L)
+    x
+  })
+  items <- dplyr::rbind_all(dfs)
+
+  if (is.numeric(items$key__)) {
+    items$key__ <- as.character(items$key__ + 1)
+  }
+  items
 }
