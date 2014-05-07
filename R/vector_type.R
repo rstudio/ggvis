@@ -33,6 +33,10 @@ vector_type.default <- function(x) {
   stop("Unknown variable type: ", paste0(class(x), collapse = "/"))
 }
 
+#' Reports whether a vector maps to a countable prop type
+vector_countable <- function(x) {
+  countable_prop_type(vector_type(x))
+}
 
 #' Determine the vega data type for a vector
 #'

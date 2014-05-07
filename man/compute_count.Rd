@@ -28,7 +28,7 @@ Count data at each location of a continuous variable
 \examples{
 mtcars \%>\% compute_count(~cyl)
 
-# Weight by car weight
+# Weight the counts by car weight value
 mtcars \%>\% compute_count(~cyl, ~wt)
 
 # If there's one weight value at each x, it effectively just renames columns.

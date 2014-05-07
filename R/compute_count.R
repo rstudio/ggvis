@@ -21,7 +21,7 @@
 #' @examples
 #' mtcars %>% compute_count(~cyl)
 #'
-#' # Weight by car weight
+#' # Weight the counts by car weight value
 #' mtcars %>% compute_count(~cyl, ~wt)
 #'
 #' # If there's one weight value at each x, it effectively just renames columns.
@@ -48,6 +48,10 @@ compute_count.data.frame <- function(x, x_var, w_var = NULL) {
   assert_that(is.formula(x_var))
 
   x_val <- eval_vector(x, x_var)
+  if (vector_countable(x_val)) {
+    stop("compute_count requires continuous data.")
+  }
+
   if (is.null(w_var)) {
     w_val <- NULL
   } else {
@@ -75,34 +79,6 @@ compute_count.ggvis <- function(x, x_var, w_var = NULL) {
 # Count individual vector ------------------------------------------------------
 
 count_vector <- function(x, weight = NULL, ...) {
-  if (is.null(weight)) {
-    weight <- rep.int(1, length(x))
-  }
-  counts <- unname(tapply(weight, x, sum, na.rm = TRUE))
-  # Need to get unique values this way instead of using names(counts), because names
-  # are strings but the x values aren't always strings.
-  values <- unname(tapply(x, x, unique, na.rm = TRUE))
-
-  width <- resolution(values)
-
-  data.frame(
-    count_ = counts,
-    x_ = values,
-    xmin_ = values - width/2,
-    xmax_ = values + width/2,
-    width_ = width,
-    stringsAsFactors = FALSE
-  )
-}
-
-bin_out <- function(count = numeric(0), x = numeric(0), width = numeric(0),
-                    xmin = x - width / 2, xmax = x + width / 2) {
-  data.frame(
-    count_ = count,
-    x_ = x,
-    xmin_ = xmin,
-    xmax_ = xmax,
-    width_ = width,
-    stringsAsFactors = FALSE
-  )
+  res <- tabulate_vector(x, weight, ...)
+  bin_out(res$count_, res$x_, width = resolution(res$x_))
 }

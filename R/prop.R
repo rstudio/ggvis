@@ -250,7 +250,11 @@ prop_type.data.frame <- function(data, prop, processed = FALSE) {
 
 # Continuous variables are not countable; categorical variables are.
 prop_countable <- function(data, prop, processed = FALSE) {
-  type <- prop_type(data, prop, processed)
+  countable_prop_type(prop_value(data, prop, processed))
+}
+
+# Report whether a prop type is countable
+countable_prop_type <- function(type) {
   switch(type,
     NULL = NULL,
     "numeric" = FALSE,
