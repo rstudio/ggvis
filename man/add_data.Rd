@@ -3,7 +3,7 @@
 \alias{add_data}
 \title{Add dataset to a visualisation}
 \usage{
-add_data(vis, data, name = deparse2(substitute(data)), add_hash = TRUE)
+add_data(vis, data, name = deparse2(substitute(data)))
 }
 \arguments{
 \item{vis}{Visualisation to modify.}
@@ -12,8 +12,6 @@ add_data(vis, data, name = deparse2(substitute(data)), add_hash = TRUE)
 
 \item{name}{Data of data - optional, but helps produce informative
 error messages.}
-
-\item{add_hash}{Add a hash of the object as a suffix to the data ID?}
 }
 \description{
 Add dataset to a visualisation

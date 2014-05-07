@@ -67,13 +67,11 @@ add_props <- function(vis, ..., .props = NULL, inherit = NULL,
 #' @param data Data set to add.
 #' @param name Data of data - optional, but helps produce informative
 #'  error messages.
-#' @param add_hash Add a hash of the object as a suffix to the data ID?
 #' @export
 #' @examples
 #' mtcars %>% ggvis(~mpg, ~wt) %>% layer_points()
 #' NULL %>% ggvis(~mpg, ~wt) %>% add_data(mtcars) %>% layer_points()
-add_data <- function(vis, data, name = deparse2(substitute(data)),
-                     add_hash = TRUE) {
+add_data <- function(vis, data, name = deparse2(substitute(data))) {
   if (is.null(data)) return(vis)
 
   # Make sure data is reactive
@@ -82,8 +80,8 @@ add_data <- function(vis, data, name = deparse2(substitute(data)),
     data <- function() static_data
   }
 
-  data <- add_data_id(data, name, add_hash = add_hash)
-  vis$data[[get_data_id(data)]] <- data
+  data_id(data) <- name
+  vis$data[[name]] <- data
   vis$cur_data <- data
 
   vis
@@ -163,7 +161,10 @@ register_computation <- function(vis, args, name, transform = NULL) {
   if (is.null(transform)) return(vis)
 
   parent_data <- vis$cur_data
-  id <- paste0(get_data_id(parent_data), "/", name)
+  # For the ID, append to the parent's ID, along with a hash of the transform's
+  # arguments.
+  id <- paste0(data_id(parent_data), "/", name, "_",
+               digest::digest(args, algo = "crc32"))
 
   if (shiny::is.reactive(parent_data) || any_apply(args, shiny::is.reactive)) {
     new_data <- reactive(transform(parent_data(), values(args)))
@@ -172,8 +173,8 @@ register_computation <- function(vis, args, name, transform = NULL) {
     new_data <- function() cache
   }
 
-  new_data <- add_data_id(new_data, id)
-  vis$data[[get_data_id(new_data)]] <- new_data
+  data_id(new_data) <- id
+  vis$data[[id]] <- new_data
   vis$cur_data <- new_data
 
   vis

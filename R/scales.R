@@ -53,7 +53,7 @@ add_default_scales <- function(vis, data_table) {
   scale_types <- list()
   scale_uses <- list()
   for (mark in marks) {
-    data_id <- get_data_id(mark$data)
+    data_id <- data_id(mark$data)
     data <- shiny::isolate(data_table[[data_id]]())
 
     for (prop_n in names(mark$props)) {

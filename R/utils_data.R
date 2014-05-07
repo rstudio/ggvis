@@ -1,30 +1,11 @@
-# Calculate the data_id for a data object; if the object already has the data_id
-# attribute, simply return that.
-get_data_id <- function(data, prefix = "unnamed_data", add_hash = FALSE) {
-  if (is.null(data)) return(NULL)
-  if (!is.function(data)) stop("data object must be a reactive or a function.")
-
-  # If there's already aa data_id attribute, just return it
-  if (!is.null(attr(data, "data_id")))
-    return(attr(data, "data_id"))
-
-  if (!add_hash)
-    return(prefix)
-
-  paste0(prefix, "_", digest::digest(data, algo = "crc32"))
+data_id <- function(x) {
+  return(attr(x, "data_id"))
 }
 
-# Add the appropriate data_id attribute to a data object, and return it.
-# The data id consists of a prefix plus (if add_hash is TRUE) a hash.
-# @param add_hash Add an automatically-created add_hash to the data ID?
-add_data_id <- function(data, prefix = "unnamed_data", add_hash = TRUE) {
-  if (is.null(data)) return(NULL)
-  if (!is.function(data)) stop("data object must be a reactive or a function.")
-
-  attr(data, "data_id") <- get_data_id(data, prefix, add_hash)
-  data
+`data_id<-` <- function(x, value) {
+  attr(x, "data_id") <- value
+  x
 }
-
 
 merge_df <- function(a, b) {
   if (is.null(a) || nrow(a) == 0 || ncol(a) == 0) return(b)

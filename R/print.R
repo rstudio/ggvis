@@ -65,7 +65,7 @@ explain.ggvis <- function (x, ...) {
   }
   cat("Data objects:\n")
   for (dat in x$data) {
-    cat(indent(get_data_id(dat), 2), "\n")
+    cat(indent(data_id(dat), 2), "\n")
   }
   cat("Reactives:\n")
   for (reactive in x$reactives) {

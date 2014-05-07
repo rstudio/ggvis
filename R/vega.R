@@ -68,7 +68,7 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
 # Given a list of layers, return a character vector of all data ID's used.
 extract_data_ids <- function(layers) {
   data_ids <- vapply(layers,
-    function(layer) get_data_id(layer$data),
+    function(layer) data_id(layer$data),
     character(1)
   )
   unique(data_ids)
@@ -93,7 +93,7 @@ as.vega.mark <- function(mark) {
   # FIXME: dispatch on the class of mark$data()
   split <- !is.null(dplyr::groups(shiny::isolate(mark$data())))
   if (split) {
-    data_id <- paste0(get_data_id(mark$data), "_tree")
+    data_id <- paste0(data_id(mark$data), "_tree")
     properties$ggvis$data <- list(value = data_id)
 
     m <- list(
@@ -108,7 +108,7 @@ as.vega.mark <- function(mark) {
     )
 
   } else {
-    data_id <- get_data_id(mark$data)
+    data_id <- data_id(mark$data)
     properties$ggvis$data <- list(value = data_id)
 
     m <- list(

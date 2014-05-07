@@ -2,7 +2,7 @@
 # by properties.
 active_props <- function(data, layers) {
   # Collect all props for given data
-  data_ids <- vapply(layers, function(layer) get_data_id(layer$data),
+  data_ids <- vapply(layers, function(layer) data_id(layer$data),
     character(1))
   props <- lapply(layers, function(x) x$props)
 

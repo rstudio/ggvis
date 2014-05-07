@@ -57,7 +57,7 @@ check_mark_props <- function(type, props) {
 #' @export
 format.mark <- function(x, ...) {
   paste0("<", class(x)[1], ">",
-    " (Data: ", get_data_id(x$data), ")",
+    " (Data: ", data_id(x$data), ")",
     "\n",
     indent(format(x$props), 2)
   )
