@@ -1,3 +1,4 @@
+library(ggvis)
 data(diamonds, package = "ggplot2")
 
 shinyServer(function(input, output, session) {

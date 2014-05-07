@@ -1,3 +1,5 @@
+library(ggvis)
+
 shinyServer(function(input, output, session) {
   gv <- reactive({
     mtcars %>% ggvis(~disp, ~mpg) %>%

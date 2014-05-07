@@ -1,3 +1,5 @@
+library(ggvis)
+
 shinyServer(function(input, output, session) {
 
   # A subset of mtcars

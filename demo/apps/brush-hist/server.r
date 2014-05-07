@@ -15,7 +15,6 @@ shinyServer(function(input, output, session) {
   # Set up observers for the spec and the data
   observe_ggvis(hist_gv, "plot1", session)
 
-
   diamonds_brushed <- reactive({
     ranges <- input$ggvis_plot1_brush$items
 
