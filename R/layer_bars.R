@@ -36,32 +36,25 @@
 #' @export
 #' @examples
 #' # Discrete x: bar graph of counts at each x value
-#' mtcars %>% ggvis(~factor(cyl)) %>% layer_bars()
-#'
-#' # Discrete x & continuous y: sum up heights at each count
-#' pressure %>% ggvis(~temperature, ~pressure) %>% layer_bars()
-#' mtcars %>% ggvis(~factor(cyl), ~disp) %>% layer_bars()
-#'
-#' # Narrower bars
-#' mtcars %>% ggvis(~factor(cyl)) %>% layer_bars(width = band(mult = 0.5))
-#'
+#' cocaine %>% ggvis(~state) %>% layer_bars()
 #' # Continuous x: bar graph of counts at unique locations
-#' mtcars %>% ggvis(~cyl) %>% layer_bars()
-#' # Notice how it differs from a histogram: a histogram has bins that span
-#' # ranges of x, but layer_bars shows the count at each unique x value.
-#' mtcars %>% ggvis(~wt) %>% layer_histograms()
-#' mtcars %>% ggvis(~wt) %>% layer_bars()
+#' cocaine %>% ggvis(~month) %>% layer_bars()
 #'
-#' # It's possible to use a nominal x scale when the x value is continuous.
-#' # Notice how each x value is labeled and ordered by numeric value.
-#' pressure %>% ggvis(x = ~temperature, y = ~pressure) %>%
-#'   layer_bars() %>%
-#'   set_dscale("x", "nominal", padding = 0, points = FALSE)
+#' # Use y prop to weight by additional variable. This is also useful
+#' # if you have pretabulated data
+#' cocaine %>% ggvis(~state, ~weight) %>% layer_bars()
+#' cocaine %>% ggvis(~month, ~weight) %>% layer_bars()
 #'
-#' # Y var, and discrete x
-#' # FIXME: x values are currently sorted alphabetically, instead of by factor
-#' # level order.
-#' pressure %>% ggvis(~factor(temperature), ~pressure) %>% layer_bars()
+#' # For continuous x, layer_bars is useful when the variable has a few
+#' # unique values that you want to preserve. If you have many unique
+#' # values and you want to bin, use layer_histogram
+#' cocaine %>% ggvis(~price) %>% layer_bars()
+#' cocaine %>% ggvis(~price) %>% layer_histograms(binwidth = 100)
+#'
+#' # If you have unique x values, you can use layer_bars() as an alternative
+#' # to layer_points()
+#' pressure %>% ggvis(~temperature, ~pressure) %>% layer_points()
+#' pressure %>% ggvis(~temperature, ~pressure) %>% layer_bars()
 layer_bars <- function(vis, ..., width = band(mult = 0.9)) {
   new_props <- merge_props(cur_props(vis), props(...))
 
