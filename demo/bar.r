@@ -5,8 +5,9 @@ pressure %>% ggvis(x = ~temperature, y = ~pressure) %>%
   layer_rects(y2 = 0, width := 15)
 
 # Bar graph with continuous x, and bars occupying full width
-pressure %>% ggvis(x = ~temperature + 10, x2 = ~temperature - 10,
-                   y = ~pressure, y2 = 0) %>%
+pressure %>%
+  ggvis(x = ~temperature + 10, x2 = ~temperature - 10,
+        y = ~pressure, y2 = 0) %>%
   layer_rects()
 
 # Bar graph with categorical x
