@@ -23,7 +23,7 @@ mtcars \%>\% cbind(count = 1) \%>\% group_by(am) \%>\% compute_stack(~count, ~cy
 
 # If given a ggvis object, will use x variable for stacking by default
 mtcars \%>\% ggvis(x = ~cyl, y = ~wt) \%>\%
-  compute_stack() \%>\%
+  compute_stack(stack_var = ~wt, group_var = ~cyl) \%>\%
   layer_rects(x = ~cyl - 0.5, x2 = ~cyl + 0.5, y = ~stack_upr_,
     y2 = ~stack_lwr_)
 
@@ -37,8 +37,8 @@ hec \%>\% ggvis(~Hair, ~Freq, fill = ~Eye, fillOpacity := 0.5) \%>\%
   layer_rects(y2 = 0, width = band())
 
 # With stacking
-hec \%>\% ggvis(~Hair, ~Freq, fill = ~Eye, fillOpacity := 0.5) \%>\%
-  compute_stack() \%>\%
+hec \%>\% ggvis(x = ~Hair, y = ~Freq, fill = ~Eye, fillOpacity := 0.5) \%>\%
+  compute_stack(~Freq, ~Hair) \%>\%
   set_dscale("x", "nominal", range = "width", padding = 0, points = FALSE) \%>\%
   layer_rects(y = ~stack_lwr_, y2 = ~stack_upr_, width = band())
 }
