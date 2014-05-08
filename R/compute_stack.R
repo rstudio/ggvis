@@ -71,11 +71,6 @@ compute_stack.data.frame <- function(x, stack_var = NULL, group_var = NULL) {
 
 #' @export
 compute_stack.ggvis <- function(x, stack_var = NULL, group_var = NULL) {
-  # Try to figure out the stack_var and group_var, if not explicitly
-
-  group_var <- group_var %||% find_prop_var(x$cur_props, "x.update")
-  stack_var <- stack_var %||% find_prop_var(x$cur_props, "y.update")
-
   args <- list(stack_var = stack_var, group_var = group_var)
 
   register_computation(x, args, "stack", function(data, args) {
