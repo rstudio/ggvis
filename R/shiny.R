@@ -113,7 +113,7 @@ bind_shiny <- function(vis, plot_id, controls_id = NULL, ...,
   exec_connectors(r_spec, plot_id, session)
 
   if (!is.null(controls_id)) {
-    bind_shiny(vis, controls_id, session = session)
+    bind_shiny_ui(vis, controls_id, session = session)
   }
 
   vis
