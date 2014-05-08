@@ -12,7 +12,7 @@
 #'   "utc", "linear", "log", "pow", "sqrt", "quantile", "quantize", "threshold".
 #' @param domain The domain of the scale, representing the set of data values.
 #'   For ordinal scales, a character vector; for quantitative scales, a numeric
-#'   vector of length two. Either value (but not both) may be missing, in which
+#'   vector of length two. Either value (but not both) may be NA, in which
 #'   case \code{domainMin} or \code{domainMax} is set.
 #' @param range The range of the scale, representing the set of visual values.
 #'   For numeric values, the range can take the form of a two-element array with

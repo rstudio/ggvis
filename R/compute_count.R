@@ -31,14 +31,13 @@
 #' mtcars %>% compute_count(~cyl, ~wt) %>%
 #'   ggvis(x = ~xmin_, x2 = ~xmax_, y = ~count_, y2 = 0) %>%
 #'   layer_rects() %>%
-#'   set_dscale("y", "numeric", domain = c(0, 60))
-#' # FIXME: Add support for domainMin and domainMax
+#'   set_dscale("y", "numeric", domain = c(0, NA))
 #'
 #' mtcars %>%
 #'   ggvis(x = ~xmin_, x2 = ~xmax_, y = ~count_, y2 = 0) %>%
 #'   compute_count(~cyl, ~wt) %>%
 #'   layer_rects() %>%
-#'   set_dscale("y", "numeric", domain = c(0, 60))
+#'   set_dscale("y", "numeric", domain = c(0, NA))
 compute_count <- function(x, x_var, w_var = NULL) {
   UseMethod("compute_count")
 }
