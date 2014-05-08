@@ -34,17 +34,16 @@ pressure \%>\% compute_tabulate(~factor(temperature), ~pressure)
 # It doesn't matter whether you transform inside or outside of a vis
 mtcars \%>\% compute_tabulate(~factor(cyl)) \%>\%
   ggvis(x = ~x_, y = ~count_, y2 = 0) \%>\%
-  layer_rects(width = band()) \%>\%
-  set_dscale("x", "nominal", padding = 0.1, points = FALSE) \%>\%
-  set_dscale("y", "numeric", domain = c(0, 15))
-# FIXME: Add support for domainMin and domainMax
+  layer_rects(width = band(mult = 0.9)) \%>\%
+  set_dscale("x", "nominal", padding = 0, points = FALSE) \%>\%
+  set_dscale("y", "numeric", domain = c(0, NA))
 
 mtcars \%>\%
   ggvis(x = ~x_, y = ~count_, y2 = 0) \%>\%
   compute_tabulate(~factor(cyl)) \%>\%
-  layer_rects(width = band()) \%>\%
-  set_dscale("x", "nominal", padding = 0.1, points = FALSE) \%>\%
-  set_dscale("y", "numeric", domain = c(0, 15))
+  layer_rects(width = band(mult = 0.9)) \%>\%
+  set_dscale("x", "nominal", padding = 0, points = FALSE) \%>\%
+  set_dscale("y", "numeric", domain = c(0, NA))
 }
 \seealso{
 \code{\link{compute_bin}} For counting cases within ranges of

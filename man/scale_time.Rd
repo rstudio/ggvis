@@ -21,7 +21,7 @@ interval; legal values are "second", "minute", "hour", "day", "week",
 
 \item{domain}{The domain of the scale, representing the set of data values.
 For ordinal scales, a character vector; for quantitative scales, a numeric
-vector of length two. Either value (but not both) may be missing, in which
+vector of length two. Either value (but not both) may be NA, in which
 case \code{domainMin} or \code{domainMax} is set.}
 
 \item{range}{The range of the scale, representing the set of visual values.

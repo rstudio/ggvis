@@ -38,14 +38,13 @@ pressure \%>\% compute_count(~temperature, ~pressure)
 mtcars \%>\% compute_count(~cyl, ~wt) \%>\%
   ggvis(x = ~xmin_, x2 = ~xmax_, y = ~count_, y2 = 0) \%>\%
   layer_rects() \%>\%
-  set_dscale("y", "numeric", domain = c(0, 60))
-# FIXME: Add support for domainMin and domainMax
+  set_dscale("y", "numeric", domain = c(0, NA))
 
 mtcars \%>\%
   ggvis(x = ~xmin_, x2 = ~xmax_, y = ~count_, y2 = 0) \%>\%
   compute_count(~cyl, ~wt) \%>\%
   layer_rects() \%>\%
-  set_dscale("y", "numeric", domain = c(0, 60))
+  set_dscale("y", "numeric", domain = c(0, NA))
 }
 \seealso{
 \code{\link{compute_bin}} For counting cases within ranges of
