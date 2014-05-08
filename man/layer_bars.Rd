@@ -3,14 +3,16 @@
 \alias{layer_bars}
 \title{Display data with bars (a barchart).}
 \usage{
-layer_bars(vis, ..., stack = TRUE, width = band(mult = 0.9))
+layer_bars(vis, ..., stack = TRUE, width = NULL)
 }
 \arguments{
 \item{vis}{Visualisation to modify}
 
 \item{...}{Visual properties used to override defaults.}
 
-\item{width}{Width of each bar (only used when x is categorical).}
+\item{width}{Width of each bar. When x is continuous, this controls the width
+in the same units as x. When x is categorical, this controls the width as a
+proportion of the spacing between items (default is 0.9).}
 
 \item{stack}{If there are multiple bars to be drawn at an x location, should
 the bars be stacked? If FALSE, the bars will be overplotted on each other.}
@@ -36,8 +38,8 @@ at each x value is simply the y value. However, if an x value appear more
 than once in the data, then this will sum up the y values at each x.
 
 If the x variable is continuous, then a continuous x axis will be used, and
-the width of each bar is equal to the resolution of the data -- that is, the
-smallest difference between any two x values.
+the width of each bar is by default equal to the resolution of the data --
+that is, the smallest difference between any two x values.
 
 If the x variable is categorical, then a categorical x axis will be used. By
 default, the width of each bar is 0.9 times the space between the items.
@@ -63,6 +65,12 @@ cocaine \%>\% ggvis(~price) \%>\% layer_histograms(binwidth = 100)
 # to layer_points()
 pressure \%>\% ggvis(~temperature, ~pressure) \%>\% layer_points()
 pressure \%>\% ggvis(~temperature, ~pressure) \%>\% layer_bars()
+
+# When x is continuous, width controls the width in x units
+pressure \%>\% ggvis(~temperature, ~pressure) \%>\% layer_bars(width = 10)
+# When x is categorical, width is proportional to spacing between bars
+pressure \%>\% ggvis(~factor(temperature), ~pressure) \%>\%
+  layer_bars(width = 0.5)
 
 # Stacked bars
 ToothGrowth \%>\% group_by(dose) \%>\%

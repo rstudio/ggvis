@@ -19,15 +19,17 @@
 #' than once in the data, then this will sum up the y values at each x.
 #'
 #' If the x variable is continuous, then a continuous x axis will be used, and
-#' the width of each bar is equal to the resolution of the data -- that is, the
-#' smallest difference between any two x values.
+#' the width of each bar is by default equal to the resolution of the data --
+#' that is, the smallest difference between any two x values.
 #'
 #' If the x variable is categorical, then a categorical x axis will be used. By
 #' default, the width of each bar is 0.9 times the space between the items.
 #'
 #' @param vis Visualisation to modify
 #' @param ... Visual properties used to override defaults.
-#' @param width Width of each bar (only used when x is categorical).
+#' @param width Width of each bar. When x is continuous, this controls the width
+#'   in the same units as x. When x is categorical, this controls the width as a
+#'   proportion of the spacing between items (default is 0.9).
 #' @param stack If there are multiple bars to be drawn at an x location, should
 #'   the bars be stacked? If FALSE, the bars will be overplotted on each other.
 #' @inheritParams compute_count
@@ -58,12 +60,18 @@
 #' pressure %>% ggvis(~temperature, ~pressure) %>% layer_points()
 #' pressure %>% ggvis(~temperature, ~pressure) %>% layer_bars()
 #'
+#' # When x is continuous, width controls the width in x units
+#' pressure %>% ggvis(~temperature, ~pressure) %>% layer_bars(width = 10)
+#' # When x is categorical, width is proportional to spacing between bars
+#' pressure %>% ggvis(~factor(temperature), ~pressure) %>%
+#'   layer_bars(width = 0.5)
+#'
 #' # Stacked bars
 #' ToothGrowth %>% group_by(dose) %>%
 #'   ggvis(x = ~supp, y = ~len, fill = ~dose) %>% layer_bars()
 #' cocaine %>% group_by(month) %>%
 #'   ggvis(x = ~state, fill = ~as.factor(month)) %>%  layer_bars()
-layer_bars <- function(vis, ..., stack = TRUE, width = band(mult = 0.9)) {
+layer_bars <- function(vis, ..., stack = TRUE, width = NULL) {
   new_props <- merge_props(cur_props(vis), props(...))
 
   x_var <- find_prop_var(new_props, "x.update")
@@ -80,12 +88,16 @@ layer_bars <- function(vis, ..., stack = TRUE, width = band(mult = 0.9)) {
   }
 
   if (discrete_x) {
+    if (is.null(width)) {
+      width <- 0.9
+    }
+
     vis <- layer_f(vis, function(v) {
-      v <- compute_tabulate(v, x_var, y_var)
+      v <- compute_count(v, x_var, y_var)
       if (stack) {
         v <- compute_stack(v, stack_var = ~count_, group_var = ~x_)
         v <- layer_rects(v, x = ~x_, y = ~stack_lwr_, y2 = ~stack_upr_,
-                         width = width)
+                         width = band(mult = width))
       } else {
         v <- layer_rects(v, x = ~x_, y = 0, y2 = ~count_, width = width)
       }
@@ -96,6 +108,7 @@ layer_bars <- function(vis, ..., stack = TRUE, width = band(mult = 0.9)) {
   } else {
     vis <- layer_f(vis, function(v) {
       v <- compute_count(v, x_var, y_var)
+      v <- compute_width(v, ~x_, width)
       if (stack) {
         v <- compute_stack(v, stack_var = ~count_, group_var = ~x_)
       }
