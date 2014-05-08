@@ -176,6 +176,11 @@ bin_vector.POSIXt <- function(x, weight = NULL, ..., binwidth = 1,
   results
 }
 
+#' @export
+bin_vector.default <- function(x, weight = NULL, ...) {
+  stop("Don't know how to bin vector of type ", class(x))
+}
+
 bin_out <- function(count = numeric(0), x = numeric(0), width = numeric(0),
                     xmin = x - width / 2, xmax = x + width / 2) {
   data.frame(
