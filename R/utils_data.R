@@ -1,3 +1,17 @@
+#' Get data from a ggvis object
+#'
+#' This function is useful for inspecting the data in a ggvis object.
+#' @param vis A ggvis object.
+#' @examples
+#' p <- cocaine %>% ggvis(~price) %>% layer_bars()
+#' get_data(p)
+#'
+#' @export
+get_data <- function(vis) {
+  if (!is.ggvis(vis)) stop("vis must be a ggvis object.")
+  lapply(vis$data, function(x) shiny::isolate(x()))
+}
+
 data_id <- function(x) {
   return(attr(x, "data_id"))
 }
