@@ -400,7 +400,7 @@ knit_print.ggvis <- function(x, options) {
                     script = "lodash.min.js",
                     head = "<script>var lodash = _.noConflict();</script>"),
     html_dependency(name = "ggvis",
-                    version = packageVersion("ggvis"),
+                    version = as.character(packageVersion("ggvis")),
                     path = "ggvis",
                     script = "js/ggvis.js",
                     stylesheet = "css/ggvis.css")
