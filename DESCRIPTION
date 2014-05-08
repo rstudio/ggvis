@@ -26,3 +26,4 @@ Suggests:
 VignetteBuilder: knitr
 Roxygen: list(wrap = FALSE)
 License: GPL-2
+LazyData: true
