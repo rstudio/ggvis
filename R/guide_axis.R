@@ -124,7 +124,7 @@ apply_axes_defaults <- function(vis) {
   axes <- vis$axes
   scales <- vis$scales
 
-  lapply(axes, function(axis) {
+  axes <- lapply(axes, function(axis) {
     scale <- scales[[axis$scale]]
 
     # If we don't have a title, try to get it from the scale.
