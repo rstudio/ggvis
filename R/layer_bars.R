@@ -47,9 +47,15 @@
 #' # Y var, and continous x
 #' pressure %>% ggvis(~temperature, ~pressure) %>% layer_bars()
 #'
+#' # It's possible to use a nominal x scale when the x value is continuous.
+#' # Notice how each x value is labeled and ordered by numeric value.
+#' pressure %>% ggvis(x = ~temperature, y = ~pressure) %>%
+#'   layer_bars() %>%
+#'   set_dscale("x", "nominal", padding = 0, points = FALSE)
+#'
 #' # Y var, and discrete x
 #' # FIXME: x values are currently sorted alphabetically, instead of by factor
-#' # level order
+#' # level order.
 #' pressure %>% ggvis(~factor(temperature), ~pressure) %>% layer_bars()
 layer_bars <- function(vis, ..., width = band(mult = 0.9)) {
   new_props <- merge_props(cur_props(vis), props(...))
