@@ -3,6 +3,8 @@
 #' @param vis Visualisation to modify
 #' @param ... Visual properties used to override defaults.
 #' @inheritParams compute_bin
+#' @seealso \code{\link{layer_bars}} For bar graphs of counts at each unique
+#'   x value, in contrast to a histogram's bins along x ranges.
 #' @export
 #' @examples
 #' # Create histograms and frequency polygons with layers
@@ -47,22 +49,6 @@ layer_freqpolys <- function(vis, ..., binwidth = NULL, origin = NULL,
     x <- compute_bin(x, x_var, binwidth = params$binwidth,
       origin = params$origin, right = params$right)
     x <- emit_paths(x, path_props)
-    x
-  })
-}
-
-#' @rdname layer_histograms
-#' @export
-layer_bars <- function(vis, ..., right = TRUE) {
-  rect_props <- merge_props(props(x = ~x, width = band(mult = 0.9),
-    y2 = ~count__, y = 0), props(...))
-
-  x_var <- find_prop_var(vis$cur_props, "x.update")
-
-  layer_f(vis, function(x) {
-    x <- compute_bin(x, x_var, binwidth = 1,
-      origin = 0.5, right = right)
-    x <- emit_rects(x, rect_props)
     x
   })
 }
