@@ -116,7 +116,8 @@
 			"scale" : "y",
 			"orient" : "left",
 			"layer" : "back",
-			"grid" : true
+			"grid" : true,
+			"title" : "x"
 		}
 	],
 	"padding" : null,

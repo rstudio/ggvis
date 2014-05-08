@@ -199,14 +199,16 @@
 			"scale" : "x",
 			"orient" : "bottom",
 			"layer" : "back",
-			"grid" : true
+			"grid" : true,
+			"title" : "x"
 		},
 		{
 			"type" : "y",
 			"scale" : "y",
 			"orient" : "left",
 			"layer" : "back",
-			"grid" : true
+			"grid" : true,
+			"title" : "y"
 		}
 	],
 	"padding" : null,

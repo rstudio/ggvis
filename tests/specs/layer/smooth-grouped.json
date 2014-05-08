@@ -1323,14 +1323,16 @@
 			"scale" : "x",
 			"orient" : "bottom",
 			"layer" : "back",
-			"grid" : true
+			"grid" : true,
+			"title" : "pred_"
 		},
 		{
 			"type" : "y",
 			"scale" : "y",
 			"orient" : "left",
 			"layer" : "back",
-			"grid" : true
+			"grid" : true,
+			"title" : "resp_"
 		}
 	],
 	"padding" : null,
