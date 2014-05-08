@@ -15,8 +15,6 @@
 #' @seealso \code{\link{compute_count}} For counting cases at specific locations
 #'   of a continuous variable. This is useful when the variable is continuous
 #'   but the data is granular.
-#' @seealso \code{\link{compute_tabulate}} For counting cases at each value
-#'   of a categorical variable.
 #' @export
 #' @return A data frame with columns:
 #'  \item{count_}{the number of points}

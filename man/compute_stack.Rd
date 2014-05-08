@@ -12,6 +12,11 @@ compute_stack(x, stack_var = NULL, group_var = NULL)
 
 \item{group_var}{A string specifying the grouping variable.}
 }
+\value{
+A data frame with columns:
+ \item{stack_upr_}{the lower y coordinate for a stack bar}
+ \item{stack_lwr_}{the upper y coordinate for a stack bar}
+}
 \description{
 Stack overlapping data.
 }

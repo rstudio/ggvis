@@ -1,5 +1,8 @@
 #' Stack overlapping data.
 #'
+#' @return A data frame with columns:
+#'  \item{stack_upr_}{the lower y coordinate for a stack bar}
+#'  \item{stack_lwr_}{the upper y coordinate for a stack bar}
 #' @export
 #' @param x A data object
 #' @param stack_var A string specifying the stacking variable.
