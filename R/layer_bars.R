@@ -28,6 +28,8 @@
 #' @param vis Visualisation to modify
 #' @param ... Visual properties used to override defaults.
 #' @param width Width of each bar (only used when x is categorical).
+#' @param stack If there are multiple bars to be drawn at an x location, should
+#'   the bars be stacked? If FALSE, the bars will be overplotted on each other.
 #' @inheritParams compute_count
 #' @seealso \code{\link{layer_histograms}} For bar graphs of counts at each unique
 #'   x value, in contrast to a histogram's bins along x ranges.
@@ -55,7 +57,13 @@
 #' # to layer_points()
 #' pressure %>% ggvis(~temperature, ~pressure) %>% layer_points()
 #' pressure %>% ggvis(~temperature, ~pressure) %>% layer_bars()
-layer_bars <- function(vis, ..., width = band(mult = 0.9)) {
+#'
+#' # Stacked bars
+#' ToothGrowth %>% group_by(dose) %>%
+#'   ggvis(x = ~supp, y = ~len, fill = ~dose) %>% layer_bars()
+#' cocaine %>% group_by(month) %>%
+#'   ggvis(x = ~state, fill = ~as.factor(month)) %>%  layer_bars()
+layer_bars <- function(vis, ..., stack = TRUE, width = band(mult = 0.9)) {
   new_props <- merge_props(cur_props(vis), props(...))
 
   x_var <- find_prop_var(new_props, "x.update")
@@ -74,7 +82,13 @@ layer_bars <- function(vis, ..., width = band(mult = 0.9)) {
   if (discrete_x) {
     vis <- layer_f(vis, function(v) {
       v <- compute_tabulate(v, x_var, y_var)
-      v <- layer_rects(v, x = ~x_, y = 0, y2 = ~count_, width = width)
+      if (stack) {
+        v <- compute_stack(v, stack_var = ~count_, group_var = ~x_)
+        v <- layer_rects(v, x = ~x_, y = ~stack_lwr_, y2 = ~stack_upr_,
+                         width = width)
+      } else {
+        v <- layer_rects(v, x = ~x_, y = 0, y2 = ~count_, width = width)
+      }
       v
     })
     vis <- set_dscale(vis, "x", "nominal", padding = 0, points = FALSE)
@@ -82,6 +96,9 @@ layer_bars <- function(vis, ..., width = band(mult = 0.9)) {
   } else {
     vis <- layer_f(vis, function(v) {
       v <- compute_count(v, x_var, y_var)
+      if (stack) {
+        v <- compute_stack(v, stack_var = ~count_, group_var = ~x_)
+      }
       v <- layer_rects(v, x = ~xmin_, x2 = ~xmax_, y = 0, y2 = ~count_)
       v
     })

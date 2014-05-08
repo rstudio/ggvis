@@ -3,7 +3,7 @@
 \alias{layer_bars}
 \title{Display data with bars (a barchart).}
 \usage{
-layer_bars(vis, ..., width = band(mult = 0.9))
+layer_bars(vis, ..., stack = TRUE, width = band(mult = 0.9))
 }
 \arguments{
 \item{vis}{Visualisation to modify}
@@ -11,6 +11,9 @@ layer_bars(vis, ..., width = band(mult = 0.9))
 \item{...}{Visual properties used to override defaults.}
 
 \item{width}{Width of each bar (only used when x is categorical).}
+
+\item{stack}{If there are multiple bars to be drawn at an x location, should
+the bars be stacked? If FALSE, the bars will be overplotted on each other.}
 }
 \description{
 This will add bars to a plot. The exact behavior is complicated because
@@ -60,6 +63,12 @@ cocaine \%>\% ggvis(~price) \%>\% layer_histograms(binwidth = 100)
 # to layer_points()
 pressure \%>\% ggvis(~temperature, ~pressure) \%>\% layer_points()
 pressure \%>\% ggvis(~temperature, ~pressure) \%>\% layer_bars()
+
+# Stacked bars
+ToothGrowth \%>\% group_by(dose) \%>\%
+  ggvis(x = ~supp, y = ~len, fill = ~dose) \%>\% layer_bars()
+cocaine \%>\% group_by(month) \%>\%
+  ggvis(x = ~state, fill = ~as.factor(month)) \%>\%  layer_bars()
 }
 \seealso{
 \code{\link{layer_histograms}} For bar graphs of counts at each unique
