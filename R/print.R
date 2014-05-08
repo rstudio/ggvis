@@ -52,6 +52,17 @@ is.dynamic <- function(x) {
   any_apply(x$data, shiny::is.reactive) || length(x$reactives) > 0
 }
 
+#' Explain details of an object
+#'
+#' This is a generic function which gives more details about an object than
+#' print, and is more focussed on human readable output than str.
+#'
+#' @export
+#' @inheritParams dplyr::explain
+#' @examples
+#' p <- mtcars %>% ggvis(x = ~cyl) %>% layer_bars()
+#' explain(p)
+explain <- dplyr::explain
 
 #' Print out the structure of a ggvis object in a friendly format
 #'
