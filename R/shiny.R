@@ -48,42 +48,6 @@
 NULL
 
 #' @rdname shiny-ggvis
-#' @param plot_id unique identifier to use for the div containing the ggvis plot.
-#' @param shiny Should this include headers for Shiny? For dynamic and
-#'   interactive plots, this should be TRUE; otherwise FALSE.
-#' @param minify If \code{TRUE}, use minified version of JS and CSS files. This
-#'   can be useful for debugging.
-#' @export
-ggvisOutput <- function(plot_id, shiny = TRUE, minify = TRUE) {
-  container <-
-    shiny::div(id = paste0(plot_id, "-container"), class = "ggvis-output-container",
-      # Div containing the plot
-      shiny::div(id = plot_id, class = "ggvis-output"),
-
-      shiny::div(class = "plot-gear-icon",
-        ggvisControlGroup(plot_id)
-      )
-    )
-
-
-  if (shiny) {
-    suppressMessages(
-      shiny::addResourcePath("ggvis", system.file("www", package = "ggvis"))
-    )
-
-    shiny::tagList(
-      shiny::singleton(tags$head(
-        html_head(prefix = "ggvis", minify = minify, shiny = TRUE)
-      )),
-      container
-    )
-
-  } else {
-    container
-  }
-}
-
-#' @rdname shiny-ggvis
 #' @param vis A ggvis object, or a reactive expression that returns a ggvis
 #'   object.
 #' @param session A Shiny session object.
@@ -113,11 +77,43 @@ bind_shiny <- function(vis, plot_id, controls_id = NULL, ...,
   exec_connectors(r_spec, plot_id, session)
 
   if (!is.null(controls_id)) {
-    bind_shiny(vis, controls_id, session = session)
+    bind_shiny_ui(vis, controls_id, session = session)
   }
 
   vis
 }
+
+#' @param controls_id Unique identifier for controls div.
+#' @rdname shiny-ggvis
+#' @export
+bind_shiny_ui <- function(vis, controls_id,
+  session = shiny::getDefaultReactiveDomain()) {
+  if (is.null(session)) {
+    stop("bind_shiny_ui() must be run inside a shiny app.", call. = FALSE)
+  }
+
+  if (shiny::is.reactive(vis)) {
+    visf <- vis
+  } else if (is.ggvis(vis)) {
+    visf <- function() vis
+  } else {
+    stop("bind_shiny_ui requires a ggvis object or a reactive expression that returns a ggvis object",
+      call. = FALSE)
+  }
+
+  shiny::observe({
+    controls <- visf()$controls
+    if (empty(controls)) return()
+
+    # Wrap each control in a div, for layout purposes
+    divs <- lapply(controls, shiny::div,  class = "ggvis-input-container")
+    session$output[[controls_id]] <- shiny::renderUI(shiny::tagList(divs))
+  })
+
+  vis
+}
+
+
 
 # Create an observer for a reactive vega spec
 observe_spec <- function(r_spec, id, session) {
@@ -179,156 +175,4 @@ exec_connectors <- function(r_spec, plot_id, session) {
       connect(session, plot_id)
     }
   })
-}
-
-#' @param controls_id Unique identifier for controls div.
-#' @rdname shiny-ggvis
-#' @export
-bind_shiny_ui <- function(vis, controls_id,
-                          session = shiny::getDefaultReactiveDomain()) {
-  if (is.null(session)) {
-    stop("bind_shiny_ui() must be run inside a shiny app.", call. = FALSE)
-  }
-
-  if (shiny::is.reactive(vis)) {
-    visf <- vis
-  } else if (is.ggvis(vis)) {
-    visf <- function() vis
-  } else {
-    stop("bind_shiny_ui requires a ggvis object or a reactive expression that returns a ggvis object",
-      call. = FALSE)
-  }
-
-  shiny::observe({
-    controls <- visf()$controls
-    if (empty(controls)) return()
-
-    # Wrap each control in a div, for layout purposes
-    divs <- lapply(controls, shiny::div,  class = "ggvis-input-container")
-    session$output[[controls_id]] <- shiny::renderUI(shiny::tagList(divs))
-  })
-
-  vis
-}
-
-
-#' Create a page with a sidebar
-#'
-#' This creates a page with a sidebar, where the sidebar moves to the bottom
-#' when the width goes below a particular value.
-#'
-#' @param sidebarPanel The \code{\link{sidebarBottomPanel}} containing input
-#'   controls.
-#' @param mainPanel The \code{\link{mainTopPanel}} containing the main content.
-#' @param shiny_headers Should Shiny headers be embedded in the page? This
-#'   should be TRUE for interactive/dynamic pages, FALSE for static pages.
-#' @export
-#' @examples
-#' sidebarBottomPage
-sidebarBottomPage <- function(sidebarPanel, mainPanel, shiny_headers = TRUE) {
-  content <- shiny::div(
-    class = "container-fluid",
-    shiny::div(class = "row-fluid",
-      mainPanel,
-      sidebarPanel
-    )
-  )
-
-  if (shiny_headers) {
-    shiny::bootstrapPage(content)
-  } else {
-    content
-  }
-}
-
-#' Create a sidebar panel which moves to the bottom
-#'
-#' This is to be used with \code{link{sidebarBottomPage}}.
-#'
-#' @param ... UI elements to include in the sidebar.
-#' @export
-sidebarBottomPanel <- function(...) {
-  shiny::div(class = "span4 sidebar-bottom",
-    tags$form(class = "well well-small",
-      ...
-    )
-  )
-}
-
-
-#' Create a main panel which moves to the top
-#'
-#' This is to be used with \code{link{sidebarBottomPage}}.
-#'
-#' @param ... UI elements to include in the main panel.
-#' @export
-mainTopPanel <- function(...) {
-  shiny::div(class = "span8 main-top",
-    ...
-  )
-}
-
-#' Generate Shiny tags for ggvis controls
-#'
-#' Controls for choosing a renderer and downloading an image.
-#' @param plot_id Plot ID
-#' @export
-ggvisControlGroup <- function(plot_id) {
-  tags$nav(class = "ggvis-control",
-    tags$a(class = "ggvis-dropdown-toggle", title = "Controls", "\u2699"),
-    tags$ul(class = "ggvis-dropdown",
-      tags$li(
-        "Renderer: ",
-        tags$a(
-          id = paste0(plot_id, "_renderer_svg"),
-          class = "ggvis-renderer-button",
-          `data-plot-id` = plot_id,
-          `data-renderer` = "svg",
-          "SVG"
-        ),
-        " | ",
-        tags$a(
-          id = paste0(plot_id, "_renderer_canvas"),
-          class = "ggvis-renderer-button",
-          `data-plot-id` = plot_id,
-          `data-renderer` = "canvas",
-          "Canvas"
-        )
-      ),
-      tags$li(tags$a(
-        id = paste0(plot_id, "_download"),
-        class = "ggvis-download",
-        `data-plot-id` = plot_id,
-        "Download"
-      ))
-    )
-  )
-}
-
-#' Create a ggvis control output element in UI
-#'
-#' This is effectively the same as \code{\link[shiny]{uiOutput}}, except that
-#' on the client side it may call some plot resizing functions after new
-#' controls are drawn.
-#'
-#' \code{ggvisControlOutput} is intended to be used with
-#' \code{\link{bind_shiny}} on the server side.
-#'
-#' @param outputId The output variable to read the value from.
-#' @param plotId An optional plot ID or vector of plot IDs. The plots will
-#'   have their .onControlOutput functions called after the controls are drawn.
-#' @examples
-#' ggvisControlOutput("plot1")
-#' @export
-ggvisControlOutput <- function(outputId, plotId = NULL) {
-  if (is.null(plotId)) {
-    shiny::div(id = outputId, class = "ggvis-control-output")
-
-  } else {
-    shiny::div(
-      id = outputId,
-      class = "ggvis-control-output",
-      `data-plot-id` = paste(plotId, collapse = " ")
-    )
-  }
 }
