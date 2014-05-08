@@ -1,8 +1,12 @@
-#' Display data with bars
+#' Display data with bars (a barchart).
 #'
-#' This will add bars to a plot. The exact behavior depends on two factors:
-#' whether a y prop has been specified, and whether the x variable is
+#' This will add bars to a plot. The exact behavior is complicated because
+#' the term bar chart is used to describe four important variations on a theme.
+#' The action of \code{layer_bars} depends on two factors: whether or not a
+#' \code{y} prop has been specified, and whether the \code{x} props is
 #' continuous or categorical.
+#'
+#' @section Visualisations:
 #'
 #' If no y prop has been specified, then this will count the number of entries
 #' at each unique x value. There will be one bar at each unique x value, and
@@ -31,21 +35,22 @@
 #'   more information on how data is transformed.
 #' @export
 #' @examples
-#' # No y var, and continuous x: bar graph of counts
-#' mtcars %>% ggvis(x = ~cyl) %>% layer_bars()
+#' # Discrete x: bar graph of counts at each x value
+#' mtcars %>% ggvis(~factor(cyl)) %>% layer_bars()
 #'
+#' # Discrete x & continuous y: sum up heights at each count
+#' pressure %>% ggvis(~temperature, ~pressure) %>% layer_bars()
+#' mtcars %>% ggvis(~factor(cyl), ~disp) %>% layer_bars()
+#'
+#' # Narrower bars
+#' mtcars %>% ggvis(~factor(cyl)) %>% layer_bars(width = band(mult = 0.5))
+#'
+#' # Continuous x: bar graph of counts at unique locations
+#' mtcars %>% ggvis(~cyl) %>% layer_bars()
 #' # Notice how it differs from a histogram: a histogram has bins that span
 #' # ranges of x, but layer_bars shows the count at each unique x value.
 #' mtcars %>% ggvis(~wt) %>% layer_histograms()
 #' mtcars %>% ggvis(~wt) %>% layer_bars()
-#'
-#' # No y var, and discrete x: bar graph of counts at each x value
-#' mtcars %>% ggvis(~factor(cyl)) %>% layer_bars()
-#' # Narrower bars
-#' mtcars %>% ggvis(~factor(cyl)) %>% layer_bars(width = band(mult = 0.5))
-#'
-#' # Y var, and continous x
-#' pressure %>% ggvis(~temperature, ~pressure) %>% layer_bars()
 #'
 #' # It's possible to use a nominal x scale when the x value is continuous.
 #' # Notice how each x value is labeled and ordered by numeric value.

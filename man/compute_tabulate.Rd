@@ -20,10 +20,10 @@ A data frame with columns:
 Count data at each location of a categorical variable
 }
 \examples{
+library(dplyr)
 # The tabulated column must be countable (not numeric)
-mtcars2 <- mtcars
-mtcars2$cyl <- factor(mtcars2$cyl)
-mtcars2 \%>\% compute_tabulate(~cyl)
+\dontrun{mtcars \%>\% compute_tabulate(~cyl)}
+mtcars \%>\% mutate(cyl = factor(cyl)) \%>\% compute_tabulate(~cyl)
 
 # Or equivalently:
 mtcars \%>\% compute_tabulate(~factor(cyl))

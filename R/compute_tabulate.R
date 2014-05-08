@@ -13,10 +13,10 @@
 #'  \item{count_}{the number of points}
 #'  \item{x_}{value of bin}
 #' @examples
+#' library(dplyr)
 #' # The tabulated column must be countable (not numeric)
-#' mtcars2 <- mtcars
-#' mtcars2$cyl <- factor(mtcars2$cyl)
-#' mtcars2 %>% compute_tabulate(~cyl)
+#' \dontrun{mtcars %>% compute_tabulate(~cyl)}
+#' mtcars %>% mutate(cyl = factor(cyl)) %>% compute_tabulate(~cyl)
 #'
 #' # Or equivalently:
 #' mtcars %>% compute_tabulate(~factor(cyl))
@@ -47,7 +47,8 @@ compute_tabulate.data.frame <- function(x, x_var, w_var = NULL) {
 
   x_val <- eval_vector(x, x_var)
   if (!vector_countable(x_val)) {
-    stop("compute_tabulate requires categorical (countable) data.")
+    stop("compute_tabulate requires categorical (countable) data.",
+      call. = FALSE)
   }
 
   if (is.null(w_var)) {
