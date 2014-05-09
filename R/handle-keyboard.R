@@ -95,7 +95,6 @@ create_keyboard_event <- function(map, default = NULL) {
   # This function is run at render time.
   connect <- function(session, plot_id) {
     key_press_id  <- paste0(plot_id, "_key_press")
-    print(key_press_id)
 
     shiny::observe({
       key_press <- session$input[[key_press_id]]
