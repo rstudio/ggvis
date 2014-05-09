@@ -15,7 +15,7 @@
 #' @keywords internal
 #' @method print ggvis
 #' @export
-print.ggvis <- function(x, dynamic = NA, launch = TRUE, ...) {
+print.ggvis <- function(x, dynamic = NA, launch = interactive(), ...) {
   if (is.na(dynamic)) {
     dynamic <- is.dynamic(x) && interactive()
   }

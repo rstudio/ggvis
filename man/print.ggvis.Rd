@@ -5,7 +5,7 @@
 \alias{view_static}
 \title{View in a ggvis plot in the browser.}
 \usage{
-\method{print}{ggvis}(x, dynamic = NA, launch = TRUE, ...)
+\method{print}{ggvis}(x, dynamic = NA, launch = interactive(), ...)
 
 view_static(x, plot_id = rand_id("plot_"), minified = TRUE,
   dest = tempfile(pattern = "ggvis"))
