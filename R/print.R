@@ -2,34 +2,27 @@
 #'
 #' \code{view_static} creates a static web page in a temporary directory;
 #' \code{view_dynamic} generate a dynamic shiny app and launches it.
-#' \code{print} picks between the two methods automatically based on whether
-#' or not your plot has interactive features.
+#' \code{print} automatically picks between the two.
 #'
 #' @param x A ggvis object.
 #' @param dynamic Uses \code{view_dynamic} if \code{TRUE}, \code{view_static} if
 #'   \code{FALSE}. The default, \code{NA}, chooses automatically based on the
 #'   presence of reactives or interactive inputs in \code{x}.
 #' @param ... Other arguments passed on to \code{view_dynamic} and
-#'   \code{view_static} from \code{print}.
-#' @param launch If \code{TRUE}, launch this web page in a browser or Rstudio.
-#' @param port the port on which to start the shiny app. If NULL (the default),
-#'   Shiny will select a random port.
-#' @param quiet If \code{TRUE} show status messages from Shiny. (Default is
-#'   \code{FALSE}.)
-#' @param minified If \code{TRUE}, use minified version of JS and CSS files. This
-#'   can be useful for debugging.
+#'   \code{view_static} ?from \code{print}.
 #' @keywords internal
 #' @method print ggvis
 #' @export
-print.ggvis <- function(x, dynamic = NA,
-                        id = rand_id("plot_"), minified = TRUE, ...) {
+print.ggvis <- function(x, dynamic = NA, ...) {
 
-  if (is.na(dynamic)) dynamic <- is.dynamic(x) && interactive()
+  if (is.na(dynamic)) {
+    dynamic <- is.dynamic(x) && interactive()
+  }
 
   if (dynamic) {
-    out <- view_dynamic(x, plot_id = id, minified = minified, ...)
+    out <- view_dynamic(x, ...)
   } else {
-    out <- view_static(x, plot_id = id, minified = minified, ...)
+    out <- view_static(x, ...)
   }
   print(out)
 }
@@ -44,6 +37,11 @@ is.dynamic <- function(x) {
 
 #' @rdname print.ggvis
 #' @export
+#' @param plot_id Unique identifier used to identify the plot on the page.
+#' @param minified If \code{TRUE}, use minified version of JS and CSS files. This
+#'   can be useful for debugging.
+#' @param dest Directory in which to save html and depedencies. Created if
+#'   it doesn't already exist.
 view_static <- function(x, plot_id = rand_id("plot_"), minified = TRUE,
                         dest = tempfile(pattern = "ggvis")) {
 
@@ -68,6 +66,10 @@ print.showUrl <- function(x, ...) {
 
 #' @rdname print.ggvis
 #' @export
+#' @param port the port on which to start the shiny app. If NULL (the default),
+#'   Shiny will select a random port.
+#' @param quiet If \code{TRUE} show status messages from Shiny. (Default is
+#'   \code{FALSE}.)
 view_dynamic <- function(x, plot_id = rand_id("plot_"), minified = TRUE,
                          port = NULL, quiet = TRUE) {
 
@@ -82,7 +84,6 @@ view_dynamic <- function(x, plot_id = rand_id("plot_"), minified = TRUE,
   ggvis_app(x, plot_id = plot_id, deps = deps, options = options)
 }
 
-#' @rdname print.ggvis
 #' @export
 knit_print.ggvis <- function(x, options = list()) {
   # Set height and width from knitr chunk options
