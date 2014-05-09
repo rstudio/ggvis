@@ -7,13 +7,13 @@
 \title{View in a ggvis plot in the browser.}
 \usage{
 \method{print}{ggvis}(x, dynamic = NA, spec = getOption("ggvis.print_spec",
-  FALSE), id = rand_id("plot_"), minify = TRUE, ...)
+  FALSE), id = rand_id("plot_"), minified = TRUE, ...)
 
 view_static(x, plot_id = rand_id("plot_"), minified = TRUE,
-  dest = tempfile(pattern = "ggvis"), launch = TRUE)
+  dest = tempfile(pattern = "ggvis"))
 
-view_dynamic(x, plot_id = rand_id("plot_"), minified = TRUE,
-  launch = TRUE, port = NULL, quiet = TRUE)
+view_dynamic(x, plot_id = rand_id("plot_"), minified = TRUE, port = NULL,
+  quiet = TRUE)
 
 knit_print.ggvis(x, options = list())
 }
@@ -39,7 +39,7 @@ Shiny will select a random port.}
 \item{quiet}{If \code{TRUE} show status messages from Shiny. (Default is
 \code{FALSE}.)}
 
-\item{minify}{If \code{TRUE}, use minified version of JS and CSS files. This
+\item{minified}{If \code{TRUE}, use minified version of JS and CSS files. This
 can be useful for debugging.}
 }
 \description{
