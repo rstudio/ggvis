@@ -33,17 +33,15 @@ hec <- as.data.frame(xtabs(Freq ~ Hair + Eye, HairEyeColor))
 # Without stacking - bars overlap
 hec %>% group_by(Eye) %>%
   ggvis(x = ~Hair, y = ~Freq, fill = ~Eye, fillOpacity := 0.5) %>%
-  layer_bars()
+  layer_bars(stack = FALSE)
 
 # With stacking
-# Currently need to add rects explicitly instead of using layer_bars
 hec %>% group_by(Eye) %>%
-  ggvis(x = ~Hair, fill = ~Eye, fillOpacity := 0.5) %>%
-  compute_stack(stack_var = ~Freq, group_var = ~Hair) %>%
-  layer_rects(y = ~stack_lwr_, y2 = ~stack_upr_, width = band(mult = 0.9)) %>%
-  set_dscale("x", "nominal", range = "width", padding = 0, points = FALSE)
+  ggvis(x = ~Hair, y = ~Freq, fill = ~Eye, fillOpacity := 0.5) %>%
+  layer_bars()
 
-# Stacking in x direction instead of default y
+# Stacking in x direction instead of default y - need to be explicit about
+# all the steps
 hec %>% group_by(Eye) %>%
   ggvis(y = ~Hair, fill = ~Eye, fillOpacity := 0.5) %>%
   compute_stack(stack_var = ~Freq, group_var = ~Hair) %>%

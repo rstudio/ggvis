@@ -81,7 +81,7 @@ tabulate_vector <- function(x, weight = NULL, ...) {
   if (is.null(weight)) {
     weight <- rep.int(1, length(x))
   }
-  counts <- unname(tapply(weight, x, sum, na.rm = TRUE))
+  counts <- unname(as.vector(tapply(weight, x, sum, na.rm = TRUE)))
 
   if (is.factor(x)) {
     # Get the factor levels, preserving factor-ness. Order should align
@@ -90,7 +90,7 @@ tabulate_vector <- function(x, weight = NULL, ...) {
   } else {
     # Need to get unique values this way instead of using names(counts),
     # because names are strings but the x values aren't always strings.
-    values <- unname(tapply(x, x, unique, na.rm = TRUE))
+    values <- unname(as.vector(tapply(x, x, unique, na.rm = TRUE)))
   }
 
   data.frame(
