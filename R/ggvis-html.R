@@ -4,11 +4,13 @@
 # reactive doc: static
 # reactive doc: dynamic
 
+# The defaults are set so that this gives dependencies that can be used in a
+# dynamic shiny app.
 # @param absolute Should full, absolute paths be used?
 # @param jquery Should jquery be added?
 # @param shiny_ggvis Should ggvis-shiny be added?
-ggvis_dependencies <- function(minified = TRUE, absolute = FALSE, jquery = TRUE,
-                               shiny_ggvis = FALSE) {
+ggvis_dependencies <- function(minified = TRUE, absolute = TRUE, jquery = FALSE,
+                               shiny_ggvis = TRUE) {
   adjust_min <- if (minified) identity else function(x) gsub("\\.min", "", x)
 
   adjust_path <- if (absolute) function(x) system.file(package = "ggvis", "www", x)
