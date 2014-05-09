@@ -130,17 +130,6 @@ show_spec <- function(x, pieces) {
 
 #' @rdname print.ggvis
 #' @export
-view_dynamic <- function(x, plot_id = rand_id("plot_"), minify = TRUE,
-                         port = NULL, quiet = TRUE) {
-
-  deps <- ggvis_dependencies(minified = minified)
-  app <- ggvis_app(x, plot_id = plot_id, deps = deps)
-  shiny::runApp(app, port = port, quiet = quiet,
-    launch.browser = function(url) view_plot(url, 350 + control_height(x)))
-}
-
-#' @rdname print.ggvis
-#' @export
 view_static <- function(x, plot_id = rand_id("plot_"), minified = TRUE,
                         dest = tempfile(pattern = "ggvis"), launch = TRUE) {
 
@@ -196,7 +185,6 @@ view_plot <- function(url, height) {
     utils::browseURL(url)
   }
 }
-
 
 # given a ggvis object, return the number of pixels to reserve for its controls.
 control_height <- function(x) {
