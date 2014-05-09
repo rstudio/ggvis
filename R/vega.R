@@ -57,7 +57,7 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
     axes = lapply(x$axes, as.vega),
     padding = as.vega(x$options$padding),
     ggvis_opts = x$options,
-    handlers = x$handlers
+    handlers = if (dynamic) x$handlers
   )
 
   structure(spec, data_table = data_table, controls = x$controls,
