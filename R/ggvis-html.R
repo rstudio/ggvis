@@ -17,6 +17,12 @@ ggvis_dependencies <- function(minified = TRUE, absolute = FALSE, jquery = FALSE
                  else identity
 
   deps <- compact(list(
+    if (jquery) html_dependency(
+      name = "jquery",
+      version = "1.11.0",
+      path = adjust_path("lib/jquery"),
+      script = "jquery.min.js"
+    ),
     html_dependency(
       name = "jquery-ui",
       version = "1.10.4",
@@ -49,12 +55,6 @@ ggvis_dependencies <- function(minified = TRUE, absolute = FALSE, jquery = FALSE
       path = adjust_path("ggvis"),
       script = "js/ggvis.js",
       stylesheet = "css/ggvis.css"
-    ),
-    if (jquery) html_dependency(
-      name = "jquery",
-      version = "1.11.0",
-      path = adjust_path("lib/jquery"),
-      script = "jquery.min.js"
     ),
     if (shiny_ggvis) html_dependency(
       name = "shiny-ggvis",
