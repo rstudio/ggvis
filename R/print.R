@@ -40,8 +40,8 @@ print.ggvis <- function(x, dynamic = NA, launch = TRUE, ...) {
 view_static <- function(x, plot_id = rand_id("plot_"), minified = TRUE,
                         dest = tempfile(pattern = "ggvis")) {
 
-  deps <- ggvis_dependencies(minified = minified)
-  deps <- add_jquery_dep(deps)
+  deps <- ggvis_dependencies(minified = minified, absolute = FALSE,
+                             jquery = TRUE, shiny_ggvis = FALSE)
 
   if (!file.exists(dest)) dir.create(dest)
   copy_deps(deps, system.file("www", package = "ggvis"), dest)
@@ -64,7 +64,8 @@ view_static <- function(x, plot_id = rand_id("plot_"), minified = TRUE,
 view_dynamic <- function(x, plot_id = rand_id("plot_"), minified = TRUE,
                          port = NULL, quiet = TRUE) {
 
-  deps <- ggvis_dependencies(minified = minified)
+  deps <- ggvis_dependencies(minified = minified, absolute = FALSE,
+                             jquery = FALSE, shiny_ggvis = TRUE)
 
   options <- list(
     port = port,
@@ -84,7 +85,8 @@ knit_print.ggvis <- function(x, options = list()) {
   )
   x <- add_options(x, knitr_opts, replace = FALSE)
 
-  deps <- ggvis_dependencies()
+  deps <- ggvis_dependencies(absolute = FALSE, jquery = FALSE,
+                             shiny_ggvis = TRUE)
 
   # If this is a dynamic object, check to see if we're rendering in a Shiny R
   # Markdown document and have an appropriate version of Shiny; emit a Shiny
@@ -106,13 +108,8 @@ knit_print.ggvis <- function(x, options = list()) {
     )
   }
 
-  # Convert dependencies to absolute paths
-  deps <- lapply(deps, function(x) {
-    x$path <- system.file(package = "ggvis", "www", x$path)
-    x
-  })
-
-
+  deps <- ggvis_dependencies(absolute = TRUE, jquery = FALSE,
+                             shiny_ggvis = FALSE)
 
   spec <- as.vega(x, dynamic = FALSE)
   html <- ggvisOutput(spec = spec, deps = deps)
