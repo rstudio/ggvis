@@ -10,7 +10,6 @@ Depends:
     R (>= 2.15.1)
 Imports:
     assertthat,
-    whisker,
     RJSONIO,
     digest,
     shiny (>= 0.9.1.9005),
