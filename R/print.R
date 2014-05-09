@@ -93,8 +93,8 @@ knit_print.ggvis <- function(x, options = list()) {
     if (identical(runtime(), "shiny")) {
       # create the application object and allocate space for the controls
       app <- ggvis_app(x, deps = deps, options = list(
-        width <- knitr_opts$width,
-        height <- knitr_opts$height + control_height(x)
+        width = knitr_opts$width,
+        height = knitr_opts$height + control_height(x)
       ))
       return(knitr::knit_print(app))
     }
