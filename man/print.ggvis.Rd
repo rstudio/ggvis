@@ -9,12 +9,11 @@
 \method{print}{ggvis}(x, dynamic = NA, spec = getOption("ggvis.print_spec",
   FALSE), id = rand_id("plot_"), minify = TRUE, ...)
 
-view_static(x, renderer = getOption("ggvis.renderer", default = "svg"),
-  launch = interactive(), id = rand_id("plot_"), minify = TRUE)
+view_static(x, plot_id = rand_id("plot_"), minified = TRUE,
+  dest = tempfile(pattern = "ggvis"), launch = TRUE)
 
-view_dynamic(x, renderer = getOption("ggvis.renderer", default = "svg"),
-  id = rand_id("plot_"), minify = TRUE, launch = TRUE, port = NULL,
-  quiet = TRUE)
+view_dynamic(x, plot_id = rand_id("plot_"), minified = TRUE,
+  launch = TRUE, port = NULL, quiet = TRUE)
 
 knit_print.ggvis(x, options)
 }
