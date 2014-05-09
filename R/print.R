@@ -30,14 +30,6 @@ print.ggvis <- function(x, dynamic = NA, launch = TRUE, ...) {
   out
 }
 
-#' Determine if an ggvis is dynamic (i.e. needs to be run in a shiny app)
-#'
-#' @export
-#' @keywords internal
-is.dynamic <- function(x) {
-  any_apply(x$data, shiny::is.reactive) || length(x$reactives) > 0
-}
-
 #' @rdname print.ggvis
 #' @export
 #' @param plot_id Unique identifier used to identify the plot on the page.
@@ -60,11 +52,6 @@ view_static <- function(x, plot_id = rand_id("plot_"), minified = TRUE,
   cat(renderHTML(ui), file = html_file)
 
   structure(html_file, class = "showUrl")
-}
-
-#' @export
-print.showUrl <- function(x, ...) {
-  view_plot(x, 350)
 }
 
 #' @rdname print.ggvis
@@ -95,32 +82,32 @@ knit_print.ggvis <- function(x, options = list()) {
     height = options$out.height.px
   )
   x <- add_options(x, knitr_opts, replace = FALSE)
+
+  # Give dependencies as absolute path
   deps <- ggvis_dependencies()
   deps <- lapply(deps, function(x) {
     x$path <- system.file(package = "ggvis", "www", x$path)
     x
   })
 
-  # if this is a dynamic object, check to see if we're rendering in a Shiny R
+  # If this is a dynamic object, check to see if we're rendering in a Shiny R
   # Markdown document and have an appropriate version of Shiny; emit a Shiny
   # application if we are, and a warning if we aren't.
   if (is.dynamic(x)) {
-    if (identical(knitr::opts_knit$get()$rmarkdown.runtime, "shiny") &&
-        packageVersion("shiny") >= "0.9.1.9000") {
-
+    if (identical(runtime(), "shiny") && modern_shiny()) {
       # create the application object and allocate space for the controls
       app <- ggvis_app(x, deps = deps, options = list(
         width <- knitr_opts$width,
         height <- knitr_opts$height + control_height(x)
       ))
       return(app)
-    } else {
-      warning(
-        "Can't output dynamic/interactive ggvis plots in a knitr document.\n",
-        "Generating a static (non-dynamic, non-interactive) version of plot.",
-        call. = FALSE
-      )
     }
+
+    warning(
+      "Can't output dynamic/interactive ggvis plots in a knitr document.\n",
+      "Generating a static (non-dynamic, non-interactive) version of the plot.",
+      call. = FALSE
+    )
   }
 
   spec <- as.vega(x, dynamic = FALSE)
@@ -133,6 +120,26 @@ knit_print.ggvis <- function(x, options = list()) {
 }
 
 # Helper functions -------------------------------------------------------------
+
+runtime <- function() {
+  knitr::opts_knit$get()$rmarkdown.runtime
+}
+modern_shiny <- function() {
+  packageVersion("shiny") >= "0.9.1.9000"
+}
+
+#' Determine if an ggvis is dynamic (i.e. needs to be run in a shiny app)
+#'
+#' @export
+#' @keywords internal
+is.dynamic <- function(x) {
+  any_apply(x$data, shiny::is.reactive) || length(x$reactives) > 0
+}
+
+#' @export
+print.showUrl <- function(x, ...) {
+  view_plot(x, 350)
+}
 
 # View using either an internal viewer or fallback to utils::browseURL
 view_plot <- function(url, height) {
