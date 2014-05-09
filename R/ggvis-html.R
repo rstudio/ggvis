@@ -9,12 +9,6 @@ ggvis_dependencies <- function(minified = TRUE) {
 
   list(
     htmltools::html_dependency(
-      name = "jquery",
-      version = "1.11.0",
-      path = "lib/jquery",
-      script = adjust_min("jquery.min.js")
-    ),
-    htmltools::html_dependency(
       name = "jquery-ui",
       version = "1.10.4",
       path = "lib/jquery-ui",
@@ -50,6 +44,24 @@ ggvis_dependencies <- function(minified = TRUE) {
   )
 }
 
+add_jquery_dep <- function(deps) {
+  jquery <- htmltools::html_dependency(
+    name = "jquery",
+    version = "1.11.0",
+    path = "lib/jquery",
+    script = "jquery.min.js"
+  )
+  c(list(jquery), deps)
+}
+add_shiny_ggvis_dep <- function(deps) {
+  shiny_ggvis <- html_dependency(name = "shiny-ggvis",
+    version = packageVersion("ggvis"),
+    path = "ggvis",
+    script = "js/shiny-ggvis.js")
+  c(deps, list(shiny_ggvis))
+}
+
+
 ggvis_ui <- function(plot_id, has_controls = TRUE, spec = NULL, deps = NULL) {
   plot_div <- ggvisOutput(plot_id, spec = spec, deps = deps)
 
@@ -66,12 +78,7 @@ ggvis_ui <- function(plot_id, has_controls = TRUE, spec = NULL, deps = NULL) {
 }
 
 ggvis_app <- function(x, plot_id = rand_id("plot_"), deps = ggvis_dependencies(), options = list()) {
-  deps <- c(deps, list(
-    html_dependency(name = "shiny-ggvis",
-      version = packageVersion("ggvis"),
-      path = "ggvis",
-      script = "js/shiny-ggvis.js")
-  ))
+  deps <- add_shiny_ggvis_dep(deps)
 
   ui <- ggvis_ui(plot_id, length(x$controls) > 0, deps = deps)
   shiny::addResourcePath("ggvis", system.file("www", "ggvis", package = "ggvis"))

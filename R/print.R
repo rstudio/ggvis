@@ -41,6 +41,7 @@ view_static <- function(x, plot_id = rand_id("plot_"), minified = TRUE,
                         dest = tempfile(pattern = "ggvis")) {
 
   deps <- ggvis_dependencies(minified = minified)
+  deps <- add_jquery_dep(deps)
 
   if (!file.exists(dest)) dir.create(dest)
   copy_deps(deps, system.file("www", package = "ggvis"), dest)
