@@ -8,7 +8,7 @@
 #' @examples
 #' p <- mtcars %>% ggvis(x = ~cyl) %>% layer_bars()
 #' explain(p)
-explain <- dplyr::explain
+explain <- function(x, ...) UseMethod("explain")
 
 #' Print out the structure of a ggvis object in a friendly format
 #'
