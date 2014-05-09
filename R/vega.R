@@ -18,6 +18,10 @@ as.vega <- function(x, ...) {
 #' @param dynamic whether to generate dynamic or static spec
 as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
 
+  if (length(x$marks) == 0) {
+    stop("No marks on plot.", call. = FALSE)
+  }
+
   data_ids <- extract_data_ids(x$marks)
   data_table <- as.environment(x$data[data_ids])
 
