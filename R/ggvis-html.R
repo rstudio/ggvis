@@ -54,6 +54,13 @@ ggvis_ui <- function(plot_id, has_controls = TRUE, spec = NULL, deps = NULL) {
 }
 
 ggvis_app <- function(x, plot_id = rand_id("plot_"), deps = NULL) {
+  deps <- c(deps, list(
+    html_dependency(name = "shiny-ggvis",
+      version = packageVersion("ggvis"),
+      path = "ggvis",
+      script = "js/shiny-ggvis.js")
+  ))
+
   ui <- ggvis_ui(plot_id, length(x$controls) > 0, deps = deps)
   shiny::addResourcePath("ggvis", system.file("www", "ggvis", package = "ggvis"))
   shiny::addResourcePath("lib", system.file("www", "lib", package = "ggvis"))
