@@ -6,7 +6,7 @@
 \alias{shiny-ggvis}
 \title{Connect a ggvis graphic to a shiny app.}
 \usage{
-ggvisOutput(plot_id, spec = NULL, deps = NULL)
+ggvisOutput(plot_id = rand_id("plot_id"), spec = NULL, deps = NULL)
 
 bind_shiny(vis, plot_id, controls_id = NULL, ...,
   session = shiny::getDefaultReactiveDomain())

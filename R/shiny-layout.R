@@ -5,7 +5,7 @@
 #' @param minify If \code{TRUE}, use minified version of JS and CSS files. This
 #'   can be useful for debugging.
 #' @export
-ggvisOutput <- function(plot_id, spec = NULL, deps = NULL) {
+ggvisOutput <- function(plot_id = rand_id("plot_id"), spec = NULL, deps = NULL) {
   shiny::tagList(
     ggvisPlot(plot_id),
     ggvisDependencies(deps),

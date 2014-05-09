@@ -197,12 +197,18 @@ control_height <- function(x) {
 
 #' @rdname print.ggvis
 #' @export
-knit_print.ggvis <- function(x, options) {
-
-  # Read knitr chunk options for output width and height
-  knitr_opts <- list(width = options$out.width.px,
-                     height = options$out.height.px)
+knit_print.ggvis <- function(x, options = list()) {
+  # Set height and width from knitr chunk options
+  knitr_opts <- list(
+    width = options$out.width.px,
+    height = options$out.height.px
+  )
   x <- add_options(x, knitr_opts, replace = FALSE)
+  deps <- ggvis_dependencies()
+  deps <- lapply(deps, function(x) {
+    x$path <- system.file(package = "ggvis", "www", x$path)
+    x
+  })
 
   # if this is a dynamic object, check to see if we're rendering in a Shiny R
   # Markdown document and have an appropriate version of Shiny; emit a Shiny
@@ -212,36 +218,22 @@ knit_print.ggvis <- function(x, options) {
         packageVersion("shiny") >= "0.9.1.9000") {
 
       # create the application object and allocate space for the controls
-      app <- app_object(x)
-      knitr_opts$height <- knitr_opts$height + control_height(x)
-      return(knitr::knit_print(shiny::shinyApp(ui = app$ui,
-                                               server = app$server,
-                                               options = knitr_opts)))
+      app <- ggvis_app(x, deps = deps, options = list(
+        width <- knitr_opts$width,
+        height <- knitr_opts$height + control_height(x)
+      ))
+      return(app)
     } else {
       warning("Can't output dynamic/interactive ggvis plots in a knitr document.\n",
               "Generating a static (non-dynamic, non-interactive) version of plot.")
     }
   }
 
-  # Plot as JSON
   spec <- as.vega(x, dynamic = FALSE)
-  vega_json <- RJSONIO::toJSON(spec, pretty = TRUE)
+  html <- ggvisOutput(spec = spec, deps = deps)
 
-  # Plot as HTML
-  id = rand_id("plot_")
-  html <- shiny::tagList(
-    ggvisOutput(id, shiny = FALSE),
-    tags$script(type = "text/javascript",
-                paste0('var ', id, '_spec = ', vega_json, ';
-                       ggvis.getPlot("', id, '").parseSpec(', id, '_spec);
-                       ')
-                )
-  )
-
-  # Return knit_asis
   structure(class = "knit_asis",
-            format(html, indent = FALSE),
-            knit_meta = ggvis_deps
+    format(html, indent = FALSE),
+    knit_meta = deps
   )
 }
-

@@ -65,7 +65,7 @@ ggvis_ui <- function(plot_id, has_controls = TRUE, spec = NULL, deps = NULL) {
   }
 }
 
-ggvis_app <- function(x, plot_id = rand_id("plot_"), deps = NULL) {
+ggvis_app <- function(x, plot_id = rand_id("plot_"), deps = ggvis_dependencies(), options = list()) {
   deps <- c(deps, list(
     html_dependency(name = "shiny-ggvis",
       version = packageVersion("ggvis"),
@@ -83,5 +83,5 @@ ggvis_app <- function(x, plot_id = rand_id("plot_"), deps = NULL) {
       controls_id = "ggvis_controls", renderer = renderer)
   }
 
-  shiny::shinyApp(ui = ui, server = server)
+  shiny::shinyApp(ui = ui, server = server, options = options)
 }

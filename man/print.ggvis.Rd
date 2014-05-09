@@ -15,7 +15,7 @@ view_static(x, plot_id = rand_id("plot_"), minified = TRUE,
 view_dynamic(x, plot_id = rand_id("plot_"), minified = TRUE,
   launch = TRUE, port = NULL, quiet = TRUE)
 
-knit_print.ggvis(x, options)
+knit_print.ggvis(x, options = list())
 }
 \arguments{
 \item{x}{A ggvis object.}
