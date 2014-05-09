@@ -28,8 +28,6 @@ print.ggvis <- function(x, dynamic = NA,
                         spec = getOption("ggvis.print_spec", FALSE),
                         id = rand_id("plot_"), minified = TRUE, ...) {
 
-  set_last_vis(x)
-
   # Special case for spec printing mode
   if (!identical(spec, FALSE)) {
     return(show_spec(x, spec))
