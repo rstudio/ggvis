@@ -83,12 +83,7 @@ knit_print.ggvis <- function(x, options = list()) {
   )
   x <- add_options(x, knitr_opts, replace = FALSE)
 
-  # Give dependencies as absolute path
   deps <- ggvis_dependencies()
-  deps <- lapply(deps, function(x) {
-    x$path <- system.file(package = "ggvis", "www", x$path)
-    x
-  })
 
   # If this is a dynamic object, check to see if we're rendering in a Shiny R
   # Markdown document and have an appropriate version of Shiny; emit a Shiny
@@ -100,7 +95,7 @@ knit_print.ggvis <- function(x, options = list()) {
         width <- knitr_opts$width,
         height <- knitr_opts$height + control_height(x)
       ))
-      return(app)
+      return(knitr::knit_print(app))
     }
 
     warning(
@@ -109,6 +104,14 @@ knit_print.ggvis <- function(x, options = list()) {
       call. = FALSE
     )
   }
+
+  # Convert dependencies to absolute paths
+  deps <- lapply(deps, function(x) {
+    x$path <- system.file(package = "ggvis", "www", x$path)
+    x
+  })
+
+
 
   spec <- as.vega(x, dynamic = FALSE)
   html <- ggvisOutput(spec = spec, deps = deps)
