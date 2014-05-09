@@ -107,7 +107,7 @@ sidebarBottomPage <- function(sidebarPanel, mainPanel, shiny_headers = TRUE) {
 #' @rdname sidebarBottomPage
 sidebarBottomPanel <- function(...) {
   shiny::div(class = "span4 sidebar-bottom",
-    tags$form(class = "well well-small",
+    shiny::tags$form(class = "well well-small",
       ...
     )
   )
