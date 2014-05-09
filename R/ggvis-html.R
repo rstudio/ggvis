@@ -42,7 +42,7 @@ ggvis_dependencies <- function(minified = TRUE) {
     ),
     htmltools::html_dependency(
       name = "ggvis",
-      version = packageVersion("ggvis"),
+      version = as.character(packageVersion("ggvis")),
       path = "ggvis",
       script = "js/ggvis.js",
       stylesheet = "css/ggvis.css"
