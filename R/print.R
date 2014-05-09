@@ -8,13 +8,14 @@
 #' @param dynamic Uses \code{view_dynamic} if \code{TRUE}, \code{view_static} if
 #'   \code{FALSE}. The default, \code{NA}, chooses automatically based on the
 #'   presence of reactives or interactive inputs in \code{x}.
+#' @param launch If \code{TRUE}, will launch plot in a viewer/browser. If
+#'   \code{FALSE} returns an object that you can \code{print()} to launch.
 #' @param ... Other arguments passed on to \code{view_dynamic} and
 #'   \code{view_static} ?from \code{print}.
 #' @keywords internal
 #' @method print ggvis
 #' @export
-print.ggvis <- function(x, dynamic = NA, ...) {
-
+print.ggvis <- function(x, dynamic = NA, launch = TRUE, ...) {
   if (is.na(dynamic)) {
     dynamic <- is.dynamic(x) && interactive()
   }
@@ -24,7 +25,9 @@ print.ggvis <- function(x, dynamic = NA, ...) {
   } else {
     out <- view_static(x, ...)
   }
-  print(out)
+
+  if (launch) print(out)
+  out
 }
 
 #' Determine if an ggvis is dynamic (i.e. needs to be run in a shiny app)

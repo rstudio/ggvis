@@ -5,7 +5,7 @@
 \alias{view_static}
 \title{View in a ggvis plot in the browser.}
 \usage{
-\method{print}{ggvis}(x, dynamic = NA, ...)
+\method{print}{ggvis}(x, dynamic = NA, launch = TRUE, ...)
 
 view_static(x, plot_id = rand_id("plot_"), minified = TRUE,
   dest = tempfile(pattern = "ggvis"))
@@ -19,6 +19,9 @@ view_dynamic(x, plot_id = rand_id("plot_"), minified = TRUE, port = NULL,
 \item{dynamic}{Uses \code{view_dynamic} if \code{TRUE}, \code{view_static} if
 \code{FALSE}. The default, \code{NA}, chooses automatically based on the
 presence of reactives or interactive inputs in \code{x}.}
+
+\item{launch}{If \code{TRUE}, will launch plot in a viewer/browser. If
+\code{FALSE} returns an object that you can \code{print()} to launch.}
 
 \item{...}{Other arguments passed on to \code{view_dynamic} and
 \code{view_static} ?from \code{print}.}
