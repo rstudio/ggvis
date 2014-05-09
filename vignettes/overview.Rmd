@@ -1,5 +1,7 @@
 ---
 title: "ggvis overview"
+output: html_document
+runtime: shiny
 ---
 
 <!--
@@ -35,19 +37,20 @@ Histogram:
 ```{r, echo = FALSE, fig.width = 4}
 # Histogram
 faithful %>% ggvis(~eruptions, fill := "#ffffdd", fill.hover := "#eebbbb") %>%
-  layer_histograms() %>%
+  layer_histograms(binwidth = 0.2) %>%
   add_guide_axis("x", title = "eruptions") %>%
   add_guide_axis("y", title = "count")
 ```
 
 Scatterplot with smooth curve and interactive control:
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, fig.width = 3, fig.height = 3}
 # Scatter plot with model fit line
-mtcars %>% 
-  ggvis(~wt, ~mpg) %>% 
+mtcars %>%
+  ggvis(~wt, ~mpg) %>%
   layer_points() %>%
-  layer_smooths(span = input_slider(0.1, 1, 0.75))
+  layer_smooths(span = input_slider(0.2, 1, 0.75, step = 0.05,
+    label = "Smoothing span"))
 ```
 
 ## Getting started with ggvis

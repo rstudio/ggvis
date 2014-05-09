@@ -1,5 +1,7 @@
 ---
 title: Interactivity
+output: html_document
+runtime: shiny
 ---
 
 <!--

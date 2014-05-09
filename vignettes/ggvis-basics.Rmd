@@ -1,5 +1,7 @@
 ---
 title: ggvis basics
+output: html_document
+runtime: shiny
 ---
 
 <!--
