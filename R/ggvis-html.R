@@ -9,7 +9,7 @@
 # @param absolute Should full, absolute paths be used?
 # @param jquery Should jquery be added?
 # @param shiny_ggvis Should ggvis-shiny be added?
-ggvis_dependencies <- function(minified = TRUE, absolute = TRUE, jquery = FALSE,
+ggvis_dependencies <- function(minified = TRUE, absolute = FALSE, jquery = FALSE,
                                shiny_ggvis = TRUE) {
   adjust_min <- if (minified) identity else function(x) gsub("\\.min", "", x)
 
