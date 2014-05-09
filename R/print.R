@@ -38,10 +38,11 @@ print.ggvis <- function(x, dynamic = NA,
   if (is.na(dynamic)) dynamic <- is.dynamic(x) && interactive()
 
   if (dynamic) {
-    view_dynamic(x, plot_id = id, minified = minified, ...)
+    out <- view_dynamic(x, plot_id = id, minified = minified, ...)
   } else {
-    view_static(x, plot_id = id, minified = minified, ...)
+    out <- view_static(x, plot_id = id, minified = minified, ...)
   }
+  print(out)
 }
 
 #' Determine if an ggvis is dynamic (i.e. needs to be run in a shiny app)
