@@ -92,7 +92,7 @@ ggvis_app <- function(x, plot_id = rand_id("plot_"), deps = ggvis_dependencies()
   server <- function(input, output, session) {
     r_gv <- reactive(x)
     bind_shiny(r_gv, session = session, plot_id = plot_id,
-      controls_id = "ggvis_controls", renderer = renderer)
+      controls_id = "ggvis_controls")
   }
 
   shiny::shinyApp(ui = ui, server = server, options = options)

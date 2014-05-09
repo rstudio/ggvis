@@ -20,8 +20,9 @@ bind_shiny_ui(vis, controls_id, session = shiny::getDefaultReactiveDomain())
 \item{shiny}{Should this include headers for Shiny? For dynamic and
 interactive plots, this should be TRUE; otherwise FALSE.}
 
-\item{minify}{If \code{TRUE}, use minified version of JS and CSS files. This
-can be useful for debugging.}
+\item{spec}{Plot specification, used internally.}
+
+\item{deps}{Default dependencies, used internally.}
 
 \item{vis}{A ggvis object, or a reactive expression that returns a ggvis
 object.}

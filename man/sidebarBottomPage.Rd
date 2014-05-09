@@ -19,6 +19,8 @@ controls.}
 
 \item{shiny_headers}{Should Shiny headers be embedded in the page? This
 should be TRUE for interactive/dynamic pages, FALSE for static pages.}
+
+\item{...}{Additional tags.}
 }
 \description{
 This creates a page with a sidebar, where the sidebar moves to the bottom

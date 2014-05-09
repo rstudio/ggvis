@@ -2,8 +2,8 @@
 #' @param plot_id unique identifier to use for the div containing the ggvis plot.
 #' @param shiny Should this include headers for Shiny? For dynamic and
 #'   interactive plots, this should be TRUE; otherwise FALSE.
-#' @param minify If \code{TRUE}, use minified version of JS and CSS files. This
-#'   can be useful for debugging.
+#' @param spec Plot specification, used internally.
+#' @param deps Default dependencies, used internally.
 #' @export
 ggvisOutput <- function(plot_id = rand_id("plot_id"), spec = NULL,
                         deps = ggvis_dependencies()) {
@@ -85,6 +85,7 @@ ggvisControlGroup <- function(plot_id) {
 #' @param mainPanel The \code{\link{mainTopPanel}} containing the main content.
 #' @param shiny_headers Should Shiny headers be embedded in the page? This
 #'   should be TRUE for interactive/dynamic pages, FALSE for static pages.
+#' @param ... Additional tags.
 #' @export
 #' @examples
 #' sidebarBottomPage(sidebarBottomPanel(), mainTopPanel())

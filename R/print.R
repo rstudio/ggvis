@@ -76,6 +76,9 @@ view_dynamic <- function(x, plot_id = rand_id("plot_"), minified = TRUE,
   ggvis_app(x, plot_id = plot_id, deps = deps, options = options)
 }
 
+#' Knit print method for ggvis plots.
+#'
+#' @keywords internal
 #' @export
 knit_print.ggvis <- function(x, options = list()) {
   # Set height and width from knitr chunk options
