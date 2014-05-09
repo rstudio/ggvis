@@ -224,8 +224,11 @@ knit_print.ggvis <- function(x, options = list()) {
       ))
       return(app)
     } else {
-      warning("Can't output dynamic/interactive ggvis plots in a knitr document.\n",
-              "Generating a static (non-dynamic, non-interactive) version of plot.")
+      warning(
+        "Can't output dynamic/interactive ggvis plots in a knitr document.\n",
+        "Generating a static (non-dynamic, non-interactive) version of plot.",
+        call. = FALSE
+      )
     }
   }
 
