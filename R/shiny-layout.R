@@ -34,7 +34,7 @@ ggvisSpec <- function(plot_id, spec = NULL) {
   if (is.null(spec)) return()
   json <- RJSONIO::toJSON(spec, pretty = TRUE)
 
-  tags$script(type = "text/javascript", paste0('\n',
+  shiny::tags$script(type = "text/javascript", paste0('\n',
     'var ', plot_id, '_spec = ', json, ';\n',
     'ggvis.getPlot("', plot_id, '").parseSpec(', plot_id, '_spec);\n'
   ))
@@ -42,12 +42,12 @@ ggvisSpec <- function(plot_id, spec = NULL) {
 
 # Controls drop down
 ggvisControlGroup <- function(plot_id) {
-  tags$nav(class = "ggvis-control",
-    tags$a(class = "ggvis-dropdown-toggle", title = "Controls", "\u2699"),
-    tags$ul(class = "ggvis-dropdown",
-      tags$li(
+  shiny::tags$nav(class = "ggvis-control",
+    shiny::tags$a(class = "ggvis-dropdown-toggle", title = "Controls", "\u2699"),
+    shiny::tags$ul(class = "ggvis-dropdown",
+      shiny::tags$li(
         "Renderer: ",
-        tags$a(
+        shiny::tags$a(
           id = paste0(plot_id, "_renderer_svg"),
           class = "ggvis-renderer-button",
           `data-plot-id` = plot_id,
@@ -55,7 +55,7 @@ ggvisControlGroup <- function(plot_id) {
           "SVG"
         ),
         " | ",
-        tags$a(
+        shiny::tags$a(
           id = paste0(plot_id, "_renderer_canvas"),
           class = "ggvis-renderer-button",
           `data-plot-id` = plot_id,
@@ -63,7 +63,7 @@ ggvisControlGroup <- function(plot_id) {
           "Canvas"
         )
       ),
-      tags$li(tags$a(
+      shiny::tags$li(shiny::tags$a(
         id = paste0(plot_id, "_download"),
         class = "ggvis-download",
         `data-plot-id` = plot_id,

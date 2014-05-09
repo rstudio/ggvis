@@ -19,14 +19,14 @@
 #'   Shiny will select a random port.
 #' @param quiet If \code{TRUE} show status messages from Shiny. (Default is
 #'   \code{FALSE}.)
-#' @param minify If \code{TRUE}, use minified version of JS and CSS files. This
+#' @param minified If \code{TRUE}, use minified version of JS and CSS files. This
 #'   can be useful for debugging.
 #' @keywords internal
 #' @method print ggvis
 #' @export
 print.ggvis <- function(x, dynamic = NA,
                         spec = getOption("ggvis.print_spec", FALSE),
-                        id = rand_id("plot_"), minify = TRUE, ...) {
+                        id = rand_id("plot_"), minified = TRUE, ...) {
 
   set_last_vis(x)
 
@@ -38,9 +38,9 @@ print.ggvis <- function(x, dynamic = NA,
   if (is.na(dynamic)) dynamic <- is.dynamic(x) && interactive()
 
   if (dynamic) {
-    view_dynamic(x, id = id, minify = minify, ...)
+    view_dynamic(x, plot_id = id, minified = minified, ...)
   } else {
-    view_static(x, id = id, minify = minify, ...)
+    view_static(x, plot_id = id, minified = minified, ...)
   }
 }
 
@@ -50,69 +50,6 @@ print.ggvis <- function(x, dynamic = NA,
 #' @keywords internal
 is.dynamic <- function(x) {
   any_apply(x$data, shiny::is.reactive) || length(x$reactives) > 0
-}
-
-
-#' Print out the structure of a ggvis object in a friendly format
-#'
-#' @param x Visualisation to explain
-#' @param ... Needed for compatibility with generic. Ignored by this method.
-#' @export
-explain.ggvis <- function (x, ...) {
-  cat("Marks:\n")
-  for (mark in x$marks) {
-    cat(indent(format(mark), 2))
-  }
-  cat("Data objects:\n")
-  for (dat in x$data) {
-    cat(indent(data_id(dat), 2), "\n")
-  }
-  cat("Reactives:\n")
-  for (reactive in x$reactives) {
-    cat(indent(reactive_id(reactive), 2))
-    if (is.broker(reactive)) {
-      cat(" <Broker>\n")
-    } else {
-      cat("\n")
-    }
-  }
-  cat("Scales:\n")
-  for (scale in x$scales) {
-    cat(indent(format(scale), 2))
-    cat("\n")
-  }
-  cat("Axes:\n")
-  for (axis in x$axes) {
-    cat(indent(format(axis), 2))
-    cat("\n")
-  }
-  cat("Legends:\n")
-  for (legend in x$legends) {
-    cat(indent(format(legend), 2))
-    cat("\n")
-  }
-  cat("HTML controls:\n")
-  for (control_name in names(x$controls)) {
-    cat(indent(control_name, 2))
-    cat("\n")
-  }
-  cat("Client-side handlers:\n")
-  for (handler in x$handlers) {
-    cat(indent(paste0("<", handler$type, "> ", handler$id), 2))
-    cat("\n")
-  }
-  cat("Connector functions:\n")
-  for (connector in x$connectors) {
-    cat(indent(connector_label(connector), 2))
-    cat("\n")
-  }
-  cat("Options:\n")
-  if (length(x$options) > 0) {
-    params <- param_string(x$options, collapse = FALSE)
-    cat(paste0("  ", format(paste0(names(params), ":")), " ", format(params),
-        collapse = "\n"))
-    cat("\n")
-  }
 }
 
 show_spec <- function(x, pieces) {
@@ -131,7 +68,7 @@ show_spec <- function(x, pieces) {
 #' @rdname print.ggvis
 #' @export
 view_static <- function(x, plot_id = rand_id("plot_"), minified = TRUE,
-                        dest = tempfile(pattern = "ggvis"), launch = TRUE) {
+                        dest = tempfile(pattern = "ggvis")) {
 
   deps <- ggvis_dependencies(minified = minified)
 
@@ -141,58 +78,31 @@ view_static <- function(x, plot_id = rand_id("plot_"), minified = TRUE,
   spec <- as.vega(x, dynamic = FALSE)
   ui <- ggvis_ui(plot_id, length(x$controls) > 0, spec, deps = deps)
 
-  result <- shiny:::renderTags(ui)
   html_file <- file.path(dest, "plot.html")
-  cat(
-    '<!DOCTYPE html>\n',
-    '<html>\n',
-    '<head>\n',
-    '  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>\n',
-    result$head,
-    '</head>\n',
-    '<body>\n',
-    result$html,
-    '</body>\n',
-    '</html>\n',
-    file = html_file, sep = "")
+  cat(renderHTML(ui), file = html_file)
 
-  if (launch) view_plot(html_file, 350)
-  invisible(html_file)
+  structure(html_file, class = "showUrl")
+}
+
+#' @export
+print.showUrl <- function(x, ...) {
+  view_plot(x, 350)
 }
 
 #' @rdname print.ggvis
 #' @export
 view_dynamic <- function(x, plot_id = rand_id("plot_"), minified = TRUE,
-                         launch = TRUE, port = NULL, quiet = TRUE) {
+                         port = NULL, quiet = TRUE) {
 
   deps <- ggvis_dependencies(minified = minified)
-  app <- ggvis_app(x, plot_id = plot_id, deps = deps)
 
-  if (launch) {
-    shiny::runApp(app, port = port, quiet = quiet,
-      launch.browser = function(url) view_plot(url, 350 + control_height(x)))
-  } else {
-    app
-  }
-}
+  options <- list(
+    port = port,
+    quiet = quiet,
+    launch.browser = function(url) view_plot(url, 350 + control_height(x))
+  )
 
-# View using either an internal viewer or fallback to utils::browseURL
-view_plot <- function(url, height) {
-  viewer <- getOption("viewer")
-  if (!is.null(viewer) && getOption("ggvis.view_internal", TRUE)) {
-    viewer(url, height)
-  } else {
-    utils::browseURL(url)
-  }
-}
-
-# given a ggvis object, return the number of pixels to reserve for its controls.
-control_height <- function(x) {
-  n_controls <- length(x$controls)
-
-  # Request 70 vertical pixels for each pair of control items, since there are
-  # two on a row.
-  70 * ceiling(n_controls / 2)
+  ggvis_app(x, plot_id = plot_id, deps = deps, options = options)
 }
 
 #' @rdname print.ggvis
@@ -239,4 +149,41 @@ knit_print.ggvis <- function(x, options = list()) {
     format(html, indent = FALSE),
     knit_meta = deps
   )
+}
+
+# Helper functions -------------------------------------------------------------
+
+# View using either an internal viewer or fallback to utils::browseURL
+view_plot <- function(url, height) {
+  viewer <- getOption("viewer")
+  if (!is.null(viewer) && getOption("ggvis.view_internal", TRUE)) {
+    viewer(url, height)
+  } else {
+    utils::browseURL(url)
+  }
+}
+
+# given a ggvis object, return the number of pixels to reserve for its controls.
+control_height <- function(x) {
+  n_controls <- length(x$controls)
+
+  # Request 70 vertical pixels for each pair of control items, since there are
+  # two on a row.
+  70 * ceiling(n_controls / 2)
+}
+
+# Given shiny tags, makes an HTML page
+renderHTML <- function(tags) {
+  html <- shiny:::renderTags(tags)
+  paste0(
+    '<!DOCTYPE html>\n',
+    '<html>\n',
+    '<head>\n',
+    '  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>\n',
+    html$head,
+    '</head>\n',
+    '<body>\n',
+    html$html,
+    '</body>\n',
+    '</html>\n', sep = "")
 }
