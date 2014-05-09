@@ -9,9 +9,6 @@
 #' @param dynamic Uses \code{view_dynamic} if \code{TRUE}, \code{view_static} if
 #'   \code{FALSE}. The default, \code{NA}, chooses automatically based on the
 #'   presence of reactives or interactive inputs in \code{x}.
-#' @param spec If \code{TRUE}, override usual printing and instead print
-#'   the json plot spec. If a character vector, will display just those
-#'   components of the spec. This is useful for generating regression tests.
 #' @param ... Other arguments passed on to \code{view_dynamic} and
 #'   \code{view_static} from \code{print}.
 #' @param launch If \code{TRUE}, launch this web page in a browser or Rstudio.
@@ -25,13 +22,7 @@
 #' @method print ggvis
 #' @export
 print.ggvis <- function(x, dynamic = NA,
-                        spec = getOption("ggvis.print_spec", FALSE),
                         id = rand_id("plot_"), minified = TRUE, ...) {
-
-  # Special case for spec printing mode
-  if (!identical(spec, FALSE)) {
-    return(show_spec(x, spec))
-  }
 
   if (is.na(dynamic)) dynamic <- is.dynamic(x) && interactive()
 
@@ -49,19 +40,6 @@ print.ggvis <- function(x, dynamic = NA,
 #' @keywords internal
 is.dynamic <- function(x) {
   any_apply(x$data, shiny::is.reactive) || length(x$reactives) > 0
-}
-
-show_spec <- function(x, pieces) {
-  out <- as.vega(x, dynamic = FALSE)
-
-  if (is.character(pieces)) {
-    out <- out[pieces]
-  }
-
-  json <- RJSONIO::toJSON(out, pretty = TRUE)
-  cat(gsub("\t", " ", json), "\n", sep = "")
-
-  invisible()
 }
 
 #' @rdname print.ggvis

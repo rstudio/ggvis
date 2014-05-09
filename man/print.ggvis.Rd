@@ -6,8 +6,8 @@
 \alias{view_static}
 \title{View in a ggvis plot in the browser.}
 \usage{
-\method{print}{ggvis}(x, dynamic = NA, spec = getOption("ggvis.print_spec",
-  FALSE), id = rand_id("plot_"), minified = TRUE, ...)
+\method{print}{ggvis}(x, dynamic = NA, id = rand_id("plot_"),
+  minified = TRUE, ...)
 
 view_static(x, plot_id = rand_id("plot_"), minified = TRUE,
   dest = tempfile(pattern = "ggvis"))
@@ -23,10 +23,6 @@ knit_print.ggvis(x, options = list())
 \item{dynamic}{Uses \code{view_dynamic} if \code{TRUE}, \code{view_static} if
 \code{FALSE}. The default, \code{NA}, chooses automatically based on the
 presence of reactives or interactive inputs in \code{x}.}
-
-\item{spec}{If \code{TRUE}, override usual printing and instead print
-the json plot spec. If a character vector, will display just those
-components of the spec. This is useful for generating regression tests.}
 
 \item{...}{Other arguments passed on to \code{view_dynamic} and
 \code{view_static} from \code{print}.}

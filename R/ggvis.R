@@ -245,6 +245,29 @@ register_handler <- function(vis, handler) {
   vis
 }
 
+#' Print out the vega plot specification
+#'
+#' @param vis Visualisation to print
+#' @param pieces Optional, a character or numeric vector used to
+#'   pull out selected pieces of the spec
+#' @export
+#' @examples
+#' base <- mtcars %>% ggvis(~mpg, ~wt) %>% layer_points()
+#' base %>% show_spec()
+#' base %>% show_spec("scales")
+show_spec <- function(vis, pieces = NULL) {
+  out <- as.vega(vis, dynamic = FALSE)
+
+  if (!is.null(pieces)) {
+    out <- out[pieces]
+  }
+
+  json <- RJSONIO::toJSON(out, pretty = TRUE)
+  cat(gsub("\t", " ", json), "\n", sep = "")
+
+  invisible()
+}
+
 #' Tools to save and view static specs.
 #'
 #' These functions are mainly useful for testing.
