@@ -89,7 +89,7 @@ knit_print.ggvis <- function(x, options = list()) {
   # Markdown document and have an appropriate version of Shiny; emit a Shiny
   # application if we are, and a warning if we aren't.
   if (is.dynamic(x)) {
-    if (identical(runtime(), "shiny") && modern_shiny()) {
+    if (identical(runtime(), "shiny")) {
       # create the application object and allocate space for the controls
       app <- ggvis_app(x, deps = deps, options = list(
         width <- knitr_opts$width,
@@ -126,9 +126,6 @@ knit_print.ggvis <- function(x, options = list()) {
 
 runtime <- function() {
   knitr::opts_knit$get()$rmarkdown.runtime
-}
-modern_shiny <- function() {
-  packageVersion("shiny") >= "0.9.1.9000"
 }
 
 #' Determine if an ggvis is dynamic (i.e. needs to be run in a shiny app)
