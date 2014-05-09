@@ -10,6 +10,7 @@
 #' @param x numeric vector
 #' @param zero should a zero value be automatically included in the
 #'   computation of resolution
+#' @export
 #' @examples
 #' resolution(1:10)
 #' resolution((1:10) - 0.5)
@@ -65,6 +66,7 @@ resolution <- function(x, zero = TRUE) {
 #'   \code{.Machine$double.eps * 100}.
 #' @return logical \code{TRUE} if the relative difference of the endpoints of
 #' the range are not distinguishable from 0.
+#' @export
 zero_range <- function(x, tol = .Machine$double.eps * 100) {
   if (length(x) == 1) return(TRUE)
   if (length(x) != 2) stop("x must be length 1 or 2")
