@@ -4,15 +4,9 @@ author: Winston Chang
 output:
   ioslides_presentation:
     widescreen: true
+    fig_width: 6
+    fig_height: 4
 ---
-
-```{r echo=FALSE}
-# Set up default dimensions. Width and height are multiplied by dpi to get
-# pixel dimensions.
-knitr::opts_chunk$set(fig.width = 6,
-                      fig.height = 4,
-                      message = FALSE)
-```
 
 ## First Plot
 
@@ -23,7 +17,7 @@ mtcars %>% ggvis(x = ~wt, y = ~mpg) %>% layer_points()
 
 ## Second Plot
 
-```{r, fig.width = 5.5, fig.height = 3.5}
+```{r}
 mtcars %>% ggvis(x = ~wt, y = ~mpg) %>%
   layer_points() %>%
   layer_smooths()
