@@ -1,5 +1,8 @@
 ---
 title: "ggvis cookbook"
+output:
+  html_document:
+    toc: true
 ---
 
 <!--
@@ -92,20 +95,17 @@ head(pressure)
 When the variable on the x axis is continuous (e.g., numeric or date-time):
 
 ```{r, message = FALSE, fig.width = 4}
-# Note that y2 is the bottom of the bar, and the width is specified in pixels
 pressure %>% 
-  ggvis(~temperature, ~pressure, y2 = 0) %>% 
-  layer_rects(width := 10)
+  ggvis(~temperature, ~pressure) %>%
+  layer_bars()
 ```
 
-In the previous example, the width of each bar was specified in pixels. If you change the width of the plot, you'll see that the bars remain 10 pixels wide.
-
-Instead of setting the width in pixels, it's possible to set the width in the scaled data space, by specifying the `x` and `x2` values for each bar.In this example, each bar is 20 wide in the x scale, so the bars touch:
+It's possible to specify the width of the bars:
 
 ```{r, message = FALSE, fig.width = 4}
 pressure %>% 
-  ggvis(~temperature - 10, x2 = ~temperature + 10, ~pressure, y2 = 0) %>% 
-  layer_rects()
+  ggvis(~temperature, ~pressure) %>%
+  layer_bars(width = 10)
 ```
 
 When the variable on the x axis is categorical (e.g., factor or character):
@@ -115,11 +115,21 @@ When the variable on the x axis is categorical (e.g., factor or character):
 pressure2 <- pressure %>% mutate(temperature = factor(temperature))
 
 pressure2 %>% ggvis(~temperature, ~pressure) %>%
-  layer_rects(y2 = 0, width = band()) %>%
+  layer_bars()
+```
+
+Notice that in this example, the x values aren't sorted quite right: they're sorted lexically, by the first, second, and then third digit, instead of by the numeric value. This is due to a limitation in ggvis.
+
+In this particular case, it's possible to solve this by using a data set with a numerical x, and then tell it to display using a nominal scale. Notice in the example below, the x-axis labels are centered under each bar, each bar has a label, and they are sorted numerically.
+
+
+```{r, message = FALSE, fig.width = 4}
+# Use the original pressure data set with continuous x values
+pressure %>% ggvis(~temperature, ~pressure) %>%
+  layer_bars() %>%
   set_dscale("x", "nominal", padding = 0, points = FALSE)
 ```
 
-(Notice that in this example, the x values aren't sorted quite right: they're sorted lexically, by the first, second, and then third digit, instead of by the numeric value. This is due to a bug in ggvis.)
 
 ## Line graphs
 
