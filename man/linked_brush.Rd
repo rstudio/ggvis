@@ -10,8 +10,21 @@ linked_brush(keys, fill = "red")
 
 \item{fill}{brush colour}
 }
+\value{
+A list:
+  \item{input}{A function that takes a visualisation as an argument and
+     adds an input brush to that plot}
+  \item{selected}{An function that returns a reactive providing a logical
+     vector specifying which points are under the brush}
+  \item{fill}{An function that returns a reactive providing a character
+     vector specifying which the fill colour of points under the brush}
+}
 \description{
 A linked brush has two sides: input and output
+}
+\note{
+\code{linked_brush} is very new and is likely to change substantially
+  in the future
 }
 \examples{
 lb <- linked_brush(keys = 1:nrow(mtcars), "red")

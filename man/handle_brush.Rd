@@ -20,7 +20,8 @@ handle_brush(vis, on_move = NULL, fill = "black")
 \item{fill}{Colour of the brush.}
 }
 \description{
-Handle brush events on a visualisation.
+Currently for brush events to be triggered on a visualisation, you must
+use a \code{.brush} property. This limitation will be lifted in the future.
 }
 \examples{
 # Display tooltip when objects are brushed

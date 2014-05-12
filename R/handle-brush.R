@@ -1,5 +1,8 @@
 #' Handle brush events on a visualisation.
 #'
+#' Currently for brush events to be triggered on a visualisation, you must
+#' use a \code{.brush} property. This limitation will be lifted in the future.
+#'
 #' @param vis Visualisation to listen to.
 #' @param on_move Callback function with arguments:
 #'   \describe{
