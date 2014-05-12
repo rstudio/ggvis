@@ -88,16 +88,13 @@ knit_print.ggvis <- function(x, options = list(), inline = FALSE, ...) {
   )
   x <- add_options(x, knitr_opts, replace = FALSE)
 
-  deps <- ggvis_dependencies(absolute = FALSE, jquery = FALSE,
-                             shiny_ggvis = TRUE)
-
   # If this is a dynamic object, check to see if we're rendering in a Shiny R
   # Markdown document and have an appropriate version of Shiny; emit a Shiny
   # application if we are, and a warning if we aren't.
   if (is.dynamic(x)) {
     if (identical(runtime(), "shiny")) {
       # create the application object and allocate space for the controls
-      app <- ggvis_app(x, deps = deps, options = list(
+      app <- ggvis_app(x, options = list(
         width = knitr_opts$width,
         height = knitr_opts$height + control_height(x)
       ))
@@ -111,7 +108,7 @@ knit_print.ggvis <- function(x, options = list(), inline = FALSE, ...) {
     )
   }
 
-  deps <- ggvis_dependencies(absolute = TRUE, jquery = FALSE,
+  deps <- ggvis_dependencies(absolute = TRUE, jquery = TRUE,
                              shiny_ggvis = FALSE)
 
   spec <- as.vega(x, dynamic = FALSE)
