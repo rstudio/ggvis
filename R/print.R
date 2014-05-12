@@ -13,7 +13,8 @@
 #'   the json plot spec. If a character vector, will display just those
 #'   components of the spec. This is useful for generating regression tests.
 #' @param ... Other arguments passed on to \code{view_dynamic} and
-#'   \code{view_static} from \code{print}.
+#'   \code{view_static} from \code{print}. For \code{knit_print.ggvis}, the
+#'   arguments specified via \code{...} are ignored.
 #' @param launch If \code{TRUE}, launch this web page in a browser or Rstudio.
 #' @param port the port on which to start the shiny app. If NULL (the default),
 #'   Shiny will select a random port.
@@ -261,7 +262,7 @@ html_head <- function(prefix = NULL, minify = TRUE, shiny = FALSE) {
 
 #' @rdname print.ggvis
 #' @export
-knit_print.ggvis <- function(x, options) {
+knit_print.ggvis <- function(x, ..., options) {
 
   # Read knitr chunk options for output width and height
   knitr_opts <- opts(width = options$out.width.px,
