@@ -1,6 +1,8 @@
 ---
 title: Interactivity
-output: html_document
+output:
+  html_document:
+    toc: true
 runtime: shiny
 ---
 
@@ -43,8 +45,8 @@ controls like `input_slider()`:
 ```{r}
 mtcars %>%
   ggvis(~wt, ~mpg) %>%
-  layer_smooths(span = input_slider(0.5, 1, 1)) %>%
-  layer_points(size := input_slider(100, 1000))
+  layer_smooths(span = input_slider(0.5, 1, value = 1)) %>%
+  layer_points(size := input_slider(100, 1000, value = 100))
 ```
 
 As well as `input_slider()`, which produces a slider (or a double-ended range
@@ -80,7 +82,7 @@ example, many parameters of statistical models are best expressed on a log
 scale. You can use `map` in conjunction with an slider to make multiple orders
 of magnitude easily accessible from a single slider.
 
-```{r}
+```{r, echo = FALSE}
 input_slider(-5, 5, label = "lambda", map = function(x) 10 ^ x)
 ```
 
@@ -121,8 +123,8 @@ mtcars %>% ggvis(~wt, ~mpg) %>%
   layer_points(fill := "red", opacity := 0.5, size := slider)
 
 mtcars %>% ggvis(~wt, ~mpg) %>%
-  layer_points(size := input_slider(100, 1000)) %>% 
-  layer_points(fill := "red", size := input_slider(100, 1000))
+  layer_points(size := input_slider(100, 1000, label = "black")) %>%
+  layer_points(fill := "red", size := input_slider(100, 1000, label = "red"))
 ```
 
 ### Property mappings
@@ -152,8 +154,8 @@ You can read more about these options in the __properties and scales__ vignette.
 
 Currently, interactive inputs can only be used in two places:
 
-* as arguments to transforms: `transform_smooth(span = input_slider(0, 1))`
-* as properties: `props(size = prop_reactive(input_slider(10, 1000)))`
+* as arguments to transforms: `layer_smooths(span = input_slider(0, 1))`
+* as properties: `props(size = input_slider(10, 1000))`
 
 This means that interactive inputs can only modify the data, not the underlying
 plot specification. In other words, with only basic interactivity there's no
@@ -180,11 +182,14 @@ main differences:
 ## Shiny apps
 
 If you know how to create a Shiny app already, adding a ggvis plot is easy. In
-`server.r`, create a reactive ggvis object, and call `bind_shiny()`. When called in a pipe, the arguments are the names of the plot and control placeholders.
+`server.r`, create a ggvis object, and call `bind_shiny()`. When called in a pipe, the arguments are the names of the plot and control placeholders.
 
 ```{r, eval = FALSE}
+# A reactive expression wrapper for input$size
+input_size <- reactive(input$size)
+
 mtcars %>% 
-  ggvis(~disp, ~mpg, size := input$size) %>% 
+  ggvis(~disp, ~mpg, size := input_size) %>%
   layer_points() %>%
   bind_shiny("ggvis", "ggvis_ui")
 ```
