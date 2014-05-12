@@ -80,7 +80,7 @@ view_dynamic <- function(x, plot_id = rand_id("plot_"), minified = TRUE,
 #'
 #' @keywords internal
 #' @export
-knit_print.ggvis <- function(x, options = list()) {
+knit_print.ggvis <- function(x, options = list(), inline = FALSE, ...) {
   # Set height and width from knitr chunk options
   knitr_opts <- list(
     width = options$out.width.px,

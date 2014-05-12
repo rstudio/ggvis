@@ -3,7 +3,7 @@
 \alias{knit_print.ggvis}
 \title{Knit print method for ggvis plots.}
 \usage{
-knit_print.ggvis(x, options = list())
+knit_print.ggvis(x, options = list(), inline = FALSE, ...)
 }
 \description{
 Knit print method for ggvis plots.
