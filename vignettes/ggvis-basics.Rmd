@@ -1,6 +1,8 @@
 ---
 title: ggvis basics
-output: html_document
+output:
+  html_document:
+    toc: true
 runtime: shiny
 ---
 
@@ -20,7 +22,7 @@ opts_chunk$set(fig.width = 3.5, fig.height = 2.5, dpi = 100)
 
 The goal of ggvis is to make it easy to build interactive graphics for exploratory data analysis. ggvis has a similar underlying theory to [ggplot2](http://ggplot2.org) (the grammar of graphics), but it's expressed a little differently, and adds new features to make your plots interactive. ggvis also incorporates [shiny](http://www.rstudio.com/shiny/)'s reactive programming model and [dplyr](http://github.com/hadley/dplyr)'s grammar of data transformation.
 
-The graphics produced by ggvis are fundamentally web graphics and work very differently from traditional R graphics. This allows us to implement exciting new features like interactivity, but it comes at a cost. For example, every interactive ggvis plot must be connected to a running R session (static plots do not need a running R session to be viewwed). This is great for exploration, because you can do anything in your interactive plot you can do in R, but it's not so great for publication. We will overcome these issues in time, but for now be aware that we have many existing tools to reimplement before you can do everything with ggvis that you can do with base graphics.
+The graphics produced by ggvis are fundamentally web graphics and work very differently from traditional R graphics. This allows us to implement exciting new features like interactivity, but it comes at a cost. For example, every interactive ggvis plot must be connected to a running R session (static plots do not need a running R session to be viewed). This is great for exploration, because you can do anything in your interactive plot you can do in R, but it's not so great for publication. We will overcome these issues in time, but for now be aware that we have many existing tools to reimplement before you can do everything with ggvis that you can do with base graphics.
 
 This vignette is divided into four main sections:
 

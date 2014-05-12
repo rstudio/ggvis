@@ -1,5 +1,8 @@
 ---
 title: "Guides: Axes and Legends"
+output:
+  html_document:
+    toc: true
 ---
 
 <!--
