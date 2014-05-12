@@ -16,12 +16,12 @@
 #'  lb$input()
 #'
 #' # Display one layer with all points and another layer with selected points
-#' # library(dplyr)
-#' # mtcars %>%
-#' #  ggvis(~disp, ~mpg) %>%
-#' #  layer_points(size.brush := 400) %>%
-#' #  filter(eval(lb$selected())) %>%
-#' #  layer_points(fill := "red")
+#' library(shiny)
+#' mtcars %>%
+#'  ggvis(~disp, ~mpg) %>%
+#'  layer_points(size.brush := 400) %>%
+#'  lb$input() %>%
+#'  layer_points(fill := "red", data = reactive(mtcars[lb$selected()(), ]))
 linked_brush <- function(keys, fill = "red") {
   stopifnot(is.character(fill), length(fill) == 1)
 
