@@ -9,10 +9,10 @@
 #' @return A list with components:
 #'   \item{input}{A function that takes a visualisation as an argument and
 #'      adds an input brush to that plot}
-#'   \item{selected}{An function that returns a reactive providing a logical
-#'      vector specifying which points are under the brush}
-#'   \item{fill}{An function that returns a reactive providing a character
-#'      vector specifying which the fill colour of points under the brush}
+#'   \item{selected}{A reactive providing a logical vector that describes
+#'     which points are under the brush}
+#'   \item{fill}{A reactive that gives the fill colour of points under the
+#'     brush}
 #' @export
 #' @importFrom methods setRefClass
 #' @examples
@@ -21,7 +21,7 @@
 #' # Change the colour of the points
 #' mtcars %>%
 #'  ggvis(~disp, ~mpg) %>%
-#'  layer_points(fill := lb$fill(), size.brush := 400) %>%
+#'  layer_points(fill := lb$fill, size.brush := 400) %>%
 #'  lb$input()
 #'
 #' # Display one layer with all points and another layer with selected points
@@ -30,7 +30,7 @@
 #'  ggvis(~disp, ~mpg) %>%
 #'  layer_points(size.brush := 400) %>%
 #'  lb$input() %>%
-#'  layer_points(fill := "red", data = reactive(mtcars[lb$selected()(), ]))
+#'  layer_points(fill := "red", data = reactive(mtcars[lb$selected(), ]))
 linked_brush <- function(keys, fill = "red") {
   stopifnot(is.character(fill), length(fill) == 1)
 
@@ -42,12 +42,12 @@ linked_brush <- function(keys, fill = "red") {
     })
   }
 
-  output_selected <- function() {
-    create_broker(reactive(keys %in% rv$under_brush))
-  }
-  output_fill <- function() {
-    create_broker(reactive(c("black", fill)[keys %in% rv$under_brush + 1]))
-  }
+  selected_r <- reactive(keys %in% rv$under_brush)
+  fill_r <- reactive(c("black", fill)[selected_r() + 1])
 
-  list(input = input, selected = output_selected, fill = output_fill)
+  list(
+    input = input,
+    selected = create_broker(selected_r),
+    fill = create_broker(fill_r)
+  )
 }

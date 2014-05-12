@@ -9,7 +9,7 @@ shinyServer(function(input, output, session) {
 
   diamonds %>%
     ggvis(~carat, ~price) %>%
-    layer_points(fill := lb$fill(), fillOpacity := 0.8,
+    layer_points(fill := lb$fill, fillOpacity := 0.8,
       fill.brush := "red") %>%
     lb$input() %>%
     set_options(width = 300, height = 300) %>%
@@ -17,7 +17,7 @@ shinyServer(function(input, output, session) {
 
   diamonds %>%
     ggvis(~table, ~depth) %>%
-    layer_points(fill := lb$fill(), fillOpacity := 0.8) %>%
+    layer_points(fill := lb$fill, fillOpacity := 0.8) %>%
     set_options(width = 300, height = 300) %>%
     bind_shiny("plot2")
 

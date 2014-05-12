@@ -11,13 +11,13 @@ linked_brush(keys, fill = "red")
 \item{fill}{brush colour}
 }
 \value{
-A list:
+A list with components:
   \item{input}{A function that takes a visualisation as an argument and
      adds an input brush to that plot}
-  \item{selected}{An function that returns a reactive providing a logical
-     vector specifying which points are under the brush}
-  \item{fill}{An function that returns a reactive providing a character
-     vector specifying which the fill colour of points under the brush}
+  \item{selected}{A reactive providing a logical vector that describes
+    which points are under the brush}
+  \item{fill}{A reactive that gives the fill colour of points under the
+    brush}
 }
 \description{
 A linked brush has two sides: input and output
@@ -32,7 +32,7 @@ lb <- linked_brush(keys = 1:nrow(mtcars), "red")
 # Change the colour of the points
 mtcars \%>\%
  ggvis(~disp, ~mpg) \%>\%
- layer_points(fill := lb$fill(), size.brush := 400) \%>\%
+ layer_points(fill := lb$fill, size.brush := 400) \%>\%
  lb$input()
 
 # Display one layer with all points and another layer with selected points
@@ -41,6 +41,6 @@ mtcars \%>\%
  ggvis(~disp, ~mpg) \%>\%
  layer_points(size.brush := 400) \%>\%
  lb$input() \%>\%
- layer_points(fill := "red", data = reactive(mtcars[lb$selected()(), ]))
+ layer_points(fill := "red", data = reactive(mtcars[lb$selected(), ]))
 }
 
