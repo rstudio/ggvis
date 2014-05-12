@@ -27,10 +27,10 @@ aliases for a geom + combination.  For example:
 * `geom_smooth` = `geom_smooth` + `stat_smooth`
 
 In ggvis, there is a clear demarkation between marks (pure drawing) and
-layers (drawing + transformation):
+layers (transformation + drawing). The low-level functions for drawing a mark start with `emit_`, and then the type of mark. For example:
 
-* `layer_histogram` = `mark_bar` + `transform_bin`
-* `layer_smooth` = (`mark_line` + `mark_area`) + `transform_smooth`
+* `layer_histograms` = `compute_bin` + `emit_rects`
+* `layer_smooths` = `layer_model_predictions`  + (`emit_paths` + `emit_ribbons`)
 
 ggplot2 needed special geoms like `geom_smooth` because the data hierarchy
 was not deep enough, and there was no standard way for a stat to take the
@@ -81,15 +81,7 @@ In ggvis, we can make it a little more clear that we have one marked based on
 survivors dataset and two marks based on the cities dataset.
 
 ```{r, eval = FALSE}
-ggvis(props(x = ~long, y = ~lat)) +
-  layer(
-    Minard.troops,
-    props(size = ~survivors, stroke = ~direction),
-    layer_points()
-  ) +
-  layer(
-    Minard.cities,
-    layer_points(),
-    layer_text(props(text := ~city, dx := 5, dy := -5))
-  )
+ggvis(data = NULL, x = ~long, y = ~lat) %>%
+  layer_points(size = ~survivors, stroke = ~direction, data = Minard.troops) %>%
+  layer_points(text := ~city, dx := 5, dy := -5, data = Minard.cities)
 ```
