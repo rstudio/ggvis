@@ -40,7 +40,7 @@ mtcars2_selected <- reactive({
 
 p2 <- mtcars2_selected %>%
   ggvis(~disp, ~mpg) %>%
-  layer_points() %>%
+  layer_points(key := ~id) %>%
   set_options(duration = 100)
 
 
