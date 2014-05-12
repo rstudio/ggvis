@@ -7,7 +7,7 @@
 #' that will automatically set the range to a reasonable default, and it will
 #' automatically pick the correct type of scale given the variable type.
 #'
-#' @inheritParams scale
+#' @inheritParams vega_scale
 #' @param clamp  If true, values that exceed the data domain are clamped to
 #'   either the minimum or maximum range value.
 #' @param nice If specified, modifies the scale domain to use a more
@@ -39,7 +39,7 @@ scale_time <- function(name, utc = FALSE, clamp = FALSE, nice = NULL,
       "month", "year"))
   }
 
-  scale(name, if (utc) "utc" else "time", subclass = "time",
+  vega_scale(name, if (utc) "utc" else "time", subclass = "time",
     clamp = clamp, nice = nice, domain = domain, range = range,
     reverse = reverse, round = round)
 }

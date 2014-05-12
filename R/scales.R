@@ -31,10 +31,10 @@ print.scales <- function(x, ...) cat(format(x, ...), "\n", sep = "")
 
 # Merge two ggvis scales objects
 #
-# merge_scales(scales(scale("x", "linear")))
-# merge_scales(scales(scale("x", "linear")), scales(scale("y", "linear")))
-# merge_scales(scales(scale("x", "linear"), scale("y", "linear")),
-#              scales(scale("y", "ordinal")))
+# merge_scales(scales(vega_scale("x", "linear")))
+# merge_scales(scales(vega_scale("x", "linear")), scales(vega_scale("y", "linear")))
+# merge_scales(scales(vega_scale("x", "linear"), vega_scale("y", "linear")),
+#              scales(vega_scale("y", "ordinal")))
 merge_scales <- function(parent = NULL, child = NULL) {
   if (is.null(parent)) return(child)
   if (is.null(child)) return(parent)

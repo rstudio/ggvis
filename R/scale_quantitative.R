@@ -7,7 +7,7 @@
 #' that will automatically set the range to a reasonable default, and it will
 #' automatically pick the correct type of scale given the variable type.
 #'
-#' @inheritParams scale
+#' @inheritParams vega_scale
 #' @param trans A scale transformation: one of "linear", "log", "pow", "sqrt",
 #'   "quantile", "quantize", "threshold"
 #' @param exponent Sets the exponent of the scale transformation. For pow
@@ -46,7 +46,7 @@ scale_quantitative <- function(name, trans = "linear", exponent = NULL,
     is.numeric(exponent) && length(exponent) == 1))
   assert_that(is.flag(clamp), is.flag(nice), is.flag(zero))
 
-  scale(name, trans, subclass = "quantitative",
-        exponent = exponent, clamp = clamp, nice = nice, zero = zero,
-        domain = domain, range = range, reverse = reverse, round = round)
+  vega_scale(name, trans, subclass = "quantitative",
+    exponent = exponent, clamp = clamp, nice = nice, zero = zero,
+    domain = domain, range = range, reverse = reverse, round = round)
 }

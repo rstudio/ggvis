@@ -7,7 +7,7 @@
 #' that will automatically set the range to a reasonable default, and it will
 #' automatically pick the correct type of scale given the variable type.
 #'
-#' @inheritParams scale
+#' @inheritParams vega_scale
 #' @param points If \code{TRUE}, distributes the ordinal values over a
 #'   quantitative range at uniformly spaced points. The spacing of the points
 #'   can be adjusted using the padding property. If \code{FALSE}, the ordinal
@@ -42,8 +42,8 @@ scale_ordinal <- function(name, points = TRUE, padding = NULL, sort = TRUE,
   assert_that(is.null(padding) || (is.numeric(padding) && length(padding) == 1))
   assert_that(is.flag(sort))
 
-  scale(name, "ordinal",
-        points = points, padding = padding, sort = sort, subclass = "ordinal",
-        domain = domain, range = range, reverse = reverse, round = round)
+  vega_scale(name, "ordinal",
+    points = points, padding = padding, sort = sort, subclass = "ordinal",
+    domain = domain, range = range, reverse = reverse, round = round)
 
 }

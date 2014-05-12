@@ -29,9 +29,9 @@
 #' @export
 #' @keywords internal
 #' @examples
-#' scale("x", "linear")
-#' scale("x", "ord")
-scale <- function(name, type = NULL, domain = NULL, range = NULL,
+#' vega_scale("x", "linear")
+#' vega_scale("x", "ord")
+vega_scale <- function(name, type = NULL, domain = NULL, range = NULL,
                   reverse = FALSE, round = FALSE, ..., subclass = NULL) {
   assert_that(is.string(name))
   type <- match.arg(type, c("linear", "ordinal", "time", "utc", "log",
@@ -83,7 +83,7 @@ named_list <- function(names, ...) {
 }
 
 #' @export
-#' @rdname scale
+#' @rdname vega_scale
 #' @param x object to test for scale-ness
 is.scale <- function(x) inherits(x, "scale")
 
