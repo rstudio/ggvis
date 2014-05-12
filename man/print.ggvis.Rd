@@ -16,7 +16,7 @@ view_dynamic(x, renderer = getOption("ggvis.renderer", default = "svg"),
   id = rand_id("plot_"), minify = TRUE, launch = TRUE, port = NULL,
   quiet = TRUE)
 
-knit_print.ggvis(x, options)
+knit_print.ggvis(x, ..., options)
 }
 \arguments{
 \item{x}{A ggvis object.}
@@ -30,7 +30,8 @@ the json plot spec. If a character vector, will display just those
 components of the spec. This is useful for generating regression tests.}
 
 \item{...}{Other arguments passed on to \code{view_dynamic} and
-\code{view_static} from \code{print}.}
+\code{view_static} from \code{print}. For \code{knit_print.ggvis}, the
+arguments specified via \code{...} are ignored.}
 
 \item{launch}{If \code{TRUE}, launch this web page in a browser or Rstudio.}
 
