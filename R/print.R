@@ -273,7 +273,7 @@ knit_print.ggvis <- function(x, ..., options) {
   # Markdown document and have an appropriate version of Shiny; emit a Shiny
   # application if we are, and a warning if we aren't.
   if (is.dynamic(x)) {
-    if (identical(knitr::opts_knit$get()$rmarkdown.runtime, "shiny") &&
+    if (identical(knitr::opts_knit$get("rmarkdown.runtime"), "shiny") &&
         packageVersion("shiny") >= "0.9.1.9000") {
 
       # create the application object and allocate space for the controls
