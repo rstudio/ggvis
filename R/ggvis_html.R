@@ -91,7 +91,7 @@ ggvis_ui <- function(plot_id, has_controls = TRUE, spec = NULL, deps = NULL) {
 
 ggvis_app <- function(x, plot_id = rand_id("plot_"),
                       deps = ggvis_dependencies(in_shiny = TRUE),
-                      options = list()) {
+                      ...) {
 
   ui <- ggvis_ui(plot_id, length(x$controls) > 0, deps = deps)
 
@@ -100,6 +100,8 @@ ggvis_app <- function(x, plot_id = rand_id("plot_"),
     bind_shiny(r_gv, session = session, plot_id = plot_id,
       controls_id = "ggvis_controls")
   }
+
+  options <- compact(list(...))
 
   shiny::shinyApp(ui = ui, server = server, options = options)
 }

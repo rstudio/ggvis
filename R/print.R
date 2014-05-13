@@ -61,13 +61,12 @@ view_static <- function(x, plot_id = rand_id("plot_"),
 view_dynamic <- function(x, plot_id = rand_id("plot_"), port = NULL,
                          quiet = TRUE) {
 
-  options <- list(
+  ggvis_app(x,
+    plot_id = plot_id,
     port = port,
     quiet = quiet,
     launch.browser = function(url) view_plot(url, 350 + control_height(x))
   )
-
-  ggvis_app(x, plot_id = plot_id, options = options)
 }
 
 #' Knit print method for ggvis plots.
@@ -88,10 +87,10 @@ knit_print.ggvis <- function(x, options = list(), inline = FALSE, ...) {
   if (is.dynamic(x)) {
     if (identical(runtime(), "shiny")) {
       # create the application object and allocate space for the controls
-      app <- ggvis_app(x, options = list(
+      app <- ggvis_app(x,
         width = knitr_opts$width,
         height = knitr_opts$height + control_height(x)
-      ))
+      )
       return(knitr::knit_print(app))
     }
 
