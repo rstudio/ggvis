@@ -120,7 +120,7 @@ knit_print.ggvis <- function(x, options = list(), inline = FALSE, ...) {
 # Helper functions -------------------------------------------------------------
 
 runtime <- function() {
-  knitr::opts_knit$get()$rmarkdown.runtime
+  knitr::opts_knit$get("rmarkdown.runtime")
 }
 
 #' Determine if an ggvis is dynamic (i.e. needs to be run in a shiny app)
