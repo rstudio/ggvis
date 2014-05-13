@@ -20,7 +20,8 @@
 #' @examples
 #' mtcars %>% compute_density(~mpg, n = 5)
 #' mtcars %>% group_by(cyl) %>% compute_density(~mpg, n = 5)
-#' mtcars %>% ggvis(~mpg) %>% compute_density(~mpg, n = 5)
+#' mtcars %>% ggvis(~mpg) %>% compute_density(~mpg, n = 5) %>%
+#'   layer_points(~pred_, ~resp_)
 compute_density <- function(x, x_var, w_var = NULL, kernel = "gaussian",
                             trim = FALSE, n = 256L, na.rm = FALSE, ...) {
 

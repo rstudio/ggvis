@@ -38,6 +38,7 @@ Compute density of data.
 \examples{
 mtcars \%>\% compute_density(~mpg, n = 5)
 mtcars \%>\% group_by(cyl) \%>\% compute_density(~mpg, n = 5)
-mtcars \%>\% ggvis(~mpg) \%>\% compute_density(~mpg, n = 5)
+mtcars \%>\% ggvis(~mpg) \%>\% compute_density(~mpg, n = 5) \%>\%
+  layer_points(~pred_, ~resp_)
 }
 

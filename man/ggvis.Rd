@@ -16,7 +16,7 @@ ggvis(data = NULL, ..., env = parent.frame())
 Visualise a data set with a ggvis graphic.
 }
 \examples{
-ggvis(mtcars, ~mpg, ~wt)
-mtcars \%>\% ggvis(~mpg, ~wt)
+layer_points(ggvis(mtcars, ~mpg, ~wt))
+mtcars \%>\% ggvis(~mpg, ~wt) \%>\% layer_points()
 }
 

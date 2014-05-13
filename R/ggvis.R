@@ -7,8 +7,13 @@
 #' @importFrom shiny reactive
 #' @export
 #' @examples
+#' \dontrun{
 #' ggvis(mtcars, ~mpg, ~wt)
-#' mtcars %>% ggvis(~mpg, ~wt)
+#' # Throws an error because there is nothing to show.
+#' }
+#'
+#' layer_points(ggvis(mtcars, ~mpg, ~wt))
+#' mtcars %>% ggvis(~mpg, ~wt) %>% layer_points()
 ggvis <- function(data = NULL, ..., env = parent.frame()) {
   vis <- structure(
     list(
