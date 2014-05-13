@@ -38,11 +38,12 @@ $(function(){ //DOM Ready
       Shiny.unbindAll(el);
 
       var html;
+      var dependencies = [];
       if (data === null) {
         html = '';
-      } else if (typeof(data) == 'string') {
+      } else if (typeof(data) === 'string') {
         html = data;
-      } else if (typeof(data) == 'object') {
+      } else if (typeof(data) === 'object') {
         html = data.html;
         dependencies = data.deps;
       }
