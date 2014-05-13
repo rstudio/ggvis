@@ -1,7 +1,13 @@
 #' Visualise a data set with a ggvis graphic.
 #'
+#' \code{ggvis} is used to turn a dataset into a visualisation, setting up
+#' default mappings between variables in the dataset and visual properties.
+#' Nothing will be displayed until you add additional layers.
+#'
 #' @param data A data object.
-#' @param ... Property mappings.
+#' @param ... Property mappings. If not named, the first two mappings are
+#'   taken to be \code{x} and \code{y}. Common properties are \code{x},
+#'   \code{y}, \code{stroke}, \code{fill}, \code{opacity}, \code{shape}
 #' @param env Environment in which to evaluate properties.
 #' @import assertthat
 #' @importFrom shiny reactive
@@ -12,8 +18,20 @@
 #' # Throws an error because there is nothing to show.
 #' }
 #'
+#' # ggvis has a functional interface: every ggvis function takes a ggvis
+#' # an input and returns a modified ggvis as output.
 #' layer_points(ggvis(mtcars, ~mpg, ~wt))
+#'
+#' # To make working with this interface more natural, ggvis imports the
+#' # pipe operator from magrittr. x %>% f(y) is equivalent to f(x, y) so
+#' # we can rewrite the previous command as
 #' mtcars %>% ggvis(~mpg, ~wt) %>% layer_points()
+#'
+#' # For more complicated plots, add a line break after %>%
+#' mtcars %>%
+#'   ggvis(~mpg, ~wt) %>%
+#'   layer_points() %>%
+#'   layer_smooths()
 ggvis <- function(data = NULL, ..., env = parent.frame()) {
   vis <- structure(
     list(
