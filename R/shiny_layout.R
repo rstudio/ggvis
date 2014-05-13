@@ -6,7 +6,7 @@
 #' @param deps Default dependencies, used internally.
 #' @export
 ggvisOutput <- function(plot_id = rand_id("plot_id"), spec = NULL,
-                        deps = ggvis_dependencies()) {
+                        deps = ggvis_dependencies(in_shiny = TRUE)) {
   shiny::tagList(
     ggvisPlot(plot_id),
     ggvisDependencies(deps),

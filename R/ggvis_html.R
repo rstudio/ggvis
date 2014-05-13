@@ -9,15 +9,20 @@
 # @param absolute Should full, absolute paths be used?
 # @param jquery Should jquery be added?
 # @param shiny_ggvis Should ggvis-shiny be added?
-ggvis_dependencies <- function(minified = TRUE, absolute = FALSE, jquery = FALSE,
-                               shiny_ggvis = TRUE) {
+ggvis_dependencies <- function(minified = TRUE, absolute = FALSE,
+                               in_shiny = FALSE, dynamic = TRUE) {
   adjust_min <- if (minified) identity else function(x) gsub("\\.min", "", x)
 
   adjust_path <- if (absolute) function(x) system.file(package = "ggvis", "www", x)
                  else identity
 
+  if (in_shiny) {
+    shiny::addResourcePath("ggvis", system.file("www", "ggvis", package = "ggvis"))
+    shiny::addResourcePath("lib", system.file("www", "lib", package = "ggvis"))
+  }
+
   deps <- compact(list(
-    if (jquery) html_dependency(
+    if (!in_shiny) html_dependency(
       name = "jquery",
       version = "1.11.0",
       path = adjust_path("lib/jquery"),
@@ -56,7 +61,7 @@ ggvis_dependencies <- function(minified = TRUE, absolute = FALSE, jquery = FALSE
       script = "js/ggvis.js",
       stylesheet = "css/ggvis.css"
     ),
-    if (shiny_ggvis) html_dependency(
+    if (dynamic) html_dependency(
       name = "shiny-ggvis",
       version = as.character(packageVersion("ggvis")),
       path = adjust_path("ggvis"),
@@ -82,12 +87,11 @@ ggvis_ui <- function(plot_id, has_controls = TRUE, spec = NULL, deps = NULL) {
   }
 }
 
-ggvis_app <- function(x, plot_id = rand_id("plot_"), deps = ggvis_dependencies(),
+ggvis_app <- function(x, plot_id = rand_id("plot_"),
+                      deps = ggvis_dependencies(in_shiny = TRUE),
                       options = list()) {
 
   ui <- ggvis_ui(plot_id, length(x$controls) > 0, deps = deps)
-  shiny::addResourcePath("ggvis", system.file("www", "ggvis", package = "ggvis"))
-  shiny::addResourcePath("lib", system.file("www", "lib", package = "ggvis"))
 
   server <- function(input, output, session) {
     r_gv <- reactive(x)

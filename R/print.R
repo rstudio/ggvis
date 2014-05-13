@@ -40,8 +40,7 @@ print.ggvis <- function(x, dynamic = NA, launch = interactive(), ...) {
 view_static <- function(x, plot_id = rand_id("plot_"), minified = TRUE,
                         dest = tempfile(pattern = "ggvis")) {
 
-  deps <- ggvis_dependencies(minified = minified, absolute = FALSE,
-                             jquery = TRUE, shiny_ggvis = FALSE)
+  deps <- ggvis_dependencies(minified = minified, dynamic = FALSE)
 
   if (!file.exists(dest)) dir.create(dest)
   copy_deps(deps, system.file("www", package = "ggvis"), dest)
@@ -64,8 +63,7 @@ view_static <- function(x, plot_id = rand_id("plot_"), minified = TRUE,
 view_dynamic <- function(x, plot_id = rand_id("plot_"), minified = TRUE,
                          port = NULL, quiet = TRUE) {
 
-  deps <- ggvis_dependencies(minified = minified, absolute = FALSE,
-                             jquery = FALSE, shiny_ggvis = TRUE)
+  deps <- ggvis_dependencies(minified = minified, in_shiny = TRUE)
 
   options <- list(
     port = port,
@@ -108,8 +106,7 @@ knit_print.ggvis <- function(x, options = list(), inline = FALSE, ...) {
     )
   }
 
-  deps <- ggvis_dependencies(absolute = TRUE, jquery = TRUE,
-                             shiny_ggvis = FALSE)
+  deps <- ggvis_dependencies(absolute = TRUE, in_shiny = FALSE)
 
   spec <- as.vega(x, dynamic = FALSE)
   html <- ggvisOutput(spec = spec, deps = deps)
