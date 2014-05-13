@@ -193,8 +193,15 @@ $(function(){ //DOM Ready
       // will send info when mouse_out event happens multiple times.
       this._nonce_counter = 0;
 
-      plot.chart.on("mouseover." + this.plot.plotId, this._createMouseOverHandler());
-      plot.chart.on("mouseout."  + this.plot.plotId, this._createMouseOutHandler());
+      var policy = h_spec.policy || "debounce";
+      var policy_fun = _[policy];
+      var delay = h_spec.delay || 75;
+
+      var mouseOverHandler = policy_fun(this._createMouseOverHandler(), delay);
+      var mouseOutHandler = policy_fun(this._createMouseOutHandler(), delay);
+
+      plot.chart.on("mouseover." + this.plot.plotId, mouseOverHandler);
+      plot.chart.on("mouseout."  + this.plot.plotId, mouseOutHandler);
     };
 
     var prototype = hover.prototype;
