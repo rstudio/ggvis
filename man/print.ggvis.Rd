@@ -7,11 +7,10 @@
 \usage{
 \method{print}{ggvis}(x, dynamic = NA, launch = interactive(), ...)
 
-view_static(x, plot_id = rand_id("plot_"), minified = TRUE,
-  dest = tempfile(pattern = "ggvis"))
+view_static(x, plot_id = rand_id("plot_"), dest = tempfile(pattern =
+  "ggvis"))
 
-view_dynamic(x, plot_id = rand_id("plot_"), minified = TRUE, port = NULL,
-  quiet = TRUE)
+view_dynamic(x, plot_id = rand_id("plot_"), port = NULL, quiet = TRUE)
 }
 \arguments{
 \item{x}{A ggvis object.}
@@ -27,9 +26,6 @@ presence of reactives or interactive inputs in \code{x}.}
 \code{view_static} ?from \code{print}.}
 
 \item{plot_id}{Unique identifier used to identify the plot on the page.}
-
-\item{minified}{If \code{TRUE}, use minified version of JS and CSS files. This
-can be useful for debugging.}
 
 \item{dest}{Directory in which to save html and depedencies. Created if
 it doesn't already exist.}

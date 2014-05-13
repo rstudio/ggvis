@@ -33,14 +33,12 @@ print.ggvis <- function(x, dynamic = NA, launch = interactive(), ...) {
 #' @rdname print.ggvis
 #' @export
 #' @param plot_id Unique identifier used to identify the plot on the page.
-#' @param minified If \code{TRUE}, use minified version of JS and CSS files. This
-#'   can be useful for debugging.
 #' @param dest Directory in which to save html and depedencies. Created if
 #'   it doesn't already exist.
-view_static <- function(x, plot_id = rand_id("plot_"), minified = TRUE,
+view_static <- function(x, plot_id = rand_id("plot_"),
                         dest = tempfile(pattern = "ggvis")) {
 
-  deps <- ggvis_dependencies(minified = minified, dynamic = FALSE)
+  deps <- ggvis_dependencies(dynamic = FALSE)
 
   if (!file.exists(dest)) dir.create(dest)
   copy_deps(deps, system.file("www", package = "ggvis"), dest)
@@ -60,10 +58,8 @@ view_static <- function(x, plot_id = rand_id("plot_"), minified = TRUE,
 #'   Shiny will select a random port.
 #' @param quiet If \code{TRUE} show status messages from Shiny. (Default is
 #'   \code{FALSE}.)
-view_dynamic <- function(x, plot_id = rand_id("plot_"), minified = TRUE,
-                         port = NULL, quiet = TRUE) {
-
-  deps <- ggvis_dependencies(minified = minified, in_shiny = TRUE)
+view_dynamic <- function(x, plot_id = rand_id("plot_"), port = NULL,
+                         quiet = TRUE) {
 
   options <- list(
     port = port,
@@ -71,7 +67,7 @@ view_dynamic <- function(x, plot_id = rand_id("plot_"), minified = TRUE,
     launch.browser = function(url) view_plot(url, 350 + control_height(x))
   )
 
-  ggvis_app(x, plot_id = plot_id, deps = deps, options = options)
+  ggvis_app(x, plot_id = plot_id, options = options)
 }
 
 #' Knit print method for ggvis plots.
