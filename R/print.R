@@ -111,9 +111,9 @@ knit_print.ggvis <- function(x, options = list(), inline = FALSE, ...) {
   spec <- as.vega(x, dynamic = FALSE)
   html <- ggvisOutput(spec = spec, deps = deps)
 
-  structure(class = "knit_asis",
+  knitr::asis_output(
     format(html, indent = FALSE),
-    knit_meta = deps
+    meta = deps
   )
 }
 
