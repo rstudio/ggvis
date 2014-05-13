@@ -10,7 +10,7 @@
 view_static(x, plot_id = rand_id("plot_"), dest = tempfile(pattern =
   "ggvis"))
 
-view_dynamic(x, plot_id = rand_id("plot_"), port = NULL, quiet = TRUE)
+view_dynamic(x, plot_id = rand_id("plot_"), port = NULL, quiet = FALSE)
 }
 \arguments{
 \item{x}{A ggvis object.}
