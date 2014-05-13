@@ -1,72 +1,12 @@
-flatten <- function(node, parent = NULL, session = NULL) {
-
-  node$props <- init_inputs(node$props, session)
-  # Convert handlers which were added directly to the ggvis object to reactives.
-  # This is useful only for observers. If the reactive returns a reactive
-  # expression, it will never get used because the returned values aren't
-  # used.
-  lapply(node$handlers, as.reactive, session)
-
-  # Inherit behaviour from parent
-  node$dynamic <- node$dynamic %||% parent$dynamic
-  node$props <- merge_props(parent$props, node$props)
-
-  # Create reactive pipeline, connected to parents
-  if (empty(node$data)) {
-    if (is.mark(node) && empty(parent$pipeline)) {
-      stop("Node inherits data from parent, but parent has no data",
-           call. = FALSE)
-    }
-
-    # Point to parent data
-    node$pipeline <- parent$pipeline
-    node$pipeline_id <- parent$pipeline_id
-  } else {
-    # Create new pipeline connected to parent
-    node$pipeline <- connect(node$data, node$props, parent$pipeline, session)
-
-    # Generate pipeline_id; if connected to parent's pipeline, append to its id
-    id <- pipeline_id(node$data, node$props)
-    if (!has_source(node$data)) {
-      id <- paste(parent$pipeline_id, id, sep = "_")
-    }
-    node$pipeline_id <- id
-  }
-
-  if (is.mark(node)) {
-    # Base case: so return self
-    list(node)
-  } else {
-    # If there are any handlers that have layers, grab them and add to children.
-    handler_layers <- lapply(node$handlers, extract_layer)
-    node$children <- c(node$children, handler_layers)
-
-    # Otherwise, recurse through children
-    children <- lapply(node$children, flatten, parent = node, session = session)
-    unlist(children, recursive = FALSE)
-  }
-}
-
-extract_data <- function(nodes) {
-  data_table <- new.env(parent = emptyenv())
-  for (node in nodes) {
-    id <- node$pipeline_id
-    if (exists(id, data_table)) next
-
-    data_table[[id]] <- node$pipeline
-  }
-
-  data_table
-}
-
 # Create a new reactive dataset containing only the data actually used
 # by properties.
-active_props <- function(data, nodes) {
+active_props <- function(data, layers) {
   # Collect all props for given data
-  pipeline_id <- vapply(nodes, function(x) x$pipeline_id, character(1))
-  props <- lapply(nodes, function(x) x$props)
+  data_ids <- vapply(layers, function(layer) data_id(layer$data),
+    character(1))
+  props <- lapply(layers, function(x) x$props)
 
-  props_by_id <- split(props, pipeline_id)
+  props_by_id <- split(props, data_ids)
   props_by_id <- lapply(props_by_id, unlist, recursive = FALSE)
 
   uprops_by_id <- lapply(props_by_id, function(props) {
@@ -76,10 +16,10 @@ active_props <- function(data, nodes) {
     setNames(props[ok], names[ok])
   })
 
-  reactive_prop <- function(props, data) {
+  reactive_prop <- function(props, parent_data) {
     force(props)
-    force(data)
-    reactive(apply_props(data(), props))
+    force(parent_data)
+    reactive(apply_props(parent_data(), props))
   }
 
   data_out <- new.env(parent = emptyenv())
@@ -105,7 +45,6 @@ apply_props.data.frame <- function(data, props) {
 }
 
 #' @export
-apply_props.split_df <- function(data, props) {
-  data[] <- lapply(data, apply_props, props)
-  data
+apply_props.grouped_df <- function(data, props) {
+  dplyr::do(data, apply_props(., props))
 }

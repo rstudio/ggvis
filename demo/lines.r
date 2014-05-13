@@ -1,30 +1,49 @@
 library(ggvis)
+library(dplyr) # For arrange function
 
 set.seed(1780)
 df <- data.frame(x = runif(12), y = runif(12), z = gl(3, 4))
 
-ggvis(df, props(x = ~x, y = ~y)) + mark_path()
+df %>% ggvis(x = ~x, y = ~y) %>% layer_paths()
 
 # Grouping, manually specified
-ggvis(df, by_group(z), props(x = ~x, y = ~y, stroke = ~z, fill := NA)) +
-  mark_path() +
-  layer_point()
+df %>% group_by(z) %>%
+  ggvis(x = ~x, y = ~y, stroke = ~z, fill := NA) %>%
+  layer_paths() %>%
+  layer_points()
+
+# Grouping can happen after ggvis() call
+df %>%
+  ggvis(x = ~x, y = ~y, stroke = ~z, fill := NA) %>%
+  group_by(z) %>%
+  layer_paths() %>%
+  layer_points()
 
 # Data sorted by x
-ggvis(df, transform_sort(), props(x = ~x, y = ~y)) + mark_path() + layer_point()
+df %>% ggvis(x = ~x, y = ~y) %>%
+  arrange(x) %>%
+  layer_paths() %>%
+  layer_points()
+
+# layer_lines sorts and adds a mark_path
+df %>% ggvis(x = ~x, y = ~y) %>%
+  layer_lines() %>%
+  layer_points()
+
 # Data sorted by y
-ggvis(df, transform_sort(var = "y"), props(x = ~x, y = ~y)) +
-  mark_path() +
-  layer_point()
+df %>% ggvis(x = ~x, y = ~y) %>%
+  arrange(y) %>%
+  layer_paths() %>%
+  layer_points()
 
-# Grouping with auto_split, and sorted
-ggvis(df, auto_split(), transform_sort(),
-  props(x = ~x, y = ~y, stroke = ~z, fill := NA)) +
-  mark_path() +
-  layer_point()
+# Grouping with auto_group, and sorted
+df %>% ggvis(x = ~x, y = ~y, stroke = ~z, fill := NA) %>%
+  auto_group() %>%
+  arrange(x) %>%
+  layer_paths() %>%
+  layer_points()
 
-
-# Using layer_line
-ggvis(df, props(x = ~x, y = ~y, stroke = ~z, fill := NA)) +
-  layer_line() +
-  layer_point()
+# Using layer_lines, which sorts the data
+df %>% ggvis(x = ~x, y = ~y, stroke = ~z, fill := NA) %>%
+  layer_lines() %>%
+  layer_points()

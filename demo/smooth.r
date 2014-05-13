@@ -1,37 +1,40 @@
 library(ggvis)
 
 # Scatter plot with loess model line
-ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
-  layer_point() +
-  layer(
-    transform_smooth(se = F),
-    layer(
-      mark_path(props(x = ~x, y = ~y, stroke := "red"))
-    )
-  )
+mtcars %>% ggvis(x = ~wt, y = ~mpg) %>%
+  layer_points() %>%
+  compute_smooth(mpg ~ wt, se = F) %>%
+  layer_paths(x = ~pred_, y = ~resp_, stroke := "red")
 
 # Or with shorthand layer_smooth
-ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
-  layer_point() +
-  layer_smooth(props(stroke := "red"))
+mtcars %>% ggvis(x = ~wt, y = ~mpg) %>%
+  layer_points() %>%
+  layer_smooths(stroke := "red")
+
+# With confidence region
+mtcars %>% ggvis(x = ~wt, y = ~mpg) %>%
+  layer_points() %>%
+  layer_smooths(stroke := "red", se = TRUE)
 
 # Scatter plot with lm model line
-ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
-  layer_point() +
-  layer_smooth(props(stroke := "red"), method = "lm")
+mtcars %>% ggvis(x = ~wt, y = ~mpg) %>%
+  layer_points() %>%
+  layer_model_predictions(stroke := "red", model = "lm")
 
 # Scatterplot with lm and loess
-ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
-  layer_point() +
-  layer_smooth(props(stroke := "blue"), se = FALSE) +
-  layer_smooth(props(stroke := "red"), method = "lm", se = FALSE)
+mtcars %>% ggvis(x = ~wt, y = ~mpg) %>%
+  layer_points() %>%
+  layer_smooths(stroke := "blue") %>%
+  layer_model_predictions(stroke := "red", model = "lm")
 
-# Scatter plot with linear model for each level of cyl
-ggvis(mtcars, by_group(cyl), props(x = ~wt, y = ~mpg, stroke = ~factor(cyl))) +
-  layer_point() +
-  layer_smooth(method = "lm")
+# Scatter plot with smooth for each level of cyl
+mtcars %>% ggvis(x = ~wt, y = ~mpg, stroke = ~factor(cyl)) %>%
+  group_by(cyl) %>%
+  layer_points() %>%
+  layer_smooths()
 
-# Scatter plot with linear model for each level of cyl, but only points coloured
-ggvis(mtcars, by_group(cyl), props(x = ~wt, y = ~mpg)) +
-  layer_point(props(fill = ~factor(cyl))) +
-  layer_smooth(method = "lm")
+# Scatter plot with smooth for each level of cyl, but only points coloured
+mtcars %>% ggvis(x = ~wt, y = ~mpg) %>%
+  group_by(cyl) %>%
+  layer_points(fill = ~factor(cyl)) %>%
+  layer_smooths()

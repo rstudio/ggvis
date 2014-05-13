@@ -1,8 +1,10 @@
 #' Create an interactive slider.
 #'
-#' @importFrom shiny sliderInput
 #' @inheritParams shiny::sliderInput
-#' @inheritParams input
+#' @param id A unique identifier for this input. Usually generated
+#'   automatically.
+#' @param map A function with single argument \code{x}, the value of the
+#'   control on the client. Returns a modified value.
 #' @family interactive input
 #' @export
 #' @examples
@@ -15,25 +17,29 @@
 #'
 #' # You can use map to transform the outputs
 #' input_slider(-5, 5, label = "Log scale", map = function(x) 10 ^ x)
-input_slider <- function(min, max, value = min, step = NULL, round = FALSE,
-                         format = "#,##0.#####", locale = "us", ticks = TRUE,
-                         animate = FALSE, label = "", id = rand_id("slider_"),
-                         map = identity) {
+input_slider <- function(min, max, value = (min + max) / 2, step = NULL,
+                         round = FALSE, format = "#,##0.#####", locale = "us",
+                         ticks = TRUE, animate = FALSE, label = "",
+                         id = rand_id("slider_"), map = identity) {
 
   assert_that(is.string(label), is.string(id))
 
-  args <- list(id, label, min = min, max = max, value = value, step = step,
-      round = round, format = format, locale = locale, ticks = ticks,
-      animate = animate)
+  if (!is.null(step)) {
+    value <- round_any(value - min, step) + min
+  }
 
-  input("slider", args, value, map, id)
+  control <- shiny::sliderInput(id, label, min = min, max = max,
+    value = value, step = step, round = round, format = format, locale = locale,
+    ticks = ticks, animate = animate)
+
+  create_input(id, value, map, control)
 }
+
 
 #' Create an interactive checkbox.
 #'
-#' @importFrom shiny checkboxInput
 #' @inheritParams shiny::checkboxInput
-#' @inheritParams input
+#' @inheritParams input_slider
 #' @family interactive input
 #' @export
 #' @examples
@@ -41,20 +47,21 @@ input_slider <- function(min, max, value = min, step = NULL, round = FALSE,
 #' input_checkbox(label = "Confidence interval")
 #' input_checkbox(label = "Confidence interval", value = TRUE)
 #'
-#' # Used in a layer_smooth
-#' layer_smooth(se = input_checkbox(label = "Confidence interval"))
+#' # Used in layer_smooths
+#' mtcars %>% ggvis(~wt, ~mpg) %>%
+#'   layer_smooths(se = input_checkbox(label = "Confidence interval"))
 #'
 #' # Used with a map function, to convert the boolean to another type of value
 #' model_type <- input_checkbox(label = "Use flexible curve",
 #'   map = function(val) if(val) "loess" else "lm")
-#' layer_smooth(method = model_type)
+#' mtcars %>% ggvis(~wt, ~mpg) %>%
+#'   layer_model_predictions(model = model_type)
 input_checkbox <- function(value = FALSE, label = "",
                            id = rand_id("checkbox_"), map = identity) {
 
   assert_that(is.string(label), is.string(id))
 
-  args <- list(id, label, value = value)
-  input("checkbox", args, value, map, id)
+  create_input(id, value, map, shiny::checkboxInput(id, label, value))
 }
 
 #' Create an interactive text or numeric input box.
@@ -62,37 +69,32 @@ input_checkbox <- function(value = FALSE, label = "",
 #' \code{input_numeric} only allows numbers and comes with a spin box control.
 #' \code{input_text} allows any type of input.
 #'
-#' @importFrom shiny textInput
 #' @inheritParams shiny::textInput
-#' @inheritParams input
+#' @inheritParams input_slider
 #' @family interactive input
 #' @export
 #' @examples
 #' fill_text <- input_text(label = "Point color", value = "red")
-#' qvis(mtcars, ~wt, ~mpg, fill := fill_text)
+#' mtcars %>% qvis(~wt, ~mpg, fill := fill_text)
 #'
 #' size_num <- input_numeric(label = "Point size", value = 25)
-#' qvis(mtcars, ~wt, ~mpg, size := size_num)
+#' mtcars %>% qvis(~wt, ~mpg, size := size_num)
 input_text <- function(value, label = "", id = rand_id("text_"),
                        map = identity) {
 
   assert_that(is.string(label), is.string(id), is.string(value))
 
-  args <- list(id, label, value = value)
-  input("text", args, value, map, id)
+  create_input(id, value, map, shiny::textInput(id, label, value))
 }
 
 #' @rdname input_text
 #' @export
-#' @importFrom shiny numericInput
-input_numeric <- function(value, label = "", id = rand_id("text_"),
+input_numeric <- function(value, label = "", id = rand_id("numeric_"),
                           map = identity) {
 
   assert_that(is.string(label), is.string(id), is.numeric(value))
 
-  args <- list(id, label, value = value)
-
-  input("numeric", args, value, map, id)
+  create_input(id, value, map, shiny::numericInput(id, label, value))
 }
 
 #' Create interactive control to select one (or more options) from a list.
@@ -104,9 +106,8 @@ input_numeric <- function(value, label = "", id = rand_id("text_"),
 #'    otherwise the user can select multiple by using modifier keys
 #' }
 #'
-#' @importFrom shiny selectInput
 #' @inheritParams shiny::selectInput
-#' @inheritParams input
+#' @inheritParams input_slider
 #' @family interactive input
 #' @export
 #' @examples
@@ -124,67 +125,79 @@ input_numeric <- function(value, label = "", id = rand_id("text_"),
 #' input_radiobuttons(choices = c("Linear" = "lm", "LOESS" = "loess"),
 #'                    label = "Model type")
 #' input_radiobuttons(choices = c("Linear" = "lm", "LOESS" = "loess"),
-#'                    selected = "LOESS",
+#'                    selected = "loess",
 #'                    label = "Model type")
 #'
-#' # Used in a layer_smooth
-#' layer_smooth(model = input_radiobuttons(
-#'   choices = c("Linear" = "lm", "LOESS" = "loess"),
-#'               selected = "LOESS",
-#'               label = "Model type"))
+#' # Used in layer_model_predictions
+#' mtcars %>% ggvis(~wt, ~mpg) %>%
+#'   layer_model_predictions(model = input_radiobuttons(
+#'     choices = c("Linear" = "lm", "LOESS" = "loess"),
+#'     selected = "loess",
+#'     label = "Model type"))
+#'
+#' # Checkbox group
+#' mtcars %>% ggvis(x = ~wt, y = ~mpg) %>%
+#'   layer_points(
+#'     fill := input_checkboxgroup(
+#'       choices = c("Red" = "r", "Green" = "g", "Blue" = "b"),
+#'       label = "Point color components",
+#'       map = function(val) {
+#'         rgb(0.8 * "r" %in% val, 0.8 * "g" %in% val, 0.8 * "b" %in% val)
+#'       }
+#'     )
+#'   )
 input_select <- function(choices, selected = NULL, multiple = FALSE,
-  label = "", id = rand_id("select_"),
-  map = identity) {
+                         label = "", id = rand_id("select_"), map = identity) {
+
   assert_that(is.string(label), is.string(id))
 
-  args <- list(id, label, choices = choices, selected = selected,
-    multiple = multiple)
+  control <- shiny::selectInput(id, label, choices = choices,
+                                selected = selected, multiple = multiple)
 
   if (is.null(selected)) {
     if (multiple) value <- ""
     else value <- choices[1]
   } else {
-    value <- choices[selected]
+    value <- selected
   }
 
-  input("select", args, value, map, id)
+  create_input(id, value, map, control)
 }
 
 #' @rdname input_select
 #' @export
-#' @importFrom shiny radioButtons
 input_radiobuttons <- function(choices, selected = NULL, label = "",
                                id = rand_id("radio_"), map = identity) {
 
   assert_that(is.string(label), is.string(id))
 
-  args <- list(id, label, choices = choices, selected = selected)
+  control <- shiny::radioButtons(id, label, choices = choices,
+                                 selected = selected)
 
   if (is.null(selected)) {
     value <- choices[1]
   } else {
-    value <- choices[selected]
+    value <- selected
   }
 
-  input("radio_buttons", args, value, map, id,
-    control_f = "radioButtons")
+  create_input(id, value, map, control)
 }
 
 #' @rdname input_select
 #' @export
-#' @importFrom shiny checkboxGroupInput
 input_checkboxgroup <- function(choices, selected = NULL, label = "",
                                 id = rand_id("radio_"), map = identity) {
 
   assert_that(is.string(label), is.string(id))
 
-  args <- list(id, label, choices = choices, selected = selected)
+  control <- shiny::checkboxGroupInput(id, label, choices = choices,
+                                       selected = selected)
 
   if (is.null(selected)) {
     value <- character(0)
   } else {
-    value <- choices[selected]
+    value <- selected
   }
 
-  input("checkbox_group", args, value, map, id)
+  create_input(id, value, map, control)
 }

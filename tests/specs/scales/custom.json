@@ -1,7 +1,7 @@
 {
 	"data" : [
 		{
-			"name" : "df_5d6dccca750b57e8b95a60db154cdb8e",
+			"name" : "df0",
 			"format" : {
 				"type" : "csv",
 				"parse" : {
@@ -28,7 +28,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "df_5d6dccca750b57e8b95a60db154cdb8e",
+						"data" : "df0",
 						"field" : "data.z"
 					}
 				]
@@ -46,7 +46,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "df_5d6dccca750b57e8b95a60db154cdb8e",
+						"data" : "df0",
 						"field" : "data.x"
 					}
 				]
@@ -64,7 +64,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "df_5d6dccca750b57e8b95a60db154cdb8e",
+						"data" : "df0",
 						"field" : "data.x"
 					}
 				]
@@ -94,12 +94,12 @@
 				},
 				"ggvis" : {
 					"data" : {
-						"value" : "df_5d6dccca750b57e8b95a60db154cdb8e"
+						"value" : "df0"
 					}
 				}
 			},
 			"from" : {
-				"data" : "df_5d6dccca750b57e8b95a60db154cdb8e"
+				"data" : "df0"
 			}
 		}
 	],

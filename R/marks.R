@@ -10,168 +10,129 @@
 #' a filled property. \code{mark_point} is an alias to \code{mark_symbol}.
 #'
 #' @template properties
+#' @param vis Visualisation to modify
 #' @name marks
 #' @seealso The "marks" vignette.
-#' @param props A \code{\link{props}} object, named according to the
+#' @param props,... A \code{\link{props}} object, named according to the
 #'   properties listed below.
 #' @param data An optional dataset, if you want to override the usual data
 #'   inheritance for this mark.
 NULL
 
-# Return a character vector of valid properties for a given mark
-valid_mark_properties <- function(mark) UseMethod("valid_mark_properties")
+#' @rdname marks
 #' @export
-valid_mark_properties.default <- function(mark) {
-  stop("Unknown mark type: ", paste(class(mark), collapse=", "))
+emit_points <- function(vis, props) {
+  add_mark(vis, "symbol", props)
 }
-
-# Return a named list of default properties for a mark.
-default_mark_properties <- function(mark) UseMethod("default_mark_properties")
+#' @rdname marks
 #' @export
-default_mark_properties.default <- function(mark) {
-  stop("Unknown mark type: ", paste(class(mark), collapse=", "))
+layer_points <- function(vis, ..., data = NULL) {
+  add_mark(vis, "symbol", props(..., env = parent.frame()), data,
+    deparse2(substitute(data)))
 }
 
 #' @rdname marks
 #' @export
-mark_point <- function(props = NULL, data = NULL) mark("symbol", props = props, data = data)
-#' @export
-valid_mark_properties.mark_symbol <- function(mark) {
-  c("x", "y", "opacity", "fill", "fillOpacity", "stroke", "strokeWidth",
-    "strokeOpacity", "size", "shape", "key")
+emit_images <- function(vis, props) {
+  add_mark(vis, "image", props)
 }
+#' @rdname marks
 #' @export
-default_mark_properties.mark_symbol <- function(mark) {
-  props(fill := "#000000", size := 50)
+layer_images <- function(vis, ..., data = NULL) {
+  add_mark(vis, "image", props(..., env = parent.frame()), data,
+    deparse2(substitute(data)))
 }
 
 #' @rdname marks
 #' @export
-mark_symbol <- function(props, data) {
-  stop("mark_symbol is deprecated please use mark_point/layer_point instead",
-    call. = FALSE)
+emit_arcs <- function(vis, props) {
+  add_mark(vis, "arc", props)
 }
-
 #' @rdname marks
 #' @export
-layer_point <- mark_point
-
-#' @rdname marks
-#' @export
-mark_image <- function(props = NULL, data = NULL) mark("image", props = props, data = data)
-#' @export
-valid_mark_properties.mark_image <- function(mark) {
-  c("x", "y", "opacity", "fill", "fillOpacity", "stroke", "strokeWidth",
-    "strokeOpacity", "url", "align", "baseline", "key")
+layer_arcs <- function(vis, ..., data = NULL) {
+  add_mark(vis, "arc", props(..., env = parent.frame()), data,
+    deparse2(substitute(data)))
 }
-#' @export
-default_mark_properties.mark_image <- function(mark) {
-  props(fill := "#000000")
-}
-
-#' @rdname marks
-#' @export
-layer_image <- mark_image
 
 
 #' @rdname marks
 #' @export
-mark_arc <- function(props = NULL, data = NULL) mark("arc", props = props, data = data)
-#' @export
-valid_mark_properties.mark_arc <- function(mark) {
-  c("x", "y", "opacity", "fill", "fillOpacity", "stroke", "strokeWidth",
-    "strokeOpacity", "innerRadius", "outerRadius", "startAngle", "endAngle",
-    "key")
+emit_ribbons <- function(vis, props) {
+  add_mark(vis, "area", props)
 }
+#' @rdname marks
 #' @export
-default_mark_properties.mark_arc <- function(mark) {
-  props(fill := "#333333")
+layer_ribbons <- function(vis, ..., data = NULL) {
+  add_mark(vis, "area", props(..., env = parent.frame()), data,
+    deparse2(substitute(data)))
 }
 
 #' @rdname marks
 #' @export
-layer_arc <- mark_arc
-
-
-
+emit_paths <- function(vis, props) {
+  add_mark(vis, "line", props)
+}
 #' @rdname marks
 #' @export
-mark_area <- function(props = NULL, data = NULL) mark("area", props = props, data = data)
-#' @export
-valid_mark_properties.mark_area <- function(mark) {
-  c("x", "y", "y2", "height", "opacity", "fill", "fillOpacity", "stroke",
-    "strokeWidth", "strokeOpacity", "interpolate", "tension", "key")
-}
-#' @export
-default_mark_properties.mark_area <- function(mark) {
-  props(fill := "#333333")
+layer_paths <- function(vis, ..., data = NULL) {
+  add_mark(vis, "line", props(..., env = parent.frame()), data,
+    deparse2(substitute(data)))
 }
 
 #' @rdname marks
 #' @export
-layer_area <- mark_area
-
+emit_rects <- function(vis, props) {
+  add_mark(vis, "rect", props)
+}
 #' @rdname marks
 #' @export
-mark_path <- function(props = NULL, data = NULL) mark("line", props = props, data = data)
-#' @export
-valid_mark_properties.mark_line <- function(mark) {
-  c("x", "y", "opacity", "fill", "fillOpacity", "stroke", "strokeWidth",
-    "strokeOpacity", "interpolate", "tension", "key")
-}
-#' @export
-default_mark_properties.mark_line <- function(mark) {
-  props(stroke := "#000000")
+layer_rects <- function(vis, ..., data = NULL) {
+  add_mark(vis, "rect", props(..., env = parent.frame()), data,
+    deparse2(substitute(data)))
 }
 
 #' @rdname marks
 #' @export
-layer_path <- mark_path
-
-
-#' @export
-#' @rdname marks
-mark_rect <- function(props = NULL, data = NULL) mark("rect", props = props, data = data)
-#' @export
-valid_mark_properties.mark_rect <- function(mark) {
-  c("x", "x2", "y", "y2", "width", "height", "opacity", "fill", "fillOpacity", "stroke",
-    "strokeWidth", "strokeOpacity", "key")
+emit_text <- function(vis, props) {
+  add_mark(vis, "text", props)
 }
-#' @export
-default_mark_properties.mark_rect <- function(mark) {
-  props(stroke := "#000000", fill := "#333333")
-}
-
 #' @rdname marks
 #' @export
-layer_rect <- mark_rect
-
-
-#' @export
-#' @rdname marks
-mark_text <- function(props = NULL, data = NULL) mark("text", props = props, data = data)
-#' @export
-valid_mark_properties.mark_text <- function(mark) {
-  c("x", "y", "text", "opacity", "fill", "fillOpacity", "stroke",
-    "strokeWidth", "strokeOpacity", "align", "baseline", "dx", "dy",
-    "angle", "font", "fontSize", "fontWeight", "fontStyle", "key")
-}
-#' @export
-default_mark_properties.mark_text <- function(mark) {
-  props(fill := "#333333")
+layer_text <- function(vis, ..., data = NULL) {
+  add_mark(vis, "text", props(..., env = parent.frame()), data,
+    deparse2(substitute(data)))
 }
 
-#' @rdname marks
-#' @export
-layer_text <- mark_text
+colour <- c("stroke", "strokeOpacity", "fill", "fillOpacity", "opacity",
+  "strokeWidth")
 
+valid_props <- list(
+  arc = c("x", "y", colour, "innerRadius", "outerRadius", "startAngle", "endAngle",
+    "key"),
+  area = c("x", "y", "y2", "height", colour, "interpolate", "tension", "key"),
+  image = c("x", "y", colour, "url", "align", "baseline", "key"),
+  line = c("x", "y", colour,  "interpolate", "tension", "key"),
+  rect = c("x", "x2", "y", "y2", "width", "height", colour, "key"),
+  symbol = c("x", "y", colour, "size", "shape", "key"),
+  text = c("x", "y", "text", colour, "align", "baseline",
+    "dx", "dy", "angle", "font", "fontSize", "fontWeight", "fontStyle", "key")
+)
 
-# Hack to stop spurious warnings in R CMD check
-globalVariables(c(
-  valid_mark_properties.mark_symbol(),
-  valid_mark_properties.mark_text(),
-  valid_mark_properties.mark_arc(),
-  valid_mark_properties.mark_image(),
-  valid_mark_properties.mark_line(),
-  valid_mark_properties.mark_rect()
-))
+# Hack to stop spurious warnings in R CMD check. Also used in qvis.
+known_props <- sort(unique(unlist(valid_props)))
+globalVariables(known_props)
+
+default_props <- function(type) {
+  switch(type,
+    arc =    props(fill := "#333333"),
+    area =   props(fill := "#333333"),
+    line =   props(stroke := "#000000"),
+    image =  props(fill := "#000000"),
+    rect =   props(stroke := "#000000", fill := "#333333"),
+    symbol = props(fill := "#000000", size := 50),
+    text =   props(fill := "#333333"),
+    stop("Unknown type")
+  )
+}
+

@@ -31,10 +31,10 @@ print.scales <- function(x, ...) cat(format(x, ...), "\n", sep = "")
 
 # Merge two ggvis scales objects
 #
-# merge_scales(scales(scale("x", "linear")))
-# merge_scales(scales(scale("x", "linear")), scales(scale("y", "linear")))
-# merge_scales(scales(scale("x", "linear"), scale("y", "linear")),
-#              scales(scale("y", "ordinal")))
+# merge_scales(scales(vega_scale("x", "linear")))
+# merge_scales(scales(vega_scale("x", "linear")), scales(vega_scale("y", "linear")))
+# merge_scales(scales(vega_scale("x", "linear"), vega_scale("y", "linear")),
+#              scales(vega_scale("y", "ordinal")))
 merge_scales <- function(parent = NULL, child = NULL) {
   if (is.null(parent)) return(child)
   if (is.null(child)) return(parent)
@@ -45,37 +45,39 @@ merge_scales <- function(parent = NULL, child = NULL) {
 
 # Given a ggvis object, return all needed vega scales, with correct
 # domain values set.
-add_default_scales <- function(x, nodes, data_table) {
-  
-  scales <- x$scales
-  
-  # Loop through each node, recording the usage of each scale
+add_default_scales <- function(vis, data_table) {
+  scales <- vis$scales
+  marks <- vis$marks
+
+  # Loop through each mark, recording the usage of each scale
   scale_types <- list()
   scale_uses <- list()
-  for (node in nodes) {
-    data <- isolate(data_table[[node$pipeline_id]]())
-    for (prop_n in names(node$props)) {
-      prop <- node$props[[prop_n]]
+  for (mark in marks) {
+    data_id <- data_id(mark$data)
+    data <- shiny::isolate(data_table[[data_id]]())
+
+    for (prop_n in names(mark$props)) {
+      prop <- mark$props[[prop_n]]
       scale <- prop_scale(prop, prop_to_scale(trim_propset(prop_n)))
       if (is.na(scale)) next
-      
+
       type <- prop_type(data, prop, processed = TRUE)
       scale_types[[scale]] <- c(scale_types[[scale]], type)
-      
-      use <- prop_domain(prop, node$pipeline_id)
+
+      use <- prop_domain(prop, data_id)
       if (!is.null(use)) {
         scale_uses[[scale]] <- c(scale_uses[[scale]], list(use))
       }
     }
   }
-  
+
   # Add in scales not already specified in spec
   needed <- setdiff(names(scale_types), names(scales))
   for (scale_n in needed) {
     type <- scale_types[[scale_n]][[1]]
     scales[[scale_n]] <- default_scale(scale_n, type)
   }
-  
+
   # Override domains (if not already present)
   for (scale_n in names(scales)) {
     # If domain isn't specified (length == 0) or if only one of domainMin and
@@ -86,6 +88,9 @@ add_default_scales <- function(x, nodes, data_table) {
       scales[[scale_n]]$domain <- list(fields = scale_uses[[scale_n]])
     }
   }
-  
-  unclass(scales)
+
+  for (scale in scales) {
+    vis <- add_scale(vis, scale)
+  }
+  vis
 }

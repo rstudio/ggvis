@@ -21,7 +21,7 @@ interval; legal values are "second", "minute", "hour", "day", "week",
 
 \item{domain}{The domain of the scale, representing the set of data values.
 For ordinal scales, a character vector; for quantitative scales, a numeric
-vector of length two. Either value (but not both) may be missing, in which
+vector of length two. Either value (but not both) may be NA, in which
 case \code{domainMin} or \code{domainMax} is set.}
 
 \item{range}{The range of the scale, representing the set of visual values.
@@ -41,16 +41,22 @@ A date/time scale controls the mapping of date and time variables to
 visual properties.
 }
 \details{
-Generally, you should create new scales with \code{\link{dscale}} because
+Generally, you should create new scales with \code{dscale} because
 that will automatically set the range to a reasonable default, and it will
 automatically pick the correct type of scale given the variable type.
 }
 \examples{
-scale_time("x", nice = "year")
-dscale("x", "datetime", nice = "year")
+set.seed(2934)
+dat <- data.frame(times = as.POSIXct("2013-07-01", tz = "GMT") +
+                          rnorm(200) * 60 * 60 * 24 * 7)
+p <- dat \%>\% ggvis(x = ~times) \%>\% layer_histograms()
+p
 
-scale_time("y", utc = TRUE)
-dscale("y", "datetime", utc = TRUE)
+scale_time("x", nice = "year")
+p \%>\% set_dscale("x", "datetime", nice = "year")
+
+scale_time("x", utc = TRUE)
+p \%>\% set_dscale("x", "datetime", utc = TRUE)
 }
 \seealso{
 \url{https://github.com/trifacta/vega/wiki/Scales#time-scale-properties}

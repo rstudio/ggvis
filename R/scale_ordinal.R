@@ -1,13 +1,13 @@
 #' Create an ordinal scale.
-#' 
+#'
 #' A ordinal scale controls the mapping of ordinal and nominal variables to
-#' visual properties. 
-#' 
-#' Generally, you should create new scales with \code{\link{dscale}} because 
+#' visual properties.
+#'
+#' Generally, you should create new scales with \code{dscale} because
 #' that will automatically set the range to a reasonable default, and it will
 #' automatically pick the correct type of scale given the variable type.
 #'
-#' @inheritParams scale
+#' @inheritParams vega_scale
 #' @param points If \code{TRUE}, distributes the ordinal values over a
 #'   quantitative range at uniformly spaced points. The spacing of the points
 #'   can be adjusted using the padding property. If \code{FALSE}, the ordinal
@@ -28,11 +28,13 @@
 #' @export
 #' @family vega scales
 #' @examples
+#' p <- mtcars %>% ggvis(~wt, ~mpg) %>% layer_points()
+#'
 #' scale_ordinal("x")
-#' dscale("x", "nominal")
-#' 
+#' p %>% set_dscale("x", "nominal")
+#'
 #' scale_ordinal("x", padding = 0.5, points = FALSE)
-#' dscale("x", "nominal", points = FALSE)
+#' p %>% set_dscale("x", "nominal", points = FALSE)
 scale_ordinal <- function(name, points = TRUE, padding = NULL, sort = TRUE,
                           domain = NULL, range = NULL, reverse = FALSE,
                           round = FALSE) {
@@ -40,8 +42,8 @@ scale_ordinal <- function(name, points = TRUE, padding = NULL, sort = TRUE,
   assert_that(is.null(padding) || (is.numeric(padding) && length(padding) == 1))
   assert_that(is.flag(sort))
 
-  scale(name, "ordinal",
-        points = points, padding = padding, sort = sort, subclass = "ordinal",
-        domain = domain, range = range, reverse = reverse, round = round)
+  vega_scale(name, "ordinal",
+    points = points, padding = padding, sort = sort, subclass = "ordinal",
+    domain = domain, range = range, reverse = reverse, round = round)
 
 }

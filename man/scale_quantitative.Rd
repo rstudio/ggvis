@@ -27,7 +27,7 @@ in the scale domain. This option is ignored for non-quantitative scales.}
 
 \item{domain}{The domain of the scale, representing the set of data values.
 For ordinal scales, a character vector; for quantitative scales, a numeric
-vector of length two. Either value (but not both) may be missing, in which
+vector of length two. Either value (but not both) may be NA, in which
 case \code{domainMin} or \code{domainMax} is set.}
 
 \item{range}{The range of the scale, representing the set of visual values.
@@ -47,19 +47,21 @@ A quantitative scale controls the mapping of continuous variables to
 visual properties.
 }
 \details{
-Generally, you should create new scales with \code{\link{dscale}} because
+Generally, you should create new scales with \code{dscale} because
 that will automatically set the range to a reasonable default, and it will
 automatically pick the correct type of scale given the variable type.
 }
 \examples{
+p <- mtcars \%>\% ggvis(~wt, ~mpg) \%>\% layer_points()
+
 scale_quantitative("y")
-dscale("y", "numeric")
+p \%>\% set_dscale("y", "numeric")
 
 scale_quantitative("y", "pow", 0.5)
-dscale("y", "numeric", trans = "pow", exp = 0.5)
+p \%>\% set_dscale("y", "numeric", trans = "pow", exp = 0.5)
 
 scale_quantitative("x", clamp = TRUE, nice = FALSE, zero = TRUE)
-dscale("x", "numeric", clamp = TRUE, nice = FALSE, zero = TRUE)
+p \%>\% set_dscale("x", "numeric", clamp = TRUE, nice = FALSE, zero = TRUE)
 }
 \seealso{
 \url{https://github.com/trifacta/vega/wiki/Scales#quantitative-scale-properties}

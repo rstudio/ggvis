@@ -4,7 +4,8 @@
 \alias{prop}
 \title{Create a property.}
 \usage{
-prop(x, scale = NULL, offset = NULL, mult = NULL, env = parent.frame())
+prop(x, scale = NULL, offset = NULL, mult = NULL, env = parent.frame(),
+  label = NULL)
 
 is.prop(x)
 }
@@ -26,6 +27,8 @@ points.}
 \item{env}{If \code{x} is a quoted call this provides the environment in
 which to look for variables not in the data. You should not need this in
 ordinary operation.}
+
+\item{label}{A label for this prop to use for reporting errors.}
 }
 \description{
 Properties are used to describe the visual properties of \link{marks}.

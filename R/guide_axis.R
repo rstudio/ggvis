@@ -1,16 +1,17 @@
-#' Generate a vega axis specification
+#' Add a vega axis specification to a ggvis plot
 #'
-#' Axis specifications allow you to either override the default axes, 
-#' or additional axes. 
-#' 
+#' Axis specifications allow you to either override the default axes,
+#' or additional axes.
+#'
 #' More information about axes can be found in the "axes and legends" vignettes.
 #'
 #' @section Compared to ggplot2:
-#' 
-#' In ggplot2, axis (and legend) properties are part of the scales 
-#' specification. In vega, they are separate, which allows the specification
-#' of multiple axes, and more flexible linkage between scales and axes. 
 #'
+#' In ggplot2, axis (and legend) properties are part of the scales
+#' specification. In vega, they are separate, which allows the specification
+#' of multiple axes, and more flexible linkage between scales and axes.
+#'
+#' @param vis A ggvis object.
 #' @param type The type of axis. Either x or y.
 #' @param scale The name of the scale backing the axis component. Defaults to
 #'   the scale type - you will need to specify if you want (e.g.) a scale
@@ -44,12 +45,33 @@
 #' @param properties Optional mark property definitions for custom axis styling.
 #'   Should be a named list (ticks, majorTicks, minorTicks, labels and axis) of
 #'   \code{\link{props}}.
-#' @seealso Vega axis documentation: 
+#' @seealso Vega axis documentation:
 #'   \url{https://github.com/trifacta/vega/wiki/Axes}
 #' @export
 #' @examples
-#' guide_axis("x")
-#' guide_axis("x", properties = list(ticks = props(stroke = "red")))
+#' mtcars %>% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) %>%
+#'   layer_points() %>%
+#'   add_guide_axis("x", title = "Weight", orient = "top")
+#'
+#' mtcars %>% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) %>%
+#'   layer_points() %>%
+#'   add_guide_axis("x", properties = list(ticks = props(stroke = "red")))
+add_guide_axis <- function(vis, type, scale = type, orient = NULL, title = NULL,
+                           title_offset = NULL, format = NULL, ticks = NULL,
+                           values = NULL, subdivide = NULL, tick_padding = NULL,
+                           tick_size_major = NULL, tick_size_minor = tick_size_major,
+                           tick_size_end = tick_size_major, offset = NULL,
+                           layer = "back", grid = TRUE, properties = list()) {
+
+  axis <- guide_axis(type, scale, orient, title, title_offset, format, ticks,
+                     values, subdivide, tick_padding, tick_size_major,
+                     tick_size_minor, tick_size_end, offset,
+                     layer, grid, properties)
+
+  add_axis(vis, axis)
+}
+
+# Create an axis object.
 guide_axis <- function(type, scale = type, orient = NULL, title = NULL,
                  title_offset = NULL, format = NULL, ticks = NULL,
                  values = NULL, subdivide = NULL, tick_padding = NULL,
@@ -79,7 +101,11 @@ guide_axis <- function(type, scale = type, orient = NULL, title = NULL,
   )), class = "vega_axis")
 }
 
-add_default_axes <- function(axes, scales) {
+
+add_default_axes <- function(vis) {
+  axes <- vis$axes
+  scales <- vis$scales
+
   present <- vapply(axes, "[[", "scale", FUN.VALUE = character(1))
   missing <- setdiff(intersect(names(scales), c("x", "y")), present)
 
@@ -87,12 +113,18 @@ add_default_axes <- function(axes, scales) {
     axes[[scale]] <- guide_axis(scale)
   }
 
-  unname(axes)
+  for (axis in axes) {
+    vis <- add_axis(vis, axis)
+  }
+  vis
 }
 
 # Some axis settings require examining the scale
-apply_axes_defaults <- function(axes, scales) {
-  lapply(axes, function(axis) {
+apply_axes_defaults <- function(vis) {
+  axes <- vis$axes
+  scales <- vis$scales
+
+  axes <- lapply(axes, function(axis) {
     scale <- scales[[axis$scale]]
 
     # If we don't have a title, try to get it from the scale.
@@ -107,4 +139,20 @@ apply_axes_defaults <- function(axes, scales) {
 
     axis
   })
+
+  # Replace the original axes with the new ones
+  vis$axes <- axes
+  vis
 }
+
+#' @export
+format.vega_axis <- function(x, ...) {
+  params <- param_string(x, collapse = FALSE)
+  param_s <- paste0("  ", format(paste0(names(params), ":")), " ", format(params),
+    collapse = "\n")
+
+  paste0("<", class(x)[1], ">\n", param_s)
+}
+
+#' @export
+print.vega_axis <- function(x, ...) cat(format(x, ...), "\n", sep = "")

@@ -1,17 +1,15 @@
-shinyServer(function(input, output, session) {
+library(ggvis)
 
-  # A subset of mtcars
+shinyServer(function(input, output, session) {
+  # A reactive subset of mtcars
   mtc <- reactive({ mtcars[1:input$n, ] })
 
-  r_gv <- reactive({
-    ggvis(mtc, props(x = ~wt, y = ~mpg)) + layer_point()
-  })
-
-  # Set up observers for the spec and the data
-  observe_ggvis(r_gv, "plot1", session)
-
-  # User interface elements (in the sidebar)
-  output$ggvis_ui <- renderControls(r_gv, session)
+  # A simple visualisation. In shiny apps, need to register observers
+  # and tell shiny where to put the controls
+  mtc %>%
+    ggvis(~wt, ~mpg) %>%
+    layer_points() %>%
+    bind_shiny("plot", "plot_ui")
 
   output$mtc_table <- renderTable({
     mtc()[, c("wt", "mpg")]

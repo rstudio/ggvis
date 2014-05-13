@@ -19,6 +19,7 @@
 #' @param env If \code{x} is a quoted call this provides the environment in
 #'   which to look for variables not in the data. You should not need this in
 #'   ordinary operation.
+#' @param label A label for this prop to use for reporting errors.
 #' @seealso \code{\link{props}} to manage multiple properties and to
 #'   succintly create the most common types.
 #' @export
@@ -38,7 +39,7 @@
 #' # Don't scale variable (i.e. it already makes sense in the visual space)
 #' prop(quote(colour), scale = FALSE)
 prop <- function(x, scale = NULL, offset = NULL, mult = NULL,
-                 env = parent.frame()) {
+                 env = parent.frame(), label = NULL) {
 
   if (is.prop(x)) return(x)
 
@@ -54,26 +55,23 @@ prop <- function(x, scale = NULL, offset = NULL, mult = NULL,
     assert_that(length(x) == 1)
     # Constants don't need to capture environment
     env <- NULL
-    dr <- NULL
     scale <- scale %||% FALSE
 
-  } else if (is.input(x)) {
+  } else if (shiny::is.reactive(x)) {
     type <- "reactive"
-    dr <- x
-    x <- function() stop("Delayed reactive has not yet been advanced!")
+    reactive_id(x) <- paste0("reactive_", digest::digest(x, algo = "crc32"))
     scale <- scale %||% FALSE
   } else if (is.quoted(x)) {
     type <- "variable"
-    dr <- NULL
     scale <- scale %||% TRUE
 
   } else {
-    stop("Unknown input to prop", call = FALSE)
+    if (is.null(label)) label <- deparse(substitute(label))
+    stop("Unknown input to prop: ", label, call. = FALSE)
   }
 
   structure(
     list(value = x,
-      dr = dr,
       type = type,
       scale = scale,
       offset = offset,
@@ -122,7 +120,7 @@ prop_name <- function(x) UseMethod("prop_name")
 prop_name.default <- function(x) {
   switch(x$type,
     constant = "",
-    reactive = x$dr$id,
+    reactive = safe_vega_var(reactive_id(x$value)),
     variable = safe_vega_var(x$value))
 }
 
@@ -191,7 +189,7 @@ prop_domain.default <- function(x, data) {
 as.character.prop <- function(x, ...) {
   switch(x$type,
     constant = as.character(x$value),
-    reactive = x$dr$id,
+    reactive = reactive_id(x$value),
     variable = deparse2(x$value)
   )
 }
@@ -252,7 +250,11 @@ prop_type.data.frame <- function(data, prop, processed = FALSE) {
 
 # Continuous variables are not countable; categorical variables are.
 prop_countable <- function(data, prop, processed = FALSE) {
-  type <- prop_type(data, prop, processed)
+  countable_prop_type(prop_type(data, prop, processed))
+}
+
+# Report whether a prop type is countable
+countable_prop_type <- function(type) {
   switch(type,
     NULL = NULL,
     "numeric" = FALSE,
@@ -289,4 +291,9 @@ prop_range.split_df <- function(data, var, na.rm = TRUE) {
   ranges <- vapply(data, prop_range, var, na.rm = na.rm,
     FUN.VALUE = numeric(2))
   range(ranges)
+}
+
+#' @export
+formula.prop <- function(x, ...) {
+  eval(substitute(~x, list(x = x$value)), x$env)
 }

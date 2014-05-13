@@ -1,12 +1,12 @@
 #' Determine the "type" of a vector
-#' 
+#'
 #' The \code{vector_type} collapses down the class of base vectors into
 #' something useful more for visualisation, yielding one of "datetime",
 #' "numeric", "ordinal", "nominal" or "logical".
-#' 
+#'
 #' @param x a vector
 #' @export
-#' @seealso \code{default_scale}, which uses this when picking the default 
+#' @seealso \code{default_scale}, which uses this when picking the default
 #'   scale.
 vector_type <- function(x) UseMethod("vector_type")
 
@@ -33,6 +33,10 @@ vector_type.default <- function(x) {
   stop("Unknown variable type: ", paste0(class(x), collapse = "/"))
 }
 
+# Reports whether a vector maps to a countable prop type
+vector_countable <- function(x) {
+  countable_prop_type(vector_type(x))
+}
 
 #' Determine the vega data type for a vector
 #'

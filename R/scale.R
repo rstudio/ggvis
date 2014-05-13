@@ -2,7 +2,7 @@
 #'
 #' A scale object is a close mapping to a vega mark object. Vega scales
 #' are documented in \url{https://github.com/trifacta/vega/wiki/Scales}.
-#' 
+#'
 #' This function is designed to be used by authors of new types of scale.
 #' If you are a ggvis user, please use one of the more specific scale
 #' functions starting with the \code{scale_}.
@@ -12,7 +12,7 @@
 #'   "utc", "linear", "log", "pow", "sqrt", "quantile", "quantize", "threshold".
 #' @param domain The domain of the scale, representing the set of data values.
 #'   For ordinal scales, a character vector; for quantitative scales, a numeric
-#'   vector of length two. Either value (but not both) may be missing, in which
+#'   vector of length two. Either value (but not both) may be NA, in which
 #'   case \code{domainMin} or \code{domainMax} is set.
 #' @param range The range of the scale, representing the set of visual values.
 #'   For numeric values, the range can take the form of a two-element array with
@@ -29,9 +29,9 @@
 #' @export
 #' @keywords internal
 #' @examples
-#' scale("x", "linear")
-#' scale("x", "ord")
-scale <- function(name, type = NULL, domain = NULL, range = NULL,
+#' vega_scale("x", "linear")
+#' vega_scale("x", "ord")
+vega_scale <- function(name, type = NULL, domain = NULL, range = NULL,
                   reverse = FALSE, round = FALSE, ..., subclass = NULL) {
   assert_that(is.string(name))
   type <- match.arg(type, c("linear", "ordinal", "time", "utc", "log",
@@ -83,18 +83,12 @@ named_list <- function(names, ...) {
 }
 
 #' @export
-#' @rdname scale
+#' @rdname vega_scale
 #' @param x object to test for scale-ness
 is.scale <- function(x) inherits(x, "scale")
 
 #' @export
-format.scale <- function(x, ...) {
-  params <- param_string(x, collapse = FALSE)
-  param_s <- paste0(" ", format(paste0(names(params), ":")), " ", format(params), "\n",
-    collapse = "")
-
-  paste0("<", class(x)[1], ">\n", param_s)
-}
+format.scale <- format.vega_axis
 
 #' @export
-print.scale <- function(x, ...) cat(format(x, ...), "\n", sep = "")
+print.scale <- print.vega_axis

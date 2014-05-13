@@ -24,15 +24,13 @@ for single-select lists and no values for multiple select lists.}
 
 \item{multiple}{Is selection of multiple items allowed?}
 
-\item{label}{Display label for the control}
+\item{label}{Display label for the control, or \code{NULL}}
 
-\item{id}{a unique identifier for this interactive input - used to
-de-duplicate the controls when the same input is used in multiple places
-in a visualisation}
+\item{id}{A unique identifier for this input. Usually generated
+automatically.}
 
-\item{map}{a function with a singe argument that takes the value returned
-from the input control and converts it to an argument useful for ggvis.
-Defaults to \code{identity}, leaving the output unchanged.}
+\item{map}{A function with single argument \code{x}, the value of the
+control on the client. Returns a modified value.}
 }
 \description{
 \itemize{
@@ -57,14 +55,27 @@ input_select(names(mtcars), map = as.name)
 input_radiobuttons(choices = c("Linear" = "lm", "LOESS" = "loess"),
                    label = "Model type")
 input_radiobuttons(choices = c("Linear" = "lm", "LOESS" = "loess"),
-                   selected = "LOESS",
+                   selected = "loess",
                    label = "Model type")
 
-# Used in a layer_smooth
-layer_smooth(model = input_radiobuttons(
-  choices = c("Linear" = "lm", "LOESS" = "loess"),
-              selected = "LOESS",
-              label = "Model type"))
+# Used in layer_model_predictions
+mtcars \%>\% ggvis(~wt, ~mpg) \%>\%
+  layer_model_predictions(model = input_radiobuttons(
+    choices = c("Linear" = "lm", "LOESS" = "loess"),
+    selected = "loess",
+    label = "Model type"))
+
+# Checkbox group
+mtcars \%>\% ggvis(x = ~wt, y = ~mpg) \%>\%
+  layer_points(
+    fill := input_checkboxgroup(
+      choices = c("Red" = "r", "Green" = "g", "Blue" = "b"),
+      label = "Point color components",
+      map = function(val) {
+        rgb(0.8 * "r" \%in\% val, 0.8 * "g" \%in\% val, 0.8 * "b" \%in\% val)
+      }
+    )
+  )
 }
 \seealso{
 Other interactive input: \code{\link{input_checkbox}};

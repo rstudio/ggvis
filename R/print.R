@@ -2,359 +2,171 @@
 #'
 #' \code{view_static} creates a static web page in a temporary directory;
 #' \code{view_dynamic} generate a dynamic shiny app and launches it.
-#' \code{print} picks between the two methods automatically based on whether
-#' or not your plot has interactive features.
+#' \code{print} automatically picks between the two.
 #'
 #' @param x A ggvis object.
 #' @param dynamic Uses \code{view_dynamic} if \code{TRUE}, \code{view_static} if
 #'   \code{FALSE}. The default, \code{NA}, chooses automatically based on the
 #'   presence of reactives or interactive inputs in \code{x}.
-#' @param spec If \code{TRUE}, override usual printing and instead print
-#'   the json plot spec. If a character vector, will display just those
-#'   components of the spec. This is useful for generating regression tests.
+#' @param launch If \code{TRUE}, will launch plot in a viewer/browser. If
+#'   \code{FALSE} returns an object that you can \code{print()} to launch.
 #' @param ... Other arguments passed on to \code{view_dynamic} and
-#'   \code{view_static} from \code{print}.
-#' @param launch If \code{TRUE}, launch this web page in a browser or Rstudio.
-#' @param port the port on which to start the shiny app. If NULL (the default),
-#'   Shiny will select a random port.
-#' @param quiet If \code{TRUE} show status messages from Shiny. (Default is
-#'   \code{FALSE}.)
-#' @param minify If \code{TRUE}, use minified version of JS and CSS files. This
-#'   can be useful for debugging.
+#'   \code{view_static} ?from \code{print}.
 #' @keywords internal
 #' @method print ggvis
 #' @export
-print.ggvis <- function(x, dynamic = NA,
-                        spec = getOption("ggvis.print_spec", FALSE),
-                        id = rand_id("plot_"), minify = TRUE, ...) {
-
-  set_last_vis(x)
-
-  # Special case for spec printing mode
-  if (!identical(spec, FALSE)) {
-    return(show_spec(x, spec))
+print.ggvis <- function(x, dynamic = NA, launch = interactive(), ...) {
+  if (is.na(dynamic)) {
+    dynamic <- is.dynamic(x) && interactive()
   }
-
-  if (is.na(dynamic)) dynamic <- is.dynamic(x) && interactive()
 
   if (dynamic) {
-    view_dynamic(x, id = id, minify = minify, ...)
+    out <- view_dynamic(x, ...)
   } else {
-    view_static(x, id = id, minify = minify, ...)
-  }
-}
-
-show_spec <- function(x, pieces) {
-  out <- as.vega(x, dynamic = FALSE)
-
-  if (is.character(pieces)) {
-    out <- out[pieces]
+    out <- view_static(x, ...)
   }
 
-  json <- toJSON(out, pretty = TRUE)
-  cat(gsub("\t", " ", json), "\n", sep = "")
-
-  invisible()
+  if (launch) print(out)
+  out
 }
 
 #' @rdname print.ggvis
 #' @export
-#' @importFrom RJSONIO toJSON
-#' @importFrom whisker whisker.render
-view_static <- function(x,
-                        renderer = getOption("ggvis.renderer", default = "svg"),
-                        launch = interactive(),
-                        id = rand_id("plot_"),
-                        minify = TRUE) {
+#' @param plot_id Unique identifier used to identify the plot on the page.
+#' @param dest Directory in which to save html and depedencies. Created if
+#'   it doesn't already exist.
+view_static <- function(x, plot_id = rand_id("plot_"),
+                        dest = tempfile(pattern = "ggvis")) {
 
-  if (!(renderer %in% c("canvas", "svg")))
-    stop("renderer must be 'canvas' or 'svg'")
+  deps <- ggvis_dependencies(dynamic = FALSE)
 
-  temp_dir <- tempfile(pattern = "ggvis")
-  dir.create(temp_dir)
+  if (!file.exists(dest)) dir.create(dest)
+  copy_deps(deps, system.file("www", package = "ggvis"), dest)
 
   spec <- as.vega(x, dynamic = FALSE)
-  vega_json <- toJSON(spec, pretty = TRUE)
+  ui <- ggvisPage(plot_id, length(x$controls) > 0, spec, deps = deps)
 
-  template <- paste(readLines(system.file('index.html', package='ggvis')),
-    collapse='\n')
+  html_file <- file.path(dest, "plot.html")
+  cat(renderHTML(ui), file = html_file)
 
-  head <- html_head(minify = minify)
-
-  # Find the paths of all the JS and CSS files in head tags
-  www_paths <- unlist(lapply(head, function(tag) {
-    tag$attribs$src %||% tag$attribs$href
-  }))
-  # Also copy jquery-ui resources
-  www_paths <- c(www_paths, "lib/jquery-ui")
-
-  copy_www_resources(www_paths, temp_dir)
-
-  body <- tagList(
-    ggvis_output(id, shiny = FALSE),
-    tags$script(type = "text/javascript",
-      paste0('
-        var ', id, '_spec = ', vega_json, ';
-        ggvis.getPlot("', id, '").parseSpec(', id, '_spec);
-      ')
-    )
-  )
-
-  body <- format(body)
-
-  html_file <- file.path(temp_dir, "plot.html")
-  writeLines(whisker.render(template, list(head = head, body = body)),
-    con = html_file)
-
-  if (launch) view_plot(html_file, 350)
-  invisible(html_file)
+  structure(html_file, class = "showUrl")
 }
 
-copy_www_resources <- function(paths, destdir) {
-  # Copies a file/dir from an installed package to the destdir (with path)
-  copy_www_path <- function(file, pkg) {
-    src <- system.file("www", file, package = "ggvis")
+#' @rdname print.ggvis
+#' @export
+#' @param port the port on which to start the shiny app. If NULL (the default),
+#'   Shiny will select a random port.
+#' @param quiet If \code{TRUE} show status messages from Shiny. (Default is
+#'   \code{FALSE}.)
+view_dynamic <- function(x, plot_id = rand_id("plot_"), port = NULL,
+                         quiet = FALSE) {
 
-    destfile <- file.path(destdir, file)
-    parent_dir <- dirname(destfile)
-    if (!dir.exists(parent_dir))
-      dir.create(parent_dir, recursive = TRUE)
-
-    if (file.info(src)$isdir) {
-      file.copy(src, dirname(destfile), recursive = TRUE)
-    } else {
-      file.copy(src, destfile, overwrite = TRUE)
+  ggvis_app(x,
+    plot_id = plot_id,
+    port = port,
+    quiet = TRUE,
+    launch.browser = function(url) {
+      if (!quiet) {
+        message("Showing dynamic visualisation. Press Escape/Ctrl + C to stop.")
+      }
+      view_plot(url, 350 + control_height(x))
     }
+  )
+}
+
+#' Knit print method for ggvis plots.
+#'
+#' @keywords internal
+#' @export
+knit_print.ggvis <- function(x, options = list(), inline = FALSE, ...) {
+  # Set height and width from knitr chunk options
+  knitr_opts <- list(
+    width = options$out.width.px,
+    height = options$out.height.px
+  )
+  x <- add_options(x, knitr_opts, replace = FALSE)
+
+  # If this is a dynamic object, check to see if we're rendering in a Shiny R
+  # Markdown document and have an appropriate version of Shiny; emit a Shiny
+  # application if we are, and a warning if we aren't.
+  if (is.dynamic(x)) {
+    if (identical(runtime(), "shiny")) {
+      # create the application object and allocate space for the controls
+      app <- ggvis_app(x,
+        width = knitr_opts$width,
+        height = knitr_opts$height + control_height(x)
+      )
+      return(knitr::knit_print(app))
+    }
+
+    warning(
+      "Can't output dynamic/interactive ggvis plots in a knitr document.\n",
+      "Generating a static (non-dynamic, non-interactive) version of the plot.",
+      call. = FALSE
+    )
   }
 
-  lapply(paths, copy_www_path)
+  deps <- ggvis_dependencies(absolute = TRUE, in_shiny = FALSE)
+
+  spec <- as.vega(x, dynamic = FALSE)
+  html <- ggvisOutput(spec = spec, deps = deps)
+
+  knitr::asis_output(
+    format(html, indent = FALSE),
+    meta = deps
+  )
+}
+
+# Helper functions -------------------------------------------------------------
+
+runtime <- function() {
+  knitr::opts_knit$get("rmarkdown.runtime")
+}
+
+#' Determine if an ggvis is dynamic (i.e. needs to be run in a shiny app)
+#'
+#' @export
+#' @keywords internal
+is.dynamic <- function(x) {
+  any_apply(x$data, shiny::is.reactive) || length(x$reactives) > 0
+}
+
+#' @export
+print.showUrl <- function(x, ...) {
+  view_plot(x, 350)
+}
+
+# View using either an internal viewer or fallback to utils::browseURL
+view_plot <- function(url, height) {
+  viewer <- getOption("viewer")
+  if (!is.null(viewer) && getOption("ggvis.view_internal", TRUE)) {
+    viewer(url, height)
+  } else {
+    utils::browseURL(url)
+  }
 }
 
 # given a ggvis object, return the number of pixels to reserve for its controls.
 control_height <- function(x) {
-  n_controls <- length(controls(x))
+  n_controls <- length(x$controls)
 
   # Request 70 vertical pixels for each pair of control items, since there are
   # two on a row.
   70 * ceiling(n_controls / 2)
 }
 
-#' @rdname print.ggvis
-#' @export
-#' @importFrom RJSONIO toJSON
-#' @importFrom whisker whisker.render
-#' @importFrom shiny basicPage uiOutput mainPanel tags observe runApp stopApp renderUI
-view_dynamic <- function(x,
-    renderer = getOption("ggvis.renderer", default = "svg"),
-    id = rand_id("plot_"), minify = TRUE,
-    launch = TRUE, port = NULL, quiet = TRUE) {
-
-  app <- app_object(x, renderer = renderer, id = id, minify = minify)
-
-  if (launch) {
-    shiny::runApp(app, port = port, quiet = quiet,
-      launch.browser = function(url) view_plot(url, 350 + control_height(x)))
-  } else {
-    app
-  }
+# Given shiny tags, makes an HTML page
+renderHTML <- function(tags) {
+  html <- shiny:::renderTags(tags)
+  paste0(
+    '<!DOCTYPE html>\n',
+    '<html>\n',
+    '<head>\n',
+    '  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>\n',
+    html$head,
+    '</head>\n',
+    '<body>\n',
+    html$html,
+    '</body>\n',
+    '</html>\n', sep = "")
 }
-
-# Given a ggvis object, return an object that can be run as a Shiny app
-app_object <- function(x,
-    renderer = getOption("ggvis.renderer", default = "svg"),
-    id = rand_id("plot_"), minify = TRUE) {
-
-  if (!(renderer %in% c("canvas", "svg")))
-    stop("renderer must be 'canvas' or 'svg'")
-
-  # Find number of control elements for the plot
-  n_controls <- length(controls(x))
-
-  if (n_controls == 0) {
-    ui <- shiny::basicPage(ggvis_output(id, shiny = TRUE, minify = minify))
-
-  } else {
-    ui <- sidebarBottomPage(
-      sidebarBottomPanel(
-        ggvisControlOutput("ggvis_controls", id)
-      ),
-      mainTopPanel(
-        ggvis_output(id, shiny = TRUE)
-      )
-    )
-  }
-
-  server <- function(input, output, session) {
-    r_gv <- reactive(x)
-    # Set up observers for the spec and the data
-    observe_ggvis(r_gv, id, session, renderer)
-
-    # User interface elements (in the sidebar). These must be added dynamically
-    # (instead of being rendered statically in ui) because they are unique to
-    # each session.
-    output$ggvis_controls <- renderControls(r_gv, session)
-  }
-
-  list(ui = ui, server = server)
-}
-
-# View using either an internal viewer or fallback to utils::browseURL
-view_plot <- function(url, height) {
-  viewer <- getOption("viewer")
-  if (!is.null(viewer) && getOption("ggvis.view_internal", TRUE))
-    viewer(url, height)
-  else
-    utils::browseURL(url)
-}
-
-# Returns a shiny tagList with links to the needed JS and CSS files
-# @param prefix A prefix to add to the path (like "ggvis")
-# @param minify Use minified version of JS and CSS files.
-# @param shiny Include shiny-related ggvis files?
-html_head <- function(prefix = NULL, minify = TRUE, shiny = FALSE) {
-  if(minify) {
-    tags <- tagList(
-      # Shiny has its own copy of jQuery; duplicates can cause problems
-      if (!shiny) tags$script(src = "lib/jquery/jquery.min.js"),
-      tags$script(src = "lib/jquery-ui/js/jquery-ui-1.10.4.custom.min.js"),
-      tags$script(charset = "utf-8", src = "lib/d3/d3.min.js"),
-      tags$script(src = "lib/vega/vega.min.js"),
-      tags$script(src = "lib/lodash/lodash.min.js"),
-      tags$script("var lodash = _.noConflict();"),
-      tags$script(src = "ggvis/js/ggvis.js"),
-      if (shiny) tags$script(src = "ggvis/js/shiny-ggvis.js"),
-      tags$link(rel = "stylesheet", type = "text/css",
-        href = "lib/jquery-ui/css/smoothness/jquery-ui-1.10.4.custom.min.css"),
-      tags$link(rel = "stylesheet", type = "text/css", href = "ggvis/css/ggvis.css")
-    )
-  } else {
-    tags <- tagList(
-      if (!shiny) tags$script(src = "lib/jquery/jquery.js"),
-      tags$script(src = "lib/jquery-ui/js/jquery-ui-1.10.4.custom.js"),
-      tags$script(charset = "utf-8", src = "lib/d3/d3.js"),
-      tags$script(src = "lib/vega/vega.js"),
-      tags$script(src = "lib/lodash/lodash.min.js"),
-      tags$script("var lodash = _.noConflict();"),
-      tags$script(src = "ggvis/js/ggvis.js"),
-      if (shiny) tags$script(src = "ggvis/js/shiny-ggvis.js"),
-      tags$link(rel = "stylesheet", type = "text/css",
-        href = "lib/jquery-ui/css/smoothness/jquery-ui-1.10.4.custom.css"),
-      tags$link(rel = "stylesheet", type = "text/css", href = "ggvis/css/ggvis.css")
-    )
-  }
-
-  if (!is.null(prefix)) {
-    tags[] <- lapply(tags, function(tag) {
-      if (!is.null(tag$attribs$src)) {
-        tag$attribs$src <- file.path(prefix, tag$attribs$src)
-      }
-      if (!is.null(tag$attribs$href)) {
-        tag$attribs$href <- file.path(prefix, tag$attribs$href)
-      }
-      tag
-    })
-  }
-
-  tags
-}
-
-
-#' @rdname print.ggvis
-#' @export
-knit_print.ggvis <- function(x, options) {
-
-  # Read knitr chunk options for output width and height
-  knitr_opts <- opts(width = options$out.width.px,
-                     height = options$out.height.px)
-  x$opts <- list(merge_opts(knitr_opts, x$opts[[1]]))
-
-  # if this is a dynamic object, check to see if we're rendering in a Shiny R
-  # Markdown document and have an appropriate version of Shiny; emit a Shiny
-  # application if we are, and a warning if we aren't.
-  if (is.dynamic(x)) {
-    if (identical(knitr::opts_knit$get()$rmarkdown.runtime, "shiny") &&
-        packageVersion("shiny") >= "0.9.1.9000") {
-
-      # create the application object and allocate space for the controls
-      app <- app_object(x)
-      knitr_opts$height <- knitr_opts$height + control_height(x)
-      return(knitr::knit_print(shiny::shinyApp(ui = app$ui,
-                                               server = app$server,
-                                               options = knitr_opts)))
-    } else {
-      warning("Can't output dynamic/interactive ggvis plots in a knitr document.\n",
-              "Generating a static (non-dynamic, non-interactive) version of plot.")
-    }
-  }
-
-  # Plot as JSON
-  spec <- as.vega(x, dynamic = FALSE)
-  vega_json <- toJSON(spec, pretty = TRUE)
-
-  # Plot as HTML
-  id = rand_id("plot_")
-  html <- tagList(
-    ggvis_output(id, shiny = FALSE),
-    tags$script(type = "text/javascript",
-                paste0('var ', id, '_spec = ', vega_json, ';
-                       ggvis.getPlot("', id, '").parseSpec(', id, '_spec);
-                       ')
-                )
-  )
-
-  # Define dependencies
-  dependencies <- list(
-    html_dependency(name = "jquery",
-                    version = "1.11.0",
-                    path = "lib/jquery",
-                    script = "jquery.min.js"),
-    html_dependency(name = "jquery-ui",
-                    version = "1.10.4",
-                    path = "lib/jquery-ui",
-                    script = "js/jquery-ui-1.10.4.custom.min.js",
-                    stylesheet = "css/smoothness/jquery-ui-1.10.4.custom.min.css"),
-    html_dependency(name = "d3",
-                    version = "3.4.1",
-                    path = "lib/d3",
-                    script = "d3.min.js"),
-    html_dependency(name = "vega",
-                    version = "1.3.3",
-                    path = "lib/vega",
-                    script = "vega.min.js"),
-    html_dependency(name = "lodash",
-                    version = "2.2.1",
-                    path = "lib/lodash",
-                    script = "lodash.min.js",
-                    head = "<script>var lodash = _.noConflict();</script>"),
-    html_dependency(name = "ggvis",
-                    version = packageVersion("ggvis"),
-                    path = "ggvis",
-                    script = "js/ggvis.js",
-                    stylesheet = "css/ggvis.css")
-  )
-
-  # Return knit_asis
-  structure(class = "knit_asis",
-            format(html, indent = FALSE),
-            knit_meta = dependencies
-  )
-}
-
-html_dependency <- function(name,
-                            version,
-                            path,
-                            meta = NULL,
-                            script = NULL,
-                            stylesheet = NULL,
-                            head = NULL) {
-  structure(class = "html_dependency", list(
-    name = name,
-    version = version,
-    path = system.file("www", path, package = "ggvis"),
-    meta = meta,
-    script = script,
-    stylesheet = stylesheet,
-    head = head
-  ))
-}
-

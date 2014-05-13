@@ -1,5 +1,4 @@
 bar           Bar charsts
-density       Density plots
 histogram     Histograms
 lines         Line plots
 scatterplot   Basic scatterplots
@@ -9,7 +8,7 @@ tile          Tile plots (aka heatmaps)
 guides        Controlling axes and legends
 scales        Controlling scales
 
-dynamic       Dynamic plots using reactive data sources 
+dynamic       Dynamic plots using reactive data sources
 tourr         A dynamic plot displaying a simple grand tour
 
 interactive   Simple interactive examples

@@ -4,7 +4,7 @@
 \alias{view_spec}
 \title{Tools to save and view static specs.}
 \usage{
-save_spec(path, x = last_vis(), ...)
+save_spec(x, path, ...)
 
 view_spec(path, ...)
 }

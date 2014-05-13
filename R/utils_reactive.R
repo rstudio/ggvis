@@ -1,8 +1,34 @@
-as.reactive <- function(x, session = NULL, ...) UseMethod("as.reactive")
+reactive_id <- function(x) {
+  attr(x, "reactive_id")
+}
+
+`reactive_id<-` <- function(x, value) {
+  attr(x, "reactive_id") <- value
+  x
+}
+
+
+# Pull reactives out of various types of objects
+extract_reactives <- function(x) UseMethod("extract_reactives")
 
 #' @export
-as.reactive.function <- function(x, session = NULL, ...) x
+extract_reactives.ggvis_props <- function(x) {
+  compact(lapply(x, extract_reactives))
+}
+
 #' @export
-as.reactive.reactive <- function(x, session = NULL, ...) x
+extract_reactives.prop <- function(x, session = NULL, ...) {
+  if (x$type == "reactive")
+    x$value
+  else
+    NULL
+}
+
+# Get the value of a reactive or non-reactive object.
+value <- function(x) UseMethod("value")
 #' @export
-as.reactive.default <- function(x, session = NULL, ...) reactive(x, ...)
+value.default <- function(x) x
+#' @export
+value.reactive <- function(x) x()
+
+values <- function(x) lapply(x, value)

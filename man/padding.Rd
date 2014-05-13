@@ -13,7 +13,8 @@ be a single number, "auto", or "strict"}
 Define padding.
 }
 \examples{
-opts(padding = padding())
-opts(padding = padding(10, 10, 10, 10))
+p <- mtcars \%>\% ggvis(~wt, ~mpg) \%>\% layer_points()
+p \%>\% set_options(padding = padding())
+p \%>\% set_options(padding = padding(10, 10, 10, 10))
 }
 

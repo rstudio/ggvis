@@ -24,94 +24,33 @@
 #'
 #'   The first two unnamed components are taken to be \code{x} and \code{y}.
 #'   Any additional unnamed components will raise an error.
-#' @param layers A character vector listing the names of layers to
-#'   display on the plot. You can use either the full name of the layer
-#'   (e.g. "layer_smooth"), or just the final part (e.g. "smooth").
-#'
-#'   If \code{layers} is not supplied, it defaults to "point", if both
-#'   \code{x} and \code{y} are supplied. If only \code{x} is supplied, it
-#'   defaults to "histogram".
 #' @export
 #' @examples
 #' # A basic scatterplot
-#' qvis(mtcars, ~mpg, ~wt)
-#' qvis(mtcars, ~mpg, ~wt, fill = ~cyl)
-#' qvis(mtcars, ~mpg, ~wt, fill := "red")
-#'
-#' # Basic histogram
-#' qvis(mtcars, ~mpg)
-#' qvis(mtcars, ~mpg, binwidth = 2)
+#' mtcars %>% qvis(~mpg, ~wt)
+#' mtcars %>% qvis(~mpg, ~wt, fill = ~cyl)
+#' mtcars %>% qvis(~mpg, ~wt, fill := "red")
 #'
 #' # Scatterplot + smoother
-#' qvis(mtcars, ~mpg, ~wt, layers = c("point", "smooth"))
-#' qvis(mtcars, ~mpg, ~wt, layers = c("point", "smooth"), span = 0.25)
+#' mtcars %>% qvis(~mpg, ~wt) %>% layer_smooths()
+#'
+#' # Basic histogram
+#' mtcars %>% qvis(~mpg)
+#' mtcars %>% qvis(~mpg, binwidth = 2)
 #'
 #' # It's not currently possible to create a plot of variables
 #' # stored only in the local environment
 #' x <- runif(10)
 #' y <- runif(10)
-#' \dontrun{qvis(environment(), ~x, ~y)}
-qvis <- function(data, ..., layers = character()) {
+#' \dontrun{environment() %>% qvis(~x, ~y)}
+qvis <- function(data, ...) {
   args <- dots(...)
-
-  props_args <- props_default_names(args[is_props(args)])
-  props <- props(.props = props_args)
-
-  scale <- NULL
-  if (length(layers) == 0) {
-    if ("y" %in% names(props_args)) {
-      layers <- "point"
-    } else {
-      if (prop_countable(data, props$x)) {
-        scale <- dscale("x", "nominal", range = "width", padding = 0,
-          points = FALSE)
-        layers <- "barchart"
-      } else {
-        layers <- "histogram"
-      }
-    }
-  }
-
+  props_args <- args[is_props(args)]
   layer_args <- args[!is_props(args)]
-  layers <- lapply(layers, init_layer, layer_args)
-  ggvis(data, props) + layers + scale
-}
 
-# TODO: make sure this uses the right scoping so that it will find layers
-# defined in other packages and in the global environment.
-init_layer <- function(name, args = list()) {
-  fname <- paste0("layer_", name)
-
-  if (exists(fname, mode = "function")) {
-    f <- get(fname, mode = "function")
-    if ("..." %in% names(formals(f))) {
-      return(do.call(f, args))
-    } else {
-      # Don't pass in extra args if doesn't have ... (e.g. all marks)
-      return(do.call(f, list()))
-    }
-  }
-
-  stop("Couldn't find layer called ", fname, call. = FALSE)
-}
-
-props_default_names <- function(args) {
-  new_names <- names2(args)
-
-  missing <- new_names == "" & !vapply(args, uses_colon_equals, logical(1))
-  n_missing <- sum(missing)
-
-  if (n_missing == 0) return(args)
-
-  if (n_missing == 1) {
-    new_names[missing] <- "x"
-  } else if (n_missing == 2) {
-    new_names[missing] <- c("x", "y")
-  } else {
-    stop("Only at most two properties can be unnamed", call. = FALSE)
-  }
-
-  setNames(args, new_names)
+  vis <- add_props(ggvis(data), .props = props_args)
+  vis <- do_call(layer_guess, quote(vis), .args = layer_args)
+  vis
 }
 
 # A quoted call is a prop if it's unnamed, or named and in the list of known
@@ -124,10 +63,3 @@ is_props <- function(xs) {
   unnamed | prop_name | uses_colon
 }
 
-# valid_props <- apropos("valid_mark_properties.mark_")
-# dput(sort(unique(unlist(lapply(valid_props, function(f) match.fun(f)())))))
-known_props <- c("align", "angle", "baseline", "dx", "dy", "endAngle",
-  "fill", "fillOpacity", "font", "fontSize", "fontStyle", "fontWeight",
-  "height", "innerRadius", "interpolate", "key", "opacity", "outerRadius",
-  "shape", "size", "startAngle", "stroke", "strokeOpacity", "strokeWidth",
-  "tension", "text", "url", "width", "x", "x2", "y", "y2")

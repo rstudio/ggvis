@@ -10,7 +10,7 @@
 #' @export
 ggvis_message <- function(session, type, data = NULL, id = NULL) {
   if (is.null(session)) {
-    stop("Need an active Shiny session to send ggivs message")
+    stop("Need an active Shiny session to send ggvis message")
   }
   session$sendCustomMessage("ggvis_message",
     list(type = type, id = id, data = data))

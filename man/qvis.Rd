@@ -3,7 +3,7 @@
 \alias{qvis}
 \title{Quick vis: a succint way of generating simple ggvis plot specifications.}
 \usage{
-qvis(data, ..., layers = character())
+qvis(data, ...)
 }
 \arguments{
 \item{data}{The data set where}
@@ -17,14 +17,6 @@ qvis(data, ..., layers = character())
 
   The first two unnamed components are taken to be \code{x} and \code{y}.
   Any additional unnamed components will raise an error.}
-
-\item{layers}{A character vector listing the names of layers to
-  display on the plot. You can use either the full name of the layer
-  (e.g. "layer_smooth"), or just the final part (e.g. "smooth").
-
-  If \code{layers} is not supplied, it defaults to "point", if both
-  \code{x} and \code{y} are supplied. If only \code{x} is supplied, it
-  defaults to "histogram".}
 }
 \description{
 \code{qvis} is a succinct way of creating simple plots. It achieves this
@@ -44,22 +36,21 @@ the right component on to the plot.
 }
 \examples{
 # A basic scatterplot
-qvis(mtcars, ~mpg, ~wt)
-qvis(mtcars, ~mpg, ~wt, fill = ~cyl)
-qvis(mtcars, ~mpg, ~wt, fill := "red")
-
-# Basic histogram
-qvis(mtcars, ~mpg)
-qvis(mtcars, ~mpg, binwidth = 2)
+mtcars \%>\% qvis(~mpg, ~wt)
+mtcars \%>\% qvis(~mpg, ~wt, fill = ~cyl)
+mtcars \%>\% qvis(~mpg, ~wt, fill := "red")
 
 # Scatterplot + smoother
-qvis(mtcars, ~mpg, ~wt, layers = c("point", "smooth"))
-qvis(mtcars, ~mpg, ~wt, layers = c("point", "smooth"), span = 0.25)
+mtcars \%>\% qvis(~mpg, ~wt) \%>\% layer_smooths()
+
+# Basic histogram
+mtcars \%>\% qvis(~mpg)
+mtcars \%>\% qvis(~mpg, binwidth = 2)
 
 # It's not currently possible to create a plot of variables
 # stored only in the local environment
 x <- runif(10)
 y <- runif(10)
-\dontrun{qvis(environment(), ~x, ~y)}
+\dontrun{environment() \%>\% qvis(~x, ~y)}
 }
 

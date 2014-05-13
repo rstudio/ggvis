@@ -20,11 +20,11 @@ Bands are used to set the width or height on categorical scales - a band
 represent the height or width allocated for one level of a factor.
 }
 \examples{
-df <- data.frame(label = c("a", "b", "c"), n = c(10, 9 , 4))
+df <- data.frame(label = c("a", "b", "c"), n = c(10, 9, 4))
 
-base <- ggvis(df, props(x = ~label, y2 = 0, y := ~n)) + mark_rect()
-base + props(width := band())
-base + props(width := band(offset = -1))
-base + props(width := band(mult = 0.9))
+base <- df \%>\% ggvis(~label, y2 = 0, y := ~n)
+base \%>\% layer_rects(width := band())
+base \%>\% layer_rects(width := band(offset = -1))
+base \%>\% layer_rects(width := band(mult = 0.9))
 }
 

@@ -1,16 +1,17 @@
-#' Generate a vega legend specification
+#' Add a vega legend specification to a ggvis plot
 #'
-#' Axis specifications allow you to either override the default legends, 
-#' or supply additional legends. 
-#' 
+#' Axis specifications allow you to either override the default legends,
+#' or supply additional legends.
+#'
 #' More information about axes can be found in the "axes and legends" vignettes.
 #'
 #' @section Compared to ggplot2:
-#' 
-#' In ggplot2, legend (and axis) properties are part of the scales 
+#'
+#' In ggplot2, legend (and axis) properties are part of the scales
 #' specification. In vega, they are separate, which allows the specification
 #' of multiple legends, and more flexible linkage between scales and legends.
 #'
+#' @param vis A ggvis object.
 #' @param size,shape,fill,stroke The name of the scale that determines the
 #'   legends size, shape, fill and stroke.
 #' @param orient The orientation of the legend. One of "left" or "right". This
@@ -26,10 +27,23 @@
 #'   of \code{\link{props}}.
 #' @export
 #' @examples
-#' guide_legend(size = "size")
-guide_legend <- function(size = NULL, shape = NULL, fill = NULL, stroke = NULL,
-                   orient = "right", title = NULL, format = NULL, values = NULL,
-                   properties = NULL) {
+#' mtcars %>% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) %>%
+#'   layer_points() %>%
+#'   add_guide_legend(fill = "fill", title = "Cylinders")
+add_guide_legend <- function(vis, size = NULL, shape = NULL, fill = NULL,
+                         stroke = NULL, orient = "right", title = NULL,
+                         format = NULL, values = NULL, properties = NULL) {
+
+  legend <- guide_legend(size, shape, fill, stroke, orient, title, format,
+                         values, properties)
+
+  add_legend(vis, legend)
+}
+
+# Create a legend object.
+guide_legend <- function(size = NULL, shape = NULL, fill = NULL,
+                         stroke = NULL, orient = "right", title = NULL,
+                         format = NULL, values = NULL, properties = NULL) {
 
   orient <- match.arg(orient, c("right", "left"))
 
@@ -40,22 +54,29 @@ guide_legend <- function(size = NULL, shape = NULL, fill = NULL, stroke = NULL,
   )), class = "vega_legend")
 }
 
-add_default_legends <- function(legends, scales) {
+add_default_legends <- function(vis) {
+  legends <- vis$legends
+  scales <- vis$scales
+
   legs <- c("size", "shape", "fill", "stroke")
   present <- unlist(lapply(legends, function(x) x[legs]))
 
   missing <- setdiff(intersect(names(scales), legs), present)
 
   for (scale in missing) {
-    args <- setNames(list(scale), scales[[scale]]$name)
-    legends[[scale]] <- do.call(guide_legend, args)
+    args <- list(vis)
+    args[[scales[[scale]]$name]] <- scale
+    vis <- do.call(add_guide_legend, args)
   }
 
-  unname(legends)
+  vis
 }
 
 # Some legend settings require examining the scale
-apply_legends_defaults <- function(legends, scales) {
+apply_legends_defaults <- function(vis) {
+  legends <- vis$legends
+  scales <- vis$scales
+
   legs <- c("size", "shape", "fill", "stroke")
 
   lapply(legends, function(legend) {
@@ -78,4 +99,14 @@ apply_legends_defaults <- function(legends, scales) {
 
     legend
   })
+
+  # Replace the original legends with the new ones
+  vis$legends <- legends
+  vis
 }
+
+#' @export
+format.vega_legend <- format.vega_axis
+
+#' @export
+print.vega_legend <- print.vega_axis

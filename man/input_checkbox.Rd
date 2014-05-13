@@ -11,13 +11,11 @@ input_checkbox(value = FALSE, label = "", id = rand_id("checkbox_"),
 
 \item{label}{Display label for the control.}
 
-\item{id}{a unique identifier for this interactive input - used to
-de-duplicate the controls when the same input is used in multiple places
-in a visualisation}
+\item{id}{A unique identifier for this input. Usually generated
+automatically.}
 
-\item{map}{a function with a singe argument that takes the value returned
-from the input control and converts it to an argument useful for ggvis.
-Defaults to \code{identity}, leaving the output unchanged.}
+\item{map}{A function with single argument \code{x}, the value of the
+control on the client. Returns a modified value.}
 }
 \description{
 Create an interactive checkbox.
@@ -26,13 +24,15 @@ Create an interactive checkbox.
 input_checkbox(label = "Confidence interval")
 input_checkbox(label = "Confidence interval", value = TRUE)
 
-# Used in a layer_smooth
-layer_smooth(se = input_checkbox(label = "Confidence interval"))
+# Used in layer_smooths
+mtcars \%>\% ggvis(~wt, ~mpg) \%>\%
+  layer_smooths(se = input_checkbox(label = "Confidence interval"))
 
 # Used with a map function, to convert the boolean to another type of value
 model_type <- input_checkbox(label = "Use flexible curve",
   map = function(val) if(val) "loess" else "lm")
-layer_smooth(method = model_type)
+mtcars \%>\% ggvis(~wt, ~mpg) \%>\%
+  layer_model_predictions(model = model_type)
 }
 \seealso{
 Other interactive input: \code{\link{input_checkboxgroup}},

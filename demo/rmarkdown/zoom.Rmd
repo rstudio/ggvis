@@ -1,0 +1,52 @@
+---
+title: "Zooming"
+output: html_document
+runtime: shiny
+---
+
+First we load ggvis and shiny:
+
+```{r, message = FALSE}
+options(width = 200)
+library(ggvis)
+library(shiny)
+```
+
+Then we create a linked brush object. This needs to know the possible linking keys. Here we're going to link together some plots of the `mtcars` dataset, so we'll add an `id` column, and use it as the keys:
+
+```{r}
+# Add ID column to mtcars so that we can select from it
+mtcars2 <- cbind(mtcars, id = seq_len(nrow(mtcars)))
+
+lb <- linked_brush(keys = mtcars2$id, "red")
+```
+
+Next we create two plots. Points that are brushed on the first plot will be displayed on the second plot, and the scales will automatically adjust so that those points fill the plot.
+
+```{r fig.width = 3, fig.height = 3, results = "hold"}
+mtcars2 %>%
+  ggvis(~disp, ~mpg, key := ~id) %>%
+  layer_points(fill := lb$fill, fill.brush := "red") %>%
+  function(vis) lb$input(vis)
+
+# A subset of mtcars2, of only the selected points, or the whole data if nothing
+# is selected.
+selected <- lb$selected
+mtcars2_selected <- reactive({
+  if (!any(selected())) return(mtcars2)
+  mtcars2[selected(), ]
+})
+
+mtcars2_selected %>%
+  ggvis(~disp, ~mpg) %>%
+  layer_points(key := ~id) %>%
+  set_options(duration = 100)
+```
+
+Also, we can show a table of the data, including a column indicating which ones are selected:
+
+```{r}
+renderTable(
+  cbind(mtcars2, selected = selected())
+)
+```

@@ -1,7 +1,7 @@
 ---
 title: "Guides: Axes and Legends"
 output:
-  ggvis:::html_document:
+  html_document:
     toc: true
 ---
 
@@ -39,20 +39,20 @@ they share are particularly important.
 * `scale` (axis), and stroke/fill/size/shape (legend) describe which scale (or
   scales in the case of a legend) will be displayed on the guide
 
-    ```{r}
-    guide_axis("x")
-    guide_axis("y")
-    guide_legend(fill = "stroke")
-    guide_legend(size = "size")
+    ```{r, eval = FALSE}
+    add_guide_axis(vis, "x")
+    add_guide_axis(vis, "y")
+    add_guide_legend(vis, fill = "stroke")
+    add_guide_legend(vis, size = "size")
     # Display multiple scales in one legend:
-    guide_legend(fill = "stroke", size = "size")
+    add_guide_legend(vis, fill = "stroke", size = "size")
     ```
 
 * `title`, a string describing the guide
 
-    ```{r}
-    guide_axis("x", title = "My x variable")
-    guide_legend(fill = "fill", title = "Some interesting colours")
+    ```{r, eval = FALSE}
+    guide_axis(vis, "x", title = "My x variable")
+    guide_legend(vis, fill = "fill", title = "Some interesting colours")
     ```
 
 * `values`, used to override the default placement of ticks on an axis or gradient
@@ -74,9 +74,9 @@ Currently, if you're using multiple scales, you'll need to adjust properties to 
 sure that your legends don't overlap.
 
 ```{r, results = 'asis'}
-ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
-  layer_point() +
-  guide_axis("x", properties = list(
+mtcars %>% ggvis(~wt, ~mpg) %>%
+  layer_points() %>%
+  add_guide_axis("x", properties = list(
     axis = props(stroke = "red", strokeWidth = 5),
     grid = props(stroke = "blue"),
     ticks = props(stroke = "blue", strokeWidth = 2),
@@ -84,21 +84,20 @@ ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
   ))
 ```
 
-
 ## Axis
 
 ```{r, results = 'asis'}
-ggvis(mtcars, props(x = ~wt, y = ~mpg)) + layer_point()
+mtcars %>% ggvis(~wt, ~mpg) %>% layer_points()
 
-ggvis(mtcars, props(x = ~wt, y = ~mpg)) + layer_point() +
-  guide_axis("x", title = "Weight") +
-  guide_axis("y", title = "Miles per gallon")
+mtcars %>% ggvis(~wt, ~mpg) %>% layer_points() %>%
+  add_guide_axis("x", title = "Weight") %>%
+  add_guide_axis("y", title = "Miles per gallon")
 
 # Use title offset to push the titles further away
-ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
-  layer_point() +
-  guide_axis("x", title = "Weight", title_offset = 50) +
-  guide_axis("y", title = "Miles per gallon", title_offset = 50)
+mtcars %>% ggvis(~wt, ~mpg) %>%
+  layer_points() %>%
+  add_guide_axis("x", title = "Weight", title_offset = 50) %>%
+  add_guide_axis("y", title = "Miles per gallon", title_offset = 50)
 ```
 
 ### Tick sizes and padding
@@ -115,15 +114,15 @@ There are five options that control the appearance of ticks:
 
 ```{r, results = 'asis'}
 # Change ticks and subdivide with minor ticks
-ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
-  layer_point() +
-  guide_axis("x", subdivide = 9, values = 1:6) +
-  guide_axis("y", subdivide = 1, values = seq(10, 34, by = 2))
+mtcars %>% ggvis(~wt, ~mpg) %>%
+  layer_points() %>%
+  add_guide_axis("x", subdivide = 9, values = 1:6) %>%
+  add_guide_axis("y", subdivide = 1, values = seq(10, 34, by = 2))
 
 # Make the minor ticks smaller and the end ticks longer
-ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
-  layer_point() +
-  guide_axis("x", subdivide = 9, values = 1:6, tick_size_major = 10,
+mtcars %>% ggvis(~wt, ~mpg) %>%
+  layer_points() %>%
+  add_guide_axis("x", subdivide = 9, values = 1:6, tick_size_major = 10,
     tick_size_minor = 5, tick_size_end = 15, tick_padding = 20)
 ```
 
@@ -132,28 +131,28 @@ ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
 You can control the placement of the axes with the `orient` argument:
 
 ```{r, results = 'asis'}
-ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
-  layer_point() +
-  guide_axis("x", orient = "top") +
-  guide_axis("y", orient = "right")
+mtcars %>% ggvis(~wt, ~mpg) %>%
+  layer_points() %>%
+  add_guide_axis("x", orient = "top") %>%
+  add_guide_axis("y", orient = "right")
 ```
 
 If you want axes on both sides, just add two axes:
 
 ```{r, results = 'asis'}
-ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
-  layer_point() +
-  guide_axis("x", orient = "bottom") +
-  guide_axis("x", orient = "top")
+mtcars %>% ggvis(~wt, ~mpg) %>%
+  layer_points() %>%
+  add_guide_axis("x", orient = "bottom") %>%
+  add_guide_axis("x", orient = "top")
 ```
 
 You can even put multiple scales on one side:
 
 ```{r, results = 'asis'}
-ggvis(mtcars, props(x = ~wt, y = ~mpg)) +
-  layer_point() +
-  guide_axis("x") +
-  guide_axis("x", offset = 40, grid = FALSE)
+mtcars %>% ggvis(~wt, ~mpg) %>%
+  layer_points() %>%
+  add_guide_axis("x") %>%
+  add_guide_axis("x", offset = 40, grid = FALSE)
 ```
 
 This is probably more useful if you have multiple x or y position scales, but
@@ -163,7 +162,6 @@ dislike them.
 
 ## Legends
 
-
 ### Combining legends
 
 Unlike ggplot2, by default, ggvis will not combine scales based on the same
@@ -172,9 +170,7 @@ by supplying the name of multiple scales to one legend:
 
 ```{r, results = 'asis'}
 mtcars$cyl <- ordered(mtcars$cyl)
-ggvis(mtcars, props(x = ~mpg, y = ~wt, size = ~cyl, fill = ~cyl)) +
-  layer_point()
-ggvis(mtcars, props(x = ~mpg, y = ~wt, size = ~cyl, fill = ~cyl)) +
-  layer_point() +
-  guide_legend(size = "size", fill = "fill")
+mtcars %>% ggvis(~mpg, ~wt, size = ~cyl, fill = ~cyl) %>% layer_points()
+mtcars %>% ggvis(~mpg, ~wt, size = ~cyl, fill = ~cyl) %>% layer_points() %>%
+  add_guide_legend(size = "size", fill = "fill")
 ```

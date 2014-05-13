@@ -8,12 +8,12 @@
 #'   90\% of the space allocated for its category.
 #' @export
 #' @examples
-#' df <- data.frame(label = c("a", "b", "c"), n = c(10, 9 , 4))
+#' df <- data.frame(label = c("a", "b", "c"), n = c(10, 9, 4))
 #'
-#' base <- ggvis(df, props(x = ~label, y2 = 0, y := ~n)) + mark_rect()
-#' base + props(width := band())
-#' base + props(width := band(offset = -1))
-#' base + props(width := band(mult = 0.9))
+#' base <- df %>% ggvis(~label, y2 = 0, y := ~n)
+#' base %>% layer_rects(width := band())
+#' base %>% layer_rects(width := band(offset = -1))
+#' base %>% layer_rects(width := band(mult = 0.9))
 band <- function(offset = NULL, mult = NULL) {
   structure(
     list(type = "band", offset = offset, mult = mult),

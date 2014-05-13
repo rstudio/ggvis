@@ -23,6 +23,19 @@ dot_names <- function(...) {
   nms
 }
 
+make_call <- function(f, ..., .args = list()) {
+  if (is.character(f)) f <- as.name(f)
+  as.call(c(f, ..., .args))
+}
+do_call <- function(f, ..., .args = list(), .env = parent.frame(), .debug = FALSE) {
+  f <- substitute(f)
+
+  call <- make_call(f, ..., .args)
+  if (.debug) print(call)
+  eval(call, .env)
+}
+
+
 deparse2 <- function(x) paste(deparse(x, 500L), collapse = "")
 
 names2 <- function(x) names(x) %||% rep("", length(x))
@@ -33,6 +46,16 @@ named <- function(x) names2(x) != ""
 # Given a vector or list, drop all the NULL items in it
 drop_nulls <- function(x) {
   x[!vapply(x, is.null, FUN.VALUE=logical(1))]
+}
+
+# Given a string, indent every line by some number of spaces.
+# The exception is to not add spaces after a trailing \n.
+indent <- function(str, indent = 0) {
+  gsub("(^|\\n)(?!$)",
+    paste0("\\1", paste(rep(" ", indent), collapse = "")),
+    str,
+    perl = TRUE
+  )
 }
 
 # Given two named vectors, join them together, and keep only the last element
@@ -89,7 +112,7 @@ compact <- function(x) {
 }
 
 param_string <- function(x, collapse = TRUE) {
-  is_reactive <- vapply(x, is.reactive, logical(1))
+  is_reactive <- vapply(x, shiny::is.reactive, logical(1))
   is_env <- vapply(x, is.environment, logical(1))
   is_string <- vapply(x, is.character, logical(1))
 
@@ -119,6 +142,7 @@ empty <- function(x) UseMethod("empty")
 #' @export
 empty.default <- function(x) length(x) == 0
 
+# Convert a list to a data frame, quickly
 quickdf <- function(list) {
   if (length(list) == 0) return(data.frame())
 
@@ -167,4 +191,21 @@ try_require <- function(pkg) {
       " package required for this functionality.  Please install and try again.",
       call. = FALSE)
   }
+}
+
+
+notify_guess <- function(x, explanation = NULL) {
+  msg <- paste0(
+    "Guessing ", deparse(substitute(x)), " = ", format(x, digits = 3),
+    if (!is.null(explanation)) paste0(" # ", explanation)
+  )
+  message(msg)
+}
+
+
+any_apply <- function(xs, f) {
+  for (x in xs) {
+    if (f(x)) return(TRUE)
+  }
+  FALSE
 }

@@ -29,7 +29,7 @@ according to their natural order. The default value is \code{FALSE}.}
 
 \item{domain}{The domain of the scale, representing the set of data values.
 For ordinal scales, a character vector; for quantitative scales, a numeric
-vector of length two. Either value (but not both) may be missing, in which
+vector of length two. Either value (but not both) may be NA, in which
 case \code{domainMin} or \code{domainMax} is set.}
 
 \item{range}{The range of the scale, representing the set of visual values.
@@ -49,16 +49,18 @@ A ordinal scale controls the mapping of ordinal and nominal variables to
 visual properties.
 }
 \details{
-Generally, you should create new scales with \code{\link{dscale}} because
+Generally, you should create new scales with \code{dscale} because
 that will automatically set the range to a reasonable default, and it will
 automatically pick the correct type of scale given the variable type.
 }
 \examples{
+p <- mtcars \%>\% ggvis(~wt, ~mpg) \%>\% layer_points()
+
 scale_ordinal("x")
-dscale("x", "nominal")
+p \%>\% set_dscale("x", "nominal")
 
 scale_ordinal("x", padding = 0.5, points = FALSE)
-dscale("x", "nominal", points = FALSE)
+p \%>\% set_dscale("x", "nominal", points = FALSE)
 }
 \seealso{
 \url{https://github.com/trifacta/vega/wiki/Scales#ordinal-scale-properties}

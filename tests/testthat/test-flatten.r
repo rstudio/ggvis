@@ -1,58 +1,34 @@
 context("Flatten")
 
 test_that("props inherited from parent", {
-  p <- ggvis(data.frame(),
-    props(x := 1),
-    layer(
-      props(y := 2),
-      mark_path(props(x := 3))
-    )
-  )
-  nodes <- flatten(p)
+  p <- data.frame() %>% ggvis(x := 1) %>%
+    add_props(y := 2) %>%
+    layer_paths(x := 3)
 
-  expect_equal(length(nodes), 1)
-  props <- nodes[[1]]$props
+  props <- p$marks[[1]]$props
 
-  expect_equal(sort(names(props)), c("x.update", "y.update"))
+  expect_equal(sort(names(props)), c("stroke.update", "x.update", "y.update"))
   expect_equal(props$x.update$value, 3)
   expect_equal(props$y.update$value, 2)
 })
 
-test_that("data flows through pipeline", {
-  df <- data.frame(x = 1, y = 2)
-  p <- ggvis(df, props(x = ~x, y = ~y),
-    layer(layer(layer(layer(layer(mark_path()))))))
-  nodes <- flatten(p)
-
-  expect_equal(length(nodes), 1)
-  pipeline <- nodes[[1]]$pipeline
-
-  expect_equal(isolate(pipeline()), df)
-})
-
 test_that("no data is an error", {
-  p <- ggvis(NULL, props(x = ~x, y = ~y),
-    layer(layer(layer(layer(layer(mark_path()))))))
-  expect_error(flatten(p), "parent has no data")
+  base <- NULL %>% ggvis(x = ~x, y = ~y)
+  expect_error(base %>% layer_paths(), "No data supplied to mark")
 })
 
 test_that("reactive source data only run once", {
-  library("shiny")
   runs <- 0
   df <- data.frame(x = 1, y = 2)
-  rdf <- reactive({
+  rdf <- shiny::reactive({
     runs <<- runs + 1
     df
   })
 
-  p <- ggvis(rdf, props(x = ~x, y = ~y),
-    layer_path(),
-    layer_point())
-  nodes <- flatten(p)
+  p <- rdf %>% ggvis(~x, ~y) %>% layer_paths() %>% layer_points()
+  expect_equal(length(p$data), 1)
 
-  expect_equal(length(nodes), 2)
-
-  expect_equal(isolate(nodes[[1]]$pipeline()), df)
-  expect_equal(isolate(nodes[[2]]$pipeline()), df)
+  out_df <- shiny::isolate(p$data[[1]]())
+  expect_equal(out_df, df)
   expect_equal(runs, 1)
 })

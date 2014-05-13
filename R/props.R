@@ -84,6 +84,7 @@
 #'   non-standard evaluation that \code{props} does.
 #' @param inherit If \code{TRUE}, the defaults, will inherit from properties
 #'   from the parent layer If \code{FALSE}, it will start from nothing.
+#' @param env The environment in which to evaluate variable properties.
 #' @export
 #' @examples
 #' # Set to constant values
@@ -110,15 +111,14 @@
 #' props(.props = list(x = 1, y = 2))
 #' props(.props = list(x = ~mpg, y = ~cyl))
 #' props(.props = list(quote(x := ~mpg)))
-props <- function(..., .props = NULL, inherit = TRUE) {
+props <- function(..., .props = NULL, inherit = TRUE, env = parent.frame()) {
   check_empty_args()
   args <- props_default_names(c(dots(...), .props))
-  env <- parent.frame()
 
   # If named, use regular evaluation and scale
   scaled <- lapply(args[named(args)], function(x) {
     val <- eval(x, env)
-    prop(val, scale = TRUE)
+    prop(val, scale = TRUE, label = as.character(x))
   })
 
   # If unnamed, check that it uses := and don't scale
@@ -126,7 +126,7 @@ props <- function(..., .props = NULL, inherit = TRUE) {
     check_unscaled_form(x)
 
     val <- eval(x[[3]], env)
-    prop(val, scale = FALSE)
+    prop(val, scale = FALSE, label = as.character(x[[3]]))
   })
   names(unscaled) <- vapply(args[!named(args)], function(x) as.character(x[[2]]),
     character(1))
@@ -204,12 +204,12 @@ is.ggvis_props <- function(x) inherits(x, "ggvis_props")
 # merge_props(props(x = ~x), props(x = ~y))
 # merge_props(props(x = ~x, y = 1), props(x = ~y))
 # merge_props(props(x = ~x, y = 1), props(x = ~y, inherit = FALSE))
-merge_props <- function(parent = NULL, child = NULL) {
+merge_props <- function(parent = NULL, child = NULL, inherit = attr(child, "inherit")) {
   if (is.null(parent)) return(child)
   if (is.null(child)) return(parent)
   stopifnot(is.ggvis_props(parent), is.ggvis_props(child))
 
-  if (identical(attr(child, "inherit"), FALSE)) return(child)
+  if (identical(inherit, FALSE)) return(child)
 
   structure(merge_vectors(parent, child), inherit = attr(parent, "inherit"),
     class = "ggvis_props")
@@ -217,3 +217,40 @@ merge_props <- function(parent = NULL, child = NULL) {
 
 is.formula <- function(x) inherits(x, "formula")
 
+
+# Given a props object, return a unique name for that set of props
+props_id <- function(x) {
+  digest::digest(x, algo = "crc32")
+}
+
+props_default_names <- function(args) {
+  new_names <- names2(args)
+
+  missing <- new_names == "" & !vapply(args, uses_colon_equals, logical(1))
+  n_missing <- sum(missing)
+
+  if (n_missing == 0) return(args)
+
+  if (n_missing == 1) {
+    new_names[missing] <- "x"
+  } else if (n_missing == 2) {
+    new_names[missing] <- c("x", "y")
+  } else {
+    stop("Only at most two properties can be unnamed", call. = FALSE)
+  }
+
+  setNames(args, new_names)
+}
+
+find_prop_var <- function(props, name) {
+  prop <- props[[name]]
+  if (is.null(prop)) {
+    stop("Can't find prop ", name, call. = FALSE)
+  }
+
+  if (prop$type != "variable") {
+    stop("Visual property ", name, " is not a variable", call. = FALSE)
+  }
+
+  formula(prop)
+}

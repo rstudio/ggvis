@@ -17,9 +17,9 @@ ggvis = (function(_) {
     return this.plots[plotId];
   };
 
-  // Are we in a viewer pane?
-  ggvis.inViewerPane = function() {
-    return queryVar("viewer_pane") === "1";
+  // Are we in a panel - an iframe or RStudio viewer pane?
+  ggvis.inPanel = function() {
+    return (queryVar("viewer_pane") === "1" || queryVar("__subapp__") === "1");
   };
 
   // Internal functions --------------------------------------------------
@@ -197,7 +197,7 @@ ggvis = (function(_) {
 
         self.brush.enable();
 
-        if (ggvis.inViewerPane()) {
+        if (ggvis.inPanel()) {
           self.enableAutoResizeToWindow();
         } else if (opts.resizable) {
           self.enableResizable();
@@ -353,7 +353,7 @@ ggvis = (function(_) {
       this.initialized = true;
 
       // Resizing to fit has to happen after the initial update
-      if (ggvis.inViewerPane()) {
+      if (ggvis.inPanel()) {
         this.resizeToWindow(0);
       } else {
         this.resizeWrapperToPlot();
@@ -388,7 +388,7 @@ ggvis = (function(_) {
 
     // This is called when control outputs for a plot are updated
     prototype.onControlOutput = function() {
-      if (ggvis.inViewerPane()) {
+      if (ggvis.inPanel()) {
         this.resizeToWindow(0);
       }
     };

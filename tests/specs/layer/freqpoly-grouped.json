@@ -1,13 +1,13 @@
 {
 	"data" : [
 		{
-			"name" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_16ebb52a_bin_1cb09fee_tree",
+			"name" : "mtcars0/regroup1/bin2_tree",
 			"format" : {
 				"type" : "treejson",
 				"parse" : {
 					"cyl" : "number",
-					"x" : "number",
-					"count__" : "number"
+					"x_" : "number",
+					"count_" : "number"
 				}
 			},
 			"values" : {
@@ -16,28 +16,28 @@
 						"children" : [
 							{
 								"cyl" : 4,
-								"x" : 0.5,
-								"count__" : 0
+								"x_" : 0.5,
+								"count_" : 0
 							},
 							{
 								"cyl" : 4,
-								"x" : 1.5,
-								"count__" : 4
+								"x_" : 1.5,
+								"count_" : 4
 							},
 							{
 								"cyl" : 4,
-								"x" : 2.5,
-								"count__" : 5
+								"x_" : 2.5,
+								"count_" : 5
 							},
 							{
 								"cyl" : 4,
-								"x" : 3.5,
-								"count__" : 2
+								"x_" : 3.5,
+								"count_" : 2
 							},
 							{
 								"cyl" : 4,
-								"x" : 4.5,
-								"count__" : 0
+								"x_" : 4.5,
+								"count_" : 0
 							}
 						]
 					},
@@ -45,23 +45,23 @@
 						"children" : [
 							{
 								"cyl" : 6,
-								"x" : 1.5,
-								"count__" : 0
+								"x_" : 1.5,
+								"count_" : 0
 							},
 							{
 								"cyl" : 6,
-								"x" : 2.5,
-								"count__" : 3
+								"x_" : 2.5,
+								"count_" : 3
 							},
 							{
 								"cyl" : 6,
-								"x" : 3.5,
-								"count__" : 4
+								"x_" : 3.5,
+								"count_" : 4
 							},
 							{
 								"cyl" : 6,
-								"x" : 4.5,
-								"count__" : 0
+								"x_" : 4.5,
+								"count_" : 0
 							}
 						]
 					},
@@ -69,28 +69,28 @@
 						"children" : [
 							{
 								"cyl" : 8,
-								"x" : 2.5,
-								"count__" : 0
+								"x_" : 2.5,
+								"count_" : 0
 							},
 							{
 								"cyl" : 8,
-								"x" : 3.5,
-								"count__" : 10
+								"x_" : 3.5,
+								"count_" : 10
 							},
 							{
 								"cyl" : 8,
-								"x" : 4.5,
-								"count__" : 1
+								"x_" : 4.5,
+								"count_" : 1
 							},
 							{
 								"cyl" : 8,
-								"x" : 5.5,
-								"count__" : 3
+								"x_" : 5.5,
+								"count_" : 3
 							},
 							{
 								"cyl" : 8,
-								"x" : 6.5,
-								"count__" : 0
+								"x_" : 6.5,
+								"count_" : 0
 							}
 						]
 					}
@@ -98,8 +98,8 @@
 			}
 		},
 		{
-			"name" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_16ebb52a_bin_1cb09fee",
-			"source" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_16ebb52a_bin_1cb09fee_tree",
+			"name" : "mtcars0/regroup1/bin2",
+			"source" : "mtcars0/regroup1/bin2_tree",
 			"transform" : [
 				{
 					"type" : "flatten"
@@ -123,7 +123,7 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_16ebb52a_bin_1cb09fee",
+						"data" : "mtcars0/regroup1/bin2",
 						"field" : "data.cyl"
 					}
 				]
@@ -141,8 +141,8 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_16ebb52a_bin_1cb09fee",
-						"field" : "data.x"
+						"data" : "mtcars0/regroup1/bin2",
+						"field" : "data.x_"
 					}
 				]
 			}
@@ -159,8 +159,8 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_16ebb52a_bin_1cb09fee",
-						"field" : "data.count__"
+						"data" : "mtcars0/regroup1/bin2",
+						"field" : "data.count_"
 					}
 				]
 			}
@@ -170,7 +170,7 @@
 		{
 			"type" : "group",
 			"from" : {
-				"data" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_16ebb52a_bin_1cb09fee_tree"
+				"data" : "mtcars0/regroup1/bin2_tree"
 			},
 			"marks" : [
 				{
@@ -183,16 +183,16 @@
 							},
 							"x" : {
 								"scale" : "x",
-								"field" : "data.x"
+								"field" : "data.x_"
 							},
 							"y" : {
 								"scale" : "y",
-								"field" : "data.count__"
+								"field" : "data.count_"
 							}
 						},
 						"ggvis" : {
 							"data" : {
-								"value" : "mtcars_a63c70e73b58d0823ab3bcbd3b543d6f_split_16ebb52a_bin_1cb09fee_tree"
+								"value" : "mtcars0/regroup1/bin2_tree"
 							}
 						}
 					}
@@ -205,8 +205,7 @@
 	"legends" : [
 		{
 			"stroke" : "stroke",
-			"orient" : "right",
-			"title" : "cyl"
+			"orient" : "right"
 		}
 	],
 	"axes" : [
@@ -216,7 +215,7 @@
 			"orient" : "bottom",
 			"layer" : "back",
 			"grid" : true,
-			"title" : "x"
+			"title" : "x_"
 		},
 		{
 			"type" : "y",
@@ -224,7 +223,7 @@
 			"orient" : "left",
 			"layer" : "back",
 			"grid" : true,
-			"title" : "count__"
+			"title" : "count_"
 		}
 	],
 	"padding" : null,

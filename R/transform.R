@@ -1,68 +1,26 @@
-#' Create a new "transform" object.
-#'
-#' A transform object is a \code{\link{pipe}} that represents a data 
-#' transformation.
-#' 
-#' This function is designed to be used by authors of new types of transform
-#' If you are a ggvis user, please use one of the more specific transform
-#' functions starting with the \code{transform_}.
-#' 
-#' @section Important methods:
-#' 
-#' An transform subclass should provide methods for:
-#' 
-#' \itemize{
-#'   \item \code{\link{compute}}: this method should check props, perform
-#'     the transformation, typically by dispatching to another S3 generic based
-#'     on the type of input, and then add back in constant variables with
-#'     \code{preserve_constants}.
-#' }
-#'
-#' @param type A string representing type of transform.
-#' @param dots A list of arguments to pass to the underlying statistical
-#'   transformation function.
-#' @param ... Other arguments to pass to the specific transform.
-#' @family core classes
-#'
-#' @export
-#' @keywords internal
-transform <- function(type, ..., dots = list()) {
-  type <- c(paste0("transform_", type), "transform")
-  pipe(type, ..., dots = dots)
-}
-
-#' Compute the transformation.
-#'
-#' This generic represents the actual numerical computation performed by
-#' the transformation. This is the method that does most of the work, and
-#' only needs to know about props and values, not about reactive objects.
-#'
-#' @param x the \code{\link{transform}} object
-#' @param props a list of properties, \code{\link{props}}
-#' @param data input data, often (but not necessarily) a data frame
-#' @export
-#' @return a data frame
-#' @keywords internal
-compute <- function(x, props, data) UseMethod("compute")
-
-check_prop <- function(trans, props, data, prop_name, types = NULL) {
-  name <- class(trans)[[1]]
+check_prop <- function(trans_name, props, data, prop_name, types = NULL) {
   prop <- props[[prop_name]]
-  
+
   if (is.null(prop)) {
-    stop(name, "() needs ", prop_name, " property", call. = FALSE)
+    stop(trans_name, "() needs ", prop_name, " property", call. = FALSE)
   }
   if (is.null(types)) return(invisible(TRUE))
-  
+
   type <- prop_type(data, prop)
   if (!(type %in% types)) {
-    stop(name, "() needs ", prop_name, " property to be of type ",
+    stop(trans_name, "() needs ", prop_name, " property to be of type ",
       paste(types, collapse = "/"), call. = FALSE)
   }
-  
+
   invisible(TRUE)
 }
 
+
+# Given an two data objects, input and output, this will return output cbind'ed
+# with the columns in input that are constant, that is where all the values in
+# a column have the same value within each group (if grouped). For any columns
+# names that exist in both input and output, the value from output will
+# supersede the value from input.
 preserve_constants <- function(input, output) UseMethod("preserve_constants")
 
 #' @export
@@ -70,44 +28,58 @@ preserve_constants.data.frame <- function(input, output) {
   is_constant <- constant_vars(input)
   constants <- input[1, is_constant, drop = FALSE]
   rownames(constants) <- NULL
-  
+
   merge_df(constants, output)
 }
 
 #' @export
-preserve_constants.split_df <- function(input, output) {
+preserve_constants.grouped_df <- function(input, output) {
   is_constant <- constant_vars(input)
-  
-  preserve <- function(input, output) {
-    constants <- input[1, is_constant, drop = FALSE]
-    rownames(constants) <- NULL
-    merge_df(constants, output)
-  }
-  
-  structure(Map(preserve, input, output), class = "split_df",
-    variables = attr(input, "variables"))
+
+  # Get data frame of constants with one row per group
+  constants <- dplyr::do(input, `[`(., 1, is_constant, drop = FALSE))
+
+  group_vars <- unlist(lapply(dplyr::groups(constants), as.character))
+  # From input, drop any columns that also exist in output, except grouping
+  # vars. This is so that can later do a join without duplicate columns.
+  keep_vars <- setdiff(names(constants), setdiff(names(output), group_vars))
+
+  # FIXME: The following do.call is necessary because of dplyr issue #398.
+  # It would be less clunky to do this, but it loses grouping:
+  # constants <- constants[, keep_vars, drop = FALSE]
+  constants <- do_call(dplyr::select, quote(constants),
+    .args = dplyr::groups(constants))
+
+  dplyr::left_join(constants, output, by = group_vars)
 }
 
+
+# Returns a logical vector reporting which columns are constant - that is, for
+# that column, all rows have the same value. If the data is grouped, this
+# reports whether all rows have the same value _within each group_.
 constant_vars <- function(data) UseMethod("constant_vars")
+
 #' @export
 constant_vars.data.frame <- function(data) {
   vapply(data, all_same, logical(1), USE.NAMES = FALSE)
 }
-#' @export
-constant_vars.split_df <- function(data) {
-  n <- length(data)
-  
-  vec <- unlist(lapply(data, constant_vars), use.names = FALSE)
-  mat <- matrix(vec, nrow = n, byrow = TRUE)
-  colSums(mat) == n
-}
 
 #' @export
-#' @importFrom digest digest
-pipe_id.transform <- function(x, props) {
-  # Hash the transform's settings, as well as props, since the props can affect
-  # the result (e.g., transform_bin's output depends on the x mapping)
-  paste(transform_type(x), digest(list(x, props), algo = "crc32"), sep = "_")
+constant_vars.grouped_df <- function(data) {
+  # Get number of groups
+  n <- length(dplyr::group_size(data))
+
+  # Get a list of boolean vectors
+  # FIXME: When dplyr #397 is fixed, this can be simplified.
+  vecs <- dplyr::do(data, constant_var__ = constant_vars(.))
+  vecs <- vecs[["constant_var__"]]
+
+  # Don't create ridiculously long column names
+  names(vecs) <- seq_len(length(vecs))
+  # Convert to matrix for faster computation
+  mat <- as.matrix(as.data.frame(vecs))
+
+  rowSums(mat) == n
 }
 
 # Returns a string representing the transform type. For example, if it has
@@ -116,18 +88,4 @@ transform_type <- function(transform) {
   classes <- class(transform)
   type <- classes[grep("^transform_", classes)][1]
   sub("^transform_", "", type)
-}
-
-#' @export
-connect.transform <- function(x, props, source = NULL, session = NULL) {
-  x <- init_inputs(x, session)
-  x$dots <- init_inputs(x$dots, session)
-  
-  reactive({
-    x_now <- eval_reactives(x)
-    x_now$dots <- eval_reactives(x$dots)
-    if (is.function(source)) source <- source()
-    
-    compute(x_now, props, source)
-  })
 }

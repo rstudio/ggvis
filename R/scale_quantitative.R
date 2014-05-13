@@ -1,13 +1,13 @@
 #' Create a quantitative scale
 #'
 #' A quantitative scale controls the mapping of continuous variables to
-#' visual properties. 
-#' 
-#' Generally, you should create new scales with \code{\link{dscale}} because 
+#' visual properties.
+#'
+#' Generally, you should create new scales with \code{dscale} because
 #' that will automatically set the range to a reasonable default, and it will
 #' automatically pick the correct type of scale given the variable type.
 #'
-#' @inheritParams scale
+#' @inheritParams vega_scale
 #' @param trans A scale transformation: one of "linear", "log", "pow", "sqrt",
 #'   "quantile", "quantize", "threshold"
 #' @param exponent Sets the exponent of the scale transformation. For pow
@@ -22,14 +22,16 @@
 #' @family vega scales
 #' @export
 #' @examples
+#' p <- mtcars %>% ggvis(~wt, ~mpg) %>% layer_points()
+#'
 #' scale_quantitative("y")
-#' dscale("y", "numeric")
-#' 
+#' p %>% set_dscale("y", "numeric")
+#'
 #' scale_quantitative("y", "pow", 0.5)
-#' dscale("y", "numeric", trans = "pow", exp = 0.5)
+#' p %>% set_dscale("y", "numeric", trans = "pow", exp = 0.5)
 #'
 #' scale_quantitative("x", clamp = TRUE, nice = FALSE, zero = TRUE)
-#' dscale("x", "numeric", clamp = TRUE, nice = FALSE, zero = TRUE)
+#' p %>% set_dscale("x", "numeric", clamp = TRUE, nice = FALSE, zero = TRUE)
 scale_quantitative <- function(name, trans = "linear", exponent = NULL,
                                clamp = FALSE, nice = TRUE, zero = FALSE,
                                domain = NULL, range = NULL, reverse = FALSE,
@@ -44,7 +46,7 @@ scale_quantitative <- function(name, trans = "linear", exponent = NULL,
     is.numeric(exponent) && length(exponent) == 1))
   assert_that(is.flag(clamp), is.flag(nice), is.flag(zero))
 
-  scale(name, trans, subclass = "quantitative",
-        exponent = exponent, clamp = clamp, nice = nice, zero = zero,
-        domain = domain, range = range, reverse = reverse, round = round)
+  vega_scale(name, trans, subclass = "quantitative",
+    exponent = exponent, clamp = clamp, nice = nice, zero = zero,
+    domain = domain, range = range, reverse = reverse, round = round)
 }

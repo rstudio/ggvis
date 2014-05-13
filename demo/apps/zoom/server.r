@@ -1,10 +1,11 @@
-shinyServer(function(input, output, session) {
-  gv <- reactive({
-    ggvis(mtcars, props(x = ~disp, y = ~mpg)) +
-      layer_point() +
-      dscale("x", "numeric", domain = input$x_domain, nice = FALSE, clamp = TRUE) +
-      dscale("y", "numeric", domain = input$y_domain, nice = FALSE, clamp = TRUE)
-  })
+library(ggvis)
 
-  observe_ggvis(gv, "zoom", session)
+shinyServer(function(input, output, session) {
+  reactive({
+    mtcars %>% ggvis(~disp, ~mpg) %>%
+      layer_points() %>%
+      set_dscale("x", "numeric", domain = input$x_domain, nice = FALSE, clamp = TRUE) %>%
+      set_dscale("y", "numeric", domain = input$y_domain, nice = FALSE, clamp = TRUE)
+  }) %>%
+  bind_shiny("zoom")
 })

@@ -17,76 +17,92 @@ as.vega <- function(x, ...) {
 #' @param session a session object from shiny
 #' @param dynamic whether to generate dynamic or static spec
 as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
-  nodes <- flatten(x, session = session)
-  data_table <- extract_data(nodes)
-  data_table <- active_props(data_table, nodes)
 
-  data_names <- ls(data_table, all.names = TRUE)
+  if (length(x$marks) == 0) {
+    stop("No marks on plot.", call. = FALSE)
+  }
+
+  data_ids <- extract_data_ids(x$marks)
+  data_table <- as.environment(x$data[data_ids])
+
+  # Wrap each of the reactive data objects in another reactive which returns
+  # only the columns that are actually used, and adds any calculated columns
+  # that are used in the props.
+  data_table <- active_props(data_table, x$marks)
+
   if (dynamic) {
-    datasets <- lapply(data_names, function(name) {
+    datasets <- lapply(data_ids, function(id) {
       # Don't provide data now, just the name
-      list(name = name)
+      list(name = id)
     })
   } else {
-    datasets <- unlist(lapply(data_names, function(name) {
-      data <- isolate(data_table[[name]]())
-      as.vega(data, name)
+    datasets <- unlist(lapply(data_ids, function(id) {
+      data <- shiny::isolate(data_table[[id]]())
+      as.vega(data, id)
     }), recursive = FALSE)
   }
 
-  scales <- add_default_scales(x, nodes, data_table)
-  axes <- add_default_axes(x$axes, scales)
-  axes <- apply_axes_defaults(axes, scales)
-  legends <- add_default_legends(x$legends, scales)
-  legends <- apply_legends_defaults(legends, scales)
-  opts <- add_default_opts(x$opts[[1]] %||% opts())
+  # Each of these operations results in a more completely specified (and still
+  # valid) ggvis object
+  x <- add_default_scales(x, data_table)
+  x <- add_default_axes(x)
+  x <- apply_axes_defaults(x)
+  x <- add_default_legends(x)
+  x <- apply_legends_defaults(x)
+  x <- add_default_options(x)
 
   spec <- list(
     data = datasets,
-    scales = unname(scales),
-    marks = lapply(nodes, as.vega),
-    width = opts$width,
-    height = opts$height,
-    legends = lapply(legends, as.vega),
-    axes = lapply(axes, as.vega),
-    padding = as.vega(opts$padding),
-    ggvis_opts = as.vega(opts),
-    handlers = lapply(handlers(x), as.vega)
+    scales = unname(x$scales),
+    marks = lapply(x$marks, as.vega),
+    width = x$options$width,
+    height = x$options$height,
+    legends = lapply(x$legends, as.vega),
+    axes = lapply(x$axes, as.vega),
+    padding = as.vega(x$options$padding),
+    ggvis_opts = x$options,
+    handlers = if (dynamic) x$handlers
   )
 
-  structure(spec, data_table = data_table)
+  structure(spec, data_table = data_table, controls = x$controls,
+            connectors = x$connectors)
 }
 
-# Given a ggvis mark object and set of scales, output a vega mark object
+
+# Given a list of layers, return a character vector of all data ID's used.
+extract_data_ids <- function(layers) {
+  data_ids <- vapply(layers,
+    function(layer) data_id(layer$data),
+    character(1)
+  )
+  unique(data_ids)
+}
+
+
+# Given a ggvis mark object, output a vega mark object
 #' @export
 as.vega.mark <- function(mark) {
   # Keep only the vega-specific fields, then remove the class, drop nulls,
   # and convert to proper format for vega properties.
-  defaults <- default_mark_properties(mark)
-  props <- merge_props(defaults, mark$props)
 
   # Pull out key from props, if present
-  key <- props$key
-  if (!is.null(key)) {
-    props$key <- NULL
-  }
+  key <- mark$props$key
+  mark$props$key <- NULL
 
-  check_mark_props(mark, names(props))
-
-  # HW: It seems less than ideal to have to inspect the data here, but
-  # I'm not sure how else we can figure it out.
-  split <- is.split_df(isolate(mark$pipeline()))
-
-  properties <- as.vega(props)
+  # Add the custom ggvis properties set for storing ggvis-specific information
+  # in the Vega spec.
+  properties <- as.vega(mark$props)
   properties$ggvis <- list()
 
+  # FIXME: dispatch on the class of mark$data()
+  split <- !is.null(dplyr::groups(shiny::isolate(mark$data())))
   if (split) {
-    data <- paste0(mark$pipeline_id, "_tree")
-    properties$ggvis$data <- list(value = data)
+    data_id <- paste0(data_id(mark$data), "_tree")
+    properties$ggvis$data <- list(value = data_id)
 
     m <- list(
       type = "group",
-      from = list(data = data),
+      from = list(data = data_id),
       marks = list(
         list(
           type = mark$type,
@@ -96,13 +112,13 @@ as.vega.mark <- function(mark) {
     )
 
   } else {
-    data <- mark$pipeline_id
-    properties$ggvis$data <- list(value = data)
+    data_id <- data_id(mark$data)
+    properties$ggvis$data <- list(value = data_id)
 
     m <- list(
       type = mark$type,
       properties = properties,
-      from = list(data = data)
+      from = list(data = data_id)
     )
   }
 
@@ -160,8 +176,13 @@ as.vega.data.frame <- function(x, name, ...) {
 }
 
 #' @export
-as.vega.split_df <- function(x, name, ...) {
-  data <- lapply(x, function(x) list(children = df_to_d3json(x)))
+as.vega.grouped_df <- function(x, name, ...) {
+  # FIXME: This is effectively the same as dlply - is there a better way?
+  vars <- dplyr::groups(x)
+  group_vals <- lapply(vars, function(var) x[[as.character(var)]] )
+  split_data <- unname(split(x, group_vals, drop = TRUE))
+
+  data <- lapply(split_data, function(x) list(children = df_to_d3json(x)))
 
   list(
     list(
@@ -169,7 +190,7 @@ as.vega.split_df <- function(x, name, ...) {
       format = list(
         type = "treejson",
         # Figure out correct vega parsers for non-string columns
-        parse = unlist(lapply(x[[1]], vega_data_parser))
+        parse = unlist(lapply(x, vega_data_parser))
       ),
       values = list(children = data)
      ),

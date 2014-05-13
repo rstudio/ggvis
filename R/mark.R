@@ -1,44 +1,42 @@
-  #' Create a new "mark" object.
+#' Create a new "mark" object.
 #'
 #' A mark object is a close mapping to a vega mark object. Vega marks
 #' are documented in \url{https://github.com/trifacta/vega/wiki/Marks}.
-#' 
-#' This function is designed to be used by authors of new types of mark.
-#' If you are a ggvis user, please use one of the more specific mark
-#' functions starting with the \code{mark_}.
 #'
-#' @param type vega mark list
-#' @param props list of properties
-#' @param data optional data pipeline
-#' @export
+#' This function is designed to be used by authors of new types of mark.
+#'
+#' @param type A string with the vega type.
+#' @param props A list of properties, created by \code{\link{props}}.
+#' @param data A reactive data object.
 #' @keywords internal
-mark <- function(type, props, data = NULL) {
-  m <- structure(
-    compact(list(
-      type = type,
-      data = as.pipeline(data),
-      props = props
-    )),
-    class = c(paste0("mark_", type), "mark", "layer")
-  )
+#' @export
+mark <- function(type, props, data) {
+  if (!is.ggvis_props(props)) stop("props must be a ggvis_props object")
+  if (is.null(data)) stop("No data supplied to mark.", call. = FALSE)
+  if (!is.function(data)) stop("data object must be a reactive or a function.")
 
-  check_mark_props(m, names(m$props))
-  m
+  # Check that names are correct, then merge in defaults
+  check_mark_props(type, names(props))
+  props <- merge_props(default_props(type), props, inherit = TRUE)
+
+  # FIXME: check that mark has all the props needed to draw something
+  # FIXME: check that the variables in the prop can be found in data
+
+  structure(list(type = type, data = data, props = props), class = "mark")
 }
 
-#' @export
 #' @rdname mark
+#' @export
 is.mark <- function(x) inherits(x, "mark")
 
-#' @importFrom utils adist
-check_mark_props <- function(mark, props) {
+check_mark_props <- function(type, props) {
   props <- trim_propset(props)
-  valid <- valid_mark_properties(mark)
+  valid <- valid_props[[type]]
 
   invalid <- setdiff(props, valid)
   if (length(invalid) == 0) return(invisible(TRUE))
 
-  ldist <- adist(invalid, valid, ignore.case = TRUE, partial = FALSE,
+  ldist <- utils::adist(invalid, valid, ignore.case = TRUE, partial = FALSE,
     costs = c(ins = 0.5, sub = 1, del = 2))
 
   closest <- apply(ldist, 1, min)
@@ -56,13 +54,13 @@ check_mark_props <- function(mark, props) {
     call. = FALSE)
 }
 
-
 #' @export
 format.mark <- function(x, ...) {
   paste0("<", class(x)[1], ">",
-    if (!is.null(x$pipeline_id)) paste0(" (ID: ", x$pipeline_id, ")"),
+    " (Data: ", data_id(x$data), ")",
     "\n",
-    format(x$props))
+    indent(format(x$props), 2)
+  )
 }
 
 #' @export

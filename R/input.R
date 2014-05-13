@@ -1,142 +1,51 @@
 #' Create a new interactive "input" object.
 #'
-#' An interactive input represents a reactive value bound to a UI control.
-#' Interactive inputs were previously called delayed reactives because they
-#' represent an reactive value that would be created when the plot was
-#' drawn. 
-#' 
+#' An interactive input object is a reactive expression which wraps a reactive
+#' value. When the plot is rendered, an observer is created which pushes values
+#' into the reactive value in response to changes of an input object. Those
+#' changes invalidate the reactive expression, which will return the value,
+#' optionally passed through a mapping function.
+#'
 #' This function is designed to be used by authors of new types of interactive
 #' inputs. If you are a ggvis user, please use one of the more specific input
 #' functions starting with the \code{input_}.
 #'
-#' @param subclass The name of a class to be used in addition to
-#'   "input". Automatically prefixed with "input_"
-#' @param control_args a list of arguments passed to \code{control_f}
-#' @param value the default value of the input
-#' @param map a function with a singe argument that takes the value returned
-#'   from the input control and converts it to an argument useful for ggvis.
-#'   Defaults to \code{identity}, leaving the output unchanged.
-#' @param id a unique identifier for this interactive input - used to 
-#'  de-duplicate the controls when the same input is used in multiple places 
-#'  in a visualisation
-#' @param control_f The name of a function used to create an html control.
+#' @param id The name of the input object in the Shiny app, such as
+#'   "slider_1338869".
+#' @param default The default (starting) value for the input.
+#' @param map A mapping function. Defaults to \code{identity}, which simply
+#'   returns the value unchanged.
+#' @param controls A Shiny HTML tag object representing the UI for the controls.
 #' @export
 #' @keywords internal
-input <- function(subclass, control_args = list(), value = NULL, 
-                  map = identity, id = rand_id(), control_f = NULL) {
-  if (missing(subclass)) {
-    stop("Input is a virtual class: you must provide a subclass name")
+create_input <- function(id = rand_id("input_"), default = NULL,
+                         map = identity, controls = NULL) {
+
+  # Create a reactivevalues object to store the value. When a plot is rendered,
+  # an observer will be set up to push values into val$x.
+  vals <- shiny::reactiveValues()
+  vals$x <- default
+
+  # A reactive to wrap the reactive value
+  res <- reactive({
+    map(vals$x)
+  })
+
+  # This function is run at render time. It takes values from session$input$foo
+  # and pushes them into val$foo.
+  connect <- function(session, plot_id) {
+    shiny::observe({
+      value <- session$input[[id]]
+      if (!is.null(value)) {
+        vals$x <- value
+      }
+    })
   }
-  
-  if (is.null(control_f)) {
-    control_f <- camelCase(paste0(subclass, "Input"))
-  }
-  
-  assert_that(is.string(subclass), is.string(control_f), 
-    is.list(control_args), is.function(map), is.string(id))
+  connector_label(connect) <- paste0("<", id, ">")
 
-  structure(list(
-      control_f = control_f, 
-      control_args = control_args, 
-      default = value,
-      map = map, 
-      id = id
-    ), class = c(paste0("input_", subclass), "input")
-  )
-}
+  # Wrap the shiny tag object into a list
+  controls_l <- list()
+  controls_l[[id]] <- controls
 
-#' @export
-#' @rdname input
-#' @param x object to test for "input"-ness
-is.input <- function(x) inherits(x, "input")
-
-#' @export
-controls.input <- function(x, session = NULL) {
-  control <- do.call(x$control_f, x$control_args)
-  setNames(list(control), x$id)
-}
-
-#' @export
-format.input <- function(x, ...) {
-  control <- as.call(c(as.name(x$control_f), x$control_args))
-  control_s <- paste0(deparse(control), collapse = "\n")
-  
-  paste0("<input> ", x$id, "\n",
-    control_s, "\n")
-}
-
-#' @export
-print.input <- function(x, ...) {
-  cat(format(x), "\n", sep = "")
-}
-
-#' @export
-as.reactive.input <- function(x, session = NULL, ...) {
-  f <- from_input(x$id, x$default, x$map)
-    
-  if ("session" %in% names(formals(f))) {
-    reactive(f(session = session))
-  } else {
-    reactive(f())
-  }
-}
-
-# Returns a function that takes a session object and returns
-# session$input[[id]], or, if it's not present, a default value.
-# @param id The id of something in the input object, like input[["foo"]].
-# @param default A default value that is returned when session$input[[id]] is null.
-# @param map A function that takes the raw input$foo value as input, and
-#   returns a value. This is useful when the raw input value needs to be
-#   massaged before passing it on to the next stage of processing.
-from_input <- function(id, default, map = identity) {
-  
-  call <- substitute(function(session) {
-    map(session$input[[id]] %||% default)
-  }, list(id = id, default = default))
-  
-  eval(call)
-}
-
-# Convert delayed reactives to regular reactives
-init_inputs <- function(x, session) {
-  UseMethod("init_inputs")
-}
-
-#' @export
-init_inputs.default <- function(x, session) x
-
-#' @export
-init_inputs.NULL <- function(x, session) NULL
-
-#' @export
-init_inputs.list <- function(x, session) {
-  drs <- vapply(x, is.input, logical(1))
-  x[drs] <- lapply(x[drs], as.reactive, session = session)
-  x
-}
-#' @export
-init_inputs.transform <- init_inputs.list
-
-#' @importFrom shiny is.reactive
-#' @export
-init_inputs.prop <- function(x, session) {
-  if (x$type != "reactive") return(x)
-  if (is.reactive(x$value)) stop("Delayed reactive has already been advanced.")
-
-  x$value <- as.reactive(x$dr, session)
-  x
-}
-
-#' @export
-init_inputs.ggvis_props <- function(x, session) {
-  x[] <- lapply(x, init_inputs, session = session)
-  x
-}
-
-
-# Convert reactives to values
-eval_reactives <- function(x) {
-  is_function <- vapply(x, is.function, logical(1))
-  x[is_function] <- lapply(x[is_function], function(f) f())
-  x
+  create_broker(res, connect = connect, controls = controls_l)
 }

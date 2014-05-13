@@ -6,20 +6,18 @@
 \usage{
 input_text(value, label = "", id = rand_id("text_"), map = identity)
 
-input_numeric(value, label = "", id = rand_id("text_"), map = identity)
+input_numeric(value, label = "", id = rand_id("numeric_"), map = identity)
 }
 \arguments{
 \item{value}{Initial value}
 
 \item{label}{Display label for the control}
 
-\item{id}{a unique identifier for this interactive input - used to
-de-duplicate the controls when the same input is used in multiple places
-in a visualisation}
+\item{id}{A unique identifier for this input. Usually generated
+automatically.}
 
-\item{map}{a function with a singe argument that takes the value returned
-from the input control and converts it to an argument useful for ggvis.
-Defaults to \code{identity}, leaving the output unchanged.}
+\item{map}{A function with single argument \code{x}, the value of the
+control on the client. Returns a modified value.}
 }
 \description{
 \code{input_numeric} only allows numbers and comes with a spin box control.
@@ -27,10 +25,10 @@ Defaults to \code{identity}, leaving the output unchanged.}
 }
 \examples{
 fill_text <- input_text(label = "Point color", value = "red")
-qvis(mtcars, ~wt, ~mpg, fill := fill_text)
+mtcars \%>\% qvis(~wt, ~mpg, fill := fill_text)
 
 size_num <- input_numeric(label = "Point size", value = 25)
-qvis(mtcars, ~wt, ~mpg, size := size_num)
+mtcars \%>\% qvis(~wt, ~mpg, size := size_num)
 }
 \seealso{
 Other interactive input: \code{\link{input_checkboxgroup}},
