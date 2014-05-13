@@ -59,13 +59,18 @@ view_static <- function(x, plot_id = rand_id("plot_"),
 #' @param quiet If \code{TRUE} show status messages from Shiny. (Default is
 #'   \code{FALSE}.)
 view_dynamic <- function(x, plot_id = rand_id("plot_"), port = NULL,
-                         quiet = TRUE) {
+                         quiet = FALSE) {
 
   ggvis_app(x,
     plot_id = plot_id,
     port = port,
-    quiet = quiet,
-    launch.browser = function(url) view_plot(url, 350 + control_height(x))
+    quiet = TRUE,
+    launch.browser = function(url) {
+      if (!quiet) {
+        message("Showing dynamic visualisation. Press Escape/Ctrl + C to stop.")
+      }
+      view_plot(url, 350 + control_height(x))
+    }
   )
 }
 
