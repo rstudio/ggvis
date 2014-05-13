@@ -1,3 +1,18 @@
+ggvisPage <- function(plot_id, has_controls = TRUE, spec = NULL, deps = NULL) {
+  plot_div <- ggvisOutput(plot_id, spec = spec, deps = deps)
+
+  if (!has_controls) {
+    shiny::basicPage(plot_div)
+  } else {
+    shiny::bootstrapPage(
+      sidebarBottomPage(
+        sidebarBottomPanel(ggvisControlOutput("ggvis_controls", plot_id)),
+        mainTopPanel(plot_div)
+      )
+    )
+  }
+}
+
 #' @rdname shiny-ggvis
 #' @param plot_id unique identifier to use for the div containing the ggvis plot.
 #' @param shiny Should this include headers for Shiny? For dynamic and

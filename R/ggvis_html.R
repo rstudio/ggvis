@@ -86,26 +86,11 @@ ggvis_dependencies <- function(absolute = FALSE, in_shiny = FALSE,
   deps
 }
 
-ggvis_ui <- function(plot_id, has_controls = TRUE, spec = NULL, deps = NULL) {
-  plot_div <- ggvisOutput(plot_id, spec = spec, deps = deps)
-
-  if (!has_controls) {
-    shiny::basicPage(plot_div)
-  } else {
-    shiny::bootstrapPage(
-      sidebarBottomPage(
-        sidebarBottomPanel(ggvisControlOutput("ggvis_controls", plot_id)),
-        mainTopPanel(plot_div)
-      )
-    )
-  }
-}
-
 ggvis_app <- function(x, plot_id = rand_id("plot_"),
                       deps = ggvis_dependencies(in_shiny = TRUE),
                       ...) {
 
-  ui <- ggvis_ui(plot_id, length(x$controls) > 0, deps = deps)
+  ui <- ggvisPage(plot_id, length(x$controls) > 0, deps = deps)
 
   server <- function(input, output, session) {
     r_gv <- reactive(x)

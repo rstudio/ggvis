@@ -44,7 +44,7 @@ view_static <- function(x, plot_id = rand_id("plot_"),
   copy_deps(deps, system.file("www", package = "ggvis"), dest)
 
   spec <- as.vega(x, dynamic = FALSE)
-  ui <- ggvis_ui(plot_id, length(x$controls) > 0, spec, deps = deps)
+  ui <- ggvisPage(plot_id, length(x$controls) > 0, spec, deps = deps)
 
   html_file <- file.path(dest, "plot.html")
   cat(renderHTML(ui), file = html_file)
