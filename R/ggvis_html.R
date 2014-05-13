@@ -1,22 +1,34 @@
-# embedded in shiny app
-# console: static
-# console: dynamic
-# reactive doc: static
-# reactive doc: dynamic
-
-# The defaults are set so that this gives dependencies that can be used in a
-# dynamic shiny app.
-# @param absolute Should full, absolute paths be used?
-# @param jquery Should jquery be added?
-# @param shiny_ggvis Should ggvis-shiny be added?
+#' HTML dependencies of a ggvis plot
+#'
+#' There are five way to display a ggvis plot:
+#' \itemize{
+#'   \item static html file
+#'   \item temporary shiny app
+#'   \item static html embedded in Rmarkdown
+#'   \item shiny app embedded in Rmarkdown
+#'   \item embedded in regular shiny app
+#' }
+#' This function ensures that the right dependencies are specified for
+#' each scenario.
+#'
+#' @param absolute Use absolute paths? Needed for local html files.
+#' @param in_shiny Will the plot be embedded in a shiny app? Drops jquery
+#'   dependency and adds shiny resource paths
+#' @param dynamic Is this a dynamic plot? If so, add shiny-ggvis dependency
+#' @export
+#' @keywords internal
 ggvis_dependencies <- function(absolute = FALSE, in_shiny = FALSE,
                                dynamic = TRUE) {
 
   minified <- getOption("ggvis.js_minified", TRUE)
-  adjust_min <- if (minified) identity else function(x) gsub("\\.min", "", x)
-
-  adjust_path <- if (absolute) function(x) system.file(package = "ggvis", "www", x)
-                 else identity
+  adjust_min <- function(x) {
+    if (minified) return(x)
+    gsub("\\.min", "", x)
+  }
+  adjust_path <- function(x) {
+    if (!absolute) return(x)
+    system.file(package = "ggvis", "www", x)
+  }
 
   if (in_shiny) {
     shiny::addResourcePath("ggvis", system.file("www", "ggvis", package = "ggvis"))
