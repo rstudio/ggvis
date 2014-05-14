@@ -37,9 +37,8 @@ Each section will introduce to a major idea in ggvis, and point to more detailed
 
 Every ggvis graphic starts with a call to `ggvis()`. The first argument is the data set that you want to plot, and the other arguments describe how to map variables to visual properties. 
 
-```{r, error = TRUE}
+```{r}
 p <- ggvis(mtcars, x = ~wt, y = ~mpg)
-p
 ```
 
 This doesn't actually plot anything because you haven't told ggvis how to display your data. You do that by layering visual elements, for example with `layer_points()`:
