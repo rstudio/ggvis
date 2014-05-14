@@ -51,9 +51,27 @@ compute_smooth.data.frame <- function(x, formula, ..., method = NULL,
   method <- method %||% guess_method(x)
   assert_that(is.string(method))
 
+  restore <- identity
+
   if (is.character(method)) {
     # This allows the use of e.g. MASS::rlm
     method <- parse(text = method)[[1]]
+  }
+
+  if (method == quote(loess)) {
+    # loess can't handle POSIXct, so convert to numeric. Fortunately we know
+    # that loess only has a single predictor to extract.
+    pred_var <- formula[[3]]
+    pred_vals <- eval(pred_var, x)
+    if (inherits(pred_vals, "POSIXct")) {
+      x[[as.character(pred_var)]] <- as.numeric(pred_vals)
+      tz <- attr(pred_vals, "tzone")
+
+      restore <- function(data) {
+        data$pred_ <- as.POSIXct(data$pred_, origin = "1970-01-01", tz = tz)
+        data
+      }
+    }
   }
 
   # Create model environment & model call, then evaluate
@@ -63,7 +81,8 @@ compute_smooth.data.frame <- function(x, formula, ..., method = NULL,
   model <- eval(model_call, env)
 
   # Make prediction
-  pred_grid(model, x, se = se, level = level, n = n)
+  res <- pred_grid(model, x, se = se, level = level, n = n)
+  restore(res)
 }
 
 #' @export
