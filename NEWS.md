@@ -1,3 +1,6 @@
+# ggvis 0.2.0.99
+
+
 # ggvis 0.2
 
 The main change is that ggvis now uses a functional approach to building plots. Instead of doing:
