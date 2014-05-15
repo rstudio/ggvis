@@ -1,3 +1,11 @@
+#' @import htmltools
+NULL
+
+#' @export
+format.html_dependency <- function(x, ...) {
+  htmltools::renderDependencies(list(x), "file")
+}
+
 #' HTML dependencies of a ggvis plot
 #'
 #' There are five way to display a ggvis plot:
@@ -36,49 +44,49 @@ ggvis_dependencies <- function(absolute = FALSE, in_shiny = FALSE,
   }
 
   deps <- compact(list(
-    if (!in_shiny) html_dependency(
+    if (!in_shiny) htmlDependency(
       name = "jquery",
       version = "1.11.0",
-      path = adjust_path("lib/jquery"),
+      src = adjust_path("lib/jquery"),
       script = "jquery.min.js"
     ),
-    html_dependency(
+    htmlDependency(
       name = "jquery-ui",
       version = "1.10.4",
-      path = adjust_path("lib/jquery-ui"),
+      src = adjust_path("lib/jquery-ui"),
       script = adjust_min("js/jquery-ui-1.10.4.custom.min.js"),
       stylesheet = adjust_min("css/smoothness/jquery-ui-1.10.4.custom.min.css")
     ),
-    html_dependency(
+    htmlDependency(
       name = "d3",
       version = "3.4.1",
-      path = adjust_path("lib/d3"),
+      src = adjust_path("lib/d3"),
       script = adjust_min("d3.min.js")
     ),
-    html_dependency(
+    htmlDependency(
       name = "vega",
       version = "1.3.3",
-      path = adjust_path("lib/vega"),
+      src = adjust_path("lib/vega"),
       script = adjust_min("vega.min.js")
     ),
-    html_dependency(
+    htmlDependency(
       name = "lodash",
       version = "2.2.1",
-      path = adjust_path("lib/lodash"),
+      src = adjust_path("lib/lodash"),
       script = adjust_min("lodash.min.js"),
       head = "<script>var lodash = _.noConflict();</script>"
     ),
-    html_dependency(
+    htmlDependency(
       name = "ggvis",
       version = as.character(packageVersion("ggvis")),
-      path = adjust_path("ggvis"),
+      src = adjust_path("ggvis"),
       script = "js/ggvis.js",
       stylesheet = "css/ggvis.css"
     ),
-    if (dynamic) html_dependency(
+    if (dynamic) htmlDependency(
       name = "shiny-ggvis",
       version = as.character(packageVersion("ggvis")),
-      path = adjust_path("ggvis"),
+      src = adjust_path("ggvis"),
       script = "js/shiny-ggvis.js"
     )
   ))

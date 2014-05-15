@@ -41,7 +41,11 @@ view_static <- function(x, plot_id = rand_id("plot_"),
   deps <- ggvis_dependencies(dynamic = FALSE)
 
   if (!file.exists(dest)) dir.create(dest)
-  copy_deps(deps, system.file("www", package = "ggvis"), dest)
+  lapply(deps, function(dep) {
+    htmltools::copyDependencyToDir(dep,
+      system.file("www", package = "ggvis"), dest
+    )
+  })
 
   spec <- as.vega(x, dynamic = FALSE)
   ui <- ggvisPage(plot_id, length(x$controls) > 0, spec, deps = deps)
@@ -157,7 +161,7 @@ control_height <- function(x) {
 
 # Given shiny tags, makes an HTML page
 renderHTML <- function(tags) {
-  html <- shiny:::renderTags(tags)
+  html <- htmltools::renderTags(tags)
   paste0(
     '<!DOCTYPE html>\n',
     '<html>\n',
