@@ -16,7 +16,7 @@ Imports:
     methods,
     magrittr,
     dplyr (>= 0.1.3.0.99),
-    htmltools (>= 0.2.1)
+    htmltools (>= 0.2.2)
 Suggests:
     MASS,
     mgcv,

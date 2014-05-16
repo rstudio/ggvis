@@ -1,8 +1,8 @@
-ggvisPage <- function(plot_id, has_controls = TRUE, spec = NULL, deps = NULL) {
-  plot_div <- ggvisOutput(plot_id, spec = spec, deps = deps)
+ggvisPage <- function(plot_id, has_controls = TRUE, spec = NULL) {
+  plot_div <- ggvisOutput(plot_id, spec = spec)
 
   if (!has_controls) {
-    shiny::basicPage(plot_div)
+    plot_div
   } else {
     shiny::bootstrapPage(
       sidebarBottomPage(
@@ -20,12 +20,13 @@ ggvisPage <- function(plot_id, has_controls = TRUE, spec = NULL, deps = NULL) {
 #' @param spec Plot specification, used internally.
 #' @param deps Default dependencies, used internally.
 #' @export
-ggvisOutput <- function(plot_id = rand_id("plot_id"), spec = NULL,
-                        deps = ggvis_dependencies(in_shiny = TRUE)) {
-  htmltools::tagList(
-    ggvisPlot(plot_id),
-    ggvisDependencies(deps),
-    ggvisSpec(plot_id, spec)
+ggvisOutput <- function(plot_id = rand_id("plot_id"), spec = NULL) {
+  attachDependencies(
+    htmltools::tagList(
+      ggvisPlot(plot_id),
+      ggvisSpec(plot_id, spec)
+    ),
+    ggvis_dependencies()
   )
 }
 
@@ -37,13 +38,6 @@ ggvisPlot <- function(plot_id) {
       ggvisControlGroup(plot_id)
     )
   )
-}
-
-ggvisDependencies <- function(deps) {
-  head <- unlist(lapply(deps, format), use.names = FALSE)
-  head_html <- lapply(head, htmltools::HTML)
-
-  htmltools::singleton(htmltools::tags$head(head_html))
 }
 
 ggvisSpec <- function(plot_id, spec = NULL) {
