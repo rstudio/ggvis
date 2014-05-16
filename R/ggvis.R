@@ -71,7 +71,7 @@ add_props <- function(vis, ..., .props = NULL, inherit = NULL,
                       env = parent.frame()) {
 
   # Get value of inherit from inherit arg, then .props$inherit, then TRUE
-  if (!is.null(.props)) inherit <- attr(.props, "inherit")
+  if (!is.null(.props)) inherit <- attr(.props, "inherit", TRUE)
   inherit <- inherit %||% TRUE
 
   new_props <- props(..., .props = .props, inherit = inherit, env = env)
@@ -234,7 +234,7 @@ register_reactive <- function(vis, reactive) {
 
   # If it's a broker, add controls, connector, and spec as needed
   if (is.broker(reactive)) {
-    broker <- attr(reactive, "broker")
+    broker <- attr(reactive, "broker", TRUE)
 
     vis <- register_controls(vis, broker$controls)
     vis <- register_connector(vis, broker$connect)

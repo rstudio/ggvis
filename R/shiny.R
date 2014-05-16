@@ -137,7 +137,7 @@ observe_data <- function(r_spec, id, session) {
     for (obs in data_observers) obs$suspend()
     data_observers <<- list()
 
-    data_table <- attr(r_spec(), "data_table")
+    data_table <- attr(r_spec(), "data_table", TRUE)
 
     # Create observers for each of the data objects
     for (name in ls(data_table, all.names = TRUE)) {
@@ -168,7 +168,7 @@ observe_data <- function(r_spec, id, session) {
 
 # Run the connector functions
 exec_connectors <- function(r_spec, plot_id, session) {
-  connectors <- shiny::isolate(attr(r_spec(), "connectors"))
+  connectors <- shiny::isolate(attr(r_spec(), "connectors", TRUE))
 
   lapply(connectors, function(connect) {
     if (!is.null(connect)) {

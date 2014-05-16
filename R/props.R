@@ -176,7 +176,7 @@ check_unscaled_form <- function(x) {
 format.ggvis_props <- function(x, ...) {
   labels <- lapply(x, format, ...)
   if (length(labels) > 0) {
-    inherit <- if (!attr(x, "inherit")) "\ninherit: FALSE" else ""
+    inherit <- if (!attr(x, "inherit", TRUE)) "\ninherit: FALSE" else ""
     paste0(
       paste0("* ", names(x), ": ", labels, collapse = "\n"),
       inherit,
@@ -195,7 +195,7 @@ is.ggvis_props <- function(x) inherits(x, "ggvis_props")
 
 #' @export
 `[.ggvis_props` <- function(x, idx) {
-  structure(NextMethod(), inherit = attr(x, "inherit"), class = "ggvis_props")
+  structure(NextMethod(), inherit = attr(x, "inherit", TRUE), class = "ggvis_props")
 }
 
 # Merge two ggvis_props objects
@@ -204,14 +204,16 @@ is.ggvis_props <- function(x) inherits(x, "ggvis_props")
 # merge_props(props(x = ~x), props(x = ~y))
 # merge_props(props(x = ~x, y = 1), props(x = ~y))
 # merge_props(props(x = ~x, y = 1), props(x = ~y, inherit = FALSE))
-merge_props <- function(parent = NULL, child = NULL, inherit = attr(child, "inherit")) {
+merge_props <- function(parent = NULL, child = NULL,
+                        inherit = attr(child, "inherit", TRUE)) {
   if (is.null(parent)) return(child)
   if (is.null(child)) return(parent)
   stopifnot(is.ggvis_props(parent), is.ggvis_props(child))
 
   if (identical(inherit, FALSE)) return(child)
 
-  structure(merge_vectors(parent, child), inherit = attr(parent, "inherit"),
+  structure(merge_vectors(parent, child),
+    inherit = attr(parent, "inherit", TRUE),
     class = "ggvis_props")
 }
 

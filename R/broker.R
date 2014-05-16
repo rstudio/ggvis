@@ -46,7 +46,7 @@ create_broker <- function(r, controls = NULL, connect = NULL, spec = NULL) {
 is.broker <- function(x) inherits(x, "broker")
 
 # Get the label of a connector function
-connector_label <- function(x) attr(x, "label")
+connector_label <- function(x) attr(x, "label", TRUE)
 
 # Set the label of a connector function
 `connector_label<-` <- function(x, value) {

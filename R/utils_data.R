@@ -13,7 +13,7 @@ get_data <- function(vis) {
 }
 
 data_id <- function(x) {
-  return(attr(x, "data_id"))
+  return(attr(x, "data_id", TRUE))
 }
 
 `data_id<-` <- function(x, value) {
