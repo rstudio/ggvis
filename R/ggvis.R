@@ -38,6 +38,7 @@ ggvis <- function(data = NULL, ..., env = parent.frame()) {
       marks = list(),
       data = list(),
       props = list(),
+      scale_ranges = list(),
       reactives = list(),
       scales = list(),
       axes = list(),
@@ -133,6 +134,7 @@ add_mark <- function(vis, type = NULL, props = NULL, data = NULL,
 
   vis <- add_data(vis, data, data_name)
   vis <- add_props(vis, .props = props)
+  vis <- register_ranges(vis, cur_props(vis))
 
   vis$marks <- c(vis$marks, list(
     mark(type, props = vis$cur_props, data = vis$cur_data))
@@ -239,6 +241,30 @@ register_reactive <- function(vis, reactive) {
     vis <- register_controls(vis, broker$controls)
     vis <- register_connector(vis, broker$connect)
     vis <- register_handler(vis, broker$spec)
+  }
+
+  vis
+}
+
+# Register the range
+register_ranges <- function(vis, props) {
+  # Strip off .update, .enter, etc.
+  names(props) <- trim_propset(names(props))
+
+  # Get a reactive for each scaled prop
+  data <- vis$cur_data
+  ranges <- compact(lapply(props, function(prop) {
+    if (!prop$scale) return(NULL)
+    reactive({
+      data_range(prop_value(prop, data()))
+    })
+  }))
+
+  # Add those reactives to the vis$scale_ranges
+  scales <- prop_to_scale(names(props))
+  for (scale in scales) {
+    scale_ranges <- unname(ranges[scale])
+    vis$scale_ranges[[scale]] <- c(vis$scale_ranges[[scale]], scale_ranges)
   }
 
   vis
