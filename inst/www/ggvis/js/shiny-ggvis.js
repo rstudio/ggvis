@@ -75,7 +75,7 @@ $(function(){ //DOM Ready
   // Receive data object and dispatch to appropriate vega object
   Shiny.addCustomMessageHandler("ggvis_data", function(message) {
     var plotId = message.plotId;
-    var name = message.name;
+    var name = message.value[0].name;
     var data = message.value[0].values;
     var format = message.value[0].format;
 

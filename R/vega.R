@@ -30,17 +30,10 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
   # that are used in the props.
   data_table <- active_props(data_table, x$marks)
 
-  if (dynamic) {
-    datasets <- lapply(data_ids, function(id) {
-      # Don't provide data now, just the name
-      list(name = id)
-    })
-  } else {
-    datasets <- unlist(lapply(data_ids, function(id) {
-      data <- shiny::isolate(data_table[[id]]())
-      as.vega(data, id)
-    }), recursive = FALSE)
-  }
+  datasets <- unlist(lapply(data_ids, function(id) {
+    data <- shiny::isolate(data_table[[id]]())
+    as.vega(data, id)
+  }), recursive = FALSE)
 
   # Each of these operations results in a more completely specified (and still
   # valid) ggvis object
