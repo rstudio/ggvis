@@ -48,13 +48,11 @@ merge_scales <- function(parent = NULL, child = NULL) {
 add_default_scales <- function(vis, scale_info) {
   scales <- vis$scales
 
-  scale_types <- lapply(scale_info, function(x) x$type)
-
   # Add in scales not already specified in spec
-  needed <- setdiff(names(scale_types), names(scales))
+  needed <- setdiff(names(scale_info), names(scales))
   for (scale_n in needed) {
-    type <- scale_types[[scale_n]]
-    scales[[scale_n]] <- default_scale(scale_n, type)
+    info <- scale_info[[scale_n]]
+    scales[[scale_n]] <- default_scale(scale_n, info$type)
   }
 
   # Override domains (if not already present)
