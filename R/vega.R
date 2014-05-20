@@ -64,7 +64,7 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
   # valid) ggvis object
   x <- add_default_scales(x, scale_info_static)
   x <- add_default_axes(x)
-  x <- apply_axes_defaults(x)
+  x <- apply_axes_defaults(x, scale_info_static)
   x <- add_default_legends(x)
   x <- apply_legends_defaults(x)
   x <- add_default_options(x)
