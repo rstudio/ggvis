@@ -253,16 +253,19 @@ register_domains <- function(vis, props) {
   # Get a reactive for each scaled prop
   data <- vis$cur_data
   domains <- compact(lapply(props, function(prop) {
-    if (!prop$scale) return(NULL)
-    reactive({
-      data_range(prop_value(prop, data()))
-    })
+    if (isTRUE(prop$scale)) {
+      reactive({
+        data_range(prop_value(prop, data()))
+      })
+    } else {
+      NULL
+    }
   }))
 
   # Add those reactives to the vis$scale_domains
   scales <- prop_to_scale(names(domains))
   for (scale in scales) {
-    scale_domains <- unname(domains[scale])
+    scale_domains <- unname(domains[scale == scales])
     vis$scale_domains[[scale]] <- c(vis$scale_domains[[scale]], scale_domains)
   }
 
