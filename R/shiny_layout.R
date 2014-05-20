@@ -1,4 +1,4 @@
-ggvisPage <- function(plot_id, has_controls = TRUE, spec = NULL) {
+ggvisOutput <- function(plot_id, has_controls = TRUE, spec = NULL) {
   plot_div <- ggvisOutput(plot_id, spec = spec)
 
   if (!has_controls) {
@@ -21,7 +21,7 @@ ggvisPage <- function(plot_id, has_controls = TRUE, spec = NULL) {
 #' @param deps Default dependencies, used internally.
 #' @export
 ggvisOutput <- function(plot_id = rand_id("plot_id"), spec = NULL) {
-  attachDependencies(
+  htmltools::attachDependencies(
     htmltools::tagList(
       ggvisPlot(plot_id),
       ggvisSpec(plot_id, spec)
