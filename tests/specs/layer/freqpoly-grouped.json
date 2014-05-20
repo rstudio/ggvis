@@ -105,6 +105,36 @@
 					"type" : "flatten"
 				}
 			]
+		},
+		{
+			"name" : "domain/stroke",
+			"format" : {
+				"type" : "csv",
+				"parse" : {
+					"value" : "number"
+				}
+			},
+			"values" : "\"value\"\n4\n8"
+		},
+		{
+			"name" : "domain/x",
+			"format" : {
+				"type" : "csv",
+				"parse" : {
+					"value" : "number"
+				}
+			},
+			"values" : "\"value\"\n0.5\n6.5"
+		},
+		{
+			"name" : "domain/y",
+			"format" : {
+				"type" : "csv",
+				"parse" : {
+					"value" : "number"
+				}
+			},
+			"values" : "\"value\"\n0\n10"
 		}
 	],
 	"scales" : [
@@ -123,8 +153,8 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "mtcars0/regroup1/bin2",
-						"field" : "data.cyl"
+						"data" : "domain/stroke",
+						"field" : "data.value"
 					}
 				]
 			}
@@ -141,8 +171,8 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "mtcars0/regroup1/bin2",
-						"field" : "data.x_"
+						"data" : "domain/x",
+						"field" : "data.value"
 					}
 				]
 			}
@@ -159,8 +189,8 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "mtcars0/regroup1/bin2",
-						"field" : "data.count_"
+						"data" : "domain/y",
+						"field" : "data.value"
 					}
 				]
 			}
@@ -215,7 +245,7 @@
 			"orient" : "bottom",
 			"layer" : "back",
 			"grid" : true,
-			"title" : "x_"
+			"title" : "value"
 		},
 		{
 			"type" : "y",
@@ -223,7 +253,7 @@
 			"orient" : "left",
 			"layer" : "back",
 			"grid" : true,
-			"title" : "count_"
+			"title" : "value"
 		}
 	],
 	"padding" : null,
@@ -237,5 +267,5 @@
 		"renderer" : "svg",
 		"hover_duration" : 0
 	},
-	"handlers" : []
+	"handlers" : null
 }

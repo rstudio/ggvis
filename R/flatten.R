@@ -22,7 +22,7 @@ active_props <- function(data, layers) {
     reactive(apply_props(parent_data(), props))
   }
 
-  data_out <- new.env(parent = emptyenv())
+  data_out <- list()
   for (data_n in names(uprops_by_id)) {
     data_out[[data_n]] <- reactive_prop(uprops_by_id[[data_n]], data[[data_n]])
   }

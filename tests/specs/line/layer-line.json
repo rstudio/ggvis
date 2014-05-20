@@ -94,6 +94,34 @@
 					"type" : "flatten"
 				}
 			]
+		},
+		{
+			"name" : "domain/stroke",
+			"format" : {
+				"type" : "csv",
+				"parse" : null
+			},
+			"values" : "\"value\"\n\"1\"\n\"2\"\n\"3\""
+		},
+		{
+			"name" : "domain/x",
+			"format" : {
+				"type" : "csv",
+				"parse" : {
+					"value" : "number"
+				}
+			},
+			"values" : "\"value\"\n0.0126281732227653\n0.838725288398564"
+		},
+		{
+			"name" : "domain/y",
+			"format" : {
+				"type" : "csv",
+				"parse" : {
+					"value" : "number"
+				}
+			},
+			"values" : "\"value\"\n0.00647905003279448\n0.92520075570792"
 		}
 	],
 	"scales" : [
@@ -109,8 +137,8 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "df0/regroup1/arrange2",
-						"field" : "data.x"
+						"data" : "domain/x",
+						"field" : "data.value"
 					}
 				]
 			}
@@ -127,8 +155,8 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "df0/regroup1/arrange2",
-						"field" : "data.y"
+						"data" : "domain/y",
+						"field" : "data.value"
 					}
 				]
 			}
@@ -144,8 +172,8 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "df0/regroup1/arrange2",
-						"field" : "data.z"
+						"data" : "domain/stroke",
+						"field" : "data.value"
 					}
 				]
 			}
@@ -200,7 +228,7 @@
 			"orient" : "bottom",
 			"layer" : "back",
 			"grid" : true,
-			"title" : "x"
+			"title" : "value"
 		},
 		{
 			"type" : "y",
@@ -208,7 +236,7 @@
 			"orient" : "left",
 			"layer" : "back",
 			"grid" : true,
-			"title" : "y"
+			"title" : "value"
 		}
 	],
 	"padding" : null,
@@ -222,5 +250,5 @@
 		"renderer" : "svg",
 		"hover_duration" : 0
 	},
-	"handlers" : []
+	"handlers" : null
 }

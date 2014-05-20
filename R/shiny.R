@@ -137,10 +137,11 @@ observe_data <- function(r_spec, id, session) {
     for (obs in data_observers) obs$suspend()
     data_observers <<- list()
 
-    data_table <- attr(r_spec(), "data_table")
+    data_table <- c(attr(r_spec(), "data_table", TRUE),
+                    attr(r_spec(), "scale_data_table", TRUE))
 
     # Create observers for each of the data objects
-    for (name in ls(data_table, all.names = TRUE)) {
+    for (name in names(data_table)) {
       # The datasets list contains named objects. The names are synthetic IDs
       # that are present in the vega spec. The values can be a variety of things,
       # see the if/else clauses below.
@@ -150,7 +151,7 @@ observe_data <- function(r_spec, id, session) {
         data_name <- name
 
         obs <- shiny::observe({
-          data_reactive <- get(data_name, data_table)
+          data_reactive <- data_table[[data_name]]
 
           session$sendCustomMessage("ggvis_data", list(
             plotId = id,
@@ -168,7 +169,7 @@ observe_data <- function(r_spec, id, session) {
 
 # Run the connector functions
 exec_connectors <- function(r_spec, plot_id, session) {
-  connectors <- shiny::isolate(attr(r_spec(), "connectors"))
+  connectors <- shiny::isolate(attr(r_spec(), "connectors", TRUE))
 
   lapply(connectors, function(connect) {
     if (!is.null(connect)) {

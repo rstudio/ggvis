@@ -38,6 +38,7 @@ ggvis <- function(data = NULL, ..., env = parent.frame()) {
       marks = list(),
       data = list(),
       props = list(),
+      scale_domains = list(),
       reactives = list(),
       scales = list(),
       axes = list(),
@@ -71,7 +72,7 @@ add_props <- function(vis, ..., .props = NULL, inherit = NULL,
                       env = parent.frame()) {
 
   # Get value of inherit from inherit arg, then .props$inherit, then TRUE
-  if (!is.null(.props)) inherit <- attr(.props, "inherit")
+  if (!is.null(.props)) inherit <- attr(.props, "inherit", TRUE)
   inherit <- inherit %||% TRUE
 
   new_props <- props(..., .props = .props, inherit = inherit, env = env)
@@ -133,6 +134,7 @@ add_mark <- function(vis, type = NULL, props = NULL, data = NULL,
 
   vis <- add_data(vis, data, data_name)
   vis <- add_props(vis, .props = props)
+  vis <- register_domains(vis, cur_props(vis))
 
   vis$marks <- c(vis$marks, list(
     mark(type, props = vis$cur_props, data = vis$cur_data))
@@ -234,11 +236,37 @@ register_reactive <- function(vis, reactive) {
 
   # If it's a broker, add controls, connector, and spec as needed
   if (is.broker(reactive)) {
-    broker <- attr(reactive, "broker")
+    broker <- attr(reactive, "broker", TRUE)
 
     vis <- register_controls(vis, broker$controls)
     vis <- register_connector(vis, broker$connect)
     vis <- register_handler(vis, broker$spec)
+  }
+
+  vis
+}
+
+register_domains <- function(vis, props) {
+  # Strip off .update, .enter, etc.
+  names(props) <- trim_propset(names(props))
+
+  # Get a reactive for each scaled prop
+  data <- vis$cur_data
+  domains <- compact(lapply(props, function(prop) {
+    if (isTRUE(prop$scale)) {
+      reactive({
+        data_range(prop_value(prop, data()))
+      })
+    } else {
+      NULL
+    }
+  }))
+
+  # Add those reactives to the vis$scale_domains
+  scales <- prop_to_scale(names(domains))
+  for (scale in scales) {
+    scale_domains <- unname(domains[scale == scales])
+    vis$scale_domains[[scale]] <- c(vis$scale_domains[[scale]], scale_domains)
   }
 
   vis

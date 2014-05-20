@@ -9,6 +9,26 @@
 				}
 			},
 			"values" : "\"x\"\n1\n2\n3\n4\n5"
+		},
+		{
+			"name" : "domain/x",
+			"format" : {
+				"type" : "csv",
+				"parse" : {
+					"value" : "number"
+				}
+			},
+			"values" : "\"value\"\n1\n5"
+		},
+		{
+			"name" : "domain/y",
+			"format" : {
+				"type" : "csv",
+				"parse" : {
+					"value" : "number"
+				}
+			},
+			"values" : "\"value\"\n1\n5"
 		}
 	],
 	"scales" : [
@@ -24,8 +44,8 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "df0",
-						"field" : "data.x"
+						"data" : "domain/x",
+						"field" : "data.value"
 					}
 				]
 			}
@@ -42,8 +62,8 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "df0",
-						"field" : "data.x"
+						"data" : "domain/y",
+						"field" : "data.value"
 					}
 				]
 			}
@@ -90,7 +110,7 @@
 			"orient" : "bottom",
 			"layer" : "back",
 			"grid" : true,
-			"title" : "x"
+			"title" : "value"
 		},
 		{
 			"type" : "y",
@@ -98,7 +118,7 @@
 			"orient" : "left",
 			"layer" : "back",
 			"grid" : true,
-			"title" : "x"
+			"title" : "value"
 		}
 	],
 	"padding" : null,
@@ -112,5 +132,5 @@
 		"renderer" : "svg",
 		"hover_duration" : 0
 	},
-	"handlers" : []
+	"handlers" : null
 }

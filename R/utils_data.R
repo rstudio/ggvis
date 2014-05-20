@@ -13,7 +13,7 @@ get_data <- function(vis) {
 }
 
 data_id <- function(x) {
-  return(attr(x, "data_id"))
+  return(attr(x, "data_id", TRUE))
 }
 
 `data_id<-` <- function(x, value) {
@@ -175,3 +175,12 @@ eval_vector <- function(x, f) UseMethod("eval_vector")
 eval_vector.data.frame <- function(x, f) {
   eval(f[[2]], x, environment(f))
 }
+
+#' Find the range of values for a vector
+data_range <- function(x) UseMethod("data_range")
+#' @export
+data_range.default <- function(x) range(x)
+#' @export
+data_range.character <- function(x) unique(x)
+#' @export
+data_range.factor <- function(x) levels(x)

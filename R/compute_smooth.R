@@ -65,7 +65,7 @@ compute_smooth.data.frame <- function(x, formula, ..., method = NULL,
     pred_vals <- eval(pred_var, x)
     if (inherits(pred_vals, "POSIXct")) {
       x[[as.character(pred_var)]] <- as.numeric(pred_vals)
-      tz <- attr(pred_vals, "tzone")
+      tz <- attr(pred_vals, "tzone", TRUE)
 
       restore <- function(data) {
         data$pred_ <- as.POSIXct(data$pred_, origin = "1970-01-01", tz = tz)
@@ -152,7 +152,7 @@ pred_grid.loess <- function(model, data, n = 80, se = FALSE, level = 0.95) {
 
 #' @export
 pred_grid.lm <- function(model, data, n = 80, se = FALSE, level = 0.95) {
-  x_var <- attr(terms(model), "term.labels")
+  x_var <- attr(terms(model), "term.labels", TRUE)
   if (length(x_var) > 1) {
     stop("Only know how to make grid for one variable", call. = FALSE)
   }
