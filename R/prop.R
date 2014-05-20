@@ -234,10 +234,6 @@ prop_type <- function(data, prop, processed = FALSE) {
   UseMethod("prop_type")
 }
 #' @export
-prop_type.split_df <- function(data, prop, processed = FALSE) {
-  prop_type(data[[1]], prop, processed = processed)
-}
-#' @export
 prop_type.data.frame <- function(data, prop, processed = FALSE) {
   if (processed) {
     value <- data[[prop_name(prop)]]
