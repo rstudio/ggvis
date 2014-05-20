@@ -24,7 +24,9 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
 
   data_ids <- extract_data_ids(x$marks)
   data_table <- x$data[data_ids]
-  scale_data_table <- scale_domain_data(x$scale_info)
+
+  scale_info <- summarize_scale_infos_r(x$scale_info)
+  scale_data_table <- scale_domain_data(scale_info)
 
   # Wrap each of the reactive data objects in another reactive which returns
   # only the columns that are actually used, and adds any calculated columns
