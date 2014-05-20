@@ -43,15 +43,12 @@ merge_scales <- function(parent = NULL, child = NULL) {
   structure(merge_vectors(parent, child), class = "scales")
 }
 
-# Given a ggvis object, return all needed vega scales, with correct
-# domain values set.
-add_default_scales <- function(vis, scale_data_table) {
+# Given a ggvis object, and list of scale_info objects, return all needed vega
+# scales, with correct domain values set.
+add_default_scales <- function(vis, scale_info) {
   scales <- vis$scales
 
-  names(scale_data_table) <- sub("domain/", "", names(scale_data_table))
-  scale_types <- lapply(scale_data_table, function(x) {
-    shiny::isolate(vector_type(x()$value))
-  })
+  scale_types <- lapply(scale_info, function(x) x$type)
 
   # Add in scales not already specified in spec
   needed <- setdiff(names(scale_types), names(scales))

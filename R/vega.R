@@ -57,9 +57,12 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
     scale_datasets <- static_datasets(scale_data_table, ls(scale_data_table))
   }
 
+  # Run all the reactives in the list
+  scale_info_static <- shiny::isolate(lapply(scale_info, function(x) x()))
+
   # Each of these operations results in a more completely specified (and still
   # valid) ggvis object
-  x <- add_default_scales(x, scale_data_table)
+  x <- add_default_scales(x, scale_info_static)
   x <- add_default_axes(x)
   x <- apply_axes_defaults(x)
   x <- add_default_legends(x)
