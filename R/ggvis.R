@@ -134,7 +134,7 @@ add_mark <- function(vis, type = NULL, props = NULL, data = NULL,
 
   vis <- add_data(vis, data, data_name)
   vis <- add_props(vis, .props = props)
-  vis <- register_domains(vis, cur_props(vis))
+  vis <- register_scale_domains(vis, cur_props(vis))
 
   vis$marks <- c(vis$marks, list(
     mark(type, props = vis$cur_props, data = vis$cur_data))
@@ -246,7 +246,7 @@ register_reactive <- function(vis, reactive) {
   vis
 }
 
-register_domains <- function(vis, props) {
+register_scale_domains <- function(vis, props) {
   # Strip off .update, .enter, etc.
   names(props) <- trim_propset(names(props))
 
