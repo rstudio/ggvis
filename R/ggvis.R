@@ -38,7 +38,7 @@ ggvis <- function(data = NULL, ..., env = parent.frame()) {
       marks = list(),
       data = list(),
       props = list(),
-      scale_domains = list(),
+      scale_info = list(),
       reactives = list(),
       scales = list(),
       axes = list(),
@@ -134,7 +134,7 @@ add_mark <- function(vis, type = NULL, props = NULL, data = NULL,
 
   vis <- add_data(vis, data, data_name)
   vis <- add_props(vis, .props = props)
-  vis <- register_scale_domains(vis, cur_props(vis))
+  vis <- register_scale_info(vis, cur_props(vis))
 
   vis$marks <- c(vis$marks, list(
     mark(type, props = vis$cur_props, data = vis$cur_data))
@@ -246,27 +246,27 @@ register_reactive <- function(vis, reactive) {
   vis
 }
 
-register_scale_domains <- function(vis, props) {
+register_scale_info <- function(vis, props) {
   # Strip off .update, .enter, etc.
   names(props) <- trim_propset(names(props))
 
   # Get a reactive for each scaled prop
   data <- vis$cur_data
-  domains <- compact(lapply(props, function(prop) {
-    if (isTRUE(prop$scale)) {
+  scale_info <- compact(lapply(props, function(prop) {
+    if (prop_is_scaled(prop)) {
       reactive({
-        data_range(prop_value(prop, data()))
+        scale_info(prop, data())
       })
     } else {
       NULL
     }
   }))
 
-  # Add those reactives to the vis$scale_domains
-  scales <- prop_to_scale(names(domains))
+  # Add those reactives to the vis$scale_info
+  scales <- prop_to_scale(names(scale_info))
   for (scale in scales) {
-    scale_domains <- unname(domains[scale == scales])
-    vis$scale_domains[[scale]] <- c(vis$scale_domains[[scale]], scale_domains)
+    info <- unname(scale_info[scale == scales])
+    vis$scale_info[[scale]] <- c(vis$scale_info[[scale]], info)
   }
 
   vis
