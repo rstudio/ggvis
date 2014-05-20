@@ -1235,6 +1235,26 @@
 					"type" : "flatten"
 				}
 			]
+		},
+		{
+			"name" : "domain/x",
+			"format" : {
+				"type" : "csv",
+				"parse" : {
+					"value" : "number"
+				}
+			},
+			"values" : "\"value\"\n1.513\n5.424"
+		},
+		{
+			"name" : "domain/y",
+			"format" : {
+				"type" : "csv",
+				"parse" : {
+					"value" : "number"
+				}
+			},
+			"values" : "\"value\"\n11.7099836385729\n31.0391526825725"
 		}
 	],
 	"scales" : [
@@ -1250,8 +1270,8 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "mtcars0/regroup1/smooth2",
-						"field" : "data.pred_"
+						"data" : "domain/x",
+						"field" : "data.value"
 					}
 				]
 			}
@@ -1268,8 +1288,8 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "mtcars0/regroup1/smooth2",
-						"field" : "data.resp_"
+						"data" : "domain/y",
+						"field" : "data.value"
 					}
 				]
 			}
@@ -1324,7 +1344,7 @@
 			"orient" : "bottom",
 			"layer" : "back",
 			"grid" : true,
-			"title" : "pred_"
+			"title" : "value"
 		},
 		{
 			"type" : "y",
@@ -1332,7 +1352,7 @@
 			"orient" : "left",
 			"layer" : "back",
 			"grid" : true,
-			"title" : "resp_"
+			"title" : "value"
 		}
 	],
 	"padding" : null,
@@ -1346,5 +1366,5 @@
 		"renderer" : "svg",
 		"hover_duration" : 0
 	},
-	"handlers" : []
+	"handlers" : null
 }
