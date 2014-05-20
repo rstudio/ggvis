@@ -48,8 +48,6 @@ merge_scales <- function(parent = NULL, child = NULL) {
 add_default_scales <- function(vis, scale_data_table) {
   scales <- vis$scales
 
-  # FIXME: remove as.list
-  scale_data_table <- as.list(scale_data_table)
   names(scale_data_table) <- sub("domain/", "", names(scale_data_table))
   scale_types <- lapply(scale_data_table, function(x) {
     shiny::isolate(vector_type(x()$value))

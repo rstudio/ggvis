@@ -16,5 +16,5 @@ scale_domain_data <- function(scale_domains) {
   domain_data <- compact(domain_data)
 
   names(domain_data) <- paste0("domain/", names(domain_data))
-  as.environment(domain_data)
+  domain_data
 }

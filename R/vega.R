@@ -23,8 +23,7 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
   }
 
   data_ids <- extract_data_ids(x$marks)
-  data_table <- as.environment(x$data[data_ids])
-
+  data_table <- x$data[data_ids]
   scale_data_table <- scale_domain_data(x$scale_domains)
 
   # Wrap each of the reactive data objects in another reactive which returns
@@ -43,10 +42,14 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
   }
 
   if (dynamic) {
+    # Don't provide data now, just the name
     datasets <- lapply(data_ids, function(id) {
-      # Don't provide data now, just the name
       list(name = id)
     })
+    scale_datasets <- lapply(names(scale_data_table), function(id) {
+      list(name = id)
+    })
+
   } else {
     datasets <- static_datasets(data_table, data_ids)
     scale_datasets <- static_datasets(scale_data_table, ls(scale_data_table))
