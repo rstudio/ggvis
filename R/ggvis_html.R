@@ -1,4 +1,4 @@
-#' @import htmltools
+#' @importFrom htmltools knit_print.shiny.tag knit_print.shiny.tag.list knit_print.html
 NULL
 
 ggvis_path <- function(x) {
@@ -70,7 +70,7 @@ ggvis_app <- function(x, plot_id = rand_id("plot_"),
                       ...) {
 
   ui <- htmltools::attachDependencies(
-    list(ggvisOutput(plot_id, length(x$controls) > 0)),
+    list(ggvisLayout(plot_id, length(x$controls) > 0)),
     shiny_dependency
   )
 

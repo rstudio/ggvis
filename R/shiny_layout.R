@@ -1,4 +1,4 @@
-ggvisOutput <- function(plot_id, has_controls = TRUE, spec = NULL) {
+ggvisLayout <- function(plot_id, has_controls = TRUE, spec = NULL) {
   plot_div <- ggvisOutput(plot_id, spec = spec)
 
   if (!has_controls) {

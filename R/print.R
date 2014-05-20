@@ -47,7 +47,7 @@ view_static <- function(x, plot_id = rand_id("plot_"),
                         dest = tempfile(pattern = "ggvis")) {
 
   spec <- as.vega(x, dynamic = FALSE)
-  htmltools::browsable(ggvisOutput(plot_id, length(x$controls) > 0, spec))
+  htmltools::browsable(ggvisLayout(plot_id, length(x$controls) > 0, spec))
 }
 
 #' @rdname print.ggvis
