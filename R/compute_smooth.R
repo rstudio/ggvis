@@ -71,6 +71,13 @@ compute_smooth.data.frame <- function(x, formula, ..., method = NULL,
         data$pred_ <- as.POSIXct(data$pred_, origin = "1970-01-01", tz = tz)
         data
       }
+    } else if (inherits(pred_vals, "Date")) {
+      x[[as.character(pred_var)]] <- as.numeric(pred_vals)
+
+      restore <- function(data) {
+        data$pred_ <- structure(data$pred_, class = "Date")
+        data
+      }
     }
   }
 
