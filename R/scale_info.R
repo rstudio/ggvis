@@ -16,7 +16,7 @@ collapse_scale_infos <- function(infos) {
   if (length(unique(types)) != 1) stop("Scales must all have same type.")
 
   domains <- pluck(infos, "domain")
-  domain <- data_range(unlist(domains, recursive = FALSE))
+  domain <- data_range(concat(domains))
 
   structure(list(
     label = vpluck(infos, "label", character(1)),
