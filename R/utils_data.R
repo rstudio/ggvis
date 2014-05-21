@@ -184,3 +184,15 @@ data_range.default <- function(x) range(x)
 data_range.character <- function(x) unique(x)
 #' @export
 data_range.factor <- function(x) levels(x)
+
+# Takes a list of vectors, and puts them all together into one vector.
+# For POSIXct, this preserves time zone.
+# For factors, this preserves all levels (but not necessarily order)
+concat <- function(x) {
+  if (inherits(x[[1]], "POSIXct")) {
+    vec <- do_call(c, .args = x)
+    structure(vec, tzone = attr(x[[1]], "tzone"))
+  } else {
+    unlist(x, recursive = FALSE)
+  }
+}

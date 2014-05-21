@@ -49,3 +49,36 @@ test_that("remove_missing", {
   )
 
 })
+
+
+test_that("concat preserves types and timezones", {
+  expect_identical(concat(list(1:3, 3:5)), c(1:3, 3:5))
+  expect_identical(
+    concat(list(c('a', 'b'), c('a', 'c'))),
+    c('a', 'b', 'a', 'c')
+  )
+  expect_identical(
+    concat(list(factor(c('a', 'b')), factor(c('a', 'c')))),
+    factor(c('a', 'b', 'a', 'c'))
+  )
+
+  # Preserves time zone
+  t1 <- as.POSIXct('2001-06-11 21:00', tz = 'UTC') + c(0, 2000)
+  t2 <- t1 + 5000
+  expect_identical(
+    concat(list(t1, t2)),
+    as.POSIXct('2001-06-11 21:00', tz = 'UTC') + c(0, 2000, 5000, 7000)
+  )
+
+
+  # Lists with 3 items
+  expect_identical(concat(list(1:3, 3:5, 1:2)), c(1:3, 3:5, 1:2))
+  expect_identical(
+    concat(list(factor(c('a', 'b')), factor(c('a', 'c')), factor(c('b', 'd')))),
+    factor(c('a', 'b', 'a', 'c', 'b', 'd'))
+  )
+  expect_identical(
+    concat(list(t1, t2, t2)),
+    as.POSIXct('2001-06-11 21:00', tz = 'UTC') + c(0, 2000, 5000, 7000, 5000, 7000)
+  )
+})
