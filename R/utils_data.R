@@ -192,6 +192,8 @@ concat <- function(x) {
   if (inherits(x[[1]], "POSIXct")) {
     vec <- do_call(c, .args = x)
     structure(vec, tzone = attr(x[[1]], "tzone"))
+  } else if (inherits(x[[1]], "Date")) {
+    structure(unlist(x, recursive = FALSE), class = "Date")
   } else {
     unlist(x, recursive = FALSE)
   }
