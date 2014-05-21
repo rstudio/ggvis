@@ -12,13 +12,15 @@ scale_info <- function(prop, data) {
 # object.
 collapse_scale_infos <- function(infos) {
   if (empty(infos)) return(NULL)
+  types <- vpluck(infos, "type", character(1))
+  if (length(unique(types)) != 1) stop("Scales must all have same type.")
 
-  domains <- lapply(infos, function(info) info$domain)
+  domains <- pluck(infos, "domain")
   domain <- data_range(unlist(domains, recursive = FALSE))
 
   structure(list(
-    label = vapply(infos, function(info) info$label, character(1)),
-    type = infos[[1]]$type,
+    label = vpluck(infos, "label", character(1)),
+    type = types[1],
     domain = domain
   ), class = "scale_info")
 }
