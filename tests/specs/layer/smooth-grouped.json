@@ -1344,7 +1344,7 @@
 			"orient" : "bottom",
 			"layer" : "back",
 			"grid" : true,
-			"title" : "value"
+			"title" : "pred_"
 		},
 		{
 			"type" : "y",
@@ -1352,7 +1352,7 @@
 			"orient" : "left",
 			"layer" : "back",
 			"grid" : true,
-			"title" : "value"
+			"title" : "resp_"
 		}
 	],
 	"padding" : null,

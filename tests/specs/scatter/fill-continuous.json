@@ -139,7 +139,8 @@
 	"legends" : [
 		{
 			"fill" : "fill",
-			"orient" : "right"
+			"orient" : "right",
+			"title" : "z"
 		}
 	],
 	"axes" : [
@@ -149,7 +150,7 @@
 			"orient" : "bottom",
 			"layer" : "back",
 			"grid" : true,
-			"title" : "value"
+			"title" : "x"
 		},
 		{
 			"type" : "y",
@@ -157,7 +158,7 @@
 			"orient" : "left",
 			"layer" : "back",
 			"grid" : true,
-			"title" : "value"
+			"title" : "y"
 		}
 	],
 	"padding" : null,

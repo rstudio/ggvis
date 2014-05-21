@@ -235,7 +235,8 @@
 	"legends" : [
 		{
 			"stroke" : "stroke",
-			"orient" : "right"
+			"orient" : "right",
+			"title" : "cyl"
 		}
 	],
 	"axes" : [
@@ -245,7 +246,7 @@
 			"orient" : "bottom",
 			"layer" : "back",
 			"grid" : true,
-			"title" : "value"
+			"title" : "x_"
 		},
 		{
 			"type" : "y",
@@ -253,7 +254,7 @@
 			"orient" : "left",
 			"layer" : "back",
 			"grid" : true,
-			"title" : "value"
+			"title" : "count_"
 		}
 	],
 	"padding" : null,

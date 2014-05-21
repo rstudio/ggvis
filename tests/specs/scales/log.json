@@ -110,7 +110,7 @@
 			"orient" : "bottom",
 			"layer" : "back",
 			"grid" : true,
-			"title" : "value"
+			"title" : "x"
 		},
 		{
 			"type" : "y",
@@ -118,7 +118,7 @@
 			"orient" : "left",
 			"layer" : "back",
 			"grid" : true,
-			"title" : "value"
+			"title" : "x"
 		}
 	],
 	"padding" : null,

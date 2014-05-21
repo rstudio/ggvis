@@ -108,7 +108,7 @@
 			"orient" : "bottom",
 			"layer" : "back",
 			"grid" : true,
-			"title" : "value"
+			"title" : "factor(x)"
 		},
 		{
 			"type" : "y",
@@ -116,7 +116,7 @@
 			"orient" : "left",
 			"layer" : "back",
 			"grid" : true,
-			"title" : "value"
+			"title" : "x/y"
 		}
 	],
 	"padding" : null,
