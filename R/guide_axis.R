@@ -133,7 +133,7 @@ apply_axes_defaults <- function(vis, scale_info) {
     # title from the field; or it can be a vector of explicitly-set values, in
     # which case we can't automatically get the title from the scale.
     if (is.null(axis$title) && is.list(scale$domain)) {
-      axis$title <- info$label
+      axis$title <- info$label[1]
     }
 
     axis

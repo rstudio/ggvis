@@ -17,7 +17,7 @@ collapse_scale_infos <- function(infos) {
   domain <- data_range(unlist(domains, recursive = FALSE))
 
   structure(list(
-    label = infos[[1]]$label,
+    label = vapply(infos, function(info) info$label, character(1)),
     type = infos[[1]]$type,
     domain = domain
   ), class = "scale_info")

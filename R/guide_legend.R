@@ -90,7 +90,7 @@ apply_legends_defaults <- function(vis, scale_info) {
         # scale$domain can be a vector of explicitly-set values, in which case
         # return ""
         if (!is.list(scale$domain)) return(NULL)
-        info$label
+        else info$label[1]
       }, SIMPLIFY = FALSE)
 
       fields <- unlist(fields)
