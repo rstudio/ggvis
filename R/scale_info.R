@@ -13,7 +13,7 @@ scale_info <- function(prop, data) {
 collapse_scale_infos <- function(infos) {
   if (empty(infos)) return(NULL)
 
-  domains <- lapply(infos, function(info) info$domain)
+  domains <- lapply(infos, function(info) format_vec_d3json(info$domain))
   domain <- data_range(unlist(domains, recursive = FALSE))
 
   structure(list(
