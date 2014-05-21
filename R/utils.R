@@ -209,3 +209,11 @@ any_apply <- function(xs, f) {
   }
   FALSE
 }
+
+pluck <- function(x, name) {
+  lapply(x, `[[`, name)
+}
+
+vpluck <- function(x, name, type) {
+  vapply(x, `[[`, name, FUN.VALUE = type)
+}
