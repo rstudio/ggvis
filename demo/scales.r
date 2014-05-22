@@ -5,6 +5,12 @@ mtcars %>% ggvis(x = ~wt, y = ~mpg, fill = ~factor(cyl), fillOpacity = ~hp) %>%
   layer_points() %>%
   set_dscale("opacity", "numeric", range = c(0.2, 1))
 
+# Control the domain of a scale - the y scale will go from 0 to whatever the
+# maximum of the data is.
+mtcars %>% ggvis(x = ~wt, y = ~mpg) %>% layer_points() %>%
+  set_dscale("y", "numeric", domain = c(0, NA))
+
+
 # Unscaled values in the data
 mtc <- mtcars
 mtc$color <- c("red", "teal", "#cccccc", "tan")
