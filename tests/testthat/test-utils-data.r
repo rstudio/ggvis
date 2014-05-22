@@ -58,9 +58,21 @@ test_that("concat preserves types and timezones", {
     c('a', 'b', 'a', 'c')
   )
   expect_identical(
-    concat(list(factor(c('a', 'b')), factor(c('a', 'c')))),
-    factor(c('a', 'b', 'a', 'c'))
+    concat(list(factor(c('a', 'b')), factor(c('c', 'a')))),
+    factor(c('a', 'b', 'c', 'a'))
   )
+  # Factors with different level order
+  expect_identical(
+    concat(list(factor(c('a', 'b'), levels = c('a', 'c', 'b')),
+                factor(c('c', 'a')))),
+    factor(c('a', 'b', 'c', 'a'), levels = c('a', 'c', 'b'))
+  )
+  expect_identical(
+    concat(list(factor(c('a', 'b'), levels = c('b', 'a')),
+                factor(c('c', 'd'), levels = c('d', 'c')))),
+    factor(c('a', 'b', 'c', 'd'), levels = c('b', 'a', 'd', 'c'))
+  )
+
 
   # Preserves time zone
   t1 <- as.POSIXct('2001-06-11 21:00', tz = 'UTC') + c(0, 2000)
