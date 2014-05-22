@@ -13,16 +13,6 @@
 			"values" : "\"x\",\"y\",\"z\"\n1,5,0.0807501375675201\n2,4,0.834333037259057\n3,3,0.600760886212811\n4,2,0.157208441523835\n5,1,0.0073994412086904"
 		},
 		{
-			"name" : "domain/fill",
-			"format" : {
-				"type" : "csv",
-				"parse" : {
-					"value" : "number"
-				}
-			},
-			"values" : "\"value\"\n0.0073994412086904\n0.834333037259057"
-		},
-		{
 			"name" : "domain/x",
 			"format" : {
 				"type" : "csv",
@@ -41,6 +31,16 @@
 				}
 			},
 			"values" : "\"value\"\n1\n5"
+		},
+		{
+			"name" : "domain/fill",
+			"format" : {
+				"type" : "csv",
+				"parse" : {
+					"value" : "number"
+				}
+			},
+			"values" : "\"value\"\n0.0073994412086904\n0.834333037259057"
 		}
 	],
 	"scales" : [

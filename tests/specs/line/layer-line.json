@@ -96,14 +96,6 @@
 			]
 		},
 		{
-			"name" : "domain/stroke",
-			"format" : {
-				"type" : "csv",
-				"parse" : null
-			},
-			"values" : "\"value\"\n\"1\"\n\"2\"\n\"3\""
-		},
-		{
 			"name" : "domain/x",
 			"format" : {
 				"type" : "csv",
@@ -122,6 +114,14 @@
 				}
 			},
 			"values" : "\"value\"\n0.00647905003279448\n0.92520075570792"
+		},
+		{
+			"name" : "domain/stroke",
+			"format" : {
+				"type" : "csv",
+				"parse" : null
+			},
+			"values" : "\"value\"\n\"1\"\n\"2\"\n\"3\""
 		}
 	],
 	"scales" : [
