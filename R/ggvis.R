@@ -153,30 +153,23 @@ add_mark <- function(vis, type = NULL, props = NULL, data = NULL,
 #' @keywords internal
 #' @export
 add_scale <- function(vis, scale) {
-  if (!is.ggvis(vis)) stop("Object to add legend to is not a ggvis object.")
-
   # Use the 'name' field as the name
   vis$scales[[scale$name]] <- scale
   vis
 }
 
 add_legend <- function(vis, legend) {
-  if (!is.ggvis(vis)) stop("Object to add legend to is not a ggvis object.")
-
   vis$legends <- c(vis$legends, list(legend))
   vis
 }
 
 add_axis <- function(vis, axis) {
-  if (!is.ggvis(vis)) stop("Object to add legend to is not a ggvis object.")
-
   vis$axes <- c(vis$axes, list(axis))
   vis
 }
 
 # If replace is TRUE, new options overwrite existing options; if FALSE, they don't.
 add_options <- function(vis, options, replace = TRUE) {
-  if (!is.ggvis(vis)) stop("Object to add legend to is not a ggvis object.")
   if (replace) {
     vis$options <- merge_vectors(vis$options, options)
   } else {
