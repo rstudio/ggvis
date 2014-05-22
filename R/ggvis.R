@@ -246,7 +246,7 @@ register_scale_info <- function(vis, props) {
   # Get a reactive for each scaled prop
   data <- vis$cur_data
   scale_infos <- compact(lapply(props, function(prop) {
-    if (prop_is_scaled(prop)) {
+    if (prop_is_scaled(prop) && !is.null(data)) {
       values <- shiny::isolate(prop_value(prop, data()))
       scale_info(
         label = deparse(prop$value),
