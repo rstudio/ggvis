@@ -245,20 +245,23 @@ register_scale_info <- function(vis, props) {
 
   # Get a reactive for each scaled prop
   data <- vis$cur_data
-  scale_info <- compact(lapply(props, function(prop) {
+  scale_infos <- compact(lapply(props, function(prop) {
     if (prop_is_scaled(prop)) {
-      reactive({
-        scale_info(prop, data())
-      })
+      values <- shiny::isolate(prop_value(prop, data()))
+      scale_info(
+        label = deparse(prop$value),
+        type = vector_type(values),
+        domain = reactive(data_range(values))
+      )
     } else {
       NULL
     }
   }))
 
   # Add those reactives to the vis$scale_info
-  scales <- prop_to_scale(names(scale_info))
+  scales <- prop_to_scale(names(scale_infos))
   for (scale in scales) {
-    info <- unname(scale_info[scale == scales])
+    info <- unname(scale_infos[scale == scales])
     vis$scale_info[[scale]] <- c(vis$scale_info[[scale]], info)
   }
 

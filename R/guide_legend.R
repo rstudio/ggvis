@@ -73,7 +73,7 @@ add_default_legends <- function(vis) {
 }
 
 # Some legend settings require examining the scale
-apply_legends_defaults <- function(vis, scale_info) {
+apply_legends_defaults <- function(vis) {
   legends <- vis$legends
   scales <- vis$scales
 
@@ -82,7 +82,7 @@ apply_legends_defaults <- function(vis, scale_info) {
   legends <- lapply(legends, function(legend) {
     present <- unlist(legend[legs])
     present_scales <- scales[present]
-    present_info <- scale_info[present]
+    present_info <- vis$scale_info[present]
 
     if (is.null(legend$title)) {
       # Default title for each legend consists of the fields pasted together

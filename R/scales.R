@@ -43,15 +43,15 @@ merge_scales <- function(parent = NULL, child = NULL) {
   structure(merge_vectors(parent, child), class = "scales")
 }
 
-# Given a ggvis object, and list of scale_info objects, return all needed vega
-# scales, with correct domain values set.
-add_default_scales <- function(vis, scale_info) {
+# Given a ggvis object, return all needed vega scales, with correct domain
+# values set.
+add_default_scales <- function(vis) {
   scales <- vis$scales
 
   # Add in scales not already specified in spec
-  needed <- setdiff(names(scale_info), names(scales))
+  needed <- setdiff(names(vis$scale_info), names(scales))
   for (scale_n in needed) {
-    info <- scale_info[[scale_n]]
+    info <- vis$scale_info[[scale_n]]
     scales[[scale_n]] <- default_scale(scale_n, info$type)
   }
 

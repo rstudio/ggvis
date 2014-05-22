@@ -1,10 +1,10 @@
-scale_info <- function(prop, data) {
-  values <- prop_value(prop, data)
+scale_info <- function(label, type, domain) {
+  if (!is.function(domain)) stop("domain must be a function or reactive.")
 
   structure(list(
-    label = deparse(prop$value),
-    type = vector_type(values),
-    domain = data_range(values)
+    label = label,
+    type = type,
+    domain = domain
   ), class = "scale_info")
 }
 
@@ -12,50 +12,41 @@ scale_info <- function(prop, data) {
 # object.
 collapse_scale_infos <- function(infos) {
   if (empty(infos)) return(NULL)
-  types <- vpluck(infos, "type", character(1))
-  if (length(unique(types)) != 1) stop("Scales must all have same type.")
+
+  type <- unique(vpluck(infos, "type", character(1)))
+  if (length(type) != 1) stop("Scales must all have same type.")
 
   domains <- pluck(infos, "domain")
-  domain <- data_range(concat(domains))
+  domain <- reactive({
+    data_range(concat(values(domains)))
+  })
 
   structure(list(
     label = vpluck(infos, "label", character(1)),
-    type = types[1],
+    type = type,
     domain = domain
   ), class = "scale_info")
-}
-
-
-# Given a list of reactives which return scale_info objects, return a reactive
-# which collapses those scale_info objects into a single one.
-collapse_scale_infos_r <- function(infos_r) {
-  if (empty(infos_r)) return(NULL)
-
-  reactive({
-    infos_static <- lapply(infos_r, function(x) x())
-    collapse_scale_infos(infos_static)
-  })
 }
 
 # scale_info is a named list where name is the name of a scale, and each item
 # is a list of reactives which return scale_info objects. This returns a list
 # of reactives which return scale info; it essentially collapses each of the
 # inner lists.
-summarize_scale_infos_r <- function(scale_info_r_list) {
-  lapply(scale_info_r_list, collapse_scale_infos_r)
+summarize_scale_infos <- function(scale_infos_list) {
+  lapply(scale_infos_list, collapse_scale_infos)
 }
 
 # Takes a named list, where each name is the name of a scale, and each item is
-# a reactive which returns a scale_ifo object. Returns a named list where
-# there's one item per scale, and each item is a reactive that returns a data
-# frame with values for the domain.
-scale_domain_data <- function(scale_info_r_list) {
-  scale_info_r_list <- compact(scale_info_r_list)
+# a scale_info object. Returns a named list where there's one item per scale,
+# and each item is a reactive that returns a data frame with values for the
+# domain.
+scale_domain_data <- function(scale_infos_list) {
+  scale_infos_list <- compact(scale_infos_list)
 
-  domain_data <- lapply(scale_info_r_list, function(infos_r) {
-    force(infos_r)
+  domain_data <- lapply(scale_infos_list, function(info) {
+    force(info)
     reactive({
-      data.frame(value = infos_r()$domain)
+      data.frame(value = value(info$domain))
     })
   })
 

@@ -120,13 +120,13 @@ add_default_axes <- function(vis) {
 }
 
 # Some axis settings require examining the scale
-apply_axes_defaults <- function(vis, scale_info) {
+apply_axes_defaults <- function(vis) {
   axes <- vis$axes
   scales <- vis$scales
 
   axes <- lapply(axes, function(axis) {
     scale <- scales[[axis$scale]]
-    info <- scale_info[[axis$scale]]
+    info <- vis$scale_info[[axis$scale]]
 
     # If we don't have a title, try to get it from the scale.
     # Domain can be a named list with the field, in which case we can get the

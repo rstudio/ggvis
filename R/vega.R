@@ -25,8 +25,10 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
   data_ids <- extract_data_ids(x$marks)
   data_table <- x$data[data_ids]
 
-  scale_info <- summarize_scale_infos_r(x$scale_info)
-  scale_data_table <- scale_domain_data(scale_info)
+  # Collapse each scale's list of scale_info objects into one scale_info object
+  # per scale.
+  x$scale_info <- summarize_scale_infos(x$scale_info)
+  scale_data_table <- scale_domain_data(x$scale_info)
 
   # Wrap each of the reactive data objects in another reactive which returns
   # only the columns that are actually used, and adds any calculated columns
@@ -54,19 +56,16 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
 
   } else {
     datasets <- static_datasets(data_table, data_ids)
-    scale_datasets <- static_datasets(scale_data_table, ls(scale_data_table))
+    scale_datasets <- static_datasets(scale_data_table, names(scale_data_table))
   }
-
-  # Run all the reactives in the list
-  scale_info_static <- shiny::isolate(lapply(scale_info, function(x) x()))
 
   # Each of these operations results in a more completely specified (and still
   # valid) ggvis object
-  x <- add_default_scales(x, scale_info_static)
+  x <- add_default_scales(x)
   x <- add_default_axes(x)
-  x <- apply_axes_defaults(x, scale_info_static)
+  x <- apply_axes_defaults(x)
   x <- add_default_legends(x)
-  x <- apply_legends_defaults(x, scale_info_static)
+  x <- apply_legends_defaults(x)
   x <- add_default_options(x)
 
   spec <- list(
