@@ -87,10 +87,10 @@ scale_domain_data <- function(scale_infos_list) {
   domain_data <- lapply(scale_infos_list, function(info) {
     force(info)
     reactive({
-      data.frame(value = value(info$domain))
+      data.frame(domain = value(info$domain))
     })
   })
 
-  names(domain_data) <- paste0("domain/", names(domain_data))
+  names(domain_data) <- paste0("scale/", names(domain_data))
   domain_data
 }

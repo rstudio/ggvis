@@ -170,8 +170,8 @@ add_scale <- function(vis, scale) {
   # Replace the domain with something that grabs it from the domain data
   scale$domain <- list(
     fields = list(list(
-      data = paste0("domain/", scale$name),
-      field = "data.value"
+      data = paste0("scale/", scale$name),
+      field = "data.domain"
     ))
   )
 
