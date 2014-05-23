@@ -99,7 +99,7 @@ layer_bars <- function(vis, ..., stack = TRUE, width = NULL) {
         v <- layer_rects(v, x = ~x_, y = ~stack_lwr_, y2 = ~stack_upr_,
                          width = band(mult = width))
       } else {
-        v <- layer_rects(v, x = ~x_, y = 0, y2 = ~count_, width = width)
+        v <- layer_rects(v, x = ~x_, y = 0, y2 = ~count_, width = band(mult = width))
       }
       v
     })
