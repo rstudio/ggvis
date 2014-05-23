@@ -10,6 +10,10 @@ mtcars %>% ggvis(x = ~wt, y = ~mpg, fill = ~factor(cyl), fillOpacity = ~hp) %>%
 mtcars %>% ggvis(x = ~wt, y = ~mpg) %>% layer_points() %>%
   set_dscale("y", "numeric", domain = c(0, NA))
 
+# Control the y range with a slider
+mtcars %>% ggvis(x = ~wt, y = ~mpg) %>% layer_points() %>%
+  set_dscale("y", "numeric",
+             domain = input_slider(0, 50, c(10, 40), label = "Y range"))
 
 # Unscaled values in the data
 mtc <- mtcars
