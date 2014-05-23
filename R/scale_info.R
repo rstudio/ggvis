@@ -94,3 +94,8 @@ scale_domain_data <- function(scale_infos_list) {
   names(domain_data) <- paste0("scale/", names(domain_data))
   domain_data
 }
+
+#' @export
+format.scale_info <- format.vega_axis
+#' @export
+print.scale_info <- print.vega_axis
