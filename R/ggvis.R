@@ -150,11 +150,36 @@ add_mark <- function(vis, type = NULL, props = NULL, data = NULL,
 #'
 #' @param vis Visualisation to modify.
 #' @param scale Scale object
+#' @param domain Either a vector with static values for the domain, or
+#'   a reactive that returns a such a vector.
 #' @keywords internal
 #' @export
 add_scale <- function(vis, scale) {
-  # Use the 'name' field as the name
+  # If domain is specified, remove it from the scale object, and add it to the
+  # scale_info list. This makes all scale domains controlled from the scale data
+  # sets.
+  if (!is.null(scale$domain)) {
+    if (shiny::is.reactive(scale$domain)) {
+      vis <- register_reactive(vis, scale$domain)
+    }
+    type <- shiny::isolate(vector_type(value(scale$domain)))
+    vis <- add_scale_info(vis, scale$name, scale_info(NULL, type, scale$domain))
+  }
+
+  # Replace the domain with something that grabs it from the domain data
+  scale$domain <- list(
+    fields = list(list(
+      data = paste0("domain/", scale$name),
+      field = "data.value"
+    ))
+  )
+
   vis$scales[[scale$name]] <- scale
+  vis
+}
+
+add_scale_info <- function(vis, scale, info) {
+  vis$scale_info[[scale]] <- c(vis$scale_info[[scale]], list(info))
   vis
 }
 
@@ -260,11 +285,10 @@ register_scale_info <- function(vis, props) {
     }
   }))
 
-  # Add those reactives to the vis$scale_info
+  # Add them to the vis
   scales <- prop_to_scale(names(scale_infos))
-  for (scale in scales) {
-    info <- unname(scale_infos[scale == scales])
-    vis$scale_info[[scale]] <- c(vis$scale_info[[scale]], info)
+  for (i in seq_along(scale_infos)) {
+    vis <- add_scale_info(vis, scales[i], scale_infos[[i]])
   }
 
   vis

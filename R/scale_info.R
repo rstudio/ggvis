@@ -1,6 +1,13 @@
+#' Create a scale_info object. These objects are typically associated with a
+#' mark, and they contain information about the scale. Note that these are
+#' different from vega scale objects.
+#'
+#' @param label Label for the scale.
+#' @param type Type of scale.
+#' @param domain Can be either a vector of values for the domain, or a reactive
+#'   which returns such a vector.
+#' @keywords internal
 scale_info <- function(label, type, domain) {
-  if (!is.function(domain)) stop("domain must be a function or reactive.")
-
   structure(list(
     label = label,
     type = type,
@@ -13,6 +20,8 @@ scale_info <- function(label, type, domain) {
 collapse_scale_infos <- function(infos) {
   if (empty(infos)) return(NULL)
 
+  # Get first non-NULL label
+  label <- compact(pluck(infos, "label"))[[1]]
   type <- unique(vpluck(infos, "type", character(1)))
   if (length(type) != 1) stop("Scales must all have same type.")
 
@@ -21,11 +30,7 @@ collapse_scale_infos <- function(infos) {
     data_range(concat(values(domains)))
   })
 
-  structure(list(
-    label = vpluck(infos, "label", character(1)),
-    type = type,
-    domain = domain
-  ), class = "scale_info")
+  scale_info(label, type, domain)
 }
 
 # scale_info is a named list where name is the name of a scale, and each item
