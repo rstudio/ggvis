@@ -163,7 +163,8 @@ add_scale <- function(vis, scale) {
       vis <- register_reactive(vis, scale$domain)
     }
     type <- shiny::isolate(vector_type(value(scale$domain)))
-    vis <- add_scale_info(vis, scale$name, scale_info(NULL, type, scale$domain))
+    info <- scale_info(NULL, type, scale$domain, override = TRUE)
+    vis <- add_scale_info(vis, scale$name, info)
   }
 
   # Replace the domain with something that grabs it from the domain data
