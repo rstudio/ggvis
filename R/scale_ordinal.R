@@ -35,7 +35,7 @@
 #'
 #' scale_ordinal("x", padding = 0.5, points = FALSE)
 #' p %>% set_dscale("x", "nominal", points = FALSE)
-scale_ordinal <- function(name, points = TRUE, padding = NULL, sort = TRUE,
+scale_ordinal <- function(name, points = TRUE, padding = NULL, sort = FALSE,
                           domain = NULL, range = NULL, reverse = FALSE,
                           round = FALSE) {
   assert_that(is.flag(points))
