@@ -179,9 +179,9 @@ eval_vector.data.frame <- function(x, f) {
 #' Find the range of values for a vector
 data_range <- function(x) UseMethod("data_range")
 #' @export
-data_range.default <- function(x) range(x)
+data_range.default <- function(x) range(x, na.rm = TRUE)
 #' @export
-data_range.character <- function(x) unique(x)
+data_range.character <- function(x) unique(na.omit(x))
 #' @export
 data_range.factor <- function(x) levels(x)
 
