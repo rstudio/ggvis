@@ -46,12 +46,8 @@
 				"#56B1F7"
 			],
 			"domain" : {
-				"fields" : [
-					{
-						"data" : "scale/blah",
-						"field" : "data.domain"
-					}
-				]
+				"data" : "scale/blah",
+				"field" : "data.domain"
 			}
 		},
 		{
@@ -64,12 +60,8 @@
 			"zero" : false,
 			"range" : "width",
 			"domain" : {
-				"fields" : [
-					{
-						"data" : "scale/x",
-						"field" : "data.domain"
-					}
-				]
+				"data" : "scale/x",
+				"field" : "data.domain"
 			}
 		},
 		{
@@ -82,12 +74,8 @@
 			"zero" : false,
 			"range" : "height",
 			"domain" : {
-				"fields" : [
-					{
-						"data" : "scale/y",
-						"field" : "data.domain"
-					}
-				]
+				"data" : "scale/y",
+				"field" : "data.domain"
 			}
 		}
 	],
