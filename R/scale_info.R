@@ -41,7 +41,7 @@ collapse_scale_infos <- function(infos) {
 
     if (countable_prop_type(type)) {
       # For categorical props, just use the override domain
-      domain <- reactive(values(over))
+      domain <- reactive(value(over))
 
     } else {
       # For continuous props, if either of the values in the override domain
