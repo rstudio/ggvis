@@ -10,6 +10,19 @@ mtcars %>% ggvis(x = ~wt, y = ~mpg, fill = ~factor(cyl), fillOpacity = ~hp) %>%
 mtcars %>% ggvis(x = ~wt, y = ~mpg) %>% layer_points() %>%
   set_dscale("y", "numeric", domain = c(0, NA))
 
+# Control the y range with a slider
+mtcars %>% ggvis(x = ~wt, y = ~mpg) %>% layer_points() %>%
+  set_dscale("y", "numeric",
+             domain = input_slider(0, 50, c(10, 40), label = "Y range"))
+
+# Control the lower y range with a slider
+# FIXME: clamp=TRUE is necessary to work around a sizing bug
+mtcars %>% ggvis(x = ~wt, y = ~mpg) %>% layer_points() %>%
+  set_dscale(
+    "y", "numeric", clamp = TRUE,
+    domain = input_slider(0, 50, label = "Lower Y",
+                          map = function(x) c(x, NA))
+  )
 
 # Unscaled values in the data
 mtc <- mtcars

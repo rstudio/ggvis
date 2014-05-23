@@ -13,24 +13,24 @@
 			"values" : "\"xmin_\",\"xmax_\",\"count_\"\n0,1,0\n1,2,4\n2,3,8\n3,4,16\n4,5,1\n5,6,3\n6,7,0"
 		},
 		{
-			"name" : "domain/x",
+			"name" : "scale/x",
 			"format" : {
 				"type" : "csv",
 				"parse" : {
-					"value" : "number"
+					"domain" : "number"
 				}
 			},
-			"values" : "\"value\"\n0\n7"
+			"values" : "\"domain\"\n0\n7"
 		},
 		{
-			"name" : "domain/y",
+			"name" : "scale/y",
 			"format" : {
 				"type" : "csv",
 				"parse" : {
-					"value" : "number"
+					"domain" : "number"
 				}
 			},
-			"values" : "\"value\"\n0\n16"
+			"values" : "\"domain\"\n0\n16"
 		}
 	],
 	"scales" : [
@@ -44,12 +44,8 @@
 			"zero" : false,
 			"range" : "width",
 			"domain" : {
-				"fields" : [
-					{
-						"data" : "domain/x",
-						"field" : "data.value"
-					}
-				]
+				"data" : "scale/x",
+				"field" : "data.domain"
 			}
 		},
 		{
@@ -62,12 +58,8 @@
 			"zero" : false,
 			"range" : "height",
 			"domain" : {
-				"fields" : [
-					{
-						"data" : "domain/y",
-						"field" : "data.value"
-					}
-				]
+				"data" : "scale/y",
+				"field" : "data.domain"
 			}
 		}
 	],

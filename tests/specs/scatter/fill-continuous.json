@@ -13,34 +13,34 @@
 			"values" : "\"x\",\"y\",\"z\"\n1,5,0.0807501375675201\n2,4,0.834333037259057\n3,3,0.600760886212811\n4,2,0.157208441523835\n5,1,0.0073994412086904"
 		},
 		{
-			"name" : "domain/x",
+			"name" : "scale/x",
 			"format" : {
 				"type" : "csv",
 				"parse" : {
-					"value" : "number"
+					"domain" : "number"
 				}
 			},
-			"values" : "\"value\"\n1\n5"
+			"values" : "\"domain\"\n1\n5"
 		},
 		{
-			"name" : "domain/y",
+			"name" : "scale/y",
 			"format" : {
 				"type" : "csv",
 				"parse" : {
-					"value" : "number"
+					"domain" : "number"
 				}
 			},
-			"values" : "\"value\"\n1\n5"
+			"values" : "\"domain\"\n1\n5"
 		},
 		{
-			"name" : "domain/fill",
+			"name" : "scale/fill",
 			"format" : {
 				"type" : "csv",
 				"parse" : {
-					"value" : "number"
+					"domain" : "number"
 				}
 			},
-			"values" : "\"value\"\n0.0073994412086904\n0.834333037259057"
+			"values" : "\"domain\"\n0.0073994412086904\n0.834333037259057"
 		}
 	],
 	"scales" : [
@@ -54,12 +54,8 @@
 			"zero" : false,
 			"range" : "width",
 			"domain" : {
-				"fields" : [
-					{
-						"data" : "domain/x",
-						"field" : "data.value"
-					}
-				]
+				"data" : "scale/x",
+				"field" : "data.domain"
 			}
 		},
 		{
@@ -72,12 +68,8 @@
 			"zero" : false,
 			"range" : "height",
 			"domain" : {
-				"fields" : [
-					{
-						"data" : "domain/y",
-						"field" : "data.value"
-					}
-				]
+				"data" : "scale/y",
+				"field" : "data.domain"
 			}
 		},
 		{
@@ -93,12 +85,8 @@
 				"#56B1F7"
 			],
 			"domain" : {
-				"fields" : [
-					{
-						"data" : "domain/fill",
-						"field" : "data.value"
-					}
-				]
+				"data" : "scale/fill",
+				"field" : "data.domain"
 			}
 		}
 	],
