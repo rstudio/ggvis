@@ -96,32 +96,32 @@
 			]
 		},
 		{
-			"name" : "domain/x",
+			"name" : "scale/x",
 			"format" : {
 				"type" : "csv",
 				"parse" : {
-					"value" : "number"
+					"domain" : "number"
 				}
 			},
-			"values" : "\"value\"\n0.0126281732227653\n0.838725288398564"
+			"values" : "\"domain\"\n0.0126281732227653\n0.838725288398564"
 		},
 		{
-			"name" : "domain/y",
+			"name" : "scale/y",
 			"format" : {
 				"type" : "csv",
 				"parse" : {
-					"value" : "number"
+					"domain" : "number"
 				}
 			},
-			"values" : "\"value\"\n0.00647905003279448\n0.92520075570792"
+			"values" : "\"domain\"\n0.00647905003279448\n0.92520075570792"
 		},
 		{
-			"name" : "domain/stroke",
+			"name" : "scale/stroke",
 			"format" : {
 				"type" : "csv",
 				"parse" : null
 			},
-			"values" : "\"value\"\n\"1\"\n\"2\"\n\"3\""
+			"values" : "\"domain\"\n\"1\"\n\"2\"\n\"3\""
 		}
 	],
 	"scales" : [
@@ -137,8 +137,8 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "domain/x",
-						"field" : "data.value"
+						"data" : "scale/x",
+						"field" : "data.domain"
 					}
 				]
 			}
@@ -155,8 +155,8 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "domain/y",
-						"field" : "data.value"
+						"data" : "scale/y",
+						"field" : "data.domain"
 					}
 				]
 			}
@@ -172,8 +172,8 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "domain/stroke",
-						"field" : "data.value"
+						"data" : "scale/stroke",
+						"field" : "data.domain"
 					}
 				]
 			}

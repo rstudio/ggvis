@@ -11,24 +11,24 @@
 			"values" : "\"x\"\n1\n2\n3\n4\n5"
 		},
 		{
-			"name" : "domain/x",
+			"name" : "scale/x",
 			"format" : {
 				"type" : "csv",
 				"parse" : {
-					"value" : "number"
+					"domain" : "number"
 				}
 			},
-			"values" : "\"value\"\n1\n5"
+			"values" : "\"domain\"\n1\n5"
 		},
 		{
-			"name" : "domain/y",
+			"name" : "scale/y",
 			"format" : {
 				"type" : "csv",
 				"parse" : {
-					"value" : "number"
+					"domain" : "number"
 				}
 			},
-			"values" : "\"value\"\n1\n5"
+			"values" : "\"domain\"\n1\n5"
 		}
 	],
 	"scales" : [
@@ -44,8 +44,8 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "domain/x",
-						"field" : "data.value"
+						"data" : "scale/x",
+						"field" : "data.domain"
 					}
 				]
 			}
@@ -62,8 +62,8 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "domain/y",
-						"field" : "data.value"
+						"data" : "scale/y",
+						"field" : "data.domain"
 					}
 				]
 			}

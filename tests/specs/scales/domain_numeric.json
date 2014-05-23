@@ -12,34 +12,34 @@
 			"values" : "\"x\",\"z\"\n1,0.0807501375675201\n2,0.834333037259057\n3,0.600760886212811\n4,0.157208441523835\n5,0.0073994412086904"
 		},
 		{
-			"name" : "domain/x",
+			"name" : "scale/x",
 			"format" : {
 				"type" : "csv",
 				"parse" : {
-					"value" : "number"
+					"domain" : "number"
 				}
 			},
-			"values" : "\"value\"\n1\n5"
+			"values" : "\"domain\"\n0\n10"
 		},
 		{
-			"name" : "domain/y",
+			"name" : "scale/y",
 			"format" : {
 				"type" : "csv",
 				"parse" : {
-					"value" : "number"
+					"domain" : "number"
 				}
 			},
-			"values" : "\"value\"\n1\n5"
+			"values" : "\"domain\"\n1\n5"
 		},
 		{
-			"name" : "domain/fill",
+			"name" : "scale/fill",
 			"format" : {
 				"type" : "csv",
 				"parse" : {
-					"value" : "number"
+					"domain" : "number"
 				}
 			},
-			"values" : "\"value\"\n0.0073994412086904\n0.834333037259057"
+			"values" : "\"domain\"\n0\n2"
 		}
 	],
 	"scales" : [
@@ -48,30 +48,38 @@
 			"type" : "linear",
 			"reverse" : false,
 			"round" : false,
+			"domain" : {
+				"fields" : [
+					{
+						"data" : "scale/x",
+						"field" : "data.domain"
+					}
+				]
+			},
 			"clamp" : false,
 			"nice" : true,
 			"zero" : false,
-			"range" : "width",
-			"domain" : [
-				0,
-				10
-			]
+			"range" : "width"
 		},
 		{
 			"name" : "fill",
 			"type" : "linear",
 			"reverse" : false,
 			"round" : false,
+			"domain" : {
+				"fields" : [
+					{
+						"data" : "scale/fill",
+						"field" : "data.domain"
+					}
+				]
+			},
 			"clamp" : false,
 			"nice" : true,
 			"zero" : false,
 			"range" : [
 				"#132B43",
 				"#56B1F7"
-			],
-			"domain" : [
-				0,
-				2
 			]
 		},
 		{
@@ -86,8 +94,8 @@
 			"domain" : {
 				"fields" : [
 					{
-						"data" : "domain/y",
-						"field" : "data.value"
+						"data" : "scale/y",
+						"field" : "data.domain"
 					}
 				]
 			}
@@ -131,7 +139,7 @@
 		{
 			"fill" : "fill",
 			"orient" : "right",
-			"title" : ""
+			"title" : "z"
 		}
 	],
 	"axes" : [
@@ -140,7 +148,8 @@
 			"scale" : "x",
 			"orient" : "bottom",
 			"layer" : "back",
-			"grid" : true
+			"grid" : true,
+			"title" : "x"
 		},
 		{
 			"type" : "y",
