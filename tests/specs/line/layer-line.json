@@ -159,7 +159,7 @@
 			"reverse" : false,
 			"round" : false,
 			"points" : true,
-			"sort" : true,
+			"sort" : false,
 			"range" : "category10",
 			"domain" : {
 				"data" : "scale/stroke",

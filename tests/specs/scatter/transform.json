@@ -37,7 +37,7 @@
 			"round" : false,
 			"points" : true,
 			"padding" : 0.5,
-			"sort" : true,
+			"sort" : false,
 			"range" : "width",
 			"domain" : {
 				"data" : "scale/x",
