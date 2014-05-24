@@ -23,26 +23,17 @@
 #' mtcars %>% qvis(~mpg)
 #' mtcars %>% ggvis(~mpg) %>% layer_guess()
 layer_guess <- function(vis, ...) {
-  props <- vis$cur_props
-  data <- cur_data(vis)
+  types <- lapply(vis$cur_props, prop_type, data = cur_data(vis))
 
-  if ("y.update" %in% names(props)) {
-    layer_points(vis, ...)
-  } else {
-    if (prop_countable(data, props$x)) {
-      layer_bars(vis, ...)
-    } else {
-      layer_histograms(vis, ...)
-    }
-  }
+  types <- types[grepl("\\.update$", names(types))]
+  names(types) <- sub("\\.update$", "", names(types))
+
+  layer <- closest(unlist(types), templates)
+  message("Guessing layer_", layer, "()")
+
+  f <- match.fun(paste0("layer_", layer))
+  f(vis, ...)
 }
-
-# c = continuous
-#  g = granular
-#  d = date/time
-#
-# n = nominal
-#  o = ordinal
 
 template <- function(layer, x = NA, y = NA, ...) {
   desc <- c(x = x, y = y, ...)
@@ -51,6 +42,7 @@ template <- function(layer, x = NA, y = NA, ...) {
 
   structure(list(layer = layer, desc = desc), class = "template")
 }
+
 #' @export
 print.template <- function(x, ...) {
   cat("<template> ",
@@ -62,28 +54,26 @@ print.template <- function(x, ...) {
 }
 
 templates <- list(
-  template("bars",       "n"),
-  template("boxplots",   "n", "c"),
-  template("bars",       "n", "n"),
+  template("bars",       "nominal"),
+  template("boxplots",   "nominal", "numeric"),
+  template("bars",       "nominal", "nominal"),
 
-  template("histograms", "c"),
-  template("freqpolys",  "c", stroke = "n"),
-  template("boxplots",   "c", "n"),
+  template("histograms", "numeric"),
+  template("freqpolys",  "numeric", stroke = "nominal"),
+  # template("boxplots",   "numeric", "nominal"),
 
-  template("points",     "c", "c"),
-  template("points",     "g", "g"),
-  template("lines",      "d", "c")
-  template("points",     "d", "d")
+  template("points",     "numeric", "numeric"),
+  template("lines",      "discrete", "numeric"),
+  template("points",     "discrete", "discrete")
 )
 
 closest <- function(data, templates) {
   ds <- vapply(templates, distance_n, data = data, FUN.VALUE = numeric(1))
-  ds <- ds[is.finite(ds)]
-  if (length(ds) == 0) {
+  if (!any(is.finite(ds))) {
     stop("No matching templates found", call. = FALSE)
   }
 
-  templates[which.min(ds)]
+  templates[[which.min(ds)]]$layer
 }
 
 distance_n <- function(data, template) {
@@ -103,11 +93,10 @@ distance_1 <- function(data, template) {
   if (n_miss == 2) return(0)
 
   switch(data,
-    c = switch(template, c = 0, Inf),
-    d = switch(template, c = 1, d = 0, Inf),
-    g = swtich(template, c = 1, g = 0, Inf),
-    n = switch(template, n = 0, Inf),
-    o = switch(template, n = 1, o = 0, Inf),
+    numeric   = switch(template, numeric = 0, Inf),
+    datetime  = switch(template, numeric = 1, datetime = 0, Inf),
+    nominal   = switch(template, nominal = 0, Inf),
+    ordinal   = switch(template, nominal = 1, ordinal = 0, Inf),
     Inf
   )
 }
