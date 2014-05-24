@@ -30,8 +30,6 @@ layer_guess <- function(vis, ...) {
     layer_points(vis, ...)
   } else {
     if (prop_countable(data, props$x)) {
-      vis <- set_dscale(vis, "x", "nominal", range = "width", padding = 0,
-        points = FALSE)
       layer_bars(vis, ...)
     } else {
       layer_histograms(vis, ...)
