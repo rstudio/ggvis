@@ -27,11 +27,13 @@ add_tooltip <- function(vis, html, on = c("hover", "click")) {
       hide_tooltip(session)
       return()
     }
+
     html <- html(data)
-    if(is.null(html))
+    if(is.null(html)){
       hide_tooltip(session)
-    else
+    }else{
       show_tooltip(session, location$x + 5, location$y + 5, html)
+    }
   }
   hide_tooltip2 <- function(session) {
     hide_tooltip(session)
