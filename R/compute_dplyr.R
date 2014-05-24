@@ -129,7 +129,7 @@ extract_inputs <- function(x, env = parent.frame()) {
     input <- eval(x[[2]], env)
 
     stopifnot(is.broker(input))
-    nm <- names(attr(input, "broker")$controls)
+    nm <- names(attr(input, "broker", TRUE)$controls)
 
     return(list(
       expr = substitute(args$nm, list(nm = as.name(nm))),

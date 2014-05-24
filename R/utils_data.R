@@ -13,7 +13,7 @@ get_data <- function(vis) {
 }
 
 data_id <- function(x) {
-  return(attr(x, "data_id"))
+  return(attr(x, "data_id", TRUE))
 }
 
 `data_id<-` <- function(x, value) {
@@ -174,4 +174,27 @@ cur_props <- function(x) x$cur_props
 eval_vector <- function(x, f) UseMethod("eval_vector")
 eval_vector.data.frame <- function(x, f) {
   eval(f[[2]], x, environment(f))
+}
+
+# Find the range of values for a vector
+data_range <- function(x) UseMethod("data_range")
+#' @export
+data_range.default <- function(x) range(x, na.rm = TRUE)
+#' @export
+data_range.character <- function(x) unique(na.omit(x))
+#' @export
+data_range.factor <- function(x) levels(x)
+
+# Takes a list of vectors, and puts them all together into one vector.
+# For POSIXct, this preserves time zone.
+# For factors, this preserves all levels (but not necessarily order)
+concat <- function(x) {
+  if (inherits(x[[1]], "POSIXct")) {
+    vec <- do_call(c, .args = x)
+    structure(vec, tzone = attr(x[[1]], "tzone"))
+  } else if (inherits(x[[1]], "Date")) {
+    structure(unlist(x, recursive = FALSE), class = "Date")
+  } else {
+    unlist(x, recursive = FALSE)
+  }
 }

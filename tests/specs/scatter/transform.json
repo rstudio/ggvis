@@ -9,6 +9,24 @@
 				}
 			},
 			"values" : "\"factor(x)\",\"x/y\"\n\"1\",0.2\n\"2\",0.5\n\"3\",1\n\"4\",2\n\"5\",5"
+		},
+		{
+			"name" : "scale/x",
+			"format" : {
+				"type" : "csv",
+				"parse" : null
+			},
+			"values" : "\"domain\"\n\"1\"\n\"2\"\n\"3\"\n\"4\"\n\"5\""
+		},
+		{
+			"name" : "scale/y",
+			"format" : {
+				"type" : "csv",
+				"parse" : {
+					"domain" : "number"
+				}
+			},
+			"values" : "\"domain\"\n0.2\n5"
 		}
 	],
 	"scales" : [
@@ -19,15 +37,11 @@
 			"round" : false,
 			"points" : true,
 			"padding" : 0.5,
-			"sort" : true,
+			"sort" : false,
 			"range" : "width",
 			"domain" : {
-				"fields" : [
-					{
-						"data" : "df0",
-						"field" : "data.factor(x)"
-					}
-				]
+				"data" : "scale/x",
+				"field" : "data.domain"
 			}
 		},
 		{
@@ -40,12 +54,8 @@
 			"zero" : false,
 			"range" : "height",
 			"domain" : {
-				"fields" : [
-					{
-						"data" : "df0",
-						"field" : "data.x/y"
-					}
-				]
+				"data" : "scale/y",
+				"field" : "data.domain"
 			}
 		}
 	],
@@ -112,5 +122,5 @@
 		"renderer" : "svg",
 		"hover_duration" : 0
 	},
-	"handlers" : []
+	"handlers" : null
 }

@@ -38,6 +38,7 @@ ggvis <- function(data = NULL, ..., env = parent.frame()) {
       marks = list(),
       data = list(),
       props = list(),
+      scale_info = list(),
       reactives = list(),
       scales = list(),
       axes = list(),
@@ -71,7 +72,7 @@ add_props <- function(vis, ..., .props = NULL, inherit = NULL,
                       env = parent.frame()) {
 
   # Get value of inherit from inherit arg, then .props$inherit, then TRUE
-  if (!is.null(.props)) inherit <- attr(.props, "inherit")
+  if (!is.null(.props)) inherit <- attr(.props, "inherit", TRUE)
   inherit <- inherit %||% TRUE
 
   new_props <- props(..., .props = .props, inherit = inherit, env = env)
@@ -133,6 +134,7 @@ add_mark <- function(vis, type = NULL, props = NULL, data = NULL,
 
   vis <- add_data(vis, data, data_name)
   vis <- add_props(vis, .props = props)
+  vis <- register_scale_info(vis, cur_props(vis))
 
   vis$marks <- c(vis$marks, list(
     mark(type, props = vis$cur_props, data = vis$cur_data))
@@ -148,33 +150,50 @@ add_mark <- function(vis, type = NULL, props = NULL, data = NULL,
 #'
 #' @param vis Visualisation to modify.
 #' @param scale Scale object
+#' @param domain Either a vector with static values for the domain, or
+#'   a reactive that returns a such a vector.
 #' @keywords internal
 #' @export
 add_scale <- function(vis, scale) {
-  if (!is.ggvis(vis)) stop("Object to add legend to is not a ggvis object.")
+  # If domain is specified, remove it from the scale object, and add it to the
+  # scale_info list. This makes all scale domains controlled from the scale data
+  # sets.
+  if (!is.null(scale$domain)) {
+    if (shiny::is.reactive(scale$domain)) {
+      vis <- register_reactive(vis, scale$domain)
+    }
+    type <- shiny::isolate(vector_type(value(scale$domain)))
+    info <- scale_info(NULL, type, scale$domain, override = TRUE)
+    vis <- add_scale_info(vis, scale$name, info)
+  }
 
-  # Use the 'name' field as the name
+  # Replace the domain with something that grabs it from the domain data
+  scale$domain <- list(
+    data = paste0("scale/", scale$name),
+    field = "data.domain"
+  )
+
   vis$scales[[scale$name]] <- scale
   vis
 }
 
-add_legend <- function(vis, legend) {
-  if (!is.ggvis(vis)) stop("Object to add legend to is not a ggvis object.")
+add_scale_info <- function(vis, scale, info) {
+  vis$scale_info[[scale]] <- c(vis$scale_info[[scale]], list(info))
+  vis
+}
 
+add_legend <- function(vis, legend) {
   vis$legends <- c(vis$legends, list(legend))
   vis
 }
 
 add_axis <- function(vis, axis) {
-  if (!is.ggvis(vis)) stop("Object to add legend to is not a ggvis object.")
-
   vis$axes <- c(vis$axes, list(axis))
   vis
 }
 
 # If replace is TRUE, new options overwrite existing options; if FALSE, they don't.
 add_options <- function(vis, options, replace = TRUE) {
-  if (!is.ggvis(vis)) stop("Object to add legend to is not a ggvis object.")
   if (replace) {
     vis$options <- merge_vectors(vis$options, options)
   } else {
@@ -234,11 +253,41 @@ register_reactive <- function(vis, reactive) {
 
   # If it's a broker, add controls, connector, and spec as needed
   if (is.broker(reactive)) {
-    broker <- attr(reactive, "broker")
+    broker <- attr(reactive, "broker", TRUE)
 
     vis <- register_controls(vis, broker$controls)
     vis <- register_connector(vis, broker$connect)
     vis <- register_handler(vis, broker$spec)
+  }
+
+  vis
+}
+
+register_scale_info <- function(vis, props) {
+  # Strip off .update, .enter, etc.
+  names(props) <- trim_propset(names(props))
+
+  # Get a reactive for each scaled prop
+  data <- vis$cur_data
+  scale_infos <- compact(lapply(props, function(prop) {
+    if (prop_is_scaled(prop) && !is.null(data)) {
+      values <- shiny::isolate(prop_value(prop, data()))
+      scale_info(
+        label = deparse(prop$value),
+        type = vector_type(values),
+        domain = reactive({
+          data_range(prop_value(prop, data()))
+        })
+      )
+    } else {
+      NULL
+    }
+  }))
+
+  # Add them to the vis
+  scales <- prop_to_scale(names(scale_infos))
+  for (i in seq_along(scale_infos)) {
+    vis <- add_scale_info(vis, scales[i], scale_infos[[i]])
   }
 
   vis

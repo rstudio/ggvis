@@ -43,54 +43,18 @@ merge_scales <- function(parent = NULL, child = NULL) {
   structure(merge_vectors(parent, child), class = "scales")
 }
 
-# Given a ggvis object, return all needed vega scales, with correct
-# domain values set.
-add_default_scales <- function(vis, data_table) {
+# Given a ggvis object, add all needed vega scales, with correct domain
+# values set.
+add_default_scales <- function(vis) {
   scales <- vis$scales
-  marks <- vis$marks
-
-  # Loop through each mark, recording the usage of each scale
-  scale_types <- list()
-  scale_uses <- list()
-  for (mark in marks) {
-    data_id <- data_id(mark$data)
-    data <- shiny::isolate(data_table[[data_id]]())
-
-    for (prop_n in names(mark$props)) {
-      prop <- mark$props[[prop_n]]
-      scale <- prop_scale(prop, prop_to_scale(trim_propset(prop_n)))
-      if (is.na(scale)) next
-
-      type <- prop_type(data, prop, processed = TRUE)
-      scale_types[[scale]] <- c(scale_types[[scale]], type)
-
-      use <- prop_domain(prop, data_id)
-      if (!is.null(use)) {
-        scale_uses[[scale]] <- c(scale_uses[[scale]], list(use))
-      }
-    }
-  }
 
   # Add in scales not already specified in spec
-  needed <- setdiff(names(scale_types), names(scales))
+  needed <- setdiff(names(vis$scale_info), names(scales))
   for (scale_n in needed) {
-    type <- scale_types[[scale_n]][[1]]
-    scales[[scale_n]] <- default_scale(scale_n, type)
-  }
-
-  # Override domains (if not already present)
-  for (scale_n in names(scales)) {
-    # If domain isn't specified (length == 0) or if only one of domainMin and
-    # domainMax is specified, then get domain from data (min or max will also
-    # be present). If both min and max are specified, no need to get domain from
-    # data.
-    if (length(scales[[scale_n]]$domain) < 2) {
-      scales[[scale_n]]$domain <- list(fields = scale_uses[[scale_n]])
-    }
-  }
-
-  for (scale in scales) {
+    info <- vis$scale_info[[scale_n]]
+    scale <- default_scale(scale_n, info$type)
     vis <- add_scale(vis, scale)
   }
+
   vis
 }

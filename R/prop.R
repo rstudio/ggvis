@@ -138,6 +138,9 @@ prop_scale.default <- function(x, default_scale) {
   }
 }
 
+# Reports whether this is a scaled prop
+prop_is_scaled <- function(prop) isTRUE(prop$scale)
+
 # Generate a vega object for the individual mark.
 prop_vega <- function(x, default_scale) UseMethod("prop_vega")
 
@@ -234,10 +237,6 @@ prop_type <- function(data, prop, processed = FALSE) {
   UseMethod("prop_type")
 }
 #' @export
-prop_type.split_df <- function(data, prop, processed = FALSE) {
-  prop_type(data[[1]], prop, processed = processed)
-}
-#' @export
 prop_type.data.frame <- function(data, prop, processed = FALSE) {
   if (processed) {
     value <- data[[prop_name(prop)]]
@@ -264,33 +263,6 @@ countable_prop_type <- function(type) {
     "logical" = TRUE,
     stop("Don't know whether prop type '", type, "' is countable")
   )
-}
-
-#' Determine the numeric range of a variable
-#'
-#' @keywords internal
-prop_range <- function(data, prop, na.rm = TRUE) {
-  UseMethod("prop_range")
-}
-#' @export
-prop_range.data.frame <- function(data, prop, na.rm = TRUE) {
-  val <- prop_value(prop, data)
-  type <- vector_type(val)
-
-  switch(type,
-    "ordinal" = ,
-    "nominal" = ,
-    "logical" = unique(val),
-    "numeric" = ,
-    "datetime" = range(val, na.rm = na.rm)
-  )
-}
-
-#' @export
-prop_range.split_df <- function(data, var, na.rm = TRUE) {
-  ranges <- vapply(data, prop_range, var, na.rm = na.rm,
-    FUN.VALUE = numeric(2))
-  range(ranges)
 }
 
 #' @export
