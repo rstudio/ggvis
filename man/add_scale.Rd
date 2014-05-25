@@ -9,6 +9,9 @@ add_scale(vis, scale)
 \item{vis}{Visualisation to modify.}
 
 \item{scale}{Scale object}
+
+\item{domain}{Either a vector with static values for the domain, or
+a reactive that returns a such a vector.}
 }
 \description{
 Add arbitrary scales to ggvis.

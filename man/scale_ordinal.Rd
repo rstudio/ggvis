@@ -3,7 +3,7 @@
 \alias{scale_ordinal}
 \title{Create an ordinal scale.}
 \usage{
-scale_ordinal(name, points = TRUE, padding = NULL, sort = TRUE,
+scale_ordinal(name, points = TRUE, padding = NULL, sort = FALSE,
   domain = NULL, range = NULL, reverse = FALSE, round = FALSE)
 }
 \arguments{

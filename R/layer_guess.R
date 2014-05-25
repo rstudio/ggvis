@@ -23,18 +23,80 @@
 #' mtcars %>% qvis(~mpg)
 #' mtcars %>% ggvis(~mpg) %>% layer_guess()
 layer_guess <- function(vis, ...) {
-  props <- vis$cur_props
-  data <- cur_data(vis)
+  types <- lapply(vis$cur_props, prop_type, data = cur_data(vis))
 
-  if ("y.update" %in% names(props)) {
-    layer_points(vis, ...)
-  } else {
-    if (prop_countable(data, props$x)) {
-      vis <- set_dscale(vis, "x", "nominal", range = "width", padding = 0,
-        points = FALSE)
-      layer_bars(vis, ...)
-    } else {
-      layer_histograms(vis, ...)
-    }
+  types <- types[grepl("\\.update$", names(types))]
+  names(types) <- sub("\\.update$", "", names(types))
+
+  layer <- closest(unlist(types), templates)
+  message("Guessing layer_", layer, "()")
+
+  f <- match.fun(paste0("layer_", layer))
+  f(vis, ...)
+}
+
+template <- function(layer, x = NA, y = NA, ...) {
+  desc <- c(x = x, y = y, ...)
+  stopifnot(is.character(desc))
+  desc <- desc[!is.na(desc)]
+
+  structure(list(layer = layer, desc = desc), class = "template")
+}
+
+#' @export
+print.template <- function(x, ...) {
+  cat("<template> ",
+    paste0(names(x$desc), " = ", x$desc, collapse = ", "),
+    " -> ",
+    x$layer,
+    "\n",
+    sep = "")
+}
+
+templates <- list(
+  template("bars",       "nominal"),
+  template("boxplots",   "nominal", "numeric"),
+  template("bars",       "nominal", "nominal"),
+
+  template("histograms", "numeric"),
+  template("freqpolys",  "numeric", stroke = "nominal"),
+  # template("boxplots",   "numeric", "nominal"),
+
+  template("points",     "numeric", "numeric"),
+  template("lines",      "discrete", "numeric"),
+  template("points",     "discrete", "discrete")
+)
+
+closest <- function(data, templates) {
+  ds <- vapply(templates, distance_n, data = data, FUN.VALUE = numeric(1))
+  if (!any(is.finite(ds))) {
+    stop("No matching templates found", call. = FALSE)
   }
+
+  templates[[which.min(ds)]]$layer
+}
+
+distance_n <- function(data, template) {
+  all <- union(names(data), names(template$desc))
+
+  ds <- unlist(Map(distance_1, data[all], template$desc[all]))
+  sum(ds)
+}
+
+distance_1 <- function(data, template) {
+  if (is.na(data) && is.na(template)) return(0) # Both missing, so can match
+  if (is.na(data) && !is.na(template)) return(Inf) # If in template, must be in data
+  if (!is.na(data) && is.na(template)) return(0)   # If in data, but not template, ignore
+
+  n_miss <- is.na(data) + is.na(template)
+  if (n_miss == 1) return(Inf) # One missing, so can't match
+  if (n_miss == 2) return(0)
+
+  switch(data,
+    numeric   = switch(template, numeric = 0, Inf),
+    datetime  = switch(template, numeric = 1, datetime = 0, Inf),
+    nominal   = switch(template, nominal = 0, Inf),
+    ordinal   = switch(template, nominal = 1, ordinal = 0, Inf),
+    Inf
+  )
 }

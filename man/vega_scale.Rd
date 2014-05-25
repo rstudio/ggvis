@@ -46,6 +46,10 @@ are documented in \url{https://github.com/trifacta/vega/wiki/Scales}.
 This function is designed to be used by authors of new types of scale.
 If you are a ggvis user, please use one of the more specific scale
 functions starting with the \code{scale_}.
+
+This is very close, but not exactly a vega scale object. Instead of being a
+named list with a set of values, the domain can be  a vector of values, or a
+reactive that returns such values.
 }
 \examples{
 vega_scale("x", "linear")

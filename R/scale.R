@@ -7,6 +7,10 @@
 #' If you are a ggvis user, please use one of the more specific scale
 #' functions starting with the \code{scale_}.
 #'
+#' This is very close, but not exactly a vega scale object. Instead of being a
+#' named list with a set of values, the domain can be  a vector of values, or a
+#' reactive that returns such values.
+#'
 #' @param name name of the scale.
 #' @param type type of scale. Should be one of "linear", "ordinal", "time",
 #'   "utc", "linear", "log", "pow", "sqrt", "quantile", "quantize", "threshold".
@@ -45,9 +49,9 @@ vega_scale <- function(name, type = NULL, domain = NULL, range = NULL,
 
   structure(
     drop_nulls(c(
-      list(name = name, type = type, reverse = reverse, round = round, ...),
-      range_prop(range, "range"),
-      range_prop(domain, "domain")
+      list(name = name, type = type, reverse = reverse, round = round,
+           domain = domain, ...),
+      range_prop(range, "range")
     )),
     class = c(subclass, "scale")
   )

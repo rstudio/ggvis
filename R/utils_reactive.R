@@ -1,5 +1,5 @@
 reactive_id <- function(x) {
-  attr(x, "reactive_id")
+  attr(x, "reactive_id", TRUE)
 }
 
 `reactive_id<-` <- function(x, value) {

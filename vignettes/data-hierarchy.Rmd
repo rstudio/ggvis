@@ -83,5 +83,5 @@ survivors dataset and two marks based on the cities dataset.
 ```{r, eval = FALSE}
 ggvis(data = NULL, x = ~long, y = ~lat) %>%
   layer_points(size = ~survivors, stroke = ~direction, data = Minard.troops) %>%
-  layer_points(text := ~city, dx := 5, dy := -5, data = Minard.cities)
+  layer_text(text := ~city, dx := 5, dy := -5, data = Minard.cities)
 ```

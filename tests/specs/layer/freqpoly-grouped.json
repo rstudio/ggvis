@@ -105,6 +105,36 @@
 					"type" : "flatten"
 				}
 			]
+		},
+		{
+			"name" : "scale/stroke",
+			"format" : {
+				"type" : "csv",
+				"parse" : {
+					"domain" : "number"
+				}
+			},
+			"values" : "\"domain\"\n4\n8"
+		},
+		{
+			"name" : "scale/x",
+			"format" : {
+				"type" : "csv",
+				"parse" : {
+					"domain" : "number"
+				}
+			},
+			"values" : "\"domain\"\n0.5\n6.5"
+		},
+		{
+			"name" : "scale/y",
+			"format" : {
+				"type" : "csv",
+				"parse" : {
+					"domain" : "number"
+				}
+			},
+			"values" : "\"domain\"\n0\n10"
 		}
 	],
 	"scales" : [
@@ -121,12 +151,8 @@
 				"#56B1F7"
 			],
 			"domain" : {
-				"fields" : [
-					{
-						"data" : "mtcars0/regroup1/bin2",
-						"field" : "data.cyl"
-					}
-				]
+				"data" : "scale/stroke",
+				"field" : "data.domain"
 			}
 		},
 		{
@@ -139,12 +165,8 @@
 			"zero" : false,
 			"range" : "width",
 			"domain" : {
-				"fields" : [
-					{
-						"data" : "mtcars0/regroup1/bin2",
-						"field" : "data.x_"
-					}
-				]
+				"data" : "scale/x",
+				"field" : "data.domain"
 			}
 		},
 		{
@@ -157,12 +179,8 @@
 			"zero" : false,
 			"range" : "height",
 			"domain" : {
-				"fields" : [
-					{
-						"data" : "mtcars0/regroup1/bin2",
-						"field" : "data.count_"
-					}
-				]
+				"data" : "scale/y",
+				"field" : "data.domain"
 			}
 		}
 	],
@@ -205,7 +223,8 @@
 	"legends" : [
 		{
 			"stroke" : "stroke",
-			"orient" : "right"
+			"orient" : "right",
+			"title" : "cyl"
 		}
 	],
 	"axes" : [
@@ -237,5 +256,5 @@
 		"renderer" : "svg",
 		"hover_duration" : 0
 	},
-	"handlers" : []
+	"handlers" : null
 }
