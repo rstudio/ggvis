@@ -3,8 +3,7 @@
 #' @param vis Visualisation to add tooltips to.
 #' @param html A function that takes a single argument as input. This argument
 #'   will be a list containing the data in the mark currently under the
-#'   mouse. It should return a string containing HTML or \code{NULL} to
-#'   disable tooltip for the current element.
+#'   mouse. It should return a string containing HTML.
 #' @param on Should tooltips appear on hover, or on click?
 #' @export
 #' @examples
@@ -28,10 +27,7 @@ add_tooltip <- function(vis, html, on = c("hover", "click")) {
       return()
     }
     html <- html(data)
-    if(is.null(html))
-      hide_tooltip(session)
-    else
-      show_tooltip(session, location$x + 5, location$y + 5, html)
+    show_tooltip(session, location$x + 5, location$y + 5, html)
   }
   hide_tooltip2 <- function(session) {
     hide_tooltip(session)
