@@ -48,8 +48,23 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
   if (dynamic) {
     # Don't provide data now, just the name
     datasets <- lapply(data_ids, function(id) {
-      list(name = id)
+      # Send out spec but not source data for grouped df
+      data <- shiny::isolate(data_table[[id]]())
+      if(inherits(data, "grouped_df")){
+        list(
+          list(name = paste0(id, "_tree")),
+          list(
+            name = id,
+            source = paste0(id, "_tree"),
+            transform = list(list(type="flatten"))
+          )
+        )
+      }else{
+        list(list(name = id))
+      }
     })
+    datasets <- unlist(datasets, recursive = FALSE)
+
     scale_datasets <- lapply(names(scale_data_table), function(id) {
       list(name = id)
     })
