@@ -23,21 +23,60 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
   }
 
   data_ids <- extract_data_ids(x$marks)
-  data_table <- as.environment(x$data[data_ids])
+  data_table <- x$data[data_ids]
+
+  # Collapse each scale's list of scale_info objects into one scale_info object
+  # per scale.
+  x$scale_info <- summarize_scale_infos(x$scale_info)
+  scale_data_table <- scale_domain_data(x$scale_info)
 
   # Wrap each of the reactive data objects in another reactive which returns
   # only the columns that are actually used, and adds any calculated columns
   # that are used in the props.
   data_table <- active_props(data_table, x$marks)
 
-  datasets <- unlist(lapply(data_ids, function(id) {
-    data <- shiny::isolate(data_table[[id]]())
-    as.vega(data, id)
-  }), recursive = FALSE)
+  # From an environment containing data_table objects, get static data for the
+  # specified ids.
+  static_datasets <- function(data_table, ids) {
+    datasets <- lapply(ids, function(id) {
+      data <- shiny::isolate(data_table[[id]]())
+      as.vega(data, id)
+    })
+    unlist(datasets, recursive = FALSE)
+  }
+
+  if (dynamic) {
+    # Don't provide data now, just the name
+    datasets <- lapply(data_ids, function(id) {
+      # Send out spec but not source data for grouped df
+      data <- shiny::isolate(data_table[[id]]())
+      if(inherits(data, "grouped_df")){
+        list(
+          list(name = paste0(id, "_tree")),
+          list(
+            name = id,
+            source = paste0(id, "_tree"),
+            transform = list(list(type="flatten"))
+          )
+        )
+      }else{
+        list(list(name = id))
+      }
+    })
+    datasets <- unlist(datasets, recursive = FALSE)
+
+    scale_datasets <- lapply(names(scale_data_table), function(id) {
+      list(name = id)
+    })
+
+  } else {
+    datasets <- static_datasets(data_table, data_ids)
+    scale_datasets <- static_datasets(scale_data_table, names(scale_data_table))
+  }
 
   # Each of these operations results in a more completely specified (and still
   # valid) ggvis object
-  x <- add_default_scales(x, data_table)
+  x <- add_default_scales(x)
   x <- add_default_axes(x)
   x <- apply_axes_defaults(x)
   x <- add_default_legends(x)
@@ -45,7 +84,7 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
   x <- add_default_options(x)
 
   spec <- list(
-    data = datasets,
+    data = c(datasets, scale_datasets),
     scales = unname(x$scales),
     marks = lapply(x$marks, as.vega),
     width = x$options$width,
@@ -57,8 +96,13 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
     handlers = if (dynamic) x$handlers
   )
 
-  structure(spec, data_table = data_table, controls = x$controls,
-            connectors = x$connectors)
+  structure(
+    spec,
+    data_table = data_table,
+    scale_data_table = scale_data_table,
+    controls = x$controls,
+    connectors = x$connectors
+  )
 }
 
 
