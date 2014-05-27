@@ -22,8 +22,8 @@ ggvis is not yet available on CRAN. You can install it from github with the foll
 
 ```R
 # install.packages("devtools")
-devtools::install_github(c("rstudio/shiny", "rstudio/ggvis"),
-  build_vignettes = FALSE)
+devtools::install_github(c("yihui/knitr", "rstudio/rmarkdown", "rstudio/shiny",
+    "rstudio/ggvis"), build_vignettes = FALSE)
 ```
 
 ## Getting started
