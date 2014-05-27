@@ -50,7 +50,7 @@ collapse_scale_infos <- function(infos) {
       domain <- reactive({
         over_vals <- value(over)
 
-        if (anyNA(over_vals)) {
+        if (any(is.na(over_vals))) {
           under_vals <- data_range(concat(values(under)))
           if (is.na(over_vals[1])) over_vals[1] <- under_vals[1]
           if (is.na(over_vals[2])) over_vals[2] <- under_vals[2]
