@@ -59,7 +59,7 @@ ggvisSpec <- function(plot_id, spec = NULL) {
 # Controls drop down
 ggvisControlGroup <- function(plot_id) {
   shiny::tags$nav(class = "ggvis-control",
-    shiny::tags$a(class = "ggvis-dropdown-toggle", title = "Controls", "\u2699"),
+    shiny::tags$a(class = "ggvis-dropdown-toggle", title = "Controls"),
     shiny::tags$ul(class = "ggvis-dropdown",
       shiny::tags$li(
         "Renderer: ",
