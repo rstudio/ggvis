@@ -8,35 +8,9 @@ set_default_scale <- function(...) {
 #' @rdname scale_numeric
 set_dscale <- set_default_scale
 
-#' Create a scale
-#'
-#' @param scale The name of a scale, such as "x", "y", "fill", "stroke", etc.
-#' @param type The type of scale. One of "numeric", "nominal", "ordinal", "logical", "datetime".
-#'
-#'
-#' @export
-scale_numeric <- function(vis, scale, ..., name = NULL) {
-  add_scale(vis, default_vega_scale(scale, "numeric", ..., name = name))
-}
-#' @export
-scale_nominal <- function(vis, scale, ..., name = NULL) {
-  add_scale(vis, default_vega_scale(scale, "nominal", ..., name = name))
-}
-#' @export
-scale_ordinal <- function(vis, scale, ..., name = NULL) {
-  add_scale(vis, default_vega_scale(scale, "ordinal", ..., name = name))
-}
-#' @export
-scale_logical <- function(vis, scale, ..., name = NULL) {
-  add_scale(vis, default_vega_scale(scale, "logical", ..., name = name))
-}
-#' @export
-scale_datetime <- function(vis, scale, ..., name = NULL) {
-  add_scale(vis, default_vega_scale(scale, "datetime", ..., name = name))
-}
 
-# Given the name of a scale, its type, and other parameters, return a vega
-# scale object, with the supplied parameters merged into the defaults.
+# Given the name of a scale, the ggvis scale type, and other parameters, return
+# a vega scale object, with the supplied parameters merged into the defaults.
 default_vega_scale <- function(scale, type, ..., name = NULL) {
   check_empty_args()
   if (!(scale %in% valid_scales)) {
@@ -62,51 +36,6 @@ default_vega_scale <- function(scale, type, ..., name = NULL) {
   do.call(f, merge_vectors(default$values, supplied))
 }
 
-#' Convert the name of a property to the name of it's default scale.
-#'
-#' This is mainly used to ensure that similar properties share the same
-#' scale by default - e.g. \code{x} and \code{x2} should use the same
-#' scale.
-#'
-#' @param prop character vector of property names. Any unrecognised names
-#'   are left unchanged.
-#' @return character vector of default scale names.
-#' @keywords internal
-#' @export
-#' @examples
-#' prop_to_scale(c("x", "x2"))
-#' prop_to_scale(c("foo", "bar"))
-#' prop_to_scale(c("opacity", "fillOpacity", "strokeOpacity"))
-prop_to_scale <- function(prop) {
-  simplify <- c(
-    "x2" = "x",
-    "y2" = "y",
-    "fillOpacity" = "opacity",
-    "strokeOpacity" = "opacity",
-    "innerRadius" = "radius",
-    "outerRadius" = "radius",
-    "startAngle" = "angle",
-    "endAngle" = "angle"
-  )
-
-  matches <- match(prop, names(simplify))
-  prop[!is.na(matches)] <- simplify[prop[!is.na(matches)]]
-  prop
-}
-
-#' Given the type of a ggvis scale, get the name of its corresponding vega scale
-#'
-#' @param type property type: numeric, ordinal, nominal, logical or datetime.
-#' @keywords internal
-scaletype_to_vega_scaletype <- function(type) {
-  unname(c(
-    "numeric" = "quantitative",
-    "ordinal" = "ordinal",
-    "nominal" = "ordinal",
-    "logical" = "ordinal",
-    "datetime" = "time"
-  )[type])
-}
 
 scale_defaults <- new.env(parent = emptyenv())
 

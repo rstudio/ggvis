@@ -27,6 +27,51 @@ named_list <- function(names, ...) {
   setNames(list(...), names)
 }
 
+#' Convert the name of a property to the name of it's default scale.
+#'
+#' This is mainly used to ensure that similar properties share the same
+#' scale by default - e.g. \code{x} and \code{x2} should use the same
+#' scale.
+#'
+#' @param prop character vector of property names. Any unrecognised names
+#'   are left unchanged.
+#' @return character vector of default scale names.
+#' @keywords internal
+#' @export
+#' @examples
+#' prop_to_scale(c("x", "x2"))
+#' prop_to_scale(c("foo", "bar"))
+#' prop_to_scale(c("opacity", "fillOpacity", "strokeOpacity"))
+prop_to_scale <- function(prop) {
+  simplify <- c(
+    "x2" = "x",
+    "y2" = "y",
+    "fillOpacity" = "opacity",
+    "strokeOpacity" = "opacity",
+    "innerRadius" = "radius",
+    "outerRadius" = "radius",
+    "startAngle" = "angle",
+    "endAngle" = "angle"
+  )
+
+  matches <- match(prop, names(simplify))
+  prop[!is.na(matches)] <- simplify[prop[!is.na(matches)]]
+  prop
+}
+
+#' Given the type of a ggvis scale, get the name of its corresponding vega scale
+#'
+#' @param type property type: numeric, ordinal, nominal, logical or datetime.
+#' @keywords internal
+scaletype_to_vega_scaletype <- function(type) {
+  unname(c(
+    "numeric" = "quantitative",
+    "ordinal" = "ordinal",
+    "nominal" = "ordinal",
+    "logical" = "ordinal",
+    "datetime" = "time"
+  )[type])
+}
 
 valid_scale_types <- c("numeric", "ordinal", "nominal", "logical", "datetime")
 
