@@ -34,7 +34,7 @@ add_missing_scales <- function(vis) {
   needed <- setdiff(names(vis$scale_info), names(scales))
   for (scale_n in needed) {
     info <- vis$scale_info[[scale_n]]
-    scale <- default_scale(scale_n, info$type)
+    scale <- default_vega_scale(scale_n, info$type)
     vis <- add_scale(vis, scale)
   }
 
