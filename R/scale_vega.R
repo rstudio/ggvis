@@ -53,9 +53,20 @@ vega_scale <- function(name, type = NULL, domain = NULL, range = NULL,
            domain = domain, ...),
       range_prop(range, "range")
     )),
-    class = c(subclass, "scale")
+    class = c(subclass, "vega_scale")
   )
 }
+
+#' @export
+#' @rdname vega_scale
+#' @param x object to test for scale-ness
+is.vega_scale <- function(x) inherits(x, "vega_scale")
+
+#' @export
+format.vega_scale <- format.vega_axis
+
+#' @export
+print.vega_scale <- print.vega_axis
 
 #' Create an ordinal scale.
 #'

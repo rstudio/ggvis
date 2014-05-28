@@ -27,17 +27,6 @@ named_list <- function(names, ...) {
   setNames(list(...), names)
 }
 
-#' @export
-#' @rdname vega_scale
-#' @param x object to test for scale-ness
-is.scale <- function(x) inherits(x, "scale")
-
-#' @export
-format.scale <- format.vega_axis
-
-#' @export
-print.scale <- print.vega_axis
-
 
 valid_scale_types <- c("numeric", "ordinal", "nominal", "logical", "datetime")
 
