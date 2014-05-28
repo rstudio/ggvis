@@ -37,3 +37,9 @@ format.scale <- format.vega_axis
 
 #' @export
 print.scale <- print.vega_axis
+
+
+valid_scale_types <- c("numeric", "ordinal", "nominal", "logical", "datetime")
+
+valid_scales <- c("x", "y", "stroke", "fill", "shape", "size", "fontSize",
+                  "opacity", "angle", "radius")

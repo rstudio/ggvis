@@ -94,7 +94,7 @@ vega_scale <- function(name, type = NULL, domain = NULL, range = NULL,
 #'
 #' scale_ordinal("x", padding = 0.5, points = FALSE)
 #' p %>% set_dscale("x", "nominal", points = FALSE)
-scale_ordinal <- function(name, points = TRUE, padding = NULL, sort = FALSE,
+vega_scale_ordinal <- function(name, points = TRUE, padding = NULL, sort = FALSE,
                           domain = NULL, range = NULL, reverse = FALSE,
                           round = FALSE) {
   assert_that(is.flag(points))
@@ -141,7 +141,7 @@ scale_ordinal <- function(name, points = TRUE, padding = NULL, sort = FALSE,
 #'
 #' scale_quantitative("x", clamp = TRUE, nice = FALSE, zero = TRUE)
 #' p %>% set_dscale("x", "numeric", clamp = TRUE, nice = FALSE, zero = TRUE)
-scale_quantitative <- function(name, trans = "linear", exponent = NULL,
+vega_scale_quantitative <- function(name, trans = "linear", exponent = NULL,
                                clamp = FALSE, nice = TRUE, zero = FALSE,
                                domain = NULL, range = NULL, reverse = FALSE,
                                round = FALSE) {
@@ -192,7 +192,7 @@ scale_quantitative <- function(name, trans = "linear", exponent = NULL,
 #'
 #' scale_time("x", utc = TRUE)
 #' p %>% set_dscale("x", "datetime", utc = TRUE)
-scale_time <- function(name, utc = FALSE, clamp = FALSE, nice = NULL,
+vega_scale_time <- function(name, utc = FALSE, clamp = FALSE, nice = NULL,
                        domain = NULL, range = NULL, reverse = FALSE,
                        round = FALSE) {
   assert_that(is.flag(clamp))

@@ -1,83 +1,52 @@
-#' Add a default scale to a ggvis plot
-#'
-#' This creates a default scale for a given property and variable type, and adds
-#' it to a ggvis plot.
-#' Default scales depend on both the property (e.g. fill, x, opacity) and
-#' the type of variable (e.g. numeric, nominal, ordinal). For this reason
-#' \code{default_scale} implements a crude S3-like double dispatch mechanism,
-#' looking for a function called \code{dscale_prop_type}. \code{dscale} is a
-#' short-hand useful for interactive exploration.
-#'
-#' @section Scale selection:
-#'
-#' First, the type of scale is selected based on the \code{type}:
-#'
-#' \itemize{
-#'   \item datetime: \code{\link{scale_time}}
-#'   \item ordinal, nominal, logical: \code{\link{scale_ordinal}}
-#'   \item numeric: \code{\link{scale_quantitative}}
-#' }
-#'
-#' (see \code{\link{proptype_to_scale}} for more details)
-#'
-#' then the range is selected based on the combination of the \code{type}
-#' and the \code{prop} - for example, you get a different range of colours
-#' depending on whether the data is numeric, ordinal, or nominal. Some scales
-#' also set other properties - for example, nominal/ordinal position scales
-#' also add some padding so that points are spaced away from plot edges.
-#'
-#' Not all combinations have an existing default scale - if you use a
-#' combination that does not have an existing combination, it may suggest
-#' you're displaying the data in a suboptimal way. For example, there is
-#' no default for a numeric shape scale, because there's no obvious way to
-#' map continuous values to discrete shapes. On the other hand, I may have
-#' just forgotten to add the appropriate default :/.
-#'
-#' You can add your own defaults (or override existing) by calling
-#' \code{\link{add_scale_defaults}}: just be aware that this is a global setting.
-#'
-#' @param vis A ggvis object.
-#' @param prop A vega property name.
-#' @param type A variable type.  One of datetime, numeric, ordinal, nominal,
-#'   logical.
-#' @param ... other arguments passed to the scale function. See the help for
-#'   \code{\link{scale_quantitative}}, \code{\link{scale_ordinal}} and
-#'   \code{\link{scale_time}} for more details. For example, you might supply
-#'   \code{trans = "log"} to create a log scale.
-#' @param name If \code{NULL}, the default, the scale name is computed by
-#'   calling \code{\link{prop_to_scale}(prop)}. This ensures that by default
-#'   properties like \code{y} and \code{y2}, or \code{opacity},
-#'   \code{fillOpacity} and \code{strokeOpacity} all share the same scale.
-#'   Set this to a custom name to override that behaviour, or to create
-#'   multiple scales for stroke or fill, or (god forbid) a secondary y scale.
 #' @export
-#' @examples
-#' p <- mtcars %>%
-#'   ggvis(x = ~wt, y = ~mpg, fill = ~factor(cyl), stroke = ~hp) %>%
-#'   layer_points()
-#'
-#' p %>% set_default_scale("x", "numeric")
-#' p %>% set_default_scale("stroke", "numeric")
-#' p %>% set_default_scale("stroke", "nominal")
-#'
-#' # You can also supply additional arguments or override the defaults
-#' p %>% set_default_scale("x", "numeric", trans = "log")
-#' p %>% set_default_scale("stroke", "nominal", range = c("red", "blue"))
-set_default_scale <- function(vis, prop, type, ..., name = NULL) {
-  scale <- default_scale(prop, type, ..., name = name)
-  add_scale(vis, scale)
+#' @rdname scale_numeric
+set_default_scale <- function(...) {
+  stop("set_default_scale has been removed, and has been replaced by scale_numeric, ",
+       "scale_nominal, and so on. See ?scale_numeric for more information")
 }
 #' @export
-#' @rdname set_default_scale
+#' @rdname scale_numeric
 set_dscale <- set_default_scale
 
-# Create a default scale object
-default_scale <- function(prop, type, ..., name = NULL) {
-  check_empty_args()
-  assert_that(is.string(prop), is.string(type))
-  if (type == "NULL") return()
+#' Create a scale
+#'
+#' @param scale The name of a scale, such as "x", "y", "fill", "stroke", etc.
+#' @param type The type of scale. One of "numeric", "nominal", "ordinal", "logical", "datetime".
+#'
+#'
+#' @export
+scale_numeric <- function(vis, scale, ..., name = NULL) {
+  add_scale(vis, default_scale(scale, "numeric", ..., name = name))
+}
+#' @export
+scale_nominal <- function(vis, scale, ..., name = NULL) {
+  add_scale(vis, default_scale(scale, "nominal", ..., name = name))
+}
+#' @export
+scale_ordinal <- function(vis, scale, ..., name = NULL) {
+  add_scale(vis, default_scale(scale, "ordinal", ..., name = name))
+}
+#' @export
+scale_logical <- function(vis, scale, ..., name = NULL) {
+  add_scale(vis, default_scale(scale, "logical", ..., name = name))
+}
+#' @export
+scale_datetime <- function(vis, scale, ..., name = NULL) {
+  add_scale(vis, default_scale(scale, "datetime", ..., name = name))
+}
 
-  scale <- prop_to_scale(prop)
+# Create a default scale object
+default_scale <- function(scale, type, ..., name = NULL) {
+  check_empty_args()
+  if (!(scale %in% valid_scales)) {
+    stop(scale, " not in set of valid scales: ",
+         paste(valid_scales, collapse = ", "))
+  }
+  if (type == "NULL") return()
+  if (!(type %in% valid_scale_types)) {
+    stop(scale, " not in set of valid scale types: ",
+         paste(valid_scale_types, collapse = ", "))
+  }
 
   default <- scale_defaults[[paste0(scale, "_", type)]]
   if (is.null(default)) {
@@ -87,7 +56,7 @@ default_scale <- function(prop, type, ..., name = NULL) {
     return(NULL)
   }
 
-  f <- match.fun(default$scale)
+  f <- match.fun(paste0("vega_scale_", scaletype_to_vega_scaletype(type)))
   supplied <- list(name = name %||% scale, ...)
   do.call(f, merge_vectors(default$values, supplied))
 }
@@ -124,18 +93,17 @@ prop_to_scale <- function(prop) {
   prop
 }
 
-#' Convert the type of a property to the type of it's default scale.
+#' Given the type of a ggvis scale, get the name of its corresponding vega scale
 #'
 #' @param type property type: numeric, ordinal, nominal, logical or datetime.
 #' @keywords internal
-#' @export
-proptype_to_scale <- function(type) {
+scaletype_to_vega_scaletype <- function(type) {
   unname(c(
-    "numeric" = "scale_quantitative",
-    "ordinal" = "scale_ordinal",
-    "nominal" = "scale_ordinal",
-    "logical" = "scale_ordinal",
-    "datetime" = "scale_time"
+    "numeric" = "quantitative",
+    "ordinal" = "ordinal",
+    "nominal" = "ordinal",
+    "logical" = "ordinal",
+    "datetime" = "time"
   )[type])
 }
 
@@ -164,7 +132,7 @@ add_scale_defaults <- function(scale, types, ...) {
   for (type in types) {
     name <- paste0(scale, "_", type)
     scale_defaults[[name]] <- list(
-      scale = proptype_to_scale(type),
+      scale = scaletype_to_vega_scaletype(type),
       values = defaults
     )
   }
