@@ -16,27 +16,28 @@ set_dscale <- set_default_scale
 #'
 #' @export
 scale_numeric <- function(vis, scale, ..., name = NULL) {
-  add_scale(vis, default_scale(scale, "numeric", ..., name = name))
+  add_scale(vis, default_vega_scale(scale, "numeric", ..., name = name))
 }
 #' @export
 scale_nominal <- function(vis, scale, ..., name = NULL) {
-  add_scale(vis, default_scale(scale, "nominal", ..., name = name))
+  add_scale(vis, default_vega_scale(scale, "nominal", ..., name = name))
 }
 #' @export
 scale_ordinal <- function(vis, scale, ..., name = NULL) {
-  add_scale(vis, default_scale(scale, "ordinal", ..., name = name))
+  add_scale(vis, default_vega_scale(scale, "ordinal", ..., name = name))
 }
 #' @export
 scale_logical <- function(vis, scale, ..., name = NULL) {
-  add_scale(vis, default_scale(scale, "logical", ..., name = name))
+  add_scale(vis, default_vega_scale(scale, "logical", ..., name = name))
 }
 #' @export
 scale_datetime <- function(vis, scale, ..., name = NULL) {
-  add_scale(vis, default_scale(scale, "datetime", ..., name = name))
+  add_scale(vis, default_vega_scale(scale, "datetime", ..., name = name))
 }
 
-# Create a default scale object
-default_scale <- function(scale, type, ..., name = NULL) {
+# Given the name of a scale, its type, and other parameters, return a vega
+# scale object, with the supplied parameters merged into the defaults.
+default_vega_scale <- function(scale, type, ..., name = NULL) {
   check_empty_args()
   if (!(scale %in% valid_scales)) {
     stop(scale, " not in set of valid scales: ",
