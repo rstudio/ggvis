@@ -25,13 +25,13 @@
 #'
 #' # Without stacking - bars overlap
 #' hec %>% ggvis(~Hair, ~Freq, fill = ~Eye, fillOpacity := 0.5) %>%
-#'   set_dscale("x", "nominal", range = "width", padding = 0, points = FALSE) %>%
+#'   scale_nominal("x", range = "width", padding = 0, points = FALSE) %>%
 #'   layer_rects(y2 = 0, width = band())
 #'
 #' # With stacking
 #' hec %>% ggvis(x = ~Hair, y = ~Freq, fill = ~Eye, fillOpacity := 0.5) %>%
 #'   compute_stack(~Freq, ~Hair) %>%
-#'   set_dscale("x", "nominal", range = "width", padding = 0, points = FALSE) %>%
+#'   scale_nominal("x", range = "width", padding = 0, points = FALSE) %>%
 #'   layer_rects(y = ~stack_lwr_, y2 = ~stack_upr_, width = band())
 compute_stack <- function(x, stack_var = NULL, group_var = NULL) {
   UseMethod("compute_stack")

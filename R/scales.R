@@ -1,58 +1,109 @@
-#' Create a "scales" object.
+#' Add a scale to a ggvis plot
 #'
-#' A scales object is used to manage multiple scales, essentially converting
-#' a unnamed list into a named list.
+#' This creates a scale object for a given scale and variable type, and adds it
+#' to a ggvis plot. The scale object is populated with default settings, which
+#' depend on the scale (e.g. fill, x, opacity) and the type of variable (e.g.
+#' numeric, nominal, ordinal). Any settings that are passed in as arguments
+#' will override the defaults.
 #'
-#' @export
-#' @param ...,.scales scales to combine into a single scales object
-#' @keywords internal
-scales <- function(..., .scales = list()) {
-  args <- c(list(...), .scales)
-  if (length(args) == 0) return(NULL)
-  stopifnot(all(vapply(args, is.scale, logical(1))))
+#' @section Scale selection:
+#'
+#' ggvis supports the following types of scales. Typical uses for each scale
+#' type are listed below:
+#' \itemize{
+#'   \item numeric For continuous numeric values.
+#'   \item nominal For character vectors and factors.
+#'   \item ordinal For ordered factors (these presently behave the same as
+#'     nominal).
+#'   \item logical For logical (TRUE/FALSE) values.
+#'   \item datetime For dates and date-times.
+#' }
+#'
+#' Each type has a a corresponding function: \code{scale_numeric},
+#' \code{scale_nominal}, and so on.
+#'
+#' The scale types for ggvis are mapped to scale types for Vega, which include
+#' "ordinal", "quantitative", and "time". See \code{\link{vega_scale}} for more
+#' details.
+#'
+#' Given a scale and type, the range is selected based on the combination of the
+#' \code{scale} and \code{type}. For example, you get a different range of
+#' colours depending on whether the data is numeric, ordinal, or nominal. Some
+#' scales also set other properties. For example, nominal/ordinal position
+#' scales also add some padding so that points are spaced away from plot edges.
+#'
+#' Not all combinations have an existing default scale. If you use a
+#' combination that does not have an existing combination, it may suggest
+#' you're displaying the data in a suboptimal way. For example, there is
+#' no default for a numeric shape scale, because there's no obvious way to
+#' map continuous values to discrete shapes.
+#'
+#' You can add your own defaults (or override existing) by calling
+#' \code{\link{add_scale_defaults}}: just be aware that this is a global setting.
+#'
+#' @param vis A ggvis object.
+#' @param scale The name of a scale, such as "x", "y", "fill", "stroke", etc.
+#' @param type A variable type. One of "numeric", "nominal", "ordinal",
+#'   "logical", "datetime".
+#' @param ... other arguments passed to the scale function. See the help for
+#'   \code{\link{vega_scale_quantitative}}, \code{\link{vega_scale_ordinal}} and
+#'   \code{\link{vega_scale_time}} for more details. For example, you might
+#'   supply \code{trans = "log"} to create a log scale.
+#' @param name If \code{NULL}, the default, the scale name is the same as
+#'   \code{scale}. Set this to a custom name to create multiple scales for
+#'   stroke or fill, or (god forbid) a secondary y scale.
+#' @examples
+#' p <- mtcars %>%
+#'   ggvis(x = ~wt, y = ~mpg, fill = ~factor(cyl), stroke = ~hp) %>%
+#'   layer_points()
+#'
+#' p %>% scale_numeric("x")
+#' p %>% scale_numeric("stroke")
+#' p %>% scale_nominal("stroke")
+#'
+#' # You can also supply additional arguments or override the defaults
+#' p %>% scale_numeric("x", trans = "log")
+#' p %>% scale_nominal("stroke", range = c("red", "blue"))
+#' @name scales
+#' @aliases set_default_scale set_dscale
+NULL
 
-  names(args) <- vapply(args, "name", FUN = `[[`, FUN.VALUE = character(1))
-
-  structure(args, class = "scales")
-}
-
-#' @export
 #' @rdname scales
-#' @param x object to test for scales-ness
-is.scales <- function(x) inherits(x, "scales")
-
 #' @export
-format.scales <- function(x, ...) {
-  paste("*", vapply(x, format, character(1)), collapse = "\n")
+scale_numeric <- function(vis, scale, ..., name = NULL) {
+  add_scale(vis, default_vega_scale(scale, "numeric", ..., name = name))
 }
-
+#' @rdname scales
 #' @export
-print.scales <- function(x, ...) cat(format(x, ...), "\n", sep = "")
-
-# Merge two ggvis scales objects
-#
-# merge_scales(scales(vega_scale("x", "linear")))
-# merge_scales(scales(vega_scale("x", "linear")), scales(vega_scale("y", "linear")))
-# merge_scales(scales(vega_scale("x", "linear"), vega_scale("y", "linear")),
-#              scales(vega_scale("y", "ordinal")))
-merge_scales <- function(parent = NULL, child = NULL) {
-  if (is.null(parent)) return(child)
-  if (is.null(child)) return(parent)
-  stopifnot(is.scales(parent), is.scales(child))
-
-  structure(merge_vectors(parent, child), class = "scales")
+scale_nominal <- function(vis, scale, ..., name = NULL) {
+  add_scale(vis, default_vega_scale(scale, "nominal", ..., name = name))
+}
+#' @rdname scales
+#' @export
+scale_ordinal <- function(vis, scale, ..., name = NULL) {
+  add_scale(vis, default_vega_scale(scale, "ordinal", ..., name = name))
+}
+#' @rdname scales
+#' @export
+scale_logical <- function(vis, scale, ..., name = NULL) {
+  add_scale(vis, default_vega_scale(scale, "logical", ..., name = name))
+}
+#' @rdname scales
+#' @export
+scale_datetime <- function(vis, scale, ..., name = NULL) {
+  add_scale(vis, default_vega_scale(scale, "datetime", ..., name = name))
 }
 
 # Given a ggvis object, add all needed vega scales, with correct domain
 # values set.
-add_default_scales <- function(vis) {
+add_missing_scales <- function(vis) {
   scales <- vis$scales
 
   # Add in scales not already specified in spec
   needed <- setdiff(names(vis$scale_info), names(scales))
   for (scale_n in needed) {
     info <- vis$scale_info[[scale_n]]
-    scale <- default_scale(scale_n, info$type)
+    scale <- default_vega_scale(scale_n, info$type)
     vis <- add_scale(vis, scale)
   }
 

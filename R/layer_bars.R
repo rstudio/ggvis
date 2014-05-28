@@ -103,7 +103,7 @@ layer_bars <- function(vis, ..., stack = TRUE, width = NULL) {
       }
       v
     })
-    vis <- set_dscale(vis, "x", "nominal", padding = 0, points = FALSE)
+    vis <- scale_nominal(vis, "x", padding = 0, points = FALSE)
 
   } else {
     vis <- layer_f(vis, function(v) {
@@ -117,6 +117,6 @@ layer_bars <- function(vis, ..., stack = TRUE, width = NULL) {
     })
   }
 
-  vis <- set_dscale(vis, "y", "numeric", domain = c(0, NA))
+  vis <- scale_numeric(vis, "y", domain = c(0, NA))
   vis
 }
