@@ -116,33 +116,14 @@ as.vega.mark <- function(mark) {
   properties <- as.vega(mark$props)
   properties$ggvis <- list()
 
-  # FIXME: dispatch on the class of mark$data()
-  split <- !is.null(dplyr::groups(shiny::isolate(mark$data())))
-  if (split) {
-    data_id <- paste0(data_id(mark$data), "_tree")
-    properties$ggvis$data <- list(value = data_id)
+  data_id <- data_id(mark$data)
+  properties$ggvis$data <- list(value = data_id)
 
-    m <- list(
-      type = "group",
-      from = list(data = data_id),
-      marks = list(
-        list(
-          type = mark$type,
-          properties = properties
-        )
-      )
-    )
-
-  } else {
-    data_id <- data_id(mark$data)
-    properties$ggvis$data <- list(value = data_id)
-
-    m <- list(
-      type = mark$type,
-      properties = properties,
-      from = list(data = data_id)
-    )
-  }
+  m <- list(
+    type = mark$type,
+    properties = properties,
+    from = list(data = data_id)
+  )
 
   if (!is.null(key)) {
     m$key <- paste0("data.", prop_name(key))
@@ -196,31 +177,3 @@ as.vega.data.frame <- function(x, name, ...) {
     values = to_csv(x)
   ))
 }
-
-#' @export
-as.vega.grouped_df <- function(x, name, ...) {
-  # FIXME: This is effectively the same as dlply - is there a better way?
-  vars <- dplyr::groups(x)
-  group_vals <- lapply(vars, function(var) x[[as.character(var)]] )
-  split_data <- unname(split(x, group_vals, drop = TRUE))
-
-  data <- lapply(split_data, function(x) list(children = df_to_d3json(x)))
-
-  list(
-    list(
-      name = paste0(name, "_tree"),
-      format = list(
-        type = "treejson",
-        # Figure out correct vega parsers for non-string columns
-        parse = unlist(lapply(x, vega_data_parser))
-      ),
-      values = list(children = data)
-     ),
-    list(
-      name = name,
-      source = paste0(name, "_tree"),
-      transform = list(list(type = "flatten"))
-    )
-  )
-}
-
