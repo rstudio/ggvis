@@ -179,8 +179,8 @@ specification and are usually created with `dscale` (short for default scale):
 # Override the default data limits:
 mtcars %>% ggvis(~disp, ~wt) %>%
   layer_points() %>%
-  set_dscale("x", "numeric", domain = c(50, 500), nice = FALSE) %>%
-  set_dscale("y", "numeric", domain = c(0, 6), nice = FALSE)
+  scale_numeric("x", domain = c(50, 500), nice = FALSE) %>%
+  scale_numeric("y", domain = c(0, 6), nice = FALSE)
 ```
 
 Compared to ggplot2, ggvis has far fewer scales (3 vs 70), with each function
@@ -241,16 +241,16 @@ ggvis provides the `dscale` function to automatically retrieve a default scale
 given a property name and variable type:
 
 ```{r, eval = FALSE}
-set_dscale(vis, "x", "numeric")
-set_dscale(vis, "y", "numeric")
-set_dscale(vis, "shape", "nominal")
+scale_numeric(vis, "x")
+scale_numeric(vis, "y")
+scale_nominal(vis, "shape")
 ```
 
 You can also provide other arguments to the underlying scale:
 
 ```{r, eval = FALSE}
-set_dscale(vis, "x", "numeric", domain = c(10, 100))
-set_dscale(vis, "x", "numeric", trans = "log")
+scale_numeric(vis, "x", domain = c(10, 100))
+scale_numeric(vis, "x", trans = "log")
 ```
 
 So `dscale()` is usually a better way to create new scales that starting from
@@ -283,8 +283,8 @@ If you do this, you will also need to add a scale object.
 mtcars %>% ggvis(y = ~mpg) %>%
   layer_points(x = prop(~disp, scale = "xdisp")) %>%
   layer_points(x = prop(~wt, scale = "xwt"), fill := "blue") %>% 
-  set_dscale("x", "numeric", name = "xdisp") %>%
-  set_dscale("x", "numeric", name = "xwt") %>%
+  scale_numeric("x", name = "xdisp") %>%
+  scale_numeric("x", name = "xwt") %>%
   add_guide_axis("x", "xdisp", orient = "bottom") %>%
   add_guide_axis("x", "xwt", orient = "bottom", offset = 20, properties =
     list(labels = props(fill := "blue")))

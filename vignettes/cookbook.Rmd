@@ -126,8 +126,7 @@ It's possible to work around this by using a data set with a numerical x, and th
 ```{r, message = FALSE, fig.width = 4}
 # Use the original pressure data set with continuous x values
 pressure %>% ggvis(~temperature, ~pressure) %>%
-  layer_bars() %>%
-  set_dscale("x", "nominal", padding = 0, points = FALSE)
+  layer_bars()
 ```
 
 
