@@ -55,16 +55,16 @@ print.template <- function(x, ...) {
 
 templates <- list(
   template("bars",       "nominal"),
-  template("boxplots",   "nominal", "numeric"),
+#   template("boxplots",   "nominal", "numeric"),
   template("bars",       "nominal", "nominal"),
 
   template("histograms", "numeric"),
   template("freqpolys",  "numeric", stroke = "nominal"),
-  # template("boxplots",   "numeric", "nominal"),
+#   template("boxplots",   "numeric", "nominal"),
 
   template("points",     "numeric", "numeric"),
-  template("lines",      "discrete", "numeric"),
-  template("points",     "discrete", "discrete")
+  template("lines",      "datetime", "numeric"),
+  template("points",     "datetime", "datetime")
 )
 
 closest <- function(data, templates) {
