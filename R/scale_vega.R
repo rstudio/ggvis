@@ -100,11 +100,11 @@ print.vega_scale <- print.vega_axis
 #' @examples
 #' p <- mtcars %>% ggvis(~wt, ~mpg) %>% layer_points()
 #'
-#' scale_ordinal("x")
-#' p %>% set_dscale("x", "nominal")
+#' vega_scale_ordinal("x")
+#' p %>% scale_nominal("x")
 #'
-#' scale_ordinal("x", padding = 0.5, points = FALSE)
-#' p %>% set_dscale("x", "nominal", points = FALSE)
+#' vega_scale_ordinal("x", padding = 0.5, points = FALSE)
+#' p %>% scale_nominal("x", points = FALSE)
 vega_scale_ordinal <- function(name, points = TRUE, padding = NULL, sort = FALSE,
                           domain = NULL, range = NULL, reverse = FALSE,
                           round = FALSE) {
@@ -144,14 +144,14 @@ vega_scale_ordinal <- function(name, points = TRUE, padding = NULL, sort = FALSE
 #' @examples
 #' p <- mtcars %>% ggvis(~wt, ~mpg) %>% layer_points()
 #'
-#' scale_quantitative("y")
-#' p %>% set_dscale("y", "numeric")
+#' vega_scale_quantitative("y")
+#' p %>% scale_numeric("y")
 #'
-#' scale_quantitative("y", "pow", 0.5)
-#' p %>% set_dscale("y", "numeric", trans = "pow", exp = 0.5)
+#' vega_scale_quantitative("y", "pow", 0.5)
+#' p %>% scale_numeric("y", trans = "pow", exp = 0.5)
 #'
-#' scale_quantitative("x", clamp = TRUE, nice = FALSE, zero = TRUE)
-#' p %>% set_dscale("x", "numeric", clamp = TRUE, nice = FALSE, zero = TRUE)
+#' vega_scale_quantitative("x", clamp = TRUE, nice = FALSE, zero = TRUE)
+#' p %>% scale_numeric("x",clamp = TRUE, nice = FALSE, zero = TRUE)
 vega_scale_quantitative <- function(name, trans = "linear", exponent = NULL,
                                clamp = FALSE, nice = TRUE, zero = FALSE,
                                domain = NULL, range = NULL, reverse = FALSE,
@@ -198,11 +198,11 @@ vega_scale_quantitative <- function(name, trans = "linear", exponent = NULL,
 #' p <- dat %>% ggvis(x = ~times) %>% layer_histograms()
 #' p
 #'
-#' scale_time("x", nice = "year")
-#' p %>% set_dscale("x", "datetime", nice = "year")
+#' vega_scale_time("x", nice = "year")
+#' p %>% scale_datetime("x", nice = "year")
 #'
-#' scale_time("x", utc = TRUE)
-#' p %>% set_dscale("x", "datetime", utc = TRUE)
+#' vega_scale_time("x", utc = TRUE)
+#' p %>% scale_datetime("x", utc = TRUE)
 vega_scale_time <- function(name, utc = FALSE, clamp = FALSE, nice = NULL,
                        domain = NULL, range = NULL, reverse = FALSE,
                        round = FALSE) {

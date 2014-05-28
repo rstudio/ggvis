@@ -1,11 +1,9 @@
 #' @export
-#' @rdname scale_numeric
 set_default_scale <- function(...) {
   stop("set_default_scale has been removed, and has been replaced by scale_numeric, ",
-       "scale_nominal, and so on. See ?scale_numeric for more information")
+       "scale_nominal, and so on. See ?scales for more information")
 }
 #' @export
-#' @rdname scale_numeric
 set_dscale <- set_default_scale
 
 

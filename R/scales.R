@@ -1,25 +1,94 @@
-#' Create a scale
+#' Add a scale to a ggvis plot
 #'
+#' This creates a scale object for a given scale and variable type, and adds it
+#' to a ggvis plot. The scale object is populated with default settings, which
+#' depend on the scale (e.g. fill, x, opacity) and the type of variable (e.g.
+#' numeric, nominal, ordinal). Any settings that are passed in as arguments
+#' will override the defaults.
+#'
+#' @section Scale selection:
+#'
+#' ggvis supports the following types of scales. Typical uses for each scale
+#' type are listed below:
+#' \itemize{
+#'   \item numeric For continuous numeric values.
+#'   \item nominal For character vectors and factors.
+#'   \item ordinal For ordered factors (these presently behave the same as
+#'     nominal).
+#'   \item logical For logical (TRUE/FALSE) values.
+#'   \item datetime For dates and date-times.
+#' }
+#'
+#' Each type has a a corresponding function: \code{scale_numeric},
+#' \code{scale_nominal}, and so on.
+#'
+#' The scale types for ggvis are mapped to scale types for Vega, which include
+#' "ordinal", "quantitative", and "time". See \code{\link{vega_scale}} for more
+#' details.
+#'
+#' Given a scale and type, the range is selected based on the combination of the
+#' \code{scale} and \code{type}. For example, you get a different range of
+#' colours depending on whether the data is numeric, ordinal, or nominal. Some
+#' scales also set other properties. For example, nominal/ordinal position
+#' scales also add some padding so that points are spaced away from plot edges.
+#'
+#' Not all combinations have an existing default scale. If you use a
+#' combination that does not have an existing combination, it may suggest
+#' you're displaying the data in a suboptimal way. For example, there is
+#' no default for a numeric shape scale, because there's no obvious way to
+#' map continuous values to discrete shapes.
+#'
+#' You can add your own defaults (or override existing) by calling
+#' \code{\link{add_scale_defaults}}: just be aware that this is a global setting.
+#'
+#' @param vis A ggvis object.
 #' @param scale The name of a scale, such as "x", "y", "fill", "stroke", etc.
-#' @param type The type of scale. One of "numeric", "nominal", "ordinal", "logical", "datetime".
+#' @param type A variable type. One of "numeric", "nominal", "ordinal",
+#'   "logical", "datetime".
+#' @param ... other arguments passed to the scale function. See the help for
+#'   \code{\link{vega_scale_quantitative}}, \code{\link{vega_scale_ordinal}} and
+#'   \code{\link{vega_scale_time}} for more details. For example, you might
+#'   supply \code{trans = "log"} to create a log scale.
+#' @param name If \code{NULL}, the default, the scale name is the same as
+#'   \code{scale}. Set this to a custom name to create multiple scales for
+#'   stroke or fill, or (god forbid) a secondary y scale.
+#' @examples
+#' p <- mtcars %>%
+#'   ggvis(x = ~wt, y = ~mpg, fill = ~factor(cyl), stroke = ~hp) %>%
+#'   layer_points()
 #'
+#' p %>% scale_numeric("x")
+#' p %>% scale_numeric("stroke")
+#' p %>% scale_nominal("stroke")
 #'
+#' # You can also supply additional arguments or override the defaults
+#' p %>% scale_numeric("x", trans = "log")
+#' p %>% scale_nominal("stroke", range = c("red", "blue"))
+#' @name scales
+#' @aliases set_default_scale set_dscale
+NULL
+
+#' @rdname scales
 #' @export
 scale_numeric <- function(vis, scale, ..., name = NULL) {
   add_scale(vis, default_vega_scale(scale, "numeric", ..., name = name))
 }
+#' @rdname scales
 #' @export
 scale_nominal <- function(vis, scale, ..., name = NULL) {
   add_scale(vis, default_vega_scale(scale, "nominal", ..., name = name))
 }
+#' @rdname scales
 #' @export
 scale_ordinal <- function(vis, scale, ..., name = NULL) {
   add_scale(vis, default_vega_scale(scale, "ordinal", ..., name = name))
 }
+#' @rdname scales
 #' @export
 scale_logical <- function(vis, scale, ..., name = NULL) {
   add_scale(vis, default_vega_scale(scale, "logical", ..., name = name))
 }
+#' @rdname scales
 #' @export
 scale_datetime <- function(vis, scale, ..., name = NULL) {
   add_scale(vis, default_vega_scale(scale, "datetime", ..., name = name))
