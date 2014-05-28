@@ -35,15 +35,15 @@ pressure \%>\% compute_tabulate(~factor(temperature), ~pressure)
 mtcars \%>\% compute_tabulate(~factor(cyl)) \%>\%
   ggvis(x = ~x_, y = ~count_, y2 = 0) \%>\%
   layer_rects(width = band(mult = 0.9)) \%>\%
-  set_dscale("x", "nominal", padding = 0, points = FALSE) \%>\%
-  set_dscale("y", "numeric", domain = c(0, NA))
+  scale_nominal("x", padding = 0, points = FALSE) \%>\%
+  scale_numeric("y", domain = c(0, NA))
 
 mtcars \%>\%
   ggvis(x = ~x_, y = ~count_, y2 = 0) \%>\%
   compute_tabulate(~factor(cyl)) \%>\%
   layer_rects(width = band(mult = 0.9)) \%>\%
-  set_dscale("x", "nominal", padding = 0, points = FALSE) \%>\%
-  set_dscale("y", "numeric", domain = c(0, NA))
+  scale_nominal("x", padding = 0, points = FALSE) \%>\%
+  scale_numeric("y", domain = c(0, NA))
 }
 \seealso{
 \code{\link{compute_bin}} For counting cases within ranges of

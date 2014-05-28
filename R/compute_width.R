@@ -40,14 +40,14 @@
 #'   compute_width(~x_, width = .5) %>%
 #'   ggvis(x = ~xmin_, x2 = ~xmax_, y = ~count_, y2 = 0) %>%
 #'   layer_rects() %>%
-#'   set_dscale("y", "numeric", domain = c(0, NA))
+#'   scale_numeric("y", domain = c(0, NA))
 #'
 #' mtcars %>%
 #'   ggvis(x = ~xmin_, x2 = ~xmax_, y = ~count_, y2 = 0) %>%
 #'   compute_count(~cyl, ~wt) %>%
 #'   compute_width(~x_) %>%
 #'   layer_rects() %>%
-#'   set_dscale("y", "numeric", domain = c(0, NA))
+#'   scale_numeric("y", domain = c(0, NA))
 compute_width <- function(x, x_var, width = NULL) {
   UseMethod("compute_width")
 }
