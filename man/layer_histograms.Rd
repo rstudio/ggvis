@@ -4,7 +4,8 @@
 \alias{layer_histograms}
 \title{Display binned data}
 \usage{
-layer_histograms(vis, ..., binwidth = NULL, origin = NULL, right = TRUE)
+layer_histograms(vis, ..., binwidth = NULL, origin = NULL, right = TRUE,
+  stack = TRUE)
 
 layer_freqpolys(vis, ..., binwidth = NULL, origin = NULL, right = TRUE)
 }

@@ -16,10 +16,8 @@
 #' # mark
 #' mtcars %>% compute_bin(~mpg) %>% ggvis(~x_, ~count_) %>% layer_paths()
 layer_histograms <- function(vis, ..., binwidth = NULL, origin = NULL,
-                            right = TRUE) {
+                            right = TRUE, stack = TRUE) {
 
-  rect_props <- merge_props(props(x = ~xmin_, x2 = ~xmax_, y = ~count_, y2 = 0),
-    props(...))
 
   x_var <- find_prop_var(vis$cur_props, "x.update")
   x_val <- eval_vector(cur_data(vis), x_var)
@@ -29,7 +27,23 @@ layer_histograms <- function(vis, ..., binwidth = NULL, origin = NULL,
   layer_f(vis, function(x) {
     x <- compute_bin(x, x_var, binwidth = params$binwidth,
       origin = params$origin, right = params$right)
-    x <- emit_rects(x, rect_props)
+
+    if (stack) {
+      x <- compute_stack(x, stack_var = ~count_, group_var = ~x_)
+
+      rect_props <- merge_props(
+        props(x = ~xmin_, x2 = ~xmax_, y = ~stack_upr_, y2 = ~stack_lwr_),
+        props(...)
+      )
+      x <- emit_rects(x, rect_props)
+
+    } else {
+      rect_props <- merge_props(
+        props(x = ~xmin_, x2 = ~xmax_, y = ~count_, y2 = 0),
+        props(...)
+      )
+      x <- emit_rects(x, rect_props)
+    }
     x
   })
 }
