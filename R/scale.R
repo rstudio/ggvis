@@ -27,7 +27,7 @@ named_list <- function(names, ...) {
   setNames(list(...), names)
 }
 
-#' Convert the name of a property to the name of it's default scale.
+#' Convert the name of a property to the name of its default scale.
 #'
 #' This is mainly used to ensure that similar properties share the same
 #' scale by default - e.g. \code{x} and \code{x2} should use the same
