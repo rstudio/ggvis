@@ -18,14 +18,10 @@ mtcars %>% ggvis(x = ~wt, fill = ~factor(cyl)) %>%
 data(diamonds, package = "ggplot2")
 diamonds %>% ggvis(x = ~table) %>% layer_histograms()
 
-
 # Stacked histogram
 diamonds %>% ggvis(x = ~table, fill = ~cut) %>%
   group_by(cut) %>%
-  compute_bin(~table, binwidth = 1) %>%
-  compute_stack(~count_, ~x_) %>%
-  layer_rects(x = ~xmin_, x2 = ~xmax_, y = ~stack_lwr_, y2 = ~stack_upr_,
-              fillOpacity := 0.6)
+  layer_histograms(binwidth = 1)
 
 # Histogram of dates
 set.seed(2934)
