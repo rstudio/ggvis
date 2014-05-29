@@ -1,10 +1,9 @@
 # Create a new reactive dataset containing only the data actually used
 # by properties.
-active_props <- function(data, layers) {
+active_props <- function(data, marks) {
   # Collect all props for given data
-  data_ids <- vapply(layers, function(layer) data_id(layer$data),
-    character(1))
-  props <- lapply(layers, function(x) x$props)
+  data_ids <- vapply(marks, function(mark) data_id(mark$data), character(1))
+  props <- lapply(marks, function(x) x$props)
 
   props_by_id <- split(props, data_ids)
   props_by_id <- lapply(props_by_id, unlist, recursive = FALSE)
