@@ -111,8 +111,11 @@ layer_bars <- function(vis, ..., stack = TRUE, width = NULL) {
       v <- compute_width(v, ~x_, width)
       if (stack) {
         v <- compute_stack(v, stack_var = ~count_, group_var = ~x_)
+        v <- layer_rects(v, x = ~xmin_, x2 = ~xmax_, y = ~stack_upr_,
+                         y2 = ~stack_lwr_)
+      } else {
+        v <- layer_rects(v, x = ~xmin_, x2 = ~xmax_, y = 0, y2 = ~count_)
       }
-      v <- layer_rects(v, x = ~xmin_, x2 = ~xmax_, y = 0, y2 = ~count_)
       v
     })
   }
