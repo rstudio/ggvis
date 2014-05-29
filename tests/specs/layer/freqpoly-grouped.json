@@ -1,110 +1,16 @@
 {
 	"data" : [
 		{
-			"name" : "mtcars0/regroup1/bin2_tree",
+			"name" : "mtcars0/regroup1/bin2",
 			"format" : {
-				"type" : "treejson",
+				"type" : "csv",
 				"parse" : {
 					"cyl" : "number",
 					"x_" : "number",
 					"count_" : "number"
 				}
 			},
-			"values" : {
-				"children" : [
-					{
-						"children" : [
-							{
-								"cyl" : 4,
-								"x_" : 0.5,
-								"count_" : 0
-							},
-							{
-								"cyl" : 4,
-								"x_" : 1.5,
-								"count_" : 4
-							},
-							{
-								"cyl" : 4,
-								"x_" : 2.5,
-								"count_" : 5
-							},
-							{
-								"cyl" : 4,
-								"x_" : 3.5,
-								"count_" : 2
-							},
-							{
-								"cyl" : 4,
-								"x_" : 4.5,
-								"count_" : 0
-							}
-						]
-					},
-					{
-						"children" : [
-							{
-								"cyl" : 6,
-								"x_" : 1.5,
-								"count_" : 0
-							},
-							{
-								"cyl" : 6,
-								"x_" : 2.5,
-								"count_" : 3
-							},
-							{
-								"cyl" : 6,
-								"x_" : 3.5,
-								"count_" : 4
-							},
-							{
-								"cyl" : 6,
-								"x_" : 4.5,
-								"count_" : 0
-							}
-						]
-					},
-					{
-						"children" : [
-							{
-								"cyl" : 8,
-								"x_" : 2.5,
-								"count_" : 0
-							},
-							{
-								"cyl" : 8,
-								"x_" : 3.5,
-								"count_" : 10
-							},
-							{
-								"cyl" : 8,
-								"x_" : 4.5,
-								"count_" : 1
-							},
-							{
-								"cyl" : 8,
-								"x_" : 5.5,
-								"count_" : 3
-							},
-							{
-								"cyl" : 8,
-								"x_" : 6.5,
-								"count_" : 0
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"name" : "mtcars0/regroup1/bin2",
-			"source" : "mtcars0/regroup1/bin2_tree",
-			"transform" : [
-				{
-					"type" : "flatten"
-				}
-			]
+			"values" : "\"cyl\",\"x_\",\"count_\"\n4,0.5,0\n4,1.5,4\n4,2.5,5\n4,3.5,2\n4,4.5,0\n6,1.5,0\n6,2.5,3\n6,3.5,4\n6,4.5,0\n8,2.5,0\n8,3.5,10\n8,4.5,1\n8,5.5,3\n8,6.5,0"
 		},
 		{
 			"name" : "scale/stroke",
@@ -186,36 +92,31 @@
 	],
 	"marks" : [
 		{
-			"type" : "group",
-			"from" : {
-				"data" : "mtcars0/regroup1/bin2_tree"
-			},
-			"marks" : [
-				{
-					"type" : "line",
-					"properties" : {
-						"update" : {
-							"stroke" : {
-								"scale" : "stroke",
-								"field" : "data.cyl"
-							},
-							"x" : {
-								"scale" : "x",
-								"field" : "data.x_"
-							},
-							"y" : {
-								"scale" : "y",
-								"field" : "data.count_"
-							}
-						},
-						"ggvis" : {
-							"data" : {
-								"value" : "mtcars0/regroup1/bin2_tree"
-							}
-						}
+			"type" : "line",
+			"properties" : {
+				"update" : {
+					"stroke" : {
+						"scale" : "stroke",
+						"field" : "data.cyl"
+					},
+					"x" : {
+						"scale" : "x",
+						"field" : "data.x_"
+					},
+					"y" : {
+						"scale" : "y",
+						"field" : "data.count_"
+					}
+				},
+				"ggvis" : {
+					"data" : {
+						"value" : "mtcars0/regroup1/bin2"
 					}
 				}
-			]
+			},
+			"from" : {
+				"data" : "mtcars0/regroup1/bin2"
+			}
 		}
 	],
 	"width" : 600,
