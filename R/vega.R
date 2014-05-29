@@ -187,7 +187,7 @@ as.vega.grouped_df <- function(x, name, ...) {
   # Create a flat data set and add a transform-facet data set which uses the
   # flat data as a source.
   group_vars <- vapply(dplyr::groups(x), deparse, character(1))
-  res <- as.vega(ungroup(x), paste0(name, "_flat"), ...)
+  res <- as.vega(dplyr::ungroup(x), paste0(name, "_flat"), ...)
 
   res[[length(res) + 1]] <- list(
     name = name,
