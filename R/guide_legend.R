@@ -54,7 +54,7 @@ guide_legend <- function(size = NULL, shape = NULL, fill = NULL,
   )), class = "vega_legend")
 }
 
-add_default_legends <- function(vis) {
+add_missing_legends <- function(vis) {
   legends <- vis$legends
   scales <- vis$scales
 

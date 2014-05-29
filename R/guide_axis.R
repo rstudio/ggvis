@@ -102,7 +102,7 @@ guide_axis <- function(type, scale = type, orient = NULL, title = NULL,
 }
 
 
-add_default_axes <- function(vis) {
+add_missing_axes <- function(vis) {
   axes <- vis$axes
   scales <- vis$scales
 
