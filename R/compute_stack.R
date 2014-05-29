@@ -55,7 +55,10 @@ compute_stack.grouped_df <- function(x, stack_var = NULL, group_var = NULL) {
 compute_stack.data.frame <- function(x, stack_var = NULL, group_var = NULL) {
   assert_that(is.formula(stack_var), is.formula(group_var))
 
-  x <- do_call(dplyr::regroup, quote(x), list(list(group_var[[2]])))
+  # Round grouping variable to 8 significant digits
+  gvar <- substitute(signif(x, 8), list(x = group_var[[2]]))
+  x <- do_call(dplyr::mutate, quote(x), group__ = gvar)
+  x <- group_by(x, group__)
 
   # FIXME: This is a workaround for dplyr issue #412
   lag <- dplyr::lag
