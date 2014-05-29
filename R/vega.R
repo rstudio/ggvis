@@ -45,19 +45,8 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
     unlist(datasets, recursive = FALSE)
   }
 
-  if (dynamic) {
-    # Don't provide data now, just the name
-    datasets <- lapply(data_ids, function(id) {
-      list(name = id)
-    })
-    scale_datasets <- lapply(names(scale_data_table), function(id) {
-      list(name = id)
-    })
-
-  } else {
-    datasets <- static_datasets(data_table, data_ids)
-    scale_datasets <- static_datasets(scale_data_table, names(scale_data_table))
-  }
+  datasets <- static_datasets(data_table, data_ids)
+  scale_datasets <- static_datasets(scale_data_table, names(scale_data_table))
 
   # Each of these operations results in a more completely specified (and still
   # valid) ggvis object
