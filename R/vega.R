@@ -93,8 +93,7 @@ extract_data_ids <- function(layers) {
 # Given a ggvis mark object, output a vega mark object
 #' @export
 as.vega.mark <- function(mark) {
-  # Keep only the vega-specific fields, then remove the class, drop nulls,
-  # and convert to proper format for vega properties.
+  data_id <- data_id(mark$data)
 
   # Pull out key from props, if present
   key <- mark$props$key
@@ -104,15 +103,37 @@ as.vega.mark <- function(mark) {
   # in the Vega spec.
   properties <- as.vega(mark$props)
   properties$ggvis <- list()
-
-  data_id <- data_id(mark$data)
   properties$ggvis$data <- list(value = data_id)
 
-  m <- list(
-    type = mark$type,
-    properties = properties,
-    from = list(data = data_id)
-  )
+  group_vars <- dplyr::groups(shiny::isolate(mark$data()))
+  if (!is.null(group_vars)) {
+    # String representation of groups
+    group_vars <- vapply(group_vars, deparse, character(1))
+
+    m <- list(
+      type = "group",
+      from = list(
+        data = data_id,
+        transform = list(list(
+          type = "facet",
+          keys = list(paste0("data.", group_vars))
+        ))
+      ),
+      marks = list(
+        list(
+          type = mark$type,
+          properties = properties
+        )
+      )
+    )
+
+  } else {
+    m <- list(
+      type = mark$type,
+      properties = properties,
+      from = list(data = data_id)
+    )
+  }
 
   if (!is.null(key)) {
     m$key <- paste0("data.", prop_name(key))
