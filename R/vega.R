@@ -112,13 +112,7 @@ as.vega.mark <- function(mark) {
 
     m <- list(
       type = "group",
-      from = list(
-        data = data_id,
-        transform = list(list(
-          type = "facet",
-          keys = list(paste0("data.", group_vars))
-        ))
-      ),
+      from = list(data = data_id),
       marks = list(
         list(
           type = mark$type,
@@ -186,4 +180,23 @@ as.vega.data.frame <- function(x, name, ...) {
     ),
     values = to_csv(x)
   ))
+}
+
+#' @export
+as.vega.grouped_df <- function(x, name, ...) {
+  # Create a flat data set and add a transform-facet data set which uses the
+  # flat data as a source.
+  group_vars <- vapply(dplyr::groups(x), deparse, character(1))
+  res <- as.vega(ungroup(x), paste0(name, "_flat"), ...)
+
+  res[[length(res) + 1]] <- list(
+    name = name,
+    source = paste0(name, "_flat"),
+    transform = list(list(
+      type = "facet",
+      keys = list(paste0("data.", group_vars))
+    ))
+  )
+
+  res
 }
