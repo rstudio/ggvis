@@ -68,31 +68,194 @@
 #' @aliases set_default_scale set_dscale
 NULL
 
-#' @rdname scales
+#' Add a numeric scale to a ggvis object.
+#'
+#' @param vis A ggvis object.
+#' @param scale The name of a scale, such as "x", "y", "fill", "stroke", etc.
+#' @inheritParams vega_scale_quantitative
+#' @seealso \code{\link{scales}}, \code{\link{vega_scale_quantitative}}
+#' @family scales
 #' @export
-scale_numeric <- function(vis, scale, ..., name = NULL) {
-  add_scale(vis, default_vega_scale(scale, "numeric", ..., name = name))
+#' @examples
+#' p <- mtcars %>% ggvis(~wt, ~mpg, fill = ~hp) %>% layer_points()
+#'
+#' p %>% scale_numeric("y")
+#'
+#' p %>% scale_numeric("y", trans = "pow", exp = 0.5)
+#'
+#' p %>% scale_numeric("y", trans = "log")
+#'
+#' # Can control other properties other than x and y
+#' p %>% scale_numeric("fill", domain = c(0, 120), clamp = TRUE)
+#'
+#' # Set range of data from 0 to 3
+#' p %>% scale_numeric("x", domain = c(0, 3), clamp = TRUE, nice = FALSE)
+#'
+#' # Lower bound is set to lower limit of data, upper bound set to 3.
+#' p %>% scale_numeric("x", domain = c(NA, 3), clamp = TRUE, nice = FALSE)
+scale_numeric <- function(vis, scale, domain = NULL, range = NULL,
+                          reverse = FALSE, round = FALSE,
+                          trans = "linear", clamp = FALSE, exponent = NULL,
+                          nice = TRUE, zero = FALSE, name = NULL) {
+  if (is.null(range)) {
+    range <- switch(scale,
+      x = "width",
+      y = "height",
+      stroke = c("#132B43", "#56B1F7"),
+      fill = c("#132B43", "#56B1F7"),
+      size = c(20, 100),
+      fontSize = c(10, 20),
+      opacity = c(0, 1),
+      angle = c(0, 2 * pi),
+      radius = c(0, 50),
+      stop("Don't know how to automatically set range for ", scale, ".")
+    )
+  }
+
+  vscale <- vega_scale_quantitative(name = name %||% scale,
+    domain = domain, range = range, reverse = reverse, round = round,
+    trans = trans, clamp = clamp, exponent = exponent, nice = nice, zero = zero)
+
+  add_scale(vis, vscale)
 }
-#' @rdname scales
+
+#' Add a date-time scale to a ggvis object.
+#'
+#' @param vis A ggvis object.
+#' @param scale The name of a scale, such as "x", "y", "fill", "stroke", etc.
+#' @inheritParams vega_scale_time
+#' @seealso \code{\link{scales}}, \code{\link{vega_scale_time}}
+#' @family scales
 #' @export
-scale_nominal <- function(vis, scale, ..., name = NULL) {
-  add_scale(vis, default_vega_scale(scale, "nominal", ..., name = name))
+#' @examples
+#' set.seed(2934)
+#' dat <- data.frame(
+#'   time = as.Date("2013-07-01") + 1:100,
+#'   value = seq(1, 10, length.out = 100) + rnorm(100)
+#' )
+#' p <- dat %>% ggvis(~time, ~value) %>% layer_points()
+#'
+#' # Start and end on month boundaries
+#' p %>% scale_datetime("x", nice = "month")
+#'
+#'
+#' dist <- data.frame(times = as.POSIXct("2013-07-01", tz = "GMT") +
+#'                            rnorm(200) * 60 * 60 * 24 * 7)
+#' p <- dist %>% ggvis(x = ~times) %>% layer_histograms()
+#' p
+#'
+#' # Start and end on month boundaries
+#' p %>% scale_datetime("x", nice = "month")
+#'
+#' p %>% scale_datetime("x", utc = TRUE)
+scale_datetime <- function(vis, scale, domain = NULL, range = NULL,
+                           reverse = FALSE, round = FALSE, utc = FALSE,
+                           clamp = FALSE, nice = NULL, name = NULL) {
+  if (is.null(range)) {
+    range <- switch(scale,
+      x = "width",
+      y = "height",
+      stop("Don't know how to automatically set range for ", scale, ".")
+    )
+  }
+
+  vscale <- vega_scale_time(name = name %||% scale,
+    domain = domain, range = range, reverse = reverse, round = round,
+    utc = utc, clamp = clamp, nice = nice)
+
+  add_scale(vis, vscale)
 }
-#' @rdname scales
+
+#' Add a nominal, ordinal, or logical scale to a ggvis object.
+#'
+#' Nominal, ordinal, and logical scales are all categorical, and are treated
+#' similarly by ggvis.
+#'
+#' @param vis A ggvis object.
+#' @param scale The name of a scale, such as "x", "y", "fill", "stroke", etc.
+#' @inheritParams vega_scale_ordinal
+#' @seealso \code{\link{scales}}, \code{\link{vega_scale_ordinal}}
+#' @family scales
 #' @export
-scale_ordinal <- function(vis, scale, ..., name = NULL) {
-  add_scale(vis, default_vega_scale(scale, "ordinal", ..., name = name))
+#' @examples
+#' p <- PlantGrowth %>% ggvis(~group, ~weight) %>% layer_points()
+#'
+#' p
+#' p %>% scale_nominal("x", padding = 0)
+#' p %>% scale_nominal("x", padding = 1)
+#'
+#' p %>% scale_nominal("x", reverse = TRUE)
+#'
+#' p <- ToothGrowth %>% group_by(supp) %>%
+#'   ggvis(~len, fill = ~supp) %>%
+#'   layer_histograms(binwidth = 4, stack = TRUE)
+#'
+#' # Control range of fill scale
+#' p %>% scale_nominal("fill", range = c("pink", "lightblue"))
+scale_nominal <- function(vis, scale, domain = NULL, range = NULL,
+                          reverse = FALSE, round = FALSE,
+                          points = TRUE, padding = NULL, sort = FALSE,
+                          name = NULL) {
+  if (is.null(range)) {
+    range <- switch(scale,
+      x = "width",
+      y = "height",
+      stroke = "category10",
+      fill = "category10",
+      shape = "shapes",
+      stop("Don't know how to automatically set range for ", scale, ".")
+    )
+  }
+
+  if (is.null(padding)) {
+    padding <- switch(scale,
+      x = 0.5,
+      y = 0.5,
+      NULL
+    )
+  }
+
+  vscale <- vega_scale_ordinal(name = name %||% scale,
+    domain = domain, range = range, reverse = reverse, round = round,
+    points = points, padding = padding, sort = sort)
+
+  add_scale(vis, vscale)
 }
-#' @rdname scales
+
+#' @rdname scale_nominal
 #' @export
-scale_logical <- function(vis, scale, ..., name = NULL) {
-  add_scale(vis, default_vega_scale(scale, "logical", ..., name = name))
+scale_ordinal <- function(vis, scale, domain = NULL, range = NULL,
+                          reverse = FALSE, round = FALSE,
+                          points = TRUE, padding = NULL, sort = FALSE,
+                          name = NULL) {
+  if (is.null(range)) {
+    range <- switch(scale,
+      x = "width",
+      y = "height",
+      stroke = "category10",
+      fill = "category10",
+      stop("Don't know how to automatically set range for ", scale, ".")
+    )
+  }
+
+  if (is.null(padding)) {
+    padding <- switch(scale,
+      x = 0.5,
+      y = 0.5,
+      NULL
+    )
+  }
+
+  vscale <- vega_scale_ordinal(name = name %||% scale,
+    domain = domain, range = range, reverse = reverse, round = round,
+    points = points, padding = padding, sort = sort)
+
+  add_scale(vis, vscale)
 }
-#' @rdname scales
+
+#' @rdname scale_nominal
 #' @export
-scale_datetime <- function(vis, scale, ..., name = NULL) {
-  add_scale(vis, default_vega_scale(scale, "datetime", ..., name = name))
-}
+scale_logical <- scale_nominal
 
 # Given a ggvis object, add all needed vega scales, with correct domain
 # values set.
@@ -103,9 +266,14 @@ add_missing_scales <- function(vis) {
   needed <- setdiff(names(vis$scale_info), names(scales))
   for (scale_n in needed) {
     info <- vis$scale_info[[scale_n]]
-    scale <- default_vega_scale(scale_n, info$type)
-    vis <- add_scale(vis, scale)
+    scale_fun <- default_scale_fun(info$type)
+    vis <- scale_fun(vis, scale_n)
   }
 
   vis
+}
+
+# Get a default scale function
+default_scale_fun <- function(type) {
+  match.fun(paste0("scale_", type))
 }
