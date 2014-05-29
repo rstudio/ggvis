@@ -1,7 +1,7 @@
 {
 	"data" : [
 		{
-			"name" : "mtcars0/regroup1/bin2",
+			"name" : "mtcars0/regroup1/bin2_flat",
 			"format" : {
 				"type" : "csv",
 				"parse" : {
@@ -11,6 +11,18 @@
 				}
 			},
 			"values" : "\"cyl\",\"x_\",\"count_\"\n4,0.5,0\n4,1.5,4\n4,2.5,5\n4,3.5,2\n4,4.5,0\n6,1.5,0\n6,2.5,3\n6,3.5,4\n6,4.5,0\n8,2.5,0\n8,3.5,10\n8,4.5,1\n8,5.5,3\n8,6.5,0"
+		},
+		{
+			"name" : "mtcars0/regroup1/bin2",
+			"source" : "mtcars0/regroup1/bin2_flat",
+			"transform" : [
+				{
+					"type" : "facet",
+					"keys" : [
+						"data.cyl"
+					]
+				}
+			]
 		},
 		{
 			"name" : "scale/stroke",
@@ -92,31 +104,36 @@
 	],
 	"marks" : [
 		{
-			"type" : "line",
-			"properties" : {
-				"update" : {
-					"stroke" : {
-						"scale" : "stroke",
-						"field" : "data.cyl"
-					},
-					"x" : {
-						"scale" : "x",
-						"field" : "data.x_"
-					},
-					"y" : {
-						"scale" : "y",
-						"field" : "data.count_"
-					}
-				},
-				"ggvis" : {
-					"data" : {
-						"value" : "mtcars0/regroup1/bin2"
-					}
-				}
-			},
+			"type" : "group",
 			"from" : {
 				"data" : "mtcars0/regroup1/bin2"
-			}
+			},
+			"marks" : [
+				{
+					"type" : "line",
+					"properties" : {
+						"update" : {
+							"stroke" : {
+								"scale" : "stroke",
+								"field" : "data.cyl"
+							},
+							"x" : {
+								"scale" : "x",
+								"field" : "data.x_"
+							},
+							"y" : {
+								"scale" : "y",
+								"field" : "data.count_"
+							}
+						},
+						"ggvis" : {
+							"data" : {
+								"value" : "mtcars0/regroup1/bin2"
+							}
+						}
+					}
+				}
+			]
 		}
 	],
 	"width" : 600,
