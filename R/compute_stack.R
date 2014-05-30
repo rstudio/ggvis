@@ -63,7 +63,7 @@ compute_stack.data.frame <- function(x, stack_var = NULL, group_var = NULL) {
   # Round grouping variable to 8 significant digits
   gvar <- substitute(round_fp(x), list(x = group_var[[2]]))
   x <- do_call(dplyr::mutate, quote(x), group__ = gvar)
-  x <- group_by(x, group__)
+  x <- dplyr::regroup(x, list(quote(group__)))
 
   # FIXME: This is a workaround for dplyr issue #412
   lag <- dplyr::lag
