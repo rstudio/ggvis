@@ -1,6 +1,6 @@
 # ggvis 0.2.0.99
 
-* New `singleton()` and corresponding `scale_singleton()` make it easier to
+* New `singular()` and corresponding `scale_singular()` make it easier to
   draw plots where x or y are constant (and hence uninteresting), such as
   for a 1d dot plot (#127).
 
