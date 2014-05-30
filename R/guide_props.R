@@ -26,6 +26,7 @@ axis_props <- function(ticks = NULL, majorTicks = NULL, minorTicks = NULL,
   )
 }
 
+#' @export
 is.axis_props <- function(x) inherits(x, "axis_props")
 
 #' @export
@@ -65,6 +66,7 @@ legend_props <- function(title = NULL, labels = NULL,
   )
 }
 
+#' @export
 is.legend_props <- function(x) inherits(x, "legend_props")
 
 #' @export
