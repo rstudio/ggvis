@@ -152,26 +152,30 @@ add_mark <- function(vis, type = NULL, props = NULL, data = NULL,
 #' @param scale Scale object
 #' @param domain Either a vector with static values for the domain, or
 #'   a reactive that returns a such a vector.
+#' @param data_domain Should the domain be controlled by a data set which is
+#'   added to the spec? Should only be set to FALSE in special cases.
 #' @keywords internal
 #' @export
-add_scale <- function(vis, scale) {
-  # If domain is specified, remove it from the scale object, and add it to the
-  # scale_info list. This makes all scale domains controlled from the scale data
-  # sets.
-  if (!is.null(scale$domain)) {
-    if (shiny::is.reactive(scale$domain)) {
-      vis <- register_reactive(vis, scale$domain)
+add_scale <- function(vis, scale, data_domain = TRUE) {
+  if (data_domain) {
+    # If domain is specified, remove it from the scale object, and add it to the
+    # scale_info list. This makes all scale domains controlled from the scale data
+    # sets.
+    if (!is.null(scale$domain)) {
+      if (shiny::is.reactive(scale$domain)) {
+        vis <- register_reactive(vis, scale$domain)
+      }
+      type <- shiny::isolate(vector_type(value(scale$domain)))
+      info <- scale_info(NULL, type, scale$domain, override = TRUE)
+      vis <- add_scale_info(vis, scale$name, info)
     }
-    type <- shiny::isolate(vector_type(value(scale$domain)))
-    info <- scale_info(NULL, type, scale$domain, override = TRUE)
-    vis <- add_scale_info(vis, scale$name, info)
-  }
 
-  # Replace the domain with something that grabs it from the domain data
-  scale$domain <- list(
-    data = paste0("scale/", scale$name),
-    field = "data.domain"
-  )
+    # Replace the domain with something that grabs it from the domain data
+    scale$domain <- list(
+      data = paste0("scale/", scale$name),
+      field = "data.domain"
+    )
+  }
 
   vis$scales[[scale$name]] <- scale
   vis

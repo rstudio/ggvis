@@ -77,5 +77,20 @@ mtcars \%>\% ggvis(x = ~wt, y = ~mpg, fill = ~factor(cyl)) \%>\%
       )
     )
   )
+
+# Control legend position using x_rel and y_rel which specify relative
+# position, going from 0 to 1. (0, 0) is the bottom-left corner, and
+# (1, 1) is the upper-right corner. The values control the position of
+# the upper-left corner of the legend.
+mtcars \%>\% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) \%>\%
+  layer_points() \%>\%
+  add_guide_legend(fill = "fill", title = "Cylinders",
+    properties = legend_props(
+      legend = list(
+        x = scaled_value("x_rel", 0.8),
+        y = scaled_value("y_rel", 1)
+      )
+    )
+  )
 }
 

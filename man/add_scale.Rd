@@ -3,7 +3,7 @@
 \alias{add_scale}
 \title{Add arbitrary scales to ggvis.}
 \usage{
-add_scale(vis, scale)
+add_scale(vis, scale, data_domain = TRUE)
 }
 \arguments{
 \item{vis}{Visualisation to modify.}
@@ -12,6 +12,9 @@ add_scale(vis, scale)
 
 \item{domain}{Either a vector with static values for the domain, or
 a reactive that returns a such a vector.}
+
+\item{data_domain}{Should the domain be controlled by a data set which is
+added to the spec? Should only be set to FALSE in special cases.}
 }
 \description{
 Add arbitrary scales to ggvis.
