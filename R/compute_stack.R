@@ -33,6 +33,11 @@
 #'   compute_stack(~Freq, ~Hair) %>%
 #'   scale_nominal("x", range = "width", padding = 0, points = FALSE) %>%
 #'   layer_rects(y = ~stack_lwr_, y2 = ~stack_upr_, width = band())
+#'
+#' # layer_bars stacks automatically:
+#' hec %>% ggvis(~Hair, ~Freq, fill = ~Eye, fillOpacity := 0.5) %>%
+#'   group_by(Eye) %>%
+#'   layer_bars(width = 1)
 compute_stack <- function(x, stack_var = NULL, group_var = NULL) {
   UseMethod("compute_stack")
 }
