@@ -23,7 +23,9 @@
 #' mtcars %>% qvis(~mpg)
 #' mtcars %>% ggvis(~mpg) %>% layer_guess()
 layer_guess <- function(vis, ...) {
-  types <- lapply(vis$cur_props, prop_type, data = cur_data(vis))
+  types <- lapply(vis$cur_props, function(x) {
+    isolate(prop_type(x, data = cur_data(vis)))
+  })
 
   types <- types[grepl("\\.update$", names(types))]
   names(types) <- sub("\\.update$", "", names(types))
