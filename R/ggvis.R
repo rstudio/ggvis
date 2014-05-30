@@ -166,7 +166,7 @@ add_scale <- function(vis, scale, data_domain = TRUE) {
         vis <- register_reactive(vis, scale$domain)
       }
       type <- shiny::isolate(vector_type(value(scale$domain)))
-      info <- scale_info(NULL, type, scale$domain, override = TRUE)
+      info <- scale_info(scale$name, type, scale$domain, override = TRUE)
       vis <- add_scale_info(vis, scale$name, info)
     }
 
