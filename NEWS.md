@@ -1,5 +1,8 @@
 # ggvis 0.2.0.99
 
+* `compute_histogram()` gains `pad` argument to control whether empty bins
+  on either side of the data extents are added. This is useful for frequency
+  polygons and to ensure that histograms don't jam up against the axes.
 
 # ggvis 0.2
 

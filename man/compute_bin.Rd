@@ -4,7 +4,7 @@
 \title{Bin data along a continuous variable}
 \usage{
 compute_bin(x, x_var, w_var = NULL, binwidth = NULL, origin = NULL,
-  right = TRUE)
+  right = TRUE, pad = TRUE)
 }
 \arguments{
 \item{x}{Dataset-like object to bin. Built-in methods for data frames,
@@ -23,6 +23,10 @@ the default, will use the smallest value in the dataset.}
 
 \item{right}{Should bins be right-open, left-closed, or
 right-closed, left-open.}
+
+\item{pad}{If \code{TRUE}, adds empty bins at either end of x. This
+ensures frequency polygons touch 0, and adds padidng between the data
+and axis for histograms.}
 }
 \value{
 A data frame with columns:

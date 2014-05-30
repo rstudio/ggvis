@@ -12,6 +12,9 @@
 #'   the default, will use the smallest value in the dataset.
 #' @param right Should bins be right-open, left-closed, or
 #'   right-closed, left-open.
+#' @param pad If \code{TRUE}, adds empty bins at either end of x. This
+#'   ensures frequency polygons touch 0, and adds padidng between the data
+#'   and axis for histograms.
 #' @seealso \code{\link{compute_count}} For counting cases at specific locations
 #'   of a continuous variable. This is useful when the variable is continuous
 #'   but the data is granular.
@@ -31,13 +34,13 @@
 #' mtcars %>% compute_bin(~mpg) %>% ggvis(~x_, ~count_) %>% layer_paths()
 #' mtcars %>% ggvis(~ x_, ~ count_) %>% compute_bin(~mpg) %>% layer_paths()
 compute_bin <- function(x, x_var, w_var = NULL, binwidth = NULL,
-                        origin = NULL, right = TRUE) {
+                        origin = NULL, right = TRUE, pad = TRUE) {
   UseMethod("compute_bin")
 }
 
 #' @export
 compute_bin.data.frame <- function(x, x_var, w_var = NULL, binwidth = NULL,
-                                   origin = NULL, right = TRUE) {
+                                   origin = NULL, right = TRUE, pad = TRUE) {
   assert_that(is.formula(x_var))
 
   x_val <- eval_vector(x, x_var)
@@ -51,26 +54,31 @@ compute_bin.data.frame <- function(x, x_var, w_var = NULL, binwidth = NULL,
     right = right)
 
   bin_vector(x_val, weight = w_val, binwidth = params$binwidth,
-    origin = params$origin, right = params$right)
+    origin = params$origin, right = params$right, pad = pad)
 }
 
 #' @export
 compute_bin.grouped_df <- function(x, x_var, w_var = NULL, binwidth = NULL,
-                                   origin = NULL, right = TRUE) {
+                                   origin = NULL, right = TRUE, pad = TRUE) {
 
   x_val <- eval_vector(x, x_var)
   params <- bin_params(range(x_val), binwidth = binwidth, origin = origin,
     right = right)
 
-  dplyr::do(x, compute_bin(., x_var, w_var = w_var,
-    binwidth = params$binwidth, origin = params$origin, right = params$right))
+  dplyr::do(x, compute_bin(.,
+    x_var,
+    w_var = w_var,
+    binwidth = params$binwidth,
+    origin = params$origin,
+    right = params$right,
+    pad = pad))
 }
 
 #' @export
 compute_bin.ggvis <- function(x, x_var, w_var = NULL, binwidth = NULL,
-                              origin = NULL, right = TRUE) {
+                              origin = NULL, right = TRUE, pad = TRUE) {
   args <- list(x_var = x_var, w_var = w_var, binwidth = binwidth,
-    origin = origin, right = right)
+    origin = origin, right = right, pad = pad)
 
   register_computation(x, args, "bin", function(data, args) {
     output <- do_call(compute_bin, quote(data), .args = args)
@@ -133,7 +141,7 @@ bin_vector <- function(x, weight = NULL, ...) {
 
 #' @export
 bin_vector.numeric <- function(x, weight = NULL, ..., binwidth = 1,
-                               origin = NULL, right = TRUE) {
+                               origin = NULL, right = TRUE, pad = TRUE) {
   stopifnot(is.numeric(binwidth) && length(binwidth) == 1)
   stopifnot(is.null(origin) || (is.numeric(origin) && length(origin) == 1))
   stopifnot(is.flag(right))
@@ -149,10 +157,10 @@ bin_vector.numeric <- function(x, weight = NULL, ..., binwidth = 1,
   }
 
   if (is.null(origin)) {
-    breaks <- fullseq(range(x), binwidth, pad = TRUE)
-  } else {
-    breaks <- seq(origin, max(range(x)) + binwidth, binwidth)
+    origin <- round_any(min(x), binwidth, floor)
   }
+
+  breaks <- seq(origin, max(x) + binwidth, binwidth)
   fuzzybreaks <- adjust_breaks(breaks, open = if (right) "right" else "left")
 
   bins <- cut(x, fuzzybreaks, include.lowest = TRUE, right = right)
@@ -163,6 +171,12 @@ bin_vector.numeric <- function(x, weight = NULL, ..., binwidth = 1,
 
   count <- as.numeric(tapply(weight, bins, sum, na.rm = TRUE))
   count[is.na(count)] <- 0
+
+  if (pad) {
+    count <- c(0, count, 0)
+    width <- c(binwidth, width, binwidth)
+    x <- c(x[1] - binwidth, x, x[length(x)] + binwidth)
+  }
 
   bin_out(count, x, width)
 }
