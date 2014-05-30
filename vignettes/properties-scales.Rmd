@@ -267,7 +267,7 @@ df <- data.frame(x = runif(5), y = runif(5),
   labels = c("a", "b", "b", "a", "b"))
 df %>% ggvis(~x, ~y, text := ~labels, font = ~labels, fontSize := 40) %>%
   layer_text() %>%
-  add_scale(scale_ordinal("font", range = c("Helvetica Neue", "Times New Roman")))
+  scale_ordinal("font", range = c("Helvetica Neue", "Times New Roman"))
 ```
 
 Note the use of `text := ~labels`: we don't want to scale the labels - the raw values already make sense in the visual space.
