@@ -23,13 +23,38 @@
 #'   pattern: \url{https://github.com/mbostock/d3/wiki/Formatting}
 #' @param values  Explicitly set the visible legend values.
 #' @param properties Optional mark property definitions for custom legend
-#'   styling. Should be a named list (title, label, symbols, gradient, legend)
-#'   of \code{\link{props}}.
+#'   styling. Should be an object created by \code{\link{legend_props}}, with
+#'   properties for title, label, symbols, gradient, legend.
 #' @export
 #' @examples
 #' mtcars %>% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) %>%
 #'   layer_points() %>%
 #'   add_guide_legend(fill = "fill", title = "Cylinders")
+#'
+#' # Control legend properties with a continuous legend, with x and y position
+#' # in pixels.
+#' mtcars %>% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) %>%
+#'   layer_points() %>%
+#'   add_guide_legend(fill = "fill", title = "Cylinders",
+#'     properties = legend_props(
+#'       title = list(fontSize = 16),
+#'       labels = list(fontSize = 12, fill = "#00F"),
+#'       gradient = list(stroke = "red", strokeWidth = 2),
+#'       legend = list(x = 500, y = 50)
+#'     )
+#'   )
+#'
+#' # Control legend properties with a categorical legend
+#' mtcars %>% ggvis(x = ~wt, y = ~mpg, fill = ~factor(cyl)) %>%
+#'   layer_points() %>%
+#'   add_guide_legend(fill = "fill", title = "Cylinders",
+#'     properties = legend_props(
+#'       title = list(fontSize = 16),
+#'       labels = list(fontSize = 14, dx = 5),
+#'       symbol = list(stroke = "black", strokeWidth = 2,
+#'         shape = "square", size = 200),
+#'     )
+#'   )
 add_guide_legend <- function(vis, size = NULL, shape = NULL, fill = NULL,
                          stroke = NULL, orient = "right", title = NULL,
                          format = NULL, values = NULL, properties = NULL) {
@@ -46,6 +71,8 @@ guide_legend <- function(size = NULL, shape = NULL, fill = NULL,
                          format = NULL, values = NULL, properties = NULL) {
 
   orient <- match.arg(orient, c("right", "left"))
+
+  assert_that(is.null(properties) || is.legend_props(properties))
 
   structure(compact(list(
       size = size, shape = shape, fill = fill, stroke = stroke,
@@ -110,3 +137,37 @@ format.vega_legend <- format.vega_axis
 
 #' @export
 print.vega_legend <- print.vega_axis
+
+#' Create an axis_props object for controlling legend properties.
+#'
+#' @param title A named list of text properties for the legend title.
+#' @param labels A named list of text properties for legend labels.
+#' @param symbols A named list of line properties for symbols (for discrete
+#'   legend items).
+#' @param gradient A named list of line properties a continuous color gradient.
+#' @param legend A named list of line properties for the overall legend. The
+#'   x and y position can be set here, which will override automatic
+#'   positioning.
+#'
+#' @export
+legend_props <- function(title = NULL, labels = NULL,
+                         symbols = NULL, gradient = NULL, legend = NULL) {
+
+  args <- list(title = title, labels = labels, symbols = symbols,
+               gradient = gradient, legend = legend)
+
+  # Validate properties
+  prop_names <- lapply(args, function(arg) names(arg))
+  types <- c("text", "text", "symbol", "rect", "rect")
+  Map(check_mark_props, types, prop_names)
+
+  structure(
+    compact(args),
+    class = "legend_props"
+  )
+}
+
+is.legend_props <- function(x) inherits(x, "legend_props")
+
+#' @export
+as.vega.legend_props <- as.vega.axis_props
