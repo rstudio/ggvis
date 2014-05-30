@@ -24,7 +24,7 @@
 #' mtcars %>% ggvis(~mpg) %>% layer_guess()
 layer_guess <- function(vis, ...) {
   types <- lapply(vis$cur_props, function(x) {
-    isolate(prop_type(x, data = cur_data(vis)))
+    shiny::isolate(prop_type(x, data = cur_data(vis)))
   })
 
   types <- types[grepl("\\.update$", names(types))]
@@ -88,7 +88,7 @@ distance_n <- function(data, template) {
 distance_1 <- function(data, template) {
   if (is.na(data) && is.na(template)) return(0) # Both missing, so can match
   if (is.na(data) && !is.na(template)) return(Inf) # If in template, must be in data
-  if (!is.na(data) && is.na(template)) return(0)   # If in data, but not template, ignore
+  if (!is.na(data) && is.na(template)) return(0.01)   # If in data, but not template, minor penalty
 
   n_miss <- is.na(data) + is.na(template)
   if (n_miss == 1) return(Inf) # One missing, so can't match
