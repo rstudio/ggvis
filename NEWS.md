@@ -1,5 +1,9 @@
 # ggvis 0.2.0.99
 
+* New `singleton()` and corresponding `scale_singleton()` make it easier to
+  draw plots where x or y are constant (and hence uninteresting), such as
+  for a 1d dot plot (#127).
+
 * `compute_histogram()` gains `pad` argument to control whether empty bins
   on either side of the data extents are added. This is useful for frequency
   polygons and to ensure that histograms don't jam up against the axes.
