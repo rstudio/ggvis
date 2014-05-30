@@ -77,6 +77,34 @@
 				"data" : "scale/y",
 				"field" : "data.domain"
 			}
+		},
+		{
+			"name" : "x_rel",
+			"type" : "linear",
+			"reverse" : false,
+			"round" : false,
+			"domain" : [
+				0,
+				1
+			],
+			"clamp" : false,
+			"nice" : true,
+			"zero" : false,
+			"range" : "width"
+		},
+		{
+			"name" : "y_rel",
+			"type" : "linear",
+			"reverse" : false,
+			"round" : false,
+			"domain" : [
+				0,
+				1
+			],
+			"clamp" : false,
+			"nice" : true,
+			"zero" : false,
+			"range" : "height"
 		}
 	],
 	"marks" : [
