@@ -56,7 +56,7 @@ compute_stack.data.frame <- function(x, stack_var = NULL, group_var = NULL) {
   assert_that(is.formula(stack_var), is.formula(group_var))
 
   # Round grouping variable to 8 significant digits
-  gvar <- substitute(signif(x, 8), list(x = group_var[[2]]))
+  gvar <- substitute(round_fp(x), list(x = group_var[[2]]))
   x <- do_call(dplyr::mutate, quote(x), group__ = gvar)
   x <- group_by(x, group__)
 
@@ -73,6 +73,11 @@ compute_stack.data.frame <- function(x, stack_var = NULL, group_var = NULL) {
   )
 
   dplyr::ungroup(x)
+}
+
+round_fp <- function(x) {
+  if (!is.numeric(x)) return(x)
+  signif(x, 8)
 }
 
 #' @export
