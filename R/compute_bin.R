@@ -57,8 +57,13 @@ compute_bin.data.frame <- function(x, x_var, w_var = NULL, binwidth = NULL,
 #' @export
 compute_bin.grouped_df <- function(x, x_var, w_var = NULL, binwidth = NULL,
                                    origin = NULL, right = TRUE) {
+
+  x_val <- eval_vector(x, x_var)
+  params <- bin_params(range(x_val), binwidth = binwidth, origin = origin,
+    right = right)
+
   dplyr::do(x, compute_bin(., x_var, w_var = w_var,
-    binwidth = binwidth, origin = origin, right = right))
+    binwidth = params$binwidth, origin = params$origin, right = params$right))
 }
 
 #' @export
@@ -86,6 +91,10 @@ bin_params.numeric <- function(x_range, binwidth = NULL, origin = NULL,
   if (is.null(binwidth)) {
     binwidth <- diff(x_range) / 30
     notify_guess(binwidth, "range / 30")
+  }
+
+  if (is.null(origin)) {
+    origin <- round_any(x_range[1], binwidth, floor)
   }
 
   list(binwidth = binwidth, origin = origin, right = right)
