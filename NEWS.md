@@ -1,5 +1,19 @@
 # ggvis 0.2.0.99
 
+* `add_dscale()` has been replaced with `scale_quantitative()`,
+  `scale_nominal()`, `scale_ordinal()`, and similar.
+
+* Reactive expressions can be used for scale domains. This allows the scale
+  domain to change dynamically.
+
+* Axis and legend properties are fixed. (#90)
+
+* Histograms allow stacking.
+
+* Dynamic plots now with with by_group. (#71)
+
+* Gear icon displays properly in Windows. (#159)
+
 * New `singular()` and corresponding `scale_singular()` make it easier to
   draw plots where x or y are constant (and hence uninteresting), such as
   for a 1d dot plot (#127).
