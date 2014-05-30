@@ -4,7 +4,7 @@
 #' @param html A function that takes a single argument as input. This argument
 #'   will be a list containing the data in the mark currently under the
 #'   mouse. It should return a string containing HTML or \code{NULL} to
-#'   disable tooltip for the current element.
+#'   hide tooltip for the current element.
 #' @param on Should tooltips appear on hover, or on click?
 #' @export
 #' @examples
