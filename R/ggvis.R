@@ -166,7 +166,8 @@ add_scale <- function(vis, scale, data_domain = TRUE) {
         vis <- register_reactive(vis, scale$domain)
       }
       type <- shiny::isolate(vector_type(value(scale$domain)))
-      info <- scale_info(scale$name, type, scale$domain, override = TRUE)
+      info <- scale_info(scale$name, scale$name, type, scale$domain,
+                         override = TRUE)
       vis <- add_scale_info(vis, scale$name, info)
     }
 
@@ -273,20 +274,25 @@ register_scale_info <- function(vis, props) {
 
   # Get a reactive for each scaled prop
   data <- vis$cur_data
-  scale_infos <- compact(lapply(props, function(prop) {
-    if (prop_is_scaled(prop) && !is.null(data)) {
-      values <- shiny::isolate(prop_value(prop, data()))
-      scale_info(
-        label = deparse(prop$value),
-        type = vector_type(values),
-        domain = reactive({
-          data_range(prop_value(prop, data()))
-        })
-      )
-    } else {
-      NULL
+
+  build_info <- function(name, prop) {
+    if (!prop_is_scaled(prop) || is.null(data)) {
+      return(NULL)
     }
-  }))
+
+    scale <- if (isTRUE(prop$scale)) prop_to_scale(name) else prop$scale
+    values <- shiny::isolate(prop_value(prop, data()))
+
+    scale_info(
+      scale = scale,
+      label = deparse(prop$value),
+      type = vector_type(values),
+      domain = reactive({
+        data_range(prop_value(prop, data()))
+      })
+    )
+  }
+  scale_infos <- compact(Map(build_info, names(props), props))
 
   # Add them to the vis
   scales <- prop_to_scale(names(scale_infos))
