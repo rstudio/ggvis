@@ -234,6 +234,7 @@ scale_ordinal <- function(vis, scale, domain = NULL, range = NULL,
       y = "height",
       stroke = "category10",
       fill = "category10",
+      size = c(10, 100),
       stop("Don't know how to automatically set range for ", scale, ".")
     )
   }
