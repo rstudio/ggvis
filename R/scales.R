@@ -257,15 +257,12 @@ scale_logical <- scale_nominal
 
 # Given a ggvis object, add all needed vega scales, with correct domain
 # values set.
-add_missing_scales <- function(vis) {
-  scales <- vis$scales
+add_missing_scales <- function(vis, quiet = TRUE) {
 
   # Add in scales not already specified in spec
-  needed <- setdiff(names(vis$scale_info), names(scales))
+  needed <- setdiff(names(vis$scale_info), names(vis$scales))
   for (scale_n in needed) {
-    info <- vis$scale_info[[scale_n]]
-    scale_fun <- default_scale_fun(info$type)
-    vis <- scale_fun(vis, scale_n)
+    vis <- scale_auto(vis, scale_n, quiet = quiet)
   }
 
   # Add special x_rel and y_rel scales
@@ -277,7 +274,13 @@ add_missing_scales <- function(vis) {
   vis
 }
 
-# Get a default scale function
-default_scale_fun <- function(type) {
-  match.fun(paste0("scale_", type))
+scale_auto <- function(vis, scale, ..., quiet = FALSE) {
+  info <- vis$scale_info[[scale]]
+
+  if (!quiet) {
+    message("Adding scale_", info$type, "(\"", scale, "\")")
+  }
+  scale_fun <- match.fun(paste0("scale_", info$type))
+  vis <- scale_fun(vis, scale, ...)
 }
+
