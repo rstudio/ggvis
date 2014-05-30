@@ -137,37 +137,3 @@ format.vega_legend <- format.vega_axis
 
 #' @export
 print.vega_legend <- print.vega_axis
-
-#' Create an axis_props object for controlling legend properties.
-#'
-#' @param title A named list of text properties for the legend title.
-#' @param labels A named list of text properties for legend labels.
-#' @param symbols A named list of line properties for symbols (for discrete
-#'   legend items).
-#' @param gradient A named list of line properties a continuous color gradient.
-#' @param legend A named list of line properties for the overall legend. The
-#'   x and y position can be set here, which will override automatic
-#'   positioning.
-#'
-#' @export
-legend_props <- function(title = NULL, labels = NULL,
-                         symbols = NULL, gradient = NULL, legend = NULL) {
-
-  args <- list(title = title, labels = labels, symbols = symbols,
-               gradient = gradient, legend = legend)
-
-  # Validate properties
-  prop_names <- lapply(args, function(arg) names(arg))
-  types <- c("text", "text", "symbol", "rect", "rect")
-  Map(check_mark_props, types, prop_names)
-
-  structure(
-    compact(args),
-    class = "legend_props"
-  )
-}
-
-is.legend_props <- function(x) inherits(x, "legend_props")
-
-#' @export
-as.vega.legend_props <- as.vega.axis_props
