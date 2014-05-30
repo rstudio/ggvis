@@ -61,7 +61,8 @@ mtcars \%>\% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) \%>\%
     )
   )
 
-# Control legend properties with a categorical legend
+# Control legend properties with a categorical legend, with x and y position
+# in the scaled data space.
 mtcars \%>\% ggvis(x = ~wt, y = ~mpg, fill = ~factor(cyl)) \%>\%
   layer_points() \%>\%
   add_guide_legend(fill = "fill", title = "Cylinders",
@@ -70,6 +71,10 @@ mtcars \%>\% ggvis(x = ~wt, y = ~mpg, fill = ~factor(cyl)) \%>\%
       labels = list(fontSize = 14, dx = 5),
       symbol = list(stroke = "black", strokeWidth = 2,
         shape = "square", size = 200),
+      legend = list(
+        x = scaled_value("x", 4.5),
+        y = scaled_value("y", 30)
+      )
     )
   )
 }

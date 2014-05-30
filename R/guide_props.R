@@ -1,5 +1,8 @@
 #' Create an axis_props object for controlling axis properties.
 #'
+#' The items in each of the lists can be a literal value, like \code{5} or
+#' "blue", or they can be a \code{\link{scaled_value}} object.
+#'
 #' @param axis A named list of line properties for the axis line.
 #' @param ticks A named list of line properties for ticks.
 #' @param majorTicks A named list of line properties for major ticks.
@@ -32,12 +35,22 @@ is.axis_props <- function(x) inherits(x, "axis_props")
 #' @export
 as.vega.axis_props <- function(x) {
   as_value <- function(item) {
-    lapply(item, function(val) list(value = val))
+    lapply(item, function(val) {
+      if (is.scaled_value(val)) {
+        val
+      } else {
+        list(value = val)
+      }
+    })
   }
+
   lapply(x, as_value)
 }
 
 #' Create an axis_props object for controlling legend properties.
+#'
+#' The items in each of the lists can be a literal value, like \code{5} or
+#' "blue", or they can be a \code{\link{scaled_value}} object.
 #'
 #' @param title A named list of text properties for the legend title.
 #' @param labels A named list of text properties for legend labels.
@@ -71,3 +84,21 @@ is.legend_props <- function(x) inherits(x, "legend_props")
 
 #' @export
 as.vega.legend_props <- as.vega.axis_props
+
+
+#' Create a scaled_value object
+#'
+#' These are for use with legends and axes.
+#' @param scale The name of a scale, e.g., "x", "fill".
+#' @param value A value which will be transformed using the scale.
+#'
+#' @export
+scaled_value <- function(scale, value) {
+  structure(list(scale = scale, value = value), class = "scaled_value")
+}
+
+#' @export
+is.scaled_value <- function(x) inherits(x, "scaled_value")
+
+#' @export
+as.vega.scaled_value <- function(x) x

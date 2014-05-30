@@ -22,6 +22,7 @@ axis_props(ticks = NULL, majorTicks = NULL, minorTicks = NULL,
 \item{title}{A named list of text properties for the axis title.}
 }
 \description{
-Create an axis_props object for controlling axis properties.
+The items in each of the lists can be a literal value, like \code{5} or
+"blue", or they can be a \code{\link{scaled_value}} object.
 }
 
