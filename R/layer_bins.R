@@ -2,6 +2,7 @@
 #'
 #' @param vis Visualisation to modify
 #' @param ... Visual properties used to override defaults.
+#' @param stack If \code{TRUE}, will automatically stack overlapping bars.
 #' @inheritParams compute_bin
 #' @seealso \code{\link{layer_bars}} For bar graphs of counts at each unique
 #'   x value, in contrast to a histogram's bins along x ranges.

@@ -14,6 +14,8 @@ layer_freqpolys(vis, ..., binwidth = NULL, origin = NULL, right = TRUE)
 
 \item{...}{Visual properties used to override defaults.}
 
+\item{stack}{If \code{TRUE}, will automatically stack overlapping bars.}
+
 \item{binwidth}{The width of the bins. The default is \code{NULL}, which
 yields 30 bins that cover the range of the data. You should always override
 this value, exploring multiple widths to find the best to illustrate the
