@@ -111,7 +111,7 @@ valid_props <- list(
   arc = c("x", "y", colour, "innerRadius", "outerRadius", "startAngle", "endAngle",
     "key"),
   area = c("x", "y", "y2", "height", colour, "interpolate", "tension", "key"),
-  image = c("x", "y", colour, "url", "align", "baseline", "key"),
+  image = c("x", "y", colour, "url", "align", "baseline", "width", "height", "key"),
   line = c("x", "y", colour,  "interpolate", "tension", "key"),
   rect = c("x", "x2", "y", "y2", "width", "height", colour, "key"),
   symbol = c("x", "y", colour, "size", "shape", "key"),
