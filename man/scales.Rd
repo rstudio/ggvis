@@ -60,9 +60,6 @@ combination that does not have an existing combination, it may suggest
 you're displaying the data in a suboptimal way. For example, there is
 no default for a numeric shape scale, because there's no obvious way to
 map continuous values to discrete shapes.
-
-You can add your own defaults (or override existing) by calling
-\code{\link{add_scale_defaults}}: just be aware that this is a global setting.
 }
 \examples{
 p <- mtcars \%>\%

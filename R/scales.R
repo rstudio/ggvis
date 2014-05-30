@@ -38,9 +38,6 @@
 #' no default for a numeric shape scale, because there's no obvious way to
 #' map continuous values to discrete shapes.
 #'
-#' You can add your own defaults (or override existing) by calling
-#' \code{\link{add_scale_defaults}}: just be aware that this is a global setting.
-#'
 #' @param vis A ggvis object.
 #' @param scale The name of a scale, such as "x", "y", "fill", "stroke", etc.
 #' @param type A variable type. One of "numeric", "nominal", "ordinal",
