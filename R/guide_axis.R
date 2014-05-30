@@ -202,11 +202,11 @@ axis_props <- function(ticks = NULL, majorTicks = NULL, minorTicks = NULL,
 
 is.axis_props <- function(x) inherits(x, "axis_props")
 
+#' @export
 as.vega.axis_props <- function(x) {
   add_value <- function(item) {
     lapply(item, function(val) list(value = val))
   }
-
   lapply(x, add_value)
 }
 
