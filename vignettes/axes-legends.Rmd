@@ -76,11 +76,11 @@ sure that your legends don't overlap.
 ```{r, results = 'asis'}
 mtcars %>% ggvis(~wt, ~mpg) %>%
   layer_points() %>%
-  add_guide_axis("x", properties = list(
-    axis = props(stroke = "red", strokeWidth = 5),
-    grid = props(stroke = "blue"),
-    ticks = props(stroke = "blue", strokeWidth = 2),
-    labels = props(angle = 45, align = "left", fontSize = 20)
+  add_guide_axis("x", properties = axis_props(
+    axis = list(stroke = "red", strokeWidth = 5),
+    grid = list(stroke = "blue"),
+    ticks = list(stroke = "blue", strokeWidth = 2),
+    labels = list(angle = 45, align = "left", fontSize = 20)
   ))
 ```
 
