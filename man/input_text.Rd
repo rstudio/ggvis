@@ -25,10 +25,10 @@ control on the client. Returns a modified value.}
 }
 \examples{
 fill_text <- input_text(label = "Point color", value = "red")
-mtcars \%>\% qvis(~wt, ~mpg, fill := fill_text)
+mtcars \%>\% ggvis(~wt, ~mpg, fill := fill_text) \%>\% layer_bars()
 
 size_num <- input_numeric(label = "Point size", value = 25)
-mtcars \%>\% qvis(~wt, ~mpg, size := size_num)
+mtcars \%>\% ggvis(~wt, ~mpg, size := size_num) \%>\% layer_points()
 }
 \seealso{
 Other interactive input: \code{\link{input_checkboxgroup}},
