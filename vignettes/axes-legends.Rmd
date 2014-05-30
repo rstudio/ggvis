@@ -169,8 +169,8 @@ underlying variables into a single legend. Instead you must do this yourself
 by supplying the name of multiple scales to one legend:
 
 ```{r, results = 'asis'}
-mtcars$cyl <- ordered(mtcars$cyl)
-mtcars %>% ggvis(~mpg, ~wt, size = ~cyl, fill = ~cyl) %>% layer_points()
-mtcars %>% ggvis(~mpg, ~wt, size = ~cyl, fill = ~cyl) %>% layer_points() %>%
+mtcars2 <- mtcars %>% dplyr::mutate(cyl = ordered(mtcars$cyl))
+mtcars2 %>% ggvis(~mpg, ~wt, size = ~cyl, fill = ~cyl) %>% layer_points()
+mtcars2 %>% ggvis(~mpg, ~wt, size = ~cyl, fill = ~cyl) %>% layer_points() %>%
   add_guide_legend(size = "size", fill = "fill")
 ```
