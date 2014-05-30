@@ -57,7 +57,7 @@ ticks.}
 
 \item{properties}{Optional mark property definitions for custom axis styling.
 Should be an object created by \code{\link{axis_props}}, with properties
-for ticks, majorTicks, minorTicks, labels, title, and axis.}
+for ticks, majorTicks, minorTicks, grid, labels, title, and axis.}
 }
 \description{
 Axis specifications allow you to either override the default axes,
@@ -83,6 +83,7 @@ mtcars \%>\% ggvis(x = ~wt, y = ~mpg) \%>\% layer_points() \%>\%
     properties = axis_props(
       ticks = list(stroke = "red"),
       majorTicks = list(strokeWidth = 2),
+      grid = list(stroke = "red"),
       labels = list(
         fill = "steelblue",
         angle = 50,

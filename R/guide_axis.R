@@ -44,7 +44,7 @@
 #'   ticks.
 #' @param properties Optional mark property definitions for custom axis styling.
 #'   Should be an object created by \code{\link{axis_props}}, with properties
-#'   for ticks, majorTicks, minorTicks, labels, title, and axis.
+#'   for ticks, majorTicks, minorTicks, grid, labels, title, and axis.
 #' @seealso Vega axis documentation:
 #'   \url{https://github.com/trifacta/vega/wiki/Axes}
 #' @export
@@ -58,6 +58,7 @@
 #'     properties = axis_props(
 #'       ticks = list(stroke = "red"),
 #'       majorTicks = list(strokeWidth = 2),
+#'       grid = list(stroke = "red"),
 #'       labels = list(
 #'         fill = "steelblue",
 #'         angle = 50,
@@ -179,19 +180,20 @@ print.vega_axis <- function(x, ...) cat(format(x, ...), "\n", sep = "")
 #' @param ticks A named list of line properties for ticks.
 #' @param majorTicks A named list of line properties for major ticks.
 #' @param minorTicks A named list of line properties for minor ticks.
+#' @param grid A named list of line properties for grid lines.
 #' @param labels A named list of text properties for axis labels.
 #' @param title A named list of text properties for the axis title.
 #'
 #' @export
 axis_props <- function(ticks = NULL, majorTicks = NULL, minorTicks = NULL,
-                       labels = NULL, title = NULL, axis = NULL) {
+                       grid = NULL, labels = NULL, title = NULL, axis = NULL) {
 
   args <- list(ticks = ticks, majorTicks = majorTicks, minorTicks = minorTicks,
-               labels = labels, title = title, axis = axis)
+               grid = grid, labels = labels, title = title, axis = axis)
 
   # Validate properties
   prop_names <- lapply(args, function(arg) names(arg))
-  types <- c("line", "line", "line", "text", "text", "line")
+  types <- c("line", "line", "line", "line", "text", "text", "line")
   Map(check_mark_props, types, prop_names)
 
   structure(
