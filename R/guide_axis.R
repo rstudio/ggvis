@@ -43,8 +43,8 @@
 #' @param grid A flag indicating if gridlines should be created in addition to
 #'   ticks.
 #' @param properties Optional mark property definitions for custom axis styling.
-#'   Should be a named list (ticks, majorTicks, minorTicks, labels and axis) of
-#'   \code{\link{props}}.
+#'   Should be an object created by \code{\link{axis_props}}, with properties
+#'   for ticks, majorTicks, minorTicks, labels, title, and axis.
 #' @seealso Vega axis documentation:
 #'   \url{https://github.com/trifacta/vega/wiki/Axes}
 #' @export
@@ -53,15 +53,29 @@
 #'   layer_points() %>%
 #'   add_guide_axis("x", title = "Weight", orient = "top")
 #'
-#' mtcars %>% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) %>%
-#'   layer_points() %>%
-#'   add_guide_axis("x", properties = list(ticks = props(stroke = "red")))
+#' mtcars %>% ggvis(x = ~wt, y = ~mpg) %>% layer_points() %>%
+#'   add_guide_axis("x", title = "Weight", ticks = 40,
+#'     properties = axis_props(
+#'       ticks = list(stroke = "red"),
+#'       majorTicks = list(strokeWidth = 2),
+#'       labels = list(
+#'         fill = "steelblue",
+#'         angle = 50,
+#'         fontSize = 14,
+#'         align = "left",
+#'         baseline = "middle",
+#'         dx = 3
+#'       ),
+#'       title = list(fontSize = 16),
+#'       axis = list(stroke = "#333", strokeWidth = 1.5)
+#'     )
+#'   )
 add_guide_axis <- function(vis, type, scale = type, orient = NULL, title = NULL,
                            title_offset = NULL, format = NULL, ticks = NULL,
                            values = NULL, subdivide = NULL, tick_padding = NULL,
                            tick_size_major = NULL, tick_size_minor = tick_size_major,
                            tick_size_end = tick_size_major, offset = NULL,
-                           layer = "back", grid = TRUE, properties = list()) {
+                           layer = "back", grid = TRUE, properties = NULL) {
 
   axis <- guide_axis(type, scale, orient, title, title_offset, format, ticks,
                      values, subdivide, tick_padding, tick_size_major,
@@ -77,7 +91,7 @@ guide_axis <- function(type, scale = type, orient = NULL, title = NULL,
                  values = NULL, subdivide = NULL, tick_padding = NULL,
                  tick_size_major = NULL, tick_size_minor = tick_size_major,
                  tick_size_end = tick_size_major, offset = NULL,
-                 layer = "back", grid = TRUE, properties = list()) {
+                 layer = "back", grid = TRUE, properties = NULL) {
 
   assert_that(type %in% c("x", "y"))
   assert_that(is.string(scale))
@@ -90,6 +104,8 @@ guide_axis <- function(type, scale = type, orient = NULL, title = NULL,
 
   layer <- match.arg(layer, c("front", "back"))
   assert_that(is.flag(grid))
+
+  assert_that(is.null(properties) || is.axis_props(properties))
 
   structure(compact(list(
       type = type, scale = scale, orient = orient, title = title,
@@ -155,3 +171,42 @@ format.vega_axis <- function(x, ...) {
 
 #' @export
 print.vega_axis <- function(x, ...) cat(format(x, ...), "\n", sep = "")
+
+
+#' Create an axis_props object for controlling axis properties.
+#'
+#' @param axis A named list of line properties for the axis line.
+#' @param ticks A named list of line properties for ticks.
+#' @param majorTicks A named list of line properties for major ticks.
+#' @param minorTicks A named list of line properties for minor ticks.
+#' @param labels A named list of text properties for axis labels.
+#' @param title A named list of text properties for the axis title.
+#'
+#' @export
+axis_props <- function(ticks = NULL, majorTicks = NULL, minorTicks = NULL,
+                       labels = NULL, title = NULL, axis = NULL) {
+
+  args <- list(ticks = ticks, majorTicks = majorTicks, minorTicks = minorTicks,
+               labels = labels, title = title, axis = axis)
+
+  # Validate properties
+  prop_names <- lapply(args, function(arg) names(arg))
+  types <- c("line", "line", "line", "text", "text", "line")
+  Map(check_mark_props, types, prop_names)
+
+  structure(
+    compact(args),
+    class = "axis_props"
+  )
+}
+
+is.axis_props <- function(x) inherits(x, "axis_props")
+
+as.vega.axis_props <- function(x) {
+  add_value <- function(item) {
+    lapply(item, function(val) list(value = val))
+  }
+
+  lapply(x, add_value)
+}
+

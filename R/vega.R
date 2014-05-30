@@ -157,7 +157,7 @@ as.vega.vega_axis <- function(x) {
   if (empty(x$properties)) {
     x$properties <- NULL
   } else {
-    x$properties <- lapply(x$properties, as.vega)
+    x$properties <- as.vega(x$properties)
   }
 
   unclass(x)

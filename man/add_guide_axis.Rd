@@ -7,7 +7,7 @@ add_guide_axis(vis, type, scale = type, orient = NULL, title = NULL,
   title_offset = NULL, format = NULL, ticks = NULL, values = NULL,
   subdivide = NULL, tick_padding = NULL, tick_size_major = NULL,
   tick_size_minor = tick_size_major, tick_size_end = tick_size_major,
-  offset = NULL, layer = "back", grid = TRUE, properties = list())
+  offset = NULL, layer = "back", grid = TRUE, properties = NULL)
 }
 \arguments{
 \item{vis}{A ggvis object.}
@@ -56,8 +56,8 @@ placed above or below the data marks. One of "front" or "back" (default).}
 ticks.}
 
 \item{properties}{Optional mark property definitions for custom axis styling.
-Should be a named list (ticks, majorTicks, minorTicks, labels and axis) of
-\code{\link{props}}.}
+Should be an object created by \code{\link{axis_props}}, with properties
+for ticks, majorTicks, minorTicks, labels, title, and axis.}
 }
 \description{
 Axis specifications allow you to either override the default axes,
@@ -78,9 +78,23 @@ mtcars \%>\% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) \%>\%
   layer_points() \%>\%
   add_guide_axis("x", title = "Weight", orient = "top")
 
-mtcars \%>\% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) \%>\%
-  layer_points() \%>\%
-  add_guide_axis("x", properties = list(ticks = props(stroke = "red")))
+mtcars \%>\% ggvis(x = ~wt, y = ~mpg) \%>\% layer_points() \%>\%
+  add_guide_axis("x", title = "Weight", ticks = 40,
+    properties = axis_props(
+      ticks = list(stroke = "red"),
+      majorTicks = list(strokeWidth = 2),
+      labels = list(
+        fill = "steelblue",
+        angle = 50,
+        fontSize = 14,
+        align = "left",
+        baseline = "middle",
+        dx = 3
+      ),
+      title = list(fontSize = 16),
+      axis = list(stroke = "#333", strokeWidth = 1.5)
+    )
+  )
 }
 \seealso{
 Vega axis documentation:
