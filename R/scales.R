@@ -67,10 +67,24 @@ NULL
 
 #' Add a numeric scale to a ggvis object.
 #'
+#' A numeric (quantitative) scale controls the mapping of continuous variables
+#' to visual properties.
+#'
 #' @param vis A ggvis object.
 #' @param scale The name of a scale, such as "x", "y", "fill", "stroke", etc.
-#' @inheritParams vega_scale_quantitative
-#' @seealso \code{\link{scales}}, \code{\link{vega_scale_quantitative}}
+#' @inheritParams vega_scale
+#' @param trans A scale transformation: one of "linear", "log", "pow", "sqrt",
+#'   "quantile", "quantize", "threshold"
+#' @param exponent Sets the exponent of the scale transformation. For pow
+#'   transform only.
+#' @param clamp  If \code{TRUE}, values that exceed the data domain are clamped
+#'   to either the minimum or maximum range value.
+#' @param nice If \code{TRUE}, modifies the scale domain to use a more
+#'   human-friendly number range (e.g., 7 instead of 6.96).
+#' @param zero If \code{TRUE}, ensures that a zero baseline value is included
+#'   in the scale domain. This option is ignored for non-quantitative scales.
+#' @seealso \code{\link{scales}}, \code{\link{vega_scale_quantitative}},
+#'   \url{https://github.com/trifacta/vega/wiki/Scales#quantitative-scale-properties}
 #' @family scales
 #' @export
 #' @examples
@@ -94,6 +108,20 @@ scale_numeric <- function(vis, scale, domain = NULL, range = NULL,
                           reverse = FALSE, round = FALSE,
                           trans = "linear", clamp = FALSE, exponent = NULL,
                           nice = TRUE, zero = FALSE, name = NULL) {
+  trans <- match.arg(
+    trans,
+    c("linear", "log", "pow", "sqrt", "quantile", "quantize", "threshold")
+  )
+  if (trans != "pow" && !is.null(exponent)) {
+    stop("May only set exponent when pow = 'trans'", call. = FALSE)
+  }
+
+  assert_that(
+    is.null(exponent) ||
+    (is.numeric(exponent) && length(exponent) == 1)
+  )
+  assert_that(is.flag(clamp), is.flag(nice), is.flag(zero))
+
   if (is.null(range)) {
     range <- switch(scale,
       x = "width",
@@ -109,19 +137,40 @@ scale_numeric <- function(vis, scale, domain = NULL, range = NULL,
     )
   }
 
-  vscale <- vega_scale_quantitative(name = name %||% scale,
-    domain = domain, range = range, reverse = reverse, round = round,
-    trans = trans, clamp = clamp, exponent = exponent, nice = nice, zero = zero)
+  vscale <- vega_scale(
+    name = name %||% scale,
+    type = trans,
+    subclass = "quantitative",
+    exponent = exponent,
+    clamp = clamp,
+    nice = nice,
+    zero = zero,
+    domain = domain,
+    range = range,
+    reverse = reverse,
+    round = round
+  )
 
   add_scale(vis, vscale)
 }
 
 #' Add a date-time scale to a ggvis object.
 #'
+#' A date/time scale controls the mapping of date and time variables to
+#' visual properties.
+#'
 #' @param vis A ggvis object.
 #' @param scale The name of a scale, such as "x", "y", "fill", "stroke", etc.
-#' @inheritParams vega_scale_time
-#' @seealso \code{\link{scales}}, \code{\link{vega_scale_time}}
+#' @inheritParams vega_scale
+#' @param clamp  If true, values that exceed the data domain are clamped to
+#'   either the minimum or maximum range value.
+#' @param nice If specified, modifies the scale domain to use a more
+#'   human-friendly value range. Should be a string indicating the desired time
+#'   interval; legal values are "second", "minute", "hour", "day", "week",
+#'   "month", or "year"
+#' @param utc if \code{TRUE}, uses UTC times.
+#' @seealso \code{\link{scales}}, \code{\link{vega_scale_time}},
+#'   \url{https://github.com/trifacta/vega/wiki/Scales#time-scale-properties}
 #' @family scales
 #' @export
 #' @examples
@@ -148,6 +197,14 @@ scale_numeric <- function(vis, scale, domain = NULL, range = NULL,
 scale_datetime <- function(vis, scale, domain = NULL, range = NULL,
                            reverse = FALSE, round = FALSE, utc = FALSE,
                            clamp = FALSE, nice = NULL, name = NULL) {
+  assert_that(is.flag(clamp))
+  if (!is.null(nice)) {
+    nice <- match.arg(
+      nice,
+      c("second", "minute", "hour", "day", "week","month", "year")
+    )
+  }
+
   if (is.null(range)) {
     range <- switch(scale,
       x = "width",
@@ -156,22 +213,47 @@ scale_datetime <- function(vis, scale, domain = NULL, range = NULL,
     )
   }
 
-  vscale <- vega_scale_time(name = name %||% scale,
-    domain = domain, range = range, reverse = reverse, round = round,
-    utc = utc, clamp = clamp, nice = nice)
+  vscale <- vega_scale(
+    name = name,
+    type = if (utc) "utc" else "time",
+    subclass = "time",
+    clamp = clamp,
+    nice = nice,
+    domain = domain,
+    range = range,
+    reverse = reverse,
+    round = round
+  )
 
   add_scale(vis, vscale)
 }
 
-#' Add a nominal, ordinal, or logical scale to a ggvis object.
+#' Add a ordinal, nominal, or logical scale to a ggvis object.
 #'
-#' Nominal, ordinal, and logical scales are all categorical, and are treated
+#' Ordinal, nominal, and logical scales are all categorical, and are treated
 #' similarly by ggvis.
 #'
 #' @param vis A ggvis object.
 #' @param scale The name of a scale, such as "x", "y", "fill", "stroke", etc.
-#' @inheritParams vega_scale_ordinal
-#' @seealso \code{\link{scales}}, \code{\link{vega_scale_ordinal}}
+#' @inheritParams vega_scale
+#' @param points If \code{TRUE}, distributes the ordinal values over a
+#'   quantitative range at uniformly spaced points. The spacing of the points
+#'   can be adjusted using the padding property. If \code{FALSE}, the ordinal
+#'   scale will construct evenly-spaced bands, rather than points.
+#' @param padding Applies spacing among ordinal elements in the scale range.
+#'   The actual effect depends on how the scale is configured. If the points
+#'   parameter is true, the padding value is interpreted as a multiple of the
+#'   spacing between points. A reasonable value is 1.0, such that the first and
+#'   last point will be offset from the minimum and maximum value by half the
+#'   distance between points. Otherwise, padding is typically in the range
+#'   [0, 1] and corresponds to the fraction of space in the range interval to
+#'   allocate to padding. A value of 0.5 means that the range band width will
+#'   be equal to the padding width.
+#' @param sort  If \code{TRUE}, the values in the scale domain will be sorted
+#'   according to their natural order. The default value is \code{FALSE}.
+#' @seealso \code{\link{scales}}, \code{\link{vega_scale_ordinal}},
+#'   \url{https://github.com/trifacta/vega/wiki/Scales#ordinal-scale-properties},
+#'   \url{https://github.com/mbostock/d3/wiki/Ordinal-Scales}
 #' @family scales
 #' @export
 #' @examples
@@ -189,42 +271,14 @@ scale_datetime <- function(vis, scale, domain = NULL, range = NULL,
 #'
 #' # Control range of fill scale
 #' p %>% scale_nominal("fill", range = c("pink", "lightblue"))
-scale_nominal <- function(vis, scale, domain = NULL, range = NULL,
-                          reverse = FALSE, round = FALSE,
-                          points = TRUE, padding = NULL, sort = FALSE,
-                          name = NULL) {
-  if (is.null(range)) {
-    range <- switch(scale,
-      x = "width",
-      y = "height",
-      stroke = "category10",
-      fill = "category10",
-      shape = "shapes",
-      stop("Don't know how to automatically set range for ", scale, ".")
-    )
-  }
-
-  if (is.null(padding)) {
-    padding <- switch(scale,
-      x = 0.5,
-      y = 0.5,
-      NULL
-    )
-  }
-
-  vscale <- vega_scale_ordinal(name = name %||% scale,
-    domain = domain, range = range, reverse = reverse, round = round,
-    points = points, padding = padding, sort = sort)
-
-  add_scale(vis, vscale)
-}
-
-#' @rdname scale_nominal
-#' @export
 scale_ordinal <- function(vis, scale, domain = NULL, range = NULL,
                           reverse = FALSE, round = FALSE,
                           points = TRUE, padding = NULL, sort = FALSE,
                           name = NULL) {
+  assert_that(is.flag(points))
+  assert_that(is.null(padding) || (is.numeric(padding) && length(padding) == 1))
+  assert_that(is.flag(sort))
+
   if (is.null(range)) {
     range <- switch(scale,
       x = "width",
@@ -244,16 +298,47 @@ scale_ordinal <- function(vis, scale, domain = NULL, range = NULL,
     )
   }
 
-  vscale <- vega_scale_ordinal(name = name %||% scale,
-    domain = domain, range = range, reverse = reverse, round = round,
-    points = points, padding = padding, sort = sort)
+  vscale <- vega_scale(
+    name = name %||% scale,
+    type = "ordinal",
+    points = points,
+    padding = padding,
+    sort = sort,
+    subclass = "ordinal",
+    domain = domain,
+    range = range,
+    reverse = reverse,
+    round = round
+  )
 
   add_scale(vis, vscale)
 }
 
-#' @rdname scale_nominal
+#' @rdname scale_ordinal
+#' @export
+scale_nominal <- function(vis, scale, domain = NULL, range = NULL,
+                          reverse = FALSE, round = FALSE,
+                          points = TRUE, padding = NULL, sort = FALSE,
+                          name = NULL) {
+  if (is.null(range)) {
+    range <- switch(scale,
+      x = "width",
+      y = "height",
+      stroke = "category10",
+      fill = "category10",
+      shape = "shapes",
+      stop("Don't know how to automatically set range for ", scale, ".")
+    )
+  }
+
+  scale_ordinal(vis, scale, domain, range, reverse, round, points, padding,
+                sort, name)
+}
+
+#' @rdname scale_ordinal
 #' @export
 scale_logical <- scale_nominal
+
 
 # Given a ggvis object, add all needed vega scales, with correct domain
 # values set.

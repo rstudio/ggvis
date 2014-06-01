@@ -11,6 +11,16 @@ scale_datetime(vis, scale, domain = NULL, range = NULL, reverse = FALSE,
 
 \item{scale}{The name of a scale, such as "x", "y", "fill", "stroke", etc.}
 
+\item{clamp}{If true, values that exceed the data domain are clamped to
+either the minimum or maximum range value.}
+
+\item{nice}{If specified, modifies the scale domain to use a more
+human-friendly value range. Should be a string indicating the desired time
+interval; legal values are "second", "minute", "hour", "day", "week",
+"month", or "year"}
+
+\item{utc}{if \code{TRUE}, uses UTC times.}
+
 \item{domain}{The domain of the scale, representing the set of data values.
 For ordinal scales, a character vector; for quantitative scales, a numeric
 vector of length two. Either value (but not both) may be NA, in which
@@ -28,20 +38,11 @@ domain. The following range literals are also available: "width", "height",
 \item{round}{If true, rounds numeric output values to integers. This can be
 helpful for snapping to the pixel grid.}
 
-\item{utc}{if \code{TRUE}, uses UTC times.}
-
-\item{clamp}{If true, values that exceed the data domain are clamped to
-either the minimum or maximum range value.}
-
-\item{nice}{If specified, modifies the scale domain to use a more
-human-friendly value range. Should be a string indicating the desired time
-interval; legal values are "second", "minute", "hour", "day", "week",
-"month", or "year"}
-
 \item{name}{name of the scale.}
 }
 \description{
-Add a date-time scale to a ggvis object.
+A date/time scale controls the mapping of date and time variables to
+visual properties.
 }
 \examples{
 set.seed(2934)
@@ -66,7 +67,8 @@ p \%>\% scale_datetime("x", nice = "month")
 p \%>\% scale_datetime("x", utc = TRUE)
 }
 \seealso{
-\code{\link{scales}}, \code{\link{vega_scale_time}}
+\code{\link{scales}}, \code{\link{vega_scale_time}},
+  \url{https://github.com/trifacta/vega/wiki/Scales#time-scale-properties}
 
 Other scales: \code{\link{scale_logical}},
   \code{\link{scale_nominal}}, \code{\link{scale_ordinal}};

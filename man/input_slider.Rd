@@ -42,8 +42,8 @@ details.}
 according to some simple heuristics.}
 
 \item{animate}{\code{TRUE} to show simple animation controls with default
-  settings; \code{FALSE} not to; or a custom settings list, such as those
-  created using \code{animationOptions}.}
+settings; \code{FALSE} not to; or a custom settings list, such as those
+created using \code{animationOptions}.}
 
 \item{label}{A descriptive label to be displayed with the widget, or
 \code{NULL}.}

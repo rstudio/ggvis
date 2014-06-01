@@ -12,6 +12,21 @@ scale_numeric(vis, scale, domain = NULL, range = NULL, reverse = FALSE,
 
 \item{scale}{The name of a scale, such as "x", "y", "fill", "stroke", etc.}
 
+\item{trans}{A scale transformation: one of "linear", "log", "pow", "sqrt",
+"quantile", "quantize", "threshold"}
+
+\item{exponent}{Sets the exponent of the scale transformation. For pow
+transform only.}
+
+\item{clamp}{If \code{TRUE}, values that exceed the data domain are clamped
+to either the minimum or maximum range value.}
+
+\item{nice}{If \code{TRUE}, modifies the scale domain to use a more
+human-friendly number range (e.g., 7 instead of 6.96).}
+
+\item{zero}{If \code{TRUE}, ensures that a zero baseline value is included
+in the scale domain. This option is ignored for non-quantitative scales.}
+
 \item{domain}{The domain of the scale, representing the set of data values.
 For ordinal scales, a character vector; for quantitative scales, a numeric
 vector of length two. Either value (but not both) may be NA, in which
@@ -29,25 +44,11 @@ domain. The following range literals are also available: "width", "height",
 \item{round}{If true, rounds numeric output values to integers. This can be
 helpful for snapping to the pixel grid.}
 
-\item{trans}{A scale transformation: one of "linear", "log", "pow", "sqrt",
-"quantile", "quantize", "threshold"}
-
-\item{clamp}{If \code{TRUE}, values that exceed the data domain are clamped
-to either the minimum or maximum range value.}
-
-\item{exponent}{Sets the exponent of the scale transformation. For pow
-transform only.}
-
-\item{nice}{If \code{TRUE}, modifies the scale domain to use a more
-human-friendly number range (e.g., 7 instead of 6.96).}
-
-\item{zero}{If \code{TRUE}, ensures that a zero baseline value is included
-in the scale domain. This option is ignored for non-quantitative scales.}
-
 \item{name}{name of the scale.}
 }
 \description{
-Add a numeric scale to a ggvis object.
+A numeric (quantitative) scale controls the mapping of continuous variables
+to visual properties.
 }
 \examples{
 p <- mtcars \%>\% ggvis(~wt, ~mpg, fill = ~hp) \%>\% layer_points()
@@ -68,7 +69,8 @@ p \%>\% scale_numeric("x", domain = c(0, 3), clamp = TRUE, nice = FALSE)
 p \%>\% scale_numeric("x", domain = c(NA, 3), clamp = TRUE, nice = FALSE)
 }
 \seealso{
-\code{\link{scales}}, \code{\link{vega_scale_quantitative}}
+\code{\link{scales}}, \code{\link{vega_scale_quantitative}},
+  \url{https://github.com/trifacta/vega/wiki/Scales#quantitative-scale-properties}
 
 Other scales: \code{\link{scale_datetime}};
   \code{\link{scale_logical}}, \code{\link{scale_nominal}},
