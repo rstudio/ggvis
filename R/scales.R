@@ -214,7 +214,7 @@ scale_datetime <- function(vis, scale, domain = NULL, range = NULL,
   }
 
   vscale <- vega_scale(
-    name = name,
+    name = name %||% scale,
     type = if (utc) "utc" else "time",
     subclass = "time",
     clamp = clamp,
