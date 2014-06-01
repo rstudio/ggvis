@@ -70,9 +70,6 @@
 				0,
 				1
 			],
-			"clamp" : false,
-			"nice" : true,
-			"zero" : false,
 			"range" : "width"
 		},
 		{
@@ -84,9 +81,6 @@
 				0,
 				1
 			],
-			"clamp" : false,
-			"nice" : true,
-			"zero" : false,
 			"range" : "height"
 		}
 	],
