@@ -18,7 +18,6 @@ ggvisLayout <- function(plot_id, has_controls = TRUE, spec = NULL) {
 #' @param shiny Should this include headers for Shiny? For dynamic and
 #'   interactive plots, this should be TRUE; otherwise FALSE.
 #' @param spec Plot specification, used internally.
-#' @param deps Default dependencies, used internally.
 #' @export
 ggvisOutput <- function(plot_id = rand_id("plot_id"), spec = NULL) {
   htmltools::attachDependencies(

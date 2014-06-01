@@ -29,7 +29,10 @@ axis_props <- function(ticks = NULL, majorTicks = NULL, minorTicks = NULL,
   )
 }
 
+#' Tests whether an object is an axis_props object
+#' @param x an object to test
 #' @export
+#' @keywords internal
 is.axis_props <- function(x) inherits(x, "axis_props")
 
 #' @export
@@ -79,7 +82,10 @@ legend_props <- function(title = NULL, labels = NULL,
   )
 }
 
+#' Tests whether an object is a legend_props object
+#' @param x an object to test
 #' @export
+#' @keywords internal
 is.legend_props <- function(x) inherits(x, "legend_props")
 
 #' @export
@@ -97,7 +103,10 @@ scaled_value <- function(scale, value) {
   structure(list(scale = scale, value = value), class = "scaled_value")
 }
 
+#' Tests whether an object is a scaled_value object
+#' @param x an object to test
 #' @export
+#' @keywords internal
 is.scaled_value <- function(x) inherits(x, "scaled_value")
 
 #' @export

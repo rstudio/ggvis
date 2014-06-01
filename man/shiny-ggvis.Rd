@@ -29,8 +29,6 @@ object.}
 interactive plots, this should be TRUE; otherwise FALSE.}
 
 \item{spec}{Plot specification, used internally.}
-
-\item{deps}{Default dependencies, used internally.}
 }
 \description{
 Embedding ggvis in a shiny app is easy. You need to make a place for it in
