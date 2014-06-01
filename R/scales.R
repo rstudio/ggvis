@@ -351,8 +351,10 @@ add_missing_scales <- function(vis, quiet = TRUE) {
   }
 
   # Add special x_rel and y_rel scales
-  x_rel <- vega_scale_quantitative(name = "x_rel", domain = c(0, 1), range = "width")
-  y_rel <- vega_scale_quantitative(name = "y_rel", domain = c(0, 1), range = "height")
+  x_rel <- vega_scale(name = "x_rel", type = "linear", subclass = "quantitative",
+                      domain = c(0, 1), range = "width")
+  y_rel <- vega_scale(name = "y_rel", type = "linear", subclass = "quantitative",
+                      domain = c(0, 1), range = "height")
   vis <- add_scale(vis, x_rel, data_domain = FALSE)
   vis <- add_scale(vis, y_rel, data_domain = FALSE)
 
