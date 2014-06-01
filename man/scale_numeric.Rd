@@ -69,7 +69,7 @@ p \%>\% scale_numeric("x", domain = c(0, 3), clamp = TRUE, nice = FALSE)
 p \%>\% scale_numeric("x", domain = c(NA, 3), clamp = TRUE, nice = FALSE)
 }
 \seealso{
-\code{\link{scales}}, \code{\link{vega_scale_quantitative}},
+\code{\link{scales}}, \code{\link{scale_ordinal}},
   \url{https://github.com/trifacta/vega/wiki/Scales#quantitative-scale-properties}
 
 Other scales: \code{\link{scale_datetime}};

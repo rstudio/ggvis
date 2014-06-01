@@ -67,7 +67,7 @@ p \%>\% scale_datetime("x", nice = "month")
 p \%>\% scale_datetime("x", utc = TRUE)
 }
 \seealso{
-\code{\link{scales}}, \code{\link{vega_scale_time}},
+\code{\link{scales}}, \code{\link{scale_numeric}},
   \url{https://github.com/trifacta/vega/wiki/Scales#time-scale-properties}
 
 Other scales: \code{\link{scale_logical}},

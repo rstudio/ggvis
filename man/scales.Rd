@@ -13,8 +13,8 @@
 "logical", "datetime".}
 
 \item{...}{other arguments passed to the scale function. See the help for
-\code{\link{vega_scale_quantitative}}, \code{\link{vega_scale_ordinal}} and
-\code{\link{vega_scale_time}} for more details. For example, you might
+\code{\link{scale_numeric}}, \code{\link{scale_ordinal}} and
+\code{\link{scale_datetime}} for more details. For example, you might
 supply \code{trans = "log"} to create a log scale.}
 
 \item{name}{If \code{NULL}, the default, the scale name is the same as

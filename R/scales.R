@@ -43,8 +43,8 @@
 #' @param type A variable type. One of "numeric", "nominal", "ordinal",
 #'   "logical", "datetime".
 #' @param ... other arguments passed to the scale function. See the help for
-#'   \code{\link{vega_scale_quantitative}}, \code{\link{vega_scale_ordinal}} and
-#'   \code{\link{vega_scale_time}} for more details. For example, you might
+#'   \code{\link{scale_numeric}}, \code{\link{scale_ordinal}} and
+#'   \code{\link{scale_datetime}} for more details. For example, you might
 #'   supply \code{trans = "log"} to create a log scale.
 #' @param name If \code{NULL}, the default, the scale name is the same as
 #'   \code{scale}. Set this to a custom name to create multiple scales for
@@ -83,7 +83,7 @@ NULL
 #'   human-friendly number range (e.g., 7 instead of 6.96).
 #' @param zero If \code{TRUE}, ensures that a zero baseline value is included
 #'   in the scale domain. This option is ignored for non-quantitative scales.
-#' @seealso \code{\link{scales}}, \code{\link{vega_scale_quantitative}},
+#' @seealso \code{\link{scales}}, \code{\link{scale_ordinal}},
 #'   \url{https://github.com/trifacta/vega/wiki/Scales#quantitative-scale-properties}
 #' @family scales
 #' @export
@@ -169,7 +169,7 @@ scale_numeric <- function(vis, scale, domain = NULL, range = NULL,
 #'   interval; legal values are "second", "minute", "hour", "day", "week",
 #'   "month", or "year"
 #' @param utc if \code{TRUE}, uses UTC times.
-#' @seealso \code{\link{scales}}, \code{\link{vega_scale_time}},
+#' @seealso \code{\link{scales}}, \code{\link{scale_numeric}},
 #'   \url{https://github.com/trifacta/vega/wiki/Scales#time-scale-properties}
 #' @family scales
 #' @export
@@ -251,7 +251,7 @@ scale_datetime <- function(vis, scale, domain = NULL, range = NULL,
 #'   be equal to the padding width.
 #' @param sort  If \code{TRUE}, the values in the scale domain will be sorted
 #'   according to their natural order. The default value is \code{FALSE}.
-#' @seealso \code{\link{scales}}, \code{\link{vega_scale_ordinal}},
+#' @seealso \code{\link{scales}}, \code{\link{scale_numeric}},
 #'   \url{https://github.com/trifacta/vega/wiki/Scales#ordinal-scale-properties},
 #'   \url{https://github.com/mbostock/d3/wiki/Ordinal-Scales}
 #' @family scales
