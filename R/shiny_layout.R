@@ -1,8 +1,8 @@
-ggvisPage <- function(plot_id, has_controls = TRUE, spec = NULL, deps = NULL) {
-  plot_div <- ggvisOutput(plot_id, spec = spec, deps = deps)
+ggvisLayout <- function(plot_id, has_controls = TRUE, spec = NULL) {
+  plot_div <- ggvisOutput(plot_id, spec = spec)
 
   if (!has_controls) {
-    shiny::basicPage(plot_div)
+    plot_div
   } else {
     shiny::bootstrapPage(
       sidebarBottomPage(
@@ -20,37 +20,34 @@ ggvisPage <- function(plot_id, has_controls = TRUE, spec = NULL, deps = NULL) {
 #' @param spec Plot specification, used internally.
 #' @param deps Default dependencies, used internally.
 #' @export
-ggvisOutput <- function(plot_id = rand_id("plot_id"), spec = NULL,
-                        deps = ggvis_dependencies(in_shiny = TRUE)) {
-  shiny::tagList(
-    ggvisPlot(plot_id),
-    ggvisDependencies(deps),
-    ggvisSpec(plot_id, spec)
-  )
-}
-
-ggvisPlot <- function(plot_id) {
-  shiny::div(id = paste0(plot_id, "-container"), class = "ggvis-output-container",
-    # Div containing the plot
-    shiny::div(id = plot_id, class = "ggvis-output"),
-    shiny::div(class = "plot-gear-icon",
-      ggvisControlGroup(plot_id)
+ggvisOutput <- function(plot_id = rand_id("plot_id"), spec = NULL) {
+  htmltools::attachDependencies(
+    htmltools::tagList(
+      ggvisPlot(plot_id),
+      ggvisSpec(plot_id, spec)
+    ),
+    c(
+      ggvis_dependencies(),
+      list(shiny_dependency)
     )
   )
 }
 
-ggvisDependencies <- function(deps) {
-  head <- unlist(lapply(deps, format), use.names = FALSE)
-  head_html <- lapply(head, shiny::HTML)
-
-  shiny::singleton(shiny::tags$head(head_html))
+ggvisPlot <- function(plot_id) {
+  htmltools::div(id = paste0(plot_id, "-container"), class = "ggvis-output-container",
+    # Div containing the plot
+    htmltools::div(id = plot_id, class = "ggvis-output"),
+    htmltools::div(class = "plot-gear-icon",
+      ggvisControlGroup(plot_id)
+    )
+  )
 }
 
 ggvisSpec <- function(plot_id, spec = NULL) {
   if (is.null(spec)) return()
   json <- RJSONIO::toJSON(spec, pretty = TRUE)
 
-  shiny::tags$script(type = "text/javascript", paste0('\n',
+  htmltools::tags$script(type = "text/javascript", paste0('\n',
     'var ', plot_id, '_spec = ', json, ';\n',
     'ggvis.getPlot("', plot_id, '").parseSpec(', plot_id, '_spec);\n'
   ))
@@ -58,12 +55,12 @@ ggvisSpec <- function(plot_id, spec = NULL) {
 
 # Controls drop down
 ggvisControlGroup <- function(plot_id) {
-  shiny::tags$nav(class = "ggvis-control",
-    shiny::tags$a(class = "ggvis-dropdown-toggle", title = "Controls"),
-    shiny::tags$ul(class = "ggvis-dropdown",
-      shiny::tags$li(
+  htmltools::tags$nav(class = "ggvis-control",
+    htmltools::tags$a(class = "ggvis-dropdown-toggle", title = "Controls"),
+    htmltools::tags$ul(class = "ggvis-dropdown",
+      htmltools::tags$li(
         "Renderer: ",
-        shiny::tags$a(
+        htmltools::tags$a(
           id = paste0(plot_id, "_renderer_svg"),
           class = "ggvis-renderer-button",
           `data-plot-id` = plot_id,
@@ -71,7 +68,7 @@ ggvisControlGroup <- function(plot_id) {
           "SVG"
         ),
         " | ",
-        shiny::tags$a(
+        htmltools::tags$a(
           id = paste0(plot_id, "_renderer_canvas"),
           class = "ggvis-renderer-button",
           `data-plot-id` = plot_id,
@@ -79,7 +76,7 @@ ggvisControlGroup <- function(plot_id) {
           "Canvas"
         )
       ),
-      shiny::tags$li(shiny::tags$a(
+      htmltools::tags$li(htmltools::tags$a(
         id = paste0(plot_id, "_download"),
         class = "ggvis-download",
         `data-plot-id` = plot_id,
@@ -105,9 +102,9 @@ ggvisControlGroup <- function(plot_id) {
 #' @examples
 #' sidebarBottomPage(sidebarBottomPanel(), mainTopPanel())
 sidebarBottomPage <- function(sidebarPanel, mainPanel, shiny_headers = TRUE) {
-  content <- shiny::div(
+  content <- htmltools::div(
     class = "container-fluid",
-    shiny::div(class = "row-fluid",
+    htmltools::div(class = "row-fluid",
       mainPanel,
       sidebarPanel
     )
@@ -123,8 +120,8 @@ sidebarBottomPage <- function(sidebarPanel, mainPanel, shiny_headers = TRUE) {
 #' @export
 #' @rdname sidebarBottomPage
 sidebarBottomPanel <- function(...) {
-  shiny::div(class = "span4 sidebar-bottom",
-    shiny::tags$form(class = "well well-small",
+  htmltools::div(class = "span4 sidebar-bottom",
+    htmltools::tags$form(class = "well well-small",
       ...
     )
   )
@@ -133,7 +130,7 @@ sidebarBottomPanel <- function(...) {
 #' @rdname sidebarBottomPage
 #' @export
 mainTopPanel <- function(...) {
-  shiny::div(class = "span8 main-top",
+  htmltools::div(class = "span8 main-top",
     ...
   )
 }
@@ -155,10 +152,10 @@ mainTopPanel <- function(...) {
 #' @export
 ggvisControlOutput <- function(outputId, plotId = NULL) {
   if (is.null(plotId)) {
-    shiny::div(id = outputId, class = "ggvis-control-output")
+    htmltools::div(id = outputId, class = "ggvis-control-output")
 
   } else {
-    shiny::div(
+    htmltools::div(
       id = outputId,
       class = "ggvis-control-output",
       `data-plot-id` = paste(plotId, collapse = " ")

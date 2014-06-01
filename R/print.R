@@ -1,3 +1,11 @@
+# There are five way to display a ggvis plot:
+#   * static html file
+#   * temporary shiny app
+#   * static html embedded in Rmarkdown
+#   * shiny app embedded in Rmarkdown
+#   * embedded in regular shiny app
+
+
 #' View in a ggvis plot in the browser.
 #'
 #' \code{view_static} creates a static web page in a temporary directory;
@@ -38,18 +46,8 @@ print.ggvis <- function(x, dynamic = NA, launch = interactive(), ...) {
 view_static <- function(x, plot_id = rand_id("plot_"),
                         dest = tempfile(pattern = "ggvis")) {
 
-  deps <- ggvis_dependencies(dynamic = FALSE)
-
-  if (!file.exists(dest)) dir.create(dest)
-  copy_deps(deps, system.file("www", package = "ggvis"), dest)
-
   spec <- as.vega(x, dynamic = FALSE)
-  ui <- ggvisPage(plot_id, length(x$controls) > 0, spec, deps = deps)
-
-  html_file <- file.path(dest, "plot.html")
-  cat(renderHTML(ui), file = html_file)
-
-  structure(html_file, class = "showUrl")
+  htmltools::browsable(ggvisLayout(plot_id, length(x$controls) > 0, spec))
 }
 
 #' @rdname print.ggvis
@@ -106,15 +104,8 @@ knit_print.ggvis <- function(x, options = list(), inline = FALSE, ...) {
     )
   }
 
-  deps <- ggvis_dependencies(absolute = TRUE, in_shiny = FALSE)
-
   spec <- as.vega(x, dynamic = FALSE)
-  html <- ggvisOutput(spec = spec, deps = deps)
-
-  knitr::asis_output(
-    format(html, indent = FALSE),
-    meta = deps
-  )
+  knit_print(ggvisOutput(spec = spec))
 }
 
 # Helper functions -------------------------------------------------------------
@@ -153,20 +144,4 @@ control_height <- function(x) {
   # Request 70 vertical pixels for each pair of control items, since there are
   # two on a row.
   70 * ceiling(n_controls / 2)
-}
-
-# Given shiny tags, makes an HTML page
-renderHTML <- function(tags) {
-  html <- shiny:::renderTags(tags)
-  paste0(
-    '<!DOCTYPE html>\n',
-    '<html>\n',
-    '<head>\n',
-    '  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>\n',
-    html$head,
-    '</head>\n',
-    '<body>\n',
-    html$html,
-    '</body>\n',
-    '</html>\n', sep = "")
 }

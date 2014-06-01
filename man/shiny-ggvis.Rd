@@ -11,8 +11,7 @@ bind_shiny(vis, plot_id, controls_id = NULL, ...,
 
 bind_shiny_ui(vis, controls_id, session = shiny::getDefaultReactiveDomain())
 
-ggvisOutput(plot_id = rand_id("plot_id"), spec = NULL,
-  deps = ggvis_dependencies(in_shiny = TRUE))
+ggvisOutput(plot_id = rand_id("plot_id"), spec = NULL)
 }
 \arguments{
 \item{vis}{A ggvis object, or a reactive expression that returns a ggvis

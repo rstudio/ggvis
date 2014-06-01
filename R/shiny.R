@@ -106,8 +106,8 @@ bind_shiny_ui <- function(vis, controls_id,
     if (empty(controls)) return()
 
     # Wrap each control in a div, for layout purposes
-    divs <- lapply(controls, shiny::div,  class = "ggvis-input-container")
-    session$output[[controls_id]] <- shiny::renderUI(shiny::tagList(divs))
+    divs <- lapply(controls, htmltools::div,  class = "ggvis-input-container")
+    session$output[[controls_id]] <- shiny::renderUI(htmltools::tagList(divs))
   })
 
   vis
