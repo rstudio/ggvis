@@ -22,6 +22,21 @@ mtcars %>% ggvis(x = ~wt, y = ~mpg) %>% layer_points() %>%
                           map = function(x) c(x, NA))
   )
 
+# Multiple x scales
+mtcars %>% ggvis(y = ~mpg, size := 25) %>%
+  layer_points(x = prop(quote(disp), scale = "xdisp")) %>%
+  layer_points(x = prop(quote(wt), scale = "xwt"), fill := "red") %>%
+  scale_numeric("x", name = "xdisp") %>%
+  scale_numeric("x", name = "xwt") %>%
+  add_guide_axis("x", "xdisp", orient = "top") %>%
+  add_guide_axis("x", "xwt", orient = "bottom",
+    properties = axis_props(
+      ticks = list(stroke = "red"),
+      labels = list(fill = "red")
+    )
+  )
+
+
 # Unscaled values in the data
 mtc <- mtcars
 mtc$color <- c("red", "teal", "#cccccc", "tan")
