@@ -139,7 +139,7 @@ prop_scale.default <- function(x, default_scale) {
 }
 
 # Reports whether this is a scaled prop
-prop_is_scaled <- function(prop) isTRUE(prop$scale)
+prop_is_scaled <- function(prop) prop$scale != FALSE
 
 # Generate a vega object for the individual mark.
 prop_vega <- function(x, default_scale) UseMethod("prop_vega")

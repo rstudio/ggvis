@@ -295,7 +295,7 @@ register_scale_info <- function(vis, props) {
   scale_infos <- compact(Map(build_info, names(props), props))
 
   # Add them to the vis
-  scales <- prop_to_scale(names(scale_infos))
+  scales <-vpluck(scale_infos, "scale", character(1))
   for (i in seq_along(scale_infos)) {
     vis <- add_scale_info(vis, scales[i], scale_infos[[i]])
   }
