@@ -137,7 +137,7 @@ add_mark <- function(vis, type = NULL, props = NULL, data = NULL,
   vis <- register_scale_info(vis, cur_props(vis))
 
   vis$marks <- c(vis$marks, list(
-    mark(type, props = vis$cur_props, data = vis$cur_data))
+    mark(type, props = cur_props(vis), data = vis$cur_data))
   )
 
   # Restore old data
