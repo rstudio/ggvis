@@ -39,10 +39,10 @@ named_list <- function(names, ...) {
 #' @keywords internal
 #' @export
 #' @examples
-#' prop_to_scale(c("x", "x2"))
-#' prop_to_scale(c("foo", "bar"))
-#' prop_to_scale(c("opacity", "fillOpacity", "strokeOpacity"))
-prop_to_scale <- function(prop) {
+#' propname_to_scale(c("x", "x2"))
+#' propname_to_scale(c("foo", "bar"))
+#' propname_to_scale(c("opacity", "fillOpacity", "strokeOpacity"))
+propname_to_scale <- function(prop) {
   simplify <- c(
     "x2" = "x",
     "y2" = "y",

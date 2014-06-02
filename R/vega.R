@@ -145,7 +145,7 @@ as.vega.ggvis_props <- function(x, default_scales = NULL) {
     if (empty(x)) return(NULL)
 
     props <- trim_propset(names(x))
-    default_scales <- default_scales %||% prop_to_scale(props)
+    default_scales <- default_scales %||% propname_to_scale(props)
     Map(prop_vega, x, default_scales)
   }
 

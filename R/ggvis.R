@@ -280,7 +280,7 @@ register_scale_info <- function(vis, props) {
       return(NULL)
     }
 
-    scale <- if (isTRUE(prop$scale)) prop_to_scale(name) else prop$scale
+    scale <- if (isTRUE(prop$scale)) propname_to_scale(name) else prop$scale
     values <- shiny::isolate(prop_value(prop, data()))
 
     scale_info(
