@@ -21,6 +21,26 @@
 				}
 			},
 			"values" : "\"domain\"\n1\n5"
+		},
+		{
+			"name" : "scale/y-y",
+			"format" : {
+				"type" : "csv",
+				"parse" : {
+					"domain" : "number"
+				}
+			},
+			"values" : "\"domain\"\n1\n5"
+		},
+		{
+			"name" : "scale/y-z",
+			"format" : {
+				"type" : "csv",
+				"parse" : {
+					"domain" : "number"
+				}
+			},
+			"values" : "\"domain\"\n0.0073994412086904\n0.834333037259057"
 		}
 	],
 	"scales" : [
