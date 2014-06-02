@@ -16,7 +16,7 @@
 #' base %>% layer_rects(width := band(mult = 0.9))
 band <- function(offset = NULL, mult = NULL) {
   structure(
-    list(type = "band", offset = offset, mult = mult),
+    list(type = "band", offset = offset, mult = mult, scale = FALSE),
     class = c("band", "prop")
   )
 }
