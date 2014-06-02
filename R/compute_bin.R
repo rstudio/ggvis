@@ -8,6 +8,11 @@
 #'   yields 30 bins that cover the range of the data. You should always override
 #'   this value, exploring multiple widths to find the best to illustrate the
 #'   stories in your data.
+#' @param bincenter The center of one of the bins.  This is used to calculate \code{origin}
+#' if it is not specified.  Note that if center is above or below the range of the data, \code{origin}
+#' will be shifted by an appropriat number of \code{binwidth}s.  To center on integers,
+#' for example, use \code{binwidth = 1} and \code{bincenter = 0}, even if \code{0} is
+#' outside the range of the data.
 #' @param origin The initial position of the left-most bin. If \code{NULL}, the
 #'   the default, will use the smallest value in the dataset.
 #' @param right Should bins be right-open, left-closed, or
@@ -34,12 +39,14 @@
 #' mtcars %>% compute_bin(~mpg) %>% ggvis(~x_, ~count_) %>% layer_paths()
 #' mtcars %>% ggvis(~ x_, ~ count_) %>% compute_bin(~mpg) %>% layer_paths()
 compute_bin <- function(x, x_var, w_var = NULL, binwidth = NULL,
+                        bincenter=NULL,
                         origin = NULL, right = TRUE, pad = TRUE) {
   UseMethod("compute_bin")
 }
 
 #' @export
 compute_bin.data.frame <- function(x, x_var, w_var = NULL, binwidth = NULL,
+                                   bincenter=NULL,
                                    origin = NULL, right = TRUE, pad = TRUE) {
   assert_that(is.formula(x_var))
 
@@ -50,25 +57,27 @@ compute_bin.data.frame <- function(x, x_var, w_var = NULL, binwidth = NULL,
     w_val <- eval_vector(x, w_var)
   }
 
-  params <- bin_params(range(x_val), binwidth = binwidth, origin = origin,
+  params <- bin_params(range(x_val), binwidth = binwidth, bincenter = bincenter, origin = origin,
     right = right)
 
-  bin_vector(x_val, weight = w_val, binwidth = params$binwidth,
+  bin_vector(x_val, weight = w_val, binwidth = params$binwidth, bincenter = params$bincenter,
     origin = params$origin, right = params$right, pad = pad)
 }
 
 #' @export
 compute_bin.grouped_df <- function(x, x_var, w_var = NULL, binwidth = NULL,
+                                   bincenter=NULL,
                                    origin = NULL, right = TRUE, pad = TRUE) {
 
   x_val <- eval_vector(x, x_var)
-  params <- bin_params(range(x_val), binwidth = binwidth, origin = origin,
-    right = right)
+  params <- bin_params(range(x_val), binwidth = binwidth, bincenter = bincenter,
+                       origin = origin, right = right)
 
   dplyr::do(x, compute_bin(.,
     x_var,
     w_var = w_var,
     binwidth = params$binwidth,
+    bincenter = params$bincenter,
     origin = params$origin,
     right = params$right,
     pad = pad))
@@ -76,8 +85,9 @@ compute_bin.grouped_df <- function(x, x_var, w_var = NULL, binwidth = NULL,
 
 #' @export
 compute_bin.ggvis <- function(x, x_var, w_var = NULL, binwidth = NULL,
+                              bincenter=NULL,
                               origin = NULL, right = TRUE, pad = TRUE) {
-  args <- list(x_var = x_var, w_var = w_var, binwidth = binwidth,
+  args <- list(x_var = x_var, w_var = w_var, binwidth = binwidth, bincenter = bincenter,
     origin = origin, right = right, pad = pad)
 
   register_computation(x, args, "bin", function(data, args) {
@@ -88,12 +98,15 @@ compute_bin.ggvis <- function(x, x_var, w_var = NULL, binwidth = NULL,
 
 # Compute parameters -----------------------------------------------------------
 
-bin_params <- function(x_range, binwidth = NULL, origin = NULL, right = TRUE) {
+bin_params <- function(x_range, binwidth = NULL, bincenter = NULL, origin = NULL,
+                       right = TRUE) {
   UseMethod("bin_params")
 }
 
 #' @export
-bin_params.numeric <- function(x_range, binwidth = NULL, origin = NULL,
+bin_params.numeric <- function(x_range, binwidth = NULL,
+                               bincenter=NULL,
+                               origin = NULL,
                                right = TRUE) {
 
   if (is.null(binwidth)) {
@@ -101,36 +114,64 @@ bin_params.numeric <- function(x_range, binwidth = NULL, origin = NULL,
     notify_guess(binwidth, "range / 30")
   }
 
+
   if (is.null(origin)) {
-    origin <- round_any(x_range[1], binwidth, floor)
+    if (is.null(bincenter)) {
+      origin <- round_any(x_range[1], binwidth, floor)
+    } else {
+      shift <-  floor( (x_range[1] - bincenter) / binwidth )
+      origin <-  bincenter + shift * binwidth - .5 * binwidth
+    }
   }
 
-  list(binwidth = binwidth, origin = origin, right = right)
+
+  list(binwidth = binwidth, bincenter = bincenter, origin = origin, right = right)
 }
 
 #' @export
-bin_params.POSIXct <- function(x_range, binwidth = NULL, origin = NULL,
+bin_params.POSIXct <- function(x_range, binwidth = NULL,
+                               bincenter = NULL,
+                               origin = NULL,
                                right = TRUE) {
 
   if (is.null(binwidth)) {
-    binwidth <- as.numeric(diff(x_range) / 30, units = "secs")
+    binwidth <- diff(x_range) / 30
     notify_guess(binwidth, "range / 30")
+    binwidth <- as.numeric(binwidth,  units = "secs")
   }
 
-  list(binwidth = binwidth, origin = origin, right = right)
+  if (inherits(binwidth, "Period") && require(lubridate)) {
+    binwidth <- as.numeric(lubridate::as.difftime(binwidth, units="secs"))
+  }
+  if (!is.numeric(binwidth)) binwidth <- as.numeric(binwidth, units='secs')
+  if (!is.null(bincenter)) bincenter <- as.numeric(bincenter)
+  if (!is.null(origin)) origin<- as.numeric(origin)
+
+  list(binwidth = binwidth, bincenter = bincenter, origin = origin, right = right)
 }
 
 #' @export
-bin_params.integer <- function(x_range, binwidth = NULL, origin = NULL,
+bin_params.integer <- function(x_range, binwidth = NULL, bincenter = NULL,
+                               origin = NULL,
                                right = TRUE) {
 
   if (is.null(binwidth)) {
-    binwidth <- 1
-    origin <- x_range[1] - 1/2
-    notify_guess(binwidth)
+    binwidth <- min( pretty( round(diff(x_range) / 25) ))
+    if (binwidth <= 2) binwidth = 1
+    num_bins <- ceiling( diff(x_range) / binwidth )
+    notify_guess(binwidth, paste0("approximately range/", num_bins) )
   }
 
-  list(binwidth = binwidth, origin = origin, right = right)
+  if (is.null(origin)) {
+    if (is.null(bincenter)) {
+      origin <- x_range[1] - 1/2
+    } else {
+      shift <-  floor( (x_range[1] - bincenter) / binwidth )
+      origin <-  bincenter + shift * binwidth - .5 * binwidth
+    }
+  }
+
+  list(binwidth = binwidth, bincenter=bincenter, origin = origin, right = right)
 }
 
 # Bin individual vector --------------------------------------------------------
@@ -140,10 +181,11 @@ bin_vector <- function(x, weight = NULL, ...) {
 }
 
 #' @export
-bin_vector.numeric <- function(x, weight = NULL, ..., binwidth = 1,
+bin_vector.numeric <- function(x, weight = NULL, ..., binwidth = 1, bincenter=NULL,
                                origin = NULL, right = TRUE, pad = TRUE) {
   stopifnot(is.numeric(binwidth) && length(binwidth) == 1)
   stopifnot(is.null(origin) || (is.numeric(origin) && length(origin) == 1))
+  stopifnot(is.null(bincenter) || (is.numeric(bincenter) && length(bincenter) == 1))
   stopifnot(is.flag(right))
 
   if (length(na.omit(x)) == 0) {
@@ -157,7 +199,12 @@ bin_vector.numeric <- function(x, weight = NULL, ..., binwidth = 1,
   }
 
   if (is.null(origin)) {
-    origin <- round_any(min(x), binwidth, floor)
+    if (!is.null(bincenter)) {
+      shift <-  floor( (min(x) - bincenter)/binwidth )
+      origin <-  bincenter + shift * binwidth -.5 * binwidth
+    } else {
+      origin <- round_any(min(x), binwidth, floor)
+    }
   }
 
   breaks <- seq(origin, max(x) + binwidth, binwidth)
@@ -182,11 +229,14 @@ bin_vector.numeric <- function(x, weight = NULL, ..., binwidth = 1,
 }
 
 #' @export
-bin_vector.POSIXt <- function(x, weight = NULL, ..., binwidth = 1,
+bin_vector.POSIXt <- function(x, weight = NULL, ..., binwidth = 1, bincenter = NULL,
                               origin = NULL, right = TRUE) {
   # Convert times to raw numbers (seconds since UNIX epoch), and call bin.numeric
+  bincenter <- if (!is.null(bincenter)) bincenter <- as.numeric(bincenter)
+  origin <- if (!is.null(origin)) origin <- as.numeric(origin)
+
   results <- bin_vector(as.numeric(x), weight = weight, binwidth = binwidth,
-    origin = origin, right = right)
+    bincenter = bincenter, origin = origin, right = right)
 
   # Convert some columns from numeric back to POSIXct objects
   time_cols <- c("x_", "xmin_", "xmax_")
