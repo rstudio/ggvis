@@ -77,14 +77,19 @@ layer_bars <- function(vis, ..., stack = TRUE, width = NULL) {
   x_var <- find_prop_var(new_props, "x.update")
   discrete_x <- prop_countable(cur_data(vis), new_props$x.update)
 
+  # Set x axis label
+  vis <- add_scale_info(vis, scale_info("x", prop_name(cur_props(vis)$x.update)))
+
   if (!is.null(new_props$y.update)) {
     if (prop_countable(cur_data(vis), new_props$y.update)) {
       stop("y variable (weights) must be numeric.")
     }
     y_var <- find_prop_var(new_props, "y.update")
+    vis <- add_scale_info(vis, scale_info("y", prop_name(cur_props(vis)$y.update)))
 
   } else {
     y_var <- NULL
+    vis <- add_scale_info(vis, scale_info("y", "count"))
   }
 
   if (discrete_x) {
