@@ -200,7 +200,15 @@ bin_vector.numeric <- function(x, weight = NULL, ..., binwidth = 1, bincenter=NU
 
   if (is.null(origin)) {
     if (!is.null(bincenter)) {
+	  # c = center; . = bin edges; o = origin (a bin edge); m=min(data)
+	  # .     .  c  .     .     .     o     . m   .     .     .
+	  # 
+	  # in example, (m-c)/w = 4.6, so o = c + 3.5 w 
+	  # could adjust this so that o is one bin farther right.
+
+	  # how many binwidths from center to min(data)?
       shift <-  floor( (min(x) - bincenter)/binwidth )
+      # set origin near left edge of data -- at left side of a bin
       origin <-  bincenter + shift * binwidth -.5 * binwidth
     } else {
       origin <- round_any(min(x), binwidth, floor)
