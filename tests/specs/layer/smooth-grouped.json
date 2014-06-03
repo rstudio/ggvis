@@ -146,7 +146,7 @@
 			"orient" : "bottom",
 			"layer" : "back",
 			"grid" : true,
-			"title" : "pred_"
+			"title" : "wt"
 		},
 		{
 			"type" : "y",
@@ -154,7 +154,7 @@
 			"orient" : "left",
 			"layer" : "back",
 			"grid" : true,
-			"title" : "resp_"
+			"title" : "mpg"
 		}
 	],
 	"padding" : null,
