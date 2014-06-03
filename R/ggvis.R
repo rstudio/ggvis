@@ -285,7 +285,7 @@ register_scale_info <- function(vis, props) {
 
     scale_info(
       scale = scale,
-      label = deparse(prop$value),
+      label = prop_name(prop),
       type = vector_type(values),
       domain = reactive({
         data_range(prop_value(prop, data()))
