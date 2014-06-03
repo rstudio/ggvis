@@ -19,8 +19,12 @@
 layer_histograms <- function(vis, ..., binwidth = NULL, origin = NULL,
                             right = TRUE, stack = TRUE) {
 
-  x_var <- find_prop_var(vis$cur_props, "x.update")
+  x_var <- find_prop_var(cur_props(vis), "x.update")
   x_val <- eval_vector(cur_data(vis), x_var)
+
+  # Set axis labels
+  vis <- add_scale_info(vis, scale_info("x", prop_name(cur_props(vis)$x.update)))
+  vis <- add_scale_info(vis, scale_info("y", "count"))
 
   layer_f(vis, function(x) {
     x <- compute_bin(x, x_var, binwidth = binwidth,
@@ -54,6 +58,11 @@ layer_freqpolys <- function(vis, ..., binwidth = NULL, origin = NULL,
 
   x_var <- find_prop_var(vis$cur_props, "x.update")
   x_val <- eval_vector(cur_data(vis), x_var)
+
+  # Set axis labels
+  vis <- add_scale_info(vis, scale_info("x", prop_name(cur_props(vis)$x.update)))
+  vis <- add_scale_info(vis, scale_info("y", "count"))
+
   params <- bin_params(range(x_val, na.rm = TRUE), binwidth = value(binwidth),
     origin = value(origin), right = value(right))
 

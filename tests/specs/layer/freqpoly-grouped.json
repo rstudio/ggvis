@@ -25,16 +25,6 @@
 			]
 		},
 		{
-			"name" : "scale/stroke",
-			"format" : {
-				"type" : "csv",
-				"parse" : {
-					"domain" : "number"
-				}
-			},
-			"values" : "\"domain\"\n4\n8"
-		},
-		{
 			"name" : "scale/x",
 			"format" : {
 				"type" : "csv",
@@ -53,26 +43,19 @@
 				}
 			},
 			"values" : "\"domain\"\n0\n10"
+		},
+		{
+			"name" : "scale/stroke",
+			"format" : {
+				"type" : "csv",
+				"parse" : {
+					"domain" : "number"
+				}
+			},
+			"values" : "\"domain\"\n4\n8"
 		}
 	],
 	"scales" : [
-		{
-			"name" : "stroke",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
-			"clamp" : false,
-			"nice" : true,
-			"zero" : false,
-			"range" : [
-				"#132B43",
-				"#56B1F7"
-			],
-			"domain" : {
-				"data" : "scale/stroke",
-				"field" : "data.domain"
-			}
-		},
 		{
 			"name" : "x",
 			"type" : "linear",
@@ -98,6 +81,23 @@
 			"range" : "height",
 			"domain" : {
 				"data" : "scale/y",
+				"field" : "data.domain"
+			}
+		},
+		{
+			"name" : "stroke",
+			"type" : "linear",
+			"reverse" : false,
+			"round" : false,
+			"clamp" : false,
+			"nice" : true,
+			"zero" : false,
+			"range" : [
+				"#132B43",
+				"#56B1F7"
+			],
+			"domain" : {
+				"data" : "scale/stroke",
 				"field" : "data.domain"
 			}
 		},
@@ -174,7 +174,7 @@
 			"orient" : "bottom",
 			"layer" : "back",
 			"grid" : true,
-			"title" : "x_"
+			"title" : "wt"
 		},
 		{
 			"type" : "y",
@@ -182,7 +182,7 @@
 			"orient" : "left",
 			"layer" : "back",
 			"grid" : true,
-			"title" : "count_"
+			"title" : "count"
 		}
 	],
 	"padding" : null,

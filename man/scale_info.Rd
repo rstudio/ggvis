@@ -5,7 +5,8 @@
 mark, and they contain information about the scale. Note that these are
 different from vega scale objects.}
 \usage{
-scale_info(scale, label, type, domain, override = FALSE)
+scale_info(scale, label = NULL, type = NULL, domain = NULL,
+  override = FALSE)
 }
 \arguments{
 \item{label}{Label for the scale.}
