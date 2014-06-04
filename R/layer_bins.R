@@ -10,21 +10,21 @@
 #' @examples
 #' # Create histograms and frequency polygons with layers
 #' mtcars %>% ggvis(~mpg) %>% layer_histograms()
-#' mtcars %>% ggvis(~mpg) %>% layer_histograms(binwidth = 2)
-#' mtcars %>% ggvis(~mpg) %>% layer_freqpolys(binwidth = 2)
+#' mtcars %>% ggvis(~mpg) %>% layer_histograms(width = 2)
+#' mtcars %>% ggvis(~mpg) %>% layer_freqpolys(width = 2)
 #'
 #' # These are equivalent to combining compute_bin with the corresponding
 #' # mark
 #' mtcars %>% compute_bin(~mpg) %>% ggvis(~x_, ~count_) %>% layer_paths()
-layer_histograms <- function(vis, ..., binwidth = NULL, bincenter = NULL, origin = NULL,
+layer_histograms <- function(vis, ..., width = NULL, center = NULL, boundary = NULL,
                             right = TRUE, stack = TRUE) {
 
   x_var <- find_prop_var(vis$cur_props, "x.update")
   x_val <- eval_vector(cur_data(vis), x_var)
 
   layer_f(vis, function(x) {
-    x <- compute_bin(x, x_var, binwidth = binwidth, bincenter = bincenter,
-      origin = origin, right = right)
+    x <- compute_bin(x, x_var, width = width, center = center,
+      boundary = boundary, right = right)
 
     if (stack) {
       x <- compute_stack(x, stack_var = ~count_, group_var = ~x_)
@@ -48,19 +48,19 @@ layer_histograms <- function(vis, ..., binwidth = NULL, bincenter = NULL, origin
 
 #' @rdname layer_histograms
 #' @export
-layer_freqpolys <- function(vis, ..., binwidth = NULL, bincenter = bincenter, origin = NULL,
+layer_freqpolys <- function(vis, ..., width = NULL, center = NULL, boundary = NULL,
                             right = TRUE) {
   path_props <- merge_props(props(x = ~x_, y = ~count_), props(...))
 
   x_var <- find_prop_var(vis$cur_props, "x.update")
   x_val <- eval_vector(cur_data(vis), x_var)
-  params <- bin_params(range(x_val, na.rm = TRUE), binwidth = value(binwidth),
-                       bincenter = value(bincenter),
-                       origin = value(origin), right = value(right))
+  params <- bin_params(range(x_val, na.rm = TRUE), width = value(width),
+                       center = value(center), boundary = value(boundary),
+                       right = value(right))
 
   layer_f(vis, function(x) {
-    x <- compute_bin(x, x_var, binwidth = params$binwidth, bincenter = params$bincenter,
-      origin = params$origin, right = params$right)
+    x <- compute_bin(x, x_var, width = params$width,
+      boundary = params$origin, right = params$right)
     x <- emit_paths(x, path_props)
     x
   })

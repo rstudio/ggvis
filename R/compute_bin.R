@@ -4,17 +4,21 @@
 #'   grouped data frames and ggvis visualisations.
 #' @param x_var,w_var Names of x and weight variables. The x variable must be
 #'   continuous.
-#' @param binwidth The width of the bins. The default is \code{NULL}, which
+#' @param width The width of the bins. The default is \code{NULL}, which
 #'   yields 30 bins that cover the range of the data. You should always override
 #'   this value, exploring multiple widths to find the best to illustrate the
 #'   stories in your data.
-#' @param bincenter The center of one of the bins.  This is used to calculate \code{origin}
-#' if it is not specified.  Note that if center is above or below the range of the data, \code{origin}
-#' will be shifted by an appropriat number of \code{binwidth}s.  To center on integers,
-#' for example, use \code{binwidth = 1} and \code{bincenter = 0}, even if \code{0} is
-#' outside the range of the data.
-#' @param origin The initial position of the left-most bin. If \code{NULL}, the
-#'   the default, will use the smallest value in the dataset.
+#' @param center The center of one of the bins.  Note that if center is above or below
+#' the range of the data, things will be shifted by an appropriat number of \code{width}s.
+#' To center on integers,
+#' for example, use \code{width = 1} and \code{center = 0}, even if \code{0} is
+#' outside the range of the data.  At most one of \code{center} and \code{boundary} may be
+#' specified.
+#' @param boundary A boundary between two bins. As with \code{center}, things are shifted
+#' when \code{boundary} is outside the range of the data. For example, to center on
+#' integers, use \code{width = 1} and \code{boundary = 0.5}, even if \code{1} is outside
+#' the range of the data.  At most one of \code{center} and \code{boundary} may be
+#' specified.
 #' @param right Should bins be right-open, left-closed, or
 #'   right-closed, left-open.
 #' @param pad If \code{TRUE}, adds empty bins at either end of x. This
@@ -32,22 +36,22 @@
 #'  \item{width_}{width of bin}
 #' @examples
 #' mtcars %>% compute_bin(~mpg)
-#' mtcars %>% compute_bin(~mpg, binwidth = 10)
-#' mtcars %>% group_by(cyl) %>% compute_bin(~mpg, binwidth = 10)
+#' mtcars %>% compute_bin(~mpg, width = 10)
+#' mtcars %>% group_by(cyl) %>% compute_bin(~mpg, width = 10)
 #'
 #' # It doesn't matter whether you transform inside or outside of a vis
 #' mtcars %>% compute_bin(~mpg) %>% ggvis(~x_, ~count_) %>% layer_paths()
 #' mtcars %>% ggvis(~ x_, ~ count_) %>% compute_bin(~mpg) %>% layer_paths()
-compute_bin <- function(x, x_var, w_var = NULL, binwidth = NULL,
-                        bincenter=NULL,
-                        origin = NULL, right = TRUE, pad = TRUE) {
+compute_bin <- function(x, x_var, w_var = NULL, width = NULL,
+                        center=NULL, boundary = NULL,
+                        right = TRUE, pad = TRUE) {
   UseMethod("compute_bin")
 }
 
 #' @export
-compute_bin.data.frame <- function(x, x_var, w_var = NULL, binwidth = NULL,
-                                   bincenter=NULL,
-                                   origin = NULL, right = TRUE, pad = TRUE) {
+compute_bin.data.frame <- function(x, x_var, w_var = NULL, width = NULL,
+                                   center=NULL, boundary = NULL,
+                                   right = TRUE, pad = TRUE) {
   assert_that(is.formula(x_var))
 
   x_val <- eval_vector(x, x_var)
@@ -57,38 +61,37 @@ compute_bin.data.frame <- function(x, x_var, w_var = NULL, binwidth = NULL,
     w_val <- eval_vector(x, w_var)
   }
 
-  params <- bin_params(range(x_val), binwidth = binwidth, bincenter = bincenter, origin = origin,
+  params <- bin_params(range(x_val), width = width, center = center, boundary = boundary,
     right = right)
 
-  bin_vector(x_val, weight = w_val, binwidth = params$binwidth, bincenter = params$bincenter,
-    origin = params$origin, right = params$right, pad = pad)
+  bin_vector(x_val, weight = w_val, width = params$width, boundary = params$origin,
+    right = params$right, pad = pad)
 }
 
 #' @export
-compute_bin.grouped_df <- function(x, x_var, w_var = NULL, binwidth = NULL,
-                                   bincenter=NULL,
-                                   origin = NULL, right = TRUE, pad = TRUE) {
+compute_bin.grouped_df <- function(x, x_var, w_var = NULL, width = NULL,
+                                   center = NULL, boundary = NULL,
+                                   right = TRUE, pad = TRUE) {
 
   x_val <- eval_vector(x, x_var)
-  params <- bin_params(range(x_val), binwidth = binwidth, bincenter = bincenter,
-                       origin = origin, right = right)
+  params <- bin_params(range(x_val), width = width, center = center,
+                       boundary = boundary, right = right)
 
   dplyr::do(x, compute_bin(.,
     x_var,
     w_var = w_var,
-    binwidth = params$binwidth,
-    bincenter = params$bincenter,
-    origin = params$origin,
+    width = params$width,
+    boundary= params$origin,
     right = params$right,
     pad = pad))
 }
 
 #' @export
-compute_bin.ggvis <- function(x, x_var, w_var = NULL, binwidth = NULL,
-                              bincenter=NULL,
-                              origin = NULL, right = TRUE, pad = TRUE) {
-  args <- list(x_var = x_var, w_var = w_var, binwidth = binwidth, bincenter = bincenter,
-    origin = origin, right = right, pad = pad)
+compute_bin.ggvis <- function(x, x_var, w_var = NULL, width = NULL,
+                              center=NULL, boundary = NULL,
+                              right = TRUE, pad = TRUE) {
+  args <- list(x_var = x_var, w_var = w_var, width = width,
+               center = center, boundary = boundary, right = right, pad = pad)
 
   register_computation(x, args, "bin", function(data, args) {
     output <- do_call(compute_bin, quote(data), .args = args)
@@ -98,80 +101,126 @@ compute_bin.ggvis <- function(x, x_var, w_var = NULL, binwidth = NULL,
 
 # Compute parameters -----------------------------------------------------------
 
-bin_params <- function(x_range, binwidth = NULL, bincenter = NULL, origin = NULL,
+bin_params <- function(x_range, width = NULL, center = NULL, boundary = NULL,
                        right = TRUE) {
   UseMethod("bin_params")
 }
 
-#' @export
-bin_params.numeric <- function(x_range, binwidth = NULL,
-                               bincenter=NULL,
-                               origin = NULL,
-                               right = TRUE) {
-
-  if (is.null(binwidth)) {
-    binwidth <- diff(x_range) / 30
-    notify_guess(binwidth, "range / 30")
+# compute origin from x_range and width
+tilelayer_origin <- function(x_range, width) {
+  num_central_bins <- trunc(diff(x_range) / width) - 1
+  side_width <- (diff(x_range) - num_central_bins * width) / 2  # width of partial tiles on either side
+  if (side_width < .5 * width - 1e-8) {
+    warning( paste0("side_width=", side_width, "; width=", width))
   }
+  return(x_range[1] + side_width - width)
+}
 
-
-  if (is.null(origin)) {
-    if (is.null(bincenter)) {
-      origin <- round_any(x_range[1], binwidth, floor)
-    } else {
-      shift <-  floor( (x_range[1] - bincenter) / binwidth )
-      origin <-  bincenter + shift * binwidth - .5 * binwidth
-    }
-  }
-
-
-  list(binwidth = binwidth, bincenter = bincenter, origin = origin, right = right)
+compute_origin <- function(x_range, width, boundary) {
+  shift <- floor( (x_range[1] - boundary) / width )
+  return(boundary + shift * width)
 }
 
 #' @export
-bin_params.POSIXct <- function(x_range, binwidth = NULL,
-                               bincenter = NULL,
-                               origin = NULL,
+bin_params.numeric <- function(x_range, width = NULL,
+                               center=NULL,
+                               boundary=NULL,
                                right = TRUE) {
 
-  if (is.null(binwidth)) {
-    binwidth <- diff(x_range) / 30
-    notify_guess(binwidth, "range / 30")
-    binwidth <- as.numeric(binwidth,  units = "secs")
+  if (!is.null(boundary) && !is.null(center)) {
+    stop( "Only one of 'boundary' and 'center' may be specified." )
   }
 
-  if (inherits(binwidth, "Period") && require(lubridate)) {
-    binwidth <- as.numeric(lubridate::as.difftime(binwidth, units="secs"))
+  if (is.null(width)) {
+    width <- diff(x_range) / 30
+    notify_guess(width, "range / 30")
   }
-  if (!is.numeric(binwidth)) binwidth <- as.numeric(binwidth, units='secs')
-  if (!is.null(bincenter)) bincenter <- as.numeric(bincenter)
-  if (!is.null(origin)) origin<- as.numeric(origin)
 
-  list(binwidth = binwidth, bincenter = bincenter, origin = origin, right = right)
+  # if neither edge nor center given, compute both using tile layer's algorithm
+  # this puts min and max of data in outer half of their bins.
+
+  if (is.null(boundary) && is.null(center)) {
+    boundary <- tilelayer_origin(x_range, width)
+    center <- boundary + width / 2
+  }
+
+  # if center given but not boundary, compute boundary from center
+  if (is.null(boundary)) boundary <- center - width / 2
+
+  origin <- compute_origin( x_range, width, boundary )
+
+  list(width = width, origin = origin, right = right)
 }
 
 #' @export
-bin_params.integer <- function(x_range, binwidth = NULL, bincenter = NULL,
-                               origin = NULL,
+bin_params.POSIXct <- function(x_range, width = NULL,
+                               center = NULL, boundary = NULL,
                                right = TRUE) {
 
-  if (is.null(binwidth)) {
-    binwidth <- min( pretty( round(diff(x_range) / 25) ))
-    if (binwidth <= 2) binwidth = 1
-    num_bins <- ceiling( diff(x_range) / binwidth )
-    notify_guess(binwidth, paste0("approximately range/", num_bins) )
+  if (!is.null(boundary) && !is.null(center)) {
+    stop( "Only one of 'boundary' and 'center' may be specified." )
   }
 
-  if (is.null(origin)) {
-    if (is.null(bincenter)) {
-      origin <- x_range[1] - 1/2
-    } else {
-      shift <-  floor( (x_range[1] - bincenter) / binwidth )
-      origin <-  bincenter + shift * binwidth - .5 * binwidth
-    }
+  x_range <- as.numeric(x_range)
+  if (inherits(width, "Period")) {
+    width <- as.numeric(as.difftime(width, units="secs"))
+  }
+  if (!is.null(width)) width <- as.numeric(width)
+  if (!is.null(center)) width <- as.numeric(center)
+  if (!is.null(boundary)) width <- as.numeric(boundary)
+
+  if (is.null(width)) {
+    width <- diff(x_range) / 30
+    notify_guess(width, "range / 30 (in seconds)")
+    width <- as.numeric(width,  units = "secs")
   }
 
-  list(binwidth = binwidth, bincenter=bincenter, origin = origin, right = right)
+  if (is.null(boundary) && is.null(center)) {
+    boundary <- tilelayer_origin(x_range, width)
+    center <- boundary + width / 2
+  }
+
+  if (!is.numeric(width)) width <- as.numeric(width, units='secs')
+  if (!is.null(center)) center <- as.numeric(center)
+  if (!is.null(boundary)) boundary<- as.numeric(boundary)
+
+  # if we have center but not boundary, compute boundary
+  if (is.null(boundary)) boundary <- center - width / 2
+
+  origin <- compute_origin( x_range, width, boundary )
+
+  list(width = width, origin = origin, right = right,
+       origin.POSIX=structure(origin, class=c("POSIXct", "POSIXt"))
+  )
+}
+
+#' @export
+bin_params.integer <- function(x_range, width = NULL,
+                               center = NULL, boundary= NULL,
+                               right = TRUE) {
+
+  if (!is.null(boundary) && !is.null(center)) {
+    stop( "Only one of 'boundary' and 'center' may be specified." )
+  }
+
+  if (is.null(width)) {
+    width <- min(pretty(round(diff(x_range) / 25)))
+    if (width <= 2) width = 1
+    num_bins <- ceiling( diff(x_range) / width )
+    notify_guess(width, paste0("approximately range/", num_bins) )
+  }
+
+  if (is.null(boundary) && is.null(center)) {
+    boundary <- tilelayer_origin(x_range, width)
+    center <- boundary + width / 2
+  }
+
+  # if we have center but not boundary, compute boundary
+  if (is.null(boundary)) boundary <- center - width / 2
+
+  origin <- compute_origin( x_range, width, boundary )
+
+  list(width = width, origin = origin, right = right)
 }
 
 # Bin individual vector --------------------------------------------------------
@@ -181,12 +230,16 @@ bin_vector <- function(x, weight = NULL, ...) {
 }
 
 #' @export
-bin_vector.numeric <- function(x, weight = NULL, ..., binwidth = 1, bincenter=NULL,
-                               origin = NULL, right = TRUE, pad = TRUE) {
-  stopifnot(is.numeric(binwidth) && length(binwidth) == 1)
-  stopifnot(is.null(origin) || (is.numeric(origin) && length(origin) == 1))
-  stopifnot(is.null(bincenter) || (is.numeric(bincenter) && length(bincenter) == 1))
+bin_vector.numeric <- function(x, weight = NULL, ..., width = 1,
+                               center = NULL, boundary = NULL,
+                               right = TRUE, pad = TRUE) {
+  stopifnot(is.numeric(width) && length(width) == 1)
+  stopifnot(is.null(center) || (is.numeric(center) && length(center) == 1))
+  stopifnot(is.null(boundary) || (is.numeric(boundary) && length(boundary) == 1))
   stopifnot(is.flag(right))
+  if (!is.null(center) && !is.null(boundary)) {
+    stop("Only one of 'center' and 'bouncary' may be specified.")
+  }
 
   if (length(na.omit(x)) == 0) {
     return(bin_out())
@@ -198,53 +251,45 @@ bin_vector.numeric <- function(x, weight = NULL, ..., binwidth = 1, bincenter=NU
     weight[is.na(weight)] <- 0
   }
 
-  if (is.null(origin)) {
-    if (!is.null(bincenter)) {
-	  # c = center; . = bin edges; o = origin (a bin edge); m=min(data)
-	  # .     .  c  .     .     .     o     . m   .     .     .
-	  # 
-	  # in example, (m-c)/w = 4.6, so o = c + 3.5 w 
-	  # could adjust this so that o is one bin farther right.
-
-	  # how many binwidths from center to min(data)?
-      shift <-  floor( (min(x) - bincenter)/binwidth )
-      # set origin near left edge of data -- at left side of a bin
-      origin <-  bincenter + shift * binwidth -.5 * binwidth
-    } else {
-      origin <- round_any(min(x), binwidth, floor)
-    }
+  if (is.null(boundary) && is.null(center)) {
+    boundary <- tilelayer_origin(range(x), width)
+    center <- boundary + width / 2
   }
+  params <- bin_params( range(x), width, center, boundary, right)
 
-  breaks <- seq(origin, max(x) + binwidth, binwidth)
-  fuzzybreaks <- adjust_breaks(breaks, open = if (right) "right" else "left")
+  breaks <- seq(params$origin, max(x) + params$width, params$width)
+  fuzzybreaks <- adjust_breaks(breaks, open = if (params$right) "right" else "left")
 
-  bins <- cut(x, fuzzybreaks, include.lowest = TRUE, right = right)
+  bins <- cut(x, fuzzybreaks, include.lowest = TRUE, right = params$right)
   left <- breaks[-length(breaks)]
   right <- breaks[-1]
-  x <- (left + right)/2
-  width <- diff(breaks)
+  x <- (left + right) / 2
+  bin_widths <- diff(breaks)
 
   count <- as.numeric(tapply(weight, bins, sum, na.rm = TRUE))
   count[is.na(count)] <- 0
 
   if (pad) {
     count <- c(0, count, 0)
-    width <- c(binwidth, width, binwidth)
-    x <- c(x[1] - binwidth, x, x[length(x)] + binwidth)
+    bin_widths <- c(width, bin_widths, width)
+    x <- c(x[1] - width, x, x[length(x)] + width)
   }
 
-  bin_out(count, x, width)
+  bin_out(count, x, bin_widths)
 }
 
 #' @export
-bin_vector.POSIXt <- function(x, weight = NULL, ..., binwidth = 1, bincenter = NULL,
-                              origin = NULL, right = TRUE) {
+bin_vector.POSIXt <- function(x, weight = NULL, ..., width = NULL,
+                              center = NULL, boundary = NULL,
+                              right = TRUE) {
   # Convert times to raw numbers (seconds since UNIX epoch), and call bin.numeric
-  bincenter <- if (!is.null(bincenter)) bincenter <- as.numeric(bincenter)
-  origin <- if (!is.null(origin)) origin <- as.numeric(origin)
+  center <- if (!is.null(center)) center <- as.numeric(center)
+  boundary <- if (!is.null(boundary)) boundary <- as.numeric(boundary)
+  if (inherits(width, "Period")) width <- as.numeric(as.difftime(width, units="secs"))
+  width <- if (!is.null(width)) width <- as.numeric(width)
 
-  results <- bin_vector(as.numeric(x), weight = weight, binwidth = binwidth,
-    bincenter = bincenter, origin = origin, right = right)
+  results <- bin_vector(as.numeric(x), weight = weight, width = width,
+    center = center, boundary = boundary, right = right)
 
   # Convert some columns from numeric back to POSIXct objects
   time_cols <- c("x_", "xmin_", "xmax_")
