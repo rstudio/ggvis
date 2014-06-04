@@ -140,7 +140,7 @@ collapse_ggvis_scales <- function(scales) {
     })
   }
 
-  Reduce(merge_vectors, scales)
+  Reduce(merge_ggvis_scales, scales)
 }
 
 # Takes a named list, where each name is the name of a scale, and each item is
@@ -160,4 +160,8 @@ scale_domain_data <- function(scales) {
 
   names(domain_data) <- paste0("scale/", names(domain_data))
   domain_data
+}
+
+merge_ggvis_scales <- function(a, b) {
+  structure(merge_vectors(a, b), class = "ggvis_scale")
 }
