@@ -36,7 +36,7 @@
 #'
 #' # Basic histogram
 #' mtcars %>% qvis(~mpg)
-#' mtcars %>% qvis(~mpg, binwidth = 2)
+#' mtcars %>% qvis(~mpg, width := 2)
 #'
 #' # It's not currently possible to create a plot of variables
 #' # stored only in the local environment
