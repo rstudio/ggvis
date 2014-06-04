@@ -1,25 +1,23 @@
 {
 	"data" : [
 		{
-			"name" : "mtcars0/regroup1/bin2_flat",
+			"name" : "df0/regroup1/arrange2_flat",
 			"format" : {
 				"type" : "csv",
 				"parse" : {
-					"cyl" : "number",
-					"x_" : "number",
-					"count_" : "number"
+					"y" : "number"
 				}
 			},
-			"values" : "\"cyl\",\"x_\",\"count_\"\n4,0.5,0\n4,1.5,4\n4,2.5,5\n4,3.5,2\n4,4.5,0\n6,0.5,0\n6,1.5,0\n6,2.5,3\n6,3.5,4\n6,4.5,0\n8,0.5,0\n8,1.5,0\n8,2.5,0\n8,3.5,10\n8,4.5,1\n8,5.5,3\n8,6.5,0"
+			"values" : "\"w\",\"y\",\"z\"\n\"a\",0.175504838116467,\"1\"\n\"b\",0.92520075570792,\"1\"\n\"c\",0.605496409814805,\"1\"\n\"d\",0.879450253676623,\"1\"\n\"a\",0.36204455466941,\"2\"\n\"b\",0.239515871042386,\"2\"\n\"c\",0.00647905003279448,\"2\"\n\"d\",0.154914033133537,\"2\"\n\"a\",0.574154397239909,\"3\"\n\"b\",0.732962509151548,\"3\"\n\"c\",0.489878148771822,\"3\"\n\"d\",0.870066102826968,\"3\""
 		},
 		{
-			"name" : "mtcars0/regroup1/bin2",
-			"source" : "mtcars0/regroup1/bin2_flat",
+			"name" : "df0/regroup1/arrange2",
+			"source" : "df0/regroup1/arrange2_flat",
 			"transform" : [
 				{
 					"type" : "facet",
 					"keys" : [
-						"data.cyl"
+						"data.z"
 					]
 				}
 			]
@@ -28,11 +26,9 @@
 			"name" : "scale/x",
 			"format" : {
 				"type" : "csv",
-				"parse" : {
-					"domain" : "number"
-				}
+				"parse" : null
 			},
-			"values" : "\"domain\"\n0.5\n6.5"
+			"values" : "\"domain\"\n\"a\"\n\"b\"\n\"c\"\n\"d\""
 		},
 		{
 			"name" : "scale/y",
@@ -42,28 +38,26 @@
 					"domain" : "number"
 				}
 			},
-			"values" : "\"domain\"\n0\n10"
+			"values" : "\"domain\"\n0.00647905003279448\n0.92520075570792"
 		},
 		{
 			"name" : "scale/stroke",
 			"format" : {
 				"type" : "csv",
-				"parse" : {
-					"domain" : "number"
-				}
+				"parse" : null
 			},
-			"values" : "\"domain\"\n4\n8"
+			"values" : "\"domain\"\n\"1\"\n\"2\"\n\"3\""
 		}
 	],
 	"scales" : [
 		{
 			"name" : "x",
-			"type" : "linear",
+			"type" : "ordinal",
 			"reverse" : false,
 			"round" : false,
-			"clamp" : false,
-			"nice" : true,
-			"zero" : false,
+			"points" : true,
+			"padding" : 0.5,
+			"sort" : false,
 			"range" : "width",
 			"domain" : {
 				"data" : "scale/x",
@@ -86,16 +80,12 @@
 		},
 		{
 			"name" : "stroke",
-			"type" : "linear",
+			"type" : "ordinal",
 			"reverse" : false,
 			"round" : false,
-			"clamp" : false,
-			"nice" : true,
-			"zero" : false,
-			"range" : [
-				"#132B43",
-				"#56B1F7"
-			],
+			"points" : true,
+			"sort" : false,
+			"range" : "category10",
 			"domain" : {
 				"data" : "scale/stroke",
 				"field" : "data.domain"
@@ -128,29 +118,29 @@
 		{
 			"type" : "group",
 			"from" : {
-				"data" : "mtcars0/regroup1/bin2"
+				"data" : "df0/regroup1/arrange2"
 			},
 			"marks" : [
 				{
 					"type" : "line",
 					"properties" : {
 						"update" : {
-							"stroke" : {
-								"scale" : "stroke",
-								"field" : "data.cyl"
-							},
 							"x" : {
 								"scale" : "x",
-								"field" : "data.x_"
+								"field" : "data.w"
 							},
 							"y" : {
 								"scale" : "y",
-								"field" : "data.count_"
+								"field" : "data.y"
+							},
+							"stroke" : {
+								"scale" : "stroke",
+								"field" : "data.z"
 							}
 						},
 						"ggvis" : {
 							"data" : {
-								"value" : "mtcars0/regroup1/bin2"
+								"value" : "df0/regroup1/arrange2"
 							}
 						}
 					}
@@ -164,7 +154,7 @@
 		{
 			"stroke" : "stroke",
 			"orient" : "right",
-			"title" : "cyl"
+			"title" : "z"
 		}
 	],
 	"axes" : [
@@ -174,7 +164,7 @@
 			"orient" : "bottom",
 			"layer" : "back",
 			"grid" : true,
-			"title" : "wt"
+			"title" : "w"
 		},
 		{
 			"type" : "y",
@@ -182,7 +172,7 @@
 			"orient" : "left",
 			"layer" : "back",
 			"grid" : true,
-			"title" : "count"
+			"title" : "y"
 		}
 	],
 	"padding" : null,

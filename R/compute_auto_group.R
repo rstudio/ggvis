@@ -1,10 +1,13 @@
-#' Automatically split data by groups
+#' Automatically group data by grouping variables
 #'
-#' Use \code{auto_split} to split up a dataset on all categorical variables
+#' Use \code{auto_group} to group up a dataset on all categorical variables
 #' specified by props, and have each piece rendered by the same mark.
 #'
 #' @export
 #' @param vis The ggvis visualisation to modify.
+#' @param exclude A vector containing names of props to exclude from auto grouping.
+#'   It is often useful to exclude \code{c("x", "y")}, when one of those variables
+#'   is categorical.
 #' @seealso To manually specify grouping variables, see \code{\link{group_by}}.
 #' @examples
 #' # Make cyl a factor (as it really should be)
@@ -18,11 +21,15 @@
 #'   layer_paths()
 #' mtcars2 %>% ggvis(~disp,  ~mpg, stroke = ~cyl) %>% auto_group() %>%
 #'   layer_paths()
-auto_group <- function(vis) {
+auto_group <- function(vis, exclude = NULL) {
 
   # Figure out grouping variable
   data <- cur_data(vis)
   props <- cur_props(vis)
+
+  # Drop props named in exclude
+  pnames <- trim_propset(names(props))
+  props <- props[!(pnames %in% exclude)]
 
   countable <- vapply(props,
     function(prop) prop$type == "variable" && prop_countable(data, prop),

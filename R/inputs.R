@@ -147,12 +147,14 @@ input_numeric <- function(value, label = "", id = rand_id("numeric_"),
 #'     )
 #'   )
 input_select <- function(choices, selected = NULL, multiple = FALSE,
-                         label = "", id = rand_id("select_"), map = identity) {
+                         label = "", id = rand_id("select_"), map = identity,
+                         selectize = FALSE) {
 
   assert_that(is.string(label), is.string(id))
 
   control <- shiny::selectInput(id, label, choices = choices,
-                                selected = selected, multiple = multiple)
+                                selected = selected, multiple = multiple,
+                                selectize = selectize)
 
   if (is.null(selected)) {
     if (multiple) value <- ""

@@ -36,7 +36,11 @@
 layer_densities <- function(vis, ..., kernel = "gaussian", adjust = 1,
                             density_args = list(), area = TRUE) {
 
-  x_var <- find_prop_var(vis$cur_props, "x.update")
+  x_var <- find_prop_var(cur_props(vis), "x.update")
+
+  # Set axis labels
+  vis <- add_scale_info(vis, scale_info("x", prop_name(cur_props(vis)$x.update)))
+  vis <- add_scale_info(vis, scale_info("y", "density"))
 
   props <- stroke_fill_defaults(props(...),
     stroke = props(~pred_, ~resp_),

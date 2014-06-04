@@ -10,7 +10,6 @@ mtc1 %>% ggvis(x = ~wt, y = ~mpg) %>% layer_points()
 
 # Rapidly changing dynamic example
 df <- data.frame(x = runif(20), y = runif(20))
-# Basic dynamic example
 mtc1 <- reactive({
   invalidateLater(200, NULL);
 
@@ -20,7 +19,8 @@ mtc1 <- reactive({
 })
 mtc1 %>% ggvis(x = ~x, y = ~y) %>%
   layer_points() %>%
-  set_dscale("x", "numeric", domain = c(0, 1)) %>%
+  scale_numeric("x", domain = c(0, 1), clamp = TRUE) %>%
+  scale_numeric("y", domain = c(0, 1), clamp = TRUE) %>%
   set_options(duration = 0)
 
 # Two separate data sets, equal in the tree
@@ -78,8 +78,9 @@ ddat %>%
     width = band(),
     key := ~time
   ) %>%
-  set_dscale("y", "numeric", domain = 0:1) %>%
-  set_dscale("x", "nominal", range = "width", padding = 0, points = FALSE) %>%
+  scale_numeric("y", domain = 0:1) %>%
+  scale_nominal("x", domain = reactive(unique(ddat()$time)), padding = 0,
+                points = FALSE) %>%
   layer_rects()
 
 
@@ -95,6 +96,4 @@ ddat <- reactive({
   dat
 })
 ddat %>% ggvis(x = ~g1, y = ~value, fill = ~g2, fillOpacity := 0.5) %>%
-  compute_stack() %>%
-  set_dscale("x", "nominal", range = "width", padding = 0, points = FALSE) %>%
-  layer_rects(y = ~stack_lwr_, y2 = ~stack_upr_, width = band())
+  layer_bars()

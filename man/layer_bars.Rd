@@ -73,10 +73,13 @@ pressure \%>\% ggvis(~factor(temperature), ~pressure) \%>\%
   layer_bars(width = 0.5)
 
 # Stacked bars
+# If grouping var is continuous, you need to manually specify grouping
 ToothGrowth \%>\% group_by(dose) \%>\%
   ggvis(x = ~supp, y = ~len, fill = ~dose) \%>\% layer_bars()
-cocaine \%>\% group_by(month) \%>\%
-  ggvis(x = ~state, fill = ~as.factor(month)) \%>\%  layer_bars()
+# If grouping var is categorical, grouping is done automatically
+# FIXME: Currently broken; see #177
+# cocaine \%>\% ggvis(x = ~state, fill = ~as.factor(month)) \%>\%
+#   layer_bars()
 }
 \seealso{
 \code{\link{layer_histograms}} For bar graphs of counts at each unique

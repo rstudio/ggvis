@@ -26,7 +26,7 @@ hec <- as.data.frame(xtabs(Freq ~ Hair + Eye, HairEyeColor))
 hec %>% group_by(Eye) %>%
   ggvis(x = ~Hair, y = ~Freq, fill = ~Eye, fillOpacity := 0.5) %>%
   layer_bars(stack = FALSE) %>%
-  set_dscale("fill", "nominal",
+  scale_nominal("fill",
     domain = c("Brown", "Blue", "Hazel", "Green"),
     range = c("#995522", "#88CCFF", "#999933", "#00CC00"))
 
@@ -34,7 +34,7 @@ hec %>% group_by(Eye) %>%
 hec %>% group_by(Eye) %>%
   ggvis(x = ~Hair, y = ~Freq, fill = ~Eye, fillOpacity := 0.5) %>%
   layer_bars() %>%
-  set_dscale("fill", "nominal",
+  scale_nominal("fill",
     domain = c("Brown", "Blue", "Hazel", "Green"),
     range = c("#995522", "#88CCFF", "#999933", "#00CC00"))
 
@@ -45,7 +45,7 @@ hec %>% group_by(Eye) %>%
   ggvis(y = ~Hair, fill = ~Eye, fillOpacity := 0.5) %>%
   compute_stack(stack_var = ~Freq, group_var = ~Hair) %>%
   layer_rects(x = ~stack_lwr_, x2 = ~stack_upr_, height = band()) %>%
-  set_dscale("y", "nominal", range = "height", padding = 0, points = FALSE) %>%
-  set_dscale("fill", "nominal",
+  scale_nominal("y", range = "height", padding = 0, points = FALSE) %>%
+  scale_nominal("fill",
     domain = c("Brown", "Blue", "Hazel", "Green"),
     range = c("#995522", "#88CCFF", "#999933", "#00CC00"))

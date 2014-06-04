@@ -67,24 +67,32 @@
 #'   layer_bars(width = 0.5)
 #'
 #' # Stacked bars
+#' # If grouping var is continuous, you need to manually specify grouping
 #' ToothGrowth %>% group_by(dose) %>%
 #'   ggvis(x = ~supp, y = ~len, fill = ~dose) %>% layer_bars()
-#' cocaine %>% group_by(month) %>%
-#'   ggvis(x = ~state, fill = ~as.factor(month)) %>%  layer_bars()
+#' # If grouping var is categorical, grouping is done automatically
+#' # FIXME: Currently broken; see #177
+#' # cocaine %>% ggvis(x = ~state, fill = ~as.factor(month)) %>%
+#' #   layer_bars()
 layer_bars <- function(vis, ..., stack = TRUE, width = NULL) {
   new_props <- merge_props(cur_props(vis), props(...))
 
   x_var <- find_prop_var(new_props, "x.update")
   discrete_x <- prop_countable(cur_data(vis), new_props$x.update)
 
+  # Set x axis label
+  vis <- add_scale_info(vis, scale_info("x", prop_name(cur_props(vis)$x.update)))
+
   if (!is.null(new_props$y.update)) {
     if (prop_countable(cur_data(vis), new_props$y.update)) {
       stop("y variable (weights) must be numeric.")
     }
     y_var <- find_prop_var(new_props, "y.update")
+    vis <- add_scale_info(vis, scale_info("y", prop_name(cur_props(vis)$y.update)))
 
   } else {
     y_var <- NULL
+    vis <- add_scale_info(vis, scale_info("y", "count"))
   }
 
   if (discrete_x) {
@@ -93,17 +101,19 @@ layer_bars <- function(vis, ..., stack = TRUE, width = NULL) {
     }
 
     vis <- layer_f(vis, function(v) {
+      v <- auto_group(v, exclude = c("x", "y"))
       v <- compute_count(v, x_var, y_var)
+
       if (stack) {
         v <- compute_stack(v, stack_var = ~count_, group_var = ~x_)
         v <- layer_rects(v, x = ~x_, y = ~stack_lwr_, y2 = ~stack_upr_,
-                         width = band(mult = width))
+                         width = band())
       } else {
-        v <- layer_rects(v, x = ~x_, y = 0, y2 = ~count_, width = band(mult = width))
+        v <- layer_rects(v, x = ~x_, y = 0, y2 = ~count_, width = band())
       }
       v
     })
-    vis <- scale_nominal(vis, "x", padding = 0, points = FALSE)
+    vis <- scale_nominal(vis, "x", padding = 1 - width, points = FALSE)
 
   } else {
     vis <- layer_f(vis, function(v) {

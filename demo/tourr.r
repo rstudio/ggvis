@@ -17,6 +17,6 @@ proj_data <- reactive({
 
 proj_data %>% ggvis(~X1, ~X2, fill = ~species) %>%
   layer_points() %>%
-  set_dscale("x", "numeric", domain = c(-1, 1)) %>%
-  set_dscale("y", "numeric", domain = c(-1, 1)) %>%
+  scale_numeric("x", domain = c(-1, 1)) %>%
+  scale_numeric("y", domain = c(-1, 1)) %>%
   set_options(duration = 0)

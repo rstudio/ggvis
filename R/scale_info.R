@@ -10,7 +10,8 @@
 #'   override other scale_infos for the same scale? Useful when domain is
 #'   manually specified.
 #' @keywords internal
-scale_info <- function(scale, label, type, domain, override = FALSE) {
+scale_info <- function(scale, label = NULL, type = NULL, domain = NULL,
+                       override = FALSE) {
   structure(list(
     scale = scale,
     label = label,
@@ -28,7 +29,7 @@ collapse_scale_infos <- function(infos) {
   scale <- infos[[1]]$scale
   # Get first non-NULL label
   label <- compact(pluck(infos, "label"))[[1]]
-  type <- unique(vpluck(infos, "type", character(1)))
+  type <- unique(unlist(pluck(infos, "type")))
   if (length(type) != 1) stop("Scales must all have same type.")
 
   domains <- pluck(infos, "domain")

@@ -6,7 +6,7 @@
 \title{Create interactive control to select one (or more options) from a list.}
 \usage{
 input_select(choices, selected = NULL, multiple = FALSE, label = "",
-  id = rand_id("select_"), map = identity)
+  id = rand_id("select_"), map = identity, selectize = FALSE)
 
 input_radiobuttons(choices, selected = NULL, label = "",
   id = rand_id("radio_"), map = identity)
@@ -25,6 +25,8 @@ for single-select lists and no values for multiple select lists.}
 \item{multiple}{Is selection of multiple items allowed?}
 
 \item{label}{Display label for the control, or \code{NULL}}
+
+\item{selectize}{Whether to use \pkg{selectize.js} or not.}
 
 \item{id}{A unique identifier for this input. Usually generated
 automatically.}
