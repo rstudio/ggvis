@@ -102,13 +102,13 @@ layer_bars <- function(vis, ..., stack = TRUE, width = NULL) {
       if (stack) {
         v <- compute_stack(v, stack_var = ~count_, group_var = ~x_)
         v <- layer_rects(v, x = ~x_, y = ~stack_lwr_, y2 = ~stack_upr_,
-                         width = band(mult = width))
+                         width = band())
       } else {
-        v <- layer_rects(v, x = ~x_, y = 0, y2 = ~count_, width = band(mult = width))
+        v <- layer_rects(v, x = ~x_, y = 0, y2 = ~count_, width = band())
       }
       v
     })
-    vis <- scale_nominal(vis, "x", padding = 0, points = FALSE)
+    vis <- scale_nominal(vis, "x", padding = 1 - width, points = FALSE)
 
   } else {
     vis <- layer_f(vis, function(v) {
