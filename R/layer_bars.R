@@ -67,10 +67,13 @@
 #'   layer_bars(width = 0.5)
 #'
 #' # Stacked bars
+#' # If grouping var is continuous, you need to manually specify grouping
 #' ToothGrowth %>% group_by(dose) %>%
 #'   ggvis(x = ~supp, y = ~len, fill = ~dose) %>% layer_bars()
-#' cocaine %>% group_by(month) %>%
-#'   ggvis(x = ~state, fill = ~as.factor(month)) %>%  layer_bars()
+#' # If grouping var is categorical, grouping is done automatically
+#' # FIXME: Currently broken; see #177
+#' # cocaine %>% ggvis(x = ~state, fill = ~as.factor(month)) %>%
+#' #   layer_bars()
 layer_bars <- function(vis, ..., stack = TRUE, width = NULL) {
   new_props <- merge_props(cur_props(vis), props(...))
 
@@ -98,7 +101,9 @@ layer_bars <- function(vis, ..., stack = TRUE, width = NULL) {
     }
 
     vis <- layer_f(vis, function(v) {
+      v <- auto_group(v, exclude = c("x", "y"))
       v <- compute_count(v, x_var, y_var)
+
       if (stack) {
         v <- compute_stack(v, stack_var = ~count_, group_var = ~x_)
         v <- layer_rects(v, x = ~x_, y = ~stack_lwr_, y2 = ~stack_upr_,
