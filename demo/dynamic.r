@@ -79,7 +79,8 @@ ddat %>%
     key := ~time
   ) %>%
   scale_numeric("y", domain = 0:1) %>%
-  scale_nominal("x", range = "width", padding = 0, points = FALSE) %>%
+  scale_nominal("x", domain = reactive(unique(ddat()$time)), padding = 0,
+                points = FALSE) %>%
   layer_rects()
 
 
@@ -94,5 +95,5 @@ ddat <- reactive({
   dat$value <<- runif(12)
   dat
 })
-dat %>% ggvis(x = ~g1, y = ~value, fill = ~g2, fillOpacity := 0.5) %>%
+ddat %>% ggvis(x = ~g1, y = ~value, fill = ~g2, fillOpacity := 0.5) %>%
   layer_bars()
