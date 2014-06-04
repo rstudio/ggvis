@@ -9,16 +9,16 @@
 #'   this value, exploring multiple widths to find the best to illustrate the
 #'   stories in your data.
 #' @param center The center of one of the bins.  Note that if center is above or below
-#' the range of the data, things will be shifted by an appropriat number of \code{width}s.
-#' To center on integers,
-#' for example, use \code{width = 1} and \code{center = 0}, even if \code{0} is
-#' outside the range of the data.  At most one of \code{center} and \code{boundary} may be
-#' specified.
+#'   the range of the data, things will be shifted by an appropriat number of \code{width}s.
+#'   To center on integers,
+#'   for example, use \code{width = 1} and \code{center = 0}, even if \code{0} is
+#'   outside the range of the data.  At most one of \code{center} and \code{boundary} may be
+#'   specified.
 #' @param boundary A boundary between two bins. As with \code{center}, things are shifted
-#' when \code{boundary} is outside the range of the data. For example, to center on
-#' integers, use \code{width = 1} and \code{boundary = 0.5}, even if \code{1} is outside
-#' the range of the data.  At most one of \code{center} and \code{boundary} may be
-#' specified.
+#'   when \code{boundary} is outside the range of the data. For example, to center on
+#'   integers, use \code{width = 1} and \code{boundary = 0.5}, even if \code{1} is outside
+#'   the range of the data.  At most one of \code{center} and \code{boundary} may be
+#'   specified.
 #' @param right Should bins be right-open, left-closed, or
 #'   right-closed, left-open.
 #' @param pad If \code{TRUE}, adds empty bins at either end of x. This
@@ -64,6 +64,7 @@ compute_bin.data.frame <- function(x, x_var, w_var = NULL, width = NULL,
   params <- bin_params(range(x_val), width = width, center = center, boundary = boundary,
     right = right)
 
+  # note: origin is a boundary, so this works.
   bin_vector(x_val, weight = w_val, width = params$width, boundary = params$origin,
     right = params$right, pad = pad)
 }
@@ -81,7 +82,7 @@ compute_bin.grouped_df <- function(x, x_var, w_var = NULL, width = NULL,
     x_var,
     w_var = w_var,
     width = params$width,
-    boundary= params$origin,
+    boundary= params$origin,   # origin is a boundary, so this works
     right = params$right,
     pad = pad))
 }
@@ -113,12 +114,12 @@ tilelayer_origin <- function(x_range, width) {
   if (side_width < .5 * width - 1e-8) {
     warning( paste0("side_width=", side_width, "; width=", width))
   }
-  return(x_range[1] + side_width - width)
+  x_range[1] + side_width - width
 }
 
 compute_origin <- function(x_range, width, boundary) {
   shift <- floor( (x_range[1] - boundary) / width )
-  return(boundary + shift * width)
+  boundary + shift * width
 }
 
 #' @export
