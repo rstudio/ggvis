@@ -59,7 +59,7 @@ cocaine \%>\% ggvis(~month, ~weight) \%>\% layer_bars()
 # unique values that you want to preserve. If you have many unique
 # values and you want to bin, use layer_histogram
 cocaine \%>\% ggvis(~price) \%>\% layer_bars()
-cocaine \%>\% ggvis(~price) \%>\% layer_histograms(binwidth = 100)
+cocaine \%>\% ggvis(~price) \%>\% layer_histograms(width = 100)
 
 # If you have unique x values, you can use layer_bars() as an alternative
 # to layer_points()

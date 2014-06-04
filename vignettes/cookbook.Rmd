@@ -159,11 +159,37 @@ Basic histogram:
 faithful %>% ggvis(~eruptions) %>% layer_histograms()
 ```
 
-Modify the fill color and binwidth, and add titles for the axes, since the automatic titles aren't very informative:
+The bin selection can be controled by specifying `width` and at most one of `center` or 
+`boundary` of one of the bins.  `boundary` and `center` may be outside the range of 
+the data.
+
+```{r, message = FALSE}
+faithful %>% ggvis(~eruptions) %>% layer_histograms(width=0.5, boundary=0)
+faithful %>% ggvis(~eruptions) %>% layer_histograms(width=0.5, center=0)
+```
+
+Modify the fill color and bin width, and add titles for the axes, since the automatic titles aren't very informative:
 
 ```{r, message = FALSE}
 faithful %>% ggvis(~eruptions, fill := "#fff8dc") %>%
-  layer_histograms(binwidth = 0.25) %>%
+  layer_histograms(width = 0.25) %>%
   add_guide_axis("x", title = "eruptions") %>%
+  add_guide_axis("y", title = "count")
+```
+
+By default, when the number of integer values is small, bins will 
+be centered at integers and have a width of 1:
+
+```{r, message = FALSE}
+cocaine %>% ggvis(~month, fill := "#fff8dc") %>%
+  layer_histograms(width = 1, center = 0) %>%
+  add_guide_axis("x", title = "month") %>%
+  add_guide_axis("y", title = "count")
+```
+This can be forced with 
+```{r, message = FALSE}
+cocaine %>% ggvis(~month, fill := "#fff8dc") %>%
+  layer_histograms(width = 1, center = 0) %>%
+  add_guide_axis("x", title = "month") %>%
   add_guide_axis("y", title = "count")
 ```

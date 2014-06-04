@@ -267,7 +267,7 @@ scale_datetime <- function(vis, scale, domain = NULL, range = NULL,
 #'
 #' p <- ToothGrowth %>% group_by(supp) %>%
 #'   ggvis(~len, fill = ~supp) %>%
-#'   layer_histograms(binwidth = 4, stack = TRUE)
+#'   layer_histograms(width = 4, stack = TRUE)
 #'
 #' # Control range of fill scale
 #' p %>% scale_nominal("fill", range = c("pink", "lightblue"))
