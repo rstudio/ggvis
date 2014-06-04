@@ -25,7 +25,7 @@ mtcars %>% ggvis(x = ~wt, y = ~mpg) %>%
 
 # Bar graph with brushing
 pressure %>% ggvis(x = ~temperature, y = ~pressure) %>%
-  set_dscale("x", "nominal", range = "width", padding = 0, points = FALSE) %>%
+  scale_nominal("x", range = "width", padding = 0, points = FALSE) %>%
   layer_rects(y2 = 0, width = band(), fill.brush := "red") %>%
   handle_brush(brushed_summary)
 
