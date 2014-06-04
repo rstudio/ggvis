@@ -129,16 +129,15 @@ apply_legends_defaults <- function(vis) {
   legends <- lapply(legends, function(legend) {
     present <- unlist(legend[legs])
     present_scales <- scales[present]
-    present_info <- vis$scale_info[present]
 
     if (is.null(legend$title)) {
       # Default title for each legend consists of the fields pasted together
-      fields <- mapply(present_scales, present_info, FUN = function(scale, info) {
+      fields <- lapply(present_scales, function(scale) {
         # scale$domain can be a vector of explicitly-set values, in which case
-        # return ""
+        # return NULL
         if (!is.list(scale$domain)) return(NULL)
-        else info$label[1]
-      }, SIMPLIFY = FALSE)
+        else scale$label
+      })
 
       fields <- unlist(fields)
       legend$title <- paste(fields, collapse = ".")

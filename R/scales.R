@@ -23,7 +23,7 @@
 #' \code{scale_nominal}, and so on.
 #'
 #' The scale types for ggvis are mapped to scale types for Vega, which include
-#' "ordinal", "quantitative", and "time". See \code{\link{vega_scale}} for more
+#' "ordinal", "quantitative", and "time". See \code{\link{ggvis_scale}} for more
 #' details.
 #'
 #' Given a scale and type, the range is selected based on the combination of the
@@ -72,7 +72,7 @@ NULL
 #'
 #' @param vis A ggvis object.
 #' @param scale The name of a scale, such as "x", "y", "fill", "stroke", etc.
-#' @inheritParams vega_scale
+#' @inheritParams ggvis_scale
 #' @param trans A scale transformation: one of "linear", "log", "pow", "sqrt",
 #'   "quantile", "quantize", "threshold"
 #' @param exponent Sets the exponent of the scale transformation. For pow
@@ -137,7 +137,7 @@ scale_numeric <- function(vis, scale, domain = NULL, range = NULL,
     )
   }
 
-  vscale <- vega_scale(
+  vscale <- ggvis_scale(
     name = name %||% scale,
     type = trans,
     subclass = "quantitative",
@@ -161,7 +161,7 @@ scale_numeric <- function(vis, scale, domain = NULL, range = NULL,
 #'
 #' @param vis A ggvis object.
 #' @param scale The name of a scale, such as "x", "y", "fill", "stroke", etc.
-#' @inheritParams vega_scale
+#' @inheritParams ggvis_scale
 #' @param clamp  If true, values that exceed the data domain are clamped to
 #'   either the minimum or maximum range value.
 #' @param nice If specified, modifies the scale domain to use a more
@@ -213,7 +213,7 @@ scale_datetime <- function(vis, scale, domain = NULL, range = NULL,
     )
   }
 
-  vscale <- vega_scale(
+  vscale <- ggvis_scale(
     name = name %||% scale,
     type = if (utc) "utc" else "time",
     subclass = "time",
@@ -235,7 +235,7 @@ scale_datetime <- function(vis, scale, domain = NULL, range = NULL,
 #'
 #' @param vis A ggvis object.
 #' @param scale The name of a scale, such as "x", "y", "fill", "stroke", etc.
-#' @inheritParams vega_scale
+#' @inheritParams ggvis_scale
 #' @param points If \code{TRUE}, distributes the ordinal values over a
 #'   quantitative range at uniformly spaced points. The spacing of the points
 #'   can be adjusted using the padding property. If \code{FALSE}, the ordinal
@@ -298,7 +298,7 @@ scale_ordinal <- function(vis, scale, domain = NULL, range = NULL,
     )
   }
 
-  vscale <- vega_scale(
+  vscale <- ggvis_scale(
     name = name %||% scale,
     type = "ordinal",
     points = points,
@@ -340,21 +340,12 @@ scale_nominal <- function(vis, scale, domain = NULL, range = NULL,
 scale_logical <- scale_nominal
 
 
-# Given a ggvis object, add all needed vega scales, with correct domain
-# values set.
 add_missing_scales <- function(vis, quiet = TRUE) {
-
-  # Add in scales not already specified in spec
-  needed <- setdiff(names(vis$scale_info), names(vis$scales))
-  for (scale_n in needed) {
-    vis <- scale_auto(vis, scale_n, quiet = quiet)
-  }
-
   # Add special x_rel and y_rel scales. Do it directly instead of using
   # scale_quantitative function, because we need data_domain=FALSE.
-  x_rel <- vega_scale(name = "x_rel", type = "linear", subclass = "quantitative",
+  x_rel <- ggvis_scale(name = "x_rel", type = "linear", subclass = "quantitative",
                       domain = c(0, 1), range = "width")
-  y_rel <- vega_scale(name = "y_rel", type = "linear", subclass = "quantitative",
+  y_rel <- ggvis_scale(name = "y_rel", type = "linear", subclass = "quantitative",
                       domain = c(0, 1), range = "height")
   vis <- add_scale(vis, x_rel, data_domain = FALSE)
   vis <- add_scale(vis, y_rel, data_domain = FALSE)
@@ -363,7 +354,7 @@ add_missing_scales <- function(vis, quiet = TRUE) {
 }
 
 scale_auto <- function(vis, scale, ..., quiet = FALSE) {
-  info <- vis$scale_info[[scale]]
+  info <- vis$scales[[scale]]
 
   if (!quiet) {
     message("Adding scale_", info$type, "(\"", scale, "\")")

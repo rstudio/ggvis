@@ -25,10 +25,12 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
   data_ids <- extract_data_ids(x$marks)
   data_table <- x$data[data_ids]
 
-  # Collapse each scale's list of scale_info objects into one scale_info object
-  # per scale.
-  x$scale_info <- summarize_scale_infos(x$scale_info)
-  scale_data_table <- scale_domain_data(x$scale_info)
+  # Add x_rel and y_rel
+  x <- add_missing_scales(x)
+
+  # Collapse each list of scale objects into one scale object.
+  x$scales <- lapply(x$scales, collapse_ggvis_scales)
+  scale_data_table <- scale_domain_data(x$scales)
 
   # Wrap each of the reactive data objects in another reactive which returns
   # only the columns that are actually used, and adds any calculated columns
@@ -50,7 +52,6 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
 
   # Each of these operations results in a more completely specified (and still
   # valid) ggvis object
-  x <- add_missing_scales(x)
   x <- add_missing_axes(x)
   x <- apply_axes_defaults(x)
   x <- add_missing_legends(x)
@@ -59,7 +60,7 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
 
   spec <- list(
     data = c(datasets, scale_datasets),
-    scales = unname(x$scales),
+    scales = lapply(unname(x$scales), as.vega),
     marks = lapply(x$marks, as.vega),
     width = x$options$width,
     height = x$options$height,
