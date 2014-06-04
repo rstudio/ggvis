@@ -221,6 +221,9 @@ register_reactives <- function(vis, reactives = NULL) {
 }
 
 register_reactive <- function(vis, reactive) {
+  # Some reactives are marked so that they're not registered
+  if (identical(attr(reactive, "register"), FALSE)) return(vis)
+
   # Add reactive id if needed
   if (is.null(reactive_id(reactive))) {
     reactive_id(reactive) <- paste0("reactive_", digest::digest(reactive, algo = "crc32"))
@@ -263,15 +266,19 @@ register_scales_from_props <- function(vis, props) {
     domain <- reactive({
       data_range(prop_value(prop, data()))
     })
+    # Flag to not register this reactive in the ggvis reactives list. This is
+    # so that these reactives don't make is.dynamic() think that the plot is
+    # dynamic.
+    attr(domain, "register") <- FALSE
 
     # e.g. scale_quantitative, scale_nominal
-    scalefun <- match.fun(paste0("scale_", type))
+    scale_fun <- match.fun(paste0("scale_", type))
 
-    vis <- scalefun(vis, scale, domain = domain)
+    vis <- scale_fun(vis, scale, domain = domain)
     vis
   }
 
-  # Add thee scales to the vis
+  # Add them to the vis
   for (i in seq_along(props)) {
     vis <- add_scale_from_prop(vis, names(props)[i], props[[i]])
   }
