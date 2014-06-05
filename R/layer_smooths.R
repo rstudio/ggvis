@@ -59,9 +59,8 @@
 layer_model_predictions <- function(vis, ..., model, formula = NULL,
   model_args = NULL, se = FALSE) {
 
-  # Set axis labels
-  vis <- add_scale(vis, ggvis_scale("x", label = prop_name(cur_props(vis)$x.update)))
-  vis <- add_scale(vis, ggvis_scale("y", label = prop_name(cur_props(vis)$y.update)))
+  vis <- set_scale_label(vis, "x", prop_name(cur_props(vis)$x.update))
+  vis <- set_scale_label(vis, "y", prop_name(cur_props(vis)$y.update))
 
   formula <- formula %||% guess_formula(vis$cur_props, model)
   props <- stroke_fill_defaults(props(...),

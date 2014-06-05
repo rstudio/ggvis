@@ -274,3 +274,10 @@ scale_auto <- function(vis, scale, ..., quiet = FALSE) {
   vis <- scale_fun(vis, scale, ...)
 }
 
+#' Set the label for a scale
+#' @param vis A ggvis object.
+#' @param scale The name of a scale, like "x".
+#' @param label Text to use for the label.
+set_scale_label <- function(vis, scale, label) {
+  add_scale(vis, ggvis_scale(scale, label = label))
+}
