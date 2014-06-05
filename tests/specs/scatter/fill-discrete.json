@@ -38,70 +38,77 @@
 				"parse" : null
 			},
 			"values" : "\"domain\"\n\"0.0073994412086904\"\n\"0.0807501375675201\"\n\"0.157208441523835\"\n\"0.600760886212811\"\n\"0.834333037259057\""
+		},
+		{
+			"name" : "scale/x_rel",
+			"format" : {
+				"type" : "csv",
+				"parse" : {
+					"domain" : "number"
+				}
+			},
+			"values" : "\"domain\"\n0\n1"
+		},
+		{
+			"name" : "scale/y_rel",
+			"format" : {
+				"type" : "csv",
+				"parse" : {
+					"domain" : "number"
+				}
+			},
+			"values" : "\"domain\"\n0\n1"
 		}
 	],
 	"scales" : [
 		{
+			"property" : "x",
 			"name" : "x",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
-			"clamp" : false,
-			"nice" : true,
-			"zero" : false,
-			"range" : "width",
 			"domain" : {
 				"data" : "scale/x",
 				"field" : "data.domain"
-			}
+			},
+			"range" : "width"
 		},
 		{
+			"property" : "y",
 			"name" : "y",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
-			"clamp" : false,
-			"nice" : true,
-			"zero" : false,
-			"range" : "height",
 			"domain" : {
 				"data" : "scale/y",
 				"field" : "data.domain"
-			}
+			},
+			"range" : "height"
 		},
 		{
+			"property" : "fill",
 			"name" : "fill",
 			"type" : "ordinal",
 			"reverse" : false,
 			"round" : false,
-			"points" : true,
-			"sort" : false,
-			"range" : "category10",
 			"domain" : {
 				"data" : "scale/fill",
 				"field" : "data.domain"
-			}
+			},
+			"points" : true,
+			"sort" : false,
+			"range" : "category10"
 		},
 		{
+			"property" : "x_rel",
 			"name" : "x_rel",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
-			"domain" : [
-				0,
-				1
-			],
+			"domain" : {
+				"data" : "scale/x_rel",
+				"field" : "data.domain"
+			},
 			"range" : "width"
 		},
 		{
+			"property" : "y_rel",
 			"name" : "y_rel",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
-			"domain" : [
-				0,
-				1
-			],
+			"domain" : {
+				"data" : "scale/y_rel",
+				"field" : "data.domain"
+			},
 			"range" : "height"
 		}
 	],

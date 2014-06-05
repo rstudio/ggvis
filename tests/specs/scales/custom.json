@@ -40,74 +40,75 @@
 				}
 			},
 			"values" : "\"domain\"\n0.0073994412086904\n0.834333037259057"
+		},
+		{
+			"name" : "scale/x_rel",
+			"format" : {
+				"type" : "csv",
+				"parse" : {
+					"domain" : "number"
+				}
+			},
+			"values" : "\"domain\"\n0\n1"
+		},
+		{
+			"name" : "scale/y_rel",
+			"format" : {
+				"type" : "csv",
+				"parse" : {
+					"domain" : "number"
+				}
+			},
+			"values" : "\"domain\"\n0\n1"
 		}
 	],
 	"scales" : [
 		{
-			"name" : "blah",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
-			"clamp" : false,
-			"nice" : true,
-			"zero" : false,
-			"range" : [
-				"#132B43",
-				"#56B1F7"
-			],
-			"domain" : {
-				"data" : "scale/blah",
-				"field" : "data.domain"
-			}
-		},
-		{
+			"property" : "x",
 			"name" : "x",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
-			"clamp" : false,
-			"nice" : true,
-			"zero" : false,
-			"range" : "width",
 			"domain" : {
 				"data" : "scale/x",
 				"field" : "data.domain"
-			}
-		},
-		{
-			"name" : "y",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
-			"clamp" : false,
-			"nice" : true,
-			"zero" : false,
-			"range" : "height",
-			"domain" : {
-				"data" : "scale/y",
-				"field" : "data.domain"
-			}
-		},
-		{
-			"name" : "x_rel",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
-			"domain" : [
-				0,
-				1
-			],
+			},
 			"range" : "width"
 		},
 		{
+			"property" : "y",
+			"name" : "y",
+			"domain" : {
+				"data" : "scale/y",
+				"field" : "data.domain"
+			},
+			"range" : "height"
+		},
+		{
+			"property" : "fill",
+			"name" : "blah",
+			"domain" : {
+				"data" : "scale/blah",
+				"field" : "data.domain"
+			},
+			"range" : [
+				"#132B43",
+				"#56B1F7"
+			]
+		},
+		{
+			"property" : "x_rel",
+			"name" : "x_rel",
+			"domain" : {
+				"data" : "scale/x_rel",
+				"field" : "data.domain"
+			},
+			"range" : "width"
+		},
+		{
+			"property" : "y_rel",
 			"name" : "y_rel",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
-			"domain" : [
-				0,
-				1
-			],
+			"domain" : {
+				"data" : "scale/y_rel",
+				"field" : "data.domain"
+			},
 			"range" : "height"
 		}
 	],
@@ -145,7 +146,13 @@
 	],
 	"width" : 600,
 	"height" : 400,
-	"legends" : [],
+	"legends" : [
+		{
+			"fill" : "blah",
+			"orient" : "right",
+			"title" : "blah"
+		}
+	],
 	"axes" : [
 		{
 			"type" : "x",
