@@ -3,13 +3,14 @@
 \alias{scale_datetime}
 \title{Add a date-time scale to a ggvis object.}
 \usage{
-scale_datetime(vis, scale, domain = NULL, range = NULL, reverse = FALSE,
-  round = FALSE, utc = FALSE, clamp = FALSE, nice = NULL, name = NULL)
+scale_datetime(vis, property, domain = NULL, range = NULL,
+  reverse = FALSE, round = FALSE, utc = FALSE, clamp = FALSE,
+  nice = NULL, name = NULL, label = NULL)
 }
 \arguments{
 \item{vis}{A ggvis object.}
 
-\item{scale}{The name of a scale, such as "x", "y", "fill", "stroke", etc.}
+\item{property}{The name of a property, such as "x", "y", "fill", "stroke", etc.}
 
 \item{clamp}{If true, values that exceed the data domain are clamped to
 either the minimum or maximum range value.}
@@ -38,7 +39,10 @@ domain. The following range literals are also available: "width", "height",
 \item{round}{If true, rounds numeric output values to integers. This can be
 helpful for snapping to the pixel grid.}
 
-\item{name}{name of the scale.}
+\item{name}{Name of the scale, such as "x", "y", "fill", etc. Can also be an
+arbitrary name like "foo".}
+
+\item{label}{Label for the scale. Used for axis or legend titles.}
 }
 \description{
 A date/time scale controls the mapping of date and time variables to

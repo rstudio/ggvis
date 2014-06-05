@@ -11,8 +11,6 @@ scale_singular(vis, scale, points = TRUE)
 \arguments{
 \item{vis}{A ggvis object.}
 
-\item{scale}{The name of a scale, such as "x", "y", "fill", "stroke", etc.}
-
 \item{points}{If \code{TRUE}, distributes the ordinal values over a
 quantitative range at uniformly spaced points. The spacing of the points
 can be adjusted using the padding property. If \code{FALSE}, the ordinal
