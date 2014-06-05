@@ -27,57 +27,69 @@
 				}
 			},
 			"values" : "\"domain\"\n0.2\n5"
+		},
+		{
+			"name" : "scale/x_rel",
+			"format" : {
+				"type" : "csv",
+				"parse" : {
+					"domain" : "number"
+				}
+			},
+			"values" : "\"domain\"\n0\n1"
+		},
+		{
+			"name" : "scale/y_rel",
+			"format" : {
+				"type" : "csv",
+				"parse" : {
+					"domain" : "number"
+				}
+			},
+			"values" : "\"domain\"\n0\n1"
 		}
 	],
 	"scales" : [
 		{
+			"property" : "x",
 			"name" : "x",
 			"type" : "ordinal",
 			"reverse" : false,
 			"round" : false,
-			"points" : true,
-			"padding" : 0.5,
-			"sort" : false,
-			"range" : "width",
 			"domain" : {
 				"data" : "scale/x",
 				"field" : "data.domain"
-			}
+			},
+			"points" : true,
+			"sort" : false,
+			"range" : "width",
+			"padding" : 0.5
 		},
 		{
+			"property" : "y",
 			"name" : "y",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
-			"clamp" : false,
-			"nice" : true,
-			"zero" : false,
-			"range" : "height",
 			"domain" : {
 				"data" : "scale/y",
 				"field" : "data.domain"
-			}
+			},
+			"range" : "height"
 		},
 		{
+			"property" : "x_rel",
 			"name" : "x_rel",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
-			"domain" : [
-				0,
-				1
-			],
+			"domain" : {
+				"data" : "scale/x_rel",
+				"field" : "data.domain"
+			},
 			"range" : "width"
 		},
 		{
+			"property" : "y_rel",
 			"name" : "y_rel",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
-			"domain" : [
-				0,
-				1
-			],
+			"domain" : {
+				"data" : "scale/y_rel",
+				"field" : "data.domain"
+			},
 			"range" : "height"
 		}
 	],

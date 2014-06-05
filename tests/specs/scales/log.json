@@ -29,10 +29,35 @@
 				}
 			},
 			"values" : "\"domain\"\n1\n5"
+		},
+		{
+			"name" : "scale/x_rel",
+			"format" : {
+				"type" : "csv",
+				"parse" : {
+					"domain" : "number"
+				}
+			},
+			"values" : "\"domain\"\n0\n1"
+		},
+		{
+			"name" : "scale/y_rel",
+			"format" : {
+				"type" : "csv",
+				"parse" : {
+					"domain" : "number"
+				}
+			},
+			"values" : "\"domain\"\n0\n1"
 		}
 	],
 	"scales" : [
 		{
+			"domain" : {
+				"data" : "scale/x",
+				"field" : "data.domain"
+			},
+			"property" : "x",
 			"name" : "x",
 			"type" : "log",
 			"reverse" : false,
@@ -40,13 +65,14 @@
 			"clamp" : false,
 			"nice" : true,
 			"zero" : false,
-			"range" : "width",
-			"domain" : {
-				"data" : "scale/x",
-				"field" : "data.domain"
-			}
+			"range" : "width"
 		},
 		{
+			"domain" : {
+				"data" : "scale/y",
+				"field" : "data.domain"
+			},
+			"property" : "y",
 			"name" : "y",
 			"type" : "log",
 			"reverse" : false,
@@ -54,32 +80,24 @@
 			"clamp" : false,
 			"nice" : true,
 			"zero" : false,
-			"range" : "height",
-			"domain" : {
-				"data" : "scale/y",
-				"field" : "data.domain"
-			}
+			"range" : "height"
 		},
 		{
+			"property" : "x_rel",
 			"name" : "x_rel",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
-			"domain" : [
-				0,
-				1
-			],
+			"domain" : {
+				"data" : "scale/x_rel",
+				"field" : "data.domain"
+			},
 			"range" : "width"
 		},
 		{
+			"property" : "y_rel",
 			"name" : "y_rel",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
-			"domain" : [
-				0,
-				1
-			],
+			"domain" : {
+				"data" : "scale/y_rel",
+				"field" : "data.domain"
+			},
 			"range" : "height"
 		}
 	],

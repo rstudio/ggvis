@@ -112,7 +112,7 @@ add_missing_legends <- function(vis) {
 
   for (scale in missing) {
     args <- list(vis)
-    args[[scales[[scale]]$name]] <- scale
+    args[[scale]] <- scales[[scale]]$property
     vis <- do.call(add_guide_legend, args)
   }
 
@@ -129,18 +129,10 @@ apply_legends_defaults <- function(vis) {
   legends <- lapply(legends, function(legend) {
     present <- unlist(legend[legs])
     present_scales <- scales[present]
-    present_info <- vis$scale_info[present]
 
     if (is.null(legend$title)) {
       # Default title for each legend consists of the fields pasted together
-      fields <- mapply(present_scales, present_info, FUN = function(scale, info) {
-        # scale$domain can be a vector of explicitly-set values, in which case
-        # return ""
-        if (!is.list(scale$domain)) return(NULL)
-        else info$label[1]
-      }, SIMPLIFY = FALSE)
-
-      fields <- unlist(fields)
+      fields <- vpluck(present_scales, "label", character(1))
       legend$title <- paste(fields, collapse = ".")
     }
 

@@ -3,14 +3,14 @@
 \alias{scale_numeric}
 \title{Add a numeric scale to a ggvis object.}
 \usage{
-scale_numeric(vis, scale, domain = NULL, range = NULL, reverse = FALSE,
+scale_numeric(vis, property, domain = NULL, range = NULL, reverse = FALSE,
   round = FALSE, trans = "linear", clamp = FALSE, exponent = NULL,
-  nice = TRUE, zero = FALSE, name = NULL)
+  nice = TRUE, zero = FALSE, name = NULL, label = NULL)
 }
 \arguments{
 \item{vis}{A ggvis object.}
 
-\item{scale}{The name of a scale, such as "x", "y", "fill", "stroke", etc.}
+\item{property}{The name of a property, such as "x", "y", "fill", "stroke", etc.}
 
 \item{trans}{A scale transformation: one of "linear", "log", "pow", "sqrt",
 "quantile", "quantize", "threshold"}
@@ -44,7 +44,10 @@ domain. The following range literals are also available: "width", "height",
 \item{round}{If true, rounds numeric output values to integers. This can be
 helpful for snapping to the pixel grid.}
 
-\item{name}{name of the scale.}
+\item{name}{Name of the scale, such as "x", "y", "fill", etc. Can also be an
+arbitrary name like "foo".}
+
+\item{label}{Label for the scale. Used for axis or legend titles.}
 }
 \description{
 A numeric (quantitative) scale controls the mapping of continuous variables

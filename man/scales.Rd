@@ -46,7 +46,7 @@ Each type has a a corresponding function: \code{scale_numeric},
 \code{scale_nominal}, and so on.
 
 The scale types for ggvis are mapped to scale types for Vega, which include
-"ordinal", "quantitative", and "time". See \code{\link{vega_scale}} for more
+"ordinal", "quantitative", and "time". See \code{\link{ggvis_scale}} for more
 details.
 
 Given a scale and type, the range is selected based on the combination of the

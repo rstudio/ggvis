@@ -38,7 +38,6 @@ ggvis <- function(data = NULL, ..., env = parent.frame()) {
       marks = list(),
       data = list(),
       props = list(),
-      scale_info = list(),
       reactives = list(),
       scales = list(),
       axes = list(),
@@ -134,7 +133,7 @@ add_mark <- function(vis, type = NULL, props = NULL, data = NULL,
 
   vis <- add_data(vis, data, data_name)
   vis <- add_props(vis, .props = props)
-  vis <- register_scale_info(vis, cur_props(vis))
+  vis <- register_scales_from_props(vis, cur_props(vis))
 
   vis$marks <- c(vis$marks, list(
     mark(type, props = cur_props(vis), data = vis$cur_data))
@@ -157,34 +156,11 @@ add_mark <- function(vis, type = NULL, props = NULL, data = NULL,
 #' @keywords internal
 #' @export
 add_scale <- function(vis, scale, data_domain = TRUE) {
-  if (data_domain) {
-    # If domain is specified, remove it from the scale object, and add it to the
-    # scale_info list. This makes all scale domains controlled from the scale data
-    # sets.
-    if (!is.null(scale$domain)) {
-      if (shiny::is.reactive(scale$domain)) {
-        vis <- register_reactive(vis, scale$domain)
-      }
-      type <- shiny::isolate(vector_type(value(scale$domain)))
-      info <- scale_info(scale$name, scale$name, type, scale$domain,
-                         override = TRUE)
-      vis <- add_scale_info(vis, info)
-    }
-
-    # Replace the domain with something that grabs it from the domain data
-    scale$domain <- list(
-      data = paste0("scale/", scale$name),
-      field = "data.domain"
-    )
+  if (data_domain && shiny::is.reactive(scale$domain)) {
+    vis <- register_reactive(vis, scale$domain)
   }
 
-  vis$scales[[scale$name]] <- scale
-  vis
-}
-
-add_scale_info <- function(vis, info) {
-  scale <- info$scale
-  vis$scale_info[[scale]] <- c(vis$scale_info[[scale]], list(info))
+  vis$scales[[scale$name]] <- c(vis$scales[[scale$name]], list(scale))
   vis
 }
 
@@ -245,6 +221,9 @@ register_reactives <- function(vis, reactives = NULL) {
 }
 
 register_reactive <- function(vis, reactive) {
+  # Some reactives are marked so that they're not registered
+  if (identical(attr(reactive, "register"), FALSE)) return(vis)
+
   # Add reactive id if needed
   if (is.null(reactive_id(reactive))) {
     reactive_id(reactive) <- paste0("reactive_", digest::digest(reactive, algo = "crc32"))
@@ -269,37 +248,53 @@ register_reactive <- function(vis, reactive) {
   vis
 }
 
-register_scale_info <- function(vis, props) {
+# Given a set of props, register a scale for each one.
+register_scales_from_props <- function(vis, props) {
   # Strip off .update, .enter, etc.
   names(props) <- trim_propset(names(props))
 
   # Get a reactive for each scaled prop
   data <- vis$cur_data
 
-  build_info <- function(name, prop) {
+  add_scale_from_prop <- function(vis, prop_name, prop) {
     if (!prop_is_scaled(prop) || is.null(data)) {
-      return(NULL)
+      return(vis)
     }
 
-    scale <- if (isTRUE(prop$scale)) propname_to_scale(name) else prop$scale
-    values <- shiny::isolate(prop_value(prop, data()))
+    # If we can get a valid scale name (like "x") from the prop, then use that
+    # for the property and name. If we get something like "blah", then use that
+    # for the name, but use prop_name for the property.
+    property <- prop_scale(prop, default_scale = propname_to_scale(prop_name))
+    if (property %in% valid_scales) {
+      name <- property
+      label <- prop_name(prop)
+    } else {
+      property <- prop_name
+      name <- prop$scale
+      label <- name
+    }
 
-    scale_info(
-      scale = scale,
-      label = prop_name(prop),
-      type = vector_type(values),
-      domain = reactive({
-        data_range(prop_value(prop, data()))
-      })
-    )
+    type <- vector_type(shiny::isolate(prop_value(prop, data())))
+    domain <- reactive({
+      data_range(prop_value(prop, data()))
+    })
+    # Flag to not register this reactive in the ggvis reactives list. This is
+    # so that these reactives don't make is.dynamic() think that the plot is
+    # dynamic.
+    attr(domain, "register") <- FALSE
+
+    # e.g. scale_quantitative_int, scale_nominal_int
+    scale_fun <- match.fun(paste0("scale_", type, "_int"))
+
+    vis <- scale_fun(vis, property = property, name = name,
+                     label = label, domain = domain)
+    vis
   }
-  scale_infos <- compact(Map(build_info, names(props), props))
 
   # Add them to the vis
-  for (i in seq_along(scale_infos)) {
-    vis <- add_scale_info(vis, scale_infos[[i]])
+  for (i in seq_along(props)) {
+    vis <- add_scale_from_prop(vis, names(props)[i], props[[i]])
   }
-
   vis
 }
 

@@ -34,16 +34,11 @@ explain.ggvis <- function (x, ...) {
     }
   }
   cat("Scales:\n")
-  for (scale in x$scales) {
-    cat(indent(format(scale), 2))
-    cat("\n")
-  }
-  cat("Scale info objects:\n")
-  for (scale_name in names(x$scale_info)) {
+  for (scale_name in names(x$scales)) {
     cat(indent(paste0(scale_name, ":\n"), 2))
-    for (info in x$scale_info[[scale_name]]) {
-      cat(indent(format(info), 4))
-    cat("\n")
+    for (scale in x$scales[[scale_name]]) {
+      cat(indent(format(scale), 4))
+      cat("\n")
     }
   }
   cat("Axes:\n")

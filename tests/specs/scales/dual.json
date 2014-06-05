@@ -41,10 +41,44 @@
 				}
 			},
 			"values" : "\"domain\"\n0.0073994412086904\n0.834333037259057"
+		},
+		{
+			"name" : "scale/x_rel",
+			"format" : {
+				"type" : "csv",
+				"parse" : {
+					"domain" : "number"
+				}
+			},
+			"values" : "\"domain\"\n0\n1"
+		},
+		{
+			"name" : "scale/y_rel",
+			"format" : {
+				"type" : "csv",
+				"parse" : {
+					"domain" : "number"
+				}
+			},
+			"values" : "\"domain\"\n0\n1"
 		}
 	],
 	"scales" : [
 		{
+			"property" : "x",
+			"name" : "x",
+			"domain" : {
+				"data" : "scale/x",
+				"field" : "data.domain"
+			},
+			"range" : "width"
+		},
+		{
+			"domain" : {
+				"data" : "scale/y-y",
+				"field" : "data.domain"
+			},
+			"property" : "y",
 			"name" : "y-y",
 			"type" : "linear",
 			"reverse" : false,
@@ -52,13 +86,14 @@
 			"clamp" : false,
 			"nice" : true,
 			"zero" : false,
-			"range" : "height",
-			"domain" : {
-				"data" : "scale/y-y",
-				"field" : "data.domain"
-			}
+			"range" : "height"
 		},
 		{
+			"domain" : {
+				"data" : "scale/y-z",
+				"field" : "data.domain"
+			},
+			"property" : "y",
 			"name" : "y-z",
 			"type" : "linear",
 			"reverse" : false,
@@ -66,46 +101,24 @@
 			"clamp" : false,
 			"nice" : true,
 			"zero" : false,
-			"range" : "height",
-			"domain" : {
-				"data" : "scale/y-z",
-				"field" : "data.domain"
-			}
+			"range" : "height"
 		},
 		{
-			"name" : "x",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
-			"clamp" : false,
-			"nice" : true,
-			"zero" : false,
-			"range" : "width",
-			"domain" : {
-				"data" : "scale/x",
-				"field" : "data.domain"
-			}
-		},
-		{
+			"property" : "x_rel",
 			"name" : "x_rel",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
-			"domain" : [
-				0,
-				1
-			],
+			"domain" : {
+				"data" : "scale/x_rel",
+				"field" : "data.domain"
+			},
 			"range" : "width"
 		},
 		{
+			"property" : "y_rel",
 			"name" : "y_rel",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
-			"domain" : [
-				0,
-				1
-			],
+			"domain" : {
+				"data" : "scale/y_rel",
+				"field" : "data.domain"
+			},
 			"range" : "height"
 		}
 	],

@@ -5,22 +5,22 @@
 \alias{scale_ordinal}
 \title{Add a ordinal, nominal, or logical scale to a ggvis object.}
 \usage{
-scale_ordinal(vis, scale, domain = NULL, range = NULL, reverse = FALSE,
+scale_ordinal(vis, property, domain = NULL, range = NULL, reverse = FALSE,
   round = FALSE, points = TRUE, padding = NULL, sort = FALSE,
-  name = NULL)
+  name = NULL, label = NULL)
 
-scale_nominal(vis, scale, domain = NULL, range = NULL, reverse = FALSE,
+scale_nominal(vis, property, domain = NULL, range = NULL, reverse = FALSE,
   round = FALSE, points = TRUE, padding = NULL, sort = FALSE,
-  name = NULL)
+  name = NULL, label = NULL)
 
-scale_logical(vis, scale, domain = NULL, range = NULL, reverse = FALSE,
+scale_logical(vis, property, domain = NULL, range = NULL, reverse = FALSE,
   round = FALSE, points = TRUE, padding = NULL, sort = FALSE,
-  name = NULL)
+  name = NULL, label = NULL)
 }
 \arguments{
 \item{vis}{A ggvis object.}
 
-\item{scale}{The name of a scale, such as "x", "y", "fill", "stroke", etc.}
+\item{property}{The name of a property, such as "x", "y", "fill", "stroke", etc.}
 
 \item{points}{If \code{TRUE}, distributes the ordinal values over a
 quantitative range at uniformly spaced points. The spacing of the points
@@ -57,7 +57,10 @@ domain. The following range literals are also available: "width", "height",
 \item{round}{If true, rounds numeric output values to integers. This can be
 helpful for snapping to the pixel grid.}
 
-\item{name}{name of the scale.}
+\item{name}{Name of the scale, such as "x", "y", "fill", etc. Can also be an
+arbitrary name like "foo".}
+
+\item{label}{Label for the scale. Used for axis or legend titles.}
 }
 \description{
 Ordinal, nominal, and logical scales are all categorical, and are treated
