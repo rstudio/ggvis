@@ -59,7 +59,7 @@ prop <- function(x, scale = NULL, offset = NULL, mult = NULL,
 
   } else if (shiny::is.reactive(x)) {
     type <- "reactive"
-    reactive_id(x) <- paste0("reactive_", digest::digest(x, algo = "crc32"))
+    reactive_id(x) <- rand_id("reactive_")
     scale <- scale %||% FALSE
   } else if (is.quoted(x)) {
     type <- "variable"

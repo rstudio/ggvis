@@ -226,7 +226,7 @@ register_reactive <- function(vis, reactive) {
 
   # Add reactive id if needed
   if (is.null(reactive_id(reactive))) {
-    reactive_id(reactive) <- paste0("reactive_", digest::digest(reactive, algo = "crc32"))
+    reactive_id(reactive) <- rand_id("reactive_")
   }
 
   label <- reactive_id(reactive)
