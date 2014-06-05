@@ -97,7 +97,11 @@ as.vega.ggvis_scale <- function(x) {
 collapse_ggvis_scales <- function(scales) {
   if (empty(scales)) return(NULL)
   type <- unique(unlist(pluck(scales, "type")))
-  if (length(type) != 1) stop("Scales must all have same type.")
+  if (!all(type %in% c("linear", "log", "pow", "sqrt", "quantile", "quantize", "threshold")) &&
+      !all(type %in% c("time", "utc")) &&
+      !all(type %in% "ordinal")) {
+    stop("Scales must all be quantitative, time, or ordinal.")
+  }
 
   # Get first non-NULL label
   label <- compact(pluck(scales, "label"))[[1]]
