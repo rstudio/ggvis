@@ -267,12 +267,11 @@ register_scales_from_props <- function(vis, props) {
     property <- prop_scale(prop, default_scale = propname_to_scale(prop_name))
     if (property %in% valid_scales) {
       name <- property
-      label <- prop_name(prop)
     } else {
       property <- prop_name
       name <- prop$scale
-      label <- name
     }
+    label <- prop_name(prop)
 
     type <- vector_type(shiny::isolate(prop_value(prop, data())))
     domain <- reactive({
