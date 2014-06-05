@@ -16,7 +16,7 @@ df %>%
 df %>%
   ggvis(x = ~x, y = ~x, fill = prop(~z, scale = "blah")) %>%
   layer_points() %>%
-  scale_numeric("fill", name = "blah") %>%
+  add_guide_legend(fill = "blah", title = "blah") %>%
   save_spec("scales/custom.json")
 
 # Dual scale
