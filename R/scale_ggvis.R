@@ -40,12 +40,14 @@
 #' ggvis_scale("x", "linear")
 #' ggvis_scale("x", "ord")
 ggvis_scale <- function(name, label = name, type = NULL, domain = NULL,
-                        range = NULL, reverse = FALSE, round = FALSE, ...,
+                        range = NULL, reverse = NULL, round = NULL, ...,
                         subclass = NULL, override = FALSE) {
   assert_that(is.string(name))
-  type <- match.arg(type, c("linear", "ordinal", "time", "utc", "log",
-    "pow", "sqrt", "quantile", "quantize", "threshold"))
-  assert_that(is.flag(reverse), is.flag(round))
+  assert_that(is.null(type) ||
+              type %in% c("linear", "ordinal", "time", "utc", "log", "pow",
+                          "sqrt", "quantile", "quantize", "threshold"))
+  assert_that(is.null(reverse) || is.flag(reverse),
+              is.null(round) || is.flag(round))
 
   if (!is.null(subclass)) {
     assert_that(is.string(subclass))
@@ -94,13 +96,11 @@ as.vega.ggvis_scale <- function(x) {
 # ggvis_scale object.
 collapse_ggvis_scales <- function(scales) {
   if (empty(scales)) return(NULL)
-
-  scale_name <- scales[[1]]$name
-  # Get first non-NULL label
-  label <- compact(pluck(scales, "label"))[[1]]
-
   type <- unique(unlist(pluck(scales, "type")))
   if (length(type) != 1) stop("Scales must all have same type.")
+
+  # Get first non-NULL label
+  label <- compact(pluck(scales, "label"))[[1]]
 
   domains <- pluck(scales, "domain")
   overrides <- vpluck(scales, "override", logical(1))
@@ -140,7 +140,10 @@ collapse_ggvis_scales <- function(scales) {
     })
   }
 
-  Reduce(merge_ggvis_scales, scales)
+  new_scale <- Reduce(merge_ggvis_scales, scales)
+  new_scale$label <- label
+  new_scale$domain <- domain
+  new_scale
 }
 
 # Takes a named list, where each name is the name of a scale, and each item is
