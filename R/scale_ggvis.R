@@ -11,7 +11,10 @@
 #' named list with a set of values, the domain can be  a vector of values, or a
 #' reactive that returns such values.
 #'
-#' @param name Name of the scale, such as "x", "y", "fill", etc.
+#' @param property The property to which the scale applies, such as "x", "y",
+#'   "fill", etc.
+#' @param name Name of the scale, such as "x", "y", "fill", etc. Can also be an
+#'   arbitrary name like "foo".
 #' @param label Label for the scale. Used for axis or legend titles.
 #' @param type Type of scale. Should be one of "linear", "ordinal", "time",
 #'   "utc", "linear", "log", "pow", "sqrt", "quantile", "quantize", "threshold".
@@ -39,9 +42,9 @@
 #' @examples
 #' ggvis_scale("x", "linear")
 #' ggvis_scale("x", "ord")
-ggvis_scale <- function(name, label = name, type = NULL, domain = NULL,
-                        range = NULL, reverse = NULL, round = NULL, ...,
-                        subclass = NULL, override = FALSE) {
+ggvis_scale <- function(property, name = property, label = name, type = NULL,
+                        domain = NULL, range = NULL, reverse = NULL,
+                        round = NULL, ..., subclass = NULL, override = FALSE) {
   assert_that(is.string(name))
   assert_that(is.null(type) ||
               type %in% c("linear", "ordinal", "time", "utc", "log", "pow",
@@ -56,8 +59,11 @@ ggvis_scale <- function(name, label = name, type = NULL, domain = NULL,
 
   structure(
     drop_nulls(c(
-      list(name = name, label = label, type = type, reverse = reverse,
-           round = round, domain = domain, override = override, ...),
+      list(
+        property = property, name = name, label = label, type = type,
+        reverse = reverse, round = round, domain = domain, override = override,
+        ...
+      ),
       range_prop(range, "range")
     )),
     class = c(subclass, "ggvis_scale")
@@ -150,6 +156,8 @@ collapse_ggvis_scales <- function(scales) {
   new_scale$label <- compact(pluck(scales, "label"))[[1]]
   new_scale$domain <- domain
   new_scale$override <- NULL
+
+  new_scale <- apply_scale_defaults(new_scale)
   new_scale
 }
 
@@ -173,5 +181,5 @@ scale_domain_data <- function(scales) {
 }
 
 merge_ggvis_scales <- function(a, b) {
-  structure(merge_vectors(a, b), class = "ggvis_scale")
+  structure(merge_vectors(a, b), class = class(b))
 }

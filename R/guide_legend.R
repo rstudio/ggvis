@@ -112,7 +112,7 @@ add_missing_legends <- function(vis) {
 
   for (scale in missing) {
     args <- list(vis)
-    args[[scales[[scale]]$name]] <- scale
+    args[[scale]] <- scales[[scale]]$property
     vis <- do.call(add_guide_legend, args)
   }
 

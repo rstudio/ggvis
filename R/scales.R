@@ -1,3 +1,7 @@
+# This file contains user-facing versions of scale_xxx_int functions.
+# These version validate arguments, set defatuls, and then call their
+# internal-facing counterparts.
+
 #' Add a scale to a ggvis plot
 #'
 #' This creates a scale object for a given scale and variable type, and adds it
@@ -71,7 +75,7 @@ NULL
 #' to visual properties.
 #'
 #' @param vis A ggvis object.
-#' @param scale The name of a scale, such as "x", "y", "fill", "stroke", etc.
+#' @param property The name of a property, such as "x", "y", "fill", "stroke", etc.
 #' @inheritParams ggvis_scale
 #' @param trans A scale transformation: one of "linear", "log", "pow", "sqrt",
 #'   "quantile", "quantize", "threshold"
@@ -104,7 +108,7 @@ NULL
 #'
 #' # Lower bound is set to lower limit of data, upper bound set to 3.
 #' p %>% scale_numeric("x", domain = c(NA, 3), clamp = TRUE, nice = FALSE)
-scale_numeric <- function(vis, scale, domain = NULL, range = NULL,
+scale_numeric <- function(vis, property, domain = NULL, range = NULL,
                           reverse = FALSE, round = FALSE,
                           trans = "linear", clamp = FALSE, exponent = NULL,
                           nice = TRUE, zero = FALSE, name = NULL) {
@@ -116,42 +120,13 @@ scale_numeric <- function(vis, scale, domain = NULL, range = NULL,
     stop("May only set exponent when pow = 'trans'", call. = FALSE)
   }
 
-  assert_that(
-    is.null(exponent) ||
-    (is.numeric(exponent) && length(exponent) == 1)
-  )
-  assert_that(is.flag(clamp), is.flag(nice), is.flag(zero))
+  assert_that(is.null(exponent) || (is.numeric(exponent) && length(exponent) == 1))
+  assert_that(is.flag(clamp))
+  assert_that(is.flag(nice))
+  assert_that(is.flag(zero))
 
-  if (is.null(range)) {
-    range <- switch(scale,
-      x = "width",
-      y = "height",
-      stroke = c("#132B43", "#56B1F7"),
-      fill = c("#132B43", "#56B1F7"),
-      size = c(20, 100),
-      fontSize = c(10, 20),
-      opacity = c(0, 1),
-      angle = c(0, 2 * pi),
-      radius = c(0, 50),
-      stop("Don't know how to automatically set range for ", scale, ".")
-    )
-  }
-
-  vscale <- ggvis_scale(
-    name = name %||% scale,
-    type = trans,
-    subclass = "quantitative",
-    exponent = exponent,
-    clamp = clamp,
-    nice = nice,
-    zero = zero,
-    domain = domain,
-    range = range,
-    reverse = reverse,
-    round = round
-  )
-
-  add_scale(vis, vscale)
+  scale_numeric_int(vis, property, domain, range, reverse, round,
+                    trans, clamp, exponent, nice, zero, name)
 }
 
 #' Add a date-time scale to a ggvis object.
@@ -160,7 +135,7 @@ scale_numeric <- function(vis, scale, domain = NULL, range = NULL,
 #' visual properties.
 #'
 #' @param vis A ggvis object.
-#' @param scale The name of a scale, such as "x", "y", "fill", "stroke", etc.
+#' @param property The name of a property, such as "x", "y", "fill", "stroke", etc.
 #' @inheritParams ggvis_scale
 #' @param clamp  If true, values that exceed the data domain are clamped to
 #'   either the minimum or maximum range value.
@@ -194,7 +169,7 @@ scale_numeric <- function(vis, scale, domain = NULL, range = NULL,
 #' p %>% scale_datetime("x", nice = "month")
 #'
 #' p %>% scale_datetime("x", utc = TRUE)
-scale_datetime <- function(vis, scale, domain = NULL, range = NULL,
+scale_datetime <- function(vis, property, domain = NULL, range = NULL,
                            reverse = FALSE, round = FALSE, utc = FALSE,
                            clamp = FALSE, nice = NULL, name = NULL) {
   assert_that(is.flag(clamp))
@@ -205,27 +180,8 @@ scale_datetime <- function(vis, scale, domain = NULL, range = NULL,
     )
   }
 
-  if (is.null(range)) {
-    range <- switch(scale,
-      x = "width",
-      y = "height",
-      stop("Don't know how to automatically set range for ", scale, ".")
-    )
-  }
-
-  vscale <- ggvis_scale(
-    name = name %||% scale,
-    type = if (utc) "utc" else "time",
-    subclass = "time",
-    clamp = clamp,
-    nice = nice,
-    domain = domain,
-    range = range,
-    reverse = reverse,
-    round = round
-  )
-
-  add_scale(vis, vscale)
+  scale_datetime_int(vis, property, domain, range, reverse, round, utc, clamp,
+                     nice, name)
 }
 
 #' Add a ordinal, nominal, or logical scale to a ggvis object.
@@ -234,7 +190,7 @@ scale_datetime <- function(vis, scale, domain = NULL, range = NULL,
 #' similarly by ggvis.
 #'
 #' @param vis A ggvis object.
-#' @param scale The name of a scale, such as "x", "y", "fill", "stroke", etc.
+#' @param property The name of a property, such as "x", "y", "fill", "stroke", etc.
 #' @inheritParams ggvis_scale
 #' @param points If \code{TRUE}, distributes the ordinal values over a
 #'   quantitative range at uniformly spaced points. The spacing of the points
@@ -271,7 +227,7 @@ scale_datetime <- function(vis, scale, domain = NULL, range = NULL,
 #'
 #' # Control range of fill scale
 #' p %>% scale_nominal("fill", range = c("pink", "lightblue"))
-scale_ordinal <- function(vis, scale, domain = NULL, range = NULL,
+scale_ordinal <- function(vis, property, domain = NULL, range = NULL,
                           reverse = FALSE, round = FALSE,
                           points = TRUE, padding = NULL, sort = FALSE,
                           name = NULL) {
@@ -279,77 +235,31 @@ scale_ordinal <- function(vis, scale, domain = NULL, range = NULL,
   assert_that(is.null(padding) || (is.numeric(padding) && length(padding) == 1))
   assert_that(is.flag(sort))
 
-  if (is.null(range)) {
-    range <- switch(scale,
-      x = "width",
-      y = "height",
-      stroke = "category10",
-      fill = "category10",
-      size = c(10, 100),
-      stop("Don't know how to automatically set range for ", scale, ".")
-    )
-  }
-
-  if (is.null(padding)) {
-    padding <- switch(scale,
-      x = 0.5,
-      y = 0.5,
-      NULL
-    )
-  }
-
-  vscale <- ggvis_scale(
-    name = name %||% scale,
-    type = "ordinal",
-    points = points,
-    padding = padding,
-    sort = sort,
-    subclass = "ordinal",
-    domain = domain,
-    range = range,
-    reverse = reverse,
-    round = round
-  )
-
-  add_scale(vis, vscale)
+  scale_ordinal_int(vis, property, domain, range, reverse, round, points, padding,
+                    sort, name)
 }
 
 #' @rdname scale_ordinal
 #' @export
-scale_nominal <- function(vis, scale, domain = NULL, range = NULL,
+scale_nominal <- function(vis, property, domain = NULL, range = NULL,
                           reverse = FALSE, round = FALSE,
                           points = TRUE, padding = NULL, sort = FALSE,
                           name = NULL) {
-  if (is.null(range)) {
-    range <- switch(scale,
-      x = "width",
-      y = "height",
-      stroke = "category10",
-      fill = "category10",
-      shape = "shapes",
-      stop("Don't know how to automatically set range for ", scale, ".")
-    )
-  }
+  assert_that(is.flag(points))
+  assert_that(is.null(padding) || (is.numeric(padding) && length(padding) == 1))
+  assert_that(is.flag(sort))
 
-  scale_ordinal(vis, scale, domain, range, reverse, round, points, padding,
-                sort, name)
+  scale_nominal_int(vis, property, domain, range, reverse, round, points,
+                    padding, sort, name)
 }
 
 #' @rdname scale_ordinal
 #' @export
 scale_logical <- scale_nominal
 
-
 add_missing_scales <- function(vis, quiet = TRUE) {
-  # Add special x_rel and y_rel scales. Do it directly instead of using
-  # scale_quantitative function, because we need data_domain=FALSE.
-  x_rel <- ggvis_scale(name = "x_rel", type = "linear", subclass = "quantitative",
-                      domain = c(0, 1), range = "width")
-  y_rel <- ggvis_scale(name = "y_rel", type = "linear", subclass = "quantitative",
-                      domain = c(0, 1), range = "height")
-  vis <- add_scale(vis, x_rel, data_domain = FALSE)
-  vis <- add_scale(vis, y_rel, data_domain = FALSE)
-
+  vis <- scale_numeric_int(vis, "x_rel", domain = c(0, 1), range = "width")
+  vis <- scale_numeric_int(vis, "y_rel", domain = c(0, 1), range = "height")
   vis
 }
 
