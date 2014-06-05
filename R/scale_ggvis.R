@@ -40,7 +40,7 @@
 #' @export
 #' @keywords internal
 #' @examples
-#' ggvis_scale("x", "linear")
+#' ggvis_scale("x", type = "linear")
 #' ggvis_scale("x", "ord")
 ggvis_scale <- function(property, name = property, label = name, type = NULL,
                         domain = NULL, range = NULL, reverse = NULL,
