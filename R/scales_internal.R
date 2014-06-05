@@ -34,6 +34,7 @@ scale_datetime_int <- function(vis, property, domain = NULL, range = NULL,
                                label = NULL) {
   name <- name %||% property
   label <- label %||% name
+  if (is.null(utc)) utc <- FALSE
 
   vscale <- ggvis_scale(
     property = property,
@@ -99,4 +100,3 @@ scale_nominal_int <- function(vis, property, domain = NULL, range = NULL,
 
   add_scale(vis, vscale)
 }
-
