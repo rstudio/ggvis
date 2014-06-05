@@ -6,10 +6,12 @@
 \usage{
 singular()
 
-scale_singular(vis, scale, points = TRUE)
+scale_singular(vis, property, points = TRUE)
 }
 \arguments{
 \item{vis}{A ggvis object.}
+
+\item{property}{The name of a property, such as "x", "y", "fill", "stroke", etc.}
 
 \item{points}{If \code{TRUE}, distributes the ordinal values over a
 quantitative range at uniformly spaced points. The spacing of the points
