@@ -111,7 +111,7 @@ NULL
 scale_numeric <- function(vis, property, domain = NULL, range = NULL,
                           reverse = FALSE, round = FALSE,
                           trans = "linear", clamp = FALSE, exponent = NULL,
-                          nice = TRUE, zero = FALSE, name = NULL) {
+                          nice = TRUE, zero = FALSE, name = NULL, label = NULL) {
   trans <- match.arg(
     trans,
     c("linear", "log", "pow", "sqrt", "quantile", "quantize", "threshold")
@@ -126,7 +126,7 @@ scale_numeric <- function(vis, property, domain = NULL, range = NULL,
   assert_that(is.flag(zero))
 
   scale_numeric_int(vis, property, domain, range, reverse, round,
-                    trans, clamp, exponent, nice, zero, name)
+                    trans, clamp, exponent, nice, zero, name, label)
 }
 
 #' Add a date-time scale to a ggvis object.
@@ -171,7 +171,8 @@ scale_numeric <- function(vis, property, domain = NULL, range = NULL,
 #' p %>% scale_datetime("x", utc = TRUE)
 scale_datetime <- function(vis, property, domain = NULL, range = NULL,
                            reverse = FALSE, round = FALSE, utc = FALSE,
-                           clamp = FALSE, nice = NULL, name = NULL) {
+                           clamp = FALSE, nice = NULL, name = NULL,
+                           label = NULL) {
   assert_that(is.flag(clamp))
   if (!is.null(nice)) {
     nice <- match.arg(
@@ -181,7 +182,7 @@ scale_datetime <- function(vis, property, domain = NULL, range = NULL,
   }
 
   scale_datetime_int(vis, property, domain, range, reverse, round, utc, clamp,
-                     nice, name)
+                     nice, name, label)
 }
 
 #' Add a ordinal, nominal, or logical scale to a ggvis object.
@@ -230,13 +231,13 @@ scale_datetime <- function(vis, property, domain = NULL, range = NULL,
 scale_ordinal <- function(vis, property, domain = NULL, range = NULL,
                           reverse = FALSE, round = FALSE,
                           points = TRUE, padding = NULL, sort = FALSE,
-                          name = NULL) {
+                          name = NULL, label = NULL) {
   assert_that(is.flag(points))
   assert_that(is.null(padding) || (is.numeric(padding) && length(padding) == 1))
   assert_that(is.flag(sort))
 
   scale_ordinal_int(vis, property, domain, range, reverse, round, points, padding,
-                    sort, name)
+                    sort, name, label)
 }
 
 #' @rdname scale_ordinal
@@ -244,13 +245,13 @@ scale_ordinal <- function(vis, property, domain = NULL, range = NULL,
 scale_nominal <- function(vis, property, domain = NULL, range = NULL,
                           reverse = FALSE, round = FALSE,
                           points = TRUE, padding = NULL, sort = FALSE,
-                          name = NULL) {
+                          name = NULL, label = NULL) {
   assert_that(is.flag(points))
   assert_that(is.null(padding) || (is.numeric(padding) && length(padding) == 1))
   assert_that(is.flag(sort))
 
   scale_nominal_int(vis, property, domain, range, reverse, round, points,
-                    padding, sort, name)
+                    padding, sort, name, label)
 }
 
 #' @rdname scale_ordinal

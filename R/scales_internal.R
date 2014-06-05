@@ -5,10 +5,15 @@
 scale_numeric_int <- function(vis, property, domain = NULL, range = NULL,
                               reverse = NULL, round = NULL,
                               trans = NULL, clamp = NULL, exponent = NULL,
-                              nice = NULL, zero = NULL, name = NULL) {
+                              nice = NULL, zero = NULL, name = NULL,
+                              label = NULL) {
+  name <- name %||% property
+  label <- label %||% name
+
   vscale <- ggvis_scale(
     property = property,
-    name = name %||% property,
+    name = name,
+    label = label,
     type = trans,
     subclass = "numeric",
     exponent = exponent,
@@ -25,10 +30,15 @@ scale_numeric_int <- function(vis, property, domain = NULL, range = NULL,
 
 scale_datetime_int <- function(vis, property, domain = NULL, range = NULL,
                                reverse = NULL, round = NULL, utc = NULL,
-                               clamp = NULL, nice = NULL, name = NULL) {
+                               clamp = NULL, nice = NULL, name = NULL,
+                               label = NULL) {
+  name <- name %||% property
+  label <- label %||% name
+
   vscale <- ggvis_scale(
     property = property,
-    name = name %||% property,
+    name = name,
+    label = label,
     type = if (utc) "utc" else "time",
     subclass = "datetime",
     clamp = clamp,
@@ -44,10 +54,14 @@ scale_datetime_int <- function(vis, property, domain = NULL, range = NULL,
 scale_ordinal_int <- function(vis, property, domain = NULL, range = NULL,
                               reverse = FALSE, round = FALSE,
                               points = TRUE, padding = NULL, sort = FALSE,
-                              name = NULL) {
+                              name = NULL, label = NULL) {
+  name <- name %||% property
+  label <- label %||% name
+
   vscale <- ggvis_scale(
     property = property,
-    name = name %||% property,
+    name = name,
+    label = label,
     type = "ordinal",
     points = points,
     padding = padding,
@@ -64,10 +78,14 @@ scale_ordinal_int <- function(vis, property, domain = NULL, range = NULL,
 scale_nominal_int <- function(vis, property, domain = NULL, range = NULL,
                               reverse = FALSE, round = FALSE,
                               points = TRUE, padding = NULL, sort = FALSE,
-                              name = NULL) {
+                              name = NULL, label = NULL) {
+  name <- name %||% property
+  label <- label %||% name
+
   vscale <- ggvis_scale(
     property = property,
-    name = name %||% property,
+    name = name,
+    label = label,
     type = "ordinal",
     points = points,
     padding = padding,

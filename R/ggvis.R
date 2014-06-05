@@ -267,9 +267,11 @@ register_scales_from_props <- function(vis, props) {
     property <- prop_scale(prop, default_scale = propname_to_scale(prop_name))
     if (property %in% valid_scales) {
       name <- property
+      label <- prop_name(prop)
     } else {
       property <- prop_name
       name <- prop$scale
+      label <- name
     }
 
     type <- vector_type(shiny::isolate(prop_value(prop, data())))
@@ -284,7 +286,8 @@ register_scales_from_props <- function(vis, props) {
     # e.g. scale_quantitative_int, scale_nominal_int
     scale_fun <- match.fun(paste0("scale_", type, "_int"))
 
-    vis <- scale_fun(vis, property = property, name = name, domain = domain)
+    vis <- scale_fun(vis, property = property, name = name,
+                     label = label, domain = domain)
     vis
   }
 
