@@ -103,50 +103,53 @@ collapse_ggvis_scales <- function(scales) {
     stop("Scales must all be quantitative, time, or ordinal.")
   }
 
-  # Get first non-NULL label
-  label <- compact(pluck(scales, "label"))[[1]]
+  collapse_domains <- function(domains, overrides) {
+    # Set the domain based on whether there is an override domain, and the type
+    # of domain.
+    if (any(overrides)) {
+      # Use the last overriding domain, if more than one
+      over <- domains[[last(which(overrides))]]
+      under <- domains[!overrides]
+
+      if (countable_prop_type(type)) {
+        # For categorical props, just use the override domain
+        domain <- reactive(value(over))
+
+      } else {
+        # For continuous props, if either of the values in the override domain
+        # is NA, then use the upper/lower bound of the non-override domains for
+        # that value.
+        domain <- reactive({
+          over_vals <- value(over)
+
+          if (any(is.na(over_vals))) {
+            under_vals <- data_range(concat(values(under)))
+            if (is.na(over_vals[1])) over_vals[1] <- under_vals[1]
+            if (is.na(over_vals[2])) over_vals[2] <- under_vals[2]
+          }
+          over_vals
+        })
+      }
+
+    } else {
+      # If no overrides, just get range from the data
+      domain <- reactive({
+        data_range(concat(values(domains)))
+      })
+    }
+    domain
+  }
 
   domains <- pluck(scales, "domain")
   overrides <- vpluck(scales, "override", logical(1))
+  domain <- collapse_domains(domains, overrides)
 
-  ## XXXXX: Fix all this merging
-  # Set the domain based on whether there is an override domain, and the type
-  # of domain.
-  if (any(overrides)) {
-    # Use the last overriding domain, if more than one
-    over <- domains[[last(which(overrides))]]
-    under <- domains[!overrides]
-
-    if (countable_prop_type(type)) {
-      # For categorical props, just use the override domain
-      domain <- reactive(value(over))
-
-    } else {
-      # For continuous props, if either of the values in the override domain
-      # is NA, then use the upper/lower bound of the non-override domains for
-      # that value.
-      domain <- reactive({
-        over_vals <- value(over)
-
-        if (any(is.na(over_vals))) {
-          under_vals <- data_range(concat(values(under)))
-          if (is.na(over_vals[1])) over_vals[1] <- under_vals[1]
-          if (is.na(over_vals[2])) over_vals[2] <- under_vals[2]
-        }
-        over_vals
-      })
-    }
-
-  } else {
-    # If no overrides, just get range from the data
-    domain <- reactive({
-      data_range(concat(values(domains)))
-    })
-  }
-
+  # Merge scales from left to right. A couple fields need special treatment.
   new_scale <- Reduce(merge_ggvis_scales, scales)
-  new_scale$label <- label
+  # Get first non-NULL label
+  new_scale$label <- compact(pluck(scales, "label"))[[1]]
   new_scale$domain <- domain
+  new_scale$override <- NULL
   new_scale
 }
 
