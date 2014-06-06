@@ -264,7 +264,7 @@ register_scales_from_props <- function(vis, props) {
     # If we can get a valid scale name (like "x") from the prop, then use that
     # for the property and name. If we get something like "blah", then use that
     # for the name, but use prop_name for the property.
-    property <- prop_scale(prop, default_scale = propname_to_scale(prop_name))
+    property <- if (prop_is_scaled(prop)) prop$scale else propname_to_scale(prop_name)
     if (property %in% valid_scales) {
       name <- property
     } else {

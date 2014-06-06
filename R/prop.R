@@ -140,31 +140,16 @@ prop_name.default <- function(x) {
     variable = safe_vega_var(x$value))
 }
 
-# The scale (if any) that this property needs
-prop_scale <- function(x, default_scale) UseMethod("prop_scale")
-
-#' @export
-prop_scale.default <- function(x, default_scale) {
-  if (isTRUE(x$scale)) {
-    default_scale
-  } else if (is.character(x$scale)) {
-    x$scale
-  } else {
-    NA
-  }
-}
-
 # Reports whether this is a scaled prop
-prop_is_scaled <- function(prop) !identical(prop$scale, FALSE)
+prop_is_scaled <- function(prop) !is.null(prop$scale)
 
 # Generate a vega object for the individual mark.
 prop_vega <- function(x, default_scale) UseMethod("prop_vega")
 
 #' @export
 prop_vega.default <- function(x, default_scale) {
-  scale <- prop_scale(x, default_scale)
   pv <- list(
-    scale = if (!is.na(scale)) scale,
+    scale = if (prop_is_scaled(x)) x$scale,
     mult = x$mult,
     offset = x$offset
   )

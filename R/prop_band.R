@@ -51,11 +51,6 @@ prop_name.band <- function(x) {
 }
 
 #' @export
-prop_scale.band <- function(x, default_scale) {
-  switch(default_scale, width = "x", height = "y")
-}
-
-#' @export
 prop_domain.band <- function(x, data) {
   NULL
 }
@@ -63,7 +58,7 @@ prop_domain.band <- function(x, data) {
 #' @export
 prop_vega.band <- function(x, default_scale) {
   compact(list(
-    scale = prop_scale(x, default_scale),
+    scale = x$scale,
     mult = x$mult,
     offset = x$offset,
     band = TRUE
