@@ -219,9 +219,10 @@ format.prop <- function(x, ...) {
   } else {
     mult <- ""
   }
+  scale <- if (prop_is_scaled(x)) x$scale else "<none>"
 
   paste0("<", x$type, "> ", as.character(x), offset, mult,
-    " (scale: ", scale, ")")
+    " (property: ", x$property, ", scale: ", scale, ")")
 }
 
 #' @export
