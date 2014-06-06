@@ -10,10 +10,13 @@
 #'   (a constant), a name or quoted call (a variable), a single-sided
 #'   formula (a constant or variable depending on its contents), or a delayed
 #'   reactive (which can be either variable or constant).
-#' @param scale If \code{TRUE} uses the default scale associated with property;
-#'   If \code{FALSE}, does not scale the value. Otherwise supply a string to
-#'   select a custom scale. If \code{x} is an interactive input, then this
-#'   defaults to the scale parameter of the input.
+#' @param scale If \code{NULL}, automatically determine behavior by the kind of
+#'   value (constant, variable, or reactive).
+#'   If \code{TRUE} use the default scale associated with property.
+#'   If \code{FALSE}, do not scale the value.
+#'   Otherwise supply a string to select a custom scale.
+#'   If \code{x} is an interactive input, then this defaults to the scale
+#'   parameter of the input.
 #' @param offset,mult Additive and multiplicate pixel offset used to adjust
 #'   scaled values. These are useful if you want to place labels offset from
 #'   points.
@@ -38,7 +41,10 @@
 #' prop("y", quote(cyl), scale = "y-2")
 #'
 #' # Don't scale variable (i.e. it already makes sense in the visual space)
-#' prop("fill", quote(colour), scale = FALSE)
+#' prop("fill", ~colour, scale = FALSE)
+#'
+#' # Use a constant, but scaled
+#' prop("x", ~wt, scale = TRUE)
 prop <- function(property, x, scale = NULL, offset = NULL, mult = NULL,
                  env = parent.frame(), label = NULL) {
 
@@ -60,7 +66,6 @@ prop <- function(property, x, scale = NULL, offset = NULL, mult = NULL,
     # Constants don't need to capture environment
     env <- NULL
     scale <- scale %||% FALSE
-
   } else if (shiny::is.reactive(x)) {
     type <- "reactive"
     reactive_id(x) <- rand_id("reactive_")
@@ -68,10 +73,15 @@ prop <- function(property, x, scale = NULL, offset = NULL, mult = NULL,
   } else if (is.quoted(x)) {
     type <- "variable"
     scale <- scale %||% TRUE
-
   } else {
     if (is.null(label)) label <- deparse(substitute(label))
     stop("Unknown input to prop: ", label, call. = FALSE)
+  }
+
+  if (isTRUE(scale)) {
+    scale <- propname_to_scale(trim_propset(property))
+  } else if (identical(scale, FALSE)) {
+    scale <- NULL
   }
 
   structure(
