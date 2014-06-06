@@ -35,3 +35,15 @@ df %>%
   scale_numeric("x", domain = c(0, 10)) %>%
   scale_numeric("fill", domain = c(0, 2)) %>%
   save_spec("scales/domain_numeric.json")
+
+# Datetimes
+dat <- data.frame(
+  time = as.POSIXct("2013-07-01", tz = "GMT") + rnorm(40) * 60 * 60 * 24 * 7,
+  value = rnorm(40)
+)
+
+dat %>% ggvis(~time, ~value) %>% layer_points() %>%
+  save_spec("scales/datetime.json")
+
+dat %>% ggvis(~time) %>% layer_histograms() %>%
+  save_spec("scales/datetime_hist.json")
