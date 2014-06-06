@@ -1,10 +1,10 @@
 # ggvis 0.2.0.99
 
 * histogram binning controls are now `width` and one of `center` or `boundary`
-rather than `binwidth` and `origin`.  In addition, the algorithms for 
-determining various defaults have been modified by R Pruim.  In particular, 
-for integer data, `width` will be a pretty integer avoiding distortions due 
-to some bin ranges containing more integers than others.
+  rather than `binwidth` and `origin`.  In addition, the algorithms for 
+  determining various defaults have been modified by @rpruim.  In particular, 
+  for integer data, `width` will be a pretty integer avoiding distortions due 
+  to some bin ranges containing more integers than others.
 
 * `add_dscale()` has been replaced with `scale_quantitative()`,
   `scale_nominal()`, `scale_ordinal()`, and similar.
