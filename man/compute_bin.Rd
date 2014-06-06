@@ -19,7 +19,7 @@ this value, exploring multiple widths to find the best to illustrate the
 stories in your data.}
 
 \item{center}{The center of one of the bins.  Note that if center is above or below
-the range of the data, things will be shifted by an appropriat number of \code{width}s.
+the range of the data, things will be shifted by an appropriate number of \code{width}s.
 To center on integers,
 for example, use \code{width = 1} and \code{center = 0}, even if \code{0} is
 outside the range of the data.  At most one of \code{center} and \code{boundary} may be
