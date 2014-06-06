@@ -34,13 +34,15 @@ scale_datetime_int <- function(vis, property, domain = NULL, range = NULL,
                                label = NULL) {
   name <- name %||% property
   label <- label %||% name
-  if (is.null(utc)) utc <- FALSE
+  if (!is.null(utc)) {
+    utc <- if (isTRUE(utc)) "utc" else "time"
+  }
 
   vscale <- ggvis_scale(
     property = property,
     name = name,
     label = label,
-    type = if (utc) "utc" else "time",
+    type = utc,
     subclass = "datetime",
     clamp = clamp,
     nice = nice,

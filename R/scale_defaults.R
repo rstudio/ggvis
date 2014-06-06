@@ -14,6 +14,10 @@ apply_scale_defaults.ggvis_scale <- function(x) x
 
 #' @export
 apply_scale_defaults.scale_numeric <- function(x) {
+  x$zero <- x$zero %||% FALSE
+  x$nice <- x$nice %||% TRUE
+  x$clamp <- x$clamp %||% FALSE
+
   if (is.null(x$range)) {
     x$range <- switch(x$property,
       x = "width",
@@ -33,6 +37,9 @@ apply_scale_defaults.scale_numeric <- function(x) {
 
 #' @export
 apply_scale_defaults.scale_datetime <- function(x) {
+  x$clamp <- x$clamp %||% FALSE
+  x$type <- x$type %||% "time"
+
   if (is.null(x$range)) {
     x$range <- switch(x$property,
       x = "width",
@@ -45,6 +52,9 @@ apply_scale_defaults.scale_datetime <- function(x) {
 
 #' @export
 apply_scale_defaults.scale_ordinal <- function(x) {
+  x$points <- x$points %||% TRUE
+  x$sort <- x$sort %||% FALSE
+
   if (is.null(x$range)) {
     x$range <- switch(x$property,
       x = "width",
@@ -66,6 +76,9 @@ apply_scale_defaults.scale_ordinal <- function(x) {
 }
 
 apply_scale_defaults.scale_nominal <- function(x) {
+  x$points <- x$points %||% TRUE
+  x$sort <- x$sort %||% FALSE
+
   if (is.null(x$range)) {
     x$range <- switch(x$property,
       x = "width",
