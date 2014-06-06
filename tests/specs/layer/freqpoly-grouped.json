@@ -83,6 +83,9 @@
 				"data" : "scale/x",
 				"field" : "data.domain"
 			},
+			"zero" : false,
+			"nice" : true,
+			"clamp" : false,
 			"range" : "width"
 		},
 		{
@@ -92,6 +95,9 @@
 				"data" : "scale/y",
 				"field" : "data.domain"
 			},
+			"zero" : false,
+			"nice" : true,
+			"clamp" : false,
 			"range" : "height"
 		},
 		{
@@ -101,6 +107,9 @@
 				"data" : "scale/stroke",
 				"field" : "data.domain"
 			},
+			"zero" : false,
+			"nice" : true,
+			"clamp" : false,
 			"range" : [
 				"#132B43",
 				"#56B1F7"
@@ -113,7 +122,10 @@
 				"data" : "scale/x_rel",
 				"field" : "data.domain"
 			},
-			"range" : "width"
+			"range" : "width",
+			"zero" : false,
+			"nice" : true,
+			"clamp" : false
 		},
 		{
 			"property" : "y_rel",
@@ -122,7 +134,10 @@
 				"data" : "scale/y_rel",
 				"field" : "data.domain"
 			},
-			"range" : "height"
+			"range" : "height",
+			"zero" : false,
+			"nice" : true,
+			"clamp" : false
 		}
 	],
 	"marks" : [

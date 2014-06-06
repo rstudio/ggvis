@@ -89,7 +89,10 @@
 				"data" : "scale/x_rel",
 				"field" : "data.domain"
 			},
-			"range" : "width"
+			"range" : "width",
+			"zero" : false,
+			"nice" : true,
+			"clamp" : false
 		},
 		{
 			"property" : "y_rel",
@@ -98,7 +101,10 @@
 				"data" : "scale/y_rel",
 				"field" : "data.domain"
 			},
-			"range" : "height"
+			"range" : "height",
+			"zero" : false,
+			"nice" : true,
+			"clamp" : false
 		}
 	],
 	"marks" : [
