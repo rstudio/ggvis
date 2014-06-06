@@ -77,7 +77,7 @@ add_props <- function(vis, ..., .props = NULL, inherit = NULL,
   new_props <- props(..., .props = .props, inherit = inherit, env = env)
   both_props <- merge_props(cur_props(vis), new_props)
 
-  vis$props[[props_id(props)]] <- both_props
+  vis$props[[length(vis$props) + 1]] <- both_props
   vis$cur_props <- both_props
 
   vis <- register_reactives(vis, extract_reactives(both_props))
