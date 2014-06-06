@@ -111,9 +111,8 @@ bin_params <- function(x_range, width = NULL, center = NULL, boundary = NULL,
 tilelayer_origin <- function(x_range, width) {
   num_central_bins <- trunc(diff(x_range) / width) - 1
   side_width <- (diff(x_range) - num_central_bins * width) / 2  # width of partial tiles on either side
-  origin <- x_range[1] + side_width - width
-  if (origin > x_range[1]) origin <- origin - width # guarding agains small round off issues
-  origin
+  x_range[1] + side_width - width
+  # adjust_breaks should be called to handle any round-off fuzziness issues
 }
 
 compute_origin <- function(x_range, width, boundary) {
