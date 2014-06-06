@@ -5,6 +5,7 @@
 #' sets of named properties with \code{\link{props}} (which also provides
 #' shortcuts for creating the most common kind of properties)
 #'
+#' @param property A property, like "x", "x2", "y", "fill", and so on.
 #' @param x The value of the property. This can be an atomic vector
 #'   (a constant), a name or quoted call (a variable), a single-sided
 #'   formula (a constant or variable depending on its contents), or a delayed
@@ -24,22 +25,25 @@
 #'   succintly create the most common types.
 #' @export
 #' @examples
-#' prop(1)
-#' prop(quote(cyl))
-#' prop(~ cyl)
-#' prop(input_slider(0, 100))
+#' prop("x", 1)
+#' prop("fill", quote(cyl))
+#' prop("fill", ~cyl)
+#' prop("x", input_slider(0, 100))
 #'
 #' # If you have a variable name as a string
 #' var <- "cyl"
-#' prop(as.name(var))
+#' prop("x", as.name(var))
 #'
 #' # Override regular scale
-#' prop(quote(cyl), scale = "y-2")
+#' prop("y", quote(cyl), scale = "y-2")
 #'
 #' # Don't scale variable (i.e. it already makes sense in the visual space)
-#' prop(quote(colour), scale = FALSE)
-prop <- function(x, scale = NULL, offset = NULL, mult = NULL,
+#' prop("fill", quote(colour), scale = FALSE)
+prop <- function(property, x, scale = NULL, offset = NULL, mult = NULL,
                  env = parent.frame(), label = NULL) {
+
+  if (missing(property)) stop("Property required for prop().")
+  if (missing(x)) stop("Value required for prop().")
 
   if (is.prop(x)) return(x)
 
@@ -71,7 +75,9 @@ prop <- function(x, scale = NULL, offset = NULL, mult = NULL,
   }
 
   structure(
-    list(value = x,
+    list(
+      property = property,
+      value = x,
       type = type,
       scale = scale,
       offset = offset,

@@ -119,7 +119,7 @@ valid_props <- list(
     "dx", "dy", "angle", "font", "fontSize", "fontWeight", "fontStyle", "key")
 )
 
-# Hack to stop spurious warnings in R CMD check. Also used in qvis.
+# Hack to stop spurious warnings in R CMD check. Also used in qvis and prop.
 known_props <- sort(unique(unlist(valid_props)))
 globalVariables(known_props)
 
