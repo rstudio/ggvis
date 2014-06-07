@@ -22,7 +22,7 @@
 #' @param right Should bins be right-open, left-closed, or
 #'   right-closed, left-open.
 #' @param pad If \code{TRUE}, adds empty bins at either end of x. This
-#'   ensures frequency polygons touch 0, and adds padidng between the data
+#'   ensures frequency polygons touch 0, and adds padding between the data
 #'   and axis for histograms.
 #' @seealso \code{\link{compute_count}} For counting cases at specific locations
 #'   of a continuous variable. This is useful when the variable is continuous
@@ -226,11 +226,28 @@ bin_params.integer <- function(x_range, width = NULL,
 
 # Bin individual vector --------------------------------------------------------
 
+#' Bin vectors
+#'
+#' A generic and several implementations for binning vectors.
+#'
 #' @export
+#' @param x a vector to bin
+#' @param weight if specified, an integer vector of the same length as \code{x}
+#'   representing the number of occurances of each value in \code{x}
+#' @param width the width of a bin
+#' @param center the center of a bin
+#' @param boundary the boundary of a bin.  \code{center} and \code{boundary} should
+#'   not both be specified.
+#' @param right a logical indicating whether the right boundary of a bin is
+#'   included with the bin.
+#' @param pad a logical indicatign whether the bins should be padded to include
+#'   an empty bin on each side.
+#' @param ... additional arguments passed through to instances of the generic
 bin_vector <- function(x, weight = NULL, ...) {
   UseMethod("bin_vector")
 }
 
+#' @rdname bin_vector
 #' @export
 bin_vector.numeric <- function(x, weight = NULL, ..., width = NULL,
                                center = NULL, boundary = NULL,
@@ -277,6 +294,7 @@ bin_vector.numeric <- function(x, weight = NULL, ..., width = NULL,
   bin_out(count, x, bin_widths)
 }
 
+#' @rdname bin_vector
 #' @export
 bin_vector.POSIXt <- function(x, weight = NULL, ..., width = NULL,
                               center = NULL, boundary = NULL,
@@ -299,6 +317,7 @@ bin_vector.POSIXt <- function(x, weight = NULL, ..., width = NULL,
   results
 }
 
+#' @rdname bin_vector
 #' @export
 bin_vector.default <- function(x, weight = NULL, ...) {
   stop("Don't know how to bin vector of type ", class(x))
