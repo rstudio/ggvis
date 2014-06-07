@@ -155,7 +155,7 @@ args_to_props <- function(args, env) {
     property <- name[1]
     event <- if (length(name) > 1) name[2] else NULL
     val <- eval(expr, env)
-    prop(property, val, scale = scale, event = event, label = as.character(x))
+    prop(property, val, scale = scale, event = event, label = as.character(name))
   }
 
   # Given a prop, get the full name, like x.update
