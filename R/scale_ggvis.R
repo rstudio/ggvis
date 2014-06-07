@@ -92,6 +92,7 @@ as.vega.ggvis_scale <- function(x) {
   }
 
   # Remove the non-vega items
+  x$property <- NULL
   x$label <- NULL
   x$override <- NULL
 
