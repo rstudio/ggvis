@@ -110,6 +110,9 @@
 					"stroke" : {
 						"value" : "#000000"
 					},
+					"strokeWidth" : {
+						"value" : 2
+					},
 					"x" : {
 						"scale" : "x",
 						"field" : "data.pred_"
@@ -117,9 +120,6 @@
 					"y" : {
 						"scale" : "y",
 						"field" : "data.resp_"
-					},
-					"strokeWidth" : {
-						"value" : 2
 					},
 					"fill" : {
 						"value" : "transparent"
