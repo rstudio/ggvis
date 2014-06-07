@@ -31,6 +31,7 @@
 #' @export
 #' @examples
 #' prop("x", 1)
+#' prop("x", ~1)
 #' prop("fill", quote(cyl))
 #' prop("fill", ~cyl)
 #' prop("x", input_slider(0, 100))
@@ -39,14 +40,18 @@
 #' var <- "cyl"
 #' prop("x", as.name(var))
 #'
-#' # Override regular scale
+#' # Use a custom scale
 #' prop("y", quote(cyl), scale = "y-2")
 #'
 #' # Don't scale variable (i.e. it already makes sense in the visual space)
 #' prop("fill", ~colour, scale = FALSE)
 #'
 #' # Use a constant, but scaled
-#' prop("x", ~wt, scale = TRUE)
+#' prop("x", 5, scale = TRUE)
+#'
+#' # Use other events
+#' prop("y", quote(cyl), scale = "y-2")
+#'
 prop <- function(property, x, scale = NULL, offset = NULL, mult = NULL,
                  env = parent.frame(), event = NULL, label = NULL) {
 

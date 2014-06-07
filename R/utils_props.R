@@ -4,7 +4,7 @@ has_prop_event <- function(x) {
   sub("^.*\\.", "", x) %in% c("enter", "exit", "update", "hover", "brush")
 }
 
-# Remove the trailing propset from a prop name
+# Remove the trailing event from a prop name
 trim_prop_event <- function(x) {
   sub("\\.(enter|exit|update|hover|brush)$", "", x)
 }
