@@ -72,8 +72,3 @@ scaletype_to_vega_scaletype <- function(type) {
     "datetime" = "time"
   )[type])
 }
-
-valid_scale_types <- c("numeric", "ordinal", "nominal", "logical", "datetime")
-
-valid_scales <- c("x", "y", "stroke", "fill", "shape", "size", "font",
-                  "fontSize", "opacity", "angle", "radius")
