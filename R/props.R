@@ -167,7 +167,7 @@ args_to_props <- function(args, env) {
       expr_to_prop(deparse(x[[2]]), x[[3]], scale = FALSE)
     } else {
       # It's either prop() call, or an unnamed value
-      eval(x)
+      eval(x, env)
     }
   })
 

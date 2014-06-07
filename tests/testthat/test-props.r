@@ -197,6 +197,15 @@ test_that("props() creates correct prop objects", {
   expect_error(props(key := 1:10)) # Can't be constant
 })
 
+test_that("props evaluates arguments in correct environment", {
+  p <- 1
+  f <- function() {
+    p <- 2
+    props(p)
+  }
+  expect_identical(f()$x.update$value, 2)
+})
+
 test_that("props uses environment in formulas", {
   dat <- data.frame(a = 1:2, b = 3:4)
   val <- 11:12
