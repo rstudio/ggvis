@@ -130,7 +130,7 @@ prop_value.default <- function(x, data) {
   col <- eval(expr, envir = data, enclos = x$env)
 
   if (!(length(col) == 1 || length(col) == nrow(data))) {
-    stop("Length of calculated column '", prop_name(x), "' (", length(col),
+    stop("Length of calculated column '", prop_label(x), "' (", length(col),
       ") is not equal to 1 or the number of rows in data (", nrow(data), ").",
       call. = FALSE)
   }
@@ -140,10 +140,10 @@ prop_value.default <- function(x, data) {
 
 # The name of the property: used for naming the variable it produces in the
 # vega data frame
-prop_name <- function(x) UseMethod("prop_name")
+prop_label <- function(x) UseMethod("prop_label")
 
 #' @export
-prop_name.default <- function(x) {
+prop_label.default <- function(x) {
   switch(x$type,
     constant = "",
     reactive = safe_vega_var(reactive_id(x$value)),
@@ -167,7 +167,7 @@ prop_vega.default <- function(x, default_scale) {
   if (x$type == "constant") {
     pv$value <- x$value
   } else {
-    pv$field <- paste0("data.", prop_name(x))
+    pv$field <- paste0("data.", prop_label(x))
   }
 
   compact(pv)
@@ -187,7 +187,7 @@ prop_domain.default <- function(x, data) {
 
   list(
     data = data,
-    field = paste0("data.", prop_name(x))
+    field = paste0("data.", prop_label(x))
   )
 }
 
@@ -252,7 +252,7 @@ prop_type <- function(data, prop, processed = FALSE) {
 #' @export
 prop_type.data.frame <- function(data, prop, processed = FALSE) {
   if (processed) {
-    value <- data[[prop_name(prop)]]
+    value <- data[[prop_label(prop)]]
   } else {
     value <- prop_value(prop, data)
   }

@@ -46,7 +46,7 @@ prop_value.band <- function(x, data) {
 }
 
 #' @export
-prop_name.band <- function(x) {
+prop_label.band <- function(x) {
   ""
 }
 

@@ -38,7 +38,7 @@ layer_densities <- function(vis, ..., kernel = "gaussian", adjust = 1,
 
   x_var <- find_prop_var(cur_props(vis), "x.update")
 
-  vis <- set_scale_label(vis, "x", prop_name(cur_props(vis)$x.update))
+  vis <- set_scale_label(vis, "x", prop_label(cur_props(vis)$x.update))
   vis <- set_scale_label(vis, "y", "density")
 
   props <- stroke_fill_defaults(props(...),

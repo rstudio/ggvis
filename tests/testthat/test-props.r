@@ -48,8 +48,8 @@ test_that("creating prop objects with prop()", {
 
 
 test_that("property names for variables", {
-  # pname(wt) is equivalent to prop_name(prop(quote(wt)))
-  pname <- function(x) prop_name(prop("x", substitute(x)))
+  # pname(wt) is equivalent to prop_label(prop(quote(wt)))
+  pname <- function(x) prop_label(prop("x", substitute(x)))
 
   # Regular variable names are simply converted to string
   expect_identical(pname(wt), "wt")

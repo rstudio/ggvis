@@ -271,7 +271,7 @@ register_scales_from_props <- function(vis, props) {
       property <- prop_name
       name <- prop$scale
     }
-    label <- prop_name(prop)
+    label <- prop_label(prop)
 
     type <- vector_type(shiny::isolate(prop_value(prop, data())))
     domain <- reactive({

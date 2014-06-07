@@ -131,7 +131,7 @@ as.vega.mark <- function(mark) {
   }
 
   if (!is.null(key)) {
-    m$key <- paste0("data.", prop_name(key))
+    m$key <- paste0("data.", prop_label(key))
   }
   m
 }
@@ -169,7 +169,7 @@ as.vega.vega_legend <- as.vega.vega_axis
 #' @export
 as.vega.data.frame <- function(x, name, ...) {
   # For CSV output, we need to unescape periods, which were turned into \. by
-  # prop_name().
+  # prop_label().
   names(x) <- gsub("\\.", ".", names(x), fixed = TRUE)
 
   list(list(
