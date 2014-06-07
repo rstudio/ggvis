@@ -109,6 +109,8 @@ bin_params <- function(x_range, width = NULL, center = NULL, boundary = NULL,
 
 # compute origin from x_range and width
 tilelayer_origin <- function(x_range, width) {
+  stopifnot(is.numeric(x_range) && length(x_range) == 2)
+  stopifnot(is.numeric(width) && length(width) == 1)
   num_central_bins <- trunc(diff(x_range) / width) - 1
   side_width <- (diff(x_range) - num_central_bins * width) / 2  # width of partial tiles on either side
   x_range[1] + side_width - width
@@ -125,7 +127,7 @@ bin_params.numeric <- function(x_range, width = NULL,
                                center = NULL,
                                boundary = NULL,
                                right = TRUE) {
-
+  stopifnot(is.numeric(x_range) && length(x_range) == 2)
   if (!is.null(boundary) && !is.null(center)) {
     stop( "Only one of 'boundary' and 'center' may be specified." )
   }
@@ -140,7 +142,7 @@ bin_params.numeric <- function(x_range, width = NULL,
 
   if (is.null(boundary) && is.null(center)) {
     boundary <- tilelayer_origin(x_range, width)
-    center <- boundary + width / 2
+    # center <- boundary + width / 2
   }
 
   # if center given but not boundary, compute boundary from center
@@ -203,8 +205,8 @@ bin_params.integer <- function(x_range, width = NULL,
   }
 
   if (is.null(width)) {
-    width <- min(pretty(round(diff(x_range) / 25)))
-    if (width <= 2) width = 1
+    width <- max(pretty(round(diff(x_range) / 30)))
+    if (width <= 1) width <- 1
     num_bins <- ceiling( diff(x_range) / width )
     notify_guess(width, paste0("approximately range/", num_bins) )
   }
@@ -224,15 +226,16 @@ bin_params.integer <- function(x_range, width = NULL,
 
 # Bin individual vector --------------------------------------------------------
 
+#' @export
 bin_vector <- function(x, weight = NULL, ...) {
   UseMethod("bin_vector")
 }
 
 #' @export
-bin_vector.numeric <- function(x, weight = NULL, ..., width = 1,
+bin_vector.numeric <- function(x, weight = NULL, ..., width = NULL,
                                center = NULL, boundary = NULL,
                                right = TRUE, pad = TRUE) {
-  stopifnot(is.numeric(width) && length(width) == 1)
+  stopifnot(is.null(width) || (is.numeric(width) && length(width) == 1))
   stopifnot(is.null(center) || (is.numeric(center) && length(center) == 1))
   stopifnot(is.null(boundary) || (is.numeric(boundary) && length(boundary) == 1))
   stopifnot(is.flag(right))
@@ -250,10 +253,7 @@ bin_vector.numeric <- function(x, weight = NULL, ..., width = 1,
     weight[is.na(weight)] <- 0
   }
 
-  if (is.null(boundary) && is.null(center)) {
-    boundary <- tilelayer_origin(range(x), width)
-    center <- boundary + width / 2
-  }
+
   params <- bin_params( range(x), width, center, boundary, right)
 
   breaks <- seq(params$origin, max(x) + params$width, params$width)
