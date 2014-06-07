@@ -28,7 +28,7 @@ auto_group <- function(vis, exclude = NULL) {
   props <- cur_props(vis)
 
   # Drop props named in exclude
-  pnames <- trim_propset(names(props))
+  pnames <- trim_prop_event(names(props))
   props <- props[!(pnames %in% exclude)]
 
   countable <- vapply(props,

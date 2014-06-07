@@ -251,7 +251,7 @@ register_reactive <- function(vis, reactive) {
 # Given a set of props, register a scale for each one.
 register_scales_from_props <- function(vis, props) {
   # Strip off .update, .enter, etc.
-  names(props) <- trim_propset(names(props))
+  names(props) <- trim_prop_event(names(props))
 
   # Get a reactive for each scaled prop
   data <- vis$cur_data

@@ -1,24 +1,24 @@
 # Given a character vector like c("x", "x.update", "x.enter"), report which ones
 # have .update, .enter, etc.
-has_propset <- function(x) {
+has_prop_event <- function(x) {
   sub("^.*\\.", "", x) %in% c("enter", "exit", "update", "hover", "brush")
 }
 
 # Remove the trailing propset from a prop name
-trim_propset <- function(x) {
+trim_prop_event <- function(x) {
   sub("\\.(enter|exit|update|hover|brush)$", "", x)
 }
 
 # Given a list with objects x.enter, x.update, y.update, return a list p of
 # ggvis_props objects, with structure p$enter$x, p$update$x, p$update$y.
-prop_sets <- function(props) {
+prop_event_sets <- function(props) {
   sets <- c("enter", "exit", "update", "hover", "brush")
   names(sets) <- sets
 
   x <- lapply(sets, function(set) {
     searchstr <- paste0("\\.", set, "$")
     matches <- props[grep(searchstr, names(props))]
-    names(matches) <- trim_propset(names(matches))
+    names(matches) <- trim_prop_event(names(matches))
     matches
   })
 
@@ -32,7 +32,7 @@ prop_sets <- function(props) {
 #   c("stroke", "strokeOpacity")
 # )
 drop_props <- function(props, drop) {
-  pnames <- trim_propset(names(props))
+  pnames <- trim_prop_event(names(props))
   props[!(pnames %in% drop)]
 }
 

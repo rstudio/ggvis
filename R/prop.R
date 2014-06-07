@@ -82,7 +82,7 @@ prop <- function(property, x, scale = NULL, offset = NULL, mult = NULL,
   }
 
   if (isTRUE(scale)) {
-    scale <- propname_to_scale(trim_propset(property))
+    scale <- propname_to_scale(trim_prop_event(property))
   } else if (identical(scale, FALSE)) {
     scale <- NULL
   }

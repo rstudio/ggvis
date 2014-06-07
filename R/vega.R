@@ -138,14 +138,14 @@ as.vega.mark <- function(mark) {
 
 #' @export
 as.vega.ggvis_props <- function(x, default_scales = NULL) {
-  x <- prop_sets(x)
+  x <- prop_event_sets(x)
 
   # Given a list of property sets (enter, update, etc.), return appropriate
   # vega property set.
   vega_prop_set <- function(x) {
     if (empty(x)) return(NULL)
 
-    props <- trim_propset(names(x))
+    props <- trim_prop_event(names(x))
     default_scales <- default_scales %||% propname_to_scale(props)
     Map(prop_vega, x, default_scales)
   }
