@@ -98,7 +98,7 @@
 #'
 #' # To control other settings (like custom scales, mult and offset)
 #' # use a prop object
-#' props(x = prop("old", scale = TRUE, offset = -1))
+#' props(prop("x", "old", scale = "x", offset = -1))
 #'
 #' # Red when hovered over, black otherwise (these are equivalent)
 #' props(fill := "black", fill.hover := "red")
@@ -113,25 +113,8 @@
 #' props(.props = list(quote(x := ~mpg)))
 props <- function(..., .props = NULL, inherit = TRUE, env = parent.frame()) {
   check_empty_args()
-  args <- props_default_names(c(dots(...), .props))
 
-  # If named, use regular evaluation and scale
-  scaled <- lapply(args[named(args)], function(x) {
-    val <- eval(x, env)
-    prop(val, scale = TRUE, label = as.character(x))
-  })
-
-  # If unnamed, check that it uses := and don't scale
-  unscaled <- lapply(args[!named(args)], function(x) {
-    check_unscaled_form(x)
-
-    val <- eval(x[[3]], env)
-    prop(val, scale = FALSE, label = as.character(x[[3]]))
-  })
-  names(unscaled) <- vapply(args[!named(args)], function(x) as.character(x[[2]]),
-    character(1))
-
-  all <- c(scaled, unscaled)
+  all <- args_to_props(c(dots(...), .props), env)
 
   if (!is.null(all$key)) {
     if (all$key$scale) {
@@ -166,10 +149,56 @@ uses_colon_equals <- function(x) {
   is.call(x) && identical(x[[1]], quote(`:=`))
 }
 
-check_unscaled_form <- function(x) {
-  if (!uses_colon_equals(x)) {
-    stop("Arguments to props must use either := or =", call. = FALSE)
+# Given a list of unevaluated expressions, return a list of prop objects
+args_to_props <- function(args, env) {
+
+  expr_to_prop <- function(name, expr, scale = NULL) {
+    val <- eval(expr, env)
+    prop(name, val, scale = scale, label = as.character(x))
   }
+
+  arg_names <- names2(args)
+  named_args <- args[arg_names != ""]
+  unnamed_args <- args[arg_names == ""]
+
+  # First pass: Convert named arguments to props
+  named_args <- Map(named_args, names(named_args), f = function(x, name) {
+    expr_to_prop(name, x, scale = TRUE)
+  })
+
+  # Second pass: Convert unnamed arguments to prop objects, or raw value
+  unnamed_args <- lapply(unnamed_args, function(x) {
+    if (uses_colon_equals(x)) {
+      expr_to_prop(deparse(x[[2]]), x[[3]], scale = FALSE)
+    } else {
+      # It's either prop() call, or an unnamed value
+      eval(x)
+    }
+  })
+
+  # Some of the unnamed items are now props, others are raw values.
+  is_prop <- vapply(unnamed_args, is.prop, logical(1))
+  unnamed_props <- unnamed_args[is_prop]
+  unnamed_values <- unnamed_args[!is_prop]
+
+  # For those that are props, get name from prop$property
+  names(unnamed_props) <- vpluck(unnamed_props, "property", character(1))
+
+  # Assign missing names to unnamed values
+  missing_names <- setdiff(c("x", "y"), c(names(named_args), names(unnamed_props)))
+  if (length(unnamed_values) > length(missing_names)) {
+    stop("Too many unnamed properties (can only have x and y)", call. = FALSE)
+  }
+  names(unnamed_values) <- missing_names[seq_along(unnamed_values)]
+
+  # Final pass: Convert the now-named values to props
+  unnamed_values <- Map(unnamed_values, names(unnamed_values),
+    f = function(x, name) {
+      expr_to_prop(name, x)
+    }
+  )
+
+  c(named_args, unnamed_props, unnamed_values)
 }
 
 #' @export
@@ -218,25 +247,6 @@ merge_props <- function(parent = NULL, child = NULL,
 }
 
 is.formula <- function(x) inherits(x, "formula")
-
-props_default_names <- function(args) {
-  new_names <- names2(args)
-
-  missing <- new_names == "" & !vapply(args, uses_colon_equals, logical(1))
-  n_missing <- sum(missing)
-
-  if (n_missing == 0) return(args)
-
-  if (n_missing == 1) {
-    new_names[missing] <- "x"
-  } else if (n_missing == 2) {
-    new_names[missing] <- c("x", "y")
-  } else {
-    stop("Only at most two properties can be unnamed", call. = FALSE)
-  }
-
-  setNames(args, new_names)
-}
 
 find_prop_var <- function(props, name) {
   prop <- props[[name]]
