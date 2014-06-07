@@ -23,6 +23,8 @@
 #' @param env If \code{x} is a quoted call this provides the environment in
 #'   which to look for variables not in the data. You should not need this in
 #'   ordinary operation.
+#' @param event An event to which this property applies. One of "update",
+#'   "enter", "exit", "hover", "brush".
 #' @param label A label for this prop to use for reporting errors.
 #' @seealso \code{\link{props}} to manage multiple properties and to
 #'   succintly create the most common types.
@@ -46,10 +48,11 @@
 #' # Use a constant, but scaled
 #' prop("x", ~wt, scale = TRUE)
 prop <- function(property, x, scale = NULL, offset = NULL, mult = NULL,
-                 env = parent.frame(), label = NULL) {
+                 env = parent.frame(), event = NULL, label = NULL) {
 
   if (missing(property)) stop("Property required for prop().")
   if (missing(x)) stop("Value required for prop().")
+  if (property != "key" && is.null(event)) event <- "update"
 
   if (is.prop(x)) return(x)
 
@@ -84,6 +87,12 @@ prop <- function(property, x, scale = NULL, offset = NULL, mult = NULL,
     scale <- NULL
   }
 
+  if (property == "key") {
+    if (!is.null(event)) stop("key prop cannot have an event.")
+    if (!is.null(scale)) stop("key prop cannot have a scale.")
+    if (type == "constant") stop("key prop cannot be constant.")
+  }
+
   structure(
     list(
       property = property,
@@ -92,6 +101,7 @@ prop <- function(property, x, scale = NULL, offset = NULL, mult = NULL,
       scale = scale,
       offset = offset,
       mult = mult,
+      event = event,
       env = env
     ),
     class = c("prop")
@@ -220,9 +230,10 @@ format.prop <- function(x, ...) {
     mult <- ""
   }
   scale <- if (prop_is_scaled(x)) x$scale else "<none>"
+  event <- x$event %||% "<none>"
 
   paste0("<", x$type, "> ", as.character(x), offset, mult,
-    " (property: ", x$property, ", scale: ", scale, ")")
+    " (property: ", x$property, ", scale: ", scale, ", event: ", event, ")")
 }
 
 #' @export

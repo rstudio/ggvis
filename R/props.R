@@ -116,20 +116,6 @@ props <- function(..., .props = NULL, inherit = TRUE, env = parent.frame()) {
 
   all <- args_to_props(c(dots(...), .props), env)
 
-  if (!is.null(all$key)) {
-    if (all$key$scale) {
-      stop("The special prop 'key' must be unscaled. Use `key :=` instead of `key =`")
-    }
-    if (all$key$type == "constant") {
-      stop("The special prop 'key' cannot be a constant.")
-    }
-  }
-
-  # Append ".update" to any props that don't already have ".enter", ".exit",
-  # ".update", ".hover", or ".brush". But don't modify a prop named "key".
-  needs_propset <- !has_propset(names(all)) & names(all) != "key"
-  names(all)[needs_propset] <- paste0(names(all)[needs_propset], ".update")
-
   structure(
     all,
     inherit = inherit,
@@ -151,10 +137,19 @@ uses_colon_equals <- function(x) {
 
 # Given a list of unevaluated expressions, return a list of prop objects
 args_to_props <- function(args, env) {
-
+  # Given a name and expression, create a prop
   expr_to_prop <- function(name, expr, scale = NULL) {
+    name <- strsplit(name, ".", fixed = TRUE)[[1]]
+    property <- name[1]
+    event <- if (length(name) > 1) name[2] else NULL
     val <- eval(expr, env)
-    prop(name, val, scale = scale, label = as.character(x))
+    prop(property, val, scale = scale, event = event, label = as.character(x))
+  }
+
+  # Given a prop, get the full name, like x.update
+  prop_full_name <- function(p) {
+    # Use this form so that if event is NULL, there won't be trailing .
+    paste(c(p$property, p$event), collapse = ".")
   }
 
   arg_names <- names2(args)
@@ -162,9 +157,9 @@ args_to_props <- function(args, env) {
   unnamed_args <- args[arg_names == ""]
 
   # First pass: Convert named arguments to props
-  named_args <- Map(named_args, names(named_args), f = function(x, name) {
-    expr_to_prop(name, x, scale = TRUE)
-  })
+  named_args <- Map(named_args, names(named_args),
+    f = function(x, name) expr_to_prop(name, x, scale = TRUE)
+  )
 
   # Second pass: Convert unnamed arguments to prop objects, or raw value
   unnamed_args <- lapply(unnamed_args, function(x) {
@@ -181,11 +176,13 @@ args_to_props <- function(args, env) {
   unnamed_props <- unnamed_args[is_prop]
   unnamed_values <- unnamed_args[!is_prop]
 
-  # For those that are props, get name from prop$property
-  names(unnamed_props) <- vpluck(unnamed_props, "property", character(1))
+  # Assign full name, like x.update
+  names(named_args) <- vapply(named_args, prop_full_name, character(1))
+  names(unnamed_props) <- vapply(unnamed_props, prop_full_name, character(1))
 
   # Assign missing names to unnamed values
-  missing_names <- setdiff(c("x", "y"), c(names(named_args), names(unnamed_props)))
+  missing_names <- setdiff(c("x.update", "y.update"),
+                           c(names(named_args), names(unnamed_props)))
   if (length(unnamed_values) > length(missing_names)) {
     stop("Too many unnamed properties (can only have x and y)", call. = FALSE)
   }
@@ -193,9 +190,7 @@ args_to_props <- function(args, env) {
 
   # Final pass: Convert the now-named values to props
   unnamed_values <- Map(unnamed_values, names(unnamed_values),
-    f = function(x, name) {
-      expr_to_prop(name, x)
-    }
+    f = function(x, name) expr_to_prop(name, x)
   )
 
   c(named_args, unnamed_props, unnamed_values)
