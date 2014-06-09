@@ -43,8 +43,7 @@ mtcars %>% ggvis(x = ~wt, y = ~mpg) %>%
 # Two y scales
 mtcars %>% ggvis(x = ~wt, y = ~mpg) %>%
   layer_points() %>%
-  layer_points(fill := "red", y = prop(~ qsec, scale = "yq")) %>%
-  scale_numeric("y", name = "yq")
+  layer_points(fill := "red", prop("y", ~qsec, scale = "yq"))
 
 # Two separate data sets, equal in the tree
 mtc1 <- mtcars[1:10, ]
