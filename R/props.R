@@ -34,32 +34,32 @@
 #' If you have the name of a variable in a string, see the
 #' props vignette for how to create the needed property mapping.
 #'
-#' @section Enter, exit, hover, and update propsets:
+#' @section Enter, exit, hover, and update events:
 #'
-#' There are four different sets of properties (propsets) that the marks
+#' There are four different property events that the marks
 #' can use. These can, for example, be used to change the appearance of a mark
 #' when the mouse cursor is hovering over it: when the mark is hovered over, it
-#' uses the hover propset, and when the mark isn't hovered over, it uses the
-#' update propset.
+#' uses the hover event, and when the mark isn't hovered over, it uses the
+#' update event
 #'
 #' \itemize{
-#'   \item enter: This propset is used by marks when they are added to a plot.
-#'   \item update: This propset is used by marks after they have entered, and
+#'   \item enter: This event is used by marks when they are added to a plot.
+#'   \item update: This event is used by marks after they have entered, and
 #'     also after they have been hovered over.
-#'   \item exit: This propset is used by marks as they are removed from a plot.
-#'   \item hover: This propset is used when the mouse cursor is over the mark.
+#'   \item exit: This event is used by marks as they are removed from a plot.
+#'   \item hover: This event is used when the mouse cursor is over the mark.
 #' }
 #'
-#' You can specify the propset for a property, by putting a period and the
-#' propset after the property name. For example,
+#' You can specify the event for a property, by putting a period and the
+#' event after the property name. For example,
 #' \code{props(fill.update := "black", fill.hover := "red")} will make a mark
 #' have a black fill normally, and red fill when it is hovered over.
 #'
-#' The default propset is update, so if you run \code{props(fill := "red")},
+#' The default event is update, so if you run \code{props(fill := "red")},
 #' this is equivalent to \code{props(fill.update := "red")}.
 #'
-#' In practice, the enter and exit propsets are useful only when the update has
-#' a duration (and is therefore not instantaneous). The update propset can be
+#' In practice, the enter and exit events are useful only when the update has
+#' a duration (and is therefore not instantaneous). The update event can be
 #' thought of as the "default" state.
 #'
 #' @section Key property:
@@ -68,7 +68,7 @@
 #' called \code{key}. This is useful for plots with dynamic data and smooth
 #' transitions: as the data changes, the key is used to tell the plot how the
 #' new data rows should be matched to the old data rows. Note that the key must
-#' be an unscaled value. Additionally, the key property doesn't have a propset,
+#' be an unscaled value. Additionally, the key property doesn't have a event,
 #' since it is independent of enter, update, exit, and hover events.
 #'
 #' @template properties
@@ -98,7 +98,7 @@
 #'
 #' # To control other settings (like custom scales, mult and offset)
 #' # use a prop object
-#' props(x = prop("old", scale = TRUE, offset = -1))
+#' props(prop("x", "old", scale = "x", offset = -1))
 #'
 #' # Red when hovered over, black otherwise (these are equivalent)
 #' props(fill := "black", fill.hover := "red")
@@ -107,45 +107,26 @@
 #' # Use a column called id as the key (for dynamic data)
 #' props(key := ~id)
 #'
+#' # Explicitly create prop objects. The following are equivalent:
+#' props(fill = ~cyl)
+#' props(fill.update = ~cyl)
+#' props(prop("fill", ~cyl))
+#' props(prop("fill", ~cyl, scale = "fill", event = "update"))
+#'
+#' # Prop objects can be programmatically created and added:
+#' property <- "fill"
+#' expr <- parse(text = "wt/mpg")[[1]]
+#' p <- prop(property, expr)
+#' props(p)
+#'
 #' # Using .props
 #' props(.props = list(x = 1, y = 2))
 #' props(.props = list(x = ~mpg, y = ~cyl))
 #' props(.props = list(quote(x := ~mpg)))
 props <- function(..., .props = NULL, inherit = TRUE, env = parent.frame()) {
   check_empty_args()
-  args <- props_default_names(c(dots(...), .props))
 
-  # If named, use regular evaluation and scale
-  scaled <- lapply(args[named(args)], function(x) {
-    val <- eval(x, env)
-    prop(val, scale = TRUE, label = as.character(x))
-  })
-
-  # If unnamed, check that it uses := and don't scale
-  unscaled <- lapply(args[!named(args)], function(x) {
-    check_unscaled_form(x)
-
-    val <- eval(x[[3]], env)
-    prop(val, scale = FALSE, label = as.character(x[[3]]))
-  })
-  names(unscaled) <- vapply(args[!named(args)], function(x) as.character(x[[2]]),
-    character(1))
-
-  all <- c(scaled, unscaled)
-
-  if (!is.null(all$key)) {
-    if (all$key$scale) {
-      stop("The special prop 'key' must be unscaled. Use `key :=` instead of `key =`")
-    }
-    if (all$key$type == "constant") {
-      stop("The special prop 'key' cannot be a constant.")
-    }
-  }
-
-  # Append ".update" to any props that don't already have ".enter", ".exit",
-  # ".update", ".hover", or ".brush". But don't modify a prop named "key".
-  needs_propset <- !has_propset(names(all)) & names(all) != "key"
-  names(all)[needs_propset] <- paste0(names(all)[needs_propset], ".update")
+  all <- args_to_props(c(dots(...), .props), env)
 
   structure(
     all,
@@ -166,10 +147,65 @@ uses_colon_equals <- function(x) {
   is.call(x) && identical(x[[1]], quote(`:=`))
 }
 
-check_unscaled_form <- function(x) {
-  if (!uses_colon_equals(x)) {
-    stop("Arguments to props must use either := or =", call. = FALSE)
+# Given a list of unevaluated expressions, return a list of prop objects
+args_to_props <- function(args, env) {
+  # Given a name and expression, create a prop
+  expr_to_prop <- function(name, expr, scale = NULL) {
+    name <- strsplit(name, ".", fixed = TRUE)[[1]]
+    property <- name[1]
+    event <- if (length(name) > 1) name[2] else NULL
+    val <- eval(expr, env)
+    prop(property, val, scale = scale, event = event, label = as.character(val))
   }
+
+  # Given a prop, get the full name, like x.update
+  prop_full_name <- function(p) {
+    # Use this form so that if event is NULL, there won't be trailing .
+    paste(c(p$property, p$event), collapse = ".")
+  }
+
+  arg_names <- names2(args)
+  named_args <- args[arg_names != ""]
+  unnamed_args <- args[arg_names == ""]
+
+  # First pass: Convert named arguments to props
+  named_args <- Map(named_args, names(named_args),
+    f = function(x, name) expr_to_prop(name, x, scale = TRUE)
+  )
+
+  # Second pass: Convert unnamed arguments to prop objects, or raw value
+  unnamed_args <- lapply(unnamed_args, function(x) {
+    if (uses_colon_equals(x)) {
+      expr_to_prop(deparse(x[[2]]), x[[3]], scale = FALSE)
+    } else {
+      # It's either prop() call, or an unnamed value
+      eval(x, env)
+    }
+  })
+
+  # Some of the unnamed items are now props, others are raw values.
+  is_prop <- vapply(unnamed_args, is.prop, logical(1))
+  unnamed_props <- unnamed_args[is_prop]
+  unnamed_values <- unnamed_args[!is_prop]
+
+  # Assign full name, like x.update
+  names(named_args) <- vapply(named_args, prop_full_name, character(1))
+  names(unnamed_props) <- vapply(unnamed_props, prop_full_name, character(1))
+
+  # Assign missing names to unnamed values
+  missing_names <- setdiff(c("x.update", "y.update"),
+                           c(names(named_args), names(unnamed_props)))
+  if (length(unnamed_values) > length(missing_names)) {
+    stop("Too many unnamed properties (can only have x and y)", call. = FALSE)
+  }
+  names(unnamed_values) <- missing_names[seq_along(unnamed_values)]
+
+  # Final pass: Convert the now-named values to props
+  unnamed_values <- Map(unnamed_values, names(unnamed_values),
+    f = function(x, name) expr_to_prop(name, x, scale = TRUE)
+  )
+
+  c(named_args, unnamed_props, unnamed_values)
 }
 
 #' @export
@@ -219,32 +255,13 @@ merge_props <- function(parent = NULL, child = NULL,
 
 is.formula <- function(x) inherits(x, "formula")
 
-props_default_names <- function(args) {
-  new_names <- names2(args)
-
-  missing <- new_names == "" & !vapply(args, uses_colon_equals, logical(1))
-  n_missing <- sum(missing)
-
-  if (n_missing == 0) return(args)
-
-  if (n_missing == 1) {
-    new_names[missing] <- "x"
-  } else if (n_missing == 2) {
-    new_names[missing] <- c("x", "y")
-  } else {
-    stop("Only at most two properties can be unnamed", call. = FALSE)
-  }
-
-  setNames(args, new_names)
-}
-
 find_prop_var <- function(props, name) {
   prop <- props[[name]]
   if (is.null(prop)) {
     stop("Can't find prop ", name, call. = FALSE)
   }
 
-  if (prop$type != "variable") {
+  if (!is.prop_variable(prop)) {
     stop("Visual property ", name, " is not a variable", call. = FALSE)
   }
 

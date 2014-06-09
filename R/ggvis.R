@@ -251,27 +251,15 @@ register_reactive <- function(vis, reactive) {
 # Given a set of props, register a scale for each one.
 register_scales_from_props <- function(vis, props) {
   # Strip off .update, .enter, etc.
-  names(props) <- trim_propset(names(props))
+  names(props) <- trim_prop_event(names(props))
 
   # Get a reactive for each scaled prop
   data <- vis$cur_data
 
-  add_scale_from_prop <- function(vis, prop_name, prop) {
-    if (!prop_is_scaled(prop) || is.null(data)) {
+  add_scale_from_prop <- function(vis, prop) {
+    if (is.null(prop$value) || !prop_is_scaled(prop) || is.null(data)) {
       return(vis)
     }
-
-    # If we can get a valid scale name (like "x") from the prop, then use that
-    # for the property and name. If we get something like "blah", then use that
-    # for the name, but use prop_name for the property.
-    property <- prop_scale(prop, default_scale = propname_to_scale(prop_name))
-    if (property %in% valid_scales) {
-      name <- property
-    } else {
-      property <- prop_name
-      name <- prop$scale
-    }
-    label <- prop_name(prop)
 
     type <- vector_type(shiny::isolate(prop_value(prop, data())))
     domain <- reactive({
@@ -285,14 +273,14 @@ register_scales_from_props <- function(vis, props) {
     # e.g. scale_quantitative_int, scale_nominal_int
     scale_fun <- match.fun(paste0("scale_", type, "_int"))
 
-    vis <- scale_fun(vis, property = property, name = name,
-                     label = label, domain = domain)
+    vis <- scale_fun(vis, property = prop$property, name = prop$scale,
+                     label = prop_label(prop), domain = domain)
     vis
   }
 
   # Add them to the vis
   for (i in seq_along(props)) {
-    vis <- add_scale_from_prop(vis, names(props)[i], props[[i]])
+    vis <- add_scale_from_prop(vis, props[[i]])
   }
   vis
 }

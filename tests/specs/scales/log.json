@@ -57,7 +57,6 @@
 				"data" : "scale/x",
 				"field" : "data.domain"
 			},
-			"property" : "x",
 			"name" : "x",
 			"type" : "log",
 			"reverse" : false,
@@ -72,7 +71,6 @@
 				"data" : "scale/y",
 				"field" : "data.domain"
 			},
-			"property" : "y",
 			"name" : "y",
 			"type" : "log",
 			"reverse" : false,
@@ -83,7 +81,6 @@
 			"range" : "height"
 		},
 		{
-			"property" : "x_rel",
 			"name" : "x_rel",
 			"domain" : {
 				"data" : "scale/x_rel",
@@ -95,7 +92,6 @@
 			"clamp" : false
 		},
 		{
-			"property" : "y_rel",
 			"name" : "y_rel",
 			"domain" : {
 				"data" : "scale/y_rel",

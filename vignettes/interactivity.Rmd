@@ -138,7 +138,7 @@ When you map a slider to a property, you have four basic options:
 
 If you just assign the input in `props()`, like `props(size = input_slider())`,
 you'll get a constant, unscaled property. To gain more control you can use
-`prop()`: `props(size = prop(input_slider()))`.
+`prop()`: `props(prop("size", input_slider()))`.
 
 You'll need to do this if you want to:
 

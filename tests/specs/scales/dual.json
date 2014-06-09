@@ -65,7 +65,6 @@
 	],
 	"scales" : [
 		{
-			"property" : "x",
 			"name" : "x",
 			"domain" : {
 				"data" : "scale/x",
@@ -77,37 +76,28 @@
 			"range" : "width"
 		},
 		{
+			"name" : "y-y",
 			"domain" : {
 				"data" : "scale/y-y",
 				"field" : "data.domain"
 			},
-			"property" : "y",
-			"name" : "y-y",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
-			"clamp" : false,
-			"nice" : true,
 			"zero" : false,
+			"nice" : true,
+			"clamp" : false,
 			"range" : "height"
 		},
 		{
+			"name" : "y-z",
 			"domain" : {
 				"data" : "scale/y-z",
 				"field" : "data.domain"
 			},
-			"property" : "y",
-			"name" : "y-z",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
-			"clamp" : false,
-			"nice" : true,
 			"zero" : false,
+			"nice" : true,
+			"clamp" : false,
 			"range" : "height"
 		},
 		{
-			"property" : "x_rel",
 			"name" : "x_rel",
 			"domain" : {
 				"data" : "scale/x_rel",
@@ -119,7 +109,6 @@
 			"clamp" : false
 		},
 		{
-			"property" : "y_rel",
 			"name" : "y_rel",
 			"domain" : {
 				"data" : "scale/y_rel",

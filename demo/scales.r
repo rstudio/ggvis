@@ -24,10 +24,8 @@ mtcars %>% ggvis(x = ~wt, y = ~mpg) %>% layer_points() %>%
 
 # Multiple x scales
 mtcars %>% ggvis(y = ~mpg, size := 25) %>%
-  layer_points(x = prop(quote(disp), scale = "xdisp")) %>%
-  layer_points(x = prop(quote(wt), scale = "xwt"), fill := "red") %>%
-  scale_numeric("x", name = "xdisp") %>%
-  scale_numeric("x", name = "xwt") %>%
+  layer_points(prop("x", quote(disp), scale = "xdisp")) %>%
+  layer_points(prop("x", quote(wt), scale = "xwt"), fill := "red") %>%
   add_guide_axis("x", "xdisp", orient = "top") %>%
   add_guide_axis("x", "xwt", orient = "bottom",
     properties = axis_props(

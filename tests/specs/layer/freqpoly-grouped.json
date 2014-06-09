@@ -77,7 +77,6 @@
 	],
 	"scales" : [
 		{
-			"property" : "x",
 			"name" : "x",
 			"domain" : {
 				"data" : "scale/x",
@@ -89,7 +88,6 @@
 			"range" : "width"
 		},
 		{
-			"property" : "y",
 			"name" : "y",
 			"domain" : {
 				"data" : "scale/y",
@@ -101,7 +99,6 @@
 			"range" : "height"
 		},
 		{
-			"property" : "stroke",
 			"name" : "stroke",
 			"domain" : {
 				"data" : "scale/stroke",
@@ -116,7 +113,6 @@
 			]
 		},
 		{
-			"property" : "x_rel",
 			"name" : "x_rel",
 			"domain" : {
 				"data" : "scale/x_rel",
@@ -128,7 +124,6 @@
 			"clamp" : false
 		},
 		{
-			"property" : "y_rel",
 			"name" : "y_rel",
 			"domain" : {
 				"data" : "scale/y_rel",

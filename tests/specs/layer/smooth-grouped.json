@@ -67,7 +67,6 @@
 	],
 	"scales" : [
 		{
-			"property" : "x",
 			"name" : "x",
 			"domain" : {
 				"data" : "scale/x",
@@ -79,7 +78,6 @@
 			"range" : "width"
 		},
 		{
-			"property" : "y",
 			"name" : "y",
 			"domain" : {
 				"data" : "scale/y",
@@ -91,7 +89,6 @@
 			"range" : "height"
 		},
 		{
-			"property" : "x_rel",
 			"name" : "x_rel",
 			"domain" : {
 				"data" : "scale/x_rel",
@@ -103,7 +100,6 @@
 			"clamp" : false
 		},
 		{
-			"property" : "y_rel",
 			"name" : "y_rel",
 			"domain" : {
 				"data" : "scale/y_rel",
@@ -129,6 +125,9 @@
 							"stroke" : {
 								"value" : "#000000"
 							},
+							"strokeWidth" : {
+								"value" : 2
+							},
 							"x" : {
 								"scale" : "x",
 								"field" : "data.pred_"
@@ -136,9 +135,6 @@
 							"y" : {
 								"scale" : "y",
 								"field" : "data.resp_"
-							},
-							"strokeWidth" : {
-								"value" : 2
 							},
 							"fill" : {
 								"value" : "transparent"

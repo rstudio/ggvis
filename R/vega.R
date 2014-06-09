@@ -131,21 +131,21 @@ as.vega.mark <- function(mark) {
   }
 
   if (!is.null(key)) {
-    m$key <- paste0("data.", prop_name(key))
+    m$key <- paste0("data.", prop_label(key))
   }
   m
 }
 
 #' @export
 as.vega.ggvis_props <- function(x, default_scales = NULL) {
-  x <- prop_sets(x)
+  x <- prop_event_sets(x)
 
   # Given a list of property sets (enter, update, etc.), return appropriate
   # vega property set.
   vega_prop_set <- function(x) {
     if (empty(x)) return(NULL)
 
-    props <- trim_propset(names(x))
+    props <- trim_prop_event(names(x))
     default_scales <- default_scales %||% propname_to_scale(props)
     Map(prop_vega, x, default_scales)
   }
@@ -169,7 +169,7 @@ as.vega.vega_legend <- as.vega.vega_axis
 #' @export
 as.vega.data.frame <- function(x, name, ...) {
   # For CSV output, we need to unescape periods, which were turned into \. by
-  # prop_name().
+  # prop_label().
   names(x) <- gsub("\\.", ".", names(x), fixed = TRUE)
 
   list(list(

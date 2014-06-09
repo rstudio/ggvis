@@ -139,11 +139,11 @@ you increase height, it's mapped like a y variable so bigger values are further
 away.
 
 ```{r}
-df %>% ggvis(~x, ~y, height := prop(80, scale = "y")) %>% layer_ribbons()
+df %>% ggvis(~x, ~y, prop("height", 80, scale = "y")) %>% layer_ribbons()
 
 df <- data.frame(x = 1:10, y = (1:10) ^ 2)
 df %>% ggvis(~x, ~y) %>%
-  layer_ribbons(height = prop(input_slider(0, 100), scale = "y")) %>%
+  layer_ribbons(prop("height", input_slider(0, 100), scale = "y")) %>%
   layer_paths(stroke := "red", strokeWidth := 10)
 ```
 

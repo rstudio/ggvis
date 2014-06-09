@@ -14,7 +14,7 @@ df %>%
 
 # Override default scale name
 df %>%
-  ggvis(x = ~x, y = ~x, fill = prop(~z, scale = "blah")) %>%
+  ggvis(x = ~x, y = ~x, prop("fill", ~z, scale = "blah")) %>%
   layer_points() %>%
   add_guide_legend(fill = "blah") %>%
   save_spec("scales/custom.json")
@@ -22,10 +22,8 @@ df %>%
 # Dual scale
 df %>%
   ggvis(x = ~x) %>%
-  layer_points(y = prop(~y, scale = "y-y"), fill := "red") %>%
-  layer_points(y = prop(~z, scale = "y-z")) %>%
-  scale_numeric("y", name = "y-y") %>%
-  scale_numeric("y", name = "y-z") %>%
+  layer_points(prop("y", ~y, scale = "y-y"), fill := "red") %>%
+  layer_points(prop("y", ~z, scale = "y-z")) %>%
   save_spec("scales/dual.json")
 
 # Numeric domains
@@ -47,3 +45,9 @@ dat %>% ggvis(~time, ~value) %>% layer_points() %>%
 
 dat %>% ggvis(~time) %>% layer_histograms() %>%
   save_spec("scales/datetime_hist.json")
+
+# Nominal x with bars
+df %>%
+  ggvis(x = ~factor(x), y = ~y) %>%
+  layer_bars() %>%
+  save_spec("scales/bars.json")

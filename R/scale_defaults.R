@@ -19,7 +19,7 @@ apply_scale_defaults.scale_numeric <- function(x) {
   x$clamp <- x$clamp %||% FALSE
 
   if (is.null(x$range)) {
-    x$range <- switch(x$property,
+    x$range <- switch(propname_to_scale(x$property),
       x = "width",
       y = "height",
       stroke = c("#132B43", "#56B1F7"),
@@ -41,7 +41,7 @@ apply_scale_defaults.scale_datetime <- function(x) {
   x$type <- x$type %||% "time"
 
   if (is.null(x$range)) {
-    x$range <- switch(x$property,
+    x$range <- switch(propname_to_scale(x$property),
       x = "width",
       y = "height",
       stop("Don't know how to automatically set range for ", x$property, ".")
@@ -56,7 +56,7 @@ apply_scale_defaults.scale_ordinal <- function(x) {
   x$sort <- x$sort %||% FALSE
 
   if (is.null(x$range)) {
-    x$range <- switch(x$property,
+    x$range <- switch(propname_to_scale(x$property),
       x = "width",
       y = "height",
       stroke = "category10",
@@ -80,7 +80,7 @@ apply_scale_defaults.scale_nominal <- function(x) {
   x$sort <- x$sort %||% FALSE
 
   if (is.null(x$range)) {
-    x$range <- switch(x$property,
+    x$range <- switch(propname_to_scale(x$property),
       x = "width",
       y = "height",
       stroke = "category10",
