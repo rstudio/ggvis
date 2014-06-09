@@ -59,59 +59,106 @@ prop <- function(property, x, scale = NULL, offset = NULL, mult = NULL,
   if (missing(x)) stop("Value required for prop().")
   if (property != "key" && is.null(event)) event <- "update"
 
-  if (is.prop(x)) return(x)
+  p <- create_prop(x, property, scale, offset, mult, env, event, label)
 
-  # If x is a formula, then we should use on the rhs, and it must be scaled
-  if (is.formula(x)) {
-    if (length(x) != 2) stop("Formulas must be single sided")
-    env <- environment(x)
-    x <- x[[2]]
+  if (p$property == "key") {
+    if (!is.null(p$event)) stop("key prop cannot have an event.")
+    if (!is.null(p$scale)) stop("key prop cannot have a scale.")
+    if (p$type == "constant") stop("key prop cannot be constant.")
   }
 
-  if (is.atomic(x)) {
-    type <- "constant"
-    assert_that(length(x) == 1)
-    # Constants don't need to capture environment
-    env <- NULL
-    scale <- scale %||% FALSE
-  } else if (shiny::is.reactive(x)) {
-    type <- "reactive"
-    reactive_id(x) <- rand_id("reactive_")
-    scale <- scale %||% FALSE
-  } else if (is.quoted(x)) {
-    type <- "variable"
-    scale <- scale %||% TRUE
-  } else {
-    if (is.null(label)) label <- deparse(substitute(label))
-    stop("Unknown input to prop: ", label, call. = FALSE)
-  }
+  p
+}
 
-  if (isTRUE(scale)) {
-    scale <- propname_to_scale(trim_prop_event(property))
-  } else if (identical(scale, FALSE)) {
-    scale <- NULL
-  }
+create_prop <- function(x, property, scale, offset, mult, env, event, label) {
+  UseMethod("create_prop")
+}
 
-  if (property == "key") {
-    if (!is.null(event)) stop("key prop cannot have an event.")
-    if (!is.null(scale)) stop("key prop cannot have a scale.")
-    if (type == "constant") stop("key prop cannot be constant.")
-  }
+#' @export
+create_prop.prop <- function(x, ...) x
 
+#' @export
+create_prop.default <- function(x, property, scale, offset, mult, env, event,
+                                label) {
+  if (!is.atomic(x)) stop("Unknown input to prop: ", label)
+
+  # If we got here, it's constant
+  assert_that(length(x) == 1)
   structure(
     list(
       property = property,
       value = x,
-      type = type,
-      scale = scale,
+      type = "constant",
+      scale = decide_scale(scale %||% FALSE, property),
+      offset = offset,
+      mult = mult,
+      event = event,
+      env = NULL
+    ),
+    class = c("prop_constant", "prop")
+  )
+}
+
+#' @export
+create_prop.reactive <- function(x, property, scale, offset, mult, env, event,
+                                 label) {
+  reactive_id(x) <- rand_id("reactive_")
+  structure(
+    list(
+      property = property,
+      value = x,
+      type = "reactive",
+      scale =  decide_scale(scale %||% FALSE, property),
+      offset = offset,
+      mult = mult,
+      event = event,
+      env = NULL
+    ),
+    class = c("prop_reactive", "prop")
+  )
+}
+
+#' @export
+create_prop.call <- function(x, property, scale, offset, mult, env, event,
+                             label) {
+  structure(
+    list(
+      property = property,
+      value = x,
+      type = "variable",
+      scale = decide_scale(scale %||% TRUE, property),
       offset = offset,
       mult = mult,
       event = event,
       env = env
     ),
-    class = c("prop")
+    class = c("prop_variable", "prop")
   )
 }
+
+#' @export
+create_prop.name <- create_prop.call
+
+#' @export
+create_prop.formula <- function(x, property, scale, offset, mult, env, event,
+                                label) {
+  if (length(x) != 2) stop("Formulas must be single sided")
+  create_prop(x[[2]], property, scale, offset, mult, environment(x), event,
+              label)
+}
+
+# Given a value for scale and a property, return a string with the name of the
+# scale. scale can be NULL, TRUE, FALSE, or a string.
+decide_scale <- function(scale, property) {
+  if (isTRUE(scale)) {
+    propname_to_scale(trim_prop_event(property))
+  } else if (identical(scale, FALSE)) {
+    NULL
+  } else {
+    scale
+  }
+}
+
 
 #' @export
 #' @rdname prop
