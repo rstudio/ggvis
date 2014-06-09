@@ -75,6 +75,22 @@ prop <- function(property, x, scale = NULL, offset = NULL, mult = NULL,
   p
 }
 
+#' Create new prop object
+#'
+#' The resulting object has the following fields:
+#'
+#' \itemize{
+#'   \item property The name of a visual property, like "x", "x2", "width", "y",
+#'     "fill".
+#'   \item value A value. Can be a constant, reactive, or quoted expression.
+#'   \item scale A string with name of a scale. Typically something like "x",
+#'     "y", "fill", but can also be a custom name like "foo".
+#'   \item offset Additive pixel offset used to adjust scaled values.
+#'   \item mult Multiplicative pixel offset used to adjust scaled values.
+#'   \item event A event like "update", "enter", "exit", "hover", "brush".
+#'   \item env An environment in which to evaluate a variable or reactive value.
+#' }
+#' @keywords internal
 new_prop <- function(x, property, scale, offset, mult, env, event, label) {
   UseMethod("new_prop")
 }
