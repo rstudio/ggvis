@@ -24,8 +24,6 @@ df %>%
   ggvis(x = ~x) %>%
   layer_points(prop("y", ~y, scale = "y-y"), fill := "red") %>%
   layer_points(prop("y", ~z, scale = "y-z")) %>%
-  scale_numeric("y", name = "y-y") %>%
-  scale_numeric("y", name = "y-z") %>%
   save_spec("scales/dual.json")
 
 # Numeric domains
