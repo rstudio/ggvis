@@ -202,7 +202,7 @@ args_to_props <- function(args, env) {
 
   # Final pass: Convert the now-named values to props
   unnamed_values <- Map(unnamed_values, names(unnamed_values),
-    f = function(x, name) expr_to_prop(name, x)
+    f = function(x, name) expr_to_prop(name, x, scale = TRUE)
   )
 
   c(named_args, unnamed_props, unnamed_values)

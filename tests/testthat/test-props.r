@@ -158,7 +158,7 @@ test_that("props() creates correct prop objects", {
   expect_error(props(~wt, ~mpg, 1))  # Too many
   p <- props(~wt, 1)
   test_prop(p$x.update, "x", quote(wt), "x")
-  test_prop(p$y.update, "y", 1, NULL)
+  test_prop(p$y.update, "y", 1, "y")
 
   # Unnamed arguments, out of order
   p <- props(~mpg, prop("fill", ~cyl), x = ~wt)
@@ -170,7 +170,7 @@ test_that("props() creates correct prop objects", {
   p1 <- prop("fill", ~cyl)
   p2 <- 1
   p <- props(p1, p2)
-  test_prop(p$x.update, "x", 1, NULL)
+  test_prop(p$x.update, "x", 1, "x")
   test_prop(p$fill.update, "fill", quote(cyl), "fill")
 
   # Prop objects with event (.enter, .exit, .update, .hover)
