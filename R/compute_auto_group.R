@@ -32,7 +32,7 @@ auto_group <- function(vis, exclude = NULL) {
   props <- props[!(pnames %in% exclude)]
 
   countable <- vapply(props,
-    function(prop) inherits(prop, "prop_variable") && prop_countable(data, prop),
+    function(prop) is.prop_variable(prop) && prop_countable(data, prop),
     logical(1)
   )
   if (!any(countable)) return(vis)

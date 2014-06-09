@@ -69,7 +69,7 @@ prop <- function(property, x, scale = NULL, offset = NULL, mult = NULL,
   if (p$property == "key") {
     if (!is.null(p$event)) stop("key prop cannot have an event.")
     if (!is.null(p$scale)) stop("key prop cannot have a scale.")
-    if (inherits(p, "prop_constant")) stop("key prop cannot be constant.")
+    if (is.prop_constant(p)) stop("key prop cannot be constant.")
   }
 
   p
@@ -181,6 +181,17 @@ decide_scale <- function(scale, property) {
 #' @export
 #' @rdname prop
 is.prop <- function(x) inherits(x, "prop")
+#' @export
+#' @rdname prop
+is.prop_constant <- function(x) inherits(x, "prop_constant")
+#' @export
+#' @rdname prop
+is.prop_variable <- function(x) inherits(x, "prop_variable")
+#' @export
+#' @rdname prop
+is.prop_reactive <- function(x) inherits(x, "prop_reactive")
+
+
 
 # Given a property and a dataset, get the value of the property.
 prop_value <- function(x, data) UseMethod("prop_value")
