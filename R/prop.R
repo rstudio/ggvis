@@ -64,7 +64,7 @@ prop <- function(property, x, scale = NULL, offset = NULL, mult = NULL,
   if (p$property == "key") {
     if (!is.null(p$event)) stop("key prop cannot have an event.")
     if (!is.null(p$scale)) stop("key prop cannot have a scale.")
-    if (p$type == "constant") stop("key prop cannot be constant.")
+    if (inherits(p, "prop_constant")) stop("key prop cannot be constant.")
   }
 
   p
@@ -88,7 +88,6 @@ create_prop.default <- function(x, property, scale, offset, mult, env, event,
     list(
       property = property,
       value = x,
-      type = "constant",
       scale = decide_scale(scale %||% FALSE, property),
       offset = offset,
       mult = mult,
@@ -107,7 +106,6 @@ create_prop.reactive <- function(x, property, scale, offset, mult, env, event,
     list(
       property = property,
       value = x,
-      type = "reactive",
       scale =  decide_scale(scale %||% FALSE, property),
       offset = offset,
       mult = mult,
@@ -125,7 +123,6 @@ create_prop.call <- function(x, property, scale, offset, mult, env, event,
     list(
       property = property,
       value = x,
-      type = "variable",
       scale = decide_scale(scale %||% TRUE, property),
       offset = offset,
       mult = mult,
@@ -282,8 +279,9 @@ format.prop <- function(x, ...) {
   }
   scale <- if (prop_is_scaled(x)) x$scale else "<none>"
   event <- x$event %||% "<none>"
+  type <- sub("^prop_", "", class(x)[1])
 
-  paste0("<", x$type, "> ", as.character(x), offset, mult,
+  paste0("<", type, "> ", as.character(x), offset, mult,
     " (property: ", x$property, ", scale: ", scale, ", event: ", event, ")")
 }
 

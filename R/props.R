@@ -261,7 +261,7 @@ find_prop_var <- function(props, name) {
     stop("Can't find prop ", name, call. = FALSE)
   }
 
-  if (prop$type != "variable") {
+  if (!inherits(prop, "prop_variable")) {
     stop("Visual property ", name, " is not a variable", call. = FALSE)
   }
 
