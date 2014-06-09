@@ -34,7 +34,7 @@ create_prop.band <- function(x, property, scale, offset, mult, env, event,
   structure(
     list(
       property = property,
-      scale = NULL,
+      scale = decide_scale(scale %||% TRUE, property),
       offset = offset,
       mult = mult,
       event = event,

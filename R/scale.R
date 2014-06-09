@@ -45,7 +45,9 @@ named_list <- function(names, ...) {
 propname_to_scale <- function(prop) {
   simplify <- c(
     "x2" = "x",
+    "width" = "x",
     "y2" = "y",
+    "height" = "y",
     "fillOpacity" = "opacity",
     "strokeOpacity" = "opacity",
     "innerRadius" = "radius",
