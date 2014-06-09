@@ -29,8 +29,8 @@ band <- function(offset = NULL, mult = NULL) {
 }
 
 #' @export
-create_prop.band <- function(x, property, scale, offset, mult, env, event,
-                             label) {
+new_prop.band <- function(x, property, scale, offset, mult, env, event,
+                          label) {
   if (!(property %in% c("width", "height"))) {
     stop("band() can only be used for width and height properties.")
   }

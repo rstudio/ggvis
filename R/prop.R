@@ -64,7 +64,7 @@ prop <- function(property, x, scale = NULL, offset = NULL, mult = NULL,
   if (missing(x)) stop("Value required for prop().")
   if (property != "key" && is.null(event)) event <- "update"
 
-  p <- create_prop(x, property, scale, offset, mult, env, event, label)
+  p <- new_prop(x, property, scale, offset, mult, env, event, label)
 
   if (p$property == "key") {
     if (!is.null(p$event)) stop("key prop cannot have an event.")
@@ -75,16 +75,16 @@ prop <- function(property, x, scale = NULL, offset = NULL, mult = NULL,
   p
 }
 
-create_prop <- function(x, property, scale, offset, mult, env, event, label) {
-  UseMethod("create_prop")
+new_prop <- function(x, property, scale, offset, mult, env, event, label) {
+  UseMethod("new_prop")
 }
 
 #' @export
-create_prop.prop <- function(x, ...) x
+new_prop.prop <- function(x, ...) x
 
 #' @export
-create_prop.default <- function(x, property, scale, offset, mult, env, event,
-                                label) {
+new_prop.default <- function(x, property, scale, offset, mult, env, event,
+                             label) {
   if (!is.atomic(x)) stop("Unknown input to prop: ", label)
 
   # If we got here, it's constant
@@ -104,8 +104,8 @@ create_prop.default <- function(x, property, scale, offset, mult, env, event,
 }
 
 #' @export
-create_prop.reactive <- function(x, property, scale, offset, mult, env, event,
-                                 label) {
+new_prop.reactive <- function(x, property, scale, offset, mult, env, event,
+                              label) {
   reactive_id(x) <- rand_id("reactive_")
   structure(
     list(
@@ -122,8 +122,8 @@ create_prop.reactive <- function(x, property, scale, offset, mult, env, event,
 }
 
 #' @export
-create_prop.call <- function(x, property, scale, offset, mult, env, event,
-                             label) {
+new_prop.call <- function(x, property, scale, offset, mult, env, event,
+                          label) {
   structure(
     list(
       property = property,
@@ -139,14 +139,14 @@ create_prop.call <- function(x, property, scale, offset, mult, env, event,
 }
 
 #' @export
-create_prop.name <- create_prop.call
+new_prop.name <- new_prop.call
 
 #' @export
-create_prop.formula <- function(x, property, scale, offset, mult, env, event,
-                                label) {
+new_prop.formula <- function(x, property, scale, offset, mult, env, event,
+                             label) {
   if (length(x) != 2) stop("Formulas must be single sided")
-  create_prop.call(x[[2]], property, scale, offset, mult, environment(x),
-                   event, label)
+  new_prop.call(x[[2]], property, scale, offset, mult, environment(x),
+                event, label)
 }
 
 # Given a value for scale and a property, return a string with the name of the
