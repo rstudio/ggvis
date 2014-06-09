@@ -56,6 +56,11 @@ prop <- function(property, x, scale = NULL, offset = NULL, mult = NULL,
                  env = parent.frame(), event = NULL, label = NULL) {
 
   if (missing(property)) stop("Property required for prop().")
+  if (!is.character(property)) {
+    stop("The interface to the prop() function has changed. The first argument ",
+      "must be the name of a property, like 'x', 'y', or 'fill'. Instead of ",
+      "props(x = prop(1)), use props(prop(\"x\", 1)). See ?prop and ?props.")
+  }
   if (missing(x)) stop("Value required for prop().")
   if (property != "key" && is.null(event)) event <- "update"
 
