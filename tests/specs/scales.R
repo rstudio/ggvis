@@ -45,3 +45,9 @@ dat %>% ggvis(~time, ~value) %>% layer_points() %>%
 
 dat %>% ggvis(~time) %>% layer_histograms() %>%
   save_spec("scales/datetime_hist.json")
+
+# Nominal x with bars
+df %>%
+  ggvis(x = ~factor(x), y = ~y) %>%
+  layer_bars() %>%
+  save_spec("scales/bars.json")

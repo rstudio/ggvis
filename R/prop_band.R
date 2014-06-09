@@ -31,6 +31,10 @@ band <- function(offset = NULL, mult = NULL) {
 #' @export
 create_prop.band <- function(x, property, scale, offset, mult, env, event,
                              label) {
+  if (!(property %in% c("width", "height"))) {
+    stop("band() can only be used for width and height properties.")
+  }
+
   structure(
     list(
       property = property,
@@ -45,12 +49,7 @@ create_prop.band <- function(x, property, scale, offset, mult, env, event,
 }
 
 #' @export
-format.prop_band <- function(x, ...) {
-  paste0("<band>")
-}
-
-#' @export
-print.prop_band <- function(x, ...) cat(format(x, ...), "\n", sep = "")
+as.character.prop_band <- function(x, ...) ""
 
 #' @rdname band
 #' @param x object to test for band-ness

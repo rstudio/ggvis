@@ -1,16 +1,16 @@
 context("props")
 require(shiny)
 
+test_prop <- function(p, property, value, scale, event = "update") {
+  expect_identical(p$property, property)
+  expect_identical(p$value, value)
+  expect_identical(p$scale, scale)
+  expect_identical(p$event, event)
+}
+
 test_that("creating prop objects with prop()", {
   expect_error(prop("y")) # Need value
   expect_error(prop(x = 1)) # Need scale
-
-  test_prop <- function(p, property, value, scale, event = "update") {
-    expect_identical(p$property, property)
-    expect_identical(p$value, value)
-    expect_identical(p$scale, scale)
-    expect_identical(p$event, event)
-  }
 
   # Unscaled, constant
   test_prop(prop("x", 1, scale = FALSE), "x", 1, NULL)
@@ -46,7 +46,6 @@ test_that("creating prop objects with prop()", {
   # can't be constant
   expect_error(prop("key", 1:10))
 })
-
 
 test_that("property names for variables", {
   # pname(wt) is equivalent to prop_label(prop(quote(wt)))
@@ -124,13 +123,6 @@ test_that("prop captures environment for evaluation", {
 })
 
 test_that("props() creates correct prop objects", {
-  test_prop <- function(p, property, value, scale, event = "update") {
-    expect_identical(p$property, property)
-    expect_identical(p$value, value)
-    expect_identical(p$scale, scale)
-    expect_identical(p$event, event)
-  }
-
   # 6 combinations of := and constant/variable/reactive
   p <- props(x := 1, y := ~mpg, x2 := reactive(cyl),
              stroke = "foo", fill = ~wt, size = reactive(am))
@@ -279,4 +271,23 @@ test_that("drop_props", {
     unname(drop_props(p, c("x", "stroke"))),
     props()
   )
+})
+
+test_that("band() is created properly", {
+  # Automatic setting of scale, event
+  test_prop(prop("width", band()), "width", NULL, "x", "update")
+  test_prop(prop("height", band()), "height", NULL, "y", "update")
+
+  # Explicit settings of scale, event
+  test_prop(prop("width", band(), scale = "x"), "width", NULL, "x")
+  test_prop(prop("width", band(), event = "enter"), "width", NULL, "x", "enter")
+  test_prop(prop("width", band(), scale = "foo"), "width", NULL, "foo")
+
+  # Create with props()
+  test_prop(props(width = band())$width.update, "width", NULL, "x", "update")
+  test_prop(props(height.enter = band())$height.enter, "height", NULL, "y", "enter")
+
+  # Error if property isn't width or height
+  expect_error(prop("x", band()))
+  expect_error(props(x = band()))
 })

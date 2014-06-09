@@ -263,14 +263,6 @@ as.character.prop_reactive <- function(x, ...) reactive_id(x$value)
 
 #' @export
 format.prop <- function(x, ...) {
-  if (identical(x$scale, TRUE)) {
-    scale <- "auto"
-  } else if (identical(x$scale, FALSE)) {
-    scale <- "none"
-  } else {
-    scale <- x$scale
-  }
-
   if (!is.null(x$offset)) {
     offset <- paste0(" ", if (x$offset > 0) "+" else "-", " ", abs(x$offset))
   } else {
