@@ -166,20 +166,14 @@ is.prop <- function(x) inherits(x, "prop")
 
 # Given a property and a dataset, get the value of the property.
 prop_value <- function(x, data) UseMethod("prop_value")
-
 #' @export
-prop_value.default <- function(x, data) {
-  if (x$type == "constant") return(rep(x$value, nrow(data)))
-
-  # Get the expression to evaluate
-  if (x$type == "reactive") {
-    expr <- x$value()
-  } else {
-    expr <- x$value
-  }
-
+prop_value.prop_constant <- function(x, data) {
+  rep(x$value, nrow(data))
+}
+#' @export
+prop_value.prop_variable <- function(x, data) {
   # Calculate a "column"
-  col <- eval(expr, envir = data, enclos = x$env)
+  col <- eval(value(x$value), envir = data, enclos = x$env)
 
   if (!(length(col) == 1 || length(col) == nrow(data))) {
     stop("Length of calculated column '", prop_label(x), "' (", length(col),
@@ -189,59 +183,66 @@ prop_value.default <- function(x, data) {
 
   rep(col, length.out = nrow(data))
 }
+#' @export
+prop_value.prop_reactive <- prop_value.prop_variable
+
 
 # The name of the property: used for naming the variable it produces in the
 # vega data frame
 prop_label <- function(x) UseMethod("prop_label")
-
 #' @export
-prop_label.default <- function(x) {
-  switch(x$type,
-    constant = "",
-    reactive = safe_vega_var(reactive_id(x$value)),
-    variable = safe_vega_var(x$value))
-}
+prop_label.prop_constant <- function(x) ""
+#' @export
+prop_label.prop_variable <- function(x) safe_vega_var(x$value)
+#' @export
+prop_label.prop_reactive <- function(x) safe_vega_var(reactive_id(x$value))
 
 # Reports whether this is a scaled prop
 prop_is_scaled <- function(prop) !is.null(prop$scale)
 
 # Generate a vega object for the individual mark.
 prop_vega <- function(x, default_scale) UseMethod("prop_vega")
-
 #' @export
-prop_vega.default <- function(x, default_scale) {
-  pv <- list(
+prop_vega.prop_constant <- function(x, default_scale) {
+  compact(list(
     scale = if (prop_is_scaled(x)) x$scale,
+    value = x$value,
     mult = x$mult,
     offset = x$offset
-  )
-
-  if (x$type == "constant") {
-    pv$value <- x$value
-  } else {
-    pv$field <- paste0("data.", prop_label(x))
-  }
-
-  compact(pv)
+  ))
 }
+#' @export
+prop_vega.prop_variable <- function(x, default_scale) {
+  compact(list(
+    scale = if (prop_is_scaled(x)) x$scale,
+    field = paste0("data.", prop_label(x)),
+    mult = x$mult,
+    offset = x$offset
+  ))
+}
+#' @export
+prop_vega.prop_reactive <- prop_vega.prop_variable
 
 #' Property domain.
 #'
 #' @param x property to dispatch on
 #' @param data name of data set
 prop_domain <- function(x, data) UseMethod("prop_domain")
-
 #' @export
-prop_domain.default <- function(x, data) {
+prop_domain.prop_constant <- function(x, data) {
   # FIXME: for scaled constants, this should really insert a literal value in
   #   to the domain, but it's not obvious how to do that in vega currently.
-  if (x$type == "constant") return(NULL)
-
+  NULL
+}
+#' @export
+prop_domain.prop_variable <- function(x, data) {
   list(
     data = data,
     field = paste0("data.", prop_label(x))
   )
 }
+#' @export
+prop_domain.prop_reactive <- prop_domain.prop_variable
 
 
 # Given a prop object, return a string representation of the value
@@ -252,13 +253,11 @@ prop_domain.default <- function(x, data) {
 # p <- props(x := input_select(c("red", "blue")), y = 10)
 # as.character.prop(p$x)
 #' @export
-as.character.prop <- function(x, ...) {
-  switch(x$type,
-    constant = as.character(x$value),
-    reactive = reactive_id(x$value),
-    variable = deparse2(x$value)
-  )
-}
+as.character.prop_constant <- function(x, ...) as.character(x$value)
+#' @export
+as.character.prop_variable <- function(x, ...) deparse2(x$value)
+#' @export
+as.character.prop_reactive <- function(x, ...) reactive_id(x$value)
 
 #' @export
 format.prop <- function(x, ...) {
