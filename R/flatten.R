@@ -39,7 +39,6 @@ apply_props <- function(data, props) {
 apply_props.data.frame <- function(data, props) {
   cols <- lapply(props, prop_value, data = data)
   names(cols) <- vapply(props, prop_label, character(1))
-prop_label
   quickdf(cols)
 }
 
