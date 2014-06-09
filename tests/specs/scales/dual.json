@@ -76,31 +76,25 @@
 			"range" : "width"
 		},
 		{
+			"name" : "y-y",
 			"domain" : {
 				"data" : "scale/y-y",
 				"field" : "data.domain"
 			},
-			"name" : "y-y",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
-			"clamp" : false,
-			"nice" : true,
 			"zero" : false,
+			"nice" : true,
+			"clamp" : false,
 			"range" : "height"
 		},
 		{
+			"name" : "y-z",
 			"domain" : {
 				"data" : "scale/y-z",
 				"field" : "data.domain"
 			},
-			"name" : "y-z",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
-			"clamp" : false,
-			"nice" : true,
 			"zero" : false,
+			"nice" : true,
+			"clamp" : false,
 			"range" : "height"
 		},
 		{

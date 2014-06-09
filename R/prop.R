@@ -145,8 +145,8 @@ create_prop.name <- create_prop.call
 create_prop.formula <- function(x, property, scale, offset, mult, env, event,
                                 label) {
   if (length(x) != 2) stop("Formulas must be single sided")
-  create_prop(x[[2]], property, scale, offset, mult, environment(x), event,
-              label)
+  create_prop.call(x[[2]], property, scale, offset, mult, environment(x),
+                   event, label)
 }
 
 # Given a value for scale and a property, return a string with the name of the

@@ -15,6 +15,7 @@ test_that("creating prop objects with prop()", {
   # Unscaled, constant
   test_prop(prop("x", 1, scale = FALSE), "x", 1, NULL)
   test_prop(prop("x", 1), "x", 1, NULL)   # Use default scale
+  test_prop(prop("x", ~1), "x", 1, "x")
   test_prop(prop("x2", 1), "x2", 1, NULL)
 
   # Unscaled, variable, with quote() and ~
