@@ -316,26 +316,18 @@ print.prop <- function(x, ...) cat(format(x, ...), "\n", sep = "")
 #
 # @param data The data object.
 # @param prop The property object.
-# @param processed Has this data object been processed so that new columns
-#   have been calculated and unused columns have been dropped?
 # @keywords internal
-prop_type <- function(data, prop, processed = FALSE) {
+prop_type <- function(data, prop) {
   UseMethod("prop_type")
 }
 #' @export
-prop_type.data.frame <- function(data, prop, processed = FALSE) {
-  if (processed) {
-    value <- data[[prop_label(prop)]]
-  } else {
-    value <- prop_value(prop, data)
-  }
-
-  vector_type(value)
+prop_type.data.frame <- function(data, prop) {
+  vector_type(prop_value(prop, data))
 }
 
 # Continuous variables are not countable; categorical variables are.
-prop_countable <- function(data, prop, processed = FALSE) {
-  countable_prop_type(prop_type(data, prop, processed))
+prop_countable <- function(data, prop) {
+  countable_prop_type(prop_type(data, prop))
 }
 
 # Report whether a prop type is countable
