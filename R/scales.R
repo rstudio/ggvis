@@ -117,7 +117,7 @@ NULL
 scale_numeric <- function(vis, property, domain = NULL, range = NULL,
                           reverse = FALSE, round = FALSE,
                           trans = "linear", clamp = FALSE, exponent = NULL,
-                          nice = TRUE, zero = FALSE, expand = 0.05,
+                          nice = FALSE, zero = FALSE, expand = 0.05,
                           name = NULL, label = NULL) {
   trans <- match.arg(
     trans,

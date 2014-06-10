@@ -15,7 +15,7 @@ apply_scale_defaults.ggvis_scale <- function(x) x
 #' @export
 apply_scale_defaults.scale_numeric <- function(x) {
   x$zero <- x$zero %||% FALSE
-  x$nice <- x$nice %||% TRUE
+  x$nice <- x$nice %||% FALSE
   x$clamp <- x$clamp %||% FALSE
 
   if (is.null(x$range)) {
