@@ -64,8 +64,8 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
     marks = lapply(x$marks, as.vega),
     width = x$options$width,
     height = x$options$height,
-    legends = lapply(x$legends, as.vega),
-    axes = lapply(x$axes, as.vega),
+    legends = compact(lapply(x$legends, as.vega)),
+    axes = compact(lapply(x$axes, as.vega)),
     padding = as.vega(x$options$padding),
     ggvis_opts = x$options,
     handlers = if (dynamic) x$handlers
@@ -155,6 +155,8 @@ as.vega.ggvis_props <- function(x, default_scales = NULL) {
 
 #' @export
 as.vega.ggvis_axis <- function(x) {
+  if (isTRUE(x$hide)) return(NULL)
+
   if (empty(x$properties)) {
     x$properties <- NULL
   } else {

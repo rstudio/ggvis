@@ -13,7 +13,7 @@
 #'
 #' @param vis A ggvis object.
 #' @param size,shape,fill,stroke The name of the scale that determines the
-#'   legends size, shape, fill and stroke.
+#'   legends for the properties size, shape, fill and stroke.
 #' @param orient The orientation of the legend. One of "left" or "right". This
 #'   determines how the legend is positioned within the scene. The default is
 #'   "right".
@@ -30,6 +30,11 @@
 #' mtcars %>% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) %>%
 #'   layer_points() %>%
 #'   add_legend(fill = "fill", title = "Cylinders")
+#'
+#' # Suppress legend with hide_legend
+#' mtcars %>% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) %>%
+#'   layer_points() %>%
+#'   hide_legend("fill")
 #'
 #' # Control legend properties with a continuous legend, with x and y position
 #' # in pixels.
@@ -85,6 +90,13 @@ add_legend <- function(vis, size = NULL, shape = NULL, fill = NULL,
   register_legend(vis, legend)
 }
 
+#' @rdname add_legend
+#' @export
+hide_legend <- function(vis, scale) {
+  legend <- structure(list(scale = scale, hide = TRUE), class = "ggvis_legend")
+  register_legend(vis, legend)
+}
+
 #' Defunct function for adding a legend
 #'
 #' This function has been replaced with \code{\link{add_legend}}.
@@ -115,9 +127,12 @@ add_missing_legends <- function(vis) {
   scales <- vis$scales
 
   legs <- c("size", "shape", "fill", "stroke")
+  # Get scales that are in some legend
   present <- unlist(lapply(legends, function(x) x[legs]))
-
-  missing <- setdiff(intersect(names(scales), legs), present)
+  # Ignore scales with hidden legend
+  hidden <- unlist(lapply(legends, function(x) if (x$hide) x$scale))
+  # Find scales that don't have legend
+  missing <- setdiff(intersect(names(scales), legs), c(present, hidden))
 
   for (scale in missing) {
     args <- list()

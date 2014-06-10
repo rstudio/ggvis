@@ -53,6 +53,11 @@
 #'   layer_points() %>%
 #'   add_axis("x", title = "Weight", orient = "top")
 #'
+#' # Suppress axis with hide_axis
+#' mtcars %>% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) %>%
+#'   layer_points() %>%
+#'   hide_axis("x") %>% hide_axis("y")
+#'
 #' mtcars %>% ggvis(x = ~wt, y = ~mpg) %>% layer_points() %>%
 #'   add_axis("x", title = "Weight", ticks = 40,
 #'     properties = axis_props(
@@ -83,6 +88,13 @@ add_axis <- function(vis, type, scale = type, orient = NULL, title = NULL,
                       tick_size_major, tick_size_minor, tick_size_end,
                       offset, layer, grid, properties)
 
+  register_axis(vis, axis)
+}
+
+#' @rdname add_axis
+#' @export
+hide_axis <- function(vis, scale) {
+  axis <- structure(list(scale = scale, hide = TRUE), class = "ggvis_axis")
   register_axis(vis, axis)
 }
 
