@@ -154,7 +154,7 @@ as.vega.ggvis_props <- function(x, default_scales = NULL) {
 }
 
 #' @export
-as.vega.vega_axis <- function(x) {
+as.vega.ggvis_axis <- function(x) {
   if (empty(x$properties)) {
     x$properties <- NULL
   } else {
@@ -164,7 +164,7 @@ as.vega.vega_axis <- function(x) {
   unclass(x)
 }
 #' @export
-as.vega.vega_legend <- as.vega.vega_axis
+as.vega.ggvis_legend <- as.vega.ggvis_axis
 
 #' @export
 as.vega.data.frame <- function(x, name, ...) {

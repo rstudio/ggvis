@@ -124,7 +124,7 @@ create_axis <- function(type, scale = type, orient = NULL, title = NULL,
       tickSizeMajor = tick_size_major, tickSizeMinor = tick_size_minor,
       tickSizeEnd = tick_size_end, offset = offset, layer = layer,
       grid = grid, properties = properties
-  )), class = "vega_axis")
+  )), class = "ggvis_axis")
 }
 
 
@@ -163,7 +163,7 @@ apply_axes_defaults <- function(vis) {
 }
 
 #' @export
-format.vega_axis <- function(x, ...) {
+format.ggvis_axis <- function(x, ...) {
   params <- param_string(x, collapse = FALSE)
   param_s <- paste0("  ", format(paste0(names(params), ":")), " ", format(params),
     collapse = "\n")
@@ -172,4 +172,4 @@ format.vega_axis <- function(x, ...) {
 }
 
 #' @export
-print.vega_axis <- function(x, ...) cat(format(x, ...), "\n", sep = "")
+print.ggvis_axis <- function(x, ...) cat(format(x, ...), "\n", sep = "")

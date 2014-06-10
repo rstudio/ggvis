@@ -107,7 +107,7 @@ create_legend <- function(size = NULL, shape = NULL, fill = NULL,
       size = size, shape = shape, fill = fill, stroke = stroke,
       orient = orient, title = title, format = format, values = values,
       properties = properties
-  )), class = "vega_legend")
+  )), class = "ggvis_legend")
 }
 
 add_missing_legends <- function(vis) {
@@ -154,7 +154,7 @@ apply_legends_defaults <- function(vis) {
 }
 
 #' @export
-format.vega_legend <- format.vega_axis
+format.ggvis_legend <- format.ggvis_axis
 
 #' @export
-print.vega_legend <- print.vega_axis
+print.ggvis_legend <- print.ggvis_axis

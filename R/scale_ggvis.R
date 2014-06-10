@@ -76,10 +76,10 @@ ggvis_scale <- function(property, name = property, label = name, type = NULL,
 is.ggvis_scale <- function(x) inherits(x, "ggvis_scale")
 
 #' @export
-format.ggvis_scale <- format.vega_axis
+format.ggvis_scale <- format.ggvis_axis
 
 #' @export
-print.ggvis_scale <- print.vega_axis
+print.ggvis_scale <- print.ggvis_axis
 
 #' @export
 as.vega.ggvis_scale <- function(x) {
