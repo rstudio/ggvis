@@ -257,6 +257,16 @@ register_scales_from_props <- function(vis, props) {
   data <- vis$cur_data
 
   add_scale_from_prop <- function(vis, prop) {
+    if (is.prop_band(prop)) {
+      # band() requires points = FALSE
+      vis <- add_scale(
+        vis,
+        ggvis_scale(property = propname_to_scale(prop$property),
+          name = prop$scale, points = FALSE, label = prop_label(prop))
+      )
+      return(vis)
+    }
+
     if (is.null(prop$value) || !prop_is_scaled(prop) || is.null(data)) {
       return(vis)
     }

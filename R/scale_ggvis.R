@@ -201,5 +201,13 @@ expand_range <- function(range, mult = 0) {
 }
 
 merge_ggvis_scales <- function(a, b) {
-  structure(merge_vectors(a, b), class = class(b))
+  # a and b may have more than one class. If there's more than one, b's class
+  # has precedence.
+  if (length(class(b)) > 1) {
+    new_class <- class(b)
+  } else {
+    new_class <- class(a)
+  }
+
+  structure(merge_vectors(a, b), class = new_class)
 }
