@@ -39,7 +39,7 @@
 					"domain" : "number"
 				}
 			},
-			"values" : "\"domain\"\n-0.1\n2.1"
+			"values" : "\"domain\"\n0\n2"
 		},
 		{
 			"name" : "scale/x_rel",

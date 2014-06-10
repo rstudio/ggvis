@@ -52,7 +52,7 @@
 					"domain" : "number"
 				}
 			},
-			"values" : "\"domain\"\n3.8\n8.2"
+			"values" : "\"domain\"\n4\n8"
 		},
 		{
 			"name" : "scale/x_rel",
