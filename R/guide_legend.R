@@ -29,13 +29,13 @@
 #' @examples
 #' mtcars %>% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) %>%
 #'   layer_points() %>%
-#'   add_guide_legend(fill = "fill", title = "Cylinders")
+#'   add_legend(fill = "fill", title = "Cylinders")
 #'
 #' # Control legend properties with a continuous legend, with x and y position
 #' # in pixels.
 #' mtcars %>% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) %>%
 #'   layer_points() %>%
-#'   add_guide_legend(fill = "fill", title = "Cylinders",
+#'   add_legend(fill = "fill", title = "Cylinders",
 #'     properties = legend_props(
 #'       title = list(fontSize = 16),
 #'       labels = list(fontSize = 12, fill = "#00F"),
@@ -48,7 +48,7 @@
 #' # in the scaled data space.
 #' mtcars %>% ggvis(x = ~wt, y = ~mpg, fill = ~factor(cyl)) %>%
 #'   layer_points() %>%
-#'   add_guide_legend(fill = "fill", title = "Cylinders",
+#'   add_legend(fill = "fill", title = "Cylinders",
 #'     properties = legend_props(
 #'       title = list(fontSize = 16),
 #'       labels = list(fontSize = 14, dx = 5),
@@ -67,7 +67,7 @@
 #' # the upper-left corner of the legend.
 #' mtcars %>% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) %>%
 #'   layer_points() %>%
-#'   add_guide_legend(fill = "fill", title = "Cylinders",
+#'   add_legend(fill = "fill", title = "Cylinders",
 #'     properties = legend_props(
 #'       legend = list(
 #'         x = scaled_value("x_rel", 0.8),
@@ -75,20 +75,29 @@
 #'       )
 #'     )
 #'   )
-add_guide_legend <- function(vis, size = NULL, shape = NULL, fill = NULL,
-                         stroke = NULL, orient = "right", title = NULL,
-                         format = NULL, values = NULL, properties = NULL) {
+add_legend <- function(vis, size = NULL, shape = NULL, fill = NULL,
+                       stroke = NULL, orient = "right", title = NULL,
+                       format = NULL, values = NULL, properties = NULL) {
 
-  legend <- guide_legend(size, shape, fill, stroke, orient, title, format,
-                         values, properties)
+  legend <- create_legend(size, shape, fill, stroke, orient, title, format,
+                          values, properties)
 
-  add_legend(vis, legend)
+  register_legend(vis, legend)
+}
+
+#' Defunct function for adding a legend
+#'
+#' This function has been replaced with \code{\link{add_legend}}.
+#' @param ... Other arguments.
+#' @export
+add_guide_legend <- function(...) {
+  stop("add_guide_legend() has been replaced by add_legend().")
 }
 
 # Create a legend object.
-guide_legend <- function(size = NULL, shape = NULL, fill = NULL,
-                         stroke = NULL, orient = "right", title = NULL,
-                         format = NULL, values = NULL, properties = NULL) {
+create_legend <- function(size = NULL, shape = NULL, fill = NULL,
+                          stroke = NULL, orient = "right", title = NULL,
+                          format = NULL, values = NULL, properties = NULL) {
 
   orient <- match.arg(orient, c("right", "left"))
 
@@ -111,9 +120,9 @@ add_missing_legends <- function(vis) {
   missing <- setdiff(intersect(names(scales), legs), present)
 
   for (scale in missing) {
-    args <- list(vis)
+    args <- list()
     args[[scale]] <- scales[[scale]]$property
-    vis <- do.call(add_guide_legend, args)
+    vis <- do_call(add_legend, quote(vis), .args = args)
   }
 
   vis

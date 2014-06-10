@@ -26,8 +26,8 @@ mtcars %>% ggvis(x = ~wt, y = ~mpg) %>% layer_points() %>%
 mtcars %>% ggvis(y = ~mpg, size := 25) %>%
   layer_points(prop("x", quote(disp), scale = "xdisp")) %>%
   layer_points(prop("x", quote(wt), scale = "xwt"), fill := "red") %>%
-  add_guide_axis("x", "xdisp", orient = "top") %>%
-  add_guide_axis("x", "xwt", orient = "bottom",
+  add_axis("x", "xdisp", orient = "top") %>%
+  add_axis("x", "xwt", orient = "bottom",
     properties = axis_props(
       ticks = list(stroke = "red"),
       labels = list(fill = "red")

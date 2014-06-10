@@ -25,7 +25,7 @@ Use singular when you want constant x or y position.
 mtcars \%>\% ggvis("", ~mpg) \%>\%
   layer_points() \%>\%
   scale_nominal("x") \%>\%
-  add_guide_axis("x", title = "", tick_size_major = 0)
+  add_axis("x", title = "", tick_size_major = 0)
 
 # OR
 mtcars \%>\% ggvis("", ~mpg) \%>\%

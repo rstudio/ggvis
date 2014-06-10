@@ -283,8 +283,8 @@ If you do this, you will also need to add a scale object.
 mtcars %>% ggvis(y = ~mpg) %>%
   layer_points(prop("x", ~disp, scale = "xdisp")) %>%
   layer_points(prop("x", ~wt, scale = "xwt"), fill := "blue") %>%
-  add_guide_axis("x", "xdisp", orient = "bottom") %>%
-  add_guide_axis("x", "xwt", orient = "bottom", offset = 20, 
+  add_axis("x", "xdisp", orient = "bottom") %>%
+  add_axis("x", "xwt", orient = "bottom", offset = 20,
     properties = axis_props(labels = list(fill = "blue")))
 ```
 
@@ -301,15 +301,13 @@ df %>%
   ggvis(x = ~x, y = ~y, stroke = ~a, fill = ~b, 
     strokeWidth := 5, size := 1000) %>%
   layer_points() %>%
-  add_guide_legend(fill = "stroke", 
-    properties = legend_props(legend = list(y = 50)))
+  add_legend(fill = "stroke", properties = legend_props(legend = list(y = 50)))
 
 df %>% 
   ggvis(x = ~x, y = ~y, stroke = ~a, prop("fill", ~b, scale = "stroke"),
     strokeWidth := 5, size := 1000) %>%
   layer_points() %>%
-  add_guide_legend(fill = "stroke", 
-    properties = legend_props(legend = list(y = 50)))
+  add_legend(fill = "stroke", properties = legend_props(legend = list(y = 50)))
 ```
 
 In this case we don't need to manually add the correct scale, because ggvis

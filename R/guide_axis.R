@@ -51,10 +51,10 @@
 #' @examples
 #' mtcars %>% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) %>%
 #'   layer_points() %>%
-#'   add_guide_axis("x", title = "Weight", orient = "top")
+#'   add_axis("x", title = "Weight", orient = "top")
 #'
 #' mtcars %>% ggvis(x = ~wt, y = ~mpg) %>% layer_points() %>%
-#'   add_guide_axis("x", title = "Weight", ticks = 40,
+#'   add_axis("x", title = "Weight", ticks = 40,
 #'     properties = axis_props(
 #'       ticks = list(stroke = "red"),
 #'       majorTicks = list(strokeWidth = 2),
@@ -71,23 +71,32 @@
 #'       axis = list(stroke = "#333", strokeWidth = 1.5)
 #'     )
 #'   )
-add_guide_axis <- function(vis, type, scale = type, orient = NULL, title = NULL,
-                           title_offset = NULL, format = NULL, ticks = NULL,
-                           values = NULL, subdivide = NULL, tick_padding = NULL,
-                           tick_size_major = NULL, tick_size_minor = tick_size_major,
-                           tick_size_end = tick_size_major, offset = NULL,
-                           layer = "back", grid = TRUE, properties = NULL) {
+add_axis <- function(vis, type, scale = type, orient = NULL, title = NULL,
+                       title_offset = NULL, format = NULL, ticks = NULL,
+                       values = NULL, subdivide = NULL, tick_padding = NULL,
+                       tick_size_major = NULL, tick_size_minor = tick_size_major,
+                       tick_size_end = tick_size_major, offset = NULL,
+                       layer = "back", grid = TRUE, properties = NULL) {
 
-  axis <- guide_axis(type, scale, orient, title, title_offset, format, ticks,
-                     values, subdivide, tick_padding, tick_size_major,
-                     tick_size_minor, tick_size_end, offset,
-                     layer, grid, properties)
+  axis <- create_axis(type, scale, orient, title, title_offset, format,
+                      ticks, values, subdivide, tick_padding,
+                      tick_size_major, tick_size_minor, tick_size_end,
+                      offset, layer, grid, properties)
 
-  add_axis(vis, axis)
+  register_axis(vis, axis)
+}
+
+#' Defunct function for adding an axis
+#'
+#' This function has been replaced with \code{\link{add_axis}}.
+#' @param ... Other arguments.
+#' @export
+add_guide_axis <- function(...) {
+  stop("add_guide_axis() has been replaced by add_axis().")
 }
 
 # Create an axis object.
-guide_axis <- function(type, scale = type, orient = NULL, title = NULL,
+create_axis <- function(type, scale = type, orient = NULL, title = NULL,
                  title_offset = NULL, format = NULL, ticks = NULL,
                  values = NULL, subdivide = NULL, tick_padding = NULL,
                  tick_size_major = NULL, tick_size_minor = tick_size_major,
@@ -127,11 +136,7 @@ add_missing_axes <- function(vis) {
   missing <- setdiff(intersect(names(scales), c("x", "y")), present)
 
   for (scale in missing) {
-    axes[[scale]] <- guide_axis(scale)
-  }
-
-  for (axis in axes) {
-    vis <- add_axis(vis, axis)
+    vis <- add_axis(vis, scale)
   }
   vis
 }

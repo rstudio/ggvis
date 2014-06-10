@@ -164,12 +164,12 @@ add_scale <- function(vis, scale, data_domain = TRUE) {
   vis
 }
 
-add_legend <- function(vis, legend) {
+register_legend <- function(vis, legend) {
   vis$legends <- c(vis$legends, list(legend))
   vis
 }
 
-add_axis <- function(vis, axis) {
+register_axis <- function(vis, axis) {
   vis$axes <- c(vis$axes, list(axis))
   vis
 }

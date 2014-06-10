@@ -7,7 +7,7 @@
 #' mtcars %>% ggvis("", ~mpg) %>%
 #'   layer_points() %>%
 #'   scale_nominal("x") %>%
-#'   add_guide_axis("x", title = "", tick_size_major = 0)
+#'   add_axis("x", title = "", tick_size_major = 0)
 #'
 #' # OR
 #' mtcars %>% ggvis("", ~mpg) %>%
@@ -59,6 +59,6 @@ scale_singular_int <- function(vis, property, name = NULL, label = NULL,
 
   vis <- scale_nominal_int(vis, domain = "", property = property, name = name,
                            label = "", points = points)
-  vis <- add_guide_axis(vis, property, tick_size_major = 0)
+  vis <- add_axis(vis, property, tick_size_major = 0)
   vis
 }
