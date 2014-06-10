@@ -27,7 +27,7 @@
 					"domain" : "number"
 				}
 			},
-			"values" : "\"domain\"\n-0.25\n5.25"
+			"values" : "\"domain\"\n0\n5.25"
 		},
 		{
 			"name" : "scale/x_rel",
@@ -67,16 +67,13 @@
 		},
 		{
 			"name" : "y",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
 			"domain" : {
 				"data" : "scale/y",
 				"field" : "data.domain"
 			},
-			"clamp" : false,
-			"nice" : true,
 			"zero" : false,
+			"nice" : false,
+			"clamp" : false,
 			"range" : "height"
 		},
 		{
@@ -87,7 +84,7 @@
 			},
 			"range" : "width",
 			"zero" : false,
-			"nice" : true,
+			"nice" : false,
 			"clamp" : false
 		},
 		{
@@ -98,7 +95,7 @@
 			},
 			"range" : "height",
 			"zero" : false,
-			"nice" : true,
+			"nice" : false,
 			"clamp" : false
 		}
 	],

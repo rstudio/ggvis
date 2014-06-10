@@ -11,7 +11,7 @@
 					"stack_lwr_" : "number"
 				}
 			},
-			"values" : "\"xmin_\",\"xmax_\",\"stack_upr_\",\"stack_lwr_\"\n0,1,0,0\n1,2,4,0\n2,3,8,0\n3,4,16,0\n4,5,1,0\n5,6,3,0\n6,7,0,0"
+			"values" : "\"xmin_\",\"xmax_\",\"stack_upr_\",\"stack_lwr_\"\n1,2,4,0\n2,3,8,0\n3,4,16,0\n4,5,1,0\n5,6,3,0"
 		},
 		{
 			"name" : "scale/x",
@@ -21,7 +21,7 @@
 					"domain" : "number"
 				}
 			},
-			"values" : "\"domain\"\n-0.35\n7.35"
+			"values" : "\"domain\"\n0.75\n6.25"
 		},
 		{
 			"name" : "scale/y",
@@ -31,7 +31,7 @@
 					"domain" : "number"
 				}
 			},
-			"values" : "\"domain\"\n-0.8\n16.8"
+			"values" : "\"domain\"\n0\n16.8"
 		},
 		{
 			"name" : "scale/x_rel",
@@ -62,7 +62,7 @@
 				"field" : "data.domain"
 			},
 			"zero" : false,
-			"nice" : true,
+			"nice" : false,
 			"clamp" : false,
 			"range" : "width"
 		},
@@ -73,7 +73,7 @@
 				"field" : "data.domain"
 			},
 			"zero" : false,
-			"nice" : true,
+			"nice" : false,
 			"clamp" : false,
 			"range" : "height"
 		},
@@ -85,7 +85,7 @@
 			},
 			"range" : "width",
 			"zero" : false,
-			"nice" : true,
+			"nice" : false,
 			"clamp" : false
 		},
 		{
@@ -96,7 +96,7 @@
 			},
 			"range" : "height",
 			"zero" : false,
-			"nice" : true,
+			"nice" : false,
 			"clamp" : false
 		}
 	],
