@@ -102,9 +102,11 @@ new_prop.prop <- function(x, ...) x
 new_prop.default <- function(x, property, scale, offset, mult, env, event,
                              label) {
   if (!is.atomic(x)) stop("Unknown input to prop: ", label)
-
   # If we got here, it's constant
-  assert_that(length(x) == 1)
+
+  # strokeDash is the one property that can take an array
+  if (property != "strokeDash") assert_that(length(x) == 1)
+
   structure(
     list(
       property = property,

@@ -47,3 +47,12 @@ df %>% ggvis(x = ~x, y = ~y, stroke = ~z, fill := NA) %>%
 df %>% ggvis(x = ~x, y = ~y, stroke = ~z, fill := NA) %>%
   layer_lines() %>%
   layer_points()
+
+
+# Dashed lines
+dat <- data.frame(x = rep(c(0, 1), 6), g = gl(6, 2))
+dat %>% group_by(g) %>%
+  ggvis(x = ~x, y = ~g) %>%
+  layer_paths(strokeDash = ~g) %>%
+  add_axis("y", grid = FALSE) %>%
+  add_axis("x", grid = FALSE, title = "", tick_size_major = 0, ticks = 0)

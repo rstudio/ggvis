@@ -64,6 +64,8 @@ apply_scale_defaults.scale_ordinal <- function(x) {
       x = "width",
       y = "height",
       stroke = "category10",
+      strokeDash = list(c(100000, 1), c(8, 6), c(2, 2), c(3, 4, 10, 4),
+                        c(15, 3), c(5, 2, 10, 2)),
       fill = "category10",
       size = c(10, 100),
       stop("Don't know how to automatically set range for ", x$property, ".")
@@ -88,6 +90,8 @@ apply_scale_defaults.scale_nominal <- function(x) {
       x = "width",
       y = "height",
       stroke = "category10",
+      strokeDash = list(c(100000, 1), c(8, 6), c(2, 2), c(3, 4, 10, 4),
+                        c(15, 3), c(5, 2, 10, 2)),
       fill = "category10",
       shape = "shapes"
     )

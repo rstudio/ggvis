@@ -12,7 +12,6 @@
 #' @template properties
 #' @param vis Visualisation to modify
 #' @name marks
-#' @seealso The "marks" vignette.
 #' @param props,... A \code{\link{props}} object, named according to the
 #'   properties listed below.
 #' @param data An optional dataset, if you want to override the usual data
@@ -104,20 +103,20 @@ layer_text <- function(vis, ..., data = NULL) {
     deparse2(substitute(data)))
 }
 
-colour <- c("stroke", "strokeOpacity", "fill", "fillOpacity", "opacity",
-  "strokeWidth")
+common <- c("x", "y", "stroke", "strokeOpacity", "fill", "fillOpacity",
+  "opacity", "strokeWidth", "strokeDash")
 
 valid_props <- list(
-  arc = c("x", "y", colour, "innerRadius", "outerRadius", "startAngle", "endAngle",
+  arc = c(common, "innerRadius", "outerRadius", "startAngle", "endAngle",
     "key"),
-  area = c("x", "y", "y2", "height", colour, "interpolate", "tension", "key"),
-  image = c("x", "y", "x2", "y2", "width", "height", colour, "url", "align",
-    "baseline", "key"),
-  line = c("x", "y", colour,  "interpolate", "tension", "key"),
-  rect = c("x", "x2", "y", "y2", "width", "height", colour, "key"),
-  symbol = c("x", "y", colour, "size", "shape", "key"),
-  text = c("x", "y", "text", colour, "align", "baseline",
-    "dx", "dy", "angle", "font", "fontSize", "fontWeight", "fontStyle", "key")
+  area = c(common, "y2", "height", "interpolate", "tension", "key"),
+  image = c(common, "x2", "y2", "width", "height", "url", "align", "baseline",
+    "key"),
+  line = c(common,  "interpolate", "tension", "key"),
+  rect = c(common, "x2", "y2", "width", "height", "key"),
+  symbol = c(common, "size", "shape", "key"),
+  text = c(common, "text", "align", "baseline", "dx", "dy", "angle", "font",
+    "fontSize", "fontWeight", "fontStyle", "key")
 )
 
 # Hack to stop spurious warnings in R CMD check. Also used in qvis and prop.
