@@ -68,10 +68,10 @@ p <- mtcars \%>\%
 
 p \%>\% scale_numeric("x")
 p \%>\% scale_numeric("stroke")
-p \%>\% scale_nominal("stroke")
+p \%>\% scale_nominal("fill")
 
 # You can also supply additional arguments or override the defaults
 p \%>\% scale_numeric("x", trans = "log")
-p \%>\% scale_nominal("stroke", range = c("red", "blue"))
+p \%>\% scale_numeric("stroke", range = c("red", "blue"))
 }
 

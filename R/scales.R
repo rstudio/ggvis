@@ -60,11 +60,11 @@
 #'
 #' p %>% scale_numeric("x")
 #' p %>% scale_numeric("stroke")
-#' p %>% scale_nominal("stroke")
+#' p %>% scale_nominal("fill")
 #'
 #' # You can also supply additional arguments or override the defaults
 #' p %>% scale_numeric("x", trans = "log")
-#' p %>% scale_nominal("stroke", range = c("red", "blue"))
+#' p %>% scale_numeric("stroke", range = c("red", "blue"))
 #' @name scales
 #' @aliases set_default_scale set_dscale
 NULL
@@ -101,7 +101,7 @@ NULL
 #'
 #' p %>% scale_numeric("y")
 #'
-#' p %>% scale_numeric("y", trans = "pow", exp = 0.5)
+#' p %>% scale_numeric("y", trans = "pow", exponent = 0.5)
 #'
 #' p %>% scale_numeric("y", trans = "log")
 #'

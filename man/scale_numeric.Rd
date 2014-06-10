@@ -64,7 +64,7 @@ p <- mtcars \%>\% ggvis(~wt, ~mpg, fill = ~hp) \%>\% layer_points()
 
 p \%>\% scale_numeric("y")
 
-p \%>\% scale_numeric("y", trans = "pow", exp = 0.5)
+p \%>\% scale_numeric("y", trans = "pow", exponent = 0.5)
 
 p \%>\% scale_numeric("y", trans = "log")
 
