@@ -77,7 +77,7 @@ apply_scale_defaults.scale_ordinal <- function(x) {
   }
   if (is.null(x$padding) && x$property %in% c("x", "y")) {
     if (isTRUE(x$points)) x$padding <- 0.5
-    else x$padding <- 0.2
+    else x$padding <- 0.1
   }
   x
 }
@@ -100,7 +100,7 @@ apply_scale_defaults.scale_nominal <- function(x) {
   }
   if (is.null(x$padding) && x$property %in% c("x", "y")) {
     if (isTRUE(x$points)) x$padding <- 0.5
-    else x$padding <- 0.2
+    else x$padding <- 0.1
   }
   x
 }
