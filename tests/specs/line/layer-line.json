@@ -98,8 +98,6 @@
 		{
 			"name" : "stroke",
 			"type" : "ordinal",
-			"reverse" : false,
-			"round" : false,
 			"domain" : {
 				"data" : "scale/stroke",
 				"field" : "data.domain"

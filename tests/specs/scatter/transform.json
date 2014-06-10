@@ -53,8 +53,6 @@
 		{
 			"name" : "x",
 			"type" : "ordinal",
-			"reverse" : false,
-			"round" : false,
 			"domain" : {
 				"data" : "scale/x",
 				"field" : "data.domain"

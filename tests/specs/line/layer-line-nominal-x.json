@@ -73,8 +73,6 @@
 		{
 			"name" : "x",
 			"type" : "ordinal",
-			"reverse" : false,
-			"round" : false,
 			"domain" : {
 				"data" : "scale/x",
 				"field" : "data.domain"
@@ -98,8 +96,6 @@
 		{
 			"name" : "stroke",
 			"type" : "ordinal",
-			"reverse" : false,
-			"round" : false,
 			"domain" : {
 				"data" : "scale/stroke",
 				"field" : "data.domain"

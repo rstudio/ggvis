@@ -86,8 +86,6 @@
 		{
 			"name" : "fill",
 			"type" : "ordinal",
-			"reverse" : false,
-			"round" : false,
 			"domain" : {
 				"data" : "scale/fill",
 				"field" : "data.domain"
