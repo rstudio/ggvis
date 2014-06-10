@@ -46,8 +46,8 @@ vector_type.singular <- function(x) "singular"
 #' @rdname singular
 #' @export
 #' @inheritParams scale_nominal
-scale_singular <- function(vis, property, name = NULL, label = NULL,
-                               points = TRUE, domain = NULL) {
+scale_singular <- function(vis, property, name = property, label = name,
+                           points = TRUE, domain = NULL) {
   # Some of the arguments are ignored; they're there to provide a consistent
   # interface with other scales
   vis <- scale_nominal(vis, domain = "", property = property, name = name,

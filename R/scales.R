@@ -19,7 +19,7 @@
 #'   \item datetime For dates and date-times.
 #' }
 #'
-#' Each type has a a corresponding function: \code{scale_numeric},
+#' Each type has a corresponding function: \code{scale_numeric},
 #' \code{scale_nominal}, and so on.
 #'
 #' The scale types for ggvis are mapped to scale types for Vega, which include
@@ -70,24 +70,30 @@ NULL
 #' A numeric (quantitative) scale controls the mapping of continuous variables
 #' to visual properties.
 #'
+#' The default values for most of the arguments is NULL. When the plot is
+#' created, these NULL values will be replaced with default values, as indicated
+#' below.
+#'
 #' @param vis A ggvis object.
 #' @param property The name of a property, such as "x", "y", "fill", "stroke", etc.
 #' @inheritParams ggvis_scale
 #' @param trans A scale transformation: one of "linear", "log", "pow", "sqrt",
-#'   "quantile", "quantize", "threshold"
+#'   "quantile", "quantize", "threshold". Default is "linear".
 #' @param exponent Sets the exponent of the scale transformation. For pow
 #'   transform only.
 #' @param clamp  If \code{TRUE}, values that exceed the data domain are clamped
-#'   to either the minimum or maximum range value.
+#'   to either the minimum or maximum range value. Default is \code{FALSE}.
 #' @param nice If \code{TRUE}, modifies the scale domain to use a more
-#'   human-friendly number range (e.g., 7 instead of 6.96).
+#'   human-friendly number range (e.g., 7 instead of 6.96). Default is
+#'   \code{FALSE}.
 #' @param zero If \code{TRUE}, ensures that a zero baseline value is included
 #'   in the scale domain. This option is ignored for non-quantitative scales.
+#'   Default is \code{FALSE}.
 #' @param expand A multiplier for how much the scale should be expanded beyond
 #'   the domain of the data. For example, if the data goes from 10 to 110, and
 #'   \code{expand} is 0.05, then the resulting domain of the scale is 5 to 115.
 #'   Set to 0 and use \code{nice=FALSE} if you want exact control over the
-#'   domain. If NULL (the default), behavior will depend on the scale type. For
+#'   domain. If left \code{NULL}, behavior will depend on the scale type. For
 #'   positional scales (x and y), \code{expand} will default to 0.05. For other
 #'   scales, it will default to 0.
 #' @seealso \code{\link{scales}}, \code{\link{scale_ordinal}},
@@ -157,18 +163,18 @@ scale_numeric <- function(vis, property, domain = NULL, range = NULL,
 #' @param vis A ggvis object.
 #' @param property The name of a property, such as "x", "y", "fill", "stroke", etc.
 #' @inheritParams ggvis_scale
-#' @param clamp  If true, values that exceed the data domain are clamped to
-#'   either the minimum or maximum range value.
+#' @param clamp  If \code{TRUE}, values that exceed the data domain are clamped
+#'   to either the minimum or maximum range value. Default is \code{FALSE}.
 #' @param nice If specified, modifies the scale domain to use a more
 #'   human-friendly value range. Should be a string indicating the desired time
 #'   interval; legal values are "second", "minute", "hour", "day", "week",
-#'   "month", or "year"
+#'   "month", or "year".
 #' @param expand A multiplier for how much the scale should be expanded beyond
 #'   the domain of the data. For example, if the data goes from 10 to 110, and
 #'   \code{expand} is 0.05, then the resulting domain of the scale is 5 to 115.
 #'   Set to 0 and use \code{nice=FALSE} if you want exact control over the
 #'   domain.
-#' @param utc if \code{TRUE}, uses UTC times.
+#' @param utc if \code{TRUE}, uses UTC times. Default is \code{FALSE}.
 #' @seealso \code{\link{scales}}, \code{\link{scale_numeric}},
 #'   \url{https://github.com/trifacta/vega/wiki/Scales#time-scale-properties}
 #' @family scales
@@ -198,13 +204,12 @@ scale_datetime <- function(vis, property, domain = NULL, range = NULL,
                            reverse = NULL, round = NULL, utc = NULL,
                            clamp = NULL, nice = NULL, expand = NULL,
                            name = property, label = name) {
-  assert_that(is.null(nice) || nice %in% c("second", "minute", "hour", "day",
-    "week", "month", "year"))
   assert_that(is.null(reverse) || is.flag(reverse))
   assert_that(is.null(round) || is.flag(round))
   assert_that(is.null(utc) || is.flag(utc))
   assert_that(is.null(clamp) || is.flag(clamp))
-  assert_that(is.null(nice) || is.flag(nice))
+  assert_that(is.null(nice) || nice %in% c("second", "minute", "hour", "day",
+    "week", "month", "year"))
   assert_that(is.null(expand) || (is.numeric(expand) && length(expand) <= 2))
 
   if (!is.null(utc)) {
@@ -236,10 +241,12 @@ scale_datetime <- function(vis, property, domain = NULL, range = NULL,
 #' @param vis A ggvis object.
 #' @param property The name of a property, such as "x", "y", "fill", "stroke", etc.
 #' @inheritParams ggvis_scale
-#' @param points If \code{TRUE}, distributes the ordinal values over a
+#' @param points If \code{TRUE} (default), distributes the ordinal values over a
 #'   quantitative range at uniformly spaced points. The spacing of the points
 #'   can be adjusted using the padding property. If \code{FALSE}, the ordinal
-#'   scale will construct evenly-spaced bands, rather than points.
+#'   scale will construct evenly-spaced bands, rather than points. Note that
+#'   if any mark is added with a \code{\link{band}()} prop, then the scale for
+#'   that prop will automatically have \code{points} set to \code{FALSE}.
 #' @param padding Applies spacing among ordinal elements in the scale range.
 #'   The actual effect depends on how the scale is configured. If the points
 #'   parameter is true, the padding value is interpreted as a multiple of the
@@ -248,9 +255,10 @@ scale_datetime <- function(vis, property, domain = NULL, range = NULL,
 #'   distance between points. Otherwise, padding is typically in the range
 #'   [0, 1] and corresponds to the fraction of space in the range interval to
 #'   allocate to padding. A value of 0.5 means that the range band width will
-#'   be equal to the padding width.
+#'   be equal to the padding width. For positional (x and y) scales, the default
+#'   padding is 0.1. For other scales, the default padding is 0.5.
 #' @param sort  If \code{TRUE}, the values in the scale domain will be sorted
-#'   according to their natural order. The default value is \code{FALSE}.
+#'   according to their natural order. Default is \code{FALSE}.
 #' @seealso \code{\link{scales}}, \code{\link{scale_numeric}},
 #'   \url{https://github.com/trifacta/vega/wiki/Scales#ordinal-scale-properties},
 #'   \url{https://github.com/mbostock/d3/wiki/Ordinal-Scales}

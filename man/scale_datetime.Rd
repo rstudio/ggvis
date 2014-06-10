@@ -12,13 +12,13 @@ scale_datetime(vis, property, domain = NULL, range = NULL, reverse = NULL,
 
 \item{property}{The name of a property, such as "x", "y", "fill", "stroke", etc.}
 
-\item{clamp}{If true, values that exceed the data domain are clamped to
-either the minimum or maximum range value.}
+\item{clamp}{If \code{TRUE}, values that exceed the data domain are clamped
+to either the minimum or maximum range value. Default is \code{FALSE}.}
 
 \item{nice}{If specified, modifies the scale domain to use a more
 human-friendly value range. Should be a string indicating the desired time
 interval; legal values are "second", "minute", "hour", "day", "week",
-"month", or "year"}
+"month", or "year".}
 
 \item{expand}{A multiplier for how much the scale should be expanded beyond
 the domain of the data. For example, if the data goes from 10 to 110, and
@@ -26,7 +26,7 @@ the domain of the data. For example, if the data goes from 10 to 110, and
 Set to 0 and use \code{nice=FALSE} if you want exact control over the
 domain.}
 
-\item{utc}{if \code{TRUE}, uses UTC times.}
+\item{utc}{if \code{TRUE}, uses UTC times. Default is \code{FALSE}.}
 
 \item{domain}{The domain of the scale, representing the set of data values.
 For ordinal scales, a character vector; for quantitative scales, a numeric

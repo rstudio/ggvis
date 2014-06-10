@@ -14,25 +14,27 @@ scale_numeric(vis, property, domain = NULL, range = NULL, reverse = NULL,
 \item{property}{The name of a property, such as "x", "y", "fill", "stroke", etc.}
 
 \item{trans}{A scale transformation: one of "linear", "log", "pow", "sqrt",
-"quantile", "quantize", "threshold"}
+"quantile", "quantize", "threshold". Default is "linear".}
 
 \item{exponent}{Sets the exponent of the scale transformation. For pow
 transform only.}
 
 \item{clamp}{If \code{TRUE}, values that exceed the data domain are clamped
-to either the minimum or maximum range value.}
+to either the minimum or maximum range value. Default is \code{FALSE}.}
 
 \item{nice}{If \code{TRUE}, modifies the scale domain to use a more
-human-friendly number range (e.g., 7 instead of 6.96).}
+human-friendly number range (e.g., 7 instead of 6.96). Default is
+\code{FALSE}.}
 
 \item{zero}{If \code{TRUE}, ensures that a zero baseline value is included
-in the scale domain. This option is ignored for non-quantitative scales.}
+in the scale domain. This option is ignored for non-quantitative scales.
+Default is \code{FALSE}.}
 
 \item{expand}{A multiplier for how much the scale should be expanded beyond
 the domain of the data. For example, if the data goes from 10 to 110, and
 \code{expand} is 0.05, then the resulting domain of the scale is 5 to 115.
 Set to 0 and use \code{nice=FALSE} if you want exact control over the
-domain. If NULL (the default), behavior will depend on the scale type. For
+domain. If left \code{NULL}, behavior will depend on the scale type. For
 positional scales (x and y), \code{expand} will default to 0.05. For other
 scales, it will default to 0.}
 
@@ -61,6 +63,11 @@ arbitrary name like "foo".}
 \description{
 A numeric (quantitative) scale controls the mapping of continuous variables
 to visual properties.
+}
+\details{
+The default values for most of the arguments is NULL. When the plot is
+created, these NULL values will be replaced with default values, as indicated
+below.
 }
 \examples{
 p <- mtcars \%>\% ggvis(~wt, ~mpg, fill = ~hp) \%>\% layer_points()
