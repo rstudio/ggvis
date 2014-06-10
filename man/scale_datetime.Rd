@@ -5,7 +5,7 @@
 \usage{
 scale_datetime(vis, property, domain = NULL, range = NULL,
   reverse = FALSE, round = FALSE, utc = FALSE, clamp = FALSE,
-  nice = NULL, name = NULL, label = NULL)
+  nice = NULL, expand = 0.05, name = NULL, label = NULL)
 }
 \arguments{
 \item{vis}{A ggvis object.}
@@ -19,6 +19,12 @@ either the minimum or maximum range value.}
 human-friendly value range. Should be a string indicating the desired time
 interval; legal values are "second", "minute", "hour", "day", "week",
 "month", or "year"}
+
+\item{expand}{A multiplier for how much the scale should be expanded beyond
+the domain of the data. For example, if the data goes from 10 to 110, and
+\code{expand} is 0.05, then the resulting domain of the scale is 5 to 115.
+Set to 0 and use \code{nice=FALSE} if you want exact control over the
+domain.}
 
 \item{utc}{if \code{TRUE}, uses UTC times.}
 

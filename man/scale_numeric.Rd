@@ -5,7 +5,7 @@
 \usage{
 scale_numeric(vis, property, domain = NULL, range = NULL, reverse = FALSE,
   round = FALSE, trans = "linear", clamp = FALSE, exponent = NULL,
-  nice = TRUE, zero = FALSE, name = NULL, label = NULL)
+  nice = TRUE, zero = FALSE, expand = 0.05, name = NULL, label = NULL)
 }
 \arguments{
 \item{vis}{A ggvis object.}
@@ -26,6 +26,12 @@ human-friendly number range (e.g., 7 instead of 6.96).}
 
 \item{zero}{If \code{TRUE}, ensures that a zero baseline value is included
 in the scale domain. This option is ignored for non-quantitative scales.}
+
+\item{expand}{A multiplier for how much the scale should be expanded beyond
+the domain of the data. For example, if the data goes from 10 to 110, and
+\code{expand} is 0.05, then the resulting domain of the scale is 5 to 115.
+Set to 0 and use \code{nice=FALSE} if you want exact control over the
+domain.}
 
 \item{domain}{The domain of the scale, representing the set of data values.
 For ordinal scales, a character vector; for quantitative scales, a numeric
@@ -66,7 +72,8 @@ p \%>\% scale_numeric("y", trans = "log")
 p \%>\% scale_numeric("fill", domain = c(0, 120), clamp = TRUE)
 
 # Set range of data from 0 to 3
-p \%>\% scale_numeric("x", domain = c(0, 3), clamp = TRUE, nice = FALSE)
+p \%>\% scale_numeric("x", domain = c(0, 3), clamp = TRUE, expand = 0,
+                     nice = FALSE)
 
 # Lower bound is set to lower limit of data, upper bound set to 3.
 p \%>\% scale_numeric("x", domain = c(NA, 3), clamp = TRUE, nice = FALSE)

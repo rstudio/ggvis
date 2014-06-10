@@ -87,6 +87,11 @@ NULL
 #'   human-friendly number range (e.g., 7 instead of 6.96).
 #' @param zero If \code{TRUE}, ensures that a zero baseline value is included
 #'   in the scale domain. This option is ignored for non-quantitative scales.
+#' @param expand A multiplier for how much the scale should be expanded beyond
+#'   the domain of the data. For example, if the data goes from 10 to 110, and
+#'   \code{expand} is 0.05, then the resulting domain of the scale is 5 to 115.
+#'   Set to 0 and use \code{nice=FALSE} if you want exact control over the
+#'   domain.
 #' @seealso \code{\link{scales}}, \code{\link{scale_ordinal}},
 #'   \url{https://github.com/trifacta/vega/wiki/Scales#quantitative-scale-properties}
 #' @family scales
@@ -104,14 +109,16 @@ NULL
 #' p %>% scale_numeric("fill", domain = c(0, 120), clamp = TRUE)
 #'
 #' # Set range of data from 0 to 3
-#' p %>% scale_numeric("x", domain = c(0, 3), clamp = TRUE, nice = FALSE)
+#' p %>% scale_numeric("x", domain = c(0, 3), clamp = TRUE, expand = 0,
+#'                      nice = FALSE)
 #'
 #' # Lower bound is set to lower limit of data, upper bound set to 3.
 #' p %>% scale_numeric("x", domain = c(NA, 3), clamp = TRUE, nice = FALSE)
 scale_numeric <- function(vis, property, domain = NULL, range = NULL,
                           reverse = FALSE, round = FALSE,
                           trans = "linear", clamp = FALSE, exponent = NULL,
-                          nice = TRUE, zero = FALSE, name = NULL, label = NULL) {
+                          nice = TRUE, zero = FALSE, expand = 0.05,
+                          name = NULL, label = NULL) {
   trans <- match.arg(
     trans,
     c("linear", "log", "pow", "sqrt", "quantile", "quantize", "threshold")
@@ -126,7 +133,7 @@ scale_numeric <- function(vis, property, domain = NULL, range = NULL,
   assert_that(is.flag(zero))
 
   scale_numeric_int(vis, property, domain, range, reverse, round,
-                    trans, clamp, exponent, nice, zero, name, label)
+                    trans, clamp, exponent, nice, zero, expand, name, label)
 }
 
 #' Add a date-time scale to a ggvis object.
@@ -143,6 +150,11 @@ scale_numeric <- function(vis, property, domain = NULL, range = NULL,
 #'   human-friendly value range. Should be a string indicating the desired time
 #'   interval; legal values are "second", "minute", "hour", "day", "week",
 #'   "month", or "year"
+#' @param expand A multiplier for how much the scale should be expanded beyond
+#'   the domain of the data. For example, if the data goes from 10 to 110, and
+#'   \code{expand} is 0.05, then the resulting domain of the scale is 5 to 115.
+#'   Set to 0 and use \code{nice=FALSE} if you want exact control over the
+#'   domain.
 #' @param utc if \code{TRUE}, uses UTC times.
 #' @seealso \code{\link{scales}}, \code{\link{scale_numeric}},
 #'   \url{https://github.com/trifacta/vega/wiki/Scales#time-scale-properties}
@@ -171,8 +183,8 @@ scale_numeric <- function(vis, property, domain = NULL, range = NULL,
 #' p %>% scale_datetime("x", utc = TRUE)
 scale_datetime <- function(vis, property, domain = NULL, range = NULL,
                            reverse = FALSE, round = FALSE, utc = FALSE,
-                           clamp = FALSE, nice = NULL, name = NULL,
-                           label = NULL) {
+                           clamp = FALSE, nice = NULL, expand = 0.05,
+                           name = NULL, label = NULL) {
   assert_that(is.flag(clamp))
   if (!is.null(nice)) {
     nice <- match.arg(
@@ -182,7 +194,7 @@ scale_datetime <- function(vis, property, domain = NULL, range = NULL,
   }
 
   scale_datetime_int(vis, property, domain, range, reverse, round, utc, clamp,
-                     nice, name, label)
+                     nice, expand, name, label)
 }
 
 #' Add a ordinal, nominal, or logical scale to a ggvis object.
@@ -259,8 +271,10 @@ scale_nominal <- function(vis, property, domain = NULL, range = NULL,
 scale_logical <- scale_nominal
 
 add_missing_scales <- function(vis, quiet = TRUE) {
-  vis <- scale_numeric_int(vis, "x_rel", domain = c(0, 1), range = "width")
-  vis <- scale_numeric_int(vis, "y_rel", domain = c(0, 1), range = "height")
+  vis <- scale_numeric_int(vis, "x_rel", domain = c(0, 1), range = "width",
+                           expand = 0)
+  vis <- scale_numeric_int(vis, "y_rel", domain = c(0, 1), range = "height",
+                           expand = 0)
   vis
 }
 
@@ -281,3 +295,18 @@ scale_auto <- function(vis, scale, ..., quiet = FALSE) {
 set_scale_label <- function(vis, scale, label) {
   add_scale(vis, ggvis_scale(scale, label = label))
 }
+
+# Is this scale object countable?
+scale_countable <- function(scale) UseMethod("scale_countable")
+#' @export
+scale_countable.scale_numeric <- function(scale) FALSE
+#' @export
+scale_countable.scale_datetime <- function(scale) FALSE
+#' @export
+scale_countable.scale_nominal <- function(scale) TRUE
+#' @export
+scale_countable.scale_ordinal <- function(scale) TRUE
+#' @export
+scale_countable.scale_logical <- function(scale) TRUE
+#' @export
+scale_countable.default <- function(scale) NULL

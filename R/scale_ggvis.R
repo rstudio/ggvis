@@ -95,6 +95,7 @@ as.vega.ggvis_scale <- function(x) {
   x$property <- NULL
   x$label <- NULL
   x$override <- NULL
+  x$expand <- NULL
 
   x
 }
@@ -103,14 +104,12 @@ as.vega.ggvis_scale <- function(x) {
 # ggvis_scale object.
 collapse_ggvis_scales <- function(scales) {
   if (empty(scales)) return(NULL)
-  type <- unique(unlist(pluck(scales, "type")))
-  if (!all(type %in% c("linear", "log", "pow", "sqrt", "quantile", "quantize", "threshold")) &&
-      !all(type %in% c("time", "utc")) &&
-      !all(type %in% "ordinal")) {
-    stop("Scales must all be quantitative, time, or ordinal.")
+  countable <- unique(unlist(lapply(scales, scale_countable)))
+  if (length(unique(countable)) > 1) {
+    stop("Scales must all be countable, or all not countable.")
   }
 
-  collapse_domains <- function(domains, overrides) {
+  collapse_domains <- function(domains, overrides, countable) {
     # Set the domain based on whether there is an override domain, and the type
     # of domain.
     if (any(overrides)) {
@@ -118,7 +117,7 @@ collapse_ggvis_scales <- function(scales) {
       over <- domains[[last(which(overrides))]]
       under <- domains[!overrides]
 
-      if (countable_prop_type(type)) {
+      if (countable) {
         # For categorical props, just use the override domain
         domain <- reactive(value(over))
 
@@ -147,9 +146,11 @@ collapse_ggvis_scales <- function(scales) {
     domain
   }
 
-  domains <- pluck(scales, "domain")
-  overrides <- vpluck(scales, "override", logical(1))
-  domain <- collapse_domains(domains, overrides)
+  domain <- collapse_domains(
+    domains = pluck(scales, "domain"),
+    overrides = vpluck(scales, "override", logical(1)),
+    countable = scale_countable(scales[[1]])
+  )
 
   # Merge scales from left to right. A couple fields need special treatment.
   new_scale <- Reduce(merge_ggvis_scales, scales)
@@ -159,6 +160,16 @@ collapse_ggvis_scales <- function(scales) {
   new_scale$override <- NULL
 
   new_scale <- apply_scale_defaults(new_scale)
+
+  # Must expand domains after the scale defaults are applied
+  expand <- new_scale$expand
+  if (!scale_countable(new_scale) && !is.null(expand) && expand != 0) {
+    old_domain <- new_scale$domain
+    new_scale$domain <- reactive({
+      expand_range(old_domain(), expand)
+    })
+  }
+
   new_scale
 }
 
@@ -179,6 +190,14 @@ scale_domain_data <- function(scales) {
 
   names(domain_data) <- paste0("scale/", names(domain_data))
   domain_data
+}
+
+
+expand_range <- function(range, mult = 0) {
+  if (length(range) != 2) stop("range must have 2 values")
+
+  amount <- diff(range) * mult
+  range + c(-amount, amount)
 }
 
 merge_ggvis_scales <- function(a, b) {

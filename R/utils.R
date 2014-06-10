@@ -1,5 +1,8 @@
 
-last <- function(x) x[length(x)]
+last <- function(x) {
+  if (length(x) == 0) return(NULL)
+  x[length(x)]
+}
 
 dots <- function(...) {
   eval(substitute(alist(...)))

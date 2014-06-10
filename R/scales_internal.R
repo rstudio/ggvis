@@ -5,8 +5,8 @@
 scale_numeric_int <- function(vis, property, domain = NULL, range = NULL,
                               reverse = NULL, round = NULL,
                               trans = NULL, clamp = NULL, exponent = NULL,
-                              nice = NULL, zero = NULL, name = NULL,
-                              label = NULL) {
+                              nice = NULL, zero = NULL, expand = NULL,
+                              name = NULL, label = NULL) {
   name <- name %||% property
   label <- label %||% name
 
@@ -23,15 +23,16 @@ scale_numeric_int <- function(vis, property, domain = NULL, range = NULL,
     domain = domain,
     range = range,
     reverse = reverse,
-    round = round
+    round = round,
+    expand = expand
   )
   add_scale(vis, vscale)
 }
 
 scale_datetime_int <- function(vis, property, domain = NULL, range = NULL,
                                reverse = NULL, round = NULL, utc = NULL,
-                               clamp = NULL, nice = NULL, name = NULL,
-                               label = NULL) {
+                               clamp = NULL, nice = NULL, expand = NULL,
+                               name = NULL, label = NULL) {
   name <- name %||% property
   label <- label %||% name
   if (!is.null(utc)) {
@@ -49,7 +50,8 @@ scale_datetime_int <- function(vis, property, domain = NULL, range = NULL,
     domain = domain,
     range = range,
     reverse = reverse,
-    round = round
+    round = round,
+    expand = expand
   )
   add_scale(vis, vscale)
 }
