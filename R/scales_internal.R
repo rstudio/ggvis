@@ -57,8 +57,8 @@ scale_datetime_int <- function(vis, property, domain = NULL, range = NULL,
 }
 
 scale_ordinal_int <- function(vis, property, domain = NULL, range = NULL,
-                              reverse = FALSE, round = FALSE,
-                              points = TRUE, padding = NULL, sort = FALSE,
+                              reverse = NULL, round = NULL,
+                              points = NULL, padding = NULL, sort = NULL,
                               name = NULL, label = NULL) {
   name <- name %||% property
   label <- label %||% name
@@ -81,8 +81,8 @@ scale_ordinal_int <- function(vis, property, domain = NULL, range = NULL,
 }
 
 scale_nominal_int <- function(vis, property, domain = NULL, range = NULL,
-                              reverse = FALSE, round = FALSE,
-                              points = TRUE, padding = NULL, sort = FALSE,
+                              reverse = NULL, round = NULL,
+                              points = NULL, padding = NULL, sort = NULL,
                               name = NULL, label = NULL) {
   name <- name %||% property
   label <- label %||% name
