@@ -75,12 +75,9 @@ apply_scale_defaults.scale_ordinal <- function(x) {
       stop("Don't know how to automatically set range for ", x$property, ".")
     )
   }
-  if (is.null(x$padding)) {
-    x$padding <- switch(x$property,
-      x = 0.5,
-      y = 0.5,
-      NULL
-    )
+  if (is.null(x$padding) && x$property %in% c("x", "y")) {
+    if (isTRUE(x$points)) x$padding <- 0.5
+    else x$padding <- 0.2
   }
   x
 }
@@ -100,12 +97,9 @@ apply_scale_defaults.scale_nominal <- function(x) {
       shape = "shapes"
     )
   }
-  if (is.null(x$padding)) {
-    x$padding <- switch(x$property,
-      x = 0.5,
-      y = 0.5,
-      NULL
-    )
+  if (is.null(x$padding) && x$property %in% c("x", "y")) {
+    if (isTRUE(x$points)) x$padding <- 0.5
+    else x$padding <- 0.2
   }
   x
 }
