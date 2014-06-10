@@ -189,7 +189,7 @@ scale_datetime <- function(vis, property, domain = NULL, range = NULL,
   if (!is.null(nice)) {
     nice <- match.arg(
       nice,
-      c("second", "minute", "hour", "day", "week","month", "year")
+      c("second", "minute", "hour", "day", "week", "month", "year")
     )
   }
 
