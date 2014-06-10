@@ -130,7 +130,7 @@ add_missing_legends <- function(vis) {
   # Get scales that are in some legend
   present <- unlist(lapply(legends, function(x) x[legs]))
   # Ignore scales with hidden legend
-  hidden <- unlist(lapply(legends, function(x) if (x$hide) x$scale))
+  hidden <- unlist(lapply(legends, function(x) if (isTRUE(x$hide)) x$scale))
   # Find scales that don't have legend
   missing <- setdiff(intersect(names(scales), legs), c(present, hidden))
 
