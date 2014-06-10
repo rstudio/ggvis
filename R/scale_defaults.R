@@ -32,7 +32,9 @@ apply_scale_defaults.scale_numeric <- function(x) {
       stop("Don't know how to automatically set range for ", x$property, ".")
     )
   }
-  if (is.null(x$expand)) x$expand <- 0.05
+  if (propname_to_scale(x$property) %in% c("x", "y") && is.null(x$expand)) {
+    x$expand <- 0.05
+  }
 
   x
 }
@@ -49,7 +51,9 @@ apply_scale_defaults.scale_datetime <- function(x) {
       stop("Don't know how to automatically set range for ", x$property, ".")
     )
   }
-  if (is.null(x$expand)) x$expand <- 0.05
+  if (propname_to_scale(x$property) %in% c("x", "y") && is.null(x$expand)) {
+    x$expand <- 0.05
+  }
 
   x
 }

@@ -5,7 +5,7 @@
 \usage{
 scale_numeric(vis, property, domain = NULL, range = NULL, reverse = FALSE,
   round = FALSE, trans = "linear", clamp = FALSE, exponent = NULL,
-  nice = FALSE, zero = FALSE, expand = 0.05, name = NULL,
+  nice = FALSE, zero = FALSE, expand = NULL, name = NULL,
   label = NULL)
 }
 \arguments{
@@ -32,7 +32,9 @@ in the scale domain. This option is ignored for non-quantitative scales.}
 the domain of the data. For example, if the data goes from 10 to 110, and
 \code{expand} is 0.05, then the resulting domain of the scale is 5 to 115.
 Set to 0 and use \code{nice=FALSE} if you want exact control over the
-domain.}
+domain. If NULL (the default), behavior will depend on the scale type. For
+positional scales (x and y), \code{expand} will default to 0.05. For other
+scales, it will default to 0.}
 
 \item{domain}{The domain of the scale, representing the set of data values.
 For ordinal scales, a character vector; for quantitative scales, a numeric

@@ -5,7 +5,7 @@
 \usage{
 scale_datetime(vis, property, domain = NULL, range = NULL,
   reverse = FALSE, round = FALSE, utc = FALSE, clamp = FALSE,
-  nice = NULL, expand = 0.05, name = NULL, label = NULL)
+  nice = NULL, expand = NULL, name = NULL, label = NULL)
 }
 \arguments{
 \item{vis}{A ggvis object.}

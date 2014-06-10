@@ -91,7 +91,9 @@ NULL
 #'   the domain of the data. For example, if the data goes from 10 to 110, and
 #'   \code{expand} is 0.05, then the resulting domain of the scale is 5 to 115.
 #'   Set to 0 and use \code{nice=FALSE} if you want exact control over the
-#'   domain.
+#'   domain. If NULL (the default), behavior will depend on the scale type. For
+#'   positional scales (x and y), \code{expand} will default to 0.05. For other
+#'   scales, it will default to 0.
 #' @seealso \code{\link{scales}}, \code{\link{scale_ordinal}},
 #'   \url{https://github.com/trifacta/vega/wiki/Scales#quantitative-scale-properties}
 #' @family scales
@@ -117,7 +119,7 @@ NULL
 scale_numeric <- function(vis, property, domain = NULL, range = NULL,
                           reverse = FALSE, round = FALSE,
                           trans = "linear", clamp = FALSE, exponent = NULL,
-                          nice = FALSE, zero = FALSE, expand = 0.05,
+                          nice = FALSE, zero = FALSE, expand = NULL,
                           name = NULL, label = NULL) {
   trans <- match.arg(
     trans,
@@ -183,7 +185,7 @@ scale_numeric <- function(vis, property, domain = NULL, range = NULL,
 #' p %>% scale_datetime("x", utc = TRUE)
 scale_datetime <- function(vis, property, domain = NULL, range = NULL,
                            reverse = FALSE, round = FALSE, utc = FALSE,
-                           clamp = FALSE, nice = NULL, expand = 0.05,
+                           clamp = FALSE, nice = NULL, expand = NULL,
                            name = NULL, label = NULL) {
   assert_that(is.flag(clamp))
   if (!is.null(nice)) {
