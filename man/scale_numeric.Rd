@@ -3,10 +3,10 @@
 \alias{scale_numeric}
 \title{Add a numeric scale to a ggvis object.}
 \usage{
-scale_numeric(vis, property, domain = NULL, range = NULL, reverse = FALSE,
-  round = FALSE, trans = "linear", clamp = FALSE, exponent = NULL,
-  nice = FALSE, zero = FALSE, expand = NULL, name = NULL,
-  label = NULL)
+scale_numeric(vis, property, domain = NULL, range = NULL, reverse = NULL,
+  round = NULL, trans = NULL, clamp = NULL, exponent = NULL,
+  nice = NULL, zero = NULL, expand = NULL, name = property,
+  label = name)
 }
 \arguments{
 \item{vis}{A ggvis object.}

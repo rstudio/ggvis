@@ -1,7 +1,3 @@
-# This file contains user-facing versions of scale_xxx_int functions.
-# These version validate arguments, set defatuls, and then call their
-# internal-facing counterparts.
-
 #' Add a scale to a ggvis plot
 #'
 #' This creates a scale object for a given scale and variable type, and adds it
@@ -117,25 +113,40 @@ NULL
 #' # Lower bound is set to lower limit of data, upper bound set to 3.
 #' p %>% scale_numeric("x", domain = c(NA, 3), clamp = TRUE, nice = FALSE)
 scale_numeric <- function(vis, property, domain = NULL, range = NULL,
-                          reverse = FALSE, round = FALSE,
-                          trans = "linear", clamp = FALSE, exponent = NULL,
-                          nice = FALSE, zero = FALSE, expand = NULL,
-                          name = NULL, label = NULL) {
-  trans <- match.arg(
-    trans,
-    c("linear", "log", "pow", "sqrt", "quantile", "quantize", "threshold")
-  )
-  if (trans != "pow" && !is.null(exponent)) {
-    stop("May only set exponent when pow = 'trans'", call. = FALSE)
+                          reverse = NULL, round = NULL,
+                          trans = NULL, clamp = NULL, exponent = NULL,
+                          nice = NULL, zero = NULL, expand = NULL,
+                          name = property, label = name) {
+  assert_that(is.null(trans) || trans %in% c("linear", "log", "pow", "sqrt",
+    "quantile", "quantize", "threshold"))
+  if (!is.null(exponent) && !identical(trans, "pow")) {
+    stop("May only set exponent when pow = 'trans'")
   }
-
   assert_that(is.null(exponent) || (is.numeric(exponent) && length(exponent) == 1))
-  assert_that(is.flag(clamp))
-  assert_that(is.flag(nice))
-  assert_that(is.flag(zero))
+  assert_that(is.null(reverse) || is.flag(reverse))
+  assert_that(is.null(round) || is.flag(round))
+  assert_that(is.null(clamp) || is.flag(clamp))
+  assert_that(is.null(nice) || is.flag(nice))
+  assert_that(is.null(zero) || is.flag(zero))
+  assert_that(is.null(expand) || (is.numeric(expand) && length(expand) <= 2))
 
-  scale_numeric_int(vis, property, domain, range, reverse, round,
-                    trans, clamp, exponent, nice, zero, expand, name, label)
+  vscale <- ggvis_scale(
+    property = property,
+    name = name,
+    label = label,
+    type = trans,
+    subclass = "numeric",
+    exponent = exponent,
+    clamp = clamp,
+    nice = nice,
+    zero = zero,
+    domain = domain,
+    range = range,
+    reverse = reverse,
+    round = round,
+    expand = expand
+  )
+  add_scale(vis, vscale)
 }
 
 #' Add a date-time scale to a ggvis object.
@@ -184,19 +195,37 @@ scale_numeric <- function(vis, property, domain = NULL, range = NULL,
 #'
 #' p %>% scale_datetime("x", utc = TRUE)
 scale_datetime <- function(vis, property, domain = NULL, range = NULL,
-                           reverse = FALSE, round = FALSE, utc = FALSE,
-                           clamp = FALSE, nice = NULL, expand = NULL,
-                           name = NULL, label = NULL) {
-  assert_that(is.flag(clamp))
-  if (!is.null(nice)) {
-    nice <- match.arg(
-      nice,
-      c("second", "minute", "hour", "day", "week", "month", "year")
-    )
+                           reverse = NULL, round = NULL, utc = NULL,
+                           clamp = NULL, nice = NULL, expand = NULL,
+                           name = property, label = name) {
+  assert_that(is.null(nice) || nice %in% c("second", "minute", "hour", "day",
+    "week", "month", "year"))
+  assert_that(is.null(reverse) || is.flag(reverse))
+  assert_that(is.null(round) || is.flag(round))
+  assert_that(is.null(utc) || is.flag(utc))
+  assert_that(is.null(clamp) || is.flag(clamp))
+  assert_that(is.null(nice) || is.flag(nice))
+  assert_that(is.null(expand) || (is.numeric(expand) && length(expand) <= 2))
+
+  if (!is.null(utc)) {
+    utc <- if (isTRUE(utc)) "utc" else "time"
   }
 
-  scale_datetime_int(vis, property, domain, range, reverse, round, utc, clamp,
-                     nice, expand, name, label)
+  vscale <- ggvis_scale(
+    property = property,
+    name = name,
+    label = label,
+    type = utc,
+    subclass = "datetime",
+    clamp = clamp,
+    nice = nice,
+    domain = domain,
+    range = range,
+    reverse = reverse,
+    round = round,
+    expand = expand
+  )
+  add_scale(vis, vscale)
 }
 
 #' Add a ordinal, nominal, or logical scale to a ggvis object.
@@ -243,29 +272,59 @@ scale_datetime <- function(vis, property, domain = NULL, range = NULL,
 #' # Control range of fill scale
 #' p %>% scale_nominal("fill", range = c("pink", "lightblue"))
 scale_ordinal <- function(vis, property, domain = NULL, range = NULL,
-                          reverse = FALSE, round = FALSE,
-                          points = TRUE, padding = NULL, sort = FALSE,
-                          name = NULL, label = NULL) {
-  assert_that(is.flag(points))
+                          reverse = NULL, round = NULL,
+                          points = NULL, padding = NULL, sort = NULL,
+                          name = property, label = name) {
+  assert_that(is.null(reverse) || is.flag(reverse))
+  assert_that(is.null(round) || is.flag(round))
+  assert_that(is.null(points) || is.flag(points))
   assert_that(is.null(padding) || (is.numeric(padding) && length(padding) == 1))
-  assert_that(is.flag(sort))
+  assert_that(is.null(sort) || is.flag(sort))
 
-  scale_ordinal_int(vis, property, domain, range, reverse, round, points, padding,
-                    sort, name, label)
+  vscale <- ggvis_scale(
+    property = property,
+    name = name,
+    label = label,
+    type = "ordinal",
+    points = points,
+    padding = padding,
+    sort = sort,
+    subclass = "ordinal",
+    domain = domain,
+    range = range,
+    reverse = reverse,
+    round = round
+  )
+  add_scale(vis, vscale)
 }
 
 #' @rdname scale_ordinal
 #' @export
 scale_nominal <- function(vis, property, domain = NULL, range = NULL,
-                          reverse = FALSE, round = FALSE,
-                          points = TRUE, padding = NULL, sort = FALSE,
-                          name = NULL, label = NULL) {
-  assert_that(is.flag(points))
+                          reverse = NULL, round = NULL,
+                          points = NULL, padding = NULL, sort = NULL,
+                          name = property, label = name) {
+  assert_that(is.null(reverse) || is.flag(reverse))
+  assert_that(is.null(round) || is.flag(round))
+  assert_that(is.null(points) || is.flag(points))
   assert_that(is.null(padding) || (is.numeric(padding) && length(padding) == 1))
-  assert_that(is.flag(sort))
+  assert_that(is.null(sort) || is.flag(sort))
 
-  scale_nominal_int(vis, property, domain, range, reverse, round, points,
-                    padding, sort, name, label)
+  vscale <- ggvis_scale(
+    property = property,
+    name = name,
+    label = label,
+    type = "ordinal",
+    points = points,
+    padding = padding,
+    sort = sort,
+    subclass = "nominal",
+    domain = domain,
+    range = range,
+    reverse = reverse,
+    round = round
+  )
+  add_scale(vis, vscale)
 }
 
 #' @rdname scale_ordinal
@@ -273,9 +332,9 @@ scale_nominal <- function(vis, property, domain = NULL, range = NULL,
 scale_logical <- scale_nominal
 
 add_missing_scales <- function(vis, quiet = TRUE) {
-  vis <- scale_numeric_int(vis, "x", name = "x_rel", domain = c(0, 1),
+  vis <- scale_numeric(vis, "x", name = "x_rel", domain = c(0, 1),
                            range = "width", expand = 0)
-  vis <- scale_numeric_int(vis, "y", name = "y_rel", domain = c(0, 1),
+  vis <- scale_numeric(vis, "y", name = "y_rel", domain = c(0, 1),
                            range = "height", expand = 0)
   vis
 }

@@ -3,9 +3,9 @@
 \alias{scale_datetime}
 \title{Add a date-time scale to a ggvis object.}
 \usage{
-scale_datetime(vis, property, domain = NULL, range = NULL,
-  reverse = FALSE, round = FALSE, utc = FALSE, clamp = FALSE,
-  nice = NULL, expand = NULL, name = NULL, label = NULL)
+scale_datetime(vis, property, domain = NULL, range = NULL, reverse = NULL,
+  round = NULL, utc = NULL, clamp = NULL, nice = NULL, expand = NULL,
+  name = property, label = name)
 }
 \arguments{
 \item{vis}{A ggvis object.}

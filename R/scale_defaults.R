@@ -41,8 +41,8 @@ apply_scale_defaults.scale_numeric <- function(x) {
 
 #' @export
 apply_scale_defaults.scale_datetime <- function(x) {
-  x$clamp <- x$clamp %||% FALSE
   x$type <- x$type %||% "time"
+  x$clamp <- x$clamp %||% FALSE
 
   if (is.null(x$range)) {
     x$range <- switch(propname_to_scale(x$property),
@@ -82,6 +82,7 @@ apply_scale_defaults.scale_ordinal <- function(x) {
   x
 }
 
+#' @export
 apply_scale_defaults.scale_nominal <- function(x) {
   x$points <- x$points %||% TRUE
   x$sort <- x$sort %||% FALSE

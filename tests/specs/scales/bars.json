@@ -58,8 +58,6 @@
 			},
 			"name" : "x",
 			"type" : "ordinal",
-			"reverse" : false,
-			"round" : false,
 			"points" : false,
 			"padding" : 0.1,
 			"sort" : false,

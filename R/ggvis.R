@@ -280,8 +280,8 @@ register_scales_from_props <- function(vis, props) {
     # dynamic.
     attr(domain, "register") <- FALSE
 
-    # e.g. scale_quantitative_int, scale_nominal_int
-    scale_fun <- match.fun(paste0("scale_", type, "_int"))
+    # e.g. scale_quantitative, scale_nominal
+    scale_fun <- match.fun(paste0("scale_", type))
 
     vis <- scale_fun(vis, property = prop$property, name = prop$scale,
                      label = prop_label(prop), domain = domain)

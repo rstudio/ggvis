@@ -5,17 +5,17 @@
 \alias{scale_ordinal}
 \title{Add a ordinal, nominal, or logical scale to a ggvis object.}
 \usage{
-scale_ordinal(vis, property, domain = NULL, range = NULL, reverse = FALSE,
-  round = FALSE, points = TRUE, padding = NULL, sort = FALSE,
-  name = NULL, label = NULL)
+scale_ordinal(vis, property, domain = NULL, range = NULL, reverse = NULL,
+  round = NULL, points = NULL, padding = NULL, sort = NULL,
+  name = property, label = name)
 
-scale_nominal(vis, property, domain = NULL, range = NULL, reverse = FALSE,
-  round = FALSE, points = TRUE, padding = NULL, sort = FALSE,
-  name = NULL, label = NULL)
+scale_nominal(vis, property, domain = NULL, range = NULL, reverse = NULL,
+  round = NULL, points = NULL, padding = NULL, sort = NULL,
+  name = property, label = name)
 
-scale_logical(vis, property, domain = NULL, range = NULL, reverse = FALSE,
-  round = FALSE, points = TRUE, padding = NULL, sort = FALSE,
-  name = NULL, label = NULL)
+scale_logical(vis, property, domain = NULL, range = NULL, reverse = NULL,
+  round = NULL, points = NULL, padding = NULL, sort = NULL,
+  name = property, label = name)
 }
 \arguments{
 \item{vis}{A ggvis object.}
