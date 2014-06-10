@@ -130,6 +130,6 @@ layer_bars <- function(vis, ..., stack = TRUE, width = NULL) {
     })
   }
 
-  vis <- scale_numeric(vis, "y", domain = c(0, NA))
+  vis <- scale_numeric_int(vis, "y", domain = c(0, NA), expand = c(0, 0.05))
   vis
 }

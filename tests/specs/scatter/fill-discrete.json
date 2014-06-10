@@ -68,7 +68,7 @@
 				"field" : "data.domain"
 			},
 			"zero" : false,
-			"nice" : true,
+			"nice" : false,
 			"clamp" : false,
 			"range" : "width"
 		},
@@ -79,7 +79,7 @@
 				"field" : "data.domain"
 			},
 			"zero" : false,
-			"nice" : true,
+			"nice" : false,
 			"clamp" : false,
 			"range" : "height"
 		},
@@ -102,7 +102,7 @@
 			},
 			"range" : "width",
 			"zero" : false,
-			"nice" : true,
+			"nice" : false,
 			"clamp" : false
 		},
 		{
@@ -113,7 +113,7 @@
 			},
 			"range" : "height",
 			"zero" : false,
-			"nice" : true,
+			"nice" : false,
 			"clamp" : false
 		}
 	],

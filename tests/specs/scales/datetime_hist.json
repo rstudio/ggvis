@@ -21,7 +21,7 @@
 					"domain" : "number"
 				}
 			},
-			"values" : "\"domain\"\n1371299411417\n1374230870445"
+			"values" : "\"domain\"\n1371152840332\n1374377441530"
 		},
 		{
 			"name" : "scale/y",
@@ -31,7 +31,7 @@
 					"domain" : "number"
 				}
 			},
-			"values" : "\"domain\"\n-0.25\n5.25"
+			"values" : "\"domain\"\n0\n5.25"
 		},
 		{
 			"name" : "scale/x_rel",
@@ -72,7 +72,7 @@
 				"field" : "data.domain"
 			},
 			"zero" : false,
-			"nice" : true,
+			"nice" : false,
 			"clamp" : false,
 			"range" : "height"
 		},
@@ -84,7 +84,7 @@
 			},
 			"range" : "width",
 			"zero" : false,
-			"nice" : true,
+			"nice" : false,
 			"clamp" : false
 		},
 		{
@@ -95,7 +95,7 @@
 			},
 			"range" : "height",
 			"zero" : false,
-			"nice" : true,
+			"nice" : false,
 			"clamp" : false
 		}
 	],

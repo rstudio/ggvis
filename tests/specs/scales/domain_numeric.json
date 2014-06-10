@@ -73,7 +73,7 @@
 				"field" : "data.domain"
 			},
 			"clamp" : false,
-			"nice" : true,
+			"nice" : false,
 			"zero" : false,
 			"range" : "width"
 		},
@@ -84,7 +84,7 @@
 				"field" : "data.domain"
 			},
 			"zero" : false,
-			"nice" : true,
+			"nice" : false,
 			"clamp" : false,
 			"range" : "height"
 		},
@@ -98,7 +98,7 @@
 				"field" : "data.domain"
 			},
 			"clamp" : false,
-			"nice" : true,
+			"nice" : false,
 			"zero" : false,
 			"range" : [
 				"#132B43",
@@ -113,7 +113,7 @@
 			},
 			"range" : "width",
 			"zero" : false,
-			"nice" : true,
+			"nice" : false,
 			"clamp" : false
 		},
 		{
@@ -124,7 +124,7 @@
 			},
 			"range" : "height",
 			"zero" : false,
-			"nice" : true,
+			"nice" : false,
 			"clamp" : false
 		}
 	],

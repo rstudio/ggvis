@@ -163,7 +163,7 @@ collapse_ggvis_scales <- function(scales) {
 
   # Must expand domains after the scale defaults are applied
   expand <- new_scale$expand
-  if (!scale_countable(new_scale) && !is.null(expand) && expand != 0) {
+  if (!scale_countable(new_scale) && !is.null(expand) && any(expand != 0)) {
     old_domain <- new_scale$domain
     new_scale$domain <- reactive({
       expand_range(old_domain(), expand)
@@ -195,9 +195,9 @@ scale_domain_data <- function(scales) {
 
 expand_range <- function(range, mult = 0) {
   if (length(range) != 2) stop("range must have 2 values")
+  if (length(mult) == 1) mult <- c(mult, mult)
 
-  amount <- diff(range) * mult
-  range + c(-amount, amount)
+  range + diff(range) * mult * c(-1, 1)
 }
 
 merge_ggvis_scales <- function(a, b) {

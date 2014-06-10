@@ -62,7 +62,7 @@
 			"reverse" : false,
 			"round" : false,
 			"clamp" : false,
-			"nice" : true,
+			"nice" : false,
 			"zero" : false,
 			"range" : "width"
 		},
@@ -76,7 +76,7 @@
 			"reverse" : false,
 			"round" : false,
 			"clamp" : false,
-			"nice" : true,
+			"nice" : false,
 			"zero" : false,
 			"range" : "height"
 		},
@@ -88,7 +88,7 @@
 			},
 			"range" : "width",
 			"zero" : false,
-			"nice" : true,
+			"nice" : false,
 			"clamp" : false
 		},
 		{
@@ -99,7 +99,7 @@
 			},
 			"range" : "height",
 			"zero" : false,
-			"nice" : true,
+			"nice" : false,
 			"clamp" : false
 		}
 	],
