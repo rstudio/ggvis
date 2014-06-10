@@ -271,10 +271,10 @@ scale_nominal <- function(vis, property, domain = NULL, range = NULL,
 scale_logical <- scale_nominal
 
 add_missing_scales <- function(vis, quiet = TRUE) {
-  vis <- scale_numeric_int(vis, "x_rel", domain = c(0, 1), range = "width",
-                           expand = 0)
-  vis <- scale_numeric_int(vis, "y_rel", domain = c(0, 1), range = "height",
-                           expand = 0)
+  vis <- scale_numeric_int(vis, "x", name = "x_rel", domain = c(0, 1),
+                           range = "width", expand = 0)
+  vis <- scale_numeric_int(vis, "y", name = "y_rel", domain = c(0, 1),
+                           range = "height", expand = 0)
   vis
 }
 
