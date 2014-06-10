@@ -20,7 +20,7 @@
 					"domain" : "number"
 				}
 			},
-			"values" : "\"domain\"\n1\n5"
+			"values" : "\"domain\"\n0.8\n5.2"
 		},
 		{
 			"name" : "scale/y",
@@ -30,7 +30,7 @@
 					"domain" : "number"
 				}
 			},
-			"values" : "\"domain\"\n1\n5"
+			"values" : "\"domain\"\n0.8\n5.2"
 		},
 		{
 			"name" : "scale/fill",
@@ -40,7 +40,7 @@
 					"domain" : "number"
 				}
 			},
-			"values" : "\"domain\"\n0.0073994412086904\n0.834333037259057"
+			"values" : "\"domain\"\n-0.0339472385938279\n0.875679717061576"
 		},
 		{
 			"name" : "scale/x_rel",

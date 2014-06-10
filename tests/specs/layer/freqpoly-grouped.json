@@ -32,7 +32,7 @@
 					"domain" : "number"
 				}
 			},
-			"values" : "\"domain\"\n0.5\n6.5"
+			"values" : "\"domain\"\n0.2\n6.8"
 		},
 		{
 			"name" : "scale/y",
@@ -42,7 +42,7 @@
 					"domain" : "number"
 				}
 			},
-			"values" : "\"domain\"\n0\n10"
+			"values" : "\"domain\"\n-0.5\n10.5"
 		},
 		{
 			"name" : "scale/stroke",
@@ -52,7 +52,7 @@
 					"domain" : "number"
 				}
 			},
-			"values" : "\"domain\"\n4\n8"
+			"values" : "\"domain\"\n3.8\n8.2"
 		},
 		{
 			"name" : "scale/x_rel",

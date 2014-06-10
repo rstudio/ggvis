@@ -19,7 +19,7 @@
 					"domain" : "number"
 				}
 			},
-			"values" : "\"domain\"\n1.513\n5.424"
+			"values" : "\"domain\"\n1.31745\n5.61955"
 		},
 		{
 			"name" : "scale/y",
@@ -29,7 +29,7 @@
 					"domain" : "number"
 				}
 			},
-			"values" : "\"domain\"\n11.7978440230166\n32.08897233857"
+			"values" : "\"domain\"\n10.7832876072389\n33.1035287543477"
 		},
 		{
 			"name" : "scale/x_rel",
