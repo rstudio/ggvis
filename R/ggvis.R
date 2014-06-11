@@ -347,7 +347,7 @@ show_spec <- function(vis, pieces = NULL) {
   json <- RJSONIO::toJSON(out, pretty = TRUE)
   cat(gsub("\t", " ", json), "\n", sep = "")
 
-  invisible()
+  invisible(vis)
 }
 
 #' Tools to save and view static specs.
