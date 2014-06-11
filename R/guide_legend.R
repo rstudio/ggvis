@@ -14,7 +14,8 @@
 #' @param vis A ggvis object.
 #' @param scales The name of one or more scales for which to add a legend.
 #'   Typically one of "size", "shape", "fill", "stroke", although custom scale
-#'   names may also be used.
+#'   names may also be used. Multiple names can also be used, like
+#'   \code{c("fill", "shape")}.
 #' @param orient The orientation of the legend. One of "left" or "right". This
 #'   determines how the legend is positioned within the scene. The default is
 #'   "right".
@@ -102,8 +103,8 @@ add_legend <- function(vis, scales = NULL, orient = "right", title = NULL,
 
 #' @rdname add_legend
 #' @export
-hide_legend <- function(vis, scale) {
-  legend <- structure(list(scale = scale, hide = TRUE), class = "ggvis_legend")
+hide_legend <- function(vis, scales) {
+  legend <- structure(list(scales = scales, hide = TRUE), class = "ggvis_legend")
   register_legend(vis, legend)
 }
 
@@ -141,7 +142,7 @@ add_missing_legends <- function(vis) {
   # Get scales that are in some legend
   present <- unlist(lapply(legends, function(x) x[legs]))
   # Ignore scales with hidden legend
-  hidden <- unlist(lapply(legends, function(x) if (isTRUE(x$hide)) x$scale))
+  hidden <- unlist(lapply(legends, function(x) if (isTRUE(x$hide)) x$scales))
   # Find scales that don't have legend
   missing <- setdiff(intersect(names(scales), legs), c(present, hidden))
 

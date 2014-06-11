@@ -7,14 +7,15 @@
 add_legend(vis, scales = NULL, orient = "right", title = NULL,
   format = NULL, values = NULL, properties = NULL)
 
-hide_legend(vis, scale)
+hide_legend(vis, scales)
 }
 \arguments{
 \item{vis}{A ggvis object.}
 
 \item{scales}{The name of one or more scales for which to add a legend.
 Typically one of "size", "shape", "fill", "stroke", although custom scale
-names may also be used.}
+names may also be used. Multiple names can also be used, like
+\code{c("fill", "shape")}.}
 
 \item{orient}{The orientation of the legend. One of "left" or "right". This
 determines how the legend is positioned within the scene. The default is
