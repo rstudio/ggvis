@@ -165,9 +165,7 @@ apply_legends_defaults <- function(vis) {
     present_scales <- scales[present]
 
     if (is.null(legend$title)) {
-      # Default title for each legend consists of the fields pasted together
-      fields <- vpluck(present_scales, "label", character(1))
-      legend$title <- paste(fields, collapse = ".")
+      legend$title <- present_scales[[1]]$label
     }
 
     legend

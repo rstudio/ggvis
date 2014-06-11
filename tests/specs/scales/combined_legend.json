@@ -178,7 +178,7 @@
 			"orient" : "right",
 			"fill" : "fill",
 			"shape" : "shape2",
-			"title" : "factor(y).factor(y)"
+			"title" : "factor(y)"
 		}
 	],
 	"axes" : [
