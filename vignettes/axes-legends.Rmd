@@ -42,17 +42,17 @@ they share are particularly important.
     ```{r, eval = FALSE}
     add_axis(vis, "x")
     add_axis(vis, "y")
-    add_legend(vis, fill = "stroke")
-    add_legend(vis, size = "size")
+    add_legend(vis, "stroke")
+    add_legend(vis, "size")
     # Display multiple scales in one legend:
-    add_legend(vis, fill = "stroke", size = "size")
+    add_legend(vis, "stroke", "size")
     ```
 
 * `title`, a string describing the guide
 
     ```{r, eval = FALSE}
     add_axis(vis, "x", title = "My x variable")
-    add_legend(vis, fill = "fill", title = "Some interesting colours")
+    add_legend(vis, "fill", title = "Some interesting colours")
     ```
 
 * `values`, used to override the default placement of ticks on an axis or gradient
@@ -172,5 +172,5 @@ by supplying the name of multiple scales to one legend:
 mtcars2 <- mtcars %>% dplyr::mutate(cyl = ordered(mtcars$cyl))
 mtcars2 %>% ggvis(~mpg, ~wt, size = ~cyl, fill = ~cyl) %>% layer_points()
 mtcars2 %>% ggvis(~mpg, ~wt, size = ~cyl, fill = ~cyl) %>% layer_points() %>%
-  add_legend(size = "size", fill = "fill")
+  add_legend(c("size", "fill"))
 ```
