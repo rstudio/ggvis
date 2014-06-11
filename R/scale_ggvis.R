@@ -104,6 +104,9 @@ as.vega.ggvis_scale <- function(x) {
 # ggvis_scale object.
 collapse_ggvis_scales <- function(scales) {
   if (empty(scales)) return(NULL)
+  # Idempotent: collapsing an already-collapsed scales list returns the object
+  if (is.ggvis_scale(scales)) return(scales)
+
   countable <- unique(unlist(lapply(scales, scale_countable)))
   if (length(unique(countable)) > 1) {
     stop("Scales must all be countable, or all not countable.")
