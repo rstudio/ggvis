@@ -86,8 +86,9 @@ as.vega.subvis <- function(x, ...) {
 
   list(
     type = "group",
-    properties = x$props,
-    marks = lapply(x$marks, as.vega, group = FALSE),
+    properties = as.vega(x$props),
+    from = list(data = data_id(x$data)),
+    marks = lapply(x$marks, as.vega, in_group = TRUE),
     scales = lapply(unname(scales), as.vega),
     legends = lapply(x$legends, as.vega),
     axes = lapply(x$axes, as.vega)
@@ -111,7 +112,7 @@ extract_data_ids <- function(layers, unique = TRUE) {
 
 # Given a ggvis mark object, output a vega mark object
 #' @export
-as.vega.mark <- function(mark, group = TRUE) {
+as.vega.mark <- function(mark, in_group = FALSE) {
   data_id <- data_id(mark$data)
 
   # Pull out key from props, if present
@@ -125,7 +126,9 @@ as.vega.mark <- function(mark, group = TRUE) {
   properties$ggvis$data <- list(value = data_id)
 
   group_vars <- dplyr::groups(shiny::isolate(mark$data()))
-  if (group && !is.null(group_vars)) {
+  if (!in_group && !is.null(group_vars)) {
+    # FIXME: probably should go away and just use subvis
+
     # String representation of groups
     group_vars <- vapply(group_vars, deparse, character(1))
 
@@ -145,7 +148,7 @@ as.vega.mark <- function(mark, group = TRUE) {
       type = mark$type,
       properties = properties
     )
-    if (!group) {
+    if (!in_group) {
       # If mark inside group, inherits data from parent.
       m$from <- list(data = data_id)
     }
@@ -217,8 +220,8 @@ as.vega.grouped_df <- function(x, name, ...) {
     name = name,
     source = paste0(name, "_flat"),
     transform = list(list(
-      type = "facet",
-      keys = list(paste0("data.", group_vars))
+      type = "treefacet",
+      keys = as.list(paste0("data.", group_vars))
     ))
   )
 
