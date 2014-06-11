@@ -15,7 +15,7 @@
 			"source" : "df0/regroup1/arrange2_flat",
 			"transform" : [
 				{
-					"type" : "facet",
+					"type" : "treefacet",
 					"keys" : [
 						"data.z"
 					]
