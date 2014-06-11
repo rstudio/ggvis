@@ -4,19 +4,18 @@
 \alias{hide_legend}
 \title{Add a vega legend specification to a ggvis plot}
 \usage{
-add_legend(vis, size = NULL, shape = NULL, fill = NULL, stroke = NULL,
-  orient = "right", title = NULL, format = NULL, values = NULL,
-  properties = NULL)
+add_legend(vis, scales = NULL, orient = "right", title = NULL,
+  format = NULL, values = NULL, properties = NULL)
 
-hide_legend(vis, scale)
+hide_legend(vis, scales)
 }
 \arguments{
 \item{vis}{A ggvis object.}
 
-\item{scale}{The name of one or more scales for which to add a legend.}
-
-\item{size,shape,fill,stroke}{The name of the scale that determines the
-legends for the properties size, shape, fill and stroke.}
+\item{scales}{The name of one or more scales for which to add a legend.
+Typically one of "size", "shape", "fill", "stroke", although custom scale
+names may also be used. Multiple names can also be used, like
+\code{c("fill", "shape")}.}
 
 \item{orient}{The orientation of the legend. One of "left" or "right". This
 determines how the legend is positioned within the scene. The default is
@@ -51,18 +50,24 @@ of multiple legends, and more flexible linkage between scales and legends.
 \examples{
 mtcars \%>\% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) \%>\%
   layer_points() \%>\%
-  add_legend(fill = "fill", title = "Cylinders")
+  add_legend("fill", title = "Cylinders")
 
 # Suppress legend with hide_legend
 mtcars \%>\% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) \%>\%
   layer_points() \%>\%
   hide_legend("fill")
 
+# Combining two properties in one legend
+mtcars \%>\%
+  ggvis(x = ~wt, y = ~mpg, fill = ~factor(cyl), shape = ~factor(cyl)) \%>\%
+  layer_points() \%>\%
+  add_legend(c("fill", "shape"))
+
 # Control legend properties with a continuous legend, with x and y position
 # in pixels.
 mtcars \%>\% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) \%>\%
   layer_points() \%>\%
-  add_legend(fill = "fill", title = "Cylinders",
+  add_legend("fill", title = "Cylinders",
     properties = legend_props(
       title = list(fontSize = 16),
       labels = list(fontSize = 12, fill = "#00F"),
@@ -75,7 +80,7 @@ mtcars \%>\% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) \%>\%
 # in the scaled data space.
 mtcars \%>\% ggvis(x = ~wt, y = ~mpg, fill = ~factor(cyl)) \%>\%
   layer_points() \%>\%
-  add_legend(fill = "fill", title = "Cylinders",
+  add_legend("fill", title = "Cylinders",
     properties = legend_props(
       title = list(fontSize = 16),
       labels = list(fontSize = 14, dx = 5),
@@ -94,7 +99,7 @@ mtcars \%>\% ggvis(x = ~wt, y = ~mpg, fill = ~factor(cyl)) \%>\%
 # the upper-left corner of the legend.
 mtcars \%>\% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) \%>\%
   layer_points() \%>\%
-  add_legend(fill = "fill", title = "Cylinders",
+  add_legend("fill", title = "Cylinders",
     properties = legend_props(
       legend = list(
         x = scaled_value("x_rel", 0.8),

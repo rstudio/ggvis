@@ -153,8 +153,8 @@
 	"height" : 400,
 	"legends" : [
 		{
-			"fill" : "fill",
 			"orient" : "right",
+			"fill" : "fill",
 			"title" : "factor(z)"
 		}
 	],

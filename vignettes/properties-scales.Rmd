@@ -301,13 +301,13 @@ df %>%
   ggvis(x = ~x, y = ~y, stroke = ~a, fill = ~b, 
     strokeWidth := 5, size := 1000) %>%
   layer_points() %>%
-  add_legend(fill = "stroke", properties = legend_props(legend = list(y = 50)))
+  add_legend("stroke", properties = legend_props(legend = list(y = 50)))
 
 df %>% 
   ggvis(x = ~x, y = ~y, stroke = ~a, prop("fill", ~b, scale = "stroke"),
     strokeWidth := 5, size := 1000) %>%
   layer_points() %>%
-  add_legend(fill = "stroke", properties = legend_props(legend = list(y = 50)))
+  add_legend("stroke", properties = legend_props(legend = list(y = 50)))
 ```
 
 In this case we don't need to manually add the correct scale, because ggvis
