@@ -1,7 +1,6 @@
-
 last <- function(x) {
   if (length(x) == 0) return(NULL)
-  x[length(x)]
+  x[[length(x)]]
 }
 
 dots <- function(...) {

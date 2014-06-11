@@ -122,7 +122,7 @@ scale_numeric <- function(vis, property, domain = NULL, range = NULL,
                           reverse = NULL, round = NULL,
                           trans = NULL, clamp = NULL, exponent = NULL,
                           nice = NULL, zero = NULL, expand = NULL,
-                          name = property, label = name) {
+                          name = property, label = NULL) {
   assert_that(is.null(trans) || trans %in% c("linear", "log", "pow", "sqrt",
     "quantile", "quantize", "threshold"))
   if (!is.null(exponent) && !identical(trans, "pow")) {
@@ -203,7 +203,7 @@ scale_numeric <- function(vis, property, domain = NULL, range = NULL,
 scale_datetime <- function(vis, property, domain = NULL, range = NULL,
                            reverse = NULL, round = NULL, utc = NULL,
                            clamp = NULL, nice = NULL, expand = NULL,
-                           name = property, label = name) {
+                           name = property, label = NULL) {
   assert_that(is.null(reverse) || is.flag(reverse))
   assert_that(is.null(round) || is.flag(round))
   assert_that(is.null(utc) || is.flag(utc))
@@ -282,7 +282,7 @@ scale_datetime <- function(vis, property, domain = NULL, range = NULL,
 scale_ordinal <- function(vis, property, domain = NULL, range = NULL,
                           reverse = NULL, round = NULL,
                           points = NULL, padding = NULL, sort = NULL,
-                          name = property, label = name) {
+                          name = property, label = NULL) {
   assert_that(is.null(reverse) || is.flag(reverse))
   assert_that(is.null(round) || is.flag(round))
   assert_that(is.null(points) || is.flag(points))
@@ -311,7 +311,7 @@ scale_ordinal <- function(vis, property, domain = NULL, range = NULL,
 scale_nominal <- function(vis, property, domain = NULL, range = NULL,
                           reverse = NULL, round = NULL,
                           points = NULL, padding = NULL, sort = NULL,
-                          name = property, label = name) {
+                          name = property, label = NULL) {
   assert_that(is.null(reverse) || is.flag(reverse))
   assert_that(is.null(round) || is.flag(round))
   assert_that(is.null(points) || is.flag(points))

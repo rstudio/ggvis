@@ -6,7 +6,7 @@
 scale_numeric(vis, property, domain = NULL, range = NULL, reverse = NULL,
   round = NULL, trans = NULL, clamp = NULL, exponent = NULL,
   nice = NULL, zero = NULL, expand = NULL, name = property,
-  label = name)
+  label = NULL)
 }
 \arguments{
 \item{vis}{A ggvis object.}

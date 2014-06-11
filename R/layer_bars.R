@@ -80,7 +80,6 @@ layer_bars <- function(vis, ..., stack = TRUE, width = NULL) {
   x_var <- find_prop_var(new_props, "x.update")
   discrete_x <- prop_countable(cur_data(vis), new_props$x.update)
 
-  # Set x axis label
   vis <- set_scale_label(vis, "x", prop_label(cur_props(vis)$x.update))
 
   if (!is.null(new_props$y.update)) {

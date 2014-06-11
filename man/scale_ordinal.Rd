@@ -7,15 +7,15 @@
 \usage{
 scale_ordinal(vis, property, domain = NULL, range = NULL, reverse = NULL,
   round = NULL, points = NULL, padding = NULL, sort = NULL,
-  name = property, label = name)
+  name = property, label = NULL)
 
 scale_nominal(vis, property, domain = NULL, range = NULL, reverse = NULL,
   round = NULL, points = NULL, padding = NULL, sort = NULL,
-  name = property, label = name)
+  name = property, label = NULL)
 
 scale_logical(vis, property, domain = NULL, range = NULL, reverse = NULL,
   round = NULL, points = NULL, padding = NULL, sort = NULL,
-  name = property, label = name)
+  name = property, label = NULL)
 }
 \arguments{
 \item{vis}{A ggvis object.}

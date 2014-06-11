@@ -23,8 +23,8 @@ layer_histograms <- function(vis, ..., binwidth = NULL, origin = NULL,
   x_val <- eval_vector(cur_data(vis), x_var)
 
   vis <- set_scale_label(vis, "x", prop_label(cur_props(vis)$x.update))
-  vis <- set_scale_label(vis, "y", "count")
-  vis <- scale_numeric(vis, "y", domain = c(0, NA), expand = c(0, 0.05))
+  vis <- scale_numeric(vis, "y", domain = c(0, NA), expand = c(0, 0.05),
+                       label = "count")
 
   layer_f(vis, function(x) {
     x <- compute_bin(x, x_var, binwidth = binwidth, origin = origin,

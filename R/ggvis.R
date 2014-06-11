@@ -259,12 +259,18 @@ register_scales_from_props <- function(vis, props) {
   data <- vis$cur_data
 
   add_scale_from_prop <- function(vis, prop) {
+    # Automatically add label, unless it's blank or has a trailing '_'
+    label <- prop_label(prop)
+    if (label == "" || grepl("_$", prop_label(prop))) {
+      label <- NULL
+    }
+
     if (is.prop_band(prop)) {
       # band() requires points = FALSE
       vis <- add_scale(
         vis,
         ggvis_scale(property = propname_to_scale(prop$property),
-          name = prop$scale, points = FALSE, label = prop_label(prop))
+          name = prop$scale, points = FALSE, label = label)
       )
       return(vis)
     }
@@ -286,7 +292,7 @@ register_scales_from_props <- function(vis, props) {
     scale_fun <- match.fun(paste0("scale_", type))
 
     vis <- scale_fun(vis, property = prop$property, name = prop$scale,
-                     label = prop_label(prop), domain = domain)
+                     label = label, domain = domain)
     vis
   }
 

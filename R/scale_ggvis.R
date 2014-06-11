@@ -157,8 +157,9 @@ collapse_ggvis_scales <- function(scales) {
 
   # Merge scales from left to right. A couple fields need special treatment.
   new_scale <- Reduce(merge_ggvis_scales, scales)
-  # Get first non-NULL label
-  new_scale$label <- compact(pluck(scales, "label"))[[1]]
+  # Get last non-NULL label
+  new_scale$label <- last(compact(pluck(scales, "label")))
+
   new_scale$domain <- domain
   new_scale$override <- NULL
 
