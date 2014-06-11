@@ -119,7 +119,7 @@ valid_props <- list(
     "fontSize", "fontWeight", "fontStyle", "key")
 )
 
-# Hack to stop spurious warnings in R CMD check. Also used in qvis and prop.
+# Hack to stop spurious warnings in R CMD check. Used in prop.
 known_props <- sort(unique(unlist(valid_props)))
 globalVariables(known_props)
 

@@ -1,5 +1,8 @@
 # ggvis 0.2.0.99
 
+* Removed `qvis()`: now the default behaviour of `ggvis()` is to add 
+  `layer_guess()` if there are no layers on the plot already.
+
 * `add_dscale()` has been replaced with `scale_quantitative()`,
   `scale_nominal()`, `scale_ordinal()`, and similar.
 

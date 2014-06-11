@@ -13,10 +13,12 @@
 #' @importFrom shiny reactive
 #' @export
 #' @examples
-#' \dontrun{
-#' ggvis(mtcars, ~mpg, ~wt)
-#' # Throws an error because there is nothing to show.
-#' }
+#' # If you don't supply a layer, ggvis uses layer_guess() to guess at
+#' # an appropriate type:
+#' mtcars %>% ggvis(~mpg, ~wt)
+#' mtcars %>% ggvis(~mpg, ~wt, fill = ~cyl)
+#' mtcars %>% ggvis(~mpg, ~wt, fill := "red")
+#' mtcars %>% ggvis(~mpg)
 #'
 #' # ggvis has a functional interface: every ggvis function takes a ggvis
 #' # an input and returns a modified ggvis as output.

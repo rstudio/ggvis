@@ -19,7 +19,7 @@ as.vega <- function(x, ...) {
 as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
 
   if (length(x$marks) == 0) {
-    stop("No marks on plot.", call. = FALSE)
+    x <- layer_guess(x)
   }
 
   data_ids <- extract_data_ids(x$marks)
