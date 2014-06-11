@@ -17,7 +17,7 @@
 			"source" : "mtcars0/regroup1/smooth2_flat",
 			"transform" : [
 				{
-					"type" : "facet",
+					"type" : "treefacet",
 					"keys" : [
 						"data.cyl"
 					]
