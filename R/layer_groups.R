@@ -1,8 +1,7 @@
 #' @examples
-#' library(nasaweather)
 #' library(dplyr, warn.conflicts = FALSE)
 #'
-#' small <- atmos %>%
+#' small <- nasaweather::atmos %>%
 #'   filter(lat <= -11.217391, long <= -106.287, year == 1995) %>%
 #'   group_by(long, lat)
 #' small %>%
@@ -19,14 +18,15 @@
 #' the last mark (if it's is a sbuvis)
 #'
 #' Flatten needs to be recursive (again) - it has to spider through all
-#' the datasets including the child
+#' the datasets including the child.
 #'
 #' Can't change data sets inside a group - need to overlay multiple groups
 
 subvis <- function(vis, ..., layer) {
   # Initial hacky implementation
-  new_props <- merge_props(cur_props(vis), props(...))
-  vis <- register_scales_from_props(vis, new_props)
+  my_props <- merge_props(cur_props(vis), props(...))
+  my_data <- vis$data[[length(vis$data)]]
+  vis <- register_scales_from_props(vis, my_props)
 
   # Create ggvis object initialised with current data and props
   child <- ggvis()
@@ -57,8 +57,8 @@ subvis <- function(vis, ..., layer) {
 
   # Make this object behave more like a regular mark
   # assuming for now that there's only one dataset
-  child$data <- child$data[[length(child$data)]]
-  child$props <- new_props
+  child$data <- my_data
+  child$props <- my_props
   class(child) <- "subvis"
   vis$marks <- c(vis$marks, list(child))
 

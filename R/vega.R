@@ -22,7 +22,8 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
     x <- layer_guess(x)
   }
 
-  data_ids <- extract_data_ids(x$marks)
+  data_props <- combine_data_props(x$marks)
+  data_ids <- names(data_props)
   data_table <- x$data[data_ids]
 
   # Collapse each list of scale objects into one scale object.
@@ -32,7 +33,7 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
   # Wrap each of the reactive data objects in another reactive which returns
   # only the columns that are actually used, and adds any calculated columns
   # that are used in the props.
-  data_table <- active_props(data_table, x$marks)
+  data_table <- active_props(data_table, data_props)
 
   # From an environment containing data_table objects, get static data for the
   # specified ids.
@@ -90,20 +91,6 @@ as.vega.subvis <- function(x, ...) {
     legends = lapply(x$legends, as.vega),
     axes = lapply(x$axes, as.vega)
   )
-}
-
-
-
-# Given a list of layers, return a character vector of all data ID's used.
-extract_data_ids <- function(layers, unique = TRUE) {
-  data_ids <- vapply(layers,
-    function(layer) data_id(layer$data),
-    character(1)
-  )
-  if (unique) {
-    data_ids <- unique(data_ids)
-  }
-  data_ids
 }
 
 
