@@ -16,7 +16,7 @@ df %>%
 df %>%
   ggvis(x = ~x, y = ~x, prop("fill", ~z, scale = "blah")) %>%
   layer_points() %>%
-  add_legend(fill = "blah") %>%
+  add_legend("blah") %>%
   save_spec("scales/custom.json")
 
 # Dual scale
@@ -50,7 +50,7 @@ dat %>% ggvis(~time) %>% layer_histograms() %>%
 df %>%
   ggvis(x = ~x, y = ~x, fill = ~factor(y), prop("shape", ~factor(y), "shape2")) %>%
   layer_points() %>%
-  add_legend(fill = "fill", shape = "shape2") %>%
+  add_legend(c("fill", "shape2")) %>%
   save_spec("scales/combined_legend.json")
 
 # Nominal x with bars

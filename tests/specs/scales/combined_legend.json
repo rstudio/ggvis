@@ -175,9 +175,9 @@
 	"height" : 400,
 	"legends" : [
 		{
-			"shape" : "shape2",
-			"fill" : "fill",
 			"orient" : "right",
+			"fill" : "fill",
+			"shape" : "shape2",
 			"title" : "factor(y).factor(y)"
 		}
 	],

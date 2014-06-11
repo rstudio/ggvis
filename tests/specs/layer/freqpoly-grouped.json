@@ -173,8 +173,8 @@
 	"height" : 400,
 	"legends" : [
 		{
-			"stroke" : "stroke",
 			"orient" : "right",
+			"stroke" : "stroke",
 			"title" : "cyl"
 		}
 	],
