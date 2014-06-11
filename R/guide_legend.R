@@ -161,6 +161,8 @@ apply_legends_defaults <- function(vis) {
   legs <- c("size", "shape", "fill", "stroke")
 
   legends <- lapply(legends, function(legend) {
+    if (isTRUE(legend$hide)) return(legend)
+
     present <- unlist(legend[legs])
     present_scales <- scales[present]
 
