@@ -80,20 +80,38 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
   )
 }
 
+#' @export
+as.vega.subvis <- function(x, ...) {
+  scales <- lapply(x$scales, collapse_ggvis_scales)
+
+  list(
+    type = "group",
+    properties = x$props,
+    marks = lapply(x$marks, as.vega, group = FALSE),
+    scales = lapply(unname(scales), as.vega),
+    legends = lapply(x$legends, as.vega),
+    axes = lapply(x$axes, as.vega)
+  )
+}
+
+
 
 # Given a list of layers, return a character vector of all data ID's used.
-extract_data_ids <- function(layers) {
+extract_data_ids <- function(layers, unique = TRUE) {
   data_ids <- vapply(layers,
     function(layer) data_id(layer$data),
     character(1)
   )
-  unique(data_ids)
+  if (unique) {
+    data_ids <- unique(data_ids)
+  }
+  data_ids
 }
 
 
 # Given a ggvis mark object, output a vega mark object
 #' @export
-as.vega.mark <- function(mark) {
+as.vega.mark <- function(mark, group = TRUE) {
   data_id <- data_id(mark$data)
 
   # Pull out key from props, if present
@@ -107,7 +125,7 @@ as.vega.mark <- function(mark) {
   properties$ggvis$data <- list(value = data_id)
 
   group_vars <- dplyr::groups(shiny::isolate(mark$data()))
-  if (!is.null(group_vars)) {
+  if (group && !is.null(group_vars)) {
     # String representation of groups
     group_vars <- vapply(group_vars, deparse, character(1))
 
@@ -125,9 +143,12 @@ as.vega.mark <- function(mark) {
   } else {
     m <- list(
       type = mark$type,
-      properties = properties,
-      from = list(data = data_id)
+      properties = properties
     )
+    if (!group) {
+      # If mark inside group, inherits data from parent.
+      m$from <- list(data = data_id)
+    }
   }
 
   if (!is.null(key)) {
