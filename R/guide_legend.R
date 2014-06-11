@@ -12,6 +12,7 @@
 #' of multiple legends, and more flexible linkage between scales and legends.
 #'
 #' @param vis A ggvis object.
+#' @param scale The name of one or more scales for which to add a legend.
 #' @param size,shape,fill,stroke The name of the scale that determines the
 #'   legends for the properties size, shape, fill and stroke.
 #' @param orient The orientation of the legend. One of "left" or "right". This

@@ -13,6 +13,8 @@ hide_legend(vis, scale)
 \arguments{
 \item{vis}{A ggvis object.}
 
+\item{scale}{The name of one or more scales for which to add a legend.}
+
 \item{size,shape,fill,stroke}{The name of the scale that determines the
 legends for the properties size, shape, fill and stroke.}
 
