@@ -22,7 +22,17 @@
 #'
 #' Can't change data sets inside a group - need to overlay multiple groups
 
+#' Scale options:
+#'
+#' * new (shared) scale across panels (default) (scales = "shared")
+#'    - needs to modify default scale names to include
+#' * use parent scales (scales = "parent")
+#' * totally free scales (scales = "free")
+#' * mixed of free and shared scales (scales = "constrained")
 subvis <- function(vis, ..., layer) {
+  old <- set_prefix("xyz-")
+  on.exit(set_prefix(old), add = TRUE)
+
   # Initial hacky implementation
   my_props <- merge_props(cur_props(vis), props(...))
   my_data <- vis$data[[length(vis$data)]]
@@ -64,3 +74,5 @@ subvis <- function(vis, ..., layer) {
 
   vis
 }
+
+is.subvis <- function(x) inherits(x, "subvis")
