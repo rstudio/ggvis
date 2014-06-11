@@ -14,3 +14,9 @@ mtcars %>% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) %>%
 mtcars %>% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) %>%
   layer_points() %>%
   add_legend(fill = "fill", title = "Cylinders")
+
+# Combining two properties in one legend
+mtcars %>%
+  ggvis(x = ~wt, y = ~mpg, fill = ~factor(cyl), shape = ~factor(cyl)) %>%
+  layer_points() %>%
+  add_legend(fill = "fill", shape = "shape")

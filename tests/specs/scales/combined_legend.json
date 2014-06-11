@@ -1,0 +1,214 @@
+{
+	"data" : [
+		{
+			"name" : "df0",
+			"format" : {
+				"type" : "csv",
+				"parse" : {
+					"x" : "number"
+				}
+			},
+			"values" : "\"x\",\"factor(y)\"\n1,\"5\"\n2,\"4\"\n3,\"3\"\n4,\"2\"\n5,\"1\""
+		},
+		{
+			"name" : "scale/x",
+			"format" : {
+				"type" : "csv",
+				"parse" : {
+					"domain" : "number"
+				}
+			},
+			"values" : "\"domain\"\n0.8\n5.2"
+		},
+		{
+			"name" : "scale/y",
+			"format" : {
+				"type" : "csv",
+				"parse" : {
+					"domain" : "number"
+				}
+			},
+			"values" : "\"domain\"\n0.8\n5.2"
+		},
+		{
+			"name" : "scale/fill",
+			"format" : {
+				"type" : "csv",
+				"parse" : null
+			},
+			"values" : "\"domain\"\n\"1\"\n\"2\"\n\"3\"\n\"4\"\n\"5\""
+		},
+		{
+			"name" : "scale/shape2",
+			"format" : {
+				"type" : "csv",
+				"parse" : null
+			},
+			"values" : "\"domain\"\n\"1\"\n\"2\"\n\"3\"\n\"4\"\n\"5\""
+		},
+		{
+			"name" : "scale/x_rel",
+			"format" : {
+				"type" : "csv",
+				"parse" : {
+					"domain" : "number"
+				}
+			},
+			"values" : "\"domain\"\n0\n1"
+		},
+		{
+			"name" : "scale/y_rel",
+			"format" : {
+				"type" : "csv",
+				"parse" : {
+					"domain" : "number"
+				}
+			},
+			"values" : "\"domain\"\n0\n1"
+		}
+	],
+	"scales" : [
+		{
+			"name" : "x",
+			"domain" : {
+				"data" : "scale/x",
+				"field" : "data.domain"
+			},
+			"zero" : false,
+			"nice" : false,
+			"clamp" : false,
+			"range" : "width"
+		},
+		{
+			"name" : "y",
+			"domain" : {
+				"data" : "scale/y",
+				"field" : "data.domain"
+			},
+			"zero" : false,
+			"nice" : false,
+			"clamp" : false,
+			"range" : "height"
+		},
+		{
+			"name" : "fill",
+			"type" : "ordinal",
+			"domain" : {
+				"data" : "scale/fill",
+				"field" : "data.domain"
+			},
+			"points" : true,
+			"sort" : false,
+			"range" : "category10"
+		},
+		{
+			"name" : "shape2",
+			"type" : "ordinal",
+			"domain" : {
+				"data" : "scale/shape2",
+				"field" : "data.domain"
+			},
+			"points" : true,
+			"sort" : false,
+			"range" : "shapes"
+		},
+		{
+			"name" : "x_rel",
+			"domain" : {
+				"data" : "scale/x_rel",
+				"field" : "data.domain"
+			},
+			"range" : "width",
+			"zero" : false,
+			"nice" : false,
+			"clamp" : false
+		},
+		{
+			"name" : "y_rel",
+			"domain" : {
+				"data" : "scale/y_rel",
+				"field" : "data.domain"
+			},
+			"range" : "height",
+			"zero" : false,
+			"nice" : false,
+			"clamp" : false
+		}
+	],
+	"marks" : [
+		{
+			"type" : "symbol",
+			"properties" : {
+				"update" : {
+					"size" : {
+						"value" : 50
+					},
+					"x" : {
+						"scale" : "x",
+						"field" : "data.x"
+					},
+					"y" : {
+						"scale" : "y",
+						"field" : "data.x"
+					},
+					"fill" : {
+						"scale" : "fill",
+						"field" : "data.factor(y)"
+					},
+					"shape" : {
+						"scale" : "shape2",
+						"field" : "data.factor(y)"
+					}
+				},
+				"ggvis" : {
+					"data" : {
+						"value" : "df0"
+					}
+				}
+			},
+			"from" : {
+				"data" : "df0"
+			}
+		}
+	],
+	"width" : 600,
+	"height" : 400,
+	"legends" : [
+		{
+			"shape" : "shape2",
+			"fill" : "fill",
+			"orient" : "right",
+			"title" : "factor(y).factor(y)"
+		}
+	],
+	"axes" : [
+		{
+			"type" : "x",
+			"scale" : "x",
+			"orient" : "bottom",
+			"layer" : "back",
+			"grid" : true,
+			"title" : "x"
+		},
+		{
+			"type" : "y",
+			"scale" : "y",
+			"orient" : "left",
+			"layer" : "back",
+			"grid" : true,
+			"title" : "x"
+		}
+	],
+	"padding" : null,
+	"ggvis_opts" : {
+		"width" : 600,
+		"height" : 400,
+		"keep_aspect" : false,
+		"resizable" : true,
+		"padding" : {},
+		"duration" : 250,
+		"renderer" : "svg",
+		"hover_duration" : 0
+	},
+	"handlers" : null
+}

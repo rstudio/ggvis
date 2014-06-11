@@ -46,6 +46,13 @@ dat %>% ggvis(~time, ~value) %>% layer_points() %>%
 dat %>% ggvis(~time) %>% layer_histograms() %>%
   save_spec("scales/datetime_hist.json")
 
+# Two properties in one legend, one on a custom scale
+df %>%
+  ggvis(x = ~x, y = ~x, fill = ~factor(y), prop("shape", ~factor(y), "shape2")) %>%
+  layer_points() %>%
+  add_legend(fill = "fill", shape = "shape2") %>%
+  save_spec("scales/combined_legend.json")
+
 # Nominal x with bars
 df %>%
   ggvis(x = ~factor(x), y = ~y) %>%
