@@ -5,27 +5,29 @@
 \alias{scale_ordinal}
 \title{Add a ordinal, nominal, or logical scale to a ggvis object.}
 \usage{
-scale_ordinal(vis, property, domain = NULL, range = NULL, reverse = FALSE,
-  round = FALSE, points = TRUE, padding = NULL, sort = FALSE,
-  name = NULL, label = NULL)
+scale_ordinal(vis, property, domain = NULL, range = NULL, reverse = NULL,
+  round = NULL, points = NULL, padding = NULL, sort = NULL,
+  name = property, label = name)
 
-scale_nominal(vis, property, domain = NULL, range = NULL, reverse = FALSE,
-  round = FALSE, points = TRUE, padding = NULL, sort = FALSE,
-  name = NULL, label = NULL)
+scale_nominal(vis, property, domain = NULL, range = NULL, reverse = NULL,
+  round = NULL, points = NULL, padding = NULL, sort = NULL,
+  name = property, label = name)
 
-scale_logical(vis, property, domain = NULL, range = NULL, reverse = FALSE,
-  round = FALSE, points = TRUE, padding = NULL, sort = FALSE,
-  name = NULL, label = NULL)
+scale_logical(vis, property, domain = NULL, range = NULL, reverse = NULL,
+  round = NULL, points = NULL, padding = NULL, sort = NULL,
+  name = property, label = name)
 }
 \arguments{
 \item{vis}{A ggvis object.}
 
 \item{property}{The name of a property, such as "x", "y", "fill", "stroke", etc.}
 
-\item{points}{If \code{TRUE}, distributes the ordinal values over a
+\item{points}{If \code{TRUE} (default), distributes the ordinal values over a
 quantitative range at uniformly spaced points. The spacing of the points
 can be adjusted using the padding property. If \code{FALSE}, the ordinal
-scale will construct evenly-spaced bands, rather than points.}
+scale will construct evenly-spaced bands, rather than points. Note that
+if any mark is added with a \code{\link{band}()} prop, then the scale for
+that prop will automatically have \code{points} set to \code{FALSE}.}
 
 \item{padding}{Applies spacing among ordinal elements in the scale range.
 The actual effect depends on how the scale is configured. If the points
@@ -35,10 +37,11 @@ last point will be offset from the minimum and maximum value by half the
 distance between points. Otherwise, padding is typically in the range
 [0, 1] and corresponds to the fraction of space in the range interval to
 allocate to padding. A value of 0.5 means that the range band width will
-be equal to the padding width.}
+be equal to the padding width. For positional (x and y) scales, the default
+padding is 0.1. For other scales, the default padding is 0.5.}
 
 \item{sort}{If \code{TRUE}, the values in the scale domain will be sorted
-according to their natural order. The default value is \code{FALSE}.}
+according to their natural order. Default is \code{FALSE}.}
 
 \item{domain}{The domain of the scale, representing the set of data values.
 For ordinal scales, a character vector; for quantitative scales, a numeric

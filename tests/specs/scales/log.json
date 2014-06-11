@@ -59,11 +59,9 @@
 			},
 			"name" : "x",
 			"type" : "log",
-			"reverse" : false,
-			"round" : false,
-			"clamp" : false,
-			"nice" : false,
 			"zero" : false,
+			"nice" : false,
+			"clamp" : false,
 			"range" : "width"
 		},
 		{
@@ -73,11 +71,9 @@
 			},
 			"name" : "y",
 			"type" : "log",
-			"reverse" : false,
-			"round" : false,
-			"clamp" : false,
-			"nice" : false,
 			"zero" : false,
+			"nice" : false,
+			"clamp" : false,
 			"range" : "height"
 		},
 		{

@@ -59,8 +59,8 @@
 				"data" : "scale/x",
 				"field" : "data.domain"
 			},
-			"clamp" : false,
 			"type" : "time",
+			"clamp" : false,
 			"range" : "width"
 		},
 		{

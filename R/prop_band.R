@@ -10,8 +10,7 @@
 #' @examples
 #' df <- data.frame(label = c("a", "b", "c"), n = c(10, 9, 4))
 #'
-#' base <- df %>% ggvis(~label, y2 = 0, y = ~n) %>%
-#'   scale_nominal("x", padding = 0, points = FALSE)
+#' base <- df %>% ggvis(~label, y2 = 0, y = ~n)
 #' base %>% layer_rects(width = band())
 #' base %>% layer_rects(width = band(offset = -1))
 #' base %>% layer_rects(width = band(mult = 0.9))

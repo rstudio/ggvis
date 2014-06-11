@@ -6,17 +6,30 @@
 \usage{
 singular()
 
-scale_singular(vis, property, points = TRUE)
+scale_singular(vis, property, name = property, label = name,
+  points = TRUE, domain = NULL)
 }
 \arguments{
 \item{vis}{A ggvis object.}
 
 \item{property}{The name of a property, such as "x", "y", "fill", "stroke", etc.}
 
-\item{points}{If \code{TRUE}, distributes the ordinal values over a
+\item{name}{Name of the scale, such as "x", "y", "fill", etc. Can also be an
+arbitrary name like "foo".}
+
+\item{label}{Label for the scale. Used for axis or legend titles.}
+
+\item{points}{If \code{TRUE} (default), distributes the ordinal values over a
 quantitative range at uniformly spaced points. The spacing of the points
 can be adjusted using the padding property. If \code{FALSE}, the ordinal
-scale will construct evenly-spaced bands, rather than points.}
+scale will construct evenly-spaced bands, rather than points. Note that
+if any mark is added with a \code{\link{band}()} prop, then the scale for
+that prop will automatically have \code{points} set to \code{FALSE}.}
+
+\item{domain}{The domain of the scale, representing the set of data values.
+For ordinal scales, a character vector; for quantitative scales, a numeric
+vector of length two. Either value (but not both) may be NA, in which
+case \code{domainMin} or \code{domainMax} is set.}
 }
 \description{
 Use singular when you want constant x or y position.

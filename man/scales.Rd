@@ -42,7 +42,7 @@ type are listed below:
   \item datetime For dates and date-times.
 }
 
-Each type has a a corresponding function: \code{scale_numeric},
+Each type has a corresponding function: \code{scale_numeric},
 \code{scale_nominal}, and so on.
 
 The scale types for ggvis are mapped to scale types for Vega, which include

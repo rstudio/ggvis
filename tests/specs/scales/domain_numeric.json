@@ -65,16 +65,13 @@
 	"scales" : [
 		{
 			"name" : "x",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
 			"domain" : {
 				"data" : "scale/x",
 				"field" : "data.domain"
 			},
-			"clamp" : false,
-			"nice" : false,
 			"zero" : false,
+			"nice" : false,
+			"clamp" : false,
 			"range" : "width"
 		},
 		{
@@ -90,16 +87,13 @@
 		},
 		{
 			"name" : "fill",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
 			"domain" : {
 				"data" : "scale/fill",
 				"field" : "data.domain"
 			},
-			"clamp" : false,
-			"nice" : false,
 			"zero" : false,
+			"nice" : false,
+			"clamp" : false,
 			"range" : [
 				"#132B43",
 				"#56B1F7"

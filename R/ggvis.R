@@ -257,6 +257,16 @@ register_scales_from_props <- function(vis, props) {
   data <- vis$cur_data
 
   add_scale_from_prop <- function(vis, prop) {
+    if (is.prop_band(prop)) {
+      # band() requires points = FALSE
+      vis <- add_scale(
+        vis,
+        ggvis_scale(property = propname_to_scale(prop$property),
+          name = prop$scale, points = FALSE, label = prop_label(prop))
+      )
+      return(vis)
+    }
+
     if (is.null(prop$value) || !prop_is_scaled(prop) || is.null(data)) {
       return(vis)
     }
@@ -270,8 +280,8 @@ register_scales_from_props <- function(vis, props) {
     # dynamic.
     attr(domain, "register") <- FALSE
 
-    # e.g. scale_quantitative_int, scale_nominal_int
-    scale_fun <- match.fun(paste0("scale_", type, "_int"))
+    # e.g. scale_quantitative, scale_nominal
+    scale_fun <- match.fun(paste0("scale_", type))
 
     vis <- scale_fun(vis, property = prop$property, name = prop$scale,
                      label = prop_label(prop), domain = domain)

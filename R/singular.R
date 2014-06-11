@@ -46,18 +46,11 @@ vector_type.singular <- function(x) "singular"
 #' @rdname singular
 #' @export
 #' @inheritParams scale_nominal
-scale_singular <- function(vis, property, points = TRUE) {
-  vis <- scale_singular_int(vis, property = property, points = points)
-  vis
-}
-
-# Needed when adding singular scales automatically
-# Some of the arguments are ignored; they're there to provide a consistent
-# interface with other scales
-scale_singular_int <- function(vis, property, name = NULL, label = NULL,
-                               points = TRUE, domain = NULL) {
-
-  vis <- scale_nominal_int(vis, domain = "", property = property, name = name,
+scale_singular <- function(vis, property, name = property, label = name,
+                           points = TRUE, domain = NULL) {
+  # Some of the arguments are ignored; they're there to provide a consistent
+  # interface with other scales
+  vis <- scale_nominal(vis, domain = "", property = property, name = name,
                            label = "", points = points)
   vis <- add_axis(vis, property, tick_size_major = 0)
   vis

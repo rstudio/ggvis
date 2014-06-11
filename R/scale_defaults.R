@@ -41,8 +41,8 @@ apply_scale_defaults.scale_numeric <- function(x) {
 
 #' @export
 apply_scale_defaults.scale_datetime <- function(x) {
-  x$clamp <- x$clamp %||% FALSE
   x$type <- x$type %||% "time"
+  x$clamp <- x$clamp %||% FALSE
 
   if (is.null(x$range)) {
     x$range <- switch(propname_to_scale(x$property),
@@ -75,16 +75,14 @@ apply_scale_defaults.scale_ordinal <- function(x) {
       stop("Don't know how to automatically set range for ", x$property, ".")
     )
   }
-  if (is.null(x$padding)) {
-    x$padding <- switch(x$property,
-      x = 0.5,
-      y = 0.5,
-      NULL
-    )
+  if (is.null(x$padding) && x$property %in% c("x", "y")) {
+    if (isTRUE(x$points)) x$padding <- 0.5
+    else x$padding <- 0.1
   }
   x
 }
 
+#' @export
 apply_scale_defaults.scale_nominal <- function(x) {
   x$points <- x$points %||% TRUE
   x$sort <- x$sort %||% FALSE
@@ -100,12 +98,9 @@ apply_scale_defaults.scale_nominal <- function(x) {
       shape = "shapes"
     )
   }
-  if (is.null(x$padding)) {
-    x$padding <- switch(x$property,
-      x = 0.5,
-      y = 0.5,
-      NULL
-    )
+  if (is.null(x$padding) && x$property %in% c("x", "y")) {
+    if (isTRUE(x$points)) x$padding <- 0.5
+    else x$padding <- 0.1
   }
   x
 }
