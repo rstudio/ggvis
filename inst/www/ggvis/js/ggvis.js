@@ -822,6 +822,61 @@ ggvis = (function(_) {
 
 })(lodash);
 
+// This is like facet, but includes the key values at each level.
+vg.data.treefacet = function() {
+
+  var keys = [], key_funs = [];
+
+  function treefacet(data) {
+    var result = {
+          key: "",
+          keys: [],
+          values: []
+        },
+        map = {},
+        vals = result.values,
+        obj, klist, kstr, len, i, k, kv;
+
+    if (keys.length === 0) {
+      throw "Need at least one key"
+    }
+
+    for (i=0, len=data.length; i<len; ++i) {
+      // Create single key value to index hash
+      for (k=0, klist=[], kstr=""; k<keys.length; ++k) {
+        kv = key_funs[k](data[i]);
+        klist.push(kv);
+        kstr += (k>0 ? "|" : "") + String(kv);
+      }
+
+      obj = map[kstr];
+      if (obj === undefined) {
+        // Not found, so initialise object with empty value for
+        // children and keys
+        obj = map[kstr] = {
+          key: kstr,
+          keys: klist,
+          index: vals.length,
+          values: []
+        };
+        for (var key in keys) obj[keys[key]] = klist[key];
+        vals.push(obj);
+      }
+      obj.values.push(data[i]);
+    }
+
+    return result;
+  }
+
+  treefacet.keys = function(k) {
+    keys = k;
+    key_funs = vg.array(k).map(vg.accessor);
+    return treefacet;
+  };
+
+  return treefacet;
+};
+
 
 $(function(){ //DOM Ready
 

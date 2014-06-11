@@ -2,13 +2,13 @@
 #' library(nasaweather)
 #' library(dplyr, warn.conflicts = FALSE)
 #'
-#' small <- atmos %>% filter(lat <= 28.71304, long <= -106.287, year == 1995)
+#' small <- atmos %>%
+#'   filter(lat <= -11.217391, long <= -106.287, year == 1995) %>%
+#'   group_by(long, lat)
 #' small %>%
-#'   group_by(long, lat) %>%
 #'   ggvis(~long, ~lat) %>%
-#'   subvis(
-#'     layer = function(x) x %>% layer_points(~month, ~ozone)) %>%
-#'  show_spec("marks")
+#'   subvis(width := 20, height := 20,
+#'     layer = function(x) x %>% layer_points(~month, ~ozone))
 
 
 #' A subvis is a recursive mark: a mark that contain other marks. Compared
@@ -24,14 +24,14 @@
 #' Can't change data sets inside a group - need to overlay multiple groups
 
 subvis <- function(vis, ..., layer) {
-  new_props <- merge_props(cur_props(vis), props(...))
-
   # Initial hacky implementation
+  new_props <- merge_props(cur_props(vis), props(...))
+  vis <- register_scales_from_props(vis, new_props)
 
   # Create ggvis object initialised with current data and props
   child <- ggvis()
-  child <- add_data(child, data = cur_data(vis))
-  child <- add_props(child, .props = new_props)
+  child <- add_data(child, data = cur_data(vis), name = names(last(vis$data)),
+    add_suffix = FALSE)
 
   # Run layer function and add missing scales
   child <- layer(child)
