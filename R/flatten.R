@@ -14,7 +14,7 @@ combine_data_props <- function(mark) {
     return(setNames(list(mark$props), data_id(mark$data)))
   }
 
-  if (inherits(mark, "subvis")) {
+  if (is.mark_group(mark)) {
     children <- mark$marks
   } else if (is.list(mark)) {
     children <- mark

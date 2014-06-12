@@ -21,13 +21,32 @@ mark <- function(type, props, data) {
 
   # FIXME: check that mark has all the props needed to draw something
   # FIXME: check that the variables in the prop can be found in data
-
   structure(list(type = type, data = data, props = props), class = "mark")
+}
+
+mark_group <- function(props, data, marks = list(), scales = list(),
+                       axes = list(), legends = list()) {
+
+  check_mark_props("rect", names(props))
+  structure(
+    list(
+      type = "group",
+      data = data,
+      props = props,
+      marks = marks,
+      scales = scales,
+      axes = axes,
+      legends = legends
+    ),
+    class = c("mark_group", "mark")
+  )
 }
 
 #' @rdname mark
 #' @export
 is.mark <- function(x) inherits(x, "mark")
+
+is.mark_group <- function(x) inherits(x, "mark_group")
 
 check_mark_props <- function(type, props) {
   props <- trim_prop_event(props)

@@ -94,19 +94,19 @@ add_legend <- function(vis, scales = NULL, orient = "right", title = NULL,
   assert_that(!is.null(scale))
 
   # Get a named vector where names are scales, values are properties
-  all_scales <- lapply(vis$scales, collapse_ggvis_scales)
+  all_scales <- collapse_scales(gather_scales(vis))
   scales_props <- vapply(all_scales, function(s) s$property, character(1))
   scales_props <- scales_props[scales]
 
   legend <- create_legend(scales_props, orient, title, format, values, properties)
-  register_legend(vis, legend)
+  append_ggvis(vis, "legends", legend)
 }
 
 #' @rdname add_legend
 #' @export
 hide_legend <- function(vis, scales) {
   legend <- structure(list(scales = scales, hide = TRUE), class = "ggvis_legend")
-  register_legend(vis, legend)
+  append_ggvis(vis, "legends", legend)
 }
 
 #' Defunct function for adding a legend

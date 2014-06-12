@@ -92,14 +92,14 @@ add_axis <- function(vis, type, scale = NULL, orient = NULL, title = NULL,
                       tick_size_major, tick_size_minor, tick_size_end,
                       offset, layer, grid, properties)
 
-  register_axis(vis, axis)
+  append_ggvis(vis, "axes", axis)
 }
 
 #' @rdname add_axis
 #' @export
 hide_axis <- function(vis, scale) {
   axis <- structure(list(scale = scale, hide = TRUE), class = "ggvis_axis")
-  register_axis(vis, axis)
+  append_ggvis(vis, "axes", axis)
 }
 
 #' Defunct function for adding an axis

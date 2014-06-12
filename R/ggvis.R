@@ -49,7 +49,8 @@ ggvis <- function(data = NULL, ..., env = parent.frame()) {
       handlers = list(),
       options = list(),
       cur_data = NULL,
-      cur_props = NULL
+      cur_props = NULL,
+      cur_vis = NULL
     ),
     class = "ggvis"
   )
@@ -137,9 +138,8 @@ add_mark <- function(vis, type = NULL, props = NULL, data = NULL,
   vis <- add_props(vis, .props = props)
   vis <- register_scales_from_props(vis, cur_props(vis))
 
-  vis$marks <- c(vis$marks, list(
-    mark(type, props = cur_props(vis), data = vis$cur_data))
-  )
+  new_mark <- mark(type, props = cur_props(vis), data = vis$cur_data)
+  vis <- append_ggvis(vis, "marks", new_mark)
 
   # Restore old data
   vis$cur_data <- old_data
@@ -161,18 +161,7 @@ add_scale <- function(vis, scale, data_domain = TRUE) {
   if (data_domain && shiny::is.reactive(scale$domain)) {
     vis <- register_reactive(vis, scale$domain)
   }
-
-  vis$scales[[scale$name]] <- c(vis$scales[[scale$name]], list(scale))
-  vis
-}
-
-register_legend <- function(vis, legend) {
-  vis$legends <- c(vis$legends, list(legend))
-  vis
-}
-
-register_axis <- function(vis, axis) {
-  vis$axes <- c(vis$axes, list(axis))
+  vis <- append_ggvis(vis, "scales", scale)
   vis
 }
 
@@ -371,4 +360,20 @@ view_spec <- function(path, ...) {
   contents <- paste0(readLines(path), collapse = "\n")
   spec <- RJSONIO::fromJSON(contents)
   view_static(spec)
+}
+
+append_ggvis <- function(vis, field, mark) {
+  i <- vis$cur_vis
+  if (length(i) == 0) {
+    vis[[field]] <- c(vis[[field]], list(mark))
+  } else if (length(i) == 1) {
+    vis$marks[[i]][[field]] <- c(vis$marks[[i]][[field]], list(mark))
+  } else if (length(i) == 2) {
+    vis$marks[[i[1]]]$marks[[i[2]]][[field]] <-
+      c(vis$marks[[i[1]]]$marks[[i[2]]][[field]], list(mark))
+  } else {
+    stop(">3 levels deep? You must be crazy!", call. = FALSE)
+  }
+
+  vis
 }

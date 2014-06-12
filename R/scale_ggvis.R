@@ -108,6 +108,11 @@ as.vega.ggvis_scale <- function(x) {
   x
 }
 
+collapse_scales <- function(scales) {
+  by_name <- split(scales, vpluck(scales, "name", character(1)))
+  lapply(by_name, collapse_ggvis_scales)
+}
+
 # Takes a list of ggvis_scale objects and collapses them into a single
 # ggvis_scale object.
 collapse_ggvis_scales <- function(scales) {
