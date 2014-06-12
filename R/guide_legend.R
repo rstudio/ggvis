@@ -93,12 +93,12 @@ add_legend <- function(vis, scales = NULL, orient = "right", title = NULL,
                        format = NULL, values = NULL, properties = NULL) {
   assert_that(!is.null(scale))
 
-  # Get a named vector where names are scales, values are properties
-  all_scales <- collapse_scales(gather_scales(vis))
-  scales_props <- vapply(all_scales, function(s) s$property, character(1))
-  scales_props <- scales_props[scales]
+  # Create an unfortified legend
+  legend <- structure(compact(list(
+    scales = scales, orient = orient, title = title, format = format,
+    values = values, properties = properties
+  )), class = "ggvis_legend")
 
-  legend <- create_legend(scales_props, orient, title, format, values, properties)
   append_ggvis(vis, "legends", legend)
 }
 
@@ -118,18 +118,34 @@ add_guide_legend <- function(...) {
   stop("add_guide_legend() has been replaced by add_legend().")
 }
 
-# Create a legend object.
-create_legend <- function(scales_props = NULL, orient = "right", title = NULL,
-                          format = NULL, values = NULL, properties = NULL) {
+# Given a ggvis object, find all the unfortified legend and fortify them.
+# The fortification process requires examining the scales in the ggvis object.
+fortify_legends <- function(vis) {
+  all_scales <- collapse_scales(gather_scales(vis))
+  # Get a named vector where names are scales, values are properties
+  scales_props <- vapply(all_scales, function(s) s$property, character(1))
 
-  orient <- match.arg(orient, c("right", "left"))
+  vis$legends <- lapply(vis$legends, fortify_legend, scales_props)
+  vis
+}
+
+# Create a fortified legend object. An unfortified legend has only the names
+# of the scales. A fortified legends maps those names of scales to property
+# names.
+# scales_props is a named list, where names are scales, values are properties
+fortify_legend <- function(legend, scales_props) {
+  if (inherits(legend, "fortified_legend")) return(legend)
+
+  # Get scales and props that are actually used by this legend
+  scales_props <- scales_props[legend$scales]
+
   assert_that(!is.null(scales_props) && length(scales_props) > 0)
-  assert_that(is.null(properties) || is.legend_props(properties))
+  assert_that(is.null(legend$properties) || is.legend_props(legend$properties))
 
   legend <- structure(compact(list(
-      orient = orient, title = title, format = format, values = values,
-      properties = properties
-  )), class = "ggvis_legend")
+      orient = legend$orient, title = legend$title, format = legend$format,
+      values = legend$values, properties = legend$properties
+  )), class = c("fortified_legend", "ggvis_legend"))
 
   legend[scales_props] <- names(scales_props)
   legend
@@ -141,11 +157,9 @@ add_missing_legends <- function(vis) {
 
   legs <- c("size", "shape", "fill", "stroke")
   # Get scales that are in some legend
-  present <- unlist(lapply(legends, function(x) x[legs]))
-  # Ignore scales with hidden legend
-  hidden <- unlist(lapply(legends, function(x) if (isTRUE(x$hide)) x$scales))
+  present <- unlist(lapply(legends, function(x) x$scales))
   # Find scales that don't have legend
-  missing <- setdiff(intersect(names(scales), legs), c(present, hidden))
+  missing <- setdiff(intersect(names(scales), legs), present)
 
   for (scale in missing) {
     vis <- add_legend(vis, scale)

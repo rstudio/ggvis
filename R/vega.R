@@ -55,6 +55,7 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
   x <- add_missing_axes(x)
   x <- apply_axes_defaults(x)
   x <- add_missing_legends(x)
+  x <- fortify_legends(x)
   x <- apply_legends_defaults(x)
   x <- add_default_options(x)
 
