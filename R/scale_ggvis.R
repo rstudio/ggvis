@@ -162,7 +162,7 @@ collapse_ggvis_scales <- function(scales) {
   domain <- collapse_domains(
     domains = pluck(scales, "domain"),
     overrides = vpluck(scales, "override", logical(1)),
-    countable = scale_countable(scales[[1]])
+    countable = countable
   )
 
   # Merge scales from left to right. A couple fields need special treatment.
