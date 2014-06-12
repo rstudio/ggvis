@@ -105,17 +105,28 @@ as.vega.ggvis_scale <- function(x) {
   x
 }
 
-collapse_scales <- function(scales) {
-  by_name <- split(scales, vpluck(scales, "name", character(1)))
+# Collapse all scales inside each vis
+collapse_scales <- function(x) {
+  if (is.ggvis(x) || is.mark_group(x)) {
+    x$scales <- collapse_scales_by_name(x$scales)
+    x$marks <- lapply(x$marks, collapse_scales)
+    x
+  } else {
+    x
+  }
+}
+
+
+collapse_scales_by_name <- function(x) {
+  by_name <- split(x, vpluck(x, "name", character(1)))
   lapply(by_name, collapse_ggvis_scales)
+
 }
 
 # Takes a list of ggvis_scale objects and collapses them into a single
 # ggvis_scale object.
 collapse_ggvis_scales <- function(scales) {
   if (empty(scales)) return(NULL)
-  # Idempotent: collapsing an already-collapsed scales list returns the object
-  if (is.ggvis_scale(scales)) return(scales)
 
   countable <- unique(unlist(lapply(scales, scale_countable)))
   if (length(unique(countable)) > 1) {
@@ -190,19 +201,20 @@ collapse_ggvis_scales <- function(scales) {
 # a scale object. Returns a named list where there's one item per scale,
 # and each item is a reactive that returns a data frame with values for the
 # domain.
-scale_domain_data <- function(scales) {
-  scales <- Filter(function(scale) shiny::is.reactive(scale$domain),
-                   scales)
 
-  domain_data <- lapply(scales, function(scale) {
+scale_domain_data <- function(x) {
+  # Find scales in all vises
+  scales <- gather_scales(x)
+  # Only need to make data domain for reactive scales
+  scales <- Filter(function(scale) shiny::is.reactive(scale$domain), scales)
+  names(scales) <- paste0("scale/", vpluck(scales, "name", character(1)))
+
+  lapply(scales, function(scale) {
     force(scale)
     reactive({
       data.frame(domain = value(scale$domain))
     })
   })
-
-  names(domain_data) <- paste0("scale/", names(domain_data))
-  domain_data
 }
 
 
