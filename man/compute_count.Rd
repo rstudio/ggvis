@@ -31,26 +31,24 @@ mtcars \%>\% compute_count(~cyl, ~wt)
 # If there's one weight value at each x, it effectively just renames columns.
 pressure \%>\% compute_count(~temperature, ~pressure)
 # Also get the width of each bin
-pressure \%>\% compute_count(~temperature, ~pressure) \%>\% compute_width(~x_)
+pressure \%>\% compute_count(~temperature, ~pressure) \%>\% compute_align(~x_)
 
 # It doesn't matter whether you transform inside or outside of a vis
 mtcars \%>\% compute_count(~cyl, ~wt) \%>\%
-  compute_width(~x_) \%>\%
+  compute_align(~x_) \%>\%
   ggvis(x = ~xmin_, x2 = ~xmax_, y = ~count_, y2 = 0) \%>\%
-  layer_rects() \%>\%
-  scale_numeric("y", domain = c(0, NA))
+  layer_rects()
 
 mtcars \%>\%
   ggvis(x = ~xmin_, x2 = ~xmax_, y = ~count_, y2 = 0) \%>\%
   compute_count(~cyl, ~wt) \%>\%
-  compute_width(~x_) \%>\%
-  layer_rects() \%>\%
-  scale_numeric("y", domain = c(0, NA))
+  compute_align(~x_) \%>\%
+  layer_rects()
 }
 \seealso{
 \code{\link{compute_bin}} For counting cases within ranges of
   a continuous variable.
 
-\code{\link{compute_width}} For calculating the "width" of data.
+\code{\link{compute_align}} For calculating the "width" of data.
 }
 

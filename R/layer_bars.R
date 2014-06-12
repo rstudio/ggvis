@@ -120,7 +120,7 @@ layer_bars <- function(vis, ..., stack = TRUE, width = NULL) {
   } else {
     vis <- layer_f(vis, function(v) {
       v <- compute_count(v, x_var, y_var)
-      v <- compute_width(v, ~x_, width)
+      v <- compute_align(v, ~x_, length = width)
       if (stack) {
         v <- compute_stack(v, stack_var = ~count_, group_var = ~x_)
         v <- layer_rects(v, x = ~xmin_, x2 = ~xmax_, y = ~stack_upr_,
