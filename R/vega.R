@@ -25,9 +25,6 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
   data_ids <- extract_data_ids(x$marks)
   data_table <- x$data[data_ids]
 
-  # Add x_rel and y_rel
-  x <- add_missing_scales(x)
-
   # Collapse each list of scale objects into one scale object.
   x$scales <- lapply(x$scales, collapse_ggvis_scales)
   scale_data_table <- scale_domain_data(x$scales)

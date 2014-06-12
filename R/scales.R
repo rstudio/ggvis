@@ -339,11 +339,23 @@ scale_nominal <- function(vis, property, domain = NULL, range = NULL,
 #' @export
 scale_logical <- scale_nominal
 
-add_missing_scales <- function(vis, quiet = TRUE) {
+
+#' Add x_rel and y_rel scales
+#'
+#' This function adds scales named \code{x_rel} and \code{y_rel}, each of which
+#' has a domain of 0 to 1, and the range is the plot's width or height.
+#' These scales are useful for positioning visual elements relative to the
+#' plotting area. For example, with legends.
+#'
+#' @seealso \code{\link{guide_legend}} for a usage example.
+#'
+#' @param vis A ggvis object.
+#' @export
+add_relative_scales <- function(vis) {
   vis <- scale_numeric(vis, "x", name = "x_rel", domain = c(0, 1),
-                           range = "width", expand = 0)
+                       range = "width", expand = 0)
   vis <- scale_numeric(vis, "y", name = "y_rel", domain = c(0, 1),
-                           range = "height", expand = 0)
+                       range = "height", expand = 0)
   vis
 }
 

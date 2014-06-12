@@ -99,6 +99,7 @@ mtcars \%>\% ggvis(x = ~wt, y = ~mpg, fill = ~factor(cyl)) \%>\%
 # the upper-left corner of the legend.
 mtcars \%>\% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) \%>\%
   layer_points() \%>\%
+  add_relative_scales() \%>\%
   add_legend("fill", title = "Cylinders",
     properties = legend_props(
       legend = list(
