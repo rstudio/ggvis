@@ -1,6 +1,6 @@
 #' Creates a named list, giving the properties used by each dataset.
 #'
-#' @nord
+#' @noRd
 #' @examples
 #' base <- mtcars %>% ggvis(~wt, ~mpg)
 #' base %>% layer_points() %>% combine_data_props()
