@@ -40,26 +40,6 @@
 				}
 			},
 			"values" : "\"domain\"\n0.0073994412086904\n0.834333037259057"
-		},
-		{
-			"name" : "scale/x_rel",
-			"format" : {
-				"type" : "csv",
-				"parse" : {
-					"domain" : "number"
-				}
-			},
-			"values" : "\"domain\"\n0\n1"
-		},
-		{
-			"name" : "scale/y_rel",
-			"format" : {
-				"type" : "csv",
-				"parse" : {
-					"domain" : "number"
-				}
-			},
-			"values" : "\"domain\"\n0\n1"
 		}
 	],
 	"scales" : [
@@ -98,28 +78,6 @@
 				"#132B43",
 				"#56B1F7"
 			]
-		},
-		{
-			"name" : "x_rel",
-			"domain" : {
-				"data" : "scale/x_rel",
-				"field" : "data.domain"
-			},
-			"range" : "width",
-			"zero" : false,
-			"nice" : false,
-			"clamp" : false
-		},
-		{
-			"name" : "y_rel",
-			"domain" : {
-				"data" : "scale/y_rel",
-				"field" : "data.domain"
-			},
-			"range" : "height",
-			"zero" : false,
-			"nice" : false,
-			"clamp" : false
 		}
 	],
 	"marks" : [

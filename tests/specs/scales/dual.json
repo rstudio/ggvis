@@ -41,26 +41,6 @@
 				}
 			},
 			"values" : "\"domain\"\n-0.0339472385938279\n0.875679717061576"
-		},
-		{
-			"name" : "scale/x_rel",
-			"format" : {
-				"type" : "csv",
-				"parse" : {
-					"domain" : "number"
-				}
-			},
-			"values" : "\"domain\"\n0\n1"
-		},
-		{
-			"name" : "scale/y_rel",
-			"format" : {
-				"type" : "csv",
-				"parse" : {
-					"domain" : "number"
-				}
-			},
-			"values" : "\"domain\"\n0\n1"
 		}
 	],
 	"scales" : [
@@ -96,28 +76,6 @@
 			"nice" : false,
 			"clamp" : false,
 			"range" : "height"
-		},
-		{
-			"name" : "x_rel",
-			"domain" : {
-				"data" : "scale/x_rel",
-				"field" : "data.domain"
-			},
-			"range" : "width",
-			"zero" : false,
-			"nice" : false,
-			"clamp" : false
-		},
-		{
-			"name" : "y_rel",
-			"domain" : {
-				"data" : "scale/y_rel",
-				"field" : "data.domain"
-			},
-			"range" : "height",
-			"zero" : false,
-			"nice" : false,
-			"clamp" : false
 		}
 	],
 	"marks" : [

@@ -38,26 +38,6 @@
 				"parse" : null
 			},
 			"values" : "\"domain\"\n\"0.0073994412086904\"\n\"0.0807501375675201\"\n\"0.157208441523835\"\n\"0.600760886212811\"\n\"0.834333037259057\""
-		},
-		{
-			"name" : "scale/x_rel",
-			"format" : {
-				"type" : "csv",
-				"parse" : {
-					"domain" : "number"
-				}
-			},
-			"values" : "\"domain\"\n0\n1"
-		},
-		{
-			"name" : "scale/y_rel",
-			"format" : {
-				"type" : "csv",
-				"parse" : {
-					"domain" : "number"
-				}
-			},
-			"values" : "\"domain\"\n0\n1"
 		}
 	],
 	"scales" : [
@@ -93,28 +73,6 @@
 			"points" : true,
 			"sort" : false,
 			"range" : "category10"
-		},
-		{
-			"name" : "x_rel",
-			"domain" : {
-				"data" : "scale/x_rel",
-				"field" : "data.domain"
-			},
-			"range" : "width",
-			"zero" : false,
-			"nice" : false,
-			"clamp" : false
-		},
-		{
-			"name" : "y_rel",
-			"domain" : {
-				"data" : "scale/y_rel",
-				"field" : "data.domain"
-			},
-			"range" : "height",
-			"zero" : false,
-			"nice" : false,
-			"clamp" : false
 		}
 	],
 	"marks" : [
