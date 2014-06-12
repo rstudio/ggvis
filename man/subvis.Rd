@@ -6,8 +6,7 @@
 subvis(vis, ..., data = NULL)
 }
 \description{
-A subvis is a recursive mark: a mark that contain other marks. Compared
-to other marks, it can also contain scales, axes and legends.
+Create a subvisualisation.
 }
 \examples{
 library(dplyr, warn.conflicts = FALSE)
@@ -18,6 +17,7 @@ small <- nasaweather::atmos \%>\%
 small \%>\%
   ggvis(~long, ~lat) \%>\%
   layer_points()
+
 small \%>\%
   ggvis(~long, ~lat) \%>\%
   subvis(width := 20, height := 20, stroke := "red") \%>\%
