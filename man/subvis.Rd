@@ -20,7 +20,14 @@ small \%>\%
 
 small \%>\%
   ggvis(~long, ~lat) \%>\%
-  subvis(width := 20, height := 20, stroke := "red") \%>\%
+  subvis(width := 100, height := 100, stroke := "red") \%>\%
     layer_points(~month, ~ozone)
+
+small \%>\%
+  ggvis(~long, ~lat) \%>\%
+  subvis(width := 100, height := 100, stroke := "red") \%>\%
+    layer_points(~month, ~ozone) \%>\%
+    add_axis("x", ticks = 3) \%>\%
+    add_axis("y", ticks = 3)
 }
 
