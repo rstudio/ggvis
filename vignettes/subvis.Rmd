@@ -1,0 +1,82 @@
+# Subvis
+
+`subvis()` makes ggvis recursive: with `subvis()`, a visualisation can contain other visualisations. A subvisualisation is a tool for working with grouped data. Each group is displayed as a visualisation embedded in a larger context.
+
+Take this sample from the nasaweather data package. It selects a small number of locations for one year of data.
+
+```{r}
+small <- nasaweather::atmos %>%
+  filter(lat <= -11.217391, long <= -106.287, year == 1995) %>%
+  group_by(long, lat)
+```
+
+In a single grouped line chart, we can see how ozone varies over the course of the year.
+
+```{r}
+small %>%
+ ggvis(~month, ~ozone) %>%
+ layer_lines()
+```
+
+But we can't see how that pattern might vary in space. One way to look at both spatial and temporal patterns is draw the time series at the location where it was measured. That's what this code does:
+
+```{r}
+small %>%
+  ggvis(~long, ~lat) %>%
+  subvis(stroke := "grey50") %>%
+    layer_points(~month, ~ozone)
+```
+
+You can also imagine adding other data. For example, at the top-level (the parent visualisation) you might want to display a map:
+
+```{r}
+small %>%
+  ggvis(~long, ~lat) %>%
+  layer_lines(data = nasaweather::borders) %>%
+  subvis(stroke := "grey50") %>%
+    layer_points(~month, ~ozone)
+```
+
+In the simplest case, subvisualisations provide us with multiple position scales. In this example we have a top-level visualisation with position described by `long` and `lat`, and then embedded in that we have plots where position is described by `month` and `ozone`.
+
+## Marks
+
+A subvis uses a different type of mark, `mark_group()`. Compared to the other marks:
+
+* it is recursive in the sense that it contains other marks
+* it has scales, axes and legend properties.
+
+The data associated with a subvis must be grouped: each group will be displayed in a separate visulisation, embedded in the parent. The mark properties describe the layout of those subvisualisations, providing their location, size and (optionally) stroke and fill colours. The data is inherited by the children, but the properties are not.
+
+## Current visualisation
+
+Since a plot can contain multiple visualiations, we need some notion of the current visualsiation. This is used when you add marks, scales, axes and legends. Internally, every plot has a `cur_vis` property. If `cur_vis` is `NULL`, then the main visualisation is current. If it's a numeric vector of length one, then there's a child visualisation active and it's `mark_group()` is at that position in the list of marks.
+
+## Scales
+
+The most profound impact of a subvisualisation is on the scales. There are three types of scaling that you might want:
+
+* each subvisualisation shares a common scale for each property. The scales are 
+  indepedent of the parent scales. This is how facetting works.
+  
+* all subvisualisations use the same scales as the parent. This is how the 
+  vega examples of stacked bars and stacked areas works.
+  
+* each subvisualisation has its own scale for each property. This is equivalent
+  to free scales in ggplot2.
+
+(A single visualisation might use more than one scaling convention, for example if you wanted to implement dodging.)
+
+The consequences of these choices are described below.
+
+### Common scales
+
+* Scales needed inside subvis get a unique prefix.
+
+* The scale object is inserted inside the group mark, instead of at the top
+  level. This ensures that the range (e.g. height or width) uses the group 
+  size, not the overall plot size
+
+* As in a regular plot, a new scale dataset is added to the spec data.
+
+## Data
