@@ -12,23 +12,10 @@
 #' small %>%
 #'   ggvis(~long, ~lat) %>%
 #'   subvis(width := 20, height := 20, stroke := "red",
-#'     layer = function(x) x %>% layer_points(~month, ~ozone)
-#'
-#' .Last.value %>% add_axis("x"))
+#'     layer = function(x) x %>% layer_points(~month, ~ozone))
 subvis <- function(vis, ..., layer) {
   # Initial hacky implementation
   my_props <- merge_props(cur_props(vis), props(...))
-
-  # If height not supplied, use defaults
-  if (is.null(my_props$y2.update) && is.null(my_props$height.update)) {
-    y <- prop_value(my_props$y.update, cur_data(vis))
-    if (countable_prop_type(vector_type(y))) {
-      my_props$height.update <- prop("height", band())
-    } else {
-      # y2 <- substitute(y + res, list(y = my_props$y.update$value, res = resolution(y)))
-      my_props$y2.update <- prop("y2", y2)
-    }
-  }
 
   old <- set_prefix("xyz-")
   on.exit(set_prefix(old), add = TRUE)
