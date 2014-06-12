@@ -35,7 +35,12 @@
 #' @param subclass Class name for subclass.  Will have \code{scale_} prepended.
 #' @param override Should the domain specified by this ggvis_scale object
 #'   override other ggvis_scale objects for the same scale? Useful when domain is
-#'   manually specified.
+#'   manually specified. For example, by default, the domain of the scale
+#'   will contain the range of the data, but when this is TRUE, the specified
+#'   domain will override, and the domain can be smaller than the range of the
+#'   data. If \code{FALSE}, the \code{domain} will not behave this way. If
+#'   left \code{NULL}, then it will be treated as \code{TRUE} whenever
+#'   \code{domain} is non-NULL.
 #' @seealso \url{https://github.com/trifacta/vega/wiki/Scales}
 #' @export
 #' @keywords internal
@@ -44,7 +49,7 @@
 #' ggvis_scale("x", "ord")
 ggvis_scale <- function(property, name = property, label = name, type = NULL,
                         domain = NULL, range = NULL, reverse = NULL,
-                        round = NULL, ..., subclass = NULL, override = FALSE) {
+                        round = NULL, ..., subclass = NULL, override = NULL) {
   assert_that(is.string(name))
   assert_that(is.null(type) ||
               type %in% c("linear", "ordinal", "time", "utc", "log", "pow",
@@ -55,6 +60,11 @@ ggvis_scale <- function(property, name = property, label = name, type = NULL,
   if (!is.null(subclass)) {
     assert_that(is.string(subclass))
     subclass <- paste0("scale_", subclass)
+  }
+
+  # By default, if domain is specified, it should override other domains
+  if (is.null(override)) {
+    override <- if (!is.null(domain)) TRUE else FALSE
   }
 
   structure(

@@ -6,7 +6,7 @@
 scale_numeric(vis, property, domain = NULL, range = NULL, reverse = NULL,
   round = NULL, trans = NULL, clamp = NULL, exponent = NULL,
   nice = NULL, zero = NULL, expand = NULL, name = property,
-  label = NULL)
+  label = NULL, override = NULL)
 }
 \arguments{
 \item{vis}{A ggvis object.}
@@ -59,6 +59,15 @@ helpful for snapping to the pixel grid.}
 arbitrary name like "foo".}
 
 \item{label}{Label for the scale. Used for axis or legend titles.}
+
+\item{override}{Should the domain specified by this ggvis_scale object
+override other ggvis_scale objects for the same scale? Useful when domain is
+manually specified. For example, by default, the domain of the scale
+will contain the range of the data, but when this is TRUE, the specified
+domain will override, and the domain can be smaller than the range of the
+data. If \code{FALSE}, the \code{domain} will not behave this way. If
+left \code{NULL}, then it will be treated as \code{TRUE} whenever
+\code{domain} is non-NULL.}
 }
 \description{
 A numeric (quantitative) scale controls the mapping of continuous variables

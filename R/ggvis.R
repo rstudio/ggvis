@@ -292,7 +292,7 @@ register_scales_from_props <- function(vis, props) {
     scale_fun <- match.fun(paste0("scale_", type))
 
     vis <- scale_fun(vis, property = prop$property, name = prop$scale,
-                     label = label, domain = domain)
+                     label = label, domain = domain, override = FALSE)
     vis
   }
 
