@@ -63,9 +63,7 @@ ggvis_scale <- function(property, name = property, label = name, type = NULL,
   }
 
   # By default, if domain is specified, it should override other domains
-  if (is.null(override)) {
-    override <- !is.null(domain)
-  }
+  override <- override %||% !is.null(domain)
 
   structure(
     drop_nulls(c(
