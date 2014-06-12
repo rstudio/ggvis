@@ -57,6 +57,11 @@ ggvis_scale <- function(property, name = property, label = name, type = NULL,
     subclass <- paste0("scale_", subclass)
   }
 
+  # By default, if domain is specified, it should override other domains
+  if (is.null(override)) {
+    override <- if (!is.null(domain)) TRUE else FALSE
+  }
+
   structure(
     drop_nulls(c(
       list(
@@ -98,6 +103,11 @@ as.vega.ggvis_scale <- function(x) {
   x$expand <- NULL
 
   x
+}
+
+collapse_scales <- function(scales) {
+  by_name <- split(scales, vpluck(scales, "name", character(1)))
+  lapply(by_name, collapse_ggvis_scales)
 }
 
 # Takes a list of ggvis_scale objects and collapses them into a single
@@ -151,7 +161,7 @@ collapse_ggvis_scales <- function(scales) {
 
   domain <- collapse_domains(
     domains = pluck(scales, "domain"),
-    overrides = vpluck(scales, "override", logical(1)),
+    overrides = vapply(scales, function(x) x$override %||% FALSE, logical(1)),
     countable = scale_countable(scales[[1]])
   )
 

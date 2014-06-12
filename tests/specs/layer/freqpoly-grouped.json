@@ -25,26 +25,6 @@
 			]
 		},
 		{
-			"name" : "scale/x",
-			"format" : {
-				"type" : "csv",
-				"parse" : {
-					"domain" : "number"
-				}
-			},
-			"values" : "\"domain\"\n0.2\n6.8"
-		},
-		{
-			"name" : "scale/y",
-			"format" : {
-				"type" : "csv",
-				"parse" : {
-					"domain" : "number"
-				}
-			},
-			"values" : "\"domain\"\n-0.5\n10.5"
-		},
-		{
 			"name" : "scale/stroke",
 			"format" : {
 				"type" : "csv",
@@ -55,6 +35,16 @@
 			"values" : "\"domain\"\n4\n8"
 		},
 		{
+			"name" : "scale/x",
+			"format" : {
+				"type" : "csv",
+				"parse" : {
+					"domain" : "number"
+				}
+			},
+			"values" : "\"domain\"\n0.2\n6.8"
+		},
+		{
 			"name" : "scale/x_rel",
 			"format" : {
 				"type" : "csv",
@@ -63,6 +53,16 @@
 				}
 			},
 			"values" : "\"domain\"\n0\n1"
+		},
+		{
+			"name" : "scale/y",
+			"format" : {
+				"type" : "csv",
+				"parse" : {
+					"domain" : "number"
+				}
+			},
+			"values" : "\"domain\"\n-0.5\n10.5"
 		},
 		{
 			"name" : "scale/y_rel",
@@ -76,28 +76,6 @@
 		}
 	],
 	"scales" : [
-		{
-			"name" : "x",
-			"domain" : {
-				"data" : "scale/x",
-				"field" : "data.domain"
-			},
-			"zero" : false,
-			"nice" : false,
-			"clamp" : false,
-			"range" : "width"
-		},
-		{
-			"name" : "y",
-			"domain" : {
-				"data" : "scale/y",
-				"field" : "data.domain"
-			},
-			"zero" : false,
-			"nice" : false,
-			"clamp" : false,
-			"range" : "height"
-		},
 		{
 			"name" : "stroke",
 			"domain" : {
@@ -113,6 +91,17 @@
 			]
 		},
 		{
+			"name" : "x",
+			"domain" : {
+				"data" : "scale/x",
+				"field" : "data.domain"
+			},
+			"zero" : false,
+			"nice" : false,
+			"clamp" : false,
+			"range" : "width"
+		},
+		{
 			"name" : "x_rel",
 			"domain" : {
 				"data" : "scale/x_rel",
@@ -122,6 +111,17 @@
 			"zero" : false,
 			"nice" : false,
 			"clamp" : false
+		},
+		{
+			"name" : "y",
+			"domain" : {
+				"data" : "scale/y",
+				"field" : "data.domain"
+			},
+			"zero" : false,
+			"nice" : false,
+			"clamp" : false,
+			"range" : "height"
 		},
 		{
 			"name" : "y_rel",

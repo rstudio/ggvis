@@ -12,26 +12,6 @@
 			"values" : "\"x\",\"z\"\n1,0.0807501375675201\n2,0.834333037259057\n3,0.600760886212811\n4,0.157208441523835\n5,0.0073994412086904"
 		},
 		{
-			"name" : "scale/x",
-			"format" : {
-				"type" : "csv",
-				"parse" : {
-					"domain" : "number"
-				}
-			},
-			"values" : "\"domain\"\n-0.5\n10.5"
-		},
-		{
-			"name" : "scale/y",
-			"format" : {
-				"type" : "csv",
-				"parse" : {
-					"domain" : "number"
-				}
-			},
-			"values" : "\"domain\"\n0.8\n5.2"
-		},
-		{
 			"name" : "scale/fill",
 			"format" : {
 				"type" : "csv",
@@ -42,6 +22,16 @@
 			"values" : "\"domain\"\n0\n2"
 		},
 		{
+			"name" : "scale/x",
+			"format" : {
+				"type" : "csv",
+				"parse" : {
+					"domain" : "number"
+				}
+			},
+			"values" : "\"domain\"\n-0.5\n10.5"
+		},
+		{
 			"name" : "scale/x_rel",
 			"format" : {
 				"type" : "csv",
@@ -50,6 +40,16 @@
 				}
 			},
 			"values" : "\"domain\"\n0\n1"
+		},
+		{
+			"name" : "scale/y",
+			"format" : {
+				"type" : "csv",
+				"parse" : {
+					"domain" : "number"
+				}
+			},
+			"values" : "\"domain\"\n0.8\n5.2"
 		},
 		{
 			"name" : "scale/y_rel",
@@ -63,28 +63,6 @@
 		}
 	],
 	"scales" : [
-		{
-			"name" : "x",
-			"domain" : {
-				"data" : "scale/x",
-				"field" : "data.domain"
-			},
-			"zero" : false,
-			"nice" : false,
-			"clamp" : false,
-			"range" : "width"
-		},
-		{
-			"name" : "y",
-			"domain" : {
-				"data" : "scale/y",
-				"field" : "data.domain"
-			},
-			"zero" : false,
-			"nice" : false,
-			"clamp" : false,
-			"range" : "height"
-		},
 		{
 			"name" : "fill",
 			"domain" : {
@@ -100,6 +78,17 @@
 			]
 		},
 		{
+			"name" : "x",
+			"domain" : {
+				"data" : "scale/x",
+				"field" : "data.domain"
+			},
+			"zero" : false,
+			"nice" : false,
+			"clamp" : false,
+			"range" : "width"
+		},
+		{
 			"name" : "x_rel",
 			"domain" : {
 				"data" : "scale/x_rel",
@@ -109,6 +98,17 @@
 			"zero" : false,
 			"nice" : false,
 			"clamp" : false
+		},
+		{
+			"name" : "y",
+			"domain" : {
+				"data" : "scale/y",
+				"field" : "data.domain"
+			},
+			"zero" : false,
+			"nice" : false,
+			"clamp" : false,
+			"range" : "height"
 		},
 		{
 			"name" : "y_rel",

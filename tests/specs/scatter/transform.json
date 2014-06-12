@@ -19,16 +19,6 @@
 			"values" : "\"domain\"\n\"1\"\n\"2\"\n\"3\"\n\"4\"\n\"5\""
 		},
 		{
-			"name" : "scale/y",
-			"format" : {
-				"type" : "csv",
-				"parse" : {
-					"domain" : "number"
-				}
-			},
-			"values" : "\"domain\"\n-0.04\n5.24"
-		},
-		{
 			"name" : "scale/x_rel",
 			"format" : {
 				"type" : "csv",
@@ -37,6 +27,16 @@
 				}
 			},
 			"values" : "\"domain\"\n0\n1"
+		},
+		{
+			"name" : "scale/y",
+			"format" : {
+				"type" : "csv",
+				"parse" : {
+					"domain" : "number"
+				}
+			},
+			"values" : "\"domain\"\n-0.04\n5.24"
 		},
 		{
 			"name" : "scale/y_rel",
@@ -63,17 +63,6 @@
 			"padding" : 0.5
 		},
 		{
-			"name" : "y",
-			"domain" : {
-				"data" : "scale/y",
-				"field" : "data.domain"
-			},
-			"zero" : false,
-			"nice" : false,
-			"clamp" : false,
-			"range" : "height"
-		},
-		{
 			"name" : "x_rel",
 			"domain" : {
 				"data" : "scale/x_rel",
@@ -83,6 +72,17 @@
 			"zero" : false,
 			"nice" : false,
 			"clamp" : false
+		},
+		{
+			"name" : "y",
+			"domain" : {
+				"data" : "scale/y",
+				"field" : "data.domain"
+			},
+			"zero" : false,
+			"nice" : false,
+			"clamp" : false,
+			"range" : "height"
 		},
 		{
 			"name" : "y_rel",
