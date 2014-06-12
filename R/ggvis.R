@@ -289,6 +289,7 @@ register_scales_from_props <- function(vis, props) {
   for (i in seq_along(props)) {
     vis <- add_scale_from_prop(vis, props[[i]])
   }
+
   vis
 }
 

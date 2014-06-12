@@ -29,8 +29,8 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
   data_table <- x$data[data_ids]
 
   # Collapse each list of scale objects into one scale object.
-  x$scales <- collapse_scales(gather_scales(x))
-  scale_data_table <- scale_domain_data(x$scales)
+  x <- collapse_scales(x)
+  scale_data_table <- scale_domain_data(x)
 
   # Wrap each of the reactive data objects in another reactive which returns
   # only the columns that are actually used, and adds any calculated columns
@@ -87,14 +87,14 @@ gather_scales <- function(x) {
 
 #' @export
 as.vega.mark_group <- function(x, ...) {
-  scales <- lapply(x$scales, collapse_ggvis_scales)
+  this_scales <- vpluck(x$scales, "name", character(1))
 
   list(
     type = "group",
     properties = as.vega(x$props),
     from = list(data = data_id(x$data)),
     marks = lapply(x$marks, as.vega, in_group = TRUE),
-    scales = lapply(unname(scales), as.vega),
+    scales = lapply(unname(x$scales), as.vega),
     legends = lapply(x$legends, as.vega),
     axes = lapply(x$axes, as.vega)
   )
