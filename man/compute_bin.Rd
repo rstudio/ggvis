@@ -35,7 +35,7 @@ specified.}
 right-closed, left-open.}
 
 \item{pad}{If \code{TRUE}, adds empty bins at either end of x. This
-ensures frequency polygons touch 0, and adds padidng between the data
+ensures frequency polygons touch 0, and adds padding between the data
 and axis for histograms.}
 }
 \value{
