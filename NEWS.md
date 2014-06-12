@@ -1,5 +1,27 @@
 # ggvis 0.2.0.99
 
+* `add_guide_axis()` and `add_guide_legend()` have been replaced by
+  `add_axis()` and `add_legend()`. Also, the interface for `add_legend()` has
+  been simplified.
+
+* Added `hide_axis()` and `hide_legend()` functions.
+
+* When marks with a `band()` prop are added, the appropriate scale is
+  automatically set to have `points = FALSE`. (#128)
+
+* Continuous scales have a multiplicative expansion factor added by default,
+  with the `expand` parameter of scale functions.
+
+* Relative x and y scales for positioning of graphical elements can be added
+  with `add_relative_scales()`.
+
+* Added support for `strokeDash` property.
+
+* Added support for controlling width and height of image marks.
+
+* `prop()` objects have been modified so that they always record which scale
+  they use.
+
 * Removed `qvis()`: now the default behaviour of `ggvis()` is to add 
   `layer_guess()` if there are no layers on the plot already.
 
@@ -16,6 +38,8 @@
 * Dynamic plots now with with by_group. (#71)
 
 * Gear icon displays properly in Windows. (#159)
+
+* `layer_bars()` are now symmetrical about the x tick positions.
 
 * New `singular()` and corresponding `scale_singular()` make it easier to
   draw plots where x or y are constant (and hence uninteresting), such as
