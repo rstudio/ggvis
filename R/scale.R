@@ -58,17 +58,8 @@ propname_to_scale <- function(prop) {
 
   matches <- match(prop, names(simplify))
   prop[!is.na(matches)] <- simplify[prop[!is.na(matches)]]
-  paste0(get_prefix(), prop)
+  prop
 }
-
-# FIXME: do without global variable
-e <- new.env(parent = emptyenv())
-set_prefix <- function(x) {
-  old <- e$prefix
-  e$prefix <- x
-  invisible(old)
-}
-get_prefix <- function() e$prefix
 
 #' Given the type of a ggvis scale, get the name of its corresponding vega scale
 #'
