@@ -3,7 +3,7 @@
 \alias{subvis}
 \title{Create a subvisualisation.}
 \usage{
-subvis(vis, ..., layer)
+subvis(vis, ..., data = NULL)
 }
 \description{
 A subvis is a recursive mark: a mark that contain other marks. Compared
@@ -17,7 +17,12 @@ small <- nasaweather::atmos \%>\%
   group_by(long, lat)
 small \%>\%
   ggvis(~long, ~lat) \%>\%
-  subvis(width := 20, height := 20, stroke := "red",
-    layer = function(x) x \%>\% layer_points(~month, ~ozone))
+  layer_points()
+small \%>\%
+  ggvis(~long, ~lat) \%>\%
+  subvis(width := 20, height := 20, stroke := "red") \%>\%
+    layer_points(
+      prop("x", ~month, scale = "x2"),
+      prop("y", ~ozone, scale = "y2"))
 }
 
