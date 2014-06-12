@@ -2,10 +2,15 @@ library(nasaweather)
 library(ggvis)
 library(dplyr)
 
+# Compare to ggplot2 order is going to be important:
+# in ggplot2 it didn't matter where the facetting specification appeared,
+# it affected all datasets. But in ggvis, subvis only affects data after.
+# This is probably easier for people to reason about.
+
 nasa %>%
   group_by(lat, long) %>%
   ggvis(~lat, ~long) %>%
-  layer_groups()
+  subvis()
 
 # Mostly eqiuvalent to
 nasa %>%
@@ -14,11 +19,10 @@ nasa %>%
   layer_rect()
 # because a group mark is a rect mark with children
 
-
 nasa %>%
   group_by(lat, long) %>%
   ggvis(~lat, ~long) %>%
-  layer_groups() %>%
+  subvis() %>%
   layer_lines(~time, ~temp) # added to children of group
 
 # Categorical top-level (facetting) --------------------------------------------
@@ -28,7 +32,7 @@ nasa %>%
 nasa %>%
   group_by(year, month) %>%
   ggvis(~year, ~month) %>%
-  layer_groups() %>%
+  subvis() %>%
   layer_tile(~long, ~lat, fill = ~ozone)
 
 # Or maybe:
@@ -106,12 +110,12 @@ atmos %>%
 
 # Isolation --------------------------------------------------------------------
 
-# If you don't want layer_groups() to affect subsequent layers,
+# If you don't want subvis() to affect subsequent layers,
 # use layer function to insulate:
 nasa %>%
   group_by(lat, long) %>%
   ggvis(~lat, ~long) %>%
-  layer(x %>% layer_groups() %>% layer_lines(~time, ~temp))
+  layer(x %>% subvis() %>% layer_lines(~time, ~temp))
 
 # This is most important when setting scales & axes.
 # But it's also important if you want high-level data underneath low-level

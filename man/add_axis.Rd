@@ -4,7 +4,7 @@
 \alias{hide_axis}
 \title{Add a vega axis specification to a ggvis plot}
 \usage{
-add_axis(vis, type, scale = type, orient = NULL, title = NULL,
+add_axis(vis, type, scale = NULL, orient = NULL, title = NULL,
   title_offset = NULL, format = NULL, ticks = NULL, values = NULL,
   subdivide = NULL, tick_padding = NULL, tick_size_major = NULL,
   tick_size_minor = tick_size_major, tick_size_end = tick_size_major,

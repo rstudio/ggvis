@@ -1,3 +1,8 @@
+#' Create a subvisualisation.
+#'
+#' A subvis is a recursive mark: a mark that contain other marks. Compared
+#' to other marks, it can also contain scales, axes and legends.
+#'
 #' @examples
 #' library(dplyr, warn.conflicts = FALSE)
 #'
@@ -6,35 +11,27 @@
 #'   group_by(long, lat)
 #' small %>%
 #'   ggvis(~long, ~lat) %>%
-#'   subvis(width := 20, height := 20,
-#'     layer = function(x) x %>% layer_points(~month, ~ozone))
-
-
-#' A subvis is a recursive mark: a mark that contain other marks. Compared
-#' to other marks, it can also contain scales, axes and legends.
+#'   subvis(width := 20, height := 20, stroke := "red",
+#'     layer = function(x) x %>% layer_points(~month, ~ozone)
 #'
-#' Once you've started a subvis, scale_*(), add_axis() and add_legend().
-#' These functions will need to be modified to modify the properties on
-#' the last mark (if it's is a sbuvis)
-#'
-#' Flatten needs to be recursive (again) - it has to spider through all
-#' the datasets including the child.
-#'
-#' Can't change data sets inside a group - need to overlay multiple groups
-
-#' Scale options:
-#'
-#' * new (shared) scale across panels (default) (scales = "shared")
-#'    - needs to modify default scale names to include
-#' * use parent scales (scales = "parent")
-#' * totally free scales (scales = "free")
-#' * mixed of free and shared scales (scales = "constrained")
+#' .Last.value %>% add_axis("x"))
 subvis <- function(vis, ..., layer) {
-  old <- set_prefix("xyz-")
-  on.exit(set_prefix(old), add = TRUE)
-
   # Initial hacky implementation
   my_props <- merge_props(cur_props(vis), props(...))
+
+  # If height not supplied, use defaults
+  if (is.null(my_props$y2.update) && is.null(my_props$height.update)) {
+    y <- prop_value(my_props$y.update, cur_data(vis))
+    if (countable_prop_type(vector_type(y))) {
+      my_props$height.update <- prop("height", band())
+    } else {
+      # y2 <- substitute(y + res, list(y = my_props$y.update$value, res = resolution(y)))
+      my_props$y2.update <- prop("y2", y2)
+    }
+  }
+
+  old <- set_prefix("xyz-")
+  on.exit(set_prefix(old), add = TRUE)
   my_data <- vis$data[[length(vis$data)]]
   vis <- register_scales_from_props(vis, my_props)
 
@@ -74,5 +71,7 @@ subvis <- function(vis, ..., layer) {
 
   vis
 }
+
+
 
 is.subvis <- function(x) inherits(x, "subvis")
