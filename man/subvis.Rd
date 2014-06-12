@@ -3,7 +3,7 @@
 \alias{subvis}
 \title{Create a subvisualisation.}
 \usage{
-subvis(vis, ..., data = NULL)
+subvis(vis, ..., data = NULL, width = NULL, height = NULL)
 }
 \description{
 Create a subvisualisation.
@@ -21,8 +21,6 @@ small \%>\%
 small \%>\%
   ggvis(~long, ~lat) \%>\%
   subvis(width := 20, height := 20, stroke := "red") \%>\%
-    layer_points(
-      prop("x", ~month, scale = "x2"),
-      prop("y", ~ozone, scale = "y2"))
+    layer_points(~month, ~ozone)
 }
 

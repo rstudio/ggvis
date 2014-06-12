@@ -134,8 +134,22 @@ add_mark <- function(vis, type = NULL, props = NULL, data = NULL,
   old_data <- vis$cur_data
   old_props <- vis$cur_props
 
+  # If we're in a subvis, modify scale names to include prefix
+  # FIXME: figure out how to avoid this in order to specify parent scales
+  # Maybe some attribute? e.g. scale = parent("x")
+  if (!is.null(vis$cur_vis)) {
+    suffix <- paste0(vis$cur_vis, collapse = "-")
+    props <- lapply(props, function(x) {
+      if (identical(x$scale, FALSE)) return(x)
+      x$scale <- paste0(x$scale, suffix)
+      x
+    })
+  }
+
   vis <- add_data(vis, data, data_name)
   vis <- add_props(vis, .props = props)
+
+
   vis <- register_scales_from_props(vis, cur_props(vis))
 
   new_mark <- mark(type, props = cur_props(vis), data = vis$cur_data)

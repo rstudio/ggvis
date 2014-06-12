@@ -13,10 +13,8 @@
 #' small %>%
 #'   ggvis(~long, ~lat) %>%
 #'   subvis(width := 20, height := 20, stroke := "red") %>%
-#'     layer_points(
-#'       prop("x", ~month, scale = "x2"),
-#'       prop("y", ~ozone, scale = "y2"))
-subvis <- function(vis, ..., data = NULL) {
+#'     layer_points(~month, ~ozone)
+subvis <- function(vis, ..., data = NULL, width = NULL, height = NULL) {
   # Very similar to add_mark, but changes to cur_data and cur_props are
   # persistent, we use the special mark_group() and update cur_vis
   vis <- add_data(vis, data, deparse2(substitute(data)))
@@ -31,9 +29,6 @@ subvis <- function(vis, ..., data = NULL) {
   vis$cur_props <- NULL
   vis$cur_vis <- c(vis$cur_vis, length(vis$marks))
   vis
-
-#   old <- set_prefix("xyz-")
-#   on.exit(set_prefix(old), add = TRUE)
 
   vis
 }

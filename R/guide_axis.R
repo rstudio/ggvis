@@ -84,7 +84,11 @@ add_axis <- function(vis, type, scale = NULL, orient = NULL, title = NULL,
                        layer = "back", grid = TRUE, properties = NULL) {
 
   if (is.null(scale)) {
-    scale <- paste0(get_prefix(), type)
+    if (is.null(vis$cur_vis)) {
+      scale <- type
+    } else {
+      scale <- paste0(type, paste0(vis$cur_vis, collapse = "-"))
+    }
   }
 
   axis <- create_axis(type, scale, orient, title, title_offset, format,
