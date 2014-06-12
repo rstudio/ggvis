@@ -10,7 +10,7 @@
 #'  combine_data_props()
 combine_data_props <- function(mark) {
   if (is.ggvis(mark)) return(combine_data_props(mark$marks))
-  if (inherits(mark, "mark")) {
+  if (identical(class(mark), "mark")) {
     return(setNames(list(mark$props), data_id(mark$data)))
   }
 

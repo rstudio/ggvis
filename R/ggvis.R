@@ -356,15 +356,15 @@ view_spec <- function(path, ...) {
   view_static(spec)
 }
 
-append_ggvis <- function(vis, field, mark) {
+append_ggvis <- function(vis, field, x) {
   i <- vis$cur_vis
   if (length(i) == 0) {
-    vis[[field]] <- c(vis[[field]], list(mark))
+    vis[[field]] <- c(vis[[field]], list(x))
   } else if (length(i) == 1) {
-    vis$marks[[i]][[field]] <- c(vis$marks[[i]][[field]], list(mark))
+    vis$marks[[i]][[field]] <- c(vis$marks[[i]][[field]], list(x))
   } else if (length(i) == 2) {
     vis$marks[[i[1]]]$marks[[i[2]]][[field]] <-
-      c(vis$marks[[i[1]]]$marks[[i[2]]][[field]], list(mark))
+      c(vis$marks[[i[1]]]$marks[[i[2]]][[field]], list(x))
   } else {
     stop(">3 levels deep? You must be crazy!", call. = FALSE)
   }

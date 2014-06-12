@@ -17,6 +17,8 @@ as.vega <- function(x, ...) {
 #' @param session a session object from shiny
 #' @param dynamic whether to generate dynamic or static spec
 as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
+  # Any changes to default should happen at top-level
+  x$cur_vis <- NULL
 
   if (length(x$marks) == 0) {
     x <- layer_guess(x)
@@ -87,7 +89,7 @@ gather_scales <- function(x) {
 }
 
 #' @export
-as.vega.subvis <- function(x, ...) {
+as.vega.mark_group <- function(x, ...) {
   scales <- lapply(x$scales, collapse_ggvis_scales)
 
   list(
