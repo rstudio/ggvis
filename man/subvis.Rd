@@ -18,8 +18,6 @@ small <- nasaweather::atmos \%>\%
 small \%>\%
   ggvis(~long, ~lat) \%>\%
   subvis(width := 20, height := 20, stroke := "red",
-    layer = function(x) x \%>\% layer_points(~month, ~ozone)
-
-.Last.value \%>\% add_axis("x"))
+    layer = function(x) x \%>\% layer_points(~month, ~ozone))
 }
 
