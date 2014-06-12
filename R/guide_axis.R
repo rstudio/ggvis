@@ -76,12 +76,16 @@
 #'       axis = list(stroke = "#333", strokeWidth = 1.5)
 #'     )
 #'   )
-add_axis <- function(vis, type, scale = type, orient = NULL, title = NULL,
+add_axis <- function(vis, type, scale = NULL, orient = NULL, title = NULL,
                        title_offset = NULL, format = NULL, ticks = NULL,
                        values = NULL, subdivide = NULL, tick_padding = NULL,
                        tick_size_major = NULL, tick_size_minor = tick_size_major,
                        tick_size_end = tick_size_major, offset = NULL,
                        layer = "back", grid = TRUE, properties = NULL) {
+
+  if (is.null(scale)) {
+    scale <- paste0(get_prefix(), type)
+  }
 
   axis <- create_axis(type, scale, orient, title, title_offset, format,
                       ticks, values, subdivide, tick_padding,
