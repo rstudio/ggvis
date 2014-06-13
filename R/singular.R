@@ -47,11 +47,11 @@ vector_type.singular <- function(x) "singular"
 #' @export
 #' @inheritParams scale_nominal
 scale_singular <- function(vis, property, name = property, label = name,
-                           points = TRUE, domain = NULL) {
+                           points = TRUE, domain = NULL, override = NULL) {
   # Some of the arguments are ignored; they're there to provide a consistent
   # interface with other scales
   vis <- scale_nominal(vis, domain = "", property = property, name = name,
-                           label = "", points = points)
+                           label = "", points = points, override = override)
   vis <- add_axis(vis, property, tick_size_major = 0)
   vis
 }

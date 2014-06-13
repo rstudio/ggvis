@@ -7,7 +7,7 @@
 singular()
 
 scale_singular(vis, property, name = property, label = name,
-  points = TRUE, domain = NULL)
+  points = TRUE, domain = NULL, override = NULL)
 }
 \arguments{
 \item{vis}{A ggvis object.}
@@ -30,6 +30,15 @@ that prop will automatically have \code{points} set to \code{FALSE}.}
 For ordinal scales, a character vector; for quantitative scales, a numeric
 vector of length two. Either value (but not both) may be NA, in which
 case \code{domainMin} or \code{domainMax} is set.}
+
+\item{override}{Should the domain specified by this ggvis_scale object
+override other ggvis_scale objects for the same scale? Useful when domain is
+manually specified. For example, by default, the domain of the scale
+will contain the range of the data, but when this is TRUE, the specified
+domain will override, and the domain can be smaller than the range of the
+data. If \code{FALSE}, the \code{domain} will not behave this way. If
+left \code{NULL}, then it will be treated as \code{TRUE} whenever
+\code{domain} is non-NULL.}
 }
 \description{
 Use singular when you want constant x or y position.
