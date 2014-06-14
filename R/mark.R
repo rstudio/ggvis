@@ -30,7 +30,7 @@ mark <- function(type, props, data) {
 is.mark <- function(x) inherits(x, "mark")
 
 check_mark_props <- function(type, props) {
-  props <- trim_propset(props)
+  props <- trim_prop_event(props)
   valid <- valid_props[[type]]
 
   invalid <- setdiff(props, valid)

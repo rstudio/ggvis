@@ -172,9 +172,9 @@ Modify the fill color and bin width, and add titles for the axes, since the auto
 
 ```{r, message = FALSE}
 faithful %>% ggvis(~eruptions, fill := "#fff8dc") %>%
-  layer_histograms(width = 0.25) %>%
-  add_guide_axis("x", title = "eruptions") %>%
-  add_guide_axis("y", title = "count")
+  layer_histograms(binwidth = 0.25) %>%
+  add_axis("x", title = "eruptions") %>%
+  add_axis("y", title = "count")
 ```
 
 By default, when the number of integer values is small, bins will 

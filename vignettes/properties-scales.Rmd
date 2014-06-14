@@ -146,11 +146,11 @@ constant    | no     | Pixel location, or exact colour | `x := 1`
 ### Special evaluation and variables
 
 `prop()` doesn't do any special evaluation which means that you if you want a
-variable, you need to supply a quoted expression or a one-sided formula:
+variable, you need to supply the name of a property, and a quoted expression or a one-sided formula:
 
 ```{r}
-prop(quote(x))
-prop(~ x)
+prop("x", quote(mpg))
+prop("y", ~cyl)
 ```
 
 If you have the name of a variable as a string, you can convert it a name with
@@ -158,7 +158,7 @@ If you have the name of a variable as a string, you can convert it a name with
 
 ```{r}
 var <- "mpg"
-prop(as.name(var))
+prop("x", as.name(var))
 ```
 
 If you have an R expression as a string, `parse()` it then extract the first
@@ -166,7 +166,7 @@ element of the result:
 
 ```{r}
 expr <- "mpg / wt"
-prop(parse(text = expr)[[1]])
+prop("x", parse(text = expr)[[1]])
 ```
 
 ## Properties -> scales
@@ -281,13 +281,11 @@ If you do this, you will also need to add a scale object.
 
 ```{r}
 mtcars %>% ggvis(y = ~mpg) %>%
-  layer_points(x = prop(~disp, scale = "xdisp")) %>%
-  layer_points(x = prop(~wt, scale = "xwt"), fill := "blue") %>% 
-  scale_numeric("x", name = "xdisp") %>%
-  scale_numeric("x", name = "xwt") %>%
-  add_guide_axis("x", "xdisp", orient = "bottom") %>%
-  add_guide_axis("x", "xwt", orient = "bottom", offset = 20, 
-    properties = axis_props(labels = props(fill := "blue")))
+  layer_points(prop("x", ~disp, scale = "xdisp")) %>%
+  layer_points(prop("x", ~wt, scale = "xwt"), fill := "blue") %>%
+  add_axis("x", "xdisp", orient = "bottom") %>%
+  add_axis("x", "xwt", orient = "bottom", offset = 20,
+    properties = axis_props(labels = list(fill = "blue")))
 ```
 
 ### Multiple properties for one scale
@@ -303,15 +301,13 @@ df %>%
   ggvis(x = ~x, y = ~y, stroke = ~a, fill = ~b, 
     strokeWidth := 5, size := 1000) %>%
   layer_points() %>%
-  add_guide_legend(fill = "stroke", 
-    properties = legend_props(legend = list(y = 50)))
+  add_legend("stroke", properties = legend_props(legend = list(y = 50)))
 
 df %>% 
-  ggvis(x = ~x, y = ~y, stroke = ~a, fill = prop(~b, scale = "stroke"), 
+  ggvis(x = ~x, y = ~y, stroke = ~a, prop("fill", ~b, scale = "stroke"),
     strokeWidth := 5, size := 1000) %>%
   layer_points() %>%
-  add_guide_legend(fill = "stroke", 
-    properties = legend_props(legend = list(y = 50)))
+  add_legend("stroke", properties = legend_props(legend = list(y = 50)))
 ```
 
 In this case we don't need to manually add the correct scale, because ggvis

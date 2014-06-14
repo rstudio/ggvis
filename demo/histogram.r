@@ -2,7 +2,7 @@ library(ggvis)
 
 # Histogram, fully specified
 mtcars %>% ggvis(x = ~wt) %>%
-  compute_bin(~wt, binwidth = 1) %>%
+  compute_bin(~wt, binwidth = 1, pad = FALSE) %>%
   layer_rects(x = ~xmin_, x2 = ~xmax_, y = ~count_, y2 = 0)
 
 # Or using shorthand layer

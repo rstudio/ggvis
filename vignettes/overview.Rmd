@@ -37,9 +37,9 @@ Histogram:
 ```{r, echo = FALSE, fig.width = 4}
 # Histogram
 faithful %>% ggvis(~eruptions, fill := "#ffffdd", fill.hover := "#eebbbb") %>%
-  layer_histograms(width = 0.2, boundary=0.0) %>%
-  add_guide_axis("x", title = "eruptions") %>%
-  add_guide_axis("y", title = "count")
+  layer_histograms(binwidth = 0.2) %>%
+  add_axis("x", title = "eruptions") %>%
+  add_axis("y", title = "count")
 ```
 
 Scatterplot with smooth curve and interactive control:

@@ -51,10 +51,15 @@
 #' @examples
 #' mtcars %>% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) %>%
 #'   layer_points() %>%
-#'   add_guide_axis("x", title = "Weight", orient = "top")
+#'   add_axis("x", title = "Weight", orient = "top")
+#'
+#' # Suppress axis with hide_axis
+#' mtcars %>% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) %>%
+#'   layer_points() %>%
+#'   hide_axis("x") %>% hide_axis("y")
 #'
 #' mtcars %>% ggvis(x = ~wt, y = ~mpg) %>% layer_points() %>%
-#'   add_guide_axis("x", title = "Weight", ticks = 40,
+#'   add_axis("x", title = "Weight", ticks = 40,
 #'     properties = axis_props(
 #'       ticks = list(stroke = "red"),
 #'       majorTicks = list(strokeWidth = 2),
@@ -71,23 +76,39 @@
 #'       axis = list(stroke = "#333", strokeWidth = 1.5)
 #'     )
 #'   )
-add_guide_axis <- function(vis, type, scale = type, orient = NULL, title = NULL,
-                           title_offset = NULL, format = NULL, ticks = NULL,
-                           values = NULL, subdivide = NULL, tick_padding = NULL,
-                           tick_size_major = NULL, tick_size_minor = tick_size_major,
-                           tick_size_end = tick_size_major, offset = NULL,
-                           layer = "back", grid = TRUE, properties = NULL) {
+add_axis <- function(vis, type, scale = type, orient = NULL, title = NULL,
+                       title_offset = NULL, format = NULL, ticks = NULL,
+                       values = NULL, subdivide = NULL, tick_padding = NULL,
+                       tick_size_major = NULL, tick_size_minor = tick_size_major,
+                       tick_size_end = tick_size_major, offset = NULL,
+                       layer = "back", grid = TRUE, properties = NULL) {
 
-  axis <- guide_axis(type, scale, orient, title, title_offset, format, ticks,
-                     values, subdivide, tick_padding, tick_size_major,
-                     tick_size_minor, tick_size_end, offset,
-                     layer, grid, properties)
+  axis <- create_axis(type, scale, orient, title, title_offset, format,
+                      ticks, values, subdivide, tick_padding,
+                      tick_size_major, tick_size_minor, tick_size_end,
+                      offset, layer, grid, properties)
 
-  add_axis(vis, axis)
+  register_axis(vis, axis)
+}
+
+#' @rdname add_axis
+#' @export
+hide_axis <- function(vis, scale) {
+  axis <- structure(list(scale = scale, hide = TRUE), class = "ggvis_axis")
+  register_axis(vis, axis)
+}
+
+#' Defunct function for adding an axis
+#'
+#' This function has been replaced with \code{\link{add_axis}}.
+#' @param ... Other arguments.
+#' @export
+add_guide_axis <- function(...) {
+  stop("add_guide_axis() has been replaced by add_axis().")
 }
 
 # Create an axis object.
-guide_axis <- function(type, scale = type, orient = NULL, title = NULL,
+create_axis <- function(type, scale = type, orient = NULL, title = NULL,
                  title_offset = NULL, format = NULL, ticks = NULL,
                  values = NULL, subdivide = NULL, tick_padding = NULL,
                  tick_size_major = NULL, tick_size_minor = tick_size_major,
@@ -115,7 +136,7 @@ guide_axis <- function(type, scale = type, orient = NULL, title = NULL,
       tickSizeMajor = tick_size_major, tickSizeMinor = tick_size_minor,
       tickSizeEnd = tick_size_end, offset = offset, layer = layer,
       grid = grid, properties = properties
-  )), class = "vega_axis")
+  )), class = "ggvis_axis")
 }
 
 
@@ -127,11 +148,7 @@ add_missing_axes <- function(vis) {
   missing <- setdiff(intersect(names(scales), c("x", "y")), present)
 
   for (scale in missing) {
-    axes[[scale]] <- guide_axis(scale)
-  }
-
-  for (axis in axes) {
-    vis <- add_axis(vis, axis)
+    vis <- add_axis(vis, scale)
   }
   vis
 }
@@ -143,14 +160,10 @@ apply_axes_defaults <- function(vis) {
 
   axes <- lapply(axes, function(axis) {
     scale <- scales[[axis$scale]]
-    info <- vis$scale_info[[axis$scale]]
 
     # If we don't have a title, try to get it from the scale.
-    # Domain can be a named list with the field, in which case we can get the
-    # title from the field; or it can be a vector of explicitly-set values, in
-    # which case we can't automatically get the title from the scale.
-    if (is.null(axis$title) && is.list(scale$domain)) {
-      axis$title <- info$label[1]
+    if (is.null(axis$title)) {
+      axis$title <- scale$label
     }
 
     axis
@@ -162,7 +175,7 @@ apply_axes_defaults <- function(vis) {
 }
 
 #' @export
-format.vega_axis <- function(x, ...) {
+format.ggvis_axis <- function(x, ...) {
   params <- param_string(x, collapse = FALSE)
   param_s <- paste0("  ", format(paste0(names(params), ":")), " ", format(params),
     collapse = "\n")
@@ -171,4 +184,4 @@ format.vega_axis <- function(x, ...) {
 }
 
 #' @export
-print.vega_axis <- function(x, ...) cat(format(x, ...), "\n", sep = "")
+print.ggvis_axis <- function(x, ...) cat(format(x, ...), "\n", sep = "")

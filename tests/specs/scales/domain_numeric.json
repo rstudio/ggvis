@@ -19,7 +19,7 @@
 					"domain" : "number"
 				}
 			},
-			"values" : "\"domain\"\n0\n10"
+			"values" : "\"domain\"\n-0.5\n10.5"
 		},
 		{
 			"name" : "scale/y",
@@ -29,7 +29,7 @@
 					"domain" : "number"
 				}
 			},
-			"values" : "\"domain\"\n1\n5"
+			"values" : "\"domain\"\n0.8\n5.2"
 		},
 		{
 			"name" : "scale/fill",
@@ -45,70 +45,39 @@
 	"scales" : [
 		{
 			"name" : "x",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
 			"domain" : {
 				"data" : "scale/x",
 				"field" : "data.domain"
 			},
-			"clamp" : false,
-			"nice" : true,
 			"zero" : false,
+			"nice" : false,
+			"clamp" : false,
 			"range" : "width"
 		},
 		{
+			"name" : "y",
+			"domain" : {
+				"data" : "scale/y",
+				"field" : "data.domain"
+			},
+			"zero" : false,
+			"nice" : false,
+			"clamp" : false,
+			"range" : "height"
+		},
+		{
 			"name" : "fill",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
 			"domain" : {
 				"data" : "scale/fill",
 				"field" : "data.domain"
 			},
-			"clamp" : false,
-			"nice" : true,
 			"zero" : false,
+			"nice" : false,
+			"clamp" : false,
 			"range" : [
 				"#132B43",
 				"#56B1F7"
 			]
-		},
-		{
-			"name" : "y",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
-			"clamp" : false,
-			"nice" : true,
-			"zero" : false,
-			"range" : "height",
-			"domain" : {
-				"data" : "scale/y",
-				"field" : "data.domain"
-			}
-		},
-		{
-			"name" : "x_rel",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
-			"domain" : [
-				0,
-				1
-			],
-			"range" : "width"
-		},
-		{
-			"name" : "y_rel",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
-			"domain" : [
-				0,
-				1
-			],
-			"range" : "height"
 		}
 	],
 	"marks" : [
@@ -147,8 +116,8 @@
 	"height" : 400,
 	"legends" : [
 		{
-			"fill" : "fill",
 			"orient" : "right",
+			"fill" : "fill",
 			"title" : "z"
 		}
 	],

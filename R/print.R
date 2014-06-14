@@ -122,15 +122,10 @@ is.dynamic <- function(x) {
   any_apply(x$data, shiny::is.reactive) || length(x$reactives) > 0
 }
 
-#' @export
-print.showUrl <- function(x, ...) {
-  view_plot(x, 350)
-}
-
 # View using either an internal viewer or fallback to utils::browseURL
 view_plot <- function(url, height) {
   viewer <- getOption("viewer")
-  if (!is.null(viewer) && getOption("ggvis.view_internal", TRUE)) {
+  if (!is.null(viewer)) {
     viewer(url, height)
   } else {
     utils::browseURL(url)

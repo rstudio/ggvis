@@ -1,7 +1,7 @@
 #' Guess the right type of layer based on current properties.
 #'
 #' \code{layer_guess} provides the magic behind the default behaviour of
-#' \code{\link{qvis}}.
+#' \code{\link{ggvis}}.
 #'
 #' @section Defaults:
 #'
@@ -16,11 +16,11 @@
 #' @export
 #' @examples
 #' # A scatterplot:
-#' mtcars %>% qvis(~mpg, ~wt)
+#' mtcars %>% ggvis(~mpg, ~wt)
 #' mtcars %>% ggvis(~mpg, ~wt) %>% layer_guess()
 #'
 #' # A histogram:
-#' mtcars %>% qvis(~mpg)
+#' mtcars %>% ggvis(~mpg)
 #' mtcars %>% ggvis(~mpg) %>% layer_guess()
 layer_guess <- function(vis, ...) {
   types <- lapply(vis$cur_props, function(x) {
@@ -72,7 +72,7 @@ templates <- list(
 closest <- function(data, templates) {
   ds <- vapply(templates, distance_n, data = data, FUN.VALUE = numeric(1))
   if (!any(is.finite(ds))) {
-    stop("No matching templates found", call. = FALSE)
+    stop("Don't now how to guess a layer for this type of data", call. = FALSE)
   }
 
   templates[[which.min(ds)]]$layer

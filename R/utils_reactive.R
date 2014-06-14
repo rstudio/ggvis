@@ -10,19 +10,14 @@ reactive_id <- function(x) {
 
 # Pull reactives out of various types of objects
 extract_reactives <- function(x) UseMethod("extract_reactives")
-
 #' @export
 extract_reactives.ggvis_props <- function(x) {
   compact(lapply(x, extract_reactives))
 }
-
 #' @export
-extract_reactives.prop <- function(x, session = NULL, ...) {
-  if (x$type == "reactive")
-    x$value
-  else
-    NULL
-}
+extract_reactives.prop_reactive <- function(x) x$value
+#' @export
+extract_reactives.default <- function(x) NULL
 
 # Get the value of a reactive or non-reactive object.
 value <- function(x) UseMethod("value")

@@ -20,7 +20,7 @@
 					"domain" : "number"
 				}
 			},
-			"values" : "\"domain\"\n1\n5"
+			"values" : "\"domain\"\n0.8\n5.2"
 		},
 		{
 			"name" : "scale/y-y",
@@ -30,7 +30,7 @@
 					"domain" : "number"
 				}
 			},
-			"values" : "\"domain\"\n1\n5"
+			"values" : "\"domain\"\n0.8\n5.2"
 		},
 		{
 			"name" : "scale/y-z",
@@ -40,72 +40,41 @@
 					"domain" : "number"
 				}
 			},
-			"values" : "\"domain\"\n0.0073994412086904\n0.834333037259057"
+			"values" : "\"domain\"\n-0.0339472385938279\n0.875679717061576"
 		}
 	],
 	"scales" : [
 		{
-			"name" : "y-y",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
-			"clamp" : false,
-			"nice" : true,
-			"zero" : false,
-			"range" : "height",
-			"domain" : {
-				"data" : "scale/y-y",
-				"field" : "data.domain"
-			}
-		},
-		{
-			"name" : "y-z",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
-			"clamp" : false,
-			"nice" : true,
-			"zero" : false,
-			"range" : "height",
-			"domain" : {
-				"data" : "scale/y-z",
-				"field" : "data.domain"
-			}
-		},
-		{
 			"name" : "x",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
-			"clamp" : false,
-			"nice" : true,
-			"zero" : false,
-			"range" : "width",
 			"domain" : {
 				"data" : "scale/x",
 				"field" : "data.domain"
-			}
-		},
-		{
-			"name" : "x_rel",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
-			"domain" : [
-				0,
-				1
-			],
+			},
+			"zero" : false,
+			"nice" : false,
+			"clamp" : false,
 			"range" : "width"
 		},
 		{
-			"name" : "y_rel",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
-			"domain" : [
-				0,
-				1
-			],
+			"name" : "y-y",
+			"domain" : {
+				"data" : "scale/y-y",
+				"field" : "data.domain"
+			},
+			"zero" : false,
+			"nice" : false,
+			"clamp" : false,
+			"range" : "height"
+		},
+		{
+			"name" : "y-z",
+			"domain" : {
+				"data" : "scale/y-z",
+				"field" : "data.domain"
+			},
+			"zero" : false,
+			"nice" : false,
+			"clamp" : false,
 			"range" : "height"
 		}
 	],

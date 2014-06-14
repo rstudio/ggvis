@@ -19,16 +19,15 @@ as.vega <- function(x, ...) {
 as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
 
   if (length(x$marks) == 0) {
-    stop("No marks on plot.", call. = FALSE)
+    x <- layer_guess(x)
   }
 
   data_ids <- extract_data_ids(x$marks)
   data_table <- x$data[data_ids]
 
-  # Collapse each scale's list of scale_info objects into one scale_info object
-  # per scale.
-  x$scale_info <- summarize_scale_infos(x$scale_info)
-  scale_data_table <- scale_domain_data(x$scale_info)
+  # Collapse each list of scale objects into one scale object.
+  x$scales <- lapply(x$scales, collapse_ggvis_scales)
+  scale_data_table <- scale_domain_data(x$scales)
 
   # Wrap each of the reactive data objects in another reactive which returns
   # only the columns that are actually used, and adds any calculated columns
@@ -50,7 +49,6 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
 
   # Each of these operations results in a more completely specified (and still
   # valid) ggvis object
-  x <- add_missing_scales(x)
   x <- add_missing_axes(x)
   x <- apply_axes_defaults(x)
   x <- add_missing_legends(x)
@@ -59,12 +57,12 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
 
   spec <- list(
     data = c(datasets, scale_datasets),
-    scales = unname(x$scales),
+    scales = lapply(unname(x$scales), as.vega),
     marks = lapply(x$marks, as.vega),
     width = x$options$width,
     height = x$options$height,
-    legends = lapply(x$legends, as.vega),
-    axes = lapply(x$axes, as.vega),
+    legends = compact(lapply(x$legends, as.vega)),
+    axes = compact(lapply(x$axes, as.vega)),
     padding = as.vega(x$options$padding),
     ggvis_opts = x$options,
     handlers = if (dynamic) x$handlers
@@ -130,21 +128,21 @@ as.vega.mark <- function(mark) {
   }
 
   if (!is.null(key)) {
-    m$key <- paste0("data.", prop_name(key))
+    m$key <- paste0("data.", prop_label(key))
   }
   m
 }
 
 #' @export
 as.vega.ggvis_props <- function(x, default_scales = NULL) {
-  x <- prop_sets(x)
+  x <- prop_event_sets(x)
 
   # Given a list of property sets (enter, update, etc.), return appropriate
   # vega property set.
   vega_prop_set <- function(x) {
     if (empty(x)) return(NULL)
 
-    props <- trim_propset(names(x))
+    props <- trim_prop_event(names(x))
     default_scales <- default_scales %||% propname_to_scale(props)
     Map(prop_vega, x, default_scales)
   }
@@ -153,7 +151,9 @@ as.vega.ggvis_props <- function(x, default_scales = NULL) {
 }
 
 #' @export
-as.vega.vega_axis <- function(x) {
+as.vega.ggvis_axis <- function(x) {
+  if (isTRUE(x$hide)) return(NULL)
+
   if (empty(x$properties)) {
     x$properties <- NULL
   } else {
@@ -163,12 +163,12 @@ as.vega.vega_axis <- function(x) {
   unclass(x)
 }
 #' @export
-as.vega.vega_legend <- as.vega.vega_axis
+as.vega.ggvis_legend <- as.vega.ggvis_axis
 
 #' @export
 as.vega.data.frame <- function(x, name, ...) {
   # For CSV output, we need to unescape periods, which were turned into \. by
-  # prop_name().
+  # prop_label().
   names(x) <- gsub("\\.", ".", names(x), fixed = TRUE)
 
   list(list(

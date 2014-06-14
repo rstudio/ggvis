@@ -14,18 +14,16 @@ df %>%
 
 # Override default scale name
 df %>%
-  ggvis(x = ~x, y = ~x, fill = prop(~z, scale = "blah")) %>%
+  ggvis(x = ~x, y = ~x, prop("fill", ~z, scale = "blah")) %>%
   layer_points() %>%
-  scale_numeric("fill", name = "blah") %>%
+  add_legend("blah") %>%
   save_spec("scales/custom.json")
 
 # Dual scale
 df %>%
   ggvis(x = ~x) %>%
-  layer_points(y = prop(~y, scale = "y-y"), fill := "red") %>%
-  layer_points(y = prop(~z, scale = "y-z")) %>%
-  scale_numeric("y", name = "y-y") %>%
-  scale_numeric("y", name = "y-z") %>%
+  layer_points(prop("y", ~y, scale = "y-y"), fill := "red") %>%
+  layer_points(prop("y", ~z, scale = "y-z")) %>%
   save_spec("scales/dual.json")
 
 # Numeric domains
@@ -35,3 +33,28 @@ df %>%
   scale_numeric("x", domain = c(0, 10)) %>%
   scale_numeric("fill", domain = c(0, 2)) %>%
   save_spec("scales/domain_numeric.json")
+
+# Datetimes
+dat <- data.frame(
+  time = as.POSIXct("2013-07-01", tz = "GMT") + rnorm(40) * 60 * 60 * 24 * 7,
+  value = rnorm(40)
+)
+
+dat %>% ggvis(~time, ~value) %>% layer_points() %>%
+  save_spec("scales/datetime.json")
+
+dat %>% ggvis(~time) %>% layer_histograms() %>%
+  save_spec("scales/datetime_hist.json")
+
+# Two properties in one legend, one on a custom scale
+df %>%
+  ggvis(x = ~x, y = ~x, fill = ~factor(y), prop("shape", ~factor(y), "shape2")) %>%
+  layer_points() %>%
+  add_legend(c("fill", "shape2")) %>%
+  save_spec("scales/combined_legend.json")
+
+# Nominal x with bars
+df %>%
+  ggvis(x = ~factor(x), y = ~y) %>%
+  layer_bars() %>%
+  save_spec("scales/bars.json")

@@ -118,7 +118,4 @@ You can set the following mark properties:
 To each property, you can assign any property object (\code{\link{prop}})
 either locally (i.e. in the mark), or in a parent \code{layer}.
 }
-\seealso{
-The "marks" vignette.
-}
 

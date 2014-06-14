@@ -259,6 +259,7 @@ ggvis = (function(_) {
     // Set the width of the chart to the wrapper div. If keep_aspect is true,
     // also set the height to maintain the aspect ratio.
     prototype.resizeToWrapper = function(duration, keep_aspect) {
+      if (this.chart === null) return;
       if (duration === undefined) duration = this.opts.duration;
       if (duration === undefined) duration = 0;
       if (keep_aspect === undefined) keep_aspect = this.opts.keep_aspect;

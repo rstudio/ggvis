@@ -12,8 +12,10 @@
 #' of multiple legends, and more flexible linkage between scales and legends.
 #'
 #' @param vis A ggvis object.
-#' @param size,shape,fill,stroke The name of the scale that determines the
-#'   legends size, shape, fill and stroke.
+#' @param scales The name of one or more scales for which to add a legend.
+#'   Typically one of "size", "shape", "fill", "stroke", although custom scale
+#'   names may also be used. Multiple names can also be used, like
+#'   \code{c("fill", "shape")}.
 #' @param orient The orientation of the legend. One of "left" or "right". This
 #'   determines how the legend is positioned within the scene. The default is
 #'   "right".
@@ -29,13 +31,24 @@
 #' @examples
 #' mtcars %>% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) %>%
 #'   layer_points() %>%
-#'   add_guide_legend(fill = "fill", title = "Cylinders")
+#'   add_legend("fill", title = "Cylinders")
+#'
+#' # Suppress legend with hide_legend
+#' mtcars %>% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) %>%
+#'   layer_points() %>%
+#'   hide_legend("fill")
+#'
+#' # Combining two properties in one legend
+#' mtcars %>%
+#'   ggvis(x = ~wt, y = ~mpg, fill = ~factor(cyl), shape = ~factor(cyl)) %>%
+#'   layer_points() %>%
+#'   add_legend(c("fill", "shape"))
 #'
 #' # Control legend properties with a continuous legend, with x and y position
 #' # in pixels.
 #' mtcars %>% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) %>%
 #'   layer_points() %>%
-#'   add_guide_legend(fill = "fill", title = "Cylinders",
+#'   add_legend("fill", title = "Cylinders",
 #'     properties = legend_props(
 #'       title = list(fontSize = 16),
 #'       labels = list(fontSize = 12, fill = "#00F"),
@@ -48,7 +61,7 @@
 #' # in the scaled data space.
 #' mtcars %>% ggvis(x = ~wt, y = ~mpg, fill = ~factor(cyl)) %>%
 #'   layer_points() %>%
-#'   add_guide_legend(fill = "fill", title = "Cylinders",
+#'   add_legend("fill", title = "Cylinders",
 #'     properties = legend_props(
 #'       title = list(fontSize = 16),
 #'       labels = list(fontSize = 14, dx = 5),
@@ -67,7 +80,8 @@
 #' # the upper-left corner of the legend.
 #' mtcars %>% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) %>%
 #'   layer_points() %>%
-#'   add_guide_legend(fill = "fill", title = "Cylinders",
+#'   add_relative_scales() %>%
+#'   add_legend("fill", title = "Cylinders",
 #'     properties = legend_props(
 #'       legend = list(
 #'         x = scaled_value("x_rel", 0.8),
@@ -75,30 +89,50 @@
 #'       )
 #'     )
 #'   )
-add_guide_legend <- function(vis, size = NULL, shape = NULL, fill = NULL,
-                         stroke = NULL, orient = "right", title = NULL,
-                         format = NULL, values = NULL, properties = NULL) {
+add_legend <- function(vis, scales = NULL, orient = "right", title = NULL,
+                       format = NULL, values = NULL, properties = NULL) {
+  assert_that(!is.null(scale))
 
-  legend <- guide_legend(size, shape, fill, stroke, orient, title, format,
-                         values, properties)
+  # Get a named vector where names are scales, values are properties
+  all_scales <- lapply(vis$scales, collapse_ggvis_scales)
+  scales_props <- vapply(all_scales, function(s) s$property, character(1))
+  scales_props <- scales_props[scales]
 
-  add_legend(vis, legend)
+  legend <- create_legend(scales_props, orient, title, format, values, properties)
+  register_legend(vis, legend)
+}
+
+#' @rdname add_legend
+#' @export
+hide_legend <- function(vis, scales) {
+  legend <- structure(list(scales = scales, hide = TRUE), class = "ggvis_legend")
+  register_legend(vis, legend)
+}
+
+#' Defunct function for adding a legend
+#'
+#' This function has been replaced with \code{\link{add_legend}}.
+#' @param ... Other arguments.
+#' @export
+add_guide_legend <- function(...) {
+  stop("add_guide_legend() has been replaced by add_legend().")
 }
 
 # Create a legend object.
-guide_legend <- function(size = NULL, shape = NULL, fill = NULL,
-                         stroke = NULL, orient = "right", title = NULL,
-                         format = NULL, values = NULL, properties = NULL) {
+create_legend <- function(scales_props = NULL, orient = "right", title = NULL,
+                          format = NULL, values = NULL, properties = NULL) {
 
   orient <- match.arg(orient, c("right", "left"))
-
+  assert_that(!is.null(scales_props) && length(scales_props) > 0)
   assert_that(is.null(properties) || is.legend_props(properties))
 
-  structure(compact(list(
-      size = size, shape = shape, fill = fill, stroke = stroke,
+  legend <- structure(compact(list(
       orient = orient, title = title, format = format, values = values,
       properties = properties
-  )), class = "vega_legend")
+  )), class = "ggvis_legend")
+
+  legend[scales_props] <- names(scales_props)
+  legend
 }
 
 add_missing_legends <- function(vis) {
@@ -106,14 +140,15 @@ add_missing_legends <- function(vis) {
   scales <- vis$scales
 
   legs <- c("size", "shape", "fill", "stroke")
+  # Get scales that are in some legend
   present <- unlist(lapply(legends, function(x) x[legs]))
-
-  missing <- setdiff(intersect(names(scales), legs), present)
+  # Ignore scales with hidden legend
+  hidden <- unlist(lapply(legends, function(x) if (isTRUE(x$hide)) x$scales))
+  # Find scales that don't have legend
+  missing <- setdiff(intersect(names(scales), legs), c(present, hidden))
 
   for (scale in missing) {
-    args <- list(vis)
-    args[[scales[[scale]]$name]] <- scale
-    vis <- do.call(add_guide_legend, args)
+    vis <- add_legend(vis, scale)
   }
 
   vis
@@ -127,21 +162,13 @@ apply_legends_defaults <- function(vis) {
   legs <- c("size", "shape", "fill", "stroke")
 
   legends <- lapply(legends, function(legend) {
+    if (isTRUE(legend$hide)) return(legend)
+
     present <- unlist(legend[legs])
     present_scales <- scales[present]
-    present_info <- vis$scale_info[present]
 
     if (is.null(legend$title)) {
-      # Default title for each legend consists of the fields pasted together
-      fields <- mapply(present_scales, present_info, FUN = function(scale, info) {
-        # scale$domain can be a vector of explicitly-set values, in which case
-        # return ""
-        if (!is.list(scale$domain)) return(NULL)
-        else info$label[1]
-      }, SIMPLIFY = FALSE)
-
-      fields <- unlist(fields)
-      legend$title <- paste(fields, collapse = ".")
+      legend$title <- present_scales[[1]]$label
     }
 
     legend
@@ -153,7 +180,7 @@ apply_legends_defaults <- function(vis) {
 }
 
 #' @export
-format.vega_legend <- format.vega_axis
+format.ggvis_legend <- format.ggvis_axis
 
 #' @export
-print.vega_legend <- print.vega_axis
+print.ggvis_legend <- print.ggvis_axis

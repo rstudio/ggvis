@@ -7,7 +7,7 @@
 #' mtcars %>% ggvis("", ~mpg) %>%
 #'   layer_points() %>%
 #'   scale_nominal("x") %>%
-#'   add_guide_axis("x", title = "", tick_size_major = 0)
+#'   add_axis("x", title = "", tick_size_major = 0)
 #'
 #' # OR
 #' mtcars %>% ggvis("", ~mpg) %>%
@@ -46,8 +46,12 @@ vector_type.singular <- function(x) "singular"
 #' @rdname singular
 #' @export
 #' @inheritParams scale_nominal
-scale_singular <- function(vis, scale, points = TRUE) {
-  vis <- scale_nominal(vis, domain = "", scale = scale, points = points)
-  vis <- add_guide_axis(vis, scale, title = "", tick_size_major = 0)
+scale_singular <- function(vis, property, name = property, label = name,
+                           points = TRUE, domain = NULL) {
+  # Some of the arguments are ignored; they're there to provide a consistent
+  # interface with other scales
+  vis <- scale_nominal(vis, domain = "", property = property, name = name,
+                           label = "", points = points)
+  vis <- add_axis(vis, property, tick_size_major = 0)
   vis
 }

@@ -1,21 +1,3 @@
-check_prop <- function(trans_name, props, data, prop_name, types = NULL) {
-  prop <- props[[prop_name]]
-
-  if (is.null(prop)) {
-    stop(trans_name, "() needs ", prop_name, " property", call. = FALSE)
-  }
-  if (is.null(types)) return(invisible(TRUE))
-
-  type <- prop_type(data, prop)
-  if (!(type %in% types)) {
-    stop(trans_name, "() needs ", prop_name, " property to be of type ",
-      paste(types, collapse = "/"), call. = FALSE)
-  }
-
-  invisible(TRUE)
-}
-
-
 # Given an two data objects, input and output, this will return output cbind'ed
 # with the columns in input that are constant, that is where all the values in
 # a column have the same value within each group (if grouped). For any columns
