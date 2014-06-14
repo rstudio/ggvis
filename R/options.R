@@ -20,7 +20,9 @@
 #'   setting global options.
 #' @seealso \code{link{default_opts}} to see the default options.
 #' @examples
-#' qvis(mtcars, ~wt, ~mpg) %>%
+#' mtcars %>%
+#'   ggvis(~wt, ~mpg) %>%
+#'   layer_points() %>%
 #'   set_options(width = 300, height = 200, padding = padding(10, 10, 10, 10))
 #'
 #' # Display the default options

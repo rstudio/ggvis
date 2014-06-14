@@ -12,7 +12,7 @@ layer_guess(vis, ...)
 }
 \description{
 \code{layer_guess} provides the magic behind the default behaviour of
-\code{\link{qvis}}.
+\code{\link{ggvis}}.
 }
 \section{Defaults}{
 
@@ -25,11 +25,11 @@ layer_guess(vis, ...)
 }
 \examples{
 # A scatterplot:
-mtcars \%>\% qvis(~mpg, ~wt)
+mtcars \%>\% ggvis(~mpg, ~wt)
 mtcars \%>\% ggvis(~mpg, ~wt) \%>\% layer_guess()
 
 # A histogram:
-mtcars \%>\% qvis(~mpg)
+mtcars \%>\% ggvis(~mpg)
 mtcars \%>\% ggvis(~mpg) \%>\% layer_guess()
 }
 

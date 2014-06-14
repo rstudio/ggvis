@@ -32,7 +32,7 @@
 					"domain" : "number"
 				}
 			},
-			"values" : "\"domain\"\n1.513\n5.424"
+			"values" : "\"domain\"\n1.31745\n5.61955"
 		},
 		{
 			"name" : "scale/y",
@@ -42,58 +42,30 @@
 					"domain" : "number"
 				}
 			},
-			"values" : "\"domain\"\n11.7099836385729\n31.0391526825725"
+			"values" : "\"domain\"\n10.743525186373\n32.0056111347724"
 		}
 	],
 	"scales" : [
 		{
 			"name" : "x",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
-			"clamp" : false,
-			"nice" : true,
-			"zero" : false,
-			"range" : "width",
 			"domain" : {
 				"data" : "scale/x",
 				"field" : "data.domain"
-			}
-		},
-		{
-			"name" : "y",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
-			"clamp" : false,
-			"nice" : true,
+			},
 			"zero" : false,
-			"range" : "height",
-			"domain" : {
-				"data" : "scale/y",
-				"field" : "data.domain"
-			}
-		},
-		{
-			"name" : "x_rel",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
-			"domain" : [
-				0,
-				1
-			],
+			"nice" : false,
+			"clamp" : false,
 			"range" : "width"
 		},
 		{
-			"name" : "y_rel",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
-			"domain" : [
-				0,
-				1
-			],
+			"name" : "y",
+			"domain" : {
+				"data" : "scale/y",
+				"field" : "data.domain"
+			},
+			"zero" : false,
+			"nice" : false,
+			"clamp" : false,
 			"range" : "height"
 		}
 	],
@@ -111,6 +83,9 @@
 							"stroke" : {
 								"value" : "#000000"
 							},
+							"strokeWidth" : {
+								"value" : 2
+							},
 							"x" : {
 								"scale" : "x",
 								"field" : "data.pred_"
@@ -118,9 +93,6 @@
 							"y" : {
 								"scale" : "y",
 								"field" : "data.resp_"
-							},
-							"strokeWidth" : {
-								"value" : 2
 							},
 							"fill" : {
 								"value" : "transparent"

@@ -35,7 +35,9 @@ and bottom. See \code{\link{padding}}.}
 Set options for a ggvis plot
 }
 \examples{
-qvis(mtcars, ~wt, ~mpg) \%>\%
+mtcars \%>\%
+  ggvis(~wt, ~mpg) \%>\%
+  layer_points() \%>\%
   set_options(width = 300, height = 200, padding = padding(10, 10, 10, 10))
 
 # Display the default options

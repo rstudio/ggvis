@@ -19,7 +19,7 @@
 					"domain" : "number"
 				}
 			},
-			"values" : "\"domain\"\n0.0126281732227653\n0.838725288398564"
+			"values" : "\"domain\"\n-0.0286766825360246\n0.880030144157354"
 		},
 		{
 			"name" : "scale/y",
@@ -29,58 +29,30 @@
 					"domain" : "number"
 				}
 			},
-			"values" : "\"domain\"\n0.00647905003279448\n0.92520075570792"
+			"values" : "\"domain\"\n-0.0394570352509618\n0.971136840991676"
 		}
 	],
 	"scales" : [
 		{
 			"name" : "x",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
-			"clamp" : false,
-			"nice" : true,
-			"zero" : false,
-			"range" : "width",
 			"domain" : {
 				"data" : "scale/x",
 				"field" : "data.domain"
-			}
-		},
-		{
-			"name" : "y",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
-			"clamp" : false,
-			"nice" : true,
+			},
 			"zero" : false,
-			"range" : "height",
-			"domain" : {
-				"data" : "scale/y",
-				"field" : "data.domain"
-			}
-		},
-		{
-			"name" : "x_rel",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
-			"domain" : [
-				0,
-				1
-			],
+			"nice" : false,
+			"clamp" : false,
 			"range" : "width"
 		},
 		{
-			"name" : "y_rel",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
-			"domain" : [
-				0,
-				1
-			],
+			"name" : "y",
+			"domain" : {
+				"data" : "scale/y",
+				"field" : "data.domain"
+			},
+			"zero" : false,
+			"nice" : false,
+			"clamp" : false,
 			"range" : "height"
 		}
 	],

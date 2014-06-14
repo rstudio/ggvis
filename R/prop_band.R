@@ -10,60 +10,69 @@
 #' @examples
 #' df <- data.frame(label = c("a", "b", "c"), n = c(10, 9, 4))
 #'
-#' base <- df %>% ggvis(~label, y2 = 0, y := ~n) %>%
-#'   scale_nominal("x", padding = 0, points = FALSE)
-#' base %>% layer_rects(width := band())
-#' base %>% layer_rects(width := band(offset = -1))
-#' base %>% layer_rects(width := band(mult = 0.9))
+#' base <- df %>% ggvis(~label, y2 = 0, y = ~n)
+#' base %>% layer_rects(width = band())
+#' base %>% layer_rects(width = band(offset = -1))
+#' base %>% layer_rects(width = band(mult = 0.9))
 #'
 #' # A nominal scale with padding is more symmetrical than band with a mult
-#' base %>% layer_rects(width := band(mult = 0.75))
-#' base %>% layer_rects(width := band()) %>%
+#' base %>% layer_rects(width = band(mult = 0.75))
+#' base %>% layer_rects(width = band()) %>%
 #'   scale_nominal("x", padding = 0.25, points = FALSE)
-#'
 band <- function(offset = NULL, mult = NULL) {
   structure(
-    list(type = "band", offset = offset, mult = mult, scale = FALSE),
-    class = c("band", "prop")
+    list(offset = offset, mult = mult),
+    class = c("band")
   )
 }
 
 #' @export
-format.band <- function(x, ...) {
-  paste0("<band>")
+new_prop.band <- function(x, property, scale, offset, mult, env, event,
+                          label) {
+  if (!(property %in% c("width", "height"))) {
+    stop("band() can only be used for width and height properties.")
+  }
+  if (identical(scale, FALSE)) stop("band() must be scaled.")
+
+  structure(
+    list(
+      property = property,
+      scale = decide_scale(scale %||% TRUE, property),
+      offset = offset,
+      mult = mult,
+      event = event,
+      env = NULL
+    ),
+    class = c("prop_band", "prop")
+  )
 }
 
 #' @export
-print.band <- function(x, ...) cat(format(x, ...), "\n", sep = "")
+as.character.prop_band <- function(x, ...) ""
 
 #' @rdname band
 #' @param x object to test for band-ness
-is.band <- function(x) inherits(x, "band")
+is.prop_band <- function(x) inherits(x, "prop_band")
 
 #' @export
-prop_value.band <- function(x, data) {
+prop_value.prop_band <- function(x, data) {
   NULL
 }
 
 #' @export
-prop_name.band <- function(x) {
+prop_label.prop_band <- function(x) {
   ""
 }
 
 #' @export
-prop_scale.band <- function(x, default_scale) {
-  switch(default_scale, width = "x", height = "y")
-}
-
-#' @export
-prop_domain.band <- function(x, data) {
+prop_domain.prop_band <- function(x, data) {
   NULL
 }
 
 #' @export
-prop_vega.band <- function(x, default_scale) {
+prop_vega.prop_band <- function(x, default_scale) {
   compact(list(
-    scale = prop_scale(x, default_scale),
+    scale = x$scale,
     mult = x$mult,
     offset = x$offset,
     band = TRUE

@@ -27,16 +27,12 @@
 #' # It doesn't matter whether you transform inside or outside of a vis
 #' mtcars %>% compute_tabulate(~factor(cyl)) %>%
 #'   ggvis(x = ~x_, y = ~count_, y2 = 0) %>%
-#'   layer_rects(width = band()) %>%
-#'   scale_nominal("x", padding = 0.1, points = FALSE) %>%
-#'   scale_numeric("y", domain = c(0, NA))
+#'   layer_rects(width = band())
 #'
 #' mtcars %>%
 #'   ggvis(x = ~x_, y = ~count_, y2 = 0) %>%
 #'   compute_tabulate(~factor(cyl)) %>%
-#'   layer_rects(width = band()) %>%
-#'   scale_nominal("x", padding = 0.1, points = FALSE) %>%
-#'   scale_numeric("y", domain = c(0, NA))
+#'   layer_rects(width = band())
 #'
 #' # compute_tabulate is used automatically in layer_bars when no y prop
 #' # is supplied.

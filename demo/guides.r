@@ -5,12 +5,18 @@ mtcars %>% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) %>%
 
 mtcars %>% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) %>%
   layer_points() %>%
-  add_guide_axis("x", title = "Weight")
+  add_axis("x", title = "Weight")
 
 mtcars %>% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) %>%
   layer_points() %>%
-  add_guide_axis("x", title = "Weight", orient = "top")
+  add_axis("x", title = "Weight", orient = "top")
 
 mtcars %>% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) %>%
   layer_points() %>%
-  add_guide_legend(fill = "fill", title = "Cylinders")
+  add_legend("fill", title = "Cylinders")
+
+# Combining two properties in one legend
+mtcars %>%
+  ggvis(x = ~wt, y = ~mpg, fill = ~factor(cyl), shape = ~factor(cyl)) %>%
+  layer_points() %>%
+  add_legend(c("fill", "shape"))

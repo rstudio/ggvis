@@ -8,7 +8,7 @@
 					"x" : "number"
 				}
 			},
-			"values" : "\"x\"\n1\n2\n3\n4\n5"
+			"values" : "\"x\",\"factor(y)\"\n1,\"5\"\n2,\"4\"\n3,\"3\"\n4,\"2\"\n5,\"1\""
 		},
 		{
 			"name" : "scale/x",
@@ -29,6 +29,22 @@
 				}
 			},
 			"values" : "\"domain\"\n0.8\n5.2"
+		},
+		{
+			"name" : "scale/fill",
+			"format" : {
+				"type" : "csv",
+				"parse" : null
+			},
+			"values" : "\"domain\"\n\"1\"\n\"2\"\n\"3\"\n\"4\"\n\"5\""
+		},
+		{
+			"name" : "scale/shape2",
+			"format" : {
+				"type" : "csv",
+				"parse" : null
+			},
+			"values" : "\"domain\"\n\"1\"\n\"2\"\n\"3\"\n\"4\"\n\"5\""
 		}
 	],
 	"scales" : [
@@ -53,6 +69,28 @@
 			"nice" : false,
 			"clamp" : false,
 			"range" : "height"
+		},
+		{
+			"name" : "fill",
+			"type" : "ordinal",
+			"domain" : {
+				"data" : "scale/fill",
+				"field" : "data.domain"
+			},
+			"points" : true,
+			"sort" : false,
+			"range" : "category10"
+		},
+		{
+			"name" : "shape2",
+			"type" : "ordinal",
+			"domain" : {
+				"data" : "scale/shape2",
+				"field" : "data.domain"
+			},
+			"points" : true,
+			"sort" : false,
+			"range" : "shapes"
 		}
 	],
 	"marks" : [
@@ -60,9 +98,6 @@
 			"type" : "symbol",
 			"properties" : {
 				"update" : {
-					"fill" : {
-						"value" : "#000000"
-					},
 					"size" : {
 						"value" : 50
 					},
@@ -73,6 +108,14 @@
 					"y" : {
 						"scale" : "y",
 						"field" : "data.x"
+					},
+					"fill" : {
+						"scale" : "fill",
+						"field" : "data.factor(y)"
+					},
+					"shape" : {
+						"scale" : "shape2",
+						"field" : "data.factor(y)"
 					}
 				},
 				"ggvis" : {
@@ -88,7 +131,14 @@
 	],
 	"width" : 600,
 	"height" : 400,
-	"legends" : [],
+	"legends" : [
+		{
+			"orient" : "right",
+			"fill" : "fill",
+			"shape" : "shape2",
+			"title" : "factor(y)"
+		}
+	],
 	"axes" : [
 		{
 			"type" : "x",

@@ -189,6 +189,7 @@ data_range.factor <- function(x) levels(x)
 # For POSIXct, this preserves time zone.
 # For factors, this preserves all levels (but not necessarily order)
 concat <- function(x) {
+  x <- compact(x)
   if (inherits(x[[1]], "POSIXct")) {
     vec <- do_call(c, .args = x)
     structure(vec, tzone = attr(x[[1]], "tzone"))

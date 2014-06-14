@@ -9,7 +9,7 @@ active_props <- function(data, marks) {
   props_by_id <- lapply(props_by_id, unlist, recursive = FALSE)
 
   uprops_by_id <- lapply(props_by_id, function(props) {
-    names <- vapply(props, prop_name, character(1))
+    names <- vapply(props, prop_label, character(1))
     ok <- !duplicated(names) & names != ""
 
     setNames(props[ok], names[ok])
@@ -38,8 +38,7 @@ apply_props <- function(data, props) {
 #' @export
 apply_props.data.frame <- function(data, props) {
   cols <- lapply(props, prop_value, data = data)
-  names(cols) <- vapply(props, prop_name, character(1))
-
+  names(cols) <- vapply(props, prop_label, character(1))
   quickdf(cols)
 }
 

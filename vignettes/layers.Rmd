@@ -83,12 +83,14 @@ Must set two of `x`, `x2`, and `width`, and two of `y`, `y2` and `height`.
 If you have an ordinal scale, set width and/or height to `prop_band()` to
 occupy the complete band corresponding to that categorical value.
 
-```{r, eval = FALSE}
+```{r}
 hec <- as.data.frame(xtabs(Freq ~ Hair + Eye, HairEyeColor))
 
 hec %>% 
   ggvis(~Hair, ~Eye, fill = ~Freq) %>% 
-  layer_rects(width := band(), y := band())
+  layer_rects(width = band(), height = band()) %>%
+  scale_nominal("x", padding = 0, points = FALSE) %>%
+  scale_nominal("y", padding = 0, points = FALSE)
 ```
 
 ### `layer_paths`
@@ -139,11 +141,11 @@ you increase height, it's mapped like a y variable so bigger values are further
 away.
 
 ```{r}
-df %>% ggvis(~x, ~y, height := prop(80, scale = "y")) %>% layer_ribbons()
+df %>% ggvis(~x, ~y, prop("height", 80, scale = "y")) %>% layer_ribbons()
 
 df <- data.frame(x = 1:10, y = (1:10) ^ 2)
 df %>% ggvis(~x, ~y) %>%
-  layer_ribbons(height = prop(input_slider(0, 100), scale = "y")) %>%
+  layer_ribbons(prop("height", input_slider(0, 100), scale = "y")) %>%
   layer_paths(stroke := "red", strokeWidth := 10)
 ```
 

@@ -18,7 +18,7 @@
 					"domain" : "number"
 				}
 			},
-			"values" : "\"domain\"\n1\n5"
+			"values" : "\"domain\"\n0.8\n5.2"
 		},
 		{
 			"name" : "scale/y",
@@ -28,58 +28,32 @@
 					"domain" : "number"
 				}
 			},
-			"values" : "\"domain\"\n1\n5"
+			"values" : "\"domain\"\n0.8\n5.2"
 		}
 	],
 	"scales" : [
 		{
-			"name" : "x",
-			"type" : "log",
-			"reverse" : false,
-			"round" : false,
-			"clamp" : false,
-			"nice" : true,
-			"zero" : false,
-			"range" : "width",
 			"domain" : {
 				"data" : "scale/x",
 				"field" : "data.domain"
-			}
-		},
-		{
-			"name" : "y",
+			},
+			"name" : "x",
 			"type" : "log",
-			"reverse" : false,
-			"round" : false,
-			"clamp" : false,
-			"nice" : true,
 			"zero" : false,
-			"range" : "height",
-			"domain" : {
-				"data" : "scale/y",
-				"field" : "data.domain"
-			}
-		},
-		{
-			"name" : "x_rel",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
-			"domain" : [
-				0,
-				1
-			],
+			"nice" : false,
+			"clamp" : false,
 			"range" : "width"
 		},
 		{
-			"name" : "y_rel",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
-			"domain" : [
-				0,
-				1
-			],
+			"domain" : {
+				"data" : "scale/y",
+				"field" : "data.domain"
+			},
+			"name" : "y",
+			"type" : "log",
+			"zero" : false,
+			"nice" : false,
+			"clamp" : false,
 			"range" : "height"
 		}
 	],

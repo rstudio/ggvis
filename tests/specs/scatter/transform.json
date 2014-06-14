@@ -26,58 +26,31 @@
 					"domain" : "number"
 				}
 			},
-			"values" : "\"domain\"\n0.2\n5"
+			"values" : "\"domain\"\n-0.04\n5.24"
 		}
 	],
 	"scales" : [
 		{
 			"name" : "x",
 			"type" : "ordinal",
-			"reverse" : false,
-			"round" : false,
-			"points" : true,
-			"padding" : 0.5,
-			"sort" : false,
-			"range" : "width",
 			"domain" : {
 				"data" : "scale/x",
 				"field" : "data.domain"
-			}
+			},
+			"points" : true,
+			"sort" : false,
+			"range" : "width",
+			"padding" : 0.5
 		},
 		{
 			"name" : "y",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
-			"clamp" : false,
-			"nice" : true,
-			"zero" : false,
-			"range" : "height",
 			"domain" : {
 				"data" : "scale/y",
 				"field" : "data.domain"
-			}
-		},
-		{
-			"name" : "x_rel",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
-			"domain" : [
-				0,
-				1
-			],
-			"range" : "width"
-		},
-		{
-			"name" : "y_rel",
-			"type" : "linear",
-			"reverse" : false,
-			"round" : false,
-			"domain" : [
-				0,
-				1
-			],
+			},
+			"zero" : false,
+			"nice" : false,
+			"clamp" : false,
 			"range" : "height"
 		}
 	],
