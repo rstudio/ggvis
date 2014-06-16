@@ -88,15 +88,6 @@ $(function(){ //DOM Ready
       dataset[name] = vg.data.read(data, format);
       plot.chart.data(dataset);
 
-      // If all data objects have been received, update
-      if (plot.dataReady()) {
-        if (!plot.initialized) {
-          plot.initialUpdate();
-        } else {
-          plot.chart.update({ duration: plot.opts.duration });
-        }
-      }
-
     } else {
       // The plot doesn't exist, save the data for when the plot arrives
       if (!plot.pendingData) plot.pendingData = {};
@@ -113,6 +104,29 @@ $(function(){ //DOM Ready
     var plot = ggvis.getPlot(plotId);
 
     plot.parseSpec(spec);
+  });
+
+
+  // Receive command and dispatch to appropriate vega object
+  Shiny.addCustomMessageHandler("ggvis_command", function(message) {
+    var plotId = message.plotId;
+    var command = message.command;
+    var plot = ggvis.getPlot(plotId);
+
+    if (plot.chart) {
+      if (command === "update") {
+        // If all data objects have been received, update
+        if (plot.dataReady()) {
+          if (!plot.initialized) {
+            plot.initialUpdate();
+          } else {
+            plot.chart.update({ duration: plot.opts.duration });
+          }
+        }
+      } else {
+        console.log("Received unknown ggvis_command.")
+      }
+    }
   });
 
 

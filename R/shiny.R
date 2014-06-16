@@ -164,6 +164,19 @@ observe_data <- function(r_spec, id, session) {
         data_observers[[length(data_observers) + 1]] <<- obs
       })
     }
+
+    # Tell the plot to update _after_ all the data has been sent
+    data_observers[[length(data_observers) + 1]] <- shiny::observe({
+      # Take dependency on all data objects
+      for (name in names(data_table)) {
+        data_table[[name]]()
+      }
+
+      session$sendCustomMessage("ggvis_command", list(
+        plotId = id,
+        command = "update"
+      ))
+    }, priority = -1)
   })
 }
 
