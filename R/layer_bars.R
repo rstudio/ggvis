@@ -77,6 +77,9 @@
 layer_bars <- function(vis, ..., stack = TRUE, width = NULL) {
   new_props <- merge_props(cur_props(vis), props(...))
 
+  check_unsupported_props(new_props, c("x", "y", "x2", "y2"),
+                          c("enter", "exit", "hover"), "layer_bars")
+
   x_var <- find_prop_var(new_props, "x.update")
   discrete_x <- prop_countable(cur_data(vis), new_props$x.update)
 
