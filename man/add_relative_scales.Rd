@@ -15,6 +15,6 @@ These scales are useful for positioning visual elements relative to the
 plotting area. For example, with legends.
 }
 \seealso{
-\code{\link{guide_legend}} for a usage example.
+\code{\link{add_legend}} for a usage example.
 }
 
