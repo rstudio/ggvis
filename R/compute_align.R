@@ -88,8 +88,3 @@ compute_align.ggvis <- function(x, var, length = NULL, align = 0.5, dir = "x") {
     preserve_constants(data, output)
   })
 }
-
-compute_width <- function(x, x_var, width = NULL) {
-  compute_length(x, x_var, length = width, align = 0.5, dir = "x")
-}
-
