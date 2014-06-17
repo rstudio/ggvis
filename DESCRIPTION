@@ -12,7 +12,6 @@ Imports:
     assertthat,
     RJSONIO,
     shiny (>= 0.10),
-    methods,
     magrittr,
     dplyr (>= 0.2),
     htmltools (>= 0.2.4)

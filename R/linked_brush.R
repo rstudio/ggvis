@@ -14,7 +14,6 @@
 #'   \item{fill}{A reactive that gives the fill colour of points under the
 #'     brush}
 #' @export
-#' @importFrom methods setRefClass
 #' @examples
 #' lb <- linked_brush(keys = 1:nrow(mtcars), "red")
 #'
