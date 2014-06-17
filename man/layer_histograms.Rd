@@ -39,6 +39,12 @@ mtcars \%>\% ggvis(~mpg) \%>\% layer_freqpolys(binwidth = 2)
 # These are equivalent to combining compute_bin with the corresponding
 # mark
 mtcars \%>\% compute_bin(~mpg) \%>\% ggvis(~x_, ~count_) \%>\% layer_paths()
+
+# With grouping
+mtcars \%>\% ggvis(~mpg, fill = ~factor(cyl)) \%>\% group_by(cyl) \%>\%
+  layer_histograms(binwidth = 2)
+mtcars \%>\% ggvis(~mpg, stroke = ~factor(cyl)) \%>\% group_by(cyl) \%>\%
+  layer_freqpolys(binwidth = 2)
 }
 \seealso{
 \code{\link{layer_bars}} For bar graphs of counts at each unique
