@@ -108,7 +108,7 @@ select.ggvis <- function(.data, ...) {
 #' @importFrom dplyr filter
 #' @method filter ggvis
 #' @rdname dplyr-ggvis
-#' @export filter.ggvis
+#' @export
 filter.ggvis <- function(.data, ...) {
   pieces <- extract_inputs(dots(...))
 
