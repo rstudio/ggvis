@@ -1,4 +1,4 @@
-# ggvis 0.2.0.99
+# ggvis 0.3
 
 * `add_guide_axis()` and `add_guide_legend()` have been replaced by
   `add_axis()` and `add_legend()`. Also, the interface for `add_legend()` has
