@@ -55,7 +55,9 @@ ggvisSpec <- function(plot_id, spec = NULL) {
 # Controls drop down
 ggvisControlGroup <- function(plot_id) {
   htmltools::tags$nav(class = "ggvis-control",
-    htmltools::tags$a(class = "ggvis-dropdown-toggle", title = "Controls"),
+    # Need the onclick so that this works properly in Shiny Doc iframes
+    htmltools::tags$a(class = "ggvis-dropdown-toggle", title = "Controls",
+                      onclick = "return false;"),
     htmltools::tags$ul(class = "ggvis-dropdown",
       htmltools::tags$li(
         "Renderer: ",
