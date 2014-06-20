@@ -105,7 +105,19 @@ select.ggvis <- function(.data, ...) {
   })
 }
 
+# Need to re-export dplyr::filter to avoid problems with R CMD check.
+#' Filter
+#'
+#' This is the same as \code{dplyr::\link[dplyr]{filter}} function.
+#' See \code{dplyr::\link[dplyr]{filter}} for more information.
+#'
+#' @param .data A tbl.
+#' @param ... variables interpreted in the context of the data.
 #' @importFrom dplyr filter
+#' @name filter
+#' @export
+NULL
+
 #' @method filter ggvis
 #' @rdname dplyr-ggvis
 #' @export
