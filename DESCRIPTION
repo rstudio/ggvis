@@ -20,8 +20,7 @@ Suggests:
     MASS,
     mgcv,
     testthat (>= 0.8.1),
-    knitr (>= 1.6),
-    rmarkdown
+    knitr (>= 1.6)
 VignetteBuilder: knitr
 Roxygen: list(wrap = FALSE)
 License: GPL-2
