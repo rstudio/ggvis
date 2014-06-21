@@ -6,6 +6,7 @@ Description: ggvis implements a interactive grammar of graphics, taking the
 Version: 0.3
 Author: RStudio, Inc.
 Maintainer: Winston Chang <winston@rstudio.com>
+URL: http://ggvis.rstudio.com/
 Depends:
     R (>= 3.0)
 Imports:
