@@ -62,6 +62,24 @@ slider), there are a number of other interactive controls:
 Note that all interactive inputs start with `input_` so that you can always use
 tab completion to remind you of the options.
 
+Here is an example of a plot that uses both a slider and a select box:
+
+```{r, eval=FALSE}
+mtcars %>% ggvis(x = ~wt) %>%
+    layer_densities(
+      adjust = input_slider(.1, 2, value = 1, step = .1, label = "Bandwidth adjustment"),
+      kernel = input_select(
+        c("Gaussian" = "gaussian",
+          "Epanechnikov" = "epanechnikov",
+          "Rectangular" = "rectangular",
+          "Triangular" = "triangular",
+          "Biweight" = "biweight",
+          "Cosine" = "cosine",
+          "Optcosine" = "optcosine"),
+        label = "Kernel")
+    )
+```
+
 ### Arguments
 
 The arguments differ slightly depending on the type of input, and are documented
@@ -82,7 +100,7 @@ example, many parameters of statistical models are best expressed on a log
 scale. You can use `map` in conjunction with an slider to make multiple orders
 of magnitude easily accessible from a single slider.
 
-```{r, echo = FALSE}
+```{r, eval = FALSE}
 input_slider(-5, 5, label = "lambda", map = function(x) 10 ^ x)
 ```
 
