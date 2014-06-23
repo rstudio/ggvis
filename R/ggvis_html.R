@@ -59,19 +59,21 @@ ggvis_dependencies <- function() {
   deps
 }
 
-shiny_dependency <- htmltools::htmlDependency(
-  name = "shiny-ggvis",
-  version = as.character(packageVersion("ggvis")),
-  src = ggvis_path("ggvis"),
-  script = "js/shiny-ggvis.js"
-)
+shiny_dependency <- function() {
+  htmltools::htmlDependency(
+    name = "shiny-ggvis",
+    version = as.character(packageVersion("ggvis")),
+    src = ggvis_path("ggvis"),
+    script = "js/shiny-ggvis.js"
+  )
+}
 
 ggvis_app <- function(x, plot_id = rand_id("plot_"),
                       ...) {
 
   ui <- htmltools::attachDependencies(
     list(ggvisLayout(plot_id, length(x$controls) > 0)),
-    shiny_dependency
+    shiny_dependency()
   )
 
   server <- function(input, output, session) {

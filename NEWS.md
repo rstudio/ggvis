@@ -1,5 +1,7 @@
 # ggvis 0.3.0.1
 
+* Reconcile shiny dependency at run-time, not build time.
+
 # ggvis 0.3
 
 * `add_guide_axis()` and `add_guide_legend()` have been replaced by
