@@ -27,7 +27,7 @@ ggvisOutput <- function(plot_id = rand_id("plot_id"), spec = NULL) {
     ),
     c(
       ggvis_dependencies(),
-      list(shiny_dependency)
+      list(shiny_dependency())
     )
   )
 }
