@@ -1,3 +1,5 @@
+# ggvis 0.3.0.1
+
 # ggvis 0.3
 
 * `add_guide_axis()` and `add_guide_legend()` have been replaced by
