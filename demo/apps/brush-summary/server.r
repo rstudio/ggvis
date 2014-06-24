@@ -1,8 +1,5 @@
 library(ggvis)
 
-data(diamonds, package = "ggplot2")
-diamonds <- diamonds[sample(1:nrow(diamonds), 1000), ]
-
 shinyServer(function(input, output, session) {
   mtcars %>%
     ggvis(~wt, ~mpg) %>%
