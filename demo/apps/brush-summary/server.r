@@ -16,7 +16,7 @@ shinyServer(function(input, output, session) {
   mtcars %>%
     ggvis(~wt, ~mpg) %>%
     layer_points(fill := lb$fill, fill.brush := "red") %>%
-    function(vis) lb$input(vis) %>%
+    lb$input() %>%
     add_data(mtcars_selected) %>%
     layer_model_predictions(model = "lm")%>%
     bind_shiny("plot1")
