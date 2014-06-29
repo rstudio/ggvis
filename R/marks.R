@@ -112,7 +112,7 @@ valid_props <- list(
   area = c(common_valid_props, "y2", "height", "interpolate", "tension"),
   image = c(common_valid_props, "x2", "y2", "width", "height", "url", "align",
     "baseline"),
-  line = c(common_valid_props,  "interpolate", "tension"),
+  line = c(common_valid_props, "interpolate", "tension"),
   rect = c(common_valid_props, "x2", "y2", "width", "height"),
   symbol = c(common_valid_props, "size", "shape"),
   text = c(common_valid_props, "text", "align", "baseline", "dx", "dy", "angle",
