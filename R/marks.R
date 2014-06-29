@@ -125,14 +125,13 @@ globalVariables(known_props)
 
 default_props <- function(type) {
   switch(type,
-    arc =    props(fill := "#333333"),
-    area =   props(fill := "#333333"),
-    line =   props(stroke := "#000000"),
-    image =  props(fill := "#000000"),
-    rect =   props(stroke := "#000000", fill := "#333333"),
+    arc = props(fill := "#333333"),
+    area = props(fill := "#333333"),
+    line = props(stroke := "#000000"),
+    image = props(fill := "#000000"),
+    rect = props(stroke := "#000000", fill := "#333333"),
     symbol = props(fill := "#000000", size := 50),
-    text =   props(fill := "#333333"),
+    text = props(fill := "#333333"),
     stop("Unknown type")
   )
 }
-
