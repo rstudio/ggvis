@@ -11,7 +11,10 @@ layer_lines(vis, ...)
 \item{...}{Visual properties.}
 }
 \description{
-Layer lines on a plot.
+\code{layer_lines} differs from \code{layer_paths} in that \code{layer_lines}
+sorts the data on the x variable, so the line will always proceed from left
+to right, whereas \code{layer_paths} will draw a line in whatever order
+appears in the data.
 }
 \examples{
 mtcars2 <- dplyr::mutate(mtcars, cyl = factor(cyl))
@@ -22,6 +25,6 @@ mtcars2 \%>\% ggvis(~wt, ~mpg, stroke = ~cyl) \%>\%
   group_by(cyl) \%>\% dplyr::arrange(wt) \%>\% layer_paths()
 }
 \seealso{
-\code{link{mark_path}}
+\code{\link{layer_paths}}
 }
 
