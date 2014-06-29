@@ -104,19 +104,19 @@ layer_text <- function(vis, ..., data = NULL) {
 }
 
 common_valid_props <- c("x", "y", "stroke", "strokeOpacity", "fill",
-  "fillOpacity", "opacity", "strokeWidth", "strokeDash")
+  "fillOpacity", "opacity", "strokeWidth", "strokeDash", "key")
 
 valid_props <- list(
   arc = c(common_valid_props, "innerRadius", "outerRadius", "startAngle",
-    "endAngle", "key"),
-  area = c(common_valid_props, "y2", "height", "interpolate", "tension", "key"),
+    "endAngle"),
+  area = c(common_valid_props, "y2", "height", "interpolate", "tension"),
   image = c(common_valid_props, "x2", "y2", "width", "height", "url", "align",
-    "baseline", "key"),
-  line = c(common_valid_props,  "interpolate", "tension", "key"),
-  rect = c(common_valid_props, "x2", "y2", "width", "height", "key"),
-  symbol = c(common_valid_props, "size", "shape", "key"),
+    "baseline"),
+  line = c(common_valid_props,  "interpolate", "tension"),
+  rect = c(common_valid_props, "x2", "y2", "width", "height"),
+  symbol = c(common_valid_props, "size", "shape"),
   text = c(common_valid_props, "text", "align", "baseline", "dx", "dy", "angle",
-    "font", "fontSize", "fontWeight", "fontStyle", "key")
+    "font", "fontSize", "fontWeight", "fontStyle")
 )
 
 # Hack to stop spurious warnings in R CMD check. Used in prop.
