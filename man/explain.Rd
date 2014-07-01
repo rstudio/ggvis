@@ -2,14 +2,6 @@
 \name{explain}
 \alias{explain}
 \title{Explain details of an object}
-\usage{
-explain(x, ...)
-}
-\arguments{
-\item{x}{An object to explain}
-
-\item{...}{Other parameters possibly used by generic}
-}
 \description{
 This is a generic function which gives more details about an object than
 print, and is more focussed on human readable output than str.
@@ -17,5 +9,8 @@ print, and is more focussed on human readable output than str.
 \examples{
 p <- mtcars \%>\% ggvis(x = ~cyl) \%>\% layer_bars()
 explain(p)
+}
+\seealso{
+\code{dplyr::\link[dplyr]{explain}} for more information.
 }
 

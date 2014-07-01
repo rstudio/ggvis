@@ -4,16 +4,20 @@
 #' print, and is more focussed on human readable output than str.
 #'
 #' @export
+#' @seealso \code{dplyr::\link[dplyr]{explain}} for more information.
 #' @inheritParams dplyr::explain
+#' @importFrom dplyr explain
+#' @name explain
 #' @examples
 #' p <- mtcars %>% ggvis(x = ~cyl) %>% layer_bars()
 #' explain(p)
-explain <- function(x, ...) UseMethod("explain")
+NULL
 
 #' Print out the structure of a ggvis object in a friendly format
 #'
 #' @param x Visualisation to explain
 #' @param ... Needed for compatibility with generic. Ignored by this method.
+#' @method explain ggvis
 #' @export
 explain.ggvis <- function (x, ...) {
   cat("Marks:\n")
