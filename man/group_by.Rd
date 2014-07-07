@@ -2,9 +2,6 @@
 \name{group_by}
 \alias{group_by}
 \title{Divide data into groups.}
-\usage{
-group_by(x, ..., add = FALSE)
-}
 \arguments{
 \item{x}{a visualisation}
 

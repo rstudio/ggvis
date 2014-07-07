@@ -1,13 +1,14 @@
 #' Divide data into groups.
 #'
-#'
 #' @param x a visualisation
 #' @param ... variables to group by.
 #' @param add By default, when \code{add = FALSE}, \code{group_by} will
 #'   override existing groups. To instead add to the existing groups,
 #'   use \code{add = FALSE}
+#' @importFrom dplyr group_by
+#' @name group_by
 #' @export
-group_by <- dplyr::group_by
+NULL
 
 #' Dplyr verbs for ggvis.
 #'
