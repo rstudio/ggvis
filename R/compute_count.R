@@ -79,6 +79,9 @@ count_vector <- function(x, weight = NULL, ...) {
   counts <- unname(as.vector(tapply(weight, x, sum, na.rm = TRUE)))
 
   if (is.factor(x)) {
+    # Factor levels that aren't represented in x result in NA, which we'll
+    # drop.
+    counts <- counts[!is.na(counts)]
     # Get the factor levels, preserving factor-ness. Order should align
     # with counts.
     values <- unique(x)
