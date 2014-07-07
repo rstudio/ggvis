@@ -2,9 +2,6 @@
 \name{\%>\%}
 \alias{\%>\%}
 \title{Pipe graphics}
-\usage{
-lhs \%>\% rhs
-}
 \arguments{
 \item{lhs,rhs}{A visualisation and a function to apply to it}
 }
