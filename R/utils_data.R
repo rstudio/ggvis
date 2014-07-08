@@ -21,13 +21,6 @@ data_id <- function(x) {
   x
 }
 
-merge_df <- function(a, b) {
-  if (is.null(a) || nrow(a) == 0 || ncol(a) == 0) return(b)
-  if (is.null(b) || nrow(b) == 0 || ncol(b) == 0) return(a)
-
-  cbind(a[setdiff(names(a), names(b))], b)
-}
-
 # Convenience function to remove missing values from a data.frame
 # Remove all non-complete rows, with a warning if \code{warn_na = FALSE}.
 #
