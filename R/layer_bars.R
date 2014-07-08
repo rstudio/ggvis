@@ -103,6 +103,7 @@ layer_bars <- function(vis, ..., stack = TRUE, width = NULL) {
     }
 
     vis <- layer_f(vis, function(v) {
+      v <- add_props(v, .props = new_props)
       v <- auto_group(v, exclude = c("x", "y"))
       v <- compute_count(v, x_var, y_var)
 
