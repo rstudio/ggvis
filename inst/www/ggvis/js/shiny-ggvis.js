@@ -124,7 +124,7 @@ $(function(){ //DOM Ready
           }
         }
       } else {
-        console.log("Received unknown ggvis_command.")
+        console.log("Received unknown ggvis_command.");
       }
     }
   });
