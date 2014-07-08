@@ -50,7 +50,7 @@ compute_bin.data.frame <- function(x, x_var, w_var = NULL, binwidth = NULL,
     w_val <- eval_vector(x, w_var)
   }
 
-  params <- bin_params(range(x_val), binwidth = binwidth, origin = origin,
+  params <- bin_params(range2(x_val), binwidth = binwidth, origin = origin,
     right = right)
 
   bin_vector(x_val, weight = w_val, binwidth = params$binwidth,
@@ -62,7 +62,7 @@ compute_bin.grouped_df <- function(x, x_var, w_var = NULL, binwidth = NULL,
                                    origin = NULL, right = TRUE, pad = TRUE) {
 
   x_val <- eval_vector(x, x_var)
-  params <- bin_params(range(x_val), binwidth = binwidth, origin = origin,
+  params <- bin_params(range2(x_val), binwidth = binwidth, origin = origin,
     right = right)
 
   dplyr::do(x, compute_bin(.,
@@ -142,13 +142,13 @@ bin_vector <- function(x, weight = NULL, ...) {
 #' @export
 bin_vector.numeric <- function(x, weight = NULL, ..., binwidth = 1,
                                origin = NULL, right = TRUE, pad = TRUE) {
-  stopifnot(is.numeric(binwidth) && length(binwidth) == 1)
-  stopifnot(is.null(origin) || (is.numeric(origin) && length(origin) == 1))
-  stopifnot(is.flag(right))
-
   if (length(na.omit(x)) == 0) {
     return(bin_out())
   }
+
+  stopifnot(is.numeric(binwidth) && length(binwidth) == 1)
+  stopifnot(is.null(origin) || (is.numeric(origin) && length(origin) == 1))
+  stopifnot(is.flag(right))
 
   if (is.null(weight)) {
     weight <- rep(1, length(x))

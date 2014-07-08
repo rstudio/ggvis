@@ -199,3 +199,13 @@ concat <- function(x) {
     unlist(x, recursive = FALSE)
   }
 }
+
+# Does the same as base::range, except that for for 0-length vectors, it returns
+# a zero-length vector of appropriate type, instead of throwing an error.
+range2 <- function(..., na.rm = FALSE) {
+  vals <- c(...)
+  if (length(vals) == 0) {
+    return(vals)
+  }
+  range(..., na.rm = na.rm)
+}
