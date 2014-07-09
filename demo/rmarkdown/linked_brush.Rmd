@@ -33,8 +33,7 @@ cocaine %>%
   ggvis(~potency) %>%
   layer_histograms(binwidth = 5, origin = 0) %>%
   add_data(cocaine_selected) %>%
-  layer_histograms(binwidth = 5, origin = 0, fill := "#dd3333") %>%
-  set_options(renderer = "canvas")
+  layer_histograms(binwidth = 5, origin = 0, fill := "#dd3333")
 ```
 
 A summary of the selected points:
