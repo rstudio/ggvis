@@ -26,7 +26,7 @@ and bottom. See \code{\link{padding}}.}
 \item{duration}{Duration of transitions, in milliseconds.}
 
 \item{renderer}{The renderer to use in the browser. Can be \code{"canvas"}
-(the default) or \code{"svg"}.}
+or \code{"svg"} (the default).}
 
 \item{hover_duration}{The amount of time for hover transitions, in
   milliseconds.}
