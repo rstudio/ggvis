@@ -1,24 +1,32 @@
 library(ggvis)
 
-data(diamonds, package = "ggplot2")
-diamonds <- diamonds[sample(1:nrow(diamonds), 1000), ]
+set.seed(1233)
+cocaine <- cocaine[sample(1:nrow(cocaine), 500), ]
+cocaine$id <- seq_len(nrow(cocaine))
 
 shinyServer(function(input, output, session) {
 
-  lb <- linked_brush(keys = 1:nrow(diamonds))
+  lb <- linked_brush(keys = cocaine$id, "red")
 
-  diamonds %>%
-    ggvis(~carat, ~price) %>%
-    layer_points(fill := lb$fill, fillOpacity := 0.8,
-      fill.brush := "red") %>%
+  cocaine %>%
+    ggvis(~weight, ~price, key := ~id) %>%
+    layer_points(fill := lb$fill, fill.brush := "red", opacity := 0.3) %>%
     lb$input() %>%
     set_options(width = 300, height = 300) %>%
     bind_shiny("plot1") # Very important!
 
-  diamonds %>%
-    ggvis(~table, ~depth) %>%
-    layer_points(fill := lb$fill, fillOpacity := 0.8) %>%
+
+  # A subset of cocaine, of only the selected points
+  selected <- lb$selected
+  cocaine_selected <- reactive({
+    cocaine[selected(), ]
+  })
+
+  cocaine %>%
+    ggvis(~potency) %>%
+    layer_histograms(binwidth = 5, origin = 0) %>%
+    add_data(cocaine_selected) %>%
+    layer_histograms(binwidth = 5, origin = 0, fill := "#dd3333") %>%
     set_options(width = 300, height = 300) %>%
     bind_shiny("plot2")
-
 })
