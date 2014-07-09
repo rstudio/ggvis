@@ -172,7 +172,7 @@ eval_vector.data.frame <- function(x, f) {
 # Find the range of values for a vector
 data_range <- function(x) UseMethod("data_range")
 #' @export
-data_range.default <- function(x) range(x, na.rm = TRUE)
+data_range.default <- function(x) range2(x, na.rm = TRUE)
 #' @export
 data_range.character <- function(x) unique(na.omit(x))
 #' @export
@@ -182,7 +182,10 @@ data_range.factor <- function(x) levels(x)
 # For POSIXct, this preserves time zone.
 # For factors, this preserves all levels (but not necessarily order)
 concat <- function(x) {
-  x <- compact(x)
+  x <- drop_nulls(x)
+  if (length(x) == 0) {
+    return(NULL)
+  }
   if (inherits(x[[1]], "POSIXct")) {
     vec <- do_call(c, .args = x)
     structure(vec, tzone = attr(x[[1]], "tzone"))

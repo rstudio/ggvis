@@ -96,6 +96,14 @@ test_that("concat preserves types and timezones", {
 })
 
 
+test_that("concat handles NULLs and zero-length vectors", {
+  expect_identical(concat(list(NULL, NULL)), NULL)
+  expect_identical(concat(list(NULL, character(0))), character(0))
+  expect_identical(concat(list(NULL, 1:10)), 1:10)
+  expect_identical(concat(list(1:10, NULL, integer(0))), 1:10)
+})
+
+
 test_that("preserve_constants", {
   # Input data frames with various numbers of rows
   input0 <- data.frame(a = numeric(0), b = character(0), stringsAsFactors = FALSE)

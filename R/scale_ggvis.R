@@ -223,7 +223,8 @@ scale_domain_data <- function(x) {
 
 
 expand_range <- function(range, mult = 0) {
-  if (length(range) != 2) stop("range must have 2 values")
+  if (length(range) == 0) return(range)
+  if (length(range) != 2) stop("range must have either 0 or 2 values")
   if (length(mult) == 1) mult <- c(mult, mult)
 
   range + diff(range) * mult * c(-1, 1)
