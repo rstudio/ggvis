@@ -23,3 +23,14 @@ test_that("compute_stack works as expected", {
   expected <- expected[order(dat$g2), ] %>% as.data.frame()
   expect_equal(stacked[c("stack_lwr_", "stack_upr_")], expected)
 })
+
+
+test_that("compute_stack works on zero-row data", {
+  dat <- data.frame(a = numeric(0), b = character(0))
+  stacked <- compute_stack(dat, ~a, ~b)
+  expect_equal(nrow(stacked), 0)
+  expect_identical(
+    names(stacked),
+    c("a", "b", "group__", "stack_upr_", "stack_lwr_")
+  )
+})
