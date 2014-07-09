@@ -1,10 +1,28 @@
 # There are five way to display a ggvis plot:
-#   * static html file
-#   * temporary shiny app
+#   * static html file (static plot)
+#     * print.ggvis -> view_static -> ggvisLayout -> ggvisElements
+#     * Doesn't need shiny
+#     * Needs embedded spec
+#
+#   * temporary shiny app (dynamic plot)
+#     * print.ggvis -> view_dynamic -> ggvis_app -> ggvisLayout -> ggvisElements
+#     * Needs shiny
+#     * Doesn't need embedded spec
+#
 #   * static html embedded in Rmarkdown
+#     * knit_print.ggvis -> ggvisElements
+#     * Doesn't need shiny
+#     * Needs embedded spec
+#
 #   * shiny app embedded in Rmarkdown
+#     * knit_print.ggvis -> ggvis_app -> ggvisLayout -> ggvisElements
+#     * Needs shiny
+#     * Doesn't need embedded spec
+#
 #   * embedded in regular shiny app
-
+#     * call ggvisOutput in ui.R
+#     * Needs shiny
+#     * Doesn't need embedded spec
 
 #' View in a ggvis plot in the browser.
 #'
@@ -47,7 +65,9 @@ view_static <- function(x, plot_id = rand_id("plot_"),
                         dest = tempfile(pattern = "ggvis")) {
 
   spec <- as.vega(x, dynamic = FALSE)
-  htmltools::browsable(ggvisLayout(plot_id, length(x$controls) > 0, spec))
+  htmltools::browsable(
+    ggvisLayout(plot_id, length(x$controls) > 0, spec, shiny = FALSE)
+  )
 }
 
 #' @rdname print.ggvis
@@ -104,8 +124,9 @@ knit_print.ggvis <- function(x, options = list(), inline = FALSE, ...) {
     )
   }
 
+  # If we got here, it's static
   spec <- as.vega(x, dynamic = FALSE)
-  knit_print(ggvisOutput(spec = spec))
+  knitr::knit_print(ggvisOutputElements(spec = spec, shiny = FALSE))
 }
 
 # Helper functions -------------------------------------------------------------

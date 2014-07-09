@@ -1,5 +1,6 @@
-ggvisLayout <- function(plot_id, has_controls = TRUE, spec = NULL) {
-  plot_div <- ggvisOutput(plot_id, spec = spec)
+ggvisLayout <- function(plot_id, has_controls = TRUE, spec = NULL,
+                        shiny = TRUE) {
+  plot_div <- ggvisOutputElements(plot_id, spec = spec, shiny = shiny)
 
   if (!has_controls) {
     plot_div
@@ -13,13 +14,25 @@ ggvisLayout <- function(plot_id, has_controls = TRUE, spec = NULL) {
   }
 }
 
+# This is the user-facing wrapper for ggvisOutputElements. When the user calls
+# it, it will always be used with Shiny.
 #' @rdname shiny-ggvis
 #' @param plot_id unique identifier to use for the div containing the ggvis plot.
+#' @export
+ggvisOutput <- function(plot_id = rand_id("plot_id")) {
+  ggvisOutputElements(plot_id, spec = NULL, shiny = TRUE)
+}
+
+
+# Internal-facing function similar to ggvisOutput, but with more options.
+#' @param plot_id unique identifier to use for the div containing the ggvis plot.
+#' @param spec Plot specification, used internally.
 #' @param shiny Should this include headers for Shiny? For dynamic and
 #'   interactive plots, this should be TRUE; otherwise FALSE.
-#' @param spec Plot specification, used internally.
-#' @export
-ggvisOutput <- function(plot_id = rand_id("plot_id"), spec = NULL) {
+#' @keywords internal
+ggvisOutputElements <- function(plot_id = rand_id("plot_id"), spec = NULL,
+                                shiny = TRUE) {
+
   htmltools::attachDependencies(
     htmltools::tagList(
       ggvisPlot(plot_id),
@@ -27,7 +40,7 @@ ggvisOutput <- function(plot_id = rand_id("plot_id"), spec = NULL) {
     ),
     c(
       ggvis_dependencies(),
-      list(shiny_dependency())
+      if (shiny) list(shiny_dependency())
     )
   )
 }

@@ -71,10 +71,7 @@ shiny_dependency <- function() {
 ggvis_app <- function(x, plot_id = rand_id("plot_"),
                       ...) {
 
-  ui <- htmltools::attachDependencies(
-    list(ggvisLayout(plot_id, length(x$controls) > 0)),
-    shiny_dependency()
-  )
+  ui <- ggvisLayout(plot_id, length(x$controls) > 0, spec = NULL, shiny = TRUE)
 
   server <- function(input, output, session) {
     r_gv <- reactive(x)

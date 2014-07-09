@@ -11,7 +11,7 @@ bind_shiny(vis, plot_id, controls_id = NULL, ...,
 
 bind_shiny_ui(vis, controls_id, session = shiny::getDefaultReactiveDomain())
 
-ggvisOutput(plot_id = rand_id("plot_id"), spec = NULL)
+ggvisOutput(plot_id = rand_id("plot_id"))
 }
 \arguments{
 \item{vis}{A ggvis object, or a reactive expression that returns a ggvis
@@ -24,11 +24,6 @@ object.}
 \item{controls_id}{Unique identifier for controls div.}
 
 \item{plot_id}{unique identifier to use for the div containing the ggvis plot.}
-
-\item{shiny}{Should this include headers for Shiny? For dynamic and
-interactive plots, this should be TRUE; otherwise FALSE.}
-
-\item{spec}{Plot specification, used internally.}
 }
 \description{
 Embedding ggvis in a shiny app is easy. You need to make a place for it in
