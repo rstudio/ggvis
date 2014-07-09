@@ -1,3 +1,19 @@
+# ggvis 0.3.0.99
+
+* `layer_bars()` now uses correctly uses `fill` prop when it is passed to the
+  function, and not inherited. (#201)
+
+* `compute_count()` drops unused factor levels. (#201)
+
+* `compute_bin()` and `compute_stack()` no longer give warnings and errors for
+  zero-row data frames. (#211)
+
+* Range calculation for zero-length vectors now returns NULL instead of
+  throwing an error.
+
+* Objects imported from the magritter and dplyr packages are now properly
+  re-exported.
+
 # ggvis 0.3.0.1
 
 * Reconcile shiny dependency at run-time, not build time.
