@@ -9,6 +9,8 @@ subvis(vis, ..., data = NULL, width = NULL, height = NULL)
 Create a subvisualisation.
 }
 \examples{
+# Examples don't work yet
+\dontrun{
 library(dplyr, warn.conflicts = FALSE)
 
 small <- nasaweather::atmos \%>\%
@@ -29,5 +31,6 @@ small \%>\%
     layer_points(~month, ~ozone) \%>\%
     add_axis("x", ticks = 3) \%>\%
     add_axis("y", ticks = 3)
+}
 }
 

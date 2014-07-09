@@ -16,3 +16,5 @@ hover         Adding custom hover behaviour
 brush         Basic brushing
 
 size          Control the size of the output plot
+
+subvis        Subvisualizations (faceting)

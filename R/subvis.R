@@ -1,6 +1,8 @@
 #' Create a subvisualisation.
 #'
 #' @examples
+#' # Examples don't work yet
+#' \dontrun{
 #' library(dplyr, warn.conflicts = FALSE)
 #'
 #' small <- nasaweather::atmos %>%
@@ -21,6 +23,7 @@
 #'     layer_points(~month, ~ozone) %>%
 #'     add_axis("x", ticks = 3) %>%
 #'     add_axis("y", ticks = 3)
+#' }
 subvis <- function(vis, ..., data = NULL, width = NULL, height = NULL) {
   # Very similar to add_mark, but changes to cur_data and cur_props are
   # persistent, we use the special mark_group() and update cur_vis

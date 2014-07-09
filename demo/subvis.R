@@ -97,7 +97,7 @@ atmos %>%
   ggvis(~surtemp, ~temp) %>%
   layer_lines() %>%
   left_join(atmos, by = c("lat", "long")) %>%
-  layer_group(width = ?, height = ?) %>%
+  #layer_group(width = ?, height = ?) %>%
   layer_points(~surftemp, ~temp)
 
 # If grouped, then join needs to be subset of grouping variables.
