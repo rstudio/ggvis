@@ -23,9 +23,12 @@ ggvisOutput <- function(plot_id = rand_id("plot_id")) {
   ggvisOutputElements(plot_id, spec = NULL, shiny = TRUE)
 }
 
-
-# Internal-facing function similar to ggvisOutput, but with more options.
-#' @param plot_id unique identifier to use for the div containing the ggvis plot.
+#' Create HTML elements for ggvis output
+#'
+#' This is an internal-facing function similar to ggvisOutput, but with more
+#' options.
+#'
+#' @param plot_id Unique identifier to use for the div containing the ggvis plot.
 #' @param spec Plot specification, used internally.
 #' @param shiny Should this include headers for Shiny? For dynamic and
 #'   interactive plots, this should be TRUE; otherwise FALSE.
