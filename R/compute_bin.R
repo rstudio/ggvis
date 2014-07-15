@@ -44,6 +44,13 @@ compute_bin.data.frame <- function(x, x_var, w_var = NULL, binwidth = NULL,
   assert_that(is.formula(x_var))
 
   x_val <- eval_vector(x, x_var)
+
+  x_na <- is.na(x_val)
+  if (any(x_na)) {
+    message("compute_bin: NA values ignored for binning.")
+    x_val <- x_val[!x_na]
+  }
+
   if (is.null(w_var)) {
     w_val <- NULL
   } else {
