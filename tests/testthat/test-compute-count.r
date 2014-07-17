@@ -19,4 +19,14 @@ test_that("count_vector correctly handles factors", {
       x_ = factor(c("A", "C"), levels = c("A", "B", "C"))
     )
   )
+
+  # Factor with levels in non-lexical order
+  fac <- factor(c("A", "A", "C"), levels = c("C", "A"))
+  expect_identical(
+    count_vector(fac),
+    data.frame(
+      count_ = c(1, 2),
+      x_ = factor(c("C", "A"), levels = c("C", "A"))
+    )
+  )
 })
