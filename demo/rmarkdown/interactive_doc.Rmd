@@ -6,9 +6,9 @@ runtime: shiny
 
 ```{r echo=FALSE}
 library(knitr)
-library(ggvis)
+library(ggvis, warn.conflicts = FALSE)
 library(shiny)
-library(dplyr)
+library(dplyr, warn.conflicts = FALSE)
 ```
 
 An interactive plot:
