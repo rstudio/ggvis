@@ -6,23 +6,6 @@ $(function(){ //DOM Ready
 
   var _ = window.lodash;
 
-  var ggvisOutputBinding = new Shiny.OutputBinding();
-  $.extend(ggvisOutputBinding, {
-    find: function(scope) {
-      return $(scope).find('.shiny-ggvis-output');
-    },
-    onValueError: function(el, err) {
-      Shiny.unbindAll(el);
-      this.renderError(el, err);
-    },
-    renderValue: function(el, data) {
-      vg.parse.spec(data.spec, function(chart) {
-        chart({el: el}).update({duration: 250});
-      });
-    }
-  });
-  Shiny.outputBindings.register(ggvisOutputBinding, 'shiny.ggvisOutput');
-
   // A customized version of Shiny's htmlOutputBinding which can call a plot's
   // onControlOutput function when outputs are updated drawn.
   var ggvisControlOutputBinding = new Shiny.OutputBinding();
