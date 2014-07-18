@@ -1,4 +1,3 @@
-# Modifying scales
 library(ggvis)
 
 mtcars %>%
