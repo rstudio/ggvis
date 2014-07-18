@@ -144,7 +144,8 @@ fortify_legend <- function(legend, scales_props) {
 
   legend <- structure(compact(list(
       orient = legend$orient, title = legend$title, format = legend$format,
-      values = legend$values, properties = legend$properties
+      values = legend$values, properties = legend$properties,
+      hide = legend$hide
   )), class = c("fortified_legend", "ggvis_legend"))
 
   legend[scales_props] <- names(scales_props)

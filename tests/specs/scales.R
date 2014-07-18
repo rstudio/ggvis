@@ -58,3 +58,13 @@ df %>%
   ggvis(x = ~factor(x), y = ~y) %>%
   layer_bars() %>%
   save_spec("scales/bars.json")
+
+# Hide axes and legends
+df %>%
+  ggvis(x = ~x, y = ~y, fill = ~z, shape = ~factor(x)) %>%
+  layer_points() %>%
+  hide_legend("fill") %>%
+  hide_legend("shape") %>%
+  hide_axis("x") %>%
+  hide_axis("y") %>%
+  save_spec("scales/hide_guides.json")
