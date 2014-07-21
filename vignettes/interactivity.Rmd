@@ -218,7 +218,7 @@ page.
 ```{r, eval = FALSE}
 shinyUI(pageWithSidebar(
   sidebarPanel(
-    sliderInput("size", "Area", 10, 1000),
+    sliderInput("size", "Area", 10, 1000)
   ),
   mainPanel(
     uiOutput("ggvis_ui"),
