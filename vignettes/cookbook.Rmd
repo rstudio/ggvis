@@ -118,17 +118,6 @@ pressure2 %>% ggvis(~temperature, ~pressure) %>%
   layer_bars()
 ```
 
-Notice that in this example, the x values aren't sorted quite right: they're sorted lexically, by the first, second, and then third digit, instead of by the numeric value. This is due to a limitation in ggvis.
-
-It's possible to work around this by using a data set with a numerical x, and then tell it to display using a nominal scale. Notice in the example below, the x-axis labels are centered under each bar, each bar has a label, and they are sorted numerically.
-
-
-```{r, message = FALSE, fig.width = 4}
-# Use the original pressure data set with continuous x values
-pressure %>% ggvis(~temperature, ~pressure) %>%
-  layer_bars()
-```
-
 
 ## Line graphs
 
@@ -159,11 +148,9 @@ Basic histogram:
 faithful %>% ggvis(~eruptions) %>% layer_histograms()
 ```
 
-Modify the fill color and binwidth, and add titles for the axes, since the automatic titles aren't very informative:
+Modify the fill color and binwidth:
 
 ```{r, message = FALSE}
 faithful %>% ggvis(~eruptions, fill := "#fff8dc") %>%
-  layer_histograms(binwidth = 0.25) %>%
-  add_axis("x", title = "eruptions") %>%
-  add_axis("y", title = "count")
+  layer_histograms(binwidth = 0.25)
 ```
