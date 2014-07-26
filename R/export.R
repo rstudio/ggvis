@@ -47,7 +47,7 @@ vega_file <- function(gv, envir = parent.frame(), file = NULL,
 
   # Generate the Vega JSON spec
   json_file <- file.path(temp_dir, "plot.json")
-  vega_json <- save_spec(json_file, gv)
+  vega_json <- save_spec(gv, json_file)
   on.exit(unlink(json_file))
 
   # Create the image file
