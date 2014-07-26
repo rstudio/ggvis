@@ -4,14 +4,12 @@
 \alias{export_svg}
 \title{Export a PNG or SVG from a ggvis object}
 \usage{
-export_png(x, envir = parent.frame(), file = NULL)
+export_png(vis, file = NULL)
 
-export_svg(x, envir = parent.frame(), file = NULL)
+export_svg(vis, file = NULL)
 }
 \arguments{
-\item{x}{A ggvis object.}
-
-\item{envir}{The environment in which to evaluate \code{gv}.}
+\item{vis}{A ggvis object.}
 
 \item{file}{Output file name. If NULL, defaults to "plot.svg" or "plot.png".}
 }
@@ -21,6 +19,6 @@ part of \code{vega} node.js module.
 }
 \seealso{
 \url{https://github.com/trifacta/vega} for information on installing
-  \code{vg2png} and \code{vg2svg}
+  \code{vg2png} and \code{vg2svg}.
 }
 

@@ -4,33 +4,34 @@
 #' part of \code{vega} node.js module.
 #'
 #' @seealso \url{https://github.com/trifacta/vega} for information on installing
-#'   \code{vg2png} and \code{vg2svg}
-#' @param x A ggvis object.
-#' @param envir The environment in which to evaluate \code{gv}.
+#'   \code{vg2png} and \code{vg2svg}.
+#'
+#' @param vis A ggvis object.
 #' @param file Output file name. If NULL, defaults to "plot.svg" or "plot.png".
 #' @export
-export_png <- function(x, envir = parent.frame(), file = NULL) {
-  vega_file(x, envir, file = file, type = "png")
+export_png <- function(vis, file = NULL) {
+  vega_file(vis, file = file, type = "png")
 }
 
 #' @rdname export_png
 #' @export
-export_svg <- function(x, envir = parent.frame(), file = NULL) {
-  vega_file(x, envir, file = file, type = "svg")
+export_svg <- function(vis, file = NULL) {
+  vega_file(vis, file = file, type = "svg")
 }
 
 # Generate an output image file from a ggvis object
 #
-# @param gv A ggvis object.
-# @param envir The environment in which to evaluate \code{gv}.
+# @param vis A ggvis object.
 # @param file Output file name. If NULL, defaults to "plot.png".
 # @param type Output file type.
-vega_file <- function(gv, envir = parent.frame(), file = NULL,
-                      type = "png") {
+vega_file <- function(vis, file = NULL, type = "png") {
 
   if (!(type %in% c("png", "svg")))  stop("type must be 'png' or 'svg'")
 
-  if (is.null(file))  file <- paste0("plot.", type)
+  if (is.null(file)) {
+    file <- paste0("plot.", type)
+    message("Writing to file ", file)
+  }
 
   temp_dir <- tempfile(pattern = "ggvis")
   dir.create(temp_dir)
@@ -47,7 +48,7 @@ vega_file <- function(gv, envir = parent.frame(), file = NULL,
 
   # Generate the Vega JSON spec
   json_file <- file.path(temp_dir, "plot.json")
-  vega_json <- save_spec(gv, json_file)
+  vega_json <- save_spec(vis, json_file)
   on.exit(unlink(json_file))
 
   # Create the image file
