@@ -799,10 +799,18 @@ ggvis = (function(_) {
 
       // Internal functions --------------------------------------------
       function mouseOffset(e) {
-        return {
-          x: e.offsetX,
-          y: e.offsetY
-        };
+        if (e.offsetX == undefined) {
+          return {
+            x: e.pageX - $(e.currentTarget).offset().left,
+            y: e.pageY - $(e.currentTarget).offset().top
+          };
+        }
+        else {
+          return {
+            x: e.offsetX,
+            y: e.offsetY
+          };
+        }
       }
 
       return brush;
