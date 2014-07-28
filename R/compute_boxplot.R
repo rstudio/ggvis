@@ -5,7 +5,16 @@ compute_boxplot <- function(x, var = NULL, coef = 1.5) {
 
 #' @export
 compute_boxplot.grouped_df <- function(x, var = NULL, coef = 1.5) {
-  dplyr::do(x, compute_boxplot(., var, coef))
+  old_groups <- dplyr::groups(x)
+  x <- dplyr::ungroup(x)
+
+  # FIXME: Temporarily use ddply instead of dplyr::do because of dplyr issues
+  #        #463 and #514.
+  group_names <- vapply(old_groups, as.character, character(1))
+  x <- plyr::ddply(x, group_names, function(df) compute_boxplot(df, var, coef))
+
+  x <- dplyr::regroup(x, old_groups)
+  x
 }
 
 #' @export
