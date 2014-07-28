@@ -15,7 +15,10 @@ export_svg(vis, file = NULL)
 }
 \description{
 This requires that the external program \code{vg2png} is installed. This is
-part of \code{vega} node.js module.
+part of the \code{vega} node.js module.
+}
+\examples{
+mtcars \%>\% ggvis(x = ~wt) \%>\% export_png()
 }
 \seealso{
 \url{https://github.com/trifacta/vega} for information on installing

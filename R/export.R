@@ -1,13 +1,16 @@
 #' Export a PNG or SVG from a ggvis object
 #'
-#' This requires that the external program \code{vg2png} is installed. This is 
-#' part of \code{vega} node.js module.
+#' This requires that the external program \code{vg2png} is installed. This is
+#' part of the \code{vega} node.js module.
 #'
 #' @seealso \url{https://github.com/trifacta/vega} for information on installing
 #'   \code{vg2png} and \code{vg2svg}.
 #'
 #' @param vis A ggvis object.
 #' @param file Output file name. If NULL, defaults to "plot.svg" or "plot.png".
+#' @examples
+#' mtcars %>% ggvis(x = ~wt) %>% export_png()
+#'
 #' @export
 export_png <- function(vis, file = NULL) {
   vega_file(vis, file = file, type = "png")
