@@ -18,7 +18,9 @@ This requires that the external program \code{vg2png} is installed. This is
 part of the \code{vega} node.js module.
 }
 \examples{
+\dontrun{
 mtcars \%>\% ggvis(x = ~wt) \%>\% export_png()
+}
 }
 \seealso{
 \url{https://github.com/trifacta/vega} for information on installing

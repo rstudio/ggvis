@@ -9,8 +9,9 @@
 #' @param vis A ggvis object.
 #' @param file Output file name. If NULL, defaults to "plot.svg" or "plot.png".
 #' @examples
+#' \dontrun{
 #' mtcars %>% ggvis(x = ~wt) %>% export_png()
-#'
+#' }
 #' @export
 export_png <- function(vis, file = NULL) {
   vega_file(vis, file = file, type = "png")
