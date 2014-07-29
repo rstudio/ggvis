@@ -37,7 +37,7 @@ ggvis = (function(_) {
   }
 
   // Are we in a panel - an iframe or RStudio viewer pane?
-  inPanel = function() {
+  function inPanel() {
     return (queryVar("viewer_pane") === "1" || queryVar("__subapp__") === "1");
   };
 
