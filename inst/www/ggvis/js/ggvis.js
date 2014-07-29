@@ -39,12 +39,12 @@ ggvis = (function(_) {
   // Are we in a panel - an iframe or RStudio viewer pane?
   function inPanel() {
     return (queryVar("viewer_pane") === "1" || queryVar("__subapp__") === "1");
-  };
+  }
 
   // Are we in a window for exporting the image?
   function inExportPanel() {
     return queryVar("viewer_export") === "1";
-  };
+  }
 
   // ggvis.CallbackRegistry class ----------------------------------------------
   ggvis.CallbackRegistry = (function() {
@@ -847,7 +847,7 @@ vg.data.treefacet = function() {
         obj, klist, kstr, len, i, k, kv;
 
     if (keys.length === 0) {
-      throw "Need at least one key"
+      throw "Need at least one key";
     }
 
     for (i=0, len=data.length; i<len; ++i) {
