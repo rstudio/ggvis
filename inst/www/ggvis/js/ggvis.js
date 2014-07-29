@@ -41,6 +41,11 @@ ggvis = (function(_) {
     }
   }
 
+  // Are we in a window for exporting the image?
+  function inExportPanel() {
+    return queryVar("viewer_export") === "1";
+  };
+
   // ggvis.CallbackRegistry class ----------------------------------------------
   ggvis.CallbackRegistry = (function() {
     // obj is an object to use as the context for the callbacks
@@ -196,6 +201,10 @@ ggvis = (function(_) {
         self.addHandlers(self.spec.handlers);
 
         self.brush.enable();
+
+        if (inExportPanel()) {
+          $('.plot-gear-icon').hide();
+        }
 
         if (ggvis.inPanel()) {
           self.enableAutoResizeToWindow();
