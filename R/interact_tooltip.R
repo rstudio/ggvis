@@ -71,7 +71,7 @@ add_tooltip <- function(vis, html, on = c("hover", "click")) {
 #' @export
 show_tooltip <- function(session, l = 0, t = 0, html = "") {
   ggvis_message(session, "show_tooltip",
-    list(pagex = l, pagey = t, html = html))
+    list(pagex = l, pagey = t, html = as.character(html)))
 }
 
 #' @rdname show_tooltip
