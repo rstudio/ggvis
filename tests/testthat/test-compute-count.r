@@ -30,3 +30,17 @@ test_that("count_vector correctly handles factors", {
     )
   )
 })
+
+test_that("count_vector preserves dates and times", {
+  dates <- as.Date("2013-07-01") + 1:100
+  res <- count_vector(dates)
+  expect_identical(dates, res$x_)
+
+  times <- as.POSIXct('2001-06-11 21:00', tz = 'America/New_York') + 1:10 * 100
+  res <- count_vector(times)
+  expect_identical(times, res$x_)
+
+  times <- as.POSIXct('2001-06-11 21:00', tz = 'UTC') + seq(1, 1000, by = 10)
+  res <- count_vector(times)
+  expect_identical(times, res$x_)
+})

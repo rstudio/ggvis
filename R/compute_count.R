@@ -76,6 +76,17 @@ count_vector <- function(x, weight = NULL, ...) {
   if (is.null(weight)) {
     weight <- rep.int(1, length(x))
   }
+
+  # Preserve date and time types
+  if (inherits(x, "POSIXct")) {
+    tz <- attr(x, "tzone", TRUE)
+    restore <- function(x) as.POSIXct(x, origin = "1970-01-01", tz = tz)
+  } else if (inherits(x, "Date")) {
+    restore <- function(x) structure(x, class = "Date")
+  } else {
+    restore <- identity
+  }
+
   counts <- unname(as.vector(tapply(weight, x, sum, na.rm = TRUE)))
 
   if (is.factor(x)) {
@@ -94,7 +105,7 @@ count_vector <- function(x, weight = NULL, ...) {
 
   data.frame(
     count_ = counts,
-    x_ = values,
+    x_ = restore(values),
     stringsAsFactors = FALSE
   )
 }
