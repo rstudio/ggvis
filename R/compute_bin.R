@@ -128,6 +128,18 @@ bin_params.POSIXct <- function(x_range, binwidth = NULL, origin = NULL,
 }
 
 #' @export
+bin_params.Date <- function(x_range, binwidth = NULL, origin = NULL,
+                               right = TRUE) {
+
+  if (is.null(binwidth)) {
+    binwidth <- as.numeric(diff(x_range) / 30)
+    notify_guess(binwidth, "range / 30")
+  }
+
+  list(binwidth = binwidth, origin = origin, right = right)
+}
+
+#' @export
 bin_params.integer <- function(x_range, binwidth = NULL, origin = NULL,
                                right = TRUE) {
 
@@ -189,20 +201,39 @@ bin_vector.numeric <- function(x, weight = NULL, ..., binwidth = 1,
 }
 
 #' @export
-bin_vector.POSIXt <- function(x, weight = NULL, ..., binwidth = 1,
-                              origin = NULL, right = TRUE) {
+bin_vector.POSIXct <- function(x, weight = NULL, ..., binwidth = 1,
+                               origin = NULL, right = TRUE) {
+
   # Convert times to raw numbers (seconds since UNIX epoch), and call bin.numeric
   results <- bin_vector(as.numeric(x), weight = weight, binwidth = binwidth,
     origin = origin, right = right)
 
   # Convert some columns from numeric back to POSIXct objects
+  tz <- attr(x, "tzone", TRUE)
   time_cols <- c("x_", "xmin_", "xmax_")
   results[time_cols] <- lapply(results[time_cols], function(col) {
-    structure(col, class = c("POSIXct", "POSIXt"))
+    as.POSIXct(col, origin = "1970-01-01", tz = tz)
   })
 
   results
 }
+
+#' @export
+bin_vector.Date <- function(x, weight = NULL, ..., binwidth = 1,
+                            origin = NULL, right = TRUE) {
+  # Convert times to raw numbers, and call bin_vector.numeric
+  results <- bin_vector(unclass(x), weight = weight, binwidth = binwidth,
+                        origin = origin, right = right)
+
+  # Convert some columns from numeric back to Date objects
+  time_cols <- c("x_", "xmin_", "xmax_")
+  results[time_cols] <- lapply(results[time_cols], function(col) {
+    structure(col, class = "Date")
+  })
+
+  results
+}
+
 
 #' @export
 bin_vector.default <- function(x, weight = NULL, ...) {
