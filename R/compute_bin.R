@@ -202,11 +202,14 @@ bin_vector.numeric <- function(x, weight = NULL, ..., binwidth = 1,
 
 #' @export
 bin_vector.POSIXct <- function(x, weight = NULL, ..., binwidth = 1,
-                               origin = NULL, right = TRUE) {
+                               origin = NULL, right = TRUE, pad = TRUE) {
+
+  if (!is.null(origin))
+    origin <- as.numeric(origin)
 
   # Convert times to raw numbers (seconds since UNIX epoch), and call bin.numeric
   results <- bin_vector(as.numeric(x), weight = weight, binwidth = binwidth,
-    origin = origin, right = right)
+                        origin = origin, right = right, pad = pad)
 
   # Convert some columns from numeric back to POSIXct objects
   tz <- attr(x, "tzone", TRUE)
@@ -220,10 +223,14 @@ bin_vector.POSIXct <- function(x, weight = NULL, ..., binwidth = 1,
 
 #' @export
 bin_vector.Date <- function(x, weight = NULL, ..., binwidth = 1,
-                            origin = NULL, right = TRUE) {
+                            origin = NULL, right = TRUE, pad = TRUE) {
+
+  if (!is.null(origin))
+    origin <- as.numeric(origin)
+
   # Convert times to raw numbers, and call bin_vector.numeric
-  results <- bin_vector(unclass(x), weight = weight, binwidth = binwidth,
-                        origin = origin, right = right)
+  results <- bin_vector(as.numeric(x), weight = weight, binwidth = binwidth,
+                        origin = as.numeric(origin), right = right, pad = pad)
 
   # Convert some columns from numeric back to Date objects
   time_cols <- c("x_", "xmin_", "xmax_")

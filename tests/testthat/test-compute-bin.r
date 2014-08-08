@@ -14,10 +14,24 @@ test_that("bin_vector preserves dates and times", {
   expect_true(inherits(res$xmin_, "POSIXct"))
   expect_true(inherits(res$xmax_, "POSIXct"))
   expect_identical(sum(res$count_), 10)
-  expect_equal(attr(times, "tzone"), attr(res$x_, "tzone"))
+  expect_identical(attr(times, "tzone"), attr(res$x_, "tzone"))
 
   times <- as.POSIXct('2001-06-11 21:00', tz = 'UTC') + seq(1, 1000, by = 10)
   res <- bin_vector(times, binwidth = 120)
   expect_identical(sum(res$count_), 100)
-  expect_equal(attr(times, "tzone"), attr(res$x_, "tzone"))
+  expect_identical(attr(times, "tzone"), attr(res$x_, "tzone"))
+
+
+  # Can set origin
+  dates <- as.Date("2013-07-01") + 1:100
+  res <- bin_vector(dates, binwidth = 30, origin = as.Date("2013-06-01"),
+                    pad = FALSE)
+  expect_identical(sum(res$count_), 100)
+  expect_identical(res$xmin_[1], as.Date("2013-06-01"))
+
+  res <- bin_vector(times, binwidth = 120,
+                    origin = as.POSIXct('2001-06-11 21:00', tz = 'UTC'),
+                    pad = FALSE)
+  expect_identical(sum(res$count_), 100)
+  expect_identical(res$xmin_[1], as.POSIXct('2001-06-11 21:00', tz = 'UTC'))
 })
