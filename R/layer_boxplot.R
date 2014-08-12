@@ -3,6 +3,8 @@ layer_boxplot <- function(vis, ..., stack = TRUE, width = NULL) {
   new_props <- merge_props(cur_props(vis), props(fill := "white"))
   new_props <- merge_props(new_props, props(...))
 
+  new_outlier_props <- merge_props(cur_props(vis), props(fill := "black"))
+
   check_unsupported_props(new_props, c("x", "y", "x2", "y2"),
                           c("enter", "exit", "hover"), "layer_bars")
 
@@ -32,18 +34,24 @@ layer_boxplot <- function(vis, ..., stack = TRUE, width = NULL) {
       v <- do_call(group_by, quote(v), .args = list(x_var[[2]]))
       v <- compute_boxplot(v, y_var)
 
-      # Add the whiskers using an x scale named "xcenter"
+      # Whiskers are on a centered x scale
       whisker_props <- props(prop("x", x_var, scale = "xcenter"),
                              y = ~min_, y2 = ~max_, width := 0.5)
       v <- emit_rects(v, merge_props(new_props, whisker_props))
 
-
+      # The main box
       rect_props <- props(x = x_var, y = ~lower_, y2 = ~upper_, width = band())
       v <- emit_rects(v, merge_props(new_props, rect_props))
 
+      # Median line
       median_props <- props(x = x_var, y = ~median_, height := 1,
                             width = band())
       v <- emit_rects(v, merge_props(new_props, median_props))
+
+      # Outlier points need their own data set
+      v <- compute_boxplot_outliers(v)
+      outlier_props <- props(prop("x", x_var, scale = "xcenter"), y = ~value_)
+      v <- emit_points(v, merge_props(new_outlier_props, outlier_props))
 
       v
     })

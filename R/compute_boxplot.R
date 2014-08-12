@@ -34,7 +34,7 @@ compute_boxplot.data.frame <- function(x, var = NULL, coef = 1.5) {
   }
 
   res <- as.data.frame(as.list(stats))
-  res$outliers <- list(vals[outliers])
+  res$outliers_ <- list(vals[outliers])
   res
 }
 
@@ -44,6 +44,34 @@ compute_boxplot.ggvis <- function(x, var = NULL, coef = 1.5) {
 
   register_computation(x, args, "boxplot", function(data, args) {
     output <- do_call(compute_boxplot, quote(data), .args = args)
+    preserve_constants(data, output)
+  })
+}
+
+
+
+compute_boxplot_outliers <- function(x) UseMethod("compute_boxplot_outliers")
+
+compute_boxplot_outliers.grouped_df <- function(x) {
+  old_groups <- dplyr::groups(x)
+  x <- dplyr::ungroup(x)
+
+  # FIXME: Temporarily use ddply instead of dplyr::do because of dplyr issues
+  #        #463 and #514.
+  group_names <- vapply(old_groups, as.character, character(1))
+  x <- plyr::ddply(x, group_names, compute_boxplot_outliers.data.frame)
+
+  x <- dplyr::regroup(x, old_groups)
+  x
+}
+
+compute_boxplot_outliers.data.frame <- function(x) {
+  data.frame(value_ = unlist(x$outliers_))
+}
+
+compute_boxplot_outliers.ggvis <- function(x) {
+  register_computation(x, args = NULL, "boxplot_outliers", function(data, args) {
+    output <- do_call(compute_boxplot_outliers, quote(data))
     preserve_constants(data, output)
   })
 }
