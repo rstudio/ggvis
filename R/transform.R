@@ -46,7 +46,7 @@ preserve_constants.grouped_df <- function(input, output) {
   constants <- do_call(dplyr::select, quote(constants),
     .args = dplyr::groups(constants))
 
-  dplyr::left_join(constants, output, by = group_vars)
+  dplyr::inner_join(constants, output, by = group_vars)
 }
 
 

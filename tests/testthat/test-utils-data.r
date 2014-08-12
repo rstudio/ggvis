@@ -132,4 +132,12 @@ test_that("preserve_constants", {
   expect_identical(preserve_constants(input0, output2), cbind(abNA, output2))
   expect_identical(preserve_constants(input1, output2), cbind(input1, output2))
   expect_identical(preserve_constants(input3, output2), cbind(b1, output2))
+
+  # grouped_df with no rows in some groups - output shouldn't have NA rows for
+  # those taht are missing in one or the other
+  input3g <- group_by(input3, a)
+  expect_equal(
+    preserve_constants(input3g, data.frame(a=1:2, v=5:6)),
+    group_by(data.frame(a=1:2, v=5:6), a)
+  )
 })
