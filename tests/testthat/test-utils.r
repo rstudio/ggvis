@@ -38,6 +38,10 @@ test_that("all_same behaves as expected", {
 
   # Zero-length vector
   expect_true(all_same(character()))
+
+  # List (instead of atomic vector)
+  expect_false(all_same(list()))
+  expect_false(all_same(list(numeric(0))))
 })
 
 

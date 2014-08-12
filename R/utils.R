@@ -77,14 +77,19 @@ merge_vectors <- function(a, b) {
 
 # Tests whether all elements in a vector are the same, respecting NA.
 # Returns TRUE for zero-length vectors
+# Returns FALSE for non-atomic vectors
 all_same <- function(x) {
+  if (!is.atomic(x)) {
+    return(FALSE)
+  }
+
   nas <- is.na(x)
   if (length(x) == 0 || all(nas))
     TRUE
   else if (any(nas))
     FALSE
   else
-    all(x == x[1])
+     all(x == x[1])
 }
 
 # Test whether a file exists and is a directory
