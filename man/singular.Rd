@@ -29,7 +29,8 @@ that prop will automatically have \code{points} set to \code{FALSE}.}
 \item{domain}{The domain of the scale, representing the set of data values.
 For ordinal scales, a character vector; for quantitative scales, a numeric
 vector of length two. Either value (but not both) may be NA, in which
-case \code{domainMin} or \code{domainMax} is set.}
+case \code{domainMin} or \code{domainMax} is set. For dynamic scales, this
+can also be a reactive which returns the appropriate type of vector.}
 
 \item{override}{Should the domain specified by this ggvis_scale object
 override other ggvis_scale objects for the same scale? Useful when domain is

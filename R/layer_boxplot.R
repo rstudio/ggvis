@@ -1,5 +1,35 @@
+#' Display data with a boxplot.
+#'
+#' This will add boxplots to a plot. The action of \code{layer_boxplot} depends
+#' on whether the \code{x} prop is continuous or categorical.
+#'
+#' @param vis Visualisation to modify
+#' @param ... Visual properties used to override defaults.
+#' @param width Width of each bar. When x is continuous, this controls the width
+#'   in the same units as x. When x is categorical, this controls the width as a
+#'   proportion of the spacing between items (default is 0.9).
+#' @inheritParams compute_boxplot
+#' @seealso \code{\link{compute_boxplot}} for more information on how data is
+#'   transformed.
 #' @export
-layer_boxplot <- function(vis, ..., stack = TRUE, width = NULL) {
+#' @examples
+#' library(dplyr)
+#'
+#' # Make data set with categorical x
+#' mtc <- mtcars
+#' mtc$cyl <- factor(mtc$cyl)
+#'
+#' mtc %>% ggvis(~cyl, ~mpg) %>% layer_boxplot()
+#' # Set the width of the boxes to half the space between tick marks
+#' mtc %>% ggvis(~cyl, ~mpg) %>% layer_boxplot(width = 0.5)
+#'
+#' # Continuous x: boxes fill width between data values
+#' mtcars %>% ggvis(~cyl, ~mpg) %>% layer_boxplot()
+#' # Setting width=0.5 makes it 0.5 wide in the data space, which is 1/4 of the
+#' # distance between data values in this particular case.
+#' mtcars %>% ggvis(~cyl, ~mpg) %>% layer_boxplot(width = 0.5)
+#' @export
+layer_boxplot <- function(vis, ..., width = NULL) {
   new_props <- merge_props(cur_props(vis), props(fill := "white"))
   new_props <- merge_props(new_props, props(...))
 
