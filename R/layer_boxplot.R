@@ -69,6 +69,5 @@ layer_boxplot <- function(vis, ..., stack = TRUE, width = NULL) {
     v
   })
 
-  vis <- scale_numeric(vis, "y", domain = c(0, NA), expand = c(0, 0.05))
   vis
 }
