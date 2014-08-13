@@ -37,7 +37,7 @@ layer_boxplot <- function(vis, ..., stack = TRUE, width = NULL) {
 
     # To get whiskers to line up with centers of x, need to use these padding
     # and points settings.
-    vis <- scale_nominal(vis, "x", name = "xcenter", padding = 1/(width),
+    vis <- scale_nominal(vis, "x", name = "xcenter", padding = 1 + (1 - width),
                          points = TRUE)
   } else {
     whisker_props <- props(x = x_var, y = ~min_, y2 = ~max_, width := 0.5)
