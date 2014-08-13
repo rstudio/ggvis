@@ -25,36 +25,13 @@ layer_boxplot <- function(vis, ..., stack = TRUE, width = NULL) {
     if (is.null(width)) {
       width <- 0.9
     }
+    # Whiskers and outliers are on a centered x scale
+    whisker_props <- props(prop("x", x_var, scale = "xcenter"),
+                           y = ~min_, y2 = ~max_, width := 0.5)
+    outlier_props <- props(prop("x", x_var, scale = "xcenter"), y = ~value_)
 
-    vis <- layer_f(vis, function(v) {
-      v <- add_props(v, .props = new_props)
-
-      # Group by x variable
-      # FIXME: The do_call is a workaround for issue #177
-      v <- do_call(group_by, quote(v), .args = list(x_var[[2]]))
-      v <- compute_boxplot(v, y_var)
-
-      # Whiskers are on a centered x scale
-      whisker_props <- props(prop("x", x_var, scale = "xcenter"),
-                             y = ~min_, y2 = ~max_, width := 0.5)
-      v <- emit_rects(v, merge_props(new_props, whisker_props))
-
-      # The main box
-      rect_props <- props(x = x_var, y = ~lower_, y2 = ~upper_, width = band())
-      v <- emit_rects(v, merge_props(new_props, rect_props))
-
-      # Median line
-      median_props <- props(x = x_var, y = ~median_, height := 1,
-                            width = band())
-      v <- emit_rects(v, merge_props(new_props, median_props))
-
-      # Outlier points need their own data set
-      v <- compute_boxplot_outliers(v)
-      outlier_props <- props(prop("x", x_var, scale = "xcenter"), y = ~value_)
-      v <- emit_points(v, merge_props(new_outlier_props, outlier_props))
-
-      v
-    })
+    rect_props <- props(x = x_var, y = ~lower_, y2 = ~upper_, width = band())
+    median_props <- props(x = x_var, y = ~median_, height := 1, width = band())
 
     vis <- scale_nominal(vis, "x", padding = 1 - width, points = FALSE)
 
@@ -62,21 +39,35 @@ layer_boxplot <- function(vis, ..., stack = TRUE, width = NULL) {
     # and points settings.
     vis <- scale_nominal(vis, "x", name = "xcenter", padding = 1/(width),
                          points = TRUE)
-
   } else {
-    vis <- layer_f(vis, function(v) {
-      v <- compute_count(v, x_var, y_var)
-      v <- compute_align(v, ~x_, length = width)
-      if (stack) {
-        v <- compute_stack(v, stack_var = ~count_, group_var = ~x_)
-        v <- layer_rects(v, x = ~xmin_, x2 = ~xmax_, y = ~stack_upr_,
-                         y2 = ~stack_lwr_)
-      } else {
-        v <- layer_rects(v, x = ~xmin_, x2 = ~xmax_, y = 0, y2 = ~count_)
-      }
-      v
-    })
+    whisker_props <- props(x = x_var, y = ~min_, y2 = ~max_, width := 0.5)
+    rect_props <- props(x = ~xmin_, x2 = ~xmax_, y = ~lower_, y2 = ~upper_)
+    median_props <- props(x = ~xmin_, x2 = ~xmax_, y = ~median_, height := 1)
+    outlier_props <- props(x = x_var, y = ~value_)
   }
+
+  vis <- layer_f(vis, function(v) {
+    v <- add_props(v, .props = new_props)
+
+    # Group by x variable
+    # FIXME: The do_call is a workaround for issue #177
+    v <- do_call(group_by, quote(v), .args = list(x_var[[2]]))
+    v <- compute_boxplot(v, y_var)
+    if (!discrete_x) {
+      v <- compute_align(v, x_var, length = width)
+    }
+
+    v <- emit_rects(v, merge_props(new_props, whisker_props))
+    v <- emit_rects(v, merge_props(new_props, rect_props))
+    # Median line
+    v <- emit_rects(v, merge_props(new_props, median_props))
+
+    # Outlier points need their own data set
+    v <- compute_boxplot_outliers(v)
+    v <- emit_points(v, merge_props(new_outlier_props, outlier_props))
+
+    v
+  })
 
   vis <- scale_numeric(vis, "y", domain = c(0, NA), expand = c(0, 0.05))
   vis
