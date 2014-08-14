@@ -15,7 +15,8 @@ Imports:
     shiny (>= 0.10),
     magrittr,
     dplyr (>= 0.2),
-    htmltools (>= 0.2.4)
+    htmltools (>= 0.2.4),
+    plyr
 Suggests:
     MASS,
     mgcv,
