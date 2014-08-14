@@ -3,6 +3,9 @@ compute_boxplot <- function(x, var = NULL, coef = 1.5) {
   UseMethod("compute_boxplot")
 }
 
+# FIXME: plyr is imported only as a workaround for the dplyr issue; once it's
+#        fixed, plyr can be removed.
+#' @importFrom plyr ddply
 #' @export
 compute_boxplot.grouped_df <- function(x, var = NULL, coef = 1.5) {
   old_groups <- dplyr::groups(x)
