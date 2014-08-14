@@ -1,4 +1,4 @@
-# ggvis 0.3.0.99
+# ggvis 0.3.0.9xxx
 
 * Boxplots are now supported, with `layer_boxplots()` and `compute_boxplot()`.
 
