@@ -1,6 +1,6 @@
 #' Display data with a boxplot.
 #'
-#' This will add boxplots to a plot. The action of \code{layer_boxplot} depends
+#' This will add boxplots to a plot. The action of \code{layer_boxplots} depends
 #' on whether the \code{x} prop is continuous or categorical.
 #'
 #' The upper and lower "hinges" correspond to the first and third quartiles (the
@@ -31,25 +31,25 @@
 #' mtc <- mtcars
 #' mtc$cyl <- factor(mtc$cyl)
 #'
-#' mtc %>% ggvis(~cyl, ~mpg) %>% layer_boxplot()
+#' mtc %>% ggvis(~cyl, ~mpg) %>% layer_boxplots()
 #' # Set the width of the boxes to half the space between tick marks
-#' mtc %>% ggvis(~cyl, ~mpg) %>% layer_boxplot(width = 0.5)
+#' mtc %>% ggvis(~cyl, ~mpg) %>% layer_boxplots(width = 0.5)
 #'
 #' # Continuous x: boxes fill width between data values
-#' mtcars %>% ggvis(~cyl, ~mpg) %>% layer_boxplot()
+#' mtcars %>% ggvis(~cyl, ~mpg) %>% layer_boxplots()
 #' # Setting width=0.5 makes it 0.5 wide in the data space, which is 1/4 of the
 #' # distance between data values in this particular case.
-#' mtcars %>% ggvis(~cyl, ~mpg) %>% layer_boxplot(width = 0.5)
+#' mtcars %>% ggvis(~cyl, ~mpg) %>% layer_boxplots(width = 0.5)
 #'
 #' # Smaller outlier points
-#' mtc %>% ggvis(~cyl, ~mpg) %>% layer_boxplot(size := 20)
+#' mtc %>% ggvis(~cyl, ~mpg) %>% layer_boxplots(size := 20)
 #' @export
-layer_boxplot <- function(vis, ..., width = NULL) {
+layer_boxplots <- function(vis, ..., width = NULL) {
 
   new_props <- merge_props(cur_props(vis), props(...))
 
   check_unsupported_props(new_props, c("x", "y", "x2", "y2"),
-                          c("enter", "exit", "hover"), "layer_boxplot")
+                          c("enter", "exit", "hover"), "layer_boxplots")
 
   x_var <- find_prop_var(new_props, "x.update")
   discrete_x <- prop_countable(cur_data(vis), new_props$x.update)

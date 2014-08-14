@@ -161,5 +161,5 @@ faithful %>% ggvis(~eruptions, fill := "#fff8dc") %>%
 ```{r}
 # For now, if you use a categ
 mtc <- mtcars %>% mutate(cyl = factor(cyl))
-mtc %>% ggvis(~cyl, ~mpg) %>% layer_boxplot()
+mtc %>% ggvis(~cyl, ~mpg) %>% layer_boxplots()
 ```

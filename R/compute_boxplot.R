@@ -6,7 +6,7 @@
 #'   must be continuous.
 #' @param coef The maximum length of the whiskers as multiple of the
 #'   inter-quartile range. Default value is 1.5.
-#' @seealso \code{\link{layer_boxplot}}
+#' @seealso \code{\link{layer_boxplots}}
 #' @return A data frame with columns:
 #'   \item{min_}{Lower whisker = smallest observation greater than or equal to lower hinge - 1.5 * IQR}
 #'   \item{lower_}{Lower hinge (25th percentile)}
