@@ -1,3 +1,22 @@
+#' Calculate boxplot values
+#'
+#' @param x Dataset-like object to compute boxplot values. There are built-in
+#'   methods for data frames, grouped data frames, and ggvis visualisations.
+#' @param var Name of variable for which to compute boxplot values. The variable
+#'   must be continuous.
+#' @param coef The maximum length of the whiskers as multiple of the
+#'   inter-quartile range. Default value is 1.5.
+#' @seealso \code{\link{layer_boxplot}}
+#' @return A data frame with columns:
+#'   \item{min_}{Lower whisker = smallest observation greater than or equal to lower hinge - 1.5 * IQR}
+#'   \item{lower_}{Lower hinge (25th percentile)}
+#'   \item{median_}{Median (50th percentile)}
+#'   \item{upper_}{Upper hinge (75th percentile)}
+#'   \item{max_}{Upper whisker = largest observation less than or equal to upper hinge + 1.5 * IQR}
+#'   \item{outliers_}{A vector of values that are outside of the min and max}
+#' @examples
+#' mtcars %>% compute_boxplot(~mpg)
+#' mtcars %>% group_by(cyl) %>% compute_boxplot(~mpg)
 #' @export
 compute_boxplot <- function(x, var = NULL, coef = 1.5) {
   UseMethod("compute_boxplot")

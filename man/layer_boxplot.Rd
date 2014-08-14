@@ -18,6 +18,19 @@ proportion of the spacing between items (default is 0.9).}
 This will add boxplots to a plot. The action of \code{layer_boxplot} depends
 on whether the \code{x} prop is continuous or categorical.
 }
+\details{
+The upper and lower "hinges" correspond to the first and third quartiles (the
+25th and 75th percentiles). This differs slightly from the method used by the
+\code{boxplot} function, and may be apparent with small samples. See
+\code{\link{boxplot.stats}} for more information on how hinge positions are
+calculated for \code{boxplot}.
+
+The upper whisker extends from the hinge to the highest value that is within
+1.5 * IQR of the hinge, where IQR is the inter-quartile range, or distance
+between the first and third quartiles. The lower whisker extends from the
+hinge to the lowest value within 1.5 * IQR of the hinge. Data beyond the end
+of the whiskers are outliers and plotted as points (as specified by Tukey).
+}
 \examples{
 library(dplyr)
 
