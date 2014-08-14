@@ -1,5 +1,21 @@
 # ggvis 0.3.0.99
 
+* Boxplots are now supported, with `layer_boxplots()` and `compute_boxplot()`.
+
+* `compute_bin()` and `compute_count()` now preserve date and time properties.
+  (#235)
+
+* `export_png()` and `export_svg()` now work. This requires node.js, and vega
+  must be installed via npm.
+
+* Legend hiding is fixed. (#218)
+
+* `count_vector()` preserves the order of factor levels. (#223)
+
+* `compute_bin()` now ignores NA's. (#148)
+
+* Updated to Vega 1.4.1. (#193 and #217)
+
 * `layer_bars()` now uses correctly uses `fill` prop when it is passed to the
   function, and not inherited. (#201)
 
