@@ -154,3 +154,12 @@ Modify the fill color and binwidth:
 faithful %>% ggvis(~eruptions, fill := "#fff8dc") %>%
   layer_histograms(binwidth = 0.25)
 ```
+
+
+## Box plots
+
+```{r}
+# For now, if you use a categ
+mtc <- mtcars %>% mutate(cyl = factor(cyl))
+mtc %>% ggvis(~cyl, ~mpg) %>% layer_boxplot()
+```
