@@ -47,6 +47,9 @@ mtcars \%>\% ggvis(~cyl, ~mpg) \%>\% layer_boxplot()
 # Setting width=0.5 makes it 0.5 wide in the data space, which is 1/4 of the
 # distance between data values in this particular case.
 mtcars \%>\% ggvis(~cyl, ~mpg) \%>\% layer_boxplot(width = 0.5)
+
+# Smaller outlier points
+mtc \%>\% ggvis(~cyl, ~mpg) \%>\% layer_boxplot(size := 20)
 }
 \seealso{
 \code{\link{compute_boxplot}} for more information on how data is

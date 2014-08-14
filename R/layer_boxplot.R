@@ -40,28 +40,34 @@
 #' # Setting width=0.5 makes it 0.5 wide in the data space, which is 1/4 of the
 #' # distance between data values in this particular case.
 #' mtcars %>% ggvis(~cyl, ~mpg) %>% layer_boxplot(width = 0.5)
+#'
+#' # Smaller outlier points
+#' mtc %>% ggvis(~cyl, ~mpg) %>% layer_boxplot(size := 20)
 #' @export
 layer_boxplot <- function(vis, ..., width = NULL) {
-  new_props <- merge_props(cur_props(vis), props(fill := "white"))
-  new_props <- merge_props(new_props, props(...))
 
-  new_outlier_props <- merge_props(cur_props(vis), props(fill := "black"))
+  new_props <- merge_props(cur_props(vis), props(...))
 
   check_unsupported_props(new_props, c("x", "y", "x2", "y2"),
-                          c("enter", "exit", "hover"), "layer_bars")
+                          c("enter", "exit", "hover"), "layer_boxplot")
 
   x_var <- find_prop_var(new_props, "x.update")
   discrete_x <- prop_countable(cur_data(vis), new_props$x.update)
-
   vis <- set_scale_label(vis, "x", prop_label(cur_props(vis)$x.update))
 
-  if (!is.null(new_props$y.update)) {
-    if (prop_countable(cur_data(vis), new_props$y.update)) {
-      stop("y variable (weights) must be numeric.")
-    }
-    y_var <- find_prop_var(new_props, "y.update")
-    vis <- set_scale_label(vis, "y", prop_label(cur_props(vis)$y.update))
+  y_var <- find_prop_var(new_props, "y.update")
+  if (prop_countable(cur_data(vis), new_props$y.update)) {
+    stop("y variable (weights) must be numeric.")
   }
+  vis <- set_scale_label(vis, "y", prop_label(cur_props(vis)$y.update))
+
+  new_box_props <- merge_props(props(fill := "white"), new_props)
+  new_box_props <- drop_props(new_box_props, "size")
+
+  new_outlier_props <- merge_props(new_props, props(fill := "black"))
+  new_outlier_props <- drop_props(new_outlier_props,
+                                  c("stroke", "strokeWidth", "strokeOpacity"))
+
 
   if (discrete_x) {
     if (is.null(width)) {
@@ -89,7 +95,7 @@ layer_boxplot <- function(vis, ..., width = NULL) {
   }
 
   vis <- layer_f(vis, function(v) {
-    v <- add_props(v, .props = new_props)
+    v <- add_props(v, .props = new_box_props)
 
     # Group by x variable
     # FIXME: The do_call is a workaround for issue #177
@@ -99,10 +105,10 @@ layer_boxplot <- function(vis, ..., width = NULL) {
       v <- compute_align(v, x_var, length = width)
     }
 
-    v <- emit_rects(v, merge_props(new_props, whisker_props))
-    v <- emit_rects(v, merge_props(new_props, rect_props))
+    v <- emit_rects(v, merge_props(new_box_props, whisker_props))
+    v <- emit_rects(v, merge_props(new_box_props, rect_props))
     # Median line
-    v <- emit_rects(v, merge_props(new_props, median_props))
+    v <- emit_rects(v, merge_props(new_box_props, median_props))
 
     # Outlier points need their own data set
     v <- compute_boxplot_outliers(v)
