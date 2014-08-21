@@ -84,7 +84,7 @@ compute_smooth.data.frame <- function(x, formula, ..., method = NULL,
   # Create model environment & model call, then evaluate
   env <- new.env(parent = environment(formula))
   env$data <- x
-  model_call <- make_call(method, formula, data = quote(data), ...)
+  model_call <- make_call(method, formula, data = quote(data), list(...))
   model <- eval(model_call, env)
 
   # Make prediction

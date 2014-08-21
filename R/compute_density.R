@@ -46,7 +46,7 @@ compute_density.data.frame <- function(x, x_var, w_var = NULL,
 
   # Build call to density()
   call <- make_call("density", quote(x_val), weights = quote(w_val),
-    kernel = kernel, n = n, na.rm = na.rm, ...)
+    kernel = kernel, n = n, na.rm = na.rm, list(...))
 
   if (trim) {
     call$from <- min(x_val)
