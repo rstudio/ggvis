@@ -43,3 +43,15 @@ test_that("compute_smooth works with datetimes", {
   expect_equal(attr(dat$d, "tzone"), attr(res$pred_, "tzone"))
   expect_equal(range(dat$value), range(res$resp_))
 })
+
+test_that("compute_smooth works with more complex formulas", {
+  dat <- data.frame(x = 1:10, y = (1:10 - 5)^2 + 4 * 1:10 + 100)
+  res <- dat %>% compute_smooth(y ~ I(x^2) + x, n = 10, method = "lm") %>%
+          setNames( c("x", "y"))
+  expect_equal(dat, res)
+
+  dat <- data.frame(x = 1:10, y = 2.5*(1:10)^3 + 7*(1:10)^2 + 4*(1:10) + 100)
+  res <- dat %>% compute_smooth(y ~ poly(x, 3), n = 10, method = "lm") %>%
+          setNames( c("x", "y"))
+  expect_equal(dat, res)
+})
