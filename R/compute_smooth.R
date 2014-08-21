@@ -159,7 +159,7 @@ pred_grid.loess <- function(model, data, n = 80, se = FALSE, level = 0.95) {
 
 #' @export
 pred_grid.lm <- function(model, data, n = 80, se = FALSE, level = 0.95) {
-  x_var <- get_predict_vars(model$terms)
+  x_var <- get_predict_vars(terms(model))
   if (length(x_var) > 1) {
     stop("Only know how to make grid for one variable", call. = FALSE)
   }
@@ -195,10 +195,5 @@ get_predict_vars <- function(f) {
   if (length(f) > 3)
     stop("Formula must have components on both sides of `~`")
 
-  resp_var <- as.character(f[[2]])
-  if (length(resp_var) != 1)
-    stop("Response variable must be a single variable instead of ",
-         paste(resp_var, collapse = ", "))
-
-  setdiff(all.vars(f), resp_var)
+  all.vars(f[[3]])
 }
