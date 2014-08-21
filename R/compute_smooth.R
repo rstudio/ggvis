@@ -159,7 +159,7 @@ pred_grid.loess <- function(model, data, n = 80, se = FALSE, level = 0.95) {
 
 #' @export
 pred_grid.lm <- function(model, data, n = 80, se = FALSE, level = 0.95) {
-  x_var <- attr(terms(model), "term.labels", TRUE)
+  x_var <- get_predict_vars(model$terms)
   if (length(x_var) > 1) {
     stop("Only know how to make grid for one variable", call. = FALSE)
   }
@@ -185,4 +185,20 @@ pred_grid.lm <- function(model, data, n = 80, se = FALSE, level = 0.95) {
       resp_se_ = resp$se.fit
     )
   }
+}
+
+
+# Given a formula object, return a character vector of predictor variables
+get_predict_vars <- function(f) {
+  if (!is.formula(f))
+    stop("f must be a formula object")
+  if (length(f) > 3)
+    stop("Formula must have components on both sides of `~`")
+
+  resp_var <- as.character(f[[2]])
+  if (length(resp_var) != 1)
+    stop("Response variable must be a single variable instead of ",
+         paste(resp_var, collapse = ", "))
+
+  setdiff(all.vars(f), resp_var)
 }
