@@ -808,10 +808,21 @@ ggvis = (function(_) {
 
       // Internal functions --------------------------------------------
       function mouseOffset(e) {
-        return {
-          x: e.offsetX,
-          y: e.offsetY
-        };
+        // A workaround for Firefox, which doesn't provide offsetX/Y
+        // for mouse event.
+        if (typeof(e.offsetX) === "undefined") {
+          var offset = $(e.currentTarget).offset();
+          return {
+            x: e.pageX - offset.left,
+            y: e.pageY - offset.top
+          };
+        }
+        else {
+          return {
+            x: e.offsetX,
+            y: e.offsetY
+          };
+        }
       }
 
       return brush;
