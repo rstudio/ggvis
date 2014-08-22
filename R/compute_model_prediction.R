@@ -1,11 +1,11 @@
-#' Create a model of a data set and compute predictions
+#' Create a model of a data set and compute predictions.
 #'
 #' Fit a 1d model, then compute predictions and (optionally) standard errors
 #' over an evenly spaced grid.
 #'
-#' @param x Dataset-like object to smooth. Built-in methods for data frames,
-#'   grouped data frames and ggvis visualisations.
-#' @param method Model fitting function to use - it must support R's standard
+#' @param x Dataset-like object to model and predict. Built-in methods for data
+#'   frames, grouped data frames and ggvis visualisations.
+#' @param model Model fitting function to use - it must support R's standard
 #'   modelling interface, taking a formula and data frame as input, and
 #'   returning predictions with \code{\link{predict}}. If not supplied, will
 #'   use \code{\link{loess}} for <= 1000 points, otherwise it will use
@@ -18,10 +18,11 @@
 #'   standard errors is not consistent acrossing modelling frameworks.
 #' @param level the confidence level of the standard errors.
 #' @param n the number of grid points to use in the prediction
-#' @param ... arguments passed on to \code{method} function
+#' @param ... arguments passed on to \code{model} function
+#' @param method Deprecated. Please use \code{model} instead.
 #' @return A data frame with columns:
 #'  \item{\code{resp_}}{regularly spaced grid of \code{n} locations}
-#'  \item{\code{pred_}}{predicted value from smooth}
+#'  \item{\code{pred_}}{predicted value from model}
 #'  \item{\code{pred_lwr_} and \code{pred_upr_}}{upper and lower bounds of
 #'    confidence interval (if \code{se = TRUE})}
 #'  \item{\code{pred_se_}}{the standard error (width of the confidence interval)
@@ -32,9 +33,9 @@
 #' mtcars %>% compute_model_prediction(mpg ~ wt, n = 10, se = TRUE)
 #' mtcars %>% group_by(cyl) %>% compute_model_prediction(mpg ~ wt, n = 10)
 #'
-#' # Override method to suppress message or change approach
-#' mtcars %>% compute_model_prediction(mpg ~ wt, n = 10, method = "loess")
-#' mtcars %>% compute_model_prediction(mpg ~ wt, n = 10, method = "lm")
+#' # Override model to suppress message or change approach
+#' mtcars %>% compute_model_prediction(mpg ~ wt, n = 10, model = "loess")
+#' mtcars %>% compute_model_prediction(mpg ~ wt, n = 10, model = "lm")
 #'
 #' # Plot the results
 #' mtcars %>% compute_model_prediction(mpg ~ wt) %>%
@@ -43,26 +44,30 @@
 #' mtcars %>% ggvis() %>%
 #'   compute_model_prediction(mpg ~ wt) %>%
 #'   layer_paths(~pred_, ~resp_)
-compute_model_prediction <- function(x, formula, ..., method = NULL, se = FALSE,
-                           level = 0.95, n = 80L) {
+compute_model_prediction <- function(x, formula, ..., model = NULL, se = FALSE,
+                              level = 0.95, n = 80L, method) {
+  if (!missing(method)) {
+    deprecated("method", version = "0.3")
+    model <- method
+  }
   UseMethod("compute_model_prediction")
 }
 
 #' @export
-compute_model_prediction.data.frame <- function(x, formula, ..., method = NULL,
-                                      se = FALSE, level = 0.95, n = 80L) {
+compute_model_prediction.data.frame <- function(x, formula, ..., model = NULL,
+                                         se = FALSE, level = 0.95, n = 80L, method) {
   assert_that(is.formula(formula))
-  method <- method %||% guess_method(x)
-  assert_that(is.string(method))
+  model <- model %||% guess_model(x)
+  assert_that(is.string(model))
 
   restore <- identity
 
-  if (is.character(method)) {
+  if (is.character(model)) {
     # This allows the use of e.g. MASS::rlm
-    method <- parse(text = method)[[1]]
+    model <- parse(text = model)[[1]]
   }
 
-  if (method == quote(loess)) {
+  if (model == quote(loess)) {
     # loess can't handle POSIXct, so convert to numeric. Fortunately we know
     # that loess only has a single predictor to extract.
     pred_var <- formula[[3]]
@@ -88,7 +93,7 @@ compute_model_prediction.data.frame <- function(x, formula, ..., method = NULL,
   # Create model environment & model call, then evaluate
   env <- new.env(parent = environment(formula))
   env$data <- x
-  model_call <- make_call(method, formula, data = quote(data), list(...))
+  model_call <- make_call(model, formula, data = quote(data), list(...))
   model <- eval(model_call, env)
 
   # Make prediction
@@ -97,18 +102,18 @@ compute_model_prediction.data.frame <- function(x, formula, ..., method = NULL,
 }
 
 #' @export
-compute_model_prediction.grouped_df <- function(x, formula, ..., method = NULL,
-                                          se = FALSE, level = 0.95, n = 80L) {
-  dplyr::do(x, compute_model_prediction(., formula = formula, method = method,
+compute_model_prediction.grouped_df <- function(x, formula, ..., model = NULL,
+                                         se = FALSE, level = 0.95, n = 80L, method) {
+  dplyr::do(x, compute_model_prediction(., formula = formula, model = model,
     se = se, level = level, n = n, ...))
 }
 
 globalVariables(".")
 
 #' @export
-compute_model_prediction.ggvis <- function(x, formula, ..., method = NULL,
-                                    se = FALSE, level = 0.95, n = 80L) {
-  args <- list(formula = formula, method = method, se = se, level = level,
+compute_model_prediction.ggvis <- function(x, formula, ..., model = NULL, se = FALSE,
+                                 level = 0.95, n = 80L, method) {
+  args <- list(formula = formula, model = model, se = se, level = level,
     n = n, ...)
 
   register_computation(x, args, "model_prediction", function(data, args) {
@@ -117,10 +122,10 @@ compute_model_prediction.ggvis <- function(x, formula, ..., method = NULL,
   })
 }
 
-guess_method <- function(data) {
-  method <- if (max_rows(data) > 1000) "gam" else "loess"
-  notify_guess(method)
-  method
+guess_model <- function(data) {
+  model <- if (max_rows(data) > 1000) "gam" else "loess"
+  notify_guess(model)
+  model
 }
 
 # Helper function to create data frame of predictions -------------------------
