@@ -192,7 +192,7 @@ pred_grid.lm <- function(model, data, n = 80, se = FALSE, level = 0.95) {
 get_predict_vars <- function(f) {
   if (!is.formula(f))
     stop("f must be a formula object")
-  if (length(f) > 3)
+  if (length(f) != 3)
     stop("Formula must have components on both sides of `~`")
 
   all.vars(f[[3]])
