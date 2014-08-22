@@ -1,5 +1,7 @@
 # ggvis 0.3.0.9xxx
 
+* `compute_smooth()` supports more complex formulas. (#209)
+
 * Boxplots are now supported, with `layer_boxplots()` and `compute_boxplot()`.
 
 * `compute_bin()` and `compute_count()` now preserve date and time properties.
