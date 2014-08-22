@@ -1,4 +1,4 @@
-#' Smooth data with a model.
+#' Create a model of a data set and compute predictions
 #'
 #' Fit a 1d model, then compute predictions and (optionally) standard errors
 #' over an evenly spaced grid.
@@ -28,24 +28,28 @@
 #'    (if \code{se = TRUE})}
 #' @export
 #' @examples
-#' mtcars %>% compute_smooth(mpg ~ wt, n = 10)
-#' mtcars %>% compute_smooth(mpg ~ wt, n = 10, se = TRUE)
-#' mtcars %>% group_by(cyl) %>% compute_smooth(mpg ~ wt, n = 10)
+#' mtcars %>% compute_model_prediction(mpg ~ wt, n = 10)
+#' mtcars %>% compute_model_prediction(mpg ~ wt, n = 10, se = TRUE)
+#' mtcars %>% group_by(cyl) %>% compute_model_prediction(mpg ~ wt, n = 10)
 #'
 #' # Override method to suppress message or change approach
-#' mtcars %>% compute_smooth(mpg ~ wt, n = 10, method = "loess")
-#' mtcars %>% compute_smooth(mpg ~ wt, n = 10, method = "lm")
+#' mtcars %>% compute_model_prediction(mpg ~ wt, n = 10, method = "loess")
+#' mtcars %>% compute_model_prediction(mpg ~ wt, n = 10, method = "lm")
 #'
 #' # Plot the results
-#' mtcars %>% compute_smooth(mpg ~ wt) %>% ggvis(~pred_, ~resp_) %>% layer_paths()
-#' mtcars %>% ggvis() %>% compute_smooth(mpg ~ wt) %>% layer_paths(~pred_, ~resp_)
-compute_smooth <- function(x, formula, ..., method = NULL, se = FALSE,
+#' mtcars %>% compute_model_prediction(mpg ~ wt) %>%
+#'   ggvis(~pred_, ~resp_) %>%
+#'   layer_paths()
+#' mtcars %>% ggvis() %>%
+#'   compute_model_prediction(mpg ~ wt) %>%
+#'   layer_paths(~pred_, ~resp_)
+compute_model_prediction <- function(x, formula, ..., method = NULL, se = FALSE,
                            level = 0.95, n = 80L) {
-  UseMethod("compute_smooth")
+  UseMethod("compute_model_prediction")
 }
 
 #' @export
-compute_smooth.data.frame <- function(x, formula, ..., method = NULL,
+compute_model_prediction.data.frame <- function(x, formula, ..., method = NULL,
                                       se = FALSE, level = 0.95, n = 80L) {
   assert_that(is.formula(formula))
   method <- method %||% guess_method(x)
@@ -93,22 +97,22 @@ compute_smooth.data.frame <- function(x, formula, ..., method = NULL,
 }
 
 #' @export
-compute_smooth.grouped_df <- function(x, formula, ..., method = NULL,
-                                      se = FALSE, level = 0.95, n = 80L) {
-  dplyr::do(x, compute_smooth(., formula = formula, method = method, se = se,
-    level = level, n = n, ...))
+compute_model_prediction.grouped_df <- function(x, formula, ..., method = NULL,
+                                          se = FALSE, level = 0.95, n = 80L) {
+  dplyr::do(x, compute_model_prediction(., formula = formula, method = method,
+    se = se, level = level, n = n, ...))
 }
 
 globalVariables(".")
 
 #' @export
-compute_smooth.ggvis <- function(x, formula, ..., method = NULL, se = FALSE,
-                                 level = 0.95, n = 80L) {
+compute_model_prediction.ggvis <- function(x, formula, ..., method = NULL,
+                                    se = FALSE, level = 0.95, n = 80L) {
   args <- list(formula = formula, method = method, se = se, level = level,
     n = n, ...)
 
-  register_computation(x, args, "smooth", function(data, args) {
-    output <- do_call(compute_smooth, quote(data), .args = args)
+  register_computation(x, args, "model_prediction", function(data, args) {
+    output <- do_call(compute_model_prediction, quote(data), .args = args)
     preserve_constants(data, output)
   })
 }
