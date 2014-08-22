@@ -47,9 +47,11 @@
 #'   layer_model_predictions(model = "lm") %>%
 #'   layer_model_predictions(model = "MASS::rlm", stroke := "red")
 #'
-#' # layer_smooths() is just smooth() + layer_paths()
-#' # Run smooth outside of a visualisation to see what variables you get
+#' # layer_smooths() is just compute_smooth() + layer_paths()
+#' # Run loess or other model outside of a visualisation to see what variables
+#' # you get.
 #' mtcars %>% compute_smooth(mpg ~ wt)
+#' mtcars %>% compute_model_prediction(mpg ~ wt, model = "lm")
 #'
 #' mtcars %>%
 #'   ggvis(~wt, ~mpg) %>%

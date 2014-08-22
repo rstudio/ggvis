@@ -12,8 +12,8 @@ frames, grouped data frames and ggvis visualisations.}
 
 \item{model}{Model fitting function to use - it must support R's standard
 modelling interface, taking a formula and data frame as input, and
-returning predictions with \code{\link{predict}}. If not supplied, will
-use \code{\link{loess}} for <= 1000 points, otherwise it will use
+returning predictions with \code{\link{predict}}. If not supplied, will use
+\code{\link{loess}} for <= 1000 points, otherwise it will use
 \code{\link[mgcv]{gam}}. Other modelling functions that will work include
 \code{\link{lm}}, \code{\link{glm}} and \code{\link[MASS]{rlm}}.}
 
@@ -33,22 +33,30 @@ standard errors is not consistent acrossing modelling frameworks.}
 \item{method}{Deprecated. Please use \code{model} instead.}
 }
 \value{
-A data frame with columns:
- \item{\code{resp_}}{regularly spaced grid of \code{n} locations}
- \item{\code{pred_}}{predicted value from model}
- \item{\code{pred_lwr_} and \code{pred_upr_}}{upper and lower bounds of
-   confidence interval (if \code{se = TRUE})}
- \item{\code{pred_se_}}{the standard error (width of the confidence interval)
-   (if \code{se = TRUE})}
+A data frame with columns: \item{\code{resp_}}{regularly spaced grid
+  of \code{n} locations} \item{\code{pred_}}{predicted value from model}
+  \item{\code{pred_lwr_} and \code{pred_upr_}}{upper and lower bounds of
+  confidence interval (if \code{se = TRUE})} \item{\code{pred_se_}}{the
+  standard error (width of the confidence interval) (if \code{se = TRUE})}
 }
 \description{
 Fit a 1d model, then compute predictions and (optionally) standard errors
 over an evenly spaced grid.
 }
+\details{
+\code{compute_model_prediction} fits a model to the data and makes
+predictions with it. \code{compute_smooth} is a special case of model
+predictions where the model is a smooth loess curve whose smoothness is
+controlled by the \code{span} parameter.
+}
 \examples{
+# Use a small value of n for these examples
 mtcars \%>\% compute_model_prediction(mpg ~ wt, n = 10)
 mtcars \%>\% compute_model_prediction(mpg ~ wt, n = 10, se = TRUE)
 mtcars \%>\% group_by(cyl) \%>\% compute_model_prediction(mpg ~ wt, n = 10)
+
+# compute_smooth defaults to loess
+mtcars \%>\% compute_smooth(mpg ~ wt)
 
 # Override model to suppress message or change approach
 mtcars \%>\% compute_model_prediction(mpg ~ wt, n = 10, model = "loess")
