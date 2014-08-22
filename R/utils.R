@@ -224,3 +224,14 @@ pluck <- function(x, name) {
 vpluck <- function(x, name, type) {
   vapply(x, `[[`, name, FUN.VALUE = type)
 }
+
+
+deprecated <- function(old, new = NULL, msg = NULL, version = NULL) {
+  text <- paste0(
+    sprintf("'%s' is deprecated.", old),
+    if (!is.null(new)) sprintf(" Please use '%s' instead.", new),
+    msg,
+    if (!is.null(version)) sprintf(" (Last used in version %s)", version)
+  )
+  warning(text)
+}

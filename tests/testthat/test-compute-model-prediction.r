@@ -1,26 +1,26 @@
-context("compute_smooth")
+context("compute_model_prediction")
 
-test_that("compute_smooth preserves datetimes", {
+test_that("compute_model_prediction preserves datetimes", {
   # Data frame with POSIXct, and zigzag values
   dat <- data.frame(
     d = as.POSIXct('2001-06-11 21:00', tz = 'UTC') + seq(1, 1000, by = 10),
     value = 1:100 + rep(c(-3, 3), 50)
   )
-  res <- dat %>% compute_smooth(value ~ d, n = 10, method = "lm")
+  res <- dat %>% compute_model_prediction(value ~ d, n = 10, model = "lm")
   expect_equal(range(dat$d), range(res$pred_))
 })
 
-test_that("compute_smooth preserves dates", {
+test_that("compute_model_prediction preserves dates", {
   # Data frame with Date, and zigzag values
   dat <- data.frame(
     d = as.Date('2001-06-11') + seq(1, 1000, by = 10),
     value = 1:100 + rep(c(-3, 3), 50)
   )
-  res <- dat %>% compute_smooth(value ~ d, n = 10, method = "lm")
+  res <- dat %>% compute_model_prediction(value ~ d, n = 10, model = "lm")
   expect_equal(range(dat$d), range(res$pred_))
 })
 
-test_that("compute_smooth works with datetimes", {
+test_that("compute_model_prediction works with datetimes", {
   # Perfectly linear data
   dat <- data.frame(
     d = as.POSIXct('2001-06-11 21:00', tz = 'America/New_York') + 1:10 * 100,
@@ -28,30 +28,32 @@ test_that("compute_smooth works with datetimes", {
   )
 
   # Tests with various models
-  res <- dat %>% compute_smooth(value ~ d, n = 10, method = "loess")
+  res <- dat %>% compute_model_prediction(value ~ d, n = 10, model = "loess")
   expect_equal(range(dat$d), range(res$pred_))
   expect_equal(attr(dat$d, "tzone"), attr(res$pred_, "tzone"))
   expect_equal(range(dat$value), range(res$resp_))
 
-  res <- dat %>% compute_smooth(value ~ d, n = 10, method = "lm")
+  res <- dat %>% compute_model_prediction(value ~ d, n = 10, model = "lm")
   expect_equal(range(dat$d), range(res$pred_))
   expect_equal(attr(dat$d, "tzone"), attr(res$pred_, "tzone"))
   expect_equal(range(dat$value), range(res$resp_))
 
-  res <- dat %>% compute_smooth(value ~ d, n = 10, method = "glm")
+  res <- dat %>% compute_model_prediction(value ~ d, n = 10, model = "glm")
   expect_equal(range(dat$d), range(res$pred_))
   expect_equal(attr(dat$d, "tzone"), attr(res$pred_, "tzone"))
   expect_equal(range(dat$value), range(res$resp_))
 })
 
-test_that("compute_smooth works with more complex formulas", {
+test_that("compute_model_prediction works with more complex formulas", {
   dat <- data.frame(x = 1:10, y = (1:10 - 5)^2 + 4 * 1:10 + 100)
-  res <- dat %>% compute_smooth(y ~ I(x^2) + x, n = 10, method = "lm") %>%
+  res <- dat %>%
+          compute_model_prediction(y ~ I(x^2) + x, n = 10, model = "lm") %>%
           setNames( c("x", "y"))
   expect_equal(dat, res)
 
   dat <- data.frame(x = 1:10, y = 2.5*(1:10)^3 + 7*(1:10)^2 + 4*(1:10) + 100)
-  res <- dat %>% compute_smooth(y ~ poly(x, 3), n = 10, method = "lm") %>%
+  res <- dat %>%
+          compute_model_prediction(y ~ poly(x, 3), n = 10, model = "lm") %>%
           setNames( c("x", "y"))
   expect_equal(dat, res)
 })

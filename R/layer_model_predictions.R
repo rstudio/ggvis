@@ -47,9 +47,11 @@
 #'   layer_model_predictions(model = "lm") %>%
 #'   layer_model_predictions(model = "MASS::rlm", stroke := "red")
 #'
-#' # layer_smooths() is just smooth() + layer_paths()
-#' # Run smooth outside of a visualisation to see what variables you get
+#' # layer_smooths() is just compute_smooth() + layer_paths()
+#' # Run loess or other model outside of a visualisation to see what variables
+#' # you get.
 #' mtcars %>% compute_smooth(mpg ~ wt)
+#' mtcars %>% compute_model_prediction(mpg ~ wt, model = "lm")
 #'
 #' mtcars %>%
 #'   ggvis(~wt, ~mpg) %>%
@@ -69,7 +71,7 @@ layer_model_predictions <- function(vis, ..., model, formula = NULL,
   )
 
   pipeline <- function(x) {
-    x <- do_call(compute_smooth, quote(x), formula = formula, method = model,
+    x <- do_call(compute_model_prediction, quote(x), formula = formula, model = model,
       se = se, .args = model_args)
 
     if (identical(se, TRUE)) {
@@ -89,13 +91,13 @@ layer_smooths <- function(vis, ..., span = 0.75, se = FALSE) {
     model_args = list(span = span), se = se)
 }
 
-guess_formula <- function(props, method, quiet = FALSE) {
+guess_formula <- function(props, model, quiet = FALSE) {
   vars <- list(
     x = find_prop_var(props, "x.update")[[2]],
     y = find_prop_var(props, "y.update")[[2]]
   )
 
-  if (identical(method, "gam")) {
+  if (identical(model, "gam")) {
     f <- substitute(y ~ s(x), vars)
   } else {
     f <- substitute(y ~ x, vars)
