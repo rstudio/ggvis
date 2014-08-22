@@ -130,7 +130,7 @@ compute_model_prediction.ggvis <- function(x, formula, ..., model = NULL, se = F
 }
 
 
-#' @rdname layer_model_predictions
+#' @rdname compute_model_prediction
 #' @export
 compute_smooth <- function(x, formula, ..., span = 0.75, se = FALSE) {
   compute_model_prediction(x, formula, ..., model = "loess", span = span,
