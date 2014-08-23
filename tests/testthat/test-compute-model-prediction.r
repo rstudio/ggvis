@@ -57,3 +57,12 @@ test_that("compute_model_prediction works with more complex formulas", {
           setNames( c("x", "y"))
   expect_equal(dat, res)
 })
+
+
+test_that("Can control domain", {
+  dat <- data.frame(x = 1:10, y = 5 * (1:10))
+  res <- dat %>%
+          compute_model_prediction(y ~ x, n = 10, model = "lm", domain = c(11, 20)) %>%
+          setNames( c("x", "y"))
+  expect_equal(res, data.frame(x = 11:20, y = 5 * (11:20)))
+})
