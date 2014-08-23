@@ -27,12 +27,12 @@ dot_names <- function(...) {
 
 make_call <- function(f, ..., .args = list()) {
   if (is.character(f)) f <- as.name(f)
-  as.call(c(f, ..., .args))
+  as.call(c(list(f, ...), .args))
 }
 do_call <- function(f, ..., .args = list(), .env = parent.frame(), .debug = FALSE) {
   f <- substitute(f)
 
-  call <- make_call(f, ..., .args)
+  call <- make_call(f, ..., .args = .args)
   if (.debug) print(call)
   eval(call, .env)
 }

@@ -100,7 +100,7 @@ compute_model_prediction.data.frame <- function(x, formula, ..., model = NULL,
   # Create model environment & model call, then evaluate
   env <- new.env(parent = environment(formula))
   env$data <- x
-  model_call <- make_call(model, formula, data = quote(data), list(...))
+  model_call <- make_call(model, formula, data = quote(data), ...)
   model <- eval(model_call, env)
 
   # Make prediction
