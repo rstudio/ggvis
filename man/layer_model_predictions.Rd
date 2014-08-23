@@ -5,7 +5,7 @@
 \title{Overlay model predictions or a smooth curve.}
 \usage{
 layer_model_predictions(vis, ..., model, formula = NULL, model_args = NULL,
-  se = FALSE)
+  se = FALSE, domain = NULL)
 
 layer_smooths(vis, ..., span = 0.75, se = FALSE)
 }
@@ -30,6 +30,11 @@ properties, constructing \code{y ~ x}.}
 \code{FALSE} because interpretation is non-trivial.}
 
 \item{span}{For \code{layer_smooth}, the span of the loess smoother.}
+
+\item{domain}{If \code{NULL} (the default), the domain of the predicted
+values will be the same as the domain of the prediction variable in the
+data. It can also be a two-element numeric vector specifying the min and
+max.}
 }
 \description{
 \code{layer_model_predictions} fits a model to the data and draw it with
@@ -63,6 +68,13 @@ mtcars \%>\% ggvis(~wt, ~mpg) \%>\%
   layer_points() \%>\%
   layer_model_predictions(model = "lm") \%>\%
   layer_model_predictions(model = "MASS::rlm", stroke := "red")
+
+# Custom domain for predictions
+mtcars \%>\% ggvis(~wt, ~mpg) \%>\% layer_points() \%>\%
+  layer_model_predictions(model = "lm", domain = c(0, 8))
+mtcars \%>\% ggvis(~wt, ~mpg) \%>\% layer_points() \%>\%
+  layer_model_predictions(model = "lm",
+    domain = input_slider(0, 10, value = c(1, 4)))
 
 # layer_smooths() is just compute_smooth() + layer_paths()
 # Run loess or other model outside of a visualisation to see what variables

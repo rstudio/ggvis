@@ -5,7 +5,7 @@
 \title{Create a model of a data set and compute predictions.}
 \usage{
 compute_model_prediction(x, formula, ..., model = NULL, se = FALSE,
-  level = 0.95, n = 80L, method)
+  level = 0.95, n = 80L, domain = NULL, method)
 
 compute_smooth(x, formula, ..., span = 0.75, se = FALSE)
 }
@@ -30,6 +30,11 @@ standard errors is not consistent acrossing modelling frameworks.}
 \item{level}{the confidence level of the standard errors.}
 
 \item{n}{the number of grid points to use in the prediction}
+
+\item{domain}{If \code{NULL} (the default), the domain of the predicted
+values will be the same as the domain of the prediction variable in the
+data. It can also be a two-element numeric vector specifying the min and
+max.}
 
 \item{...}{arguments passed on to \code{model} function}
 
@@ -64,6 +69,10 @@ mtcars \%>\% compute_smooth(mpg ~ wt)
 # Override model to suppress message or change approach
 mtcars \%>\% compute_model_prediction(mpg ~ wt, n = 10, model = "loess")
 mtcars \%>\% compute_model_prediction(mpg ~ wt, n = 10, model = "lm")
+
+# Set the domain manually
+mtcars \%>\%
+  compute_model_prediction(mpg ~ wt, n = 20, model = "lm", domain = c(0, 8))
 
 # Plot the results
 mtcars \%>\% compute_model_prediction(mpg ~ wt) \%>\%

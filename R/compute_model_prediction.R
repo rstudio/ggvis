@@ -23,6 +23,10 @@
 #'   standard errors is not consistent acrossing modelling frameworks.
 #' @param level the confidence level of the standard errors.
 #' @param n the number of grid points to use in the prediction
+#' @param domain If \code{NULL} (the default), the domain of the predicted
+#'   values will be the same as the domain of the prediction variable in the
+#'   data. It can also be a two-element numeric vector specifying the min and
+#'   max.
 #' @param ... arguments passed on to \code{model} function
 #' @param method Deprecated. Please use \code{model} instead.
 #' @return A data frame with columns: \item{\code{resp_}}{regularly spaced grid
@@ -44,6 +48,10 @@
 #' mtcars %>% compute_model_prediction(mpg ~ wt, n = 10, model = "loess")
 #' mtcars %>% compute_model_prediction(mpg ~ wt, n = 10, model = "lm")
 #'
+#' # Set the domain manually
+#' mtcars %>%
+#'   compute_model_prediction(mpg ~ wt, n = 20, model = "lm", domain = c(0, 8))
+#'
 #' # Plot the results
 #' mtcars %>% compute_model_prediction(mpg ~ wt) %>%
 #'   ggvis(~pred_, ~resp_) %>%
@@ -52,7 +60,7 @@
 #'   compute_model_prediction(mpg ~ wt) %>%
 #'   layer_paths(~pred_, ~resp_)
 compute_model_prediction <- function(x, formula, ..., model = NULL, se = FALSE,
-                              level = 0.95, n = 80L, method) {
+                              level = 0.95, n = 80L, domain = NULL, method) {
   if (!missing(method)) {
     deprecated("method", version = "0.3")
     model <- method
@@ -62,7 +70,8 @@ compute_model_prediction <- function(x, formula, ..., model = NULL, se = FALSE,
 
 #' @export
 compute_model_prediction.data.frame <- function(x, formula, ..., model = NULL,
-                                         se = FALSE, level = 0.95, n = 80L, method) {
+                                         se = FALSE, level = 0.95, n = 80L,
+                                         domain = NULL, method) {
   assert_that(is.formula(formula))
   model <- model %||% guess_model(x)
   assert_that(is.string(model))
@@ -104,24 +113,26 @@ compute_model_prediction.data.frame <- function(x, formula, ..., model = NULL,
   model <- eval(model_call, env)
 
   # Make prediction
-  res <- pred_grid(model, x, se = se, level = level, n = n)
+  res <- pred_grid(model, x, se = se, level = level, n = n, domain = domain)
   restore(res)
 }
 
 #' @export
 compute_model_prediction.grouped_df <- function(x, formula, ..., model = NULL,
-                                         se = FALSE, level = 0.95, n = 80L, method) {
+                                         se = FALSE, level = 0.95, n = 80L,
+                                         domain = NULL, method) {
   dplyr::do(x, compute_model_prediction(., formula = formula, model = model,
-    se = se, level = level, n = n, ...))
+    se = se, level = level, n = n, domain = domain, ...))
 }
 
 globalVariables(".")
 
 #' @export
-compute_model_prediction.ggvis <- function(x, formula, ..., model = NULL, se = FALSE,
-                                 level = 0.95, n = 80L, method) {
+compute_model_prediction.ggvis <- function(x, formula, ..., model = NULL,
+                                           se = FALSE, level = 0.95, n = 80L,
+                                           domain = NULL, method) {
   args <- list(formula = formula, model = model, se = se, level = level,
-    n = n, ...)
+               n = n, domain = domain, ...)
 
   register_computation(x, args, "model_prediction", function(data, args) {
     output <- do_call(compute_model_prediction, quote(data), .args = args)
@@ -145,21 +156,24 @@ guess_model <- function(data) {
 
 # Helper function to create data frame of predictions -------------------------
 
-pred_grid <- function(model, data, n = 80, se = FALSE, level = 0.95) {
+pred_grid <- function(model, data, domain = NULL, n = 80, se = FALSE,
+                      level = 0.95) {
   assert_that(is.flag(se))
   assert_that(is.numeric(level), length(level) == 1, level >= 0, level <= 1)
   assert_that(length(n) == 1, n >= 0)
+  assert_that(is.null(domain) || length(domain) == 2)
 
   UseMethod("pred_grid")
 }
 
 #' @export
-pred_grid.loess <- function(model, data, n = 80, se = FALSE, level = 0.95) {
+pred_grid.loess <- function(model, data, domain = NULL, n = 80, se = FALSE,
+                            level = 0.95) {
   if (length(model$xnames) > 1) {
     stop("Only know how to make grid for one variable", call. = FALSE)
   }
 
-  x_rng <- range(model$x, na.rm = TRUE)
+  x_rng <- domain %||% range(model$x, na.rm = TRUE)
   x_grid <- seq(x_rng[1], x_rng[2], length = n)
   grid <- setNames(data.frame(x_grid), model$xnames)
   resp <- predict(model, newdata = grid, se = se)
@@ -182,13 +196,14 @@ pred_grid.loess <- function(model, data, n = 80, se = FALSE, level = 0.95) {
 }
 
 #' @export
-pred_grid.lm <- function(model, data, n = 80, se = FALSE, level = 0.95) {
+pred_grid.lm <- function(model, data, domain = NULL, n = 80, se = FALSE,
+                         level = 0.95) {
   x_var <- get_predict_vars(terms(model))
   if (length(x_var) > 1) {
     stop("Only know how to make grid for one variable", call. = FALSE)
   }
 
-  x_rng <- range(data[[x_var]], na.rm = TRUE)
+  x_rng <- domain %||% range(data[[x_var]], na.rm = TRUE)
   x_grid <- seq(x_rng[1], x_rng[2], length = n)
   grid <- setNames(data.frame(x_grid), x_var)
 
