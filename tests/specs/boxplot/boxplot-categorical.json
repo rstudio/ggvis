@@ -51,16 +51,14 @@
 		{
 			"name" : "scale/x",
 			"format" : {
-				"type" : "csv",
-				"parse" : null
+				"type" : "csv"
 			},
 			"values" : "\"domain\"\n\"4\"\n\"6\"\n\"8\""
 		},
 		{
 			"name" : "scale/xcenter",
 			"format" : {
-				"type" : "csv",
-				"parse" : null
+				"type" : "csv"
 			},
 			"values" : "\"domain\"\n\"4\"\n\"6\"\n\"8\""
 		},
@@ -274,7 +272,6 @@
 	],
 	"width" : 600,
 	"height" : 400,
-	"legends" : [],
 	"axes" : [
 		{
 			"type" : "x",
@@ -293,16 +290,13 @@
 			"title" : "mpg"
 		}
 	],
-	"padding" : null,
 	"ggvis_opts" : {
 		"width" : 600,
 		"height" : 400,
 		"keep_aspect" : false,
 		"resizable" : true,
-		"padding" : {},
 		"duration" : 250,
 		"renderer" : "svg",
 		"hover_duration" : 0
-	},
-	"handlers" : null
+	}
 }
