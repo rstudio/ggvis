@@ -60,7 +60,7 @@ ggvisPlot <- function(plot_id) {
 
 ggvisSpec <- function(plot_id, spec = NULL) {
   if (is.null(spec)) return()
-  json <- RJSONIO::toJSON(spec, pretty = TRUE)
+  json <- jsonlite::toJSON(spec, pretty = TRUE, auto_unbox = TRUE, force = TRUE)
 
   htmltools::tags$script(type = "text/javascript", paste0('\n',
     'var ', plot_id, '_spec = ', json, ';\n',
