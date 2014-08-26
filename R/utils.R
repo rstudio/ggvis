@@ -139,9 +139,7 @@ as_char.name <- function(x) as.character(x)
 #' @export
 as_char.call <- function(x) deparse2(x)
 #' @export
-as_char.NULL <- function(x) NULL
-#' @export
-as_char.default <- function(x) stop("Don't know how to convert to string.")
+as_char.default <- function(x) as.character(x)
 
 # Given a string, return a string that is safe as a vega variable.
 # Replaces . with \.
