@@ -32,6 +32,8 @@
 * Objects imported from the magritter and dplyr packages are now properly
   re-exported.
 
+* Using "." in column names now works. (#246)
+
 # ggvis 0.3.0.1
 
 * Reconcile shiny dependency at run-time, not build time.
