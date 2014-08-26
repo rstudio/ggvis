@@ -129,7 +129,7 @@
 		{
 			"orient" : "right",
 			"fill" : "fill",
-			"title" : "cyl\\.new"
+			"title" : "cyl.new"
 		}
 	],
 	"axes" : [
@@ -147,7 +147,7 @@
 			"orient" : "left",
 			"layer" : "back",
 			"grid" : true,
-			"title" : "mpg\\.new"
+			"title" : "mpg.new"
 		}
 	],
 	"ggvis_opts" : {
