@@ -59,7 +59,7 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
   x <- apply_legends_defaults(x)
   x <- add_default_options(x)
 
-  spec <- list(
+  spec <- compact(list(
     data = c(datasets, scale_datasets),
     scales = lapply(unname(x$scales), as.vega),
     marks = lapply(x$marks, as.vega),
@@ -68,9 +68,9 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
     legends = compact(lapply(x$legends, as.vega)),
     axes = compact(lapply(x$axes, as.vega)),
     padding = as.vega(x$options$padding),
-    ggvis_opts = x$options,
+    ggvis_opts = compact(x$options),
     handlers = if (dynamic) x$handlers
-  )
+  ))
 
   structure(
     spec,
@@ -147,7 +147,7 @@ as.vega.mark <- function(mark, in_group = FALSE) {
   }
 
   if (!is.null(key)) {
-    m$key <- paste0("data.", prop_label(key))
+    m$key <- paste0("data.", safe_vega_var(prop_label(key)))
   }
   m
 }
@@ -186,17 +186,15 @@ as.vega.ggvis_legend <- as.vega.ggvis_axis
 
 #' @export
 as.vega.data.frame <- function(x, name, ...) {
-  # For CSV output, we need to unescape periods, which were turned into \. by
-  # prop_label().
-  names(x) <- gsub("\\.", ".", names(x), fixed = TRUE)
+  # Figure out correct vega parsers for non-string columns
+  parsers <- drop_nulls(lapply(x, vega_data_parser))
 
   list(list(
     name = name,
-    format = list(
+    format = compact(list(
       type = "csv",
-      # Figure out correct vega parsers for non-string columns
-      parse = unlist(lapply(x, vega_data_parser))
-    ),
+      parse = parsers
+    )),
     values = to_csv(x)
   ))
 }
@@ -213,7 +211,7 @@ as.vega.grouped_df <- function(x, name, ...) {
     source = paste0(name, "_flat"),
     transform = list(list(
       type = "treefacet",
-      keys = as.list(paste0("data.", group_vars))
+      keys = as.list(paste0("data.", safe_vega_var(group_vars)))
     ))
   )
 

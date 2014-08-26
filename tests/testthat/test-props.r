@@ -56,7 +56,10 @@ test_that("property names for variables", {
 
   # Variable names with special characters are made vega-safe
   expect_identical(pname(`wt/mpg`), "wt/mpg")
-  expect_identical(pname(`wt.mpg`), "wt\\.mpg")
+  expect_identical(pname(`wt.mpg`), "wt.mpg")
+
+  # safe_vega_var escapes "."
+  expect_identical(safe_vega_var("wt.mpg"), "wt\\.mpg")
 
   # Expressions are kept as is
   expect_identical(pname(wt/mpg), "wt/mpg")

@@ -264,7 +264,7 @@ register_scales_from_props <- function(vis, props) {
   add_scale_from_prop <- function(vis, prop) {
     # Automatically add label, unless it's blank or has a trailing '_'
     label <- prop_label(prop)
-    if (label == "" || grepl("_$", prop_label(prop))) {
+    if (label == "" || grepl("_$", label)) {
       label <- NULL
     }
 
@@ -348,7 +348,7 @@ show_spec <- function(vis, pieces = NULL) {
     out <- out[pieces]
   }
 
-  json <- RJSONIO::toJSON(out, pretty = TRUE)
+  json <- jsonlite::toJSON(out, pretty = TRUE, auto_unbox = TRUE, force = TRUE)
   cat(gsub("\t", " ", json), "\n", sep = "")
 
   invisible(vis)
@@ -366,14 +366,15 @@ show_spec <- function(vis, pieces = NULL) {
 save_spec <- function(x, path, ...) {
   assert_that(is.ggvis(x), is.string(path))
 
-  json <- RJSONIO::toJSON(as.vega(x, ...), pretty = TRUE)
+  json <- jsonlite::toJSON(as.vega(x, ...), pretty = TRUE, auto_unbox = TRUE,
+                           force = TRUE)
   writeLines(json, path)
 }
 
 #' @rdname save_spec
 view_spec <- function(path, ...) {
   contents <- paste0(readLines(path), collapse = "\n")
-  spec <- RJSONIO::fromJSON(contents)
+  spec <- jsonlite::fromJSON(contents)
   view_static(spec)
 }
 

@@ -224,9 +224,9 @@ prop_label <- function(x) UseMethod("prop_label")
 #' @export
 prop_label.prop_constant <- function(x) ""
 #' @export
-prop_label.prop_variable <- function(x) safe_vega_var(x$value)
+prop_label.prop_variable <- function(x) as_char(x$value)
 #' @export
-prop_label.prop_reactive <- function(x) safe_vega_var(reactive_id(x$value))
+prop_label.prop_reactive <- function(x) as_char(reactive_id(x$value))
 
 # Reports whether this is a scaled prop
 prop_is_scaled <- function(prop) !is.null(prop$scale)
@@ -246,7 +246,7 @@ prop_vega.prop_constant <- function(x, default_scale) {
 prop_vega.prop_variable <- function(x, default_scale) {
   compact(list(
     scale = if (prop_is_scaled(x)) x$scale,
-    field = paste0("data.", prop_label(x)),
+    field = paste0("data.", safe_vega_var(prop_label(x))),
     mult = x$mult,
     offset = x$offset
   ))
@@ -269,7 +269,7 @@ prop_domain.prop_constant <- function(x, data) {
 prop_domain.prop_variable <- function(x, data) {
   list(
     data = data,
-    field = paste0("data.", prop_label(x))
+    field = paste0("data.", safe_vega_var(prop_label(x)))
   )
 }
 #' @export

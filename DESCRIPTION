@@ -11,7 +11,7 @@ Depends:
     R (>= 3.0)
 Imports:
     assertthat,
-    RJSONIO,
+    jsonlite,
     shiny (>= 0.10),
     magrittr,
     dplyr (>= 0.2),
