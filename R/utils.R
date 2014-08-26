@@ -132,15 +132,18 @@ param_string <- function(x, collapse = TRUE) {
   paste0("(", paste0(names(x), " = ", values, collapse = ", "), ")")
 }
 
+# Convert various objects to char strings.
+as_char <- function(x) UseMethod("as_char")
+#' @export
+as_char.name <- function(x) as.character(x)
+#' @export
+as_char.call <- function(x) deparse2(x)
+#' @export
+as_char.default <- function(x) stop("Don't know how to convert to string.")
+
 # Given a string, return a string that is safe as a vega variable.
 # Replaces . with \.
 safe_vega_var <- function(x) {
-  if (is.name(x)) {
-    x <- as.character(x)
-  } else if (is.quoted(x)) {
-    x <- deparse2(x)
-  }
-
   gsub(".", "\\.", x, fixed = TRUE)
 }
 

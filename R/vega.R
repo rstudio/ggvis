@@ -147,7 +147,7 @@ as.vega.mark <- function(mark, in_group = FALSE) {
   }
 
   if (!is.null(key)) {
-    m$key <- paste0("data.", prop_label(key))
+    m$key <- paste0("data.", safe_vega_var(prop_label(key)))
   }
   m
 }

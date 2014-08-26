@@ -264,7 +264,7 @@ register_scales_from_props <- function(vis, props) {
   add_scale_from_prop <- function(vis, prop) {
     # Automatically add label, unless it's blank or has a trailing '_'
     label <- prop_label(prop)
-    if (label == "" || grepl("_$", prop_label(prop))) {
+    if (label == "" || grepl("_$", label)) {
       label <- NULL
     }
 
