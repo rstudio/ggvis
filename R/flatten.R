@@ -62,7 +62,7 @@ apply_props <- function(data, props) {
 #' @export
 apply_props.data.frame <- function(data, props) {
   cols <- lapply(props, prop_value, data = data)
-  names(cols) <- safe_vega_var(vapply(props, prop_label, character(1)))
+  names(cols) <- vapply(props, prop_label, character(1))
   quickdf(cols)
 }
 
