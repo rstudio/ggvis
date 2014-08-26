@@ -189,12 +189,6 @@ as.vega.data.frame <- function(x, name, ...) {
   # Figure out correct vega parsers for non-string columns
   parsers <- drop_nulls(lapply(x, vega_data_parser))
 
-  # Workaround for https://github.com/jeroenooms/jsonlite/issues/30 - need to
-  # double backslashes in names
-  if (!is.null(parsers)) {
-    names(parsers) <- gsub("\\", "\\\\", names(parsers), fixed = TRUE)
-  }
-
   list(list(
     name = name,
     format = compact(list(

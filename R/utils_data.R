@@ -153,9 +153,9 @@ format_vec_d3json.POSIXt <- function(vec) floor(as.numeric(vec) * 1000)
 format_vec_d3json.Date <- function(vec) as.numeric(as.POSIXct(vec)) * 1000
 
 
-# Replace \ with \\, " with \", and add " to start and end
+# Replace \. with . , " with \", and add " to start and end
 quote_text <- function(txt) {
-  txt <- gsub("\\\\", "\\\\\\\\", txt, fixed = TRUE)
+  txt <- gsub("\\.", ".", txt, fixed = TRUE)
   txt <- gsub('"', '\\\\"', txt, fixed = TRUE)
   paste0('"', txt, '"')
 }
