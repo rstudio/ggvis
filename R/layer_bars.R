@@ -120,6 +120,7 @@ layer_bars <- function(vis, ..., stack = TRUE, width = NULL) {
 
   } else {
     vis <- layer_f(vis, function(v) {
+      v <- add_props(v, .props = new_props)
       v <- compute_count(v, x_var, y_var)
       v <- compute_align(v, ~x_, length = width)
       if (stack) {
