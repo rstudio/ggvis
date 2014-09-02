@@ -72,7 +72,7 @@ compute_stack.data.frame <- function(x, stack_var = NULL, group_var = NULL) {
   }
 
   # FIXME: This is a workaround for dplyr issue #412
-  lag <- dplyr::lag
+  lag <- stats::lag
 
   # FIXME: mutate evaluates in this function's environment, which isn't right.
   # This is like mutate(x, stack_upr_ = cumsum(stack_var),
