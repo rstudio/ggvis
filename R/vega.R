@@ -59,7 +59,7 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
   x <- apply_legends_defaults(x)
   x <- add_default_options(x)
 
-  spec <- compact(list(
+  spec <- list(
     data = c(datasets, scale_datasets),
     scales = lapply(unname(x$scales), as.vega),
     marks = lapply(x$marks, as.vega),
@@ -68,9 +68,9 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
     legends = compact(lapply(x$legends, as.vega)),
     axes = compact(lapply(x$axes, as.vega)),
     padding = as.vega(x$options$padding),
-    ggvis_opts = compact(x$options),
+    ggvis_opts = x$options,
     handlers = if (dynamic) x$handlers
-  ))
+  )
 
   structure(
     spec,
@@ -191,10 +191,10 @@ as.vega.data.frame <- function(x, name, ...) {
 
   list(list(
     name = name,
-    format = compact(list(
+    format = list(
       type = "csv",
       parse = parsers
-    )),
+    ),
     values = to_csv(x)
   ))
 }
