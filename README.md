@@ -28,6 +28,9 @@ Install the latest development version with:
 
 ```R
 # install.packages("devtools")
+devtools::install_github("hadley/lazy", build_vignettes = FALSE)
+devtools::install_github("hadley/dplyr", build_vignettes = FALSE)
+devtools::install_github("jeroenooms/jsonlite", build_vignettes = FALSE)
 devtools::install_github("rstudio/ggvis", build_vignettes = FALSE)
 ```
 
