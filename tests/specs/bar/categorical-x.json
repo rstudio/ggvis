@@ -14,7 +14,8 @@
 		{
 			"name" : "scale/x",
 			"format" : {
-				"type" : "csv"
+				"type" : "csv",
+				"parse" : {}
 			},
 			"values" : "\"domain\"\n\"0\"\n\"20\"\n\"40\"\n\"60\"\n\"80\"\n\"100\"\n\"120\"\n\"140\"\n\"160\"\n\"180\"\n\"200\"\n\"220\"\n\"240\"\n\"260\"\n\"280\"\n\"300\"\n\"320\"\n\"340\"\n\"360\""
 		},
@@ -95,6 +96,7 @@
 	],
 	"width" : 600,
 	"height" : 400,
+	"legends" : [],
 	"axes" : [
 		{
 			"type" : "x",
@@ -113,13 +115,16 @@
 			"title" : "pressure"
 		}
 	],
+	"padding" : null,
 	"ggvis_opts" : {
 		"width" : 600,
 		"height" : 400,
 		"keep_aspect" : false,
 		"resizable" : true,
+		"padding" : {},
 		"duration" : 250,
 		"renderer" : "svg",
 		"hover_duration" : 0
-	}
+	},
+	"handlers" : null
 }

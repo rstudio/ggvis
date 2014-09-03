@@ -86,6 +86,7 @@
 	],
 	"width" : 600,
 	"height" : 400,
+	"legends" : [],
 	"axes" : [
 		{
 			"type" : "x",
@@ -104,13 +105,16 @@
 			"title" : "y"
 		}
 	],
+	"padding" : null,
 	"ggvis_opts" : {
 		"width" : 600,
 		"height" : 400,
 		"keep_aspect" : false,
 		"resizable" : true,
+		"padding" : {},
 		"duration" : 250,
 		"renderer" : "svg",
 		"hover_duration" : 0
-	}
+	},
+	"handlers" : null
 }
