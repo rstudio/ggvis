@@ -348,7 +348,8 @@ show_spec <- function(vis, pieces = NULL) {
     out <- out[pieces]
   }
 
-  json <- jsonlite::toJSON(out, pretty = TRUE, auto_unbox = TRUE, force = TRUE)
+  json <- jsonlite::toJSON(out, pretty = TRUE, auto_unbox = TRUE, force = TRUE,
+                           null = "null")
   cat(gsub("\t", " ", json), "\n", sep = "")
 
   invisible(vis)
@@ -367,7 +368,7 @@ save_spec <- function(x, path, ...) {
   assert_that(is.ggvis(x), is.string(path))
 
   json <- jsonlite::toJSON(as.vega(x, ...), pretty = TRUE, auto_unbox = TRUE,
-                           force = TRUE)
+                           force = TRUE, null = "null")
   writeLines(json, path)
 }
 
