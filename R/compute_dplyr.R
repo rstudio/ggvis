@@ -171,3 +171,21 @@ extract_inputs <- function(x, env = parent.frame()) {
     inputs = inputs
   )
 }
+
+
+#' @export
+groups.reactive <- function(x, value) reactive(dplyr::groups(x(), value))
+#' @export
+regroup.reactive <- function(x, value) reactive(dplyr::regroup(x(), value))
+#' @export
+ungroup.reactive <- function(x, value) reactive(dplyr::ungroup(x(), value))
+#' @export
+summarise.reactive <- function(x, ...) reactive(dplyr::summarise(x(), ...))
+#' @export
+mutate.reactive <- function(x, ...) reactive(dplyr::mutate(x(), ...))
+#' @export
+arrange.reactive <- function(x, ...) reactive(dplyr::arrange(x(), ...))
+#' @export
+select.reactive <- function(x, ...) reactive(dplyr::select(x(), ...))
+#' @export
+filter.reactive <- function(x, ...) reactive(dplyr::filter(x(), ...))
