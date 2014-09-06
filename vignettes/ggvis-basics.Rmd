@@ -231,7 +231,7 @@ The four most common compound layers are:
     ```
 
 * `layer_histograms()` and `layer_freqpolys()` which allows you to explore the 
-  distribution of continuous. Both layers first bin the data with 
+  distribution of continuous variables. Both layers first bin the data with 
   `compute_bin()` then display the results with either rects or lines.
     
     ```{r}
