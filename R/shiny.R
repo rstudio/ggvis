@@ -113,16 +113,17 @@ bind_shiny_ui <- function(vis, controls_id,
   vis
 }
 
+# Tell an observer to suspend or resume, depending on the hidden state of an
+# output object on the client.
 sync_with_hidden_state <- function(obs, id, session) {
   force(obs)
+
   shiny::observe({
     isHidden <- session$clientData[[paste0('output_', id, '_hidden')]]
-    str(isHidden)
+
     if (identical(isHidden, FALSE)) {
-      cat('resume\n', file=stderr())
       obs$resume()
     } else {
-      cat('suspend\n', file=stderr())
       obs$suspend()
     }
   })
@@ -136,6 +137,7 @@ observe_spec <- function(r_spec, id, session) {
       spec = r_spec()
     ))
   })
+
   sync_with_hidden_state(obs, id, session)
 }
 
@@ -149,36 +151,28 @@ observe_data <- function(r_spec, id, session) {
     # which need to be suspended before we create new ones. This can happen when
     # the reactive containing the ggvis() call is invalidated.
     for (obs in data_observers) obs$suspend()
-    data_observers <<- list()
 
     data_table <- c(attr(r_spec(), "data_table", TRUE),
                     attr(r_spec(), "scale_data_table", TRUE))
 
     # Create observers for each of the data objects
-    for (name in names(data_table)) {
-      # The datasets list contains named objects. The names are synthetic IDs
-      # that are present in the vega spec. The values can be a variety of things,
-      # see the if/else clauses below.
-      local({
-        # Have to do everything in a local so that these variables are not shared
-        # between the different iterations
-        data_name <- name
+    data_observers <<- lapply(names(data_table), function(data_name) {
+      # The data_table list contains named objects. The names are synthetic IDs
+      # that are present in the vega spec.
 
-        obs <- shiny::observe(suspended = FALSE, {
-          data_reactive <- data_table[[data_name]]
+      obs <- shiny::observe(suspended = TRUE, {
+        data_reactive <- data_table[[data_name]]
 
-          session$sendCustomMessage("ggvis_data", list(
-            plotId = id,
-            name = data_name,
-            value = as.vega(data_reactive(), data_name)
-          ))
-        })
-        sync_with_hidden_state(obs, id, session)
-
-        # Track this data observer
-        data_observers[[length(data_observers) + 1]] <<- obs
+        session$sendCustomMessage("ggvis_data", list(
+          plotId = id,
+          name = data_name,
+          value = as.vega(data_reactive(), data_name)
+        ))
       })
-    }
+      sync_with_hidden_state(obs, id, session)
+
+      obs
+    })
 
     # Tell the plot to update _after_ all the data has been sent
     data_observers[[length(data_observers) + 1]] <- shiny::observe(suspended = TRUE, {
