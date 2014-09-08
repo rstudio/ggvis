@@ -113,16 +113,30 @@ bind_shiny_ui <- function(vis, controls_id,
   vis
 }
 
-
+sync_with_hidden_state <- function(obs, id, session) {
+  force(obs)
+  shiny::observe({
+    isHidden <- session$clientData[[paste0('output_', id, '_hidden')]]
+    str(isHidden)
+    if (identical(isHidden, FALSE)) {
+      cat('resume\n', file=stderr())
+      obs$resume()
+    } else {
+      cat('suspend\n', file=stderr())
+      obs$suspend()
+    }
+  })
+}
 
 # Create an observer for a reactive vega spec
 observe_spec <- function(r_spec, id, session) {
-  shiny::observe({
+  obs <- shiny::observe(suspended = TRUE, {
     session$sendCustomMessage("ggvis_vega_spec", list(
       plotId = id,
       spec = r_spec()
     ))
   })
+  sync_with_hidden_state(obs, id, session)
 }
 
 # Create observers for the data objects attached to a reactive vega spec
@@ -130,7 +144,7 @@ observe_data <- function(r_spec, id, session) {
   # A list for keeping track of each data observer
   data_observers <- list()
 
-  shiny::observe({
+  outer_obs <- shiny::observe(suspended = TRUE, {
     # If data_observers list is nonempty, that means there are old observers
     # which need to be suspended before we create new ones. This can happen when
     # the reactive containing the ggvis() call is invalidated.
@@ -150,7 +164,7 @@ observe_data <- function(r_spec, id, session) {
         # between the different iterations
         data_name <- name
 
-        obs <- shiny::observe({
+        obs <- shiny::observe(suspended = FALSE, {
           data_reactive <- data_table[[data_name]]
 
           session$sendCustomMessage("ggvis_data", list(
@@ -159,6 +173,7 @@ observe_data <- function(r_spec, id, session) {
             value = as.vega(data_reactive(), data_name)
           ))
         })
+        sync_with_hidden_state(obs, id, session)
 
         # Track this data observer
         data_observers[[length(data_observers) + 1]] <<- obs
@@ -166,7 +181,7 @@ observe_data <- function(r_spec, id, session) {
     }
 
     # Tell the plot to update _after_ all the data has been sent
-    data_observers[[length(data_observers) + 1]] <- shiny::observe({
+    data_observers[[length(data_observers) + 1]] <- shiny::observe(suspended = TRUE, {
       # Take dependency on all data objects
       for (name in names(data_table)) {
         data_table[[name]]()
@@ -177,7 +192,10 @@ observe_data <- function(r_spec, id, session) {
         command = "update"
       ))
     }, priority = -1)
+    sync_with_hidden_state(data_observers[[length(data_observers)]], id, session)
   })
+
+  sync_with_hidden_state(outer_obs, id, session)
 }
 
 # Run the connector functions
