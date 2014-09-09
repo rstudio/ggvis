@@ -6,6 +6,17 @@ $(function(){ //DOM Ready
 
   var _ = window.lodash;
 
+  // This custom message binding is needed for shiny to keep track of the
+  // hidden state of the ggvis output. It isn't actually used for receiving
+  // regular output values from the server.
+  var ggvisOutputBinding = new Shiny.OutputBinding();
+  $.extend(ggvisOutputBinding, {
+    find: function(scope) {
+      return $(scope).find('.ggvis-output');
+    }
+  });
+  Shiny.outputBindings.register(ggvisOutputBinding, 'shiny.ggvisOutput');
+
   // A customized version of Shiny's htmlOutputBinding which can call a plot's
   // onControlOutput function when outputs are updated drawn.
   var ggvisControlOutputBinding = new Shiny.OutputBinding();
