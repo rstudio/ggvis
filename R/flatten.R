@@ -1,20 +1,44 @@
-# Create a new reactive dataset containing only the data actually used
-# by properties.
-active_props <- function(data, marks) {
-  # Collect all props for given data
-  data_ids <- vapply(marks, function(mark) data_id(mark$data), character(1))
-  props <- lapply(marks, function(x) x$props)
+#' Creates a named list, giving the properties used by each dataset.
+#'
+#' @noRd
+#' @examples
+#' base <- mtcars %>% ggvis(~wt, ~mpg)
+#' base %>% layer_points() %>% combine_data_props()
+#' base %>% layer_points() %>% layer_points() %>% combine_data_props()
+#' base %>% layer_points(y = ~cyl) %>% layer_points(y = ~disp) %>% combine_data_props()
+#' base %>% layer_points() %>% layer_points(~conc, ~uptake, data = CO2) %>%
+#'  combine_data_props()
+combine_data_props <- function(mark) {
+  if (is.ggvis(mark)) return(combine_data_props(mark$marks))
+  if (identical(class(mark), "mark")) {
+    return(setNames(list(mark$props), data_id(mark$data)))
+  }
 
-  props_by_id <- split(props, data_ids)
-  props_by_id <- lapply(props_by_id, unlist, recursive = FALSE)
+  if (is.mark_group(mark)) {
+    children <- mark$marks
+  } else if (is.list(mark)) {
+    children <- mark
+  } else {
+    stop("Invalid input")
+  }
+  all_props <- unlist(lapply(children, combine_data_props), recursive = FALSE)
 
-  uprops_by_id <- lapply(props_by_id, function(props) {
-    names <- vapply(props, prop_label, character(1))
+  # Combine together props for data with same name
+  props_by_id <- split(all_props, names(all_props))
+  props_by_id <- lapply(props_by_id, unlist, recursive = FALSE, use.names = FALSE)
+
+  # Remove duplicates, and props that don't appear in the data
+  lapply(props_by_id, function(props) {
+    names <- safe_vega_var(vapply(props, prop_label, character(1)))
     ok <- !duplicated(names) & names != ""
 
     setNames(props[ok], names[ok])
   })
+}
 
+# Create a new reactive dataset containing only the data actually used
+# by properties.
+active_props <- function(data, props) {
   reactive_prop <- function(props, parent_data) {
     force(props)
     force(parent_data)
@@ -22,8 +46,8 @@ active_props <- function(data, marks) {
   }
 
   data_out <- list()
-  for (data_n in names(uprops_by_id)) {
-    data_out[[data_n]] <- reactive_prop(uprops_by_id[[data_n]], data[[data_n]])
+  for (data_n in names(props)) {
+    data_out[[data_n]] <- reactive_prop(props[[data_n]], data[[data_n]])
   }
 
   data_out
@@ -44,5 +68,10 @@ apply_props.data.frame <- function(data, props) {
 
 #' @export
 apply_props.grouped_df <- function(data, props) {
+  # FIXME: temporary hack workaround for dplyr issue #486. If x has zero rows,
+  # operate on this as though it were a normal data frame.
+  if (nrow(data) == 0) {
+    return(apply_props.data.frame(data, props))
+  }
   dplyr::do(data, apply_props(., props))
 }

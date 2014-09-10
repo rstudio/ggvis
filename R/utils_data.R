@@ -21,13 +21,6 @@ data_id <- function(x) {
   x
 }
 
-merge_df <- function(a, b) {
-  if (is.null(a) || nrow(a) == 0 || ncol(a) == 0) return(b)
-  if (is.null(b) || nrow(b) == 0 || ncol(b) == 0) return(a)
-
-  cbind(a[setdiff(names(a), names(b))], b)
-}
-
 # Convenience function to remove missing values from a data.frame
 # Remove all non-complete rows, with a warning if \code{warn_na = FALSE}.
 #
@@ -160,9 +153,9 @@ format_vec_d3json.POSIXt <- function(vec) floor(as.numeric(vec) * 1000)
 format_vec_d3json.Date <- function(vec) as.numeric(as.POSIXct(vec)) * 1000
 
 
-# Replace \ with \\, " with \", and add " to start and end
+# Replace \. with . , " with \", and add " to start and end
 quote_text <- function(txt) {
-  txt <- gsub("\\\\", "\\\\\\\\", txt, fixed = TRUE)
+  txt <- gsub("\\.", ".", txt, fixed = TRUE)
   txt <- gsub('"', '\\\\"', txt, fixed = TRUE)
   paste0('"', txt, '"')
 }
@@ -179,7 +172,7 @@ eval_vector.data.frame <- function(x, f) {
 # Find the range of values for a vector
 data_range <- function(x) UseMethod("data_range")
 #' @export
-data_range.default <- function(x) range(x, na.rm = TRUE)
+data_range.default <- function(x) range2(x, na.rm = TRUE)
 #' @export
 data_range.character <- function(x) unique(na.omit(x))
 #' @export
@@ -189,7 +182,10 @@ data_range.factor <- function(x) levels(x)
 # For POSIXct, this preserves time zone.
 # For factors, this preserves all levels (but not necessarily order)
 concat <- function(x) {
-  x <- compact(x)
+  x <- drop_nulls(x)
+  if (length(x) == 0) {
+    return(NULL)
+  }
   if (inherits(x[[1]], "POSIXct")) {
     vec <- do_call(c, .args = x)
     structure(vec, tzone = attr(x[[1]], "tzone"))
@@ -198,4 +194,14 @@ concat <- function(x) {
   } else {
     unlist(x, recursive = FALSE)
   }
+}
+
+# Does the same as base::range, except that for for 0-length vectors, it returns
+# a zero-length vector of appropriate type, instead of throwing an error.
+range2 <- function(..., na.rm = FALSE) {
+  vals <- c(...)
+  if (length(vals) == 0) {
+    return(vals)
+  }
+  range(..., na.rm = na.rm)
 }

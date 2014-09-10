@@ -118,17 +118,6 @@ pressure2 %>% ggvis(~temperature, ~pressure) %>%
   layer_bars()
 ```
 
-Notice that in this example, the x values aren't sorted quite right: they're sorted lexically, by the first, second, and then third digit, instead of by the numeric value. This is due to a limitation in ggvis.
-
-It's possible to work around this by using a data set with a numerical x, and then tell it to display using a nominal scale. Notice in the example below, the x-axis labels are centered under each bar, each bar has a label, and they are sorted numerically.
-
-
-```{r, message = FALSE, fig.width = 4}
-# Use the original pressure data set with continuous x values
-pressure %>% ggvis(~temperature, ~pressure) %>%
-  layer_bars()
-```
-
 
 ## Line graphs
 
@@ -159,22 +148,22 @@ Basic histogram:
 faithful %>% ggvis(~eruptions) %>% layer_histograms()
 ```
 
-The bin selection can be controled by specifying `width` and at most one of `center` or 
+
+The bin selection can be controled by specifying `binwidth` and at most one of `center` or 
 `boundary` of one of the bins.  `boundary` and `center` may be outside the range of 
 the data.
 
 ```{r, message = FALSE}
-faithful %>% ggvis(~eruptions) %>% layer_histograms(width=0.5, boundary=0)
-faithful %>% ggvis(~eruptions) %>% layer_histograms(width=0.5, center=0)
+faithful %>% ggvis(~eruptions) %>% layer_histograms(binwidth=0.5, boundary=0)
+faithful %>% ggvis(~eruptions) %>% layer_histograms(binwidth=0.5, center=0)
 ```
 
 Modify the fill color and bin width, and add titles for the axes, since the automatic titles aren't very informative:
 
+
 ```{r, message = FALSE}
 faithful %>% ggvis(~eruptions, fill := "#fff8dc") %>%
-  layer_histograms(binwidth = 0.25) %>%
-  add_axis("x", title = "eruptions") %>%
-  add_axis("y", title = "count")
+  layer_histograms(binwidth = 0.25)
 ```
 
 By default, when the number of integer values is small, bins will 
@@ -182,14 +171,23 @@ be centered at integers and have a width of 1:
 
 ```{r, message = FALSE}
 cocaine %>% ggvis(~month, fill := "#fff8dc") %>%
-  layer_histograms(width = 1, center = 0) %>%
-  add_guide_axis("x", title = "month") %>%
-  add_guide_axis("y", title = "count")
+  layer_histograms() %>%
+  add_axis("x", title = "month") %>%
+  add_axis("y", title = "count")
 ```
+
 This can be forced with 
 ```{r, message = FALSE}
 cocaine %>% ggvis(~month, fill := "#fff8dc") %>%
-  layer_histograms(width = 1, center = 0) %>%
-  add_guide_axis("x", title = "month") %>%
-  add_guide_axis("y", title = "count")
+  layer_histograms(binwidth = 1, center = 0) %>%
+  add_axis("x", title = "month") %>%
+  add_axis("y", title = "count")
 ```
+## Box plots
+
+```{r}
+mtc <- mtcars %>% mutate(cyl = factor(cyl))
+mtc %>% ggvis(~cyl, ~mpg) %>% layer_boxplots()
+```
+
+

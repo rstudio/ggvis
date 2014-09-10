@@ -18,12 +18,19 @@ If you find a bug, please file a minimal reproducible example at http://github.c
 
 ## Installation 
 
-ggvis is not yet available on CRAN. You can install it from github with the following code:
+Install the latest release version from CRAN with:
+
+```R
+install.packages("ggvis")
+```
+
+Install the latest development version with:
 
 ```R
 # install.packages("devtools")
-devtools::install_github(c("rstudio/rmarkdown", "rstudio/shiny", "rstudio/ggvis"),
-    build_vignettes = FALSE)
+devtools::install_github("hadley/lazy", build_vignettes = FALSE)
+devtools::install_github("hadley/dplyr", build_vignettes = FALSE)
+devtools::install_github("rstudio/ggvis", build_vignettes = FALSE)
 ```
 
 ## Getting started

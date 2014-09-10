@@ -49,7 +49,8 @@ ggvis <- function(data = NULL, ..., env = parent.frame()) {
       handlers = list(),
       options = list(),
       cur_data = NULL,
-      cur_props = NULL
+      cur_props = NULL,
+      cur_vis = NULL
     ),
     class = "ggvis"
   )
@@ -133,13 +134,26 @@ add_mark <- function(vis, type = NULL, props = NULL, data = NULL,
   old_data <- vis$cur_data
   old_props <- vis$cur_props
 
+  # If we're in a subvis, modify scale names to include prefix
+  # FIXME: figure out how to avoid this in order to specify parent scales
+  # Maybe some attribute? e.g. scale = parent("x")
+  if (!is.null(vis$cur_vis)) {
+    suffix <- paste0(vis$cur_vis, collapse = "-")
+    props <- lapply(props, function(x) {
+      if (identical(x$scale, FALSE)) return(x)
+      x$scale <- paste0(x$scale, suffix)
+      x
+    })
+  }
+
   vis <- add_data(vis, data, data_name)
   vis <- add_props(vis, .props = props)
+
+
   vis <- register_scales_from_props(vis, cur_props(vis))
 
-  vis$marks <- c(vis$marks, list(
-    mark(type, props = cur_props(vis), data = vis$cur_data))
-  )
+  new_mark <- mark(type, props = cur_props(vis), data = vis$cur_data)
+  vis <- append_ggvis(vis, "marks", new_mark)
 
   # Restore old data
   vis$cur_data <- old_data
@@ -161,18 +175,7 @@ add_scale <- function(vis, scale, data_domain = TRUE) {
   if (data_domain && shiny::is.reactive(scale$domain)) {
     vis <- register_reactive(vis, scale$domain)
   }
-
-  vis$scales[[scale$name]] <- c(vis$scales[[scale$name]], list(scale))
-  vis
-}
-
-register_legend <- function(vis, legend) {
-  vis$legends <- c(vis$legends, list(legend))
-  vis
-}
-
-register_axis <- function(vis, axis) {
-  vis$axes <- c(vis$axes, list(axis))
+  vis <- append_ggvis(vis, "scales", scale)
   vis
 }
 
@@ -261,7 +264,7 @@ register_scales_from_props <- function(vis, props) {
   add_scale_from_prop <- function(vis, prop) {
     # Automatically add label, unless it's blank or has a trailing '_'
     label <- prop_label(prop)
-    if (label == "" || grepl("_$", prop_label(prop))) {
+    if (label == "" || grepl("_$", label)) {
       label <- NULL
     }
 
@@ -300,6 +303,7 @@ register_scales_from_props <- function(vis, props) {
   for (i in seq_along(props)) {
     vis <- add_scale_from_prop(vis, props[[i]])
   }
+
   vis
 }
 
@@ -344,10 +348,11 @@ show_spec <- function(vis, pieces = NULL) {
     out <- out[pieces]
   }
 
-  json <- RJSONIO::toJSON(out, pretty = TRUE)
+  json <- jsonlite::toJSON(out, pretty = TRUE, auto_unbox = TRUE, force = TRUE,
+                           null = "null")
   cat(gsub("\t", " ", json), "\n", sep = "")
 
-  invisible()
+  invisible(vis)
 }
 
 #' Tools to save and view static specs.
@@ -362,13 +367,30 @@ show_spec <- function(vis, pieces = NULL) {
 save_spec <- function(x, path, ...) {
   assert_that(is.ggvis(x), is.string(path))
 
-  json <- RJSONIO::toJSON(as.vega(x, ...), pretty = TRUE)
+  json <- jsonlite::toJSON(as.vega(x, ...), pretty = TRUE, auto_unbox = TRUE,
+                           force = TRUE, null = "null")
   writeLines(json, path)
 }
 
 #' @rdname save_spec
 view_spec <- function(path, ...) {
   contents <- paste0(readLines(path), collapse = "\n")
-  spec <- RJSONIO::fromJSON(contents)
+  spec <- jsonlite::fromJSON(contents)
   view_static(spec)
+}
+
+append_ggvis <- function(vis, field, x) {
+  i <- vis$cur_vis
+  if (length(i) == 0) {
+    vis[[field]] <- c(vis[[field]], list(x))
+  } else if (length(i) == 1) {
+    vis$marks[[i]][[field]] <- c(vis$marks[[i]][[field]], list(x))
+  } else if (length(i) == 2) {
+    vis$marks[[i[1]]]$marks[[i[2]]][[field]] <-
+      c(vis$marks[[i[1]]]$marks[[i[2]]][[field]], list(x))
+  } else {
+    stop(">3 levels deep? You must be crazy!", call. = FALSE)
+  }
+
+  vis
 }

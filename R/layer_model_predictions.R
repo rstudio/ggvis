@@ -20,6 +20,10 @@
 #' @param se Also display a point-wise standard error band? Defaults to
 #'   \code{FALSE} because interpretation is non-trivial.
 #' @param span For \code{layer_smooth}, the span of the loess smoother.
+#' @param domain If \code{NULL} (the default), the domain of the predicted
+#'   values will be the same as the domain of the prediction variable in the
+#'   data. It can also be a two-element numeric vector specifying the min and
+#'   max.
 #' @export
 #' @examples
 #' mtcars %>% ggvis(~wt, ~mpg) %>% layer_smooths()
@@ -47,9 +51,18 @@
 #'   layer_model_predictions(model = "lm") %>%
 #'   layer_model_predictions(model = "MASS::rlm", stroke := "red")
 #'
-#' # layer_smooths() is just smooth() + layer_paths()
-#' # Run smooth outside of a visualisation to see what variables you get
+#' # Custom domain for predictions
+#' mtcars %>% ggvis(~wt, ~mpg) %>% layer_points() %>%
+#'   layer_model_predictions(model = "lm", domain = c(0, 8))
+#' mtcars %>% ggvis(~wt, ~mpg) %>% layer_points() %>%
+#'   layer_model_predictions(model = "lm",
+#'     domain = input_slider(0, 10, value = c(1, 4)))
+#'
+#' # layer_smooths() is just compute_smooth() + layer_paths()
+#' # Run loess or other model outside of a visualisation to see what variables
+#' # you get.
 #' mtcars %>% compute_smooth(mpg ~ wt)
+#' mtcars %>% compute_model_prediction(mpg ~ wt, model = "lm")
 #'
 #' mtcars %>%
 #'   ggvis(~wt, ~mpg) %>%
@@ -57,7 +70,8 @@
 #'   compute_smooth(mpg ~ wt) %>%
 #'   layer_paths(~pred_, ~resp_, strokeWidth := 2)
 layer_model_predictions <- function(vis, ..., model, formula = NULL,
-  model_args = NULL, se = FALSE) {
+                                    model_args = NULL, se = FALSE,
+                                    domain = NULL) {
 
   vis <- set_scale_label(vis, "x", prop_label(cur_props(vis)$x.update))
   vis <- set_scale_label(vis, "y", prop_label(cur_props(vis)$y.update))
@@ -69,8 +83,8 @@ layer_model_predictions <- function(vis, ..., model, formula = NULL,
   )
 
   pipeline <- function(x) {
-    x <- do_call(compute_smooth, quote(x), formula = formula, method = model,
-      se = se, .args = model_args)
+    x <- do_call(compute_model_prediction, quote(x), formula = formula,
+                 model = model, se = se, domain = domain, .args = model_args)
 
     if (identical(se, TRUE)) {
       x <- emit_ribbons(x, props$fill)
@@ -89,13 +103,13 @@ layer_smooths <- function(vis, ..., span = 0.75, se = FALSE) {
     model_args = list(span = span), se = se)
 }
 
-guess_formula <- function(props, method, quiet = FALSE) {
+guess_formula <- function(props, model, quiet = FALSE) {
   vars <- list(
     x = find_prop_var(props, "x.update")[[2]],
     y = find_prop_var(props, "y.update")[[2]]
   )
 
-  if (identical(method, "gam")) {
+  if (identical(model, "gam")) {
     f <- substitute(y ~ s(x), vars)
   } else {
     f <- substitute(y ~ x, vars)

@@ -48,6 +48,13 @@ apply_scale_defaults.scale_datetime <- function(x) {
     x$range <- switch(propname_to_scale(x$property),
       x = "width",
       y = "height",
+      stroke = c("#132B43", "#56B1F7"),
+      fill = c("#132B43", "#56B1F7"),
+      size = c(20, 100),
+      fontSize = c(10, 20),
+      opacity = c(0, 1),
+      angle = c(0, 2 * pi),
+      radius = c(0, 50),
       stop("Don't know how to automatically set range for ", x$property, ".")
     )
   }

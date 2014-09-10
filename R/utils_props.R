@@ -47,3 +47,22 @@ stroke_fill_defaults <- function(props, stroke = list(), fill = list()) {
 
   list(stroke = stroke_props, fill = fill_props)
 }
+
+# @param props A props object.
+# @param properties A character vector of properties to check.
+# @param events A character vector of events that are not supported
+# @param label A string naming the type of layer (like layer_bars), for error
+#   messages.
+check_unsupported_props <- function(props, properties, events, label = "") {
+  unsupported <- vapply(props, function(p) {
+    (p$property %in% properties) && (p$event %in% events)
+  }, logical(1))
+
+  if (any(unsupported)) {
+    if (label == "") label <- "layer"
+    stop(label, " presently cannot use properties ",
+         paste(properties, collapse = ", "), " for ",
+         paste(events, collapse = ", "), " events.")
+  }
+  invisible(NULL)
+}

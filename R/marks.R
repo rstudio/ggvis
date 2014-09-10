@@ -103,20 +103,20 @@ layer_text <- function(vis, ..., data = NULL) {
     deparse2(substitute(data)))
 }
 
-common <- c("x", "y", "stroke", "strokeOpacity", "fill", "fillOpacity",
-  "opacity", "strokeWidth", "strokeDash")
+common_valid_props <- c("x", "y", "stroke", "strokeOpacity", "fill",
+  "fillOpacity", "opacity", "strokeWidth", "strokeDash", "key")
 
 valid_props <- list(
-  arc = c(common, "innerRadius", "outerRadius", "startAngle", "endAngle",
-    "key"),
-  area = c(common, "y2", "height", "interpolate", "tension", "key"),
-  image = c(common, "x2", "y2", "width", "height", "url", "align", "baseline",
-    "key"),
-  line = c(common,  "interpolate", "tension", "key"),
-  rect = c(common, "x2", "y2", "width", "height", "key"),
-  symbol = c(common, "size", "shape", "key"),
-  text = c(common, "text", "align", "baseline", "dx", "dy", "angle", "font",
-    "fontSize", "fontWeight", "fontStyle", "key")
+  arc = c(common_valid_props, "innerRadius", "outerRadius", "startAngle",
+    "endAngle"),
+  area = c(common_valid_props, "y2", "height", "interpolate", "tension"),
+  image = c(common_valid_props, "x2", "y2", "width", "height", "url", "align",
+    "baseline"),
+  line = c(common_valid_props, "interpolate", "tension"),
+  rect = c(common_valid_props, "x2", "y2", "width", "height"),
+  symbol = c(common_valid_props, "size", "shape"),
+  text = c(common_valid_props, "text", "align", "baseline", "dx", "dy", "angle",
+    "font", "fontSize", "fontWeight", "fontStyle")
 )
 
 # Hack to stop spurious warnings in R CMD check. Used in prop.
@@ -125,14 +125,13 @@ globalVariables(known_props)
 
 default_props <- function(type) {
   switch(type,
-    arc =    props(fill := "#333333"),
-    area =   props(fill := "#333333"),
-    line =   props(stroke := "#000000"),
-    image =  props(fill := "#000000"),
-    rect =   props(stroke := "#000000", fill := "#333333"),
+    arc = props(fill := "#333333"),
+    area = props(fill := "#333333"),
+    line = props(stroke := "#000000"),
+    image = props(fill := "#000000"),
+    rect = props(stroke := "#000000", fill := "#333333"),
     symbol = props(fill := "#000000", size := 50),
-    text =   props(fill := "#333333"),
+    text = props(fill := "#333333"),
     stop("Unknown type")
   )
 }
-

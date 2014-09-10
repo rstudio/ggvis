@@ -7,6 +7,20 @@ preserve_constants <- function(input, output) UseMethod("preserve_constants")
 
 #' @export
 preserve_constants.data.frame <- function(input, output) {
+  # Merge data frame 'a' into data frame 'b'. If a and b share any columns, use
+  # the column from b. If the second data frame has zero rows, return a zero-row
+  # data frame.
+  merge_df <- function(a, b) {
+    if (is.null(a) || ncol(a) == 0) return(b)
+    if (is.null(b) || ncol(b) == 0) return(a)
+
+    a_new <- a[setdiff(names(a), names(b))]
+    if (nrow(b) == 0) {
+      a_new <- a_new[0, , drop = FALSE]
+    }
+    cbind(a_new, b)
+  }
+
   is_constant <- constant_vars(input)
   constants <- input[1, is_constant, drop = FALSE]
   rownames(constants) <- NULL
@@ -32,7 +46,7 @@ preserve_constants.grouped_df <- function(input, output) {
   constants <- do_call(dplyr::select, quote(constants),
     .args = dplyr::groups(constants))
 
-  dplyr::left_join(constants, output, by = group_vars)
+  dplyr::inner_join(constants, output, by = group_vars)
 }
 
 

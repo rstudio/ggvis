@@ -1,7 +1,7 @@
 {
 	"data" : [
 		{
-			"name" : "mtcars0/smooth1",
+			"name" : "mtcars0/model_prediction1",
 			"format" : {
 				"type" : "csv",
 				"parse" : {
@@ -81,12 +81,12 @@
 				},
 				"ggvis" : {
 					"data" : {
-						"value" : "mtcars0/smooth1"
+						"value" : "mtcars0/model_prediction1"
 					}
 				}
 			},
 			"from" : {
-				"data" : "mtcars0/smooth1"
+				"data" : "mtcars0/model_prediction1"
 			}
 		}
 	],

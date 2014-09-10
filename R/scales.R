@@ -351,7 +351,7 @@ scale_logical <- scale_nominal
 #' These scales are useful for positioning visual elements relative to the
 #' plotting area. For example, with legends.
 #'
-#' @seealso \code{\link{guide_legend}} for a usage example.
+#' @seealso \code{\link{add_legend}} for a usage example.
 #'
 #' @param vis A ggvis object.
 #' @export

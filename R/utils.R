@@ -27,12 +27,12 @@ dot_names <- function(...) {
 
 make_call <- function(f, ..., .args = list()) {
   if (is.character(f)) f <- as.name(f)
-  as.call(c(f, ..., .args))
+  as.call(c(list(f, ...), .args))
 }
 do_call <- function(f, ..., .args = list(), .env = parent.frame(), .debug = FALSE) {
   f <- substitute(f)
 
-  call <- make_call(f, ..., .args)
+  call <- make_call(f, ..., .args = .args)
   if (.debug) print(call)
   eval(call, .env)
 }
@@ -77,14 +77,19 @@ merge_vectors <- function(a, b) {
 
 # Tests whether all elements in a vector are the same, respecting NA.
 # Returns TRUE for zero-length vectors
+# Returns FALSE for non-atomic vectors
 all_same <- function(x) {
+  if (!is.atomic(x)) {
+    return(FALSE)
+  }
+
   nas <- is.na(x)
   if (length(x) == 0 || all(nas))
     TRUE
   else if (any(nas))
     FALSE
   else
-    all(x == x[1])
+     all(x == x[1])
 }
 
 # Test whether a file exists and is a directory
@@ -127,15 +132,18 @@ param_string <- function(x, collapse = TRUE) {
   paste0("(", paste0(names(x), " = ", values, collapse = ", "), ")")
 }
 
+# Convert various objects to char strings.
+as_char <- function(x) UseMethod("as_char")
+#' @export
+as_char.name <- function(x) as.character(x)
+#' @export
+as_char.call <- function(x) deparse2(x)
+#' @export
+as_char.default <- function(x) as.character(x)
+
 # Given a string, return a string that is safe as a vega variable.
 # Replaces . with \.
 safe_vega_var <- function(x) {
-  if (is.name(x)) {
-    x <- as.character(x)
-  } else if (is.quoted(x)) {
-    x <- deparse2(x)
-  }
-
   gsub(".", "\\.", x, fixed = TRUE)
 }
 
@@ -218,4 +226,15 @@ pluck <- function(x, name) {
 
 vpluck <- function(x, name, type) {
   vapply(x, `[[`, name, FUN.VALUE = type)
+}
+
+
+deprecated <- function(old, new = NULL, msg = NULL, version = NULL) {
+  text <- paste0(
+    sprintf("'%s' is deprecated.", old),
+    if (!is.null(new)) sprintf(" Please use '%s' instead.", new),
+    msg,
+    if (!is.null(version)) sprintf(" (Last used in version %s)", version)
+  )
+  warning(text)
 }

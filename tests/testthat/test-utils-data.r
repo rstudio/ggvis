@@ -94,3 +94,50 @@ test_that("concat preserves types and timezones", {
     as.POSIXct('2001-06-11 21:00', tz = 'UTC') + c(0, 2000, 5000, 7000, 5000, 7000)
   )
 })
+
+
+test_that("concat handles NULLs and zero-length vectors", {
+  expect_identical(concat(list(NULL, NULL)), NULL)
+  expect_identical(concat(list(NULL, character(0))), character(0))
+  expect_identical(concat(list(NULL, 1:10)), 1:10)
+  expect_identical(concat(list(1:10, NULL, integer(0))), 1:10)
+})
+
+
+test_that("preserve_constants", {
+  # Input data frames with various numbers of rows
+  input0 <- data.frame(a = numeric(0), b = character(0), stringsAsFactors = FALSE)
+  input1 <- data.frame(a = 1, b = "txt", stringsAsFactors = FALSE)
+  input3 <- data.frame(a = 1:3, b = rep("txt", 3), stringsAsFactors = FALSE)
+
+  # Output data frames with various numbers of rows
+  output0 <- data.frame(foo = numeric(0))
+  output1 <- data.frame(foo = 11)
+  output2 <- data.frame(foo = 11:12)
+
+  # Some things that the input data frames get reduced to
+  abNA <- data.frame(a = NA_real_, b = NA_character_, stringsAsFactors = FALSE)
+  b0 <- data.frame(b = character(0), stringsAsFactors = FALSE)
+  b1 <- data.frame(b = "txt", stringsAsFactors = FALSE)
+
+  # Test all the combinations
+  expect_identical(preserve_constants(input0, output0), cbind(input0, output0))
+  expect_identical(preserve_constants(input1, output0), cbind(input0, output0))
+  expect_identical(preserve_constants(input3, output0), cbind(b0, output0))
+
+  expect_identical(preserve_constants(input0, output1), cbind(abNA, output1))
+  expect_identical(preserve_constants(input1, output1), cbind(input1, output1))
+  expect_identical(preserve_constants(input3, output1), cbind(b1, output1))
+
+  expect_identical(preserve_constants(input0, output2), cbind(abNA, output2))
+  expect_identical(preserve_constants(input1, output2), cbind(input1, output2))
+  expect_identical(preserve_constants(input3, output2), cbind(b1, output2))
+
+  # grouped_df with no rows in some groups - output shouldn't have NA rows for
+  # those taht are missing in one or the other
+  input3g <- group_by(input3, a)
+  expect_equal(
+    preserve_constants(input3g, data.frame(a=1:2, v=5:6)),
+    group_by(data.frame(a=1:2, v=5:6), a)
+  )
+})

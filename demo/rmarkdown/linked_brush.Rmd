@@ -1,0 +1,45 @@
+---
+title: "Brushing"
+output: html_document
+runtime: shiny
+---
+```{r, message = FALSE, echo = FALSE}
+library(ggvis)
+library(shiny)
+
+set.seed(1233)
+cocaine <- cocaine[sample(1:nrow(cocaine), 500), ]
+```
+
+Two linked plots. Brushing in the scatter plot will update the histogram.
+
+```{r fig.width = 4, fig.height = 3, echo = FALSE, results = "hold"}
+cocaine$id <- seq_len(nrow(cocaine))
+
+lb <- linked_brush(keys = cocaine$id, "red")
+
+cocaine %>%
+  ggvis(~weight, ~price, key := ~id) %>%
+  layer_points(fill := lb$fill, fill.brush := "red", opacity := 0.3) %>%
+  lb$input()
+
+# A subset of cocaine, of only the selected points
+selected <- lb$selected
+cocaine_selected <- reactive({
+  cocaine[selected(), ]
+})
+
+cocaine %>%
+  ggvis(~potency) %>%
+  layer_histograms(binwidth = 5, origin = 0) %>%
+  add_data(cocaine_selected) %>%
+  layer_histograms(binwidth = 5, origin = 0, fill := "#dd3333")
+```
+
+A summary of the selected points:
+
+```{r, echo = FALSE}
+renderPrint(
+  summary(cocaine_selected())
+)
+```

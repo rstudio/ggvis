@@ -77,6 +77,9 @@
 layer_bars <- function(vis, ..., stack = TRUE, width = NULL) {
   new_props <- merge_props(cur_props(vis), props(...))
 
+  check_unsupported_props(new_props, c("x", "y", "x2", "y2"),
+                          c("enter", "exit", "hover"), "layer_bars")
+
   x_var <- find_prop_var(new_props, "x.update")
   discrete_x <- prop_countable(cur_data(vis), new_props$x.update)
 
@@ -100,6 +103,7 @@ layer_bars <- function(vis, ..., stack = TRUE, width = NULL) {
     }
 
     vis <- layer_f(vis, function(v) {
+      v <- add_props(v, .props = new_props)
       v <- auto_group(v, exclude = c("x", "y"))
       v <- compute_count(v, x_var, y_var)
 
@@ -116,8 +120,9 @@ layer_bars <- function(vis, ..., stack = TRUE, width = NULL) {
 
   } else {
     vis <- layer_f(vis, function(v) {
+      v <- add_props(v, .props = new_props)
       v <- compute_count(v, x_var, y_var)
-      v <- compute_width(v, ~x_, width)
+      v <- compute_align(v, ~x_, length = width)
       if (stack) {
         v <- compute_stack(v, stack_var = ~count_, group_var = ~x_)
         v <- layer_rects(v, x = ~xmin_, x2 = ~xmax_, y = ~stack_upr_,

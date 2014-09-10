@@ -76,26 +76,34 @@
 #'       axis = list(stroke = "#333", strokeWidth = 1.5)
 #'     )
 #'   )
-add_axis <- function(vis, type, scale = type, orient = NULL, title = NULL,
+add_axis <- function(vis, type, scale = NULL, orient = NULL, title = NULL,
                        title_offset = NULL, format = NULL, ticks = NULL,
                        values = NULL, subdivide = NULL, tick_padding = NULL,
                        tick_size_major = NULL, tick_size_minor = tick_size_major,
                        tick_size_end = tick_size_major, offset = NULL,
                        layer = "back", grid = TRUE, properties = NULL) {
 
+  if (is.null(scale)) {
+    if (is.null(vis$cur_vis)) {
+      scale <- type
+    } else {
+      scale <- paste0(type, paste0(vis$cur_vis, collapse = "-"))
+    }
+  }
+
   axis <- create_axis(type, scale, orient, title, title_offset, format,
                       ticks, values, subdivide, tick_padding,
                       tick_size_major, tick_size_minor, tick_size_end,
                       offset, layer, grid, properties)
 
-  register_axis(vis, axis)
+  append_ggvis(vis, "axes", axis)
 }
 
 #' @rdname add_axis
 #' @export
 hide_axis <- function(vis, scale) {
   axis <- structure(list(scale = scale, hide = TRUE), class = "ggvis_axis")
-  register_axis(vis, axis)
+  append_ggvis(vis, "axes", axis)
 }
 
 #' Defunct function for adding an axis

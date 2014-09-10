@@ -1,13 +1,14 @@
 #' Divide data into groups.
 #'
-#'
 #' @param x a visualisation
 #' @param ... variables to group by.
 #' @param add By default, when \code{add = FALSE}, \code{group_by} will
 #'   override existing groups. To instead add to the existing groups,
 #'   use \code{add = FALSE}
+#' @importFrom dplyr group_by
+#' @name group_by
 #' @export
-group_by <- dplyr::group_by
+NULL
 
 #' Dplyr verbs for ggvis.
 #'
@@ -105,7 +106,19 @@ select.ggvis <- function(.data, ...) {
   })
 }
 
+# Need to re-export dplyr::filter to avoid problems with R CMD check.
+#' Filter
+#'
+#' This is the same as \code{dplyr::\link[dplyr]{filter}} function.
+#' See \code{dplyr::\link[dplyr]{filter}} for more information.
+#'
+#' @param .data A tbl.
+#' @param ... variables interpreted in the context of the data.
 #' @importFrom dplyr filter
+#' @name filter
+#' @export
+NULL
+
 #' @method filter ggvis
 #' @rdname dplyr-ggvis
 #' @export
@@ -158,3 +171,21 @@ extract_inputs <- function(x, env = parent.frame()) {
     inputs = inputs
   )
 }
+
+
+#' @export
+groups.reactive <- function(x, value) reactive(dplyr::groups(x(), value))
+#' @export
+regroup.reactive <- function(x, value) reactive(dplyr::regroup(x(), value))
+#' @export
+ungroup.reactive <- function(x, value) reactive(dplyr::ungroup(x(), value))
+#' @export
+summarise.reactive <- function(x, ...) reactive(dplyr::summarise(x(), ...))
+#' @export
+mutate.reactive <- function(x, ...) reactive(dplyr::mutate(x(), ...))
+#' @export
+arrange.reactive <- function(x, ...) reactive(dplyr::arrange(x(), ...))
+#' @export
+select.reactive <- function(x, ...) reactive(dplyr::select(x(), ...))
+#' @export
+filter.reactive <- function(x, ...) reactive(dplyr::filter(x(), ...))

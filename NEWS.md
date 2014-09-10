@@ -1,4 +1,44 @@
-# ggvis 0.2.0.99
+# ggvis 0.3.0.9xxx
+
+* `compute_smooth()` supports more complex formulas. (#209)
+
+* Boxplots are now supported, with `layer_boxplots()` and `compute_boxplot()`.
+
+* `compute_bin()` and `compute_count()` now preserve date and time properties.
+  (#235)
+
+* `export_png()` and `export_svg()` now work. This requires node.js, and vega
+  must be installed via npm.
+
+* Legend hiding is fixed. (#218)
+
+* `count_vector()` preserves the order of factor levels. (#223)
+
+* `compute_bin()` now ignores NA's. (#148)
+
+* Updated to Vega 1.4.1. (#193 and #217)
+
+* `layer_bars()` now uses correctly uses `fill` prop when it is passed to the
+  function, and not inherited. (#201)
+
+* `compute_count()` drops unused factor levels. (#201)
+
+* `compute_bin()` and `compute_stack()` no longer give warnings and errors for
+  zero-row data frames. (#211)
+
+* Range calculation for zero-length vectors now returns NULL instead of
+  throwing an error.
+
+* Objects imported from the magritter and dplyr packages are now properly
+  re-exported.
+
+* Using "." in column names now works. (#246)
+
+# ggvis 0.3.0.1
+
+* Reconcile shiny dependency at run-time, not build time.
+
+# ggvis 0.3
 
 * histogram binning controls are now `width` and one of `center` or `boundary`
   rather than `binwidth` and `origin`.  In addition, the algorithms for 

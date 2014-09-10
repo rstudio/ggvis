@@ -30,13 +30,13 @@ ggvis_dependencies <- function() {
     ),
     htmltools::htmlDependency(
       name = "d3",
-      version = "3.4.1",
+      version = "3.4.10",
       src = ggvis_path("lib/d3"),
       script = adjust_min("d3.min.js")
     ),
     htmltools::htmlDependency(
       name = "vega",
-      version = "1.3.3",
+      version = "1.4.1",
       src = ggvis_path("lib/vega"),
       script = adjust_min("vega.min.js")
     ),
@@ -59,20 +59,19 @@ ggvis_dependencies <- function() {
   deps
 }
 
-shiny_dependency <- htmltools::htmlDependency(
-  name = "shiny-ggvis",
-  version = as.character(packageVersion("ggvis")),
-  src = ggvis_path("ggvis"),
-  script = "js/shiny-ggvis.js"
-)
+shiny_dependency <- function() {
+  htmltools::htmlDependency(
+    name = "shiny-ggvis",
+    version = as.character(packageVersion("ggvis")),
+    src = ggvis_path("ggvis"),
+    script = "js/shiny-ggvis.js"
+  )
+}
 
 ggvis_app <- function(x, plot_id = rand_id("plot_"),
                       ...) {
 
-  ui <- htmltools::attachDependencies(
-    list(ggvisLayout(plot_id, length(x$controls) > 0)),
-    shiny_dependency
-  )
+  ui <- ggvisLayout(plot_id, length(x$controls) > 0, spec = NULL, shiny = TRUE)
 
   server <- function(input, output, session) {
     r_gv <- reactive(x)

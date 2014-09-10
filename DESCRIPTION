@@ -3,24 +3,25 @@ Title: Interactive grammar of graphics
 Description: ggvis implements a interactive grammar of graphics, taking the
     best parts of ggplot2, combining them with shiny's reactive framework and
     drawing web graphics using vega.
-Version: 0.2.0.99
+Version: 0.3.0.9001
 Author: RStudio, Inc.
 Maintainer: Winston Chang <winston@rstudio.com>
+URL: http://ggvis.rstudio.com/
 Depends:
-    R (>= 2.15.1)
+    R (>= 3.0)
 Imports:
     assertthat,
-    RJSONIO,
-    shiny (>= 0.9.1.9009),
-    methods,
+    jsonlite (>= 0.9.11),
+    shiny (>= 0.10),
     magrittr,
-    dplyr (>= 0.1.3.0.99),
-    htmltools (>= 0.2.2)
+    dplyr (>= 0.2.0.99),
+    htmltools (>= 0.2.4),
+    plyr
 Suggests:
     MASS,
     mgcv,
-    testthat (>= 0.7.1.99),
-    knitr (>= 1.5.26),
+    testthat (>= 0.8.1),
+    knitr (>= 1.6),
     rmarkdown
 VignetteBuilder: knitr
 Roxygen: list(wrap = FALSE)

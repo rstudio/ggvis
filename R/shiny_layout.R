@@ -1,5 +1,6 @@
-ggvisLayout <- function(plot_id, has_controls = TRUE, spec = NULL) {
-  plot_div <- ggvisOutput(plot_id, spec = spec)
+ggvisLayout <- function(plot_id, has_controls = TRUE, spec = NULL,
+                        shiny = TRUE) {
+  plot_div <- ggvisOutputElements(plot_id, spec = spec, shiny = shiny)
 
   if (!has_controls) {
     plot_div
@@ -13,13 +14,28 @@ ggvisLayout <- function(plot_id, has_controls = TRUE, spec = NULL) {
   }
 }
 
+# This is the user-facing wrapper for ggvisOutputElements. When the user calls
+# it, it will always be used with Shiny.
 #' @rdname shiny-ggvis
 #' @param plot_id unique identifier to use for the div containing the ggvis plot.
+#' @export
+ggvisOutput <- function(plot_id = rand_id("plot_id")) {
+  ggvisOutputElements(plot_id, spec = NULL, shiny = TRUE)
+}
+
+#' Create HTML elements for ggvis output
+#'
+#' This is an internal-facing function similar to ggvisOutput, but with more
+#' options.
+#'
+#' @param plot_id Unique identifier to use for the div containing the ggvis plot.
+#' @param spec Plot specification, used internally.
 #' @param shiny Should this include headers for Shiny? For dynamic and
 #'   interactive plots, this should be TRUE; otherwise FALSE.
-#' @param spec Plot specification, used internally.
-#' @export
-ggvisOutput <- function(plot_id = rand_id("plot_id"), spec = NULL) {
+#' @keywords internal
+ggvisOutputElements <- function(plot_id = rand_id("plot_id"), spec = NULL,
+                                shiny = TRUE) {
+
   htmltools::attachDependencies(
     htmltools::tagList(
       ggvisPlot(plot_id),
@@ -27,7 +43,7 @@ ggvisOutput <- function(plot_id = rand_id("plot_id"), spec = NULL) {
     ),
     c(
       ggvis_dependencies(),
-      list(shiny_dependency)
+      if (shiny) list(shiny_dependency())
     )
   )
 }
@@ -44,7 +60,8 @@ ggvisPlot <- function(plot_id) {
 
 ggvisSpec <- function(plot_id, spec = NULL) {
   if (is.null(spec)) return()
-  json <- RJSONIO::toJSON(spec, pretty = TRUE)
+  json <- jsonlite::toJSON(spec, pretty = TRUE, auto_unbox = TRUE, force = TRUE,
+                           null = "null")
 
   htmltools::tags$script(type = "text/javascript", paste0('\n',
     'var ', plot_id, '_spec = ', json, ';\n',
@@ -54,14 +71,17 @@ ggvisSpec <- function(plot_id, spec = NULL) {
 
 # Controls drop down
 ggvisControlGroup <- function(plot_id) {
+  # The <a> tags need the onclick so that they work properly in Shiny Doc iframes
   htmltools::tags$nav(class = "ggvis-control",
-    htmltools::tags$a(class = "ggvis-dropdown-toggle", title = "Controls"),
+    htmltools::tags$a(class = "ggvis-dropdown-toggle", title = "Controls",
+                      onclick = "return false;"),
     htmltools::tags$ul(class = "ggvis-dropdown",
       htmltools::tags$li(
         "Renderer: ",
         htmltools::tags$a(
           id = paste0(plot_id, "_renderer_svg"),
           class = "ggvis-renderer-button",
+          onclick = "return false;",
           `data-plot-id` = plot_id,
           `data-renderer` = "svg",
           "SVG"
@@ -70,6 +90,7 @@ ggvisControlGroup <- function(plot_id) {
         htmltools::tags$a(
           id = paste0(plot_id, "_renderer_canvas"),
           class = "ggvis-renderer-button",
+          onclick = "return false;",
           `data-plot-id` = plot_id,
           `data-renderer` = "canvas",
           "Canvas"

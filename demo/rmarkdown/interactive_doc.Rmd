@@ -1,0 +1,30 @@
+---
+title: "ggvis in an interactive document"
+output: html_document
+runtime: shiny
+---
+
+```{r echo=FALSE, message = FALSE}
+library(knitr)
+library(ggvis)
+library(shiny)
+library(dplyr)
+```
+
+An interactive plot:
+
+```{r, message = FALSE, fig.width = 6, fig.height = 4}
+cocaine %>%
+  ggvis(x = ~potency) %>%
+  layer_histograms(binwidth = input_slider(1, 20, value = 5))  
+```
+
+
+An interactive table:
+
+```{r, fig.width = 8, fig.height = 6}
+cocaine %>%
+  group_by(state) %>%
+  summarise(potency = mean(potency), weight = mean(weight)) %>%
+  renderDataTable()
+```

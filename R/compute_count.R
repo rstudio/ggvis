@@ -5,7 +5,7 @@
 #' @param x_var,w_var Names of x and weight variables.
 #' @seealso \code{\link{compute_bin}} For counting cases within ranges of
 #'   a continuous variable.
-#' @seealso \code{\link{compute_width}} For calculating the "width" of data.
+#' @seealso \code{\link{compute_align}} For calculating the "width" of data.
 #' @export
 #' @return A data frame with columns:
 #'  \item{count_}{the number of points}
@@ -23,21 +23,19 @@
 #' # If there's one weight value at each x, it effectively just renames columns.
 #' pressure %>% compute_count(~temperature, ~pressure)
 #' # Also get the width of each bin
-#' pressure %>% compute_count(~temperature, ~pressure) %>% compute_width(~x_)
+#' pressure %>% compute_count(~temperature, ~pressure) %>% compute_align(~x_)
 #'
 #' # It doesn't matter whether you transform inside or outside of a vis
 #' mtcars %>% compute_count(~cyl, ~wt) %>%
-#'   compute_width(~x_) %>%
+#'   compute_align(~x_) %>%
 #'   ggvis(x = ~xmin_, x2 = ~xmax_, y = ~count_, y2 = 0) %>%
-#'   layer_rects() %>%
-#'   scale_numeric("y", domain = c(0, NA))
+#'   layer_rects()
 #'
 #' mtcars %>%
 #'   ggvis(x = ~xmin_, x2 = ~xmax_, y = ~count_, y2 = 0) %>%
 #'   compute_count(~cyl, ~wt) %>%
-#'   compute_width(~x_) %>%
-#'   layer_rects() %>%
-#'   scale_numeric("y", domain = c(0, NA))
+#'   compute_align(~x_) %>%
+#'   layer_rects()
 compute_count <- function(x, x_var, w_var = NULL) {
   UseMethod("compute_count")
 }
@@ -78,12 +76,27 @@ count_vector <- function(x, weight = NULL, ...) {
   if (is.null(weight)) {
     weight <- rep.int(1, length(x))
   }
+
+  # Preserve date and time types
+  if (inherits(x, "POSIXct")) {
+    tz <- attr(x, "tzone", TRUE)
+    restore <- function(x) as.POSIXct(x, origin = "1970-01-01", tz = tz)
+  } else if (inherits(x, "Date")) {
+    restore <- function(x) structure(x, class = "Date")
+  } else {
+    restore <- identity
+  }
+
   counts <- unname(as.vector(tapply(weight, x, sum, na.rm = TRUE)))
 
   if (is.factor(x)) {
-    # Get the factor levels, preserving factor-ness. Order should align
-    # with counts.
-    values <- unique(x)
+    na_idx <- is.na(counts)
+    # Factor levels that aren't represented in x result in NA, which we'll
+    # drop.
+    counts <- counts[!na_idx]
+    # Get the factor levels, preserving factor-ness and order of factor levels.
+    # Order should align with counts.
+    values <- factor(levels(x), levels = levels(x))[!na_idx]
   } else {
     # Need to get unique values this way instead of using names(counts),
     # because names are strings but the x values aren't always strings.
@@ -92,7 +105,7 @@ count_vector <- function(x, weight = NULL, ...) {
 
   data.frame(
     count_ = counts,
-    x_ = values,
+    x_ = restore(values),
     stringsAsFactors = FALSE
   )
 }

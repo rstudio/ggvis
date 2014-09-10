@@ -17,11 +17,6 @@ ggvis = (function(_) {
     return this.plots[plotId];
   };
 
-  // Are we in a panel - an iframe or RStudio viewer pane?
-  ggvis.inPanel = function() {
-    return (queryVar("viewer_pane") === "1" || queryVar("__subapp__") === "1");
-  };
-
   // Internal functions --------------------------------------------------
 
   // Returns the value of a GET variable
@@ -39,6 +34,16 @@ ggvis = (function(_) {
     } else {
       return 1;
     }
+  }
+
+  // Are we in a panel - an iframe or RStudio viewer pane?
+  function inPanel() {
+    return (queryVar("viewer_pane") === "1" || queryVar("__subapp__") === "1");
+  }
+
+  // Are we in a window for exporting the image?
+  function inExportPanel() {
+    return queryVar("viewer_export") === "1";
   }
 
   // ggvis.CallbackRegistry class ----------------------------------------------
@@ -197,7 +202,11 @@ ggvis = (function(_) {
 
         self.brush.enable();
 
-        if (ggvis.inPanel()) {
+        if (inExportPanel()) {
+          $('.plot-gear-icon').hide();
+        }
+
+        if (inPanel()) {
           self.enableAutoResizeToWindow();
         } else if (opts.resizable) {
           self.enableResizable();
@@ -354,7 +363,7 @@ ggvis = (function(_) {
       this.initialized = true;
 
       // Resizing to fit has to happen after the initial update
-      if (ggvis.inPanel()) {
+      if (inPanel()) {
         this.resizeToWindow(0);
       } else {
         this.resizeWrapperToPlot();
@@ -389,7 +398,7 @@ ggvis = (function(_) {
 
     // This is called when control outputs for a plot are updated
     prototype.onControlOutput = function() {
-      if (ggvis.inPanel()) {
+      if (inPanel()) {
         this.resizeToWindow(0);
       }
     };
@@ -799,10 +808,21 @@ ggvis = (function(_) {
 
       // Internal functions --------------------------------------------
       function mouseOffset(e) {
-        return {
-          x: e.offsetX,
-          y: e.offsetY
-        };
+        // A workaround for Firefox, which doesn't provide offsetX/Y
+        // for mouse event.
+        if (typeof(e.offsetX) === "undefined") {
+          var offset = $(e.currentTarget).offset();
+          return {
+            x: e.pageX - offset.left,
+            y: e.pageY - offset.top
+          };
+        }
+        else {
+          return {
+            x: e.offsetX,
+            y: e.offsetY
+          };
+        }
       }
 
       return brush;
@@ -821,6 +841,63 @@ ggvis = (function(_) {
   return ggvis;
 
 })(lodash);
+
+// This is like facet, but includes the key values in a  at each level.
+vg.data.treefacet = function() {
+
+  var keys = [], key_funs = [];
+
+  function treefacet(data) {
+    var result = {
+          key: "",
+          keys: [],
+          values: []
+        },
+        map = {},
+        vals = result.values,
+        obj, klist, kstr, len, i, k, kv;
+
+    if (keys.length === 0) {
+      throw "Need at least one key";
+    }
+
+    for (i=0, len=data.length; i<len; ++i) {
+      // Create single key value to index hash
+      for (k=0, klist=[], kstr=""; k<keys.length; ++k) {
+        kv = key_funs[k](data[i]);
+        klist.push(kv);
+        kstr += (k>0 ? "|" : "") + String(kv);
+      }
+
+      obj = map[kstr];
+      if (obj === undefined) {
+        // Not found, initialise object with empty value for children and keys
+        obj = map[kstr] = {
+          key: kstr,
+          keys: klist,
+          index: vals.length,
+          data: {},
+          values: []
+        };
+        // Keys look like data.xyz, this adds into a data element
+        // so you can refer to like usual.
+        for (var key in keys) obj.data[vg.field(keys[key])[1]] = klist[key];
+        vals.push(obj);
+      }
+      obj.values.push(data[i]);
+    }
+
+    return result;
+  }
+
+  treefacet.keys = function(k) {
+    keys = k;
+    key_funs = vg.array(k).map(vg.accessor);
+    return treefacet;
+  };
+
+  return treefacet;
+};
 
 
 $(function(){ //DOM Ready

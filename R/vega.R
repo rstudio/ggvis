@@ -17,22 +17,25 @@ as.vega <- function(x, ...) {
 #' @param session a session object from shiny
 #' @param dynamic whether to generate dynamic or static spec
 as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
+  # Any changes to default should happen at top-level
+  x$cur_vis <- NULL
 
   if (length(x$marks) == 0) {
     x <- layer_guess(x)
   }
 
-  data_ids <- extract_data_ids(x$marks)
+  data_props <- combine_data_props(x$marks)
+  data_ids <- names(data_props)
   data_table <- x$data[data_ids]
 
   # Collapse each list of scale objects into one scale object.
-  x$scales <- lapply(x$scales, collapse_ggvis_scales)
-  scale_data_table <- scale_domain_data(x$scales)
+  x <- collapse_scales(x)
+  scale_data_table <- scale_domain_data(x)
 
   # Wrap each of the reactive data objects in another reactive which returns
   # only the columns that are actually used, and adds any calculated columns
   # that are used in the props.
-  data_table <- active_props(data_table, x$marks)
+  data_table <- active_props(data_table, data_props)
 
   # From an environment containing data_table objects, get static data for the
   # specified ids.
@@ -52,6 +55,7 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
   x <- add_missing_axes(x)
   x <- apply_axes_defaults(x)
   x <- add_missing_legends(x)
+  x <- fortify_legends(x)
   x <- apply_legends_defaults(x)
   x <- add_default_options(x)
 
@@ -77,20 +81,30 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
   )
 }
 
+gather_scales <- function(x) {
+  groups <- Filter(is.mark_group, x$marks)
+  c(x$scales, unlist(pluck(groups, "scales"), recursive = FALSE))
+}
 
-# Given a list of layers, return a character vector of all data ID's used.
-extract_data_ids <- function(layers) {
-  data_ids <- vapply(layers,
-    function(layer) data_id(layer$data),
-    character(1)
+#' @export
+as.vega.mark_group <- function(x, ...) {
+  this_scales <- vpluck(x$scales, "name", character(1))
+
+  list(
+    type = "group",
+    properties = as.vega(x$props),
+    from = list(data = data_id(x$data)),
+    marks = lapply(x$marks, as.vega, in_group = TRUE),
+    scales = lapply(unname(x$scales), as.vega),
+    legends = lapply(x$legends, as.vega),
+    axes = lapply(x$axes, as.vega)
   )
-  unique(data_ids)
 }
 
 
 # Given a ggvis mark object, output a vega mark object
 #' @export
-as.vega.mark <- function(mark) {
+as.vega.mark <- function(mark, in_group = FALSE) {
   data_id <- data_id(mark$data)
 
   # Pull out key from props, if present
@@ -104,7 +118,9 @@ as.vega.mark <- function(mark) {
   properties$ggvis$data <- list(value = data_id)
 
   group_vars <- dplyr::groups(shiny::isolate(mark$data()))
-  if (!is.null(group_vars)) {
+  if (!in_group && !is.null(group_vars)) {
+    # FIXME: probably should go away and just use subvis
+
     # String representation of groups
     group_vars <- vapply(group_vars, deparse, character(1))
 
@@ -122,13 +138,16 @@ as.vega.mark <- function(mark) {
   } else {
     m <- list(
       type = mark$type,
-      properties = properties,
-      from = list(data = data_id)
+      properties = properties
     )
+    if (!in_group) {
+      # If mark inside group, inherits data from parent.
+      m$from <- list(data = data_id)
+    }
   }
 
   if (!is.null(key)) {
-    m$key <- paste0("data.", prop_label(key))
+    m$key <- paste0("data.", safe_vega_var(prop_label(key)))
   }
   m
 }
@@ -167,16 +186,14 @@ as.vega.ggvis_legend <- as.vega.ggvis_axis
 
 #' @export
 as.vega.data.frame <- function(x, name, ...) {
-  # For CSV output, we need to unescape periods, which were turned into \. by
-  # prop_label().
-  names(x) <- gsub("\\.", ".", names(x), fixed = TRUE)
+  # Figure out correct vega parsers for non-string columns
+  parsers <- drop_nulls(lapply(x, vega_data_parser))
 
   list(list(
     name = name,
     format = list(
       type = "csv",
-      # Figure out correct vega parsers for non-string columns
-      parse = unlist(lapply(x, vega_data_parser))
+      parse = parsers
     ),
     values = to_csv(x)
   ))
@@ -193,8 +210,8 @@ as.vega.grouped_df <- function(x, name, ...) {
     name = name,
     source = paste0(name, "_flat"),
     transform = list(list(
-      type = "facet",
-      keys = list(paste0("data.", group_vars))
+      type = "treefacet",
+      keys = as.list(paste0("data.", safe_vega_var(group_vars)))
     ))
   )
 
