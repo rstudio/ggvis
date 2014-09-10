@@ -10,8 +10,8 @@ bin_vector(x, weight = NULL, ...)
 \method{bin_vector}{numeric}(x, weight = NULL, ..., binwidth = NULL,
   center = NULL, boundary = NULL, right = TRUE, pad = TRUE)
 
-\method{bin_vector}{POSIXt}(x, weight = NULL, ..., binwidth = 1,
-  center = NULL, boundary = NULL, right = TRUE)
+\method{bin_vector}{POSIXt}(x, weight = NULL, ..., binwidth = NULL,
+  center = NULL, boundary = NULL, right = TRUE, pad = TRUE)
 }
 \arguments{
 \item{x}{a vector to bin}

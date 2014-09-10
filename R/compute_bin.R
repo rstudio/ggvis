@@ -328,11 +328,11 @@ bin_vector.numeric <- function(x, weight = NULL, ..., binwidth = NULL,
   x <- (left + right) / 2
   bin_widths <- diff(breaks)
 
-  count <- as.numeric(tapply(weight, bins, sum, na.rm = TRUE))
-  count[is.na(count)] <- 0
+  count <- as.integer(tapply(weight, bins, sum, na.rm = TRUE))
+  count[is.na(count)] <- 0L
 
   if (pad) {
-    count <- c(0, count, 0)
+    count <- c(0L, count, 0L)
     bin_widths <- c(binwidth, bin_widths, binwidth)
     x <- c(x[1] - binwidth, x, x[length(x)] + binwidth)
   }
@@ -343,9 +343,10 @@ bin_vector.numeric <- function(x, weight = NULL, ..., binwidth = NULL,
 #' @rdname bin_vector
 #' @export
 ## binwidth=1 by default? NULL?
-bin_vector.POSIXt <- function(x, weight = NULL, ..., binwidth = 1,
+bin_vector.POSIXt <- function(x, weight = NULL, ..., binwidth = NULL,
                               center = NULL, boundary = NULL,
-                              right = TRUE) {
+                              right = TRUE, pad=TRUE) {
+
   # Convert times to raw numbers (seconds since UNIX epoch), and call bin.numeric
   center <- if (!is.null(center)) center <- as.numeric(center)
   boundary <- if (!is.null(boundary)) boundary <- as.numeric(boundary)
@@ -353,7 +354,7 @@ bin_vector.POSIXt <- function(x, weight = NULL, ..., binwidth = 1,
   binwidth <- if (!is.null(binwidth)) binwidth <- as.numeric(binwidth)
 
   results <- bin_vector(as.numeric(x), weight = weight, binwidth = binwidth,
-    center = center, boundary = boundary, right = right)
+    center = center, boundary = boundary, right = right, pad=pad)
 
   # Convert some columns from numeric back to POSIXct objects
   tz <- attr(x, "tzone", TRUE)
@@ -366,15 +367,20 @@ bin_vector.POSIXt <- function(x, weight = NULL, ..., binwidth = 1,
 }
 
 #' @export
-bin_vector.Date <- function(x, weight = NULL, ..., binwidth = 1,
+bin_vector.Date <- function(x, weight = NULL, ..., binwidth = NULL,
                             boundary = NULL, right = TRUE, pad = TRUE) {
+
+  # Convert times to raw numbers, and call bin_vector.numeric
 
   if (!is.null(boundary))
     boundary <- as.numeric(boundary)
 
-  # Convert times to raw numbers, and call bin_vector.numeric
-  results <- bin_vector(as.numeric(x), weight = weight, binwidth = binwidth,
-                        boundary = boundary, right = right, pad = pad)
+  if (!is.null(binwidth))
+    boundary <- as.numeric(binwidth)
+
+  results <- bin_vector(as.numeric(x), weight = weight,
+                        binwidth = binwidth, boundary = boundary,
+                        right = right, pad = pad)
 
   # Convert some columns from numeric back to Date objects
   time_cols <- c("x_", "xmin_", "xmax_")
@@ -391,7 +397,7 @@ bin_vector.default <- function(x, weight = NULL, ...) {
   stop("Don't know how to bin vector of type ", class(x))
 }
 
-bin_out <- function(count = numeric(0), x = numeric(0), width = numeric(0),
+bin_out <- function(count = integer(0), x = numeric(0), width = numeric(0),
                     xmin = x - width / 2, xmax = x + width / 2) {
   data.frame(
     count_ = count,
