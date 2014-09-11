@@ -197,7 +197,7 @@ bin_params.POSIXct <- function(x_range, width = NULL,
 
   origin <- compute_origin( x_range, width, boundary )
 
-  list(width = width, origin = origin, right = right,
+  list(binwidth = width, origin = origin, right = right,
        origin.POSIX = structure(origin, class = c("POSIXct", "POSIXt"))
   )
 }
@@ -299,14 +299,13 @@ bin_vector.numeric <- function(x, weight = NULL, ..., width = NULL,
   stopifnot(is.null(boundary) || (is.numeric(boundary) && length(boundary) == 1))
   stopifnot(is.flag(right))
   if (!is.null(center) && !is.null(boundary)) {
-    stop("Only one of 'center' and 'bouncary' may be specified.")
+    stop("Only one of 'center' and 'boundary' may be specified.")
   }
 
   if (length(na.omit(x)) == 0) {
     return(bin_out())
   }
 
-  stopifnot(is.numeric(width) && length(width) == 1)
   stopifnot(is.null(boundary) || (is.numeric(boundary) && length(boundary) == 1))
   stopifnot(is.flag(right))
 
@@ -316,8 +315,7 @@ bin_vector.numeric <- function(x, weight = NULL, ..., width = NULL,
     weight[is.na(weight)] <- 0
   }
 
-
-  params <- bin_params( range(x), width, center, boundary, right)
+  params <- bin_params(range(x), width, center, boundary, right)
 
   breaks <- seq(params$origin, max(x) + params$binwidth, params$binwidth)
   fuzzybreaks <- adjust_breaks(breaks, open = if (params$right) "right" else "left")
@@ -333,8 +331,8 @@ bin_vector.numeric <- function(x, weight = NULL, ..., width = NULL,
 
   if (pad) {
     count <- c(0L, count, 0L)
-    bin_widths <- c(width, bin_widths, width)
-    x <- c(x[1] - width, x, x[length(x)] + width)
+    bin_widths <- c(params$binwidth, bin_widths, params$binwidth)
+    x <- c(x[1] - params$binwidth, x, x[length(x)] + params$binwidth)
   }
 
   bin_out(count, x, bin_widths)
@@ -342,8 +340,8 @@ bin_vector.numeric <- function(x, weight = NULL, ..., width = NULL,
 
 #' @rdname bin_vector
 #' @export
-## width=1 by default? NULL?
-bin_vector.POSIXt <- function(x, weight = NULL, ..., width = NULL,
+
+bin_vector.POSIXct <- function(x, weight = NULL, ..., width = NULL,
                               center = NULL, boundary = NULL,
                               right = TRUE, pad=TRUE) {
 
