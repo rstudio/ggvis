@@ -22,21 +22,9 @@ compute_boxplot <- function(x, var = NULL, coef = 1.5) {
   UseMethod("compute_boxplot")
 }
 
-# FIXME: plyr is imported only as a workaround for the dplyr issue; once it's
-#        fixed, plyr can be removed.
-#' @importFrom plyr ddply
 #' @export
 compute_boxplot.grouped_df <- function(x, var = NULL, coef = 1.5) {
-  old_groups <- dplyr::groups(x)
-  x <- dplyr::ungroup(x)
-
-  # FIXME: Temporarily use ddply instead of dplyr::do because of dplyr issues
-  #        #463 and #514.
-  group_names <- vapply(old_groups, as.character, character(1))
-  x <- plyr::ddply(x, group_names, function(df) compute_boxplot(df, var, coef))
-
-  x <- dplyr::regroup(x, old_groups)
-  x
+  dplyr::do(x, compute_boxplot(., var, coef))
 }
 
 #' @export
@@ -75,20 +63,7 @@ compute_boxplot.ggvis <- function(x, var = NULL, coef = 1.5) {
 compute_boxplot_outliers <- function(x) UseMethod("compute_boxplot_outliers")
 
 compute_boxplot_outliers.grouped_df <- function(x) {
-  old_groups <- dplyr::groups(x)
-  x <- dplyr::ungroup(x)
-
-  # FIXME: Temporarily use ddply instead of dplyr::do because of dplyr issues
-  #        #463 and #514.
-  group_names <- vapply(old_groups, as.character, character(1))
-  res <- plyr::ddply(x, group_names, compute_boxplot_outliers.data.frame)
-
-  # FIXME: temporary hack workaround for dplyr issue #486. If x has zero rows,
-  # return a regular, ungrouped data frame.
-  if (nrow(res) > 0) {
-    res <- dplyr::regroup(res, old_groups)
-  }
-  res
+  dplyr::do(x, compute_boxplot_outliers(.))
 }
 
 compute_boxplot_outliers.data.frame <- function(x) {
