@@ -160,6 +160,7 @@ observe_data <- function(r_spec, id, session) {
       # The data_table list contains named objects. The names are synthetic IDs
       # that are present in the vega spec.
 
+      force(data_name)
       obs <- shiny::observe(suspended = TRUE, {
         data_reactive <- data_table[[data_name]]
 
@@ -175,7 +176,7 @@ observe_data <- function(r_spec, id, session) {
     })
 
     # Tell the plot to update _after_ all the data has been sent
-    data_observers[[length(data_observers) + 1]] <- shiny::observe(suspended = TRUE, {
+    data_observers[[length(data_observers) + 1]] <<- shiny::observe(suspended = TRUE, {
       # Take dependency on all data objects
       for (name in names(data_table)) {
         data_table[[name]]()
