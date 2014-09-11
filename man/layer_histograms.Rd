@@ -4,16 +4,21 @@
 \alias{layer_histograms}
 \title{Display binned data}
 \usage{
-layer_histograms(vis, ..., binwidth = NULL, center = NULL,
-  boundary = NULL, right = TRUE, stack = TRUE)
+layer_histograms(vis, ..., width = NULL, center = NULL, boundary = NULL,
+  right = TRUE, stack = TRUE)
 
-layer_freqpolys(vis, ..., binwidth = NULL, center = NULL, boundary = NULL,
+layer_freqpolys(vis, ..., width = NULL, center = NULL, boundary = NULL,
   right = TRUE)
 }
 \arguments{
 \item{vis}{Visualisation to modify}
 
 \item{...}{Visual properties used to override defaults.}
+
+\item{width}{The width of the bins. The default is \code{NULL}, which
+yields 30 bins that cover the range of the data. You should always override
+this value, exploring multiple widths to find the best to illustrate the
+stories in your data.}
 
 \item{center}{The center of one of the bins.  Note that if center is above or below
 the range of the data, things will be shifted by an appropriate number of \code{width}s.
@@ -39,8 +44,8 @@ Display binned data
 \examples{
 # Create histograms and frequency polygons with layers
 mtcars \%>\% ggvis(~mpg) \%>\% layer_histograms()
-mtcars \%>\% ggvis(~mpg) \%>\% layer_histograms(binwidth = 2)
-mtcars \%>\% ggvis(~mpg) \%>\% layer_freqpolys(binwidth = 2)
+mtcars \%>\% ggvis(~mpg) \%>\% layer_histograms(width = 2)
+mtcars \%>\% ggvis(~mpg) \%>\% layer_freqpolys(width = 2)
 
 # These are equivalent to combining compute_bin with the corresponding
 # mark
@@ -48,9 +53,9 @@ mtcars \%>\% compute_bin(~mpg) \%>\% ggvis(~x_, ~count_) \%>\% layer_paths()
 
 # With grouping
 mtcars \%>\% ggvis(~mpg, fill = ~factor(cyl)) \%>\% group_by(cyl) \%>\%
-  layer_histograms(binwidth = 2)
+  layer_histograms(width = 2)
 mtcars \%>\% ggvis(~mpg, stroke = ~factor(cyl)) \%>\% group_by(cyl) \%>\%
-  layer_freqpolys(binwidth = 2)
+  layer_freqpolys(width = 2)
 }
 \seealso{
 \code{\link{layer_bars}} For bar graphs of counts at each unique
