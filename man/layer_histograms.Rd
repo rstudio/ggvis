@@ -15,21 +15,16 @@ layer_freqpolys(vis, ..., binwidth = NULL, center = NULL, boundary = NULL,
 
 \item{...}{Visual properties used to override defaults.}
 
-\item{binwidth}{The width of the bins. The default is \code{NULL}, which
-yields 30 bins that cover the range of the data. You should always override
-this value, exploring multiple widths to find the best to illustrate the
-stories in your data.}
-
 \item{center}{The center of one of the bins.  Note that if center is above or below
-the range of the data, things will be shifted by an appropriate number of \code{binwidth}s.
+the range of the data, things will be shifted by an appropriate number of \code{width}s.
 To center on integers,
-for example, use \code{binwidth = 1} and \code{center = 0}, even if \code{0} is
+for example, use \code{width = 1} and \code{center = 0}, even if \code{0} is
 outside the range of the data.  At most one of \code{center} and \code{boundary} may be
 specified.}
 
 \item{boundary}{A boundary between two bins. As with \code{center}, things are shifted
 when \code{boundary} is outside the range of the data. For example, to center on
-integers, use \code{binwidth = 1} and \code{boundary = 0.5}, even if \code{1} is outside
+integers, use \code{width = 1} and \code{boundary = 0.5}, even if \code{1} is outside
 the range of the data.  At most one of \code{center} and \code{boundary} may be
 specified.}
 

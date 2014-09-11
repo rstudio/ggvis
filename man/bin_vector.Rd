@@ -7,10 +7,10 @@
 \usage{
 bin_vector(x, weight = NULL, ...)
 
-\method{bin_vector}{numeric}(x, weight = NULL, ..., binwidth = NULL,
+\method{bin_vector}{numeric}(x, weight = NULL, ..., width = NULL,
   center = NULL, boundary = NULL, right = TRUE, pad = TRUE)
 
-\method{bin_vector}{POSIXt}(x, weight = NULL, ..., binwidth = NULL,
+\method{bin_vector}{POSIXt}(x, weight = NULL, ..., width = NULL,
   center = NULL, boundary = NULL, right = TRUE, pad = TRUE)
 }
 \arguments{
@@ -21,7 +21,7 @@ representing the number of occurances of each value in \code{x}}
 
 \item{...}{additional arguments passed through to instances of the generic}
 
-\item{binwidth}{the width of a bin}
+\item{width}{the width of a bin}
 
 \item{center}{the center of a bin}
 
