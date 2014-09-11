@@ -62,14 +62,7 @@ compute_stack.data.frame <- function(x, stack_var = NULL, group_var = NULL) {
   gvar <- substitute(round_fp(x), list(x = group_var[[2]]))
   x <- do_call(dplyr::mutate, quote(x), group__ = gvar)
 
-  # FIXME: This zero-row case is a workaround for dplyr issue #486
-  if (nrow(x) == 0) {
-    # Turn it into a 1-row df with NA's, then group, and then drop the row
-    x <- dplyr::regroup(x[1, ], list(quote(group__)))
-    x <- x[0, ]
-  } else {
-    x <- dplyr::regroup(x, list(quote(group__)))
-  }
+  x <- dplyr::regroup(x, list(quote(group__)))
 
   # FIXME: This is a workaround for dplyr issue #412
   lag <- stats::lag
