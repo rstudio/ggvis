@@ -348,10 +348,10 @@ bin_vector.POSIXt <- function(x, weight = NULL, ..., binwidth = NULL,
                               right = TRUE, pad=TRUE) {
 
   # Convert times to raw numbers (seconds since UNIX epoch), and call bin.numeric
+  if (inherits(binwidth, "Period")) binwidth <- as.numeric(as.difftime(binwidth, units = "secs"))
+  if (!is.null(binwidth)) binwidth <- as.numeric(binwidth)
   center <- if (!is.null(center)) center <- as.numeric(center)
   boundary <- if (!is.null(boundary)) boundary <- as.numeric(boundary)
-  if (inherits(binwidth, "Period")) binwidth <- as.numeric(as.difftime(binwidth, units = "secs"))
-  binwidth <- if (!is.null(binwidth)) binwidth <- as.numeric(binwidth)
 
   results <- bin_vector(as.numeric(x), weight = weight, binwidth = binwidth,
     center = center, boundary = boundary, right = right, pad=pad)
@@ -367,19 +367,21 @@ bin_vector.POSIXt <- function(x, weight = NULL, ..., binwidth = NULL,
 }
 
 #' @export
-bin_vector.Date <- function(x, weight = NULL, ..., binwidth = NULL,
+bin_vector.Date <- function(x, weight = NULL, ..., binwidth = NULL, center=NULL,
                             boundary = NULL, right = TRUE, pad = TRUE) {
 
   # Convert times to raw numbers, and call bin_vector.numeric
 
+  if (!is.null(binwidth))
+    binwidth <- as.numeric(binwidth)
+  if (!is.null(center))
+    center<- as.numeric(center)
   if (!is.null(boundary))
     boundary <- as.numeric(boundary)
 
-  if (!is.null(binwidth))
-    boundary <- as.numeric(binwidth)
-
   results <- bin_vector(as.numeric(x), weight = weight,
-                        binwidth = binwidth, boundary = boundary,
+                        binwidth = binwidth,
+                        center=center, boundary = boundary,
                         right = right, pad = pad)
 
   # Convert some columns from numeric back to Date objects
