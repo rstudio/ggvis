@@ -94,6 +94,13 @@ p <- ToothGrowth \%>\% group_by(supp) \%>\%
 
 # Control range of fill scale
 p \%>\% scale_nominal("fill", range = c("pink", "lightblue"))
+
+# There's no default range when the data is categorical but the output range
+# is continuous, as in the case of opacity. In these cases, you can
+# manually specify the range for the scale.
+mtcars \%>\% ggvis(x = ~wt, y = ~mpg, opacity = ~factor(cyl)) \%>\%
+  layer_points() \%>\%
+  scale_nominal("opacity", range = c(0.2, 1))
 }
 \seealso{
 \code{\link{scales}}, \code{\link{scale_numeric}},

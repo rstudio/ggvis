@@ -49,6 +49,7 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
 
   datasets <- static_datasets(data_table, data_ids)
   scale_datasets <- static_datasets(scale_data_table, names(scale_data_table))
+  check_scales_complete(x)
 
   # Each of these operations results in a more completely specified (and still
   # valid) ggvis object

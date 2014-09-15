@@ -281,6 +281,13 @@ scale_datetime <- function(vis, property, domain = NULL, range = NULL,
 #'
 #' # Control range of fill scale
 #' p %>% scale_nominal("fill", range = c("pink", "lightblue"))
+#'
+#' # There's no default range when the data is categorical but the output range
+#' # is continuous, as in the case of opacity. In these cases, you can
+#' # manually specify the range for the scale.
+#' mtcars %>% ggvis(x = ~wt, y = ~mpg, opacity = ~factor(cyl)) %>%
+#'   layer_points() %>%
+#'   scale_nominal("opacity", range = c(0.2, 1))
 scale_ordinal <- function(vis, property, domain = NULL, range = NULL,
                           reverse = NULL, round = NULL,
                           points = NULL, padding = NULL, sort = NULL,
@@ -395,3 +402,19 @@ scale_countable.scale_ordinal <- function(scale) TRUE
 scale_countable.scale_logical <- function(scale) TRUE
 #' @export
 scale_countable.default <- function(scale) NULL
+
+
+# Make sure that scales are well-formed for a vega spec
+check_scales_complete <- function(vis) {
+  check_scale_complete <- function(scale) {
+    if (is.null(scale$range)) {
+      warning(paste(
+        sprintf("Scale '%s' for property '%s' is missing a range.", scale$name, scale$property),
+        "Perhaps you need to specify the range manually?",
+        "See ?scale_nominal or ?scale_numeric for more information."
+      ), call. = FALSE)
+    }
+  }
+
+  lapply(vis$scales, check_scale_complete)
+}
