@@ -5,10 +5,10 @@
 \title{Display binned data}
 \usage{
 layer_histograms(vis, ..., width = NULL, center = NULL, boundary = NULL,
-  right = TRUE, stack = TRUE)
+  closed = c("right", "left"), stack = TRUE)
 
 layer_freqpolys(vis, ..., width = NULL, center = NULL, boundary = NULL,
-  right = TRUE)
+  closed = c("right", "left"))
 }
 \arguments{
 \item{vis}{Visualisation to modify}
@@ -33,8 +33,8 @@ integers, use \code{width = 1} and \code{boundary = 0.5}, even if \code{1} is ou
 the range of the data.  At most one of \code{center} and \code{boundary} may be
 specified.}
 
-\item{right}{Should bins be right-open, left-closed, or
-right-closed, left-open.}
+\item{closed}{One of \code{"right"} or \code{"left"} indicating whether
+right or left edges of bins are included in the bin.}
 
 \item{stack}{If \code{TRUE}, will automatically stack overlapping bars.}
 }

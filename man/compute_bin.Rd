@@ -4,7 +4,7 @@
 \title{Bin data along a continuous variable}
 \usage{
 compute_bin(x, x_var, w_var = NULL, width = NULL, center = NULL,
-  boundary = NULL, right = TRUE, pad = TRUE)
+  boundary = NULL, closed = c("right", "left"), pad = TRUE)
 }
 \arguments{
 \item{x}{Dataset-like object to bin. Built-in methods for data frames,
@@ -31,8 +31,8 @@ integers, use \code{width = 1} and \code{boundary = 0.5}, even if \code{1} is ou
 the range of the data.  At most one of \code{center} and \code{boundary} may be
 specified.}
 
-\item{right}{Should bins be right-open, left-closed, or
-right-closed, left-open.}
+\item{closed}{One of \code{"right"} or \code{"left"} indicating whether
+right or left edges of bins are included in the bin.}
 
 \item{pad}{If \code{TRUE}, adds empty bins at either end of x. This
 ensures frequency polygons touch 0, and adds padding between the data
