@@ -11,7 +11,7 @@
 					"stack_lwr_" : "number"
 				}
 			},
-			"values" : "\"xmin_\",\"xmax_\",\"stack_upr_\",\"stack_lwr_\"\n1,2,4,0\n2,3,8,0\n3,4,16,0\n4,5,1,0\n5,6,3,0"
+			"values" : "\"xmin_\",\"xmax_\",\"stack_upr_\",\"stack_lwr_\"\n0.4685,1.4685,0,0\n1.4685,2.4685,8,0\n2.4685,3.4685,13,0\n3.4685,4.4685,8,0\n4.4685,5.4685,3,0\n5.4685,6.4685,0,0"
 		},
 		{
 			"name" : "scale/x",
@@ -21,7 +21,7 @@
 					"domain" : "number"
 				}
 			},
-			"values" : "\"domain\"\n0.75\n6.25"
+			"values" : "\"domain\"\n0.1685\n6.7685"
 		},
 		{
 			"name" : "scale/y",
@@ -31,7 +31,7 @@
 					"domain" : "number"
 				}
 			},
-			"values" : "\"domain\"\n0\n16.8"
+			"values" : "\"domain\"\n0\n13.65"
 		}
 	],
 	"scales" : [

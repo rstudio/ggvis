@@ -4,23 +4,34 @@
 \alias{layer_histograms}
 \title{Display binned data}
 \usage{
-layer_histograms(vis, ..., binwidth = NULL, origin = NULL, right = TRUE,
-  stack = TRUE)
+layer_histograms(vis, ..., width = NULL, center = NULL, boundary = NULL,
+  right = TRUE, stack = TRUE)
 
-layer_freqpolys(vis, ..., binwidth = NULL, origin = NULL, right = TRUE)
+layer_freqpolys(vis, ..., width = NULL, center = NULL, boundary = NULL,
+  right = TRUE)
 }
 \arguments{
 \item{vis}{Visualisation to modify}
 
 \item{...}{Visual properties used to override defaults.}
 
-\item{binwidth}{The width of the bins. The default is \code{NULL}, which
+\item{width}{The width of the bins. The default is \code{NULL}, which
 yields 30 bins that cover the range of the data. You should always override
 this value, exploring multiple widths to find the best to illustrate the
 stories in your data.}
 
-\item{origin}{The initial position of the left-most bin. If \code{NULL}, the
-the default, will use the smallest value in the dataset.}
+\item{center}{The center of one of the bins.  Note that if center is above or below
+the range of the data, things will be shifted by an appropriate number of \code{width}s.
+To center on integers,
+for example, use \code{width = 1} and \code{center = 0}, even if \code{0} is
+outside the range of the data.  At most one of \code{center} and \code{boundary} may be
+specified.}
+
+\item{boundary}{A boundary between two bins. As with \code{center}, things are shifted
+when \code{boundary} is outside the range of the data. For example, to center on
+integers, use \code{width = 1} and \code{boundary = 0.5}, even if \code{1} is outside
+the range of the data.  At most one of \code{center} and \code{boundary} may be
+specified.}
 
 \item{right}{Should bins be right-open, left-closed, or
 right-closed, left-open.}
@@ -33,8 +44,8 @@ Display binned data
 \examples{
 # Create histograms and frequency polygons with layers
 mtcars \%>\% ggvis(~mpg) \%>\% layer_histograms()
-mtcars \%>\% ggvis(~mpg) \%>\% layer_histograms(binwidth = 2)
-mtcars \%>\% ggvis(~mpg) \%>\% layer_freqpolys(binwidth = 2)
+mtcars \%>\% ggvis(~mpg) \%>\% layer_histograms(width = 2)
+mtcars \%>\% ggvis(~mpg) \%>\% layer_freqpolys(width = 2)
 
 # These are equivalent to combining compute_bin with the corresponding
 # mark
@@ -42,9 +53,9 @@ mtcars \%>\% compute_bin(~mpg) \%>\% ggvis(~x_, ~count_) \%>\% layer_paths()
 
 # With grouping
 mtcars \%>\% ggvis(~mpg, fill = ~factor(cyl)) \%>\% group_by(cyl) \%>\%
-  layer_histograms(binwidth = 2)
+  layer_histograms(width = 2)
 mtcars \%>\% ggvis(~mpg, stroke = ~factor(cyl)) \%>\% group_by(cyl) \%>\%
-  layer_freqpolys(binwidth = 2)
+  layer_freqpolys(width = 2)
 }
 \seealso{
 \code{\link{layer_bars}} For bar graphs of counts at each unique

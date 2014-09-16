@@ -3,8 +3,8 @@
 \alias{compute_bin}
 \title{Bin data along a continuous variable}
 \usage{
-compute_bin(x, x_var, w_var = NULL, binwidth = NULL, origin = NULL,
-  right = TRUE, pad = TRUE)
+compute_bin(x, x_var, w_var = NULL, width = NULL, center = NULL,
+  boundary = NULL, right = TRUE, pad = TRUE)
 }
 \arguments{
 \item{x}{Dataset-like object to bin. Built-in methods for data frames,
@@ -13,19 +13,29 @@ grouped data frames and ggvis visualisations.}
 \item{x_var,w_var}{Names of x and weight variables. The x variable must be
 continuous.}
 
-\item{binwidth}{The width of the bins. The default is \code{NULL}, which
+\item{width}{The width of the bins. The default is \code{NULL}, which
 yields 30 bins that cover the range of the data. You should always override
 this value, exploring multiple widths to find the best to illustrate the
 stories in your data.}
 
-\item{origin}{The initial position of the left-most bin. If \code{NULL}, the
-the default, will use the smallest value in the dataset.}
+\item{center}{The center of one of the bins.  Note that if center is above or below
+the range of the data, things will be shifted by an appropriate number of \code{width}s.
+To center on integers,
+for example, use \code{width = 1} and \code{center = 0}, even if \code{0} is
+outside the range of the data.  At most one of \code{center} and \code{boundary} may be
+specified.}
+
+\item{boundary}{A boundary between two bins. As with \code{center}, things are shifted
+when \code{boundary} is outside the range of the data. For example, to center on
+integers, use \code{width = 1} and \code{boundary = 0.5}, even if \code{1} is outside
+the range of the data.  At most one of \code{center} and \code{boundary} may be
+specified.}
 
 \item{right}{Should bins be right-open, left-closed, or
 right-closed, left-open.}
 
 \item{pad}{If \code{TRUE}, adds empty bins at either end of x. This
-ensures frequency polygons touch 0, and adds padidng between the data
+ensures frequency polygons touch 0, and adds padding between the data
 and axis for histograms.}
 }
 \value{
@@ -41,8 +51,8 @@ Bin data along a continuous variable
 }
 \examples{
 mtcars \%>\% compute_bin(~mpg)
-mtcars \%>\% compute_bin(~mpg, binwidth = 10)
-mtcars \%>\% group_by(cyl) \%>\% compute_bin(~mpg, binwidth = 10)
+mtcars \%>\% compute_bin(~mpg, width = 10)
+mtcars \%>\% group_by(cyl) \%>\% compute_bin(~mpg, width = 10)
 
 # It doesn't matter whether you transform inside or outside of a vis
 mtcars \%>\% compute_bin(~mpg) \%>\% ggvis(~x_, ~count_) \%>\% layer_paths()
