@@ -8,10 +8,12 @@
 bin_vector(x, weight = NULL, ...)
 
 \method{bin_vector}{numeric}(x, weight = NULL, ..., width = NULL,
-  center = NULL, boundary = NULL, right = TRUE, pad = TRUE)
+  center = NULL, boundary = NULL, closed = c("right", "left"),
+  pad = TRUE)
 
 \method{bin_vector}{POSIXct}(x, weight = NULL, ..., width = NULL,
-  center = NULL, boundary = NULL, right = TRUE, pad = TRUE)
+  center = NULL, boundary = NULL, closed = c("right", "left"),
+  pad = TRUE)
 }
 \arguments{
 \item{x}{a vector to bin}
@@ -28,8 +30,8 @@ representing the number of occurances of each value in \code{x}}
 \item{boundary}{the boundary of a bin.  \code{center} and \code{boundary} should
 not both be specified.}
 
-\item{right}{a logical indicating whether the right boundary of a bin is
-included with the bin.}
+\item{closed}{One of \code{"right"} or \code{"left"} indicating whether
+right or left edges of bins are included in the bin.}
 
 \item{pad}{a logical indicatign whether the bins should be padded to include
 an empty bin on each side.}

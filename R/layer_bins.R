@@ -23,8 +23,9 @@
 #' mtcars %>% ggvis(~mpg, stroke = ~factor(cyl)) %>% group_by(cyl) %>%
 #'   layer_freqpolys(width = 2)
 layer_histograms <- function(vis, ..., width = NULL, center = NULL,
-                             boundary = NULL, right = TRUE, stack = TRUE)
+                             boundary = NULL, closed = c("right", "left"), stack = TRUE)
 {
+  closed <- match.arg(closed)
   new_props <- merge_props(cur_props(vis), props(...))
 
   check_unsupported_props(new_props, c("x", "y", "x2", "y2"),
@@ -39,7 +40,7 @@ layer_histograms <- function(vis, ..., width = NULL, center = NULL,
 
   layer_f(vis, function(x) {
     x <- compute_bin(x, x_var, width = width, center = center,
-      boundary = boundary, right = right)
+      boundary = boundary, closed  = closed)
 
     if (stack) {
       x <- compute_stack(x, stack_var = ~count_, group_var = ~x_)
@@ -64,7 +65,9 @@ layer_histograms <- function(vis, ..., width = NULL, center = NULL,
 #' @rdname layer_histograms
 #' @export
 layer_freqpolys <- function(vis, ..., width = NULL, center = NULL, boundary = NULL,
-                            right = TRUE) {
+                            closed = c("right", "left")) {
+  closed <- match.arg(closed)
+
   new_props <- merge_props(cur_props(vis), props(...))
 
   check_unsupported_props(new_props, c("x", "y"),
@@ -78,11 +81,11 @@ layer_freqpolys <- function(vis, ..., width = NULL, center = NULL, boundary = NU
 
   params <- bin_params(range(x_val, na.rm = TRUE), width = value(width),
                        center = value(center), boundary = value(boundary),
-                       right = value(right))
+                       closed = value(closed))
 
   layer_f(vis, function(x) {
     x <- compute_bin(x, x_var, width = params$binwidth,
-      boundary = params$origin, right = params$right)
+      boundary = params$origin, closed = params$closed)
 
     path_props <- merge_props(new_props, props(x = ~x_, y = ~count_))
     x <- emit_paths(x, path_props)
