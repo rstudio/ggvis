@@ -2,13 +2,13 @@ library(ggvis)
 
 mtcars %>%
   ggvis(x = ~wt) %>%
-  layer_histograms(binwidth = 1) %>%
+  layer_histograms(width = 1) %>%
   save_spec("layer/histogram.json")
 
 mtcars %>%
   ggvis(x = ~wt, stroke = ~cyl) %>%
   group_by(cyl) %>%
-  layer_freqpolys(binwidth = 1) %>%
+  layer_freqpolys(width = 1) %>%
   save_spec("layer/freqpoly-grouped.json")
 
 mtcars %>%
