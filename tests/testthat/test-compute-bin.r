@@ -24,7 +24,8 @@ test_that("bin_vector preserves dates and times", {
 
 
   # Can set boundary
-  res <- bin_vector(dates, width = 30, boundary = as.Date("2013-06-01"), pad = FALSE)
+  res <- bin_vector(dates, width = 30, boundary = as.Date("2013-06-01"),
+                    pad = FALSE)
   expect_identical(sum(res$count_), length(dates))
   expect_identical(res$xmin_[1], as.Date("2013-06-01"))
 

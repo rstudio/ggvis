@@ -23,8 +23,8 @@
 #' mtcars %>% ggvis(~mpg, stroke = ~factor(cyl)) %>% group_by(cyl) %>%
 #'   layer_freqpolys(width = 2)
 layer_histograms <- function(vis, ..., width = NULL, center = NULL,
-                             boundary = NULL, closed = c("right", "left"), stack = TRUE)
-{
+                             boundary = NULL, closed = c("right", "left"),
+                             stack = TRUE) {
   closed <- match.arg(closed)
   new_props <- merge_props(cur_props(vis), props(...))
 
