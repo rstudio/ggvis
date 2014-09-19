@@ -53,7 +53,7 @@ Create an interactive slider.
 }
 \examples{
 input_slider(0, 100)
-input_slider(0, 100, label = "binwidth")
+input_slider(0, 100, label = "width")
 input_slider(0, 100, value = 50)
 
 # Supply two values to value to make a double-ended sliders

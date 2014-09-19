@@ -40,6 +40,12 @@
 
 # ggvis 0.3
 
+* histogram binning controls are now `width` and one of `center` or `boundary`
+  rather than `binwidth` and `origin`.  In addition, the algorithms for 
+  determining various defaults have been modified by @rpruim.  In particular, 
+  for integer data, `width` will be a pretty integer avoiding distortions due 
+  to some bin ranges containing more integers than others.
+
 * `add_guide_axis()` and `add_guide_legend()` have been replaced by
   `add_axis()` and `add_legend()`. Also, the interface for `add_legend()` has
   been simplified.

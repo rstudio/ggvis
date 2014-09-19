@@ -115,12 +115,14 @@ mtcars %>%
   layer_points()
 ```
 
-You can also connect interactive components to other plot parameters like the binwidth of a histogram:
+You can also connect interactive components to other plot parameters like the width 
+and centers of histogram bins:
 
 ```{r}
 mtcars %>% 
   ggvis(~wt) %>% 
-  layer_histograms(binwidth = input_slider(0, 2, step = 0.1))
+  layer_histograms(width =  input_slider(0, 2, step = 0.10, label = "width"),
+                   center = input_slider(0, 2, step = 0.05, label = "center"))
 ```
 
 Behind the scenes, interactive plots are built with [shiny](http://www.rstudio.com/shiny/), and you can currently only have one running at a time in a given R session. To finish with a plot, press the stop button in Rstudio, or close the browser window and then press Escape or Ctrl + C in R.

@@ -10,8 +10,8 @@
 #' @examples
 #' # Create histograms and frequency polygons with layers
 #' mtcars %>% ggvis(~mpg) %>% layer_histograms()
-#' mtcars %>% ggvis(~mpg) %>% layer_histograms(binwidth = 2)
-#' mtcars %>% ggvis(~mpg) %>% layer_freqpolys(binwidth = 2)
+#' mtcars %>% ggvis(~mpg) %>% layer_histograms(width = 2)
+#' mtcars %>% ggvis(~mpg) %>% layer_freqpolys(width = 2)
 #'
 #' # These are equivalent to combining compute_bin with the corresponding
 #' # mark
@@ -19,12 +19,12 @@
 #'
 #' # With grouping
 #' mtcars %>% ggvis(~mpg, fill = ~factor(cyl)) %>% group_by(cyl) %>%
-#'   layer_histograms(binwidth = 2)
+#'   layer_histograms(width = 2)
 #' mtcars %>% ggvis(~mpg, stroke = ~factor(cyl)) %>% group_by(cyl) %>%
-#'   layer_freqpolys(binwidth = 2)
-layer_histograms <- function(vis, ..., binwidth = NULL, origin = NULL,
-                            right = TRUE, stack = TRUE) {
-
+#'   layer_freqpolys(width = 2)
+layer_histograms <- function(vis, ..., width = NULL, center = NULL,
+                             boundary = NULL, right = TRUE, stack = TRUE)
+{
   new_props <- merge_props(cur_props(vis), props(...))
 
   check_unsupported_props(new_props, c("x", "y", "x2", "y2"),
@@ -38,8 +38,8 @@ layer_histograms <- function(vis, ..., binwidth = NULL, origin = NULL,
                        label = "count")
 
   layer_f(vis, function(x) {
-    x <- compute_bin(x, x_var, binwidth = binwidth, origin = origin,
-                     right = right, pad = FALSE)
+    x <- compute_bin(x, x_var, width = width, center = center,
+      boundary = boundary, right = right)
 
     if (stack) {
       x <- compute_stack(x, stack_var = ~count_, group_var = ~x_)
@@ -63,7 +63,7 @@ layer_histograms <- function(vis, ..., binwidth = NULL, origin = NULL,
 
 #' @rdname layer_histograms
 #' @export
-layer_freqpolys <- function(vis, ..., binwidth = NULL, origin = NULL,
+layer_freqpolys <- function(vis, ..., width = NULL, center = NULL, boundary = NULL,
                             right = TRUE) {
   new_props <- merge_props(cur_props(vis), props(...))
 
@@ -76,12 +76,13 @@ layer_freqpolys <- function(vis, ..., binwidth = NULL, origin = NULL,
   vis <- set_scale_label(vis, "x", prop_label(new_props$x.update))
   vis <- set_scale_label(vis, "y", "count")
 
-  params <- bin_params(range(x_val, na.rm = TRUE), binwidth = value(binwidth),
-    origin = value(origin), right = value(right))
+  params <- bin_params(range(x_val, na.rm = TRUE), width = value(width),
+                       center = value(center), boundary = value(boundary),
+                       right = value(right))
 
   layer_f(vis, function(x) {
-    x <- compute_bin(x, x_var, binwidth = params$binwidth,
-      origin = params$origin, right = params$right)
+    x <- compute_bin(x, x_var, width = params$binwidth,
+      boundary = params$origin, right = params$right)
 
     path_props <- merge_props(new_props, props(x = ~x_, y = ~count_))
     x <- emit_paths(x, path_props)

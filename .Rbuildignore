@@ -5,3 +5,5 @@ bench
 ^\.travis\.yml$
 ^node_modules$
 ^NEWS\.md$
+^sandbox$
+^ggvis.*\.tar\.gz$
