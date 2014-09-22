@@ -126,15 +126,18 @@ bin_params.numeric <- function(x_range, width = NULL, center = NULL,
   }
 
   if (is.null(width)) {
-    width <- diff(x_range) / 30
-    notify_guess(width, "range / 30")
+    width <- diff(x_range) / 25
+    p <- pretty(width)
+    width <- p[which.min(abs(diff(x_range) / p - 25))]
+    num_bins <- round(diff(x_range) / width)
+    notify_guess(width, paste0("approximately range / ", num_bins))
   }
 
   # if neither edge nor center given, compute both using tile layer's algorithm
   # this puts min and max of data in outer half of their bins.
   if (is.null(boundary) && is.null(center)) {
     boundary <- tilelayer_origin(x_range, width)
-    # center <- boundary + width / 2
+    boundary <- prettify(boundary, width)
   }
 
   # if center given but not boundary, compute boundary from center
@@ -420,4 +423,12 @@ adjust_breaks <- function(breaks, closed = "right") {
     fuzz <- c(rep.int(-diddle, length(breaks) - 1), diddle)
   }
   sort(breaks) + fuzz
+}
+
+# round x to (approximately) a mutliple of m/d
+prettify <- function(x, m, d=1) {
+  if (missing(m)) m <- 10^round(log10(x)) / 5
+  m <- m/d
+  res <- m * ((x + m/2) %/% (m))
+  print(c(x=x, m=m, d=d, res=res))
 }
