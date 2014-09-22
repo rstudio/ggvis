@@ -11,7 +11,7 @@
 					"stack_lwr_" : "number"
 				}
 			},
-			"values" : "\"xmin_\",\"xmax_\",\"stack_upr_\",\"stack_lwr_\"\n1,2,4,0\n2,3,8,0\n3,4,16,0\n4,5,1,0\n5,6,3,0"
+			"values" : "\"xmin_\",\"xmax_\",\"stack_upr_\",\"stack_lwr_\"\n0,1,0,0\n1,2,4,0\n2,3,8,0\n3,4,16,0\n4,5,1,0\n5,6,3,0\n6,7,0,0"
 		},
 		{
 			"name" : "scale/x",
@@ -21,7 +21,7 @@
 					"domain" : "number"
 				}
 			},
-			"values" : "\"domain\"\n0.75\n6.25"
+			"values" : "\"domain\"\n-0.35\n7.35"
 		},
 		{
 			"name" : "scale/y",
