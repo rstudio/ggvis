@@ -26,7 +26,8 @@
 		{
 			"name" : "scale/stroke",
 			"format" : {
-				"type" : "csv"
+				"type" : "csv",
+				"parse" : {}
 			},
 			"values" : "\"domain\"\n\"1\"\n\"2\"\n\"3\""
 		},
@@ -147,13 +148,16 @@
 			"title" : "y"
 		}
 	],
+	"padding" : null,
 	"ggvis_opts" : {
 		"width" : 600,
 		"height" : 400,
 		"keep_aspect" : false,
 		"resizable" : true,
+		"padding" : {},
 		"duration" : 250,
 		"renderer" : "svg",
 		"hover_duration" : 0
-	}
+	},
+	"handlers" : null
 }
