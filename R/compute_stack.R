@@ -64,9 +64,6 @@ compute_stack.data.frame <- function(x, stack_var = NULL, group_var = NULL) {
 
   x <- dplyr::regroup(x, list(quote(group__)))
 
-  # FIXME: This is a workaround for dplyr issue #412
-  lag <- stats::lag
-
   # FIXME: mutate evaluates in this function's environment, which isn't right.
   # This is like mutate(x, stack_upr_ = cumsum(stack_var),
   #                     stack_lwr_ = lag(stack_upr_))
