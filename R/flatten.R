@@ -68,5 +68,10 @@ apply_props.data.frame <- function(data, props) {
 
 #' @export
 apply_props.grouped_df <- function(data, props) {
+  # FIXME: workaround for dplyr issue #625
+  if (nrow(data) == 0) {
+    return(data)
+  }
+
   dplyr::do(data, apply_props(., props))
 }
