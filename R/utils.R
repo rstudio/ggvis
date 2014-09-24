@@ -242,5 +242,5 @@ deprecated <- function(old, new = NULL, msg = NULL, version = NULL) {
     msg,
     if (!is.null(version)) sprintf(" (Last used in version %s)", version)
   )
-  warning(text)
+  warning(text, call. = FALSE)
 }

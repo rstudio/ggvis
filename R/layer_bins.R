@@ -24,7 +24,12 @@
 #'   layer_freqpolys(width = 2)
 layer_histograms <- function(vis, ..., width = NULL, center = NULL,
                              boundary = NULL, closed = c("right", "left"),
-                             stack = TRUE) {
+                             stack = TRUE, binwidth) {
+  if (!missing(binwidth)) {
+    width <- binwidth
+    deprecated("binwidth", "width", version = "0.3.0")
+  }
+
   closed <- match.arg(closed)
   new_props <- merge_props(cur_props(vis), props(...))
 
@@ -65,7 +70,12 @@ layer_histograms <- function(vis, ..., width = NULL, center = NULL,
 #' @rdname layer_histograms
 #' @export
 layer_freqpolys <- function(vis, ..., width = NULL, center = NULL, boundary = NULL,
-                            closed = c("right", "left")) {
+                            closed = c("right", "left"), binwidth) {
+  if (!missing(binwidth)) {
+    width <- binwidth
+    deprecated("binwidth", "width", version = "0.3.0")
+  }
+
   closed <- match.arg(closed)
 
   new_props <- merge_props(cur_props(vis), props(...))

@@ -44,14 +44,22 @@
 #' mtcars %>% ggvis(~ x_, ~ count_) %>% compute_bin(~mpg) %>% layer_paths()
 compute_bin <- function(x, x_var, w_var = NULL, width = NULL,
                         center = NULL, boundary = NULL,
-                        closed = c("right", "left"), pad = TRUE) {
+                        closed = c("right", "left"), pad = TRUE,
+                        binwidth) {
   UseMethod("compute_bin")
 }
 
 #' @export
 compute_bin.data.frame <- function(x, x_var, w_var = NULL, width = NULL,
                                    center = NULL, boundary = NULL,
-                                   closed = c("right", "left"), pad = TRUE) {
+                                   closed = c("right", "left"), pad = TRUE,
+                                   binwidth) {
+
+  if (!missing(binwidth)) {
+    width <- binwidth
+    deprecated("binwidth", "width", version = "0.3.0")
+  }
+
   closed <- match.arg(closed)
   assert_that(is.formula(x_var))
 
@@ -79,7 +87,13 @@ compute_bin.data.frame <- function(x, x_var, w_var = NULL, width = NULL,
 #' @export
 compute_bin.grouped_df <- function(x, x_var, w_var = NULL, width = NULL,
                                    center = NULL, boundary = NULL,
-                                   closed = c("right", "left"), pad = TRUE) {
+                                   closed = c("right", "left"), pad = TRUE,
+                                   binwidth) {
+
+  if (!missing(binwidth)) {
+    width <- binwidth
+    deprecated("binwidth", "width", version = "0.3.0")
+  }
 
   closed <- match.arg(closed)
   x_val <- eval_vector(x, x_var)
@@ -103,7 +117,13 @@ compute_bin.grouped_df <- function(x, x_var, w_var = NULL, width = NULL,
 #' @export
 compute_bin.ggvis <- function(x, x_var, w_var = NULL, width = NULL,
                               center = NULL, boundary = NULL,
-                              closed = c("right", "left"), pad = TRUE) {
+                              closed = c("right", "left"), pad = TRUE,
+                              binwidth) {
+  if (!missing(binwidth)) {
+    width <- binwidth
+    deprecated("binwidth", "width", version = "0.3.0")
+  }
+
   closed <- match.arg(closed)
   args <- list(x_var = x_var, w_var = w_var, width = width,
                center = center, boundary = boundary, closed = closed, pad = pad)
