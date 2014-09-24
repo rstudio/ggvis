@@ -29,6 +29,7 @@
 #'   max.
 #' @param ... arguments passed on to \code{model} function
 #' @param method Deprecated. Please use \code{model} instead.
+#' @param span Smoothing span used for loess model.
 #' @return A data frame with columns: \item{\code{resp_}}{regularly spaced grid
 #'   of \code{n} locations} \item{\code{pred_}}{predicted value from model}
 #'   \item{\code{pred_lwr_} and \code{pred_upr_}}{upper and lower bounds of

@@ -24,6 +24,7 @@
 #' @param pad If \code{TRUE}, adds empty bins at either end of x. This ensures
 #'   frequency polygons touch 0, and adds padding between the data and axis for
 #'   histograms.
+#' @param binwidth Deprecated; use \code{width} instead.
 #' @seealso \code{\link{compute_count}} For counting cases at specific locations
 #'   of a continuous variable. This is useful when the variable is continuous
 #'   but the data is granular.

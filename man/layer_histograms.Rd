@@ -5,10 +5,10 @@
 \title{Display binned data}
 \usage{
 layer_histograms(vis, ..., width = NULL, center = NULL, boundary = NULL,
-  closed = c("right", "left"), stack = TRUE)
+  closed = c("right", "left"), stack = TRUE, binwidth)
 
 layer_freqpolys(vis, ..., width = NULL, center = NULL, boundary = NULL,
-  closed = c("right", "left"))
+  closed = c("right", "left"), binwidth)
 }
 \arguments{
 \item{vis}{Visualisation to modify}
@@ -37,6 +37,8 @@ example, to center on integers, use \code{width = 1} and \code{boundary =
 or left edges of bins are included in the bin.}
 
 \item{stack}{If \code{TRUE}, will automatically stack overlapping bars.}
+
+\item{binwidth}{Deprecated; use \code{width} instead.}
 }
 \description{
 Display binned data

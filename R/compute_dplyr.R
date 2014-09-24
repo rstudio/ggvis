@@ -173,19 +173,27 @@ extract_inputs <- function(x, env = parent.frame()) {
 }
 
 
+#' @rdname dplyr-ggvis
 #' @export
-groups.reactive <- function(x, value) reactive(dplyr::groups(x(), value))
+groups.reactive <- function(x) reactive(dplyr::groups(x()))
+#' @rdname dplyr-ggvis
 #' @export
 regroup.reactive <- function(x, value) reactive(dplyr::regroup(x(), value))
+#' @rdname dplyr-ggvis
 #' @export
-ungroup.reactive <- function(x, value) reactive(dplyr::ungroup(x(), value))
+ungroup.reactive <- function(x) reactive(dplyr::ungroup(x()))
+#' @rdname dplyr-ggvis
 #' @export
-summarise.reactive <- function(x, ...) reactive(dplyr::summarise(x(), ...))
+summarise.reactive <- function(.data, ...) reactive(dplyr::summarise(.data(), ...))
+#' @rdname dplyr-ggvis
 #' @export
-mutate.reactive <- function(x, ...) reactive(dplyr::mutate(x(), ...))
+mutate.reactive <- function(.data, ...) reactive(dplyr::mutate(.data(), ...))
+#' @rdname dplyr-ggvis
 #' @export
-arrange.reactive <- function(x, ...) reactive(dplyr::arrange(x(), ...))
+arrange.reactive <- function(.data, ...) reactive(dplyr::arrange(.data(), ...))
+#' @rdname dplyr-ggvis
 #' @export
-select.reactive <- function(x, ...) reactive(dplyr::select(x(), ...))
+select.reactive <- function(.data, ...) reactive(dplyr::select(.data(), ...))
+#' @rdname dplyr-ggvis
 #' @export
-filter.reactive <- function(x, ...) reactive(dplyr::filter(x(), ...))
+filter.reactive <- function(.data, ...) reactive(dplyr::filter(.data(), ...))

@@ -39,6 +39,8 @@ data. It can also be a two-element numeric vector specifying the min and
 max.}
 
 \item{method}{Deprecated. Please use \code{model} instead.}
+
+\item{span}{Smoothing span used for loess model.}
 }
 \value{
 A data frame with columns: \item{\code{resp_}}{regularly spaced grid

@@ -244,3 +244,9 @@ deprecated <- function(old, new = NULL, msg = NULL, version = NULL) {
   )
   warning(text, call. = FALSE)
 }
+
+# Need this so R CMD check doesn't complain about "no visible global function
+# definition"
+`:=` <- function(x, value) {
+  stop("This code should not be reached.", call. = FALSE)
+}
