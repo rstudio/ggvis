@@ -143,7 +143,7 @@ bin_params <- function(x_range, width = NULL, center = NULL, boundary = NULL,
 }
 
 #' @export
-bin_params.numeric <- function(x_range, width = NULL, center = NULL,
+bin_params.default <- function(x_range, width = NULL, center = NULL,
                                boundary = NULL, closed = c("right", "left")) {
   closed <- match.arg(closed)
   stopifnot(length(x_range) == 2)
@@ -170,61 +170,40 @@ bin_params.numeric <- function(x_range, width = NULL, center = NULL,
     }
   }
 
+  # Inputs could be Dates or POSIXct, so make sure these are all numeric
+  x_range <- as.numeric(x_range)
+  width <- as.numeric(width)
+  boundary <- as.numeric(boundary)
+
   origin <- find_origin(x_range, width, boundary)
 
   list(width = width, origin = origin, closed = closed)
 }
 
 #' @export
-bin_params.integer <- function(x_range, width = NULL,
-                               center = NULL, boundary = NULL,
-                               closed = c("right", "left")) {
-
-  if (is.null(width)) {
-    width <- max(pretty(round(diff(x_range) / 30)))
-    if (width < 1) width <- 1
-    num_bins <- ceiling(diff(x_range) / width)
-    notify_guess(width, paste0("approximately range/", num_bins))
-  }
-
-  bin_params.numeric(as.numeric(x_range), width, center, boundary, closed)
-}
-
-#' @export
 bin_params.POSIXct <- function(x_range, width = NULL, center = NULL,
                                boundary = NULL, closed = c("right", "left")) {
-  if (!is.null(width)) {
-    # Period object from lubridate package - need lubridate::as.difftime to find
-    # the correct generic, instead of base::as.difftime.
-    if (is(width, "Period")) {
-      width <- as.numeric(lubridate::as.difftime(width, units = "secs"))
 
-    } else {
-      width <- as.numeric(width, units = "secs")
-    }
+  if (is.null(width)) {
+    bounds <- pretty(x_range, 30)
+    width <- bounds[2] - bounds[1]
+    notify_guess(width, paste0("range / ", length(bounds)-1))
+  }
+
+  # Period object from lubridate package - need lubridate::as.difftime to find
+  # the correct generic, instead of base::as.difftime.
+  if (is(width, "Period")) {
+    width <- as.numeric(lubridate::as.difftime(width, units = "secs"))
   }
 
   bin_params(
     as.numeric(x_range),
-    as_numeric(width),
+    as.numeric(width, units = "secs"),
     as_numeric(center),
     as_numeric(boundary),
     closed
   )
 }
-
-#' @export
-bin_params.Date <- function(x_range, width = NULL, center = NULL,
-                            boundary = NULL, closed = c("right", "left")) {
-  bin_params(
-    as.numeric(x_range),
-    as_numeric(width),
-    as_numeric(center),
-    as_numeric(boundary),
-    closed
-  )
-}
-
 # Find the left side of left-most bin
 find_origin <- function(x_range, width, boundary) {
   shift <- floor((x_range[1] - boundary) / width)

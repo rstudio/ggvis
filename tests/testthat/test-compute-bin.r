@@ -126,31 +126,31 @@ test_that("Automatic width", {
   )
 
   # numeric
-  res <- suppressMessages(compute_bin(dat, ~num))
-  # Need to use expect_equal to deal with FP error
-  expect_equal(res$width_, rep(25/30, length(res$width_)))
-  res <- suppressMessages(compute_bin(dat, ~num2))
-  expect_equal(res$width_, rep(50/30, length(res$width_)))
+  res <- comp_bin(dat, ~num)
+  # It generates approx 30 bins, at round numbers, so should have width 1
+  expect_identical(res$width_, rep(1, length(res$width_)))
+  res <- comp_bin(dat, ~num2)
+  expect_identical(res$width_, rep(2, length(res$width_)))
 
   # integer
-  res <- suppressMessages(compute_bin(dat, ~int))
+  res <- comp_bin(dat, ~int)
   expect_true(all(res$width_ == 1L))
-  res <- suppressMessages(compute_bin(dat, ~int2))
+  res <- comp_bin(dat, ~int2)
   expect_true(all(res$width_ == 2L))
 
   # Date
-  res <- suppressMessages(compute_bin(dat, ~date))
-  expect_equal(res$width_, rep(100/30, length(res$width_)))
+  res <- comp_bin(dat, ~date)
+  expect_identical(res$width_, rep(2, length(res$width_)))
 
   # POSIXct
-  res <- suppressMessages(compute_bin(dat, ~posixct))
-  expect_equal(res$width_, rep(1000/30, length(res$width_)))
+  res <- comp_bin(dat, ~posixct)
+  expect_identical(res$width_, rep(30, length(res$width_)))
 })
 
 
 test_that("Bin boundaries across groups", {
   # Bins should be the same across groups
-  dat <- data.frame(x = c(0:2, 0:2+0.5), g=c('a','a','a', 'b','b','b'))
+  dat <- data.frame(x = c(0:2, 0:2+0.1), g=c('a','a','a', 'b','b','b'))
   res <- dat %>% group_by(g) %>% compute_bin(~x, width = 1, pad = FALSE)
   expect_identical(range(res$x_[res$g =='a']), range(res$x_[res$g =='b']))
   expect_identical(dplyr::groups(res), list(quote(g)))
