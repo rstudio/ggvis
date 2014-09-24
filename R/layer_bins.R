@@ -84,7 +84,7 @@ layer_freqpolys <- function(vis, ..., width = NULL, center = NULL, boundary = NU
                        closed = value(closed))
 
   layer_f(vis, function(x) {
-    x <- compute_bin(x, x_var, width = params$binwidth,
+    x <- compute_bin(x, x_var, width = params$width,
       boundary = params$origin, closed = params$closed)
 
     path_props <- merge_props(new_props, props(x = ~x_, y = ~count_))

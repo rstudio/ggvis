@@ -20,6 +20,7 @@ Imports:
 Suggests:
     MASS,
     mgcv,
+    lubridate,
     testthat (>= 0.8.1),
     knitr (>= 1.6),
     rmarkdown

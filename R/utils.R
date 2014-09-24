@@ -228,6 +228,12 @@ vpluck <- function(x, name, type) {
   vapply(x, `[[`, name, FUN.VALUE = type)
 }
 
+# Like as.numeric, except that as.numeric(NULL) returns numeric(0), whereas
+# as_numeric(NULL) returns NULL.
+as_numeric <- function(x) {
+  if (is.null(x)) NULL
+  else as.numeric(x)
+}
 
 deprecated <- function(old, new = NULL, msg = NULL, version = NULL) {
   text <- paste0(
