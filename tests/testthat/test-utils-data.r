@@ -141,3 +141,12 @@ test_that("preserve_constants", {
     group_by(data.frame(a=1:2, v=5:6), a)
   )
 })
+
+
+test_that("to_csv", {
+  # Zero-row data frame. The trailing \n should be optional.
+  expect_identical(
+    to_csv(data.frame(x = numeric(0), c = character(0))),
+    "\"x\",\"c\"\n"
+  )
+})
