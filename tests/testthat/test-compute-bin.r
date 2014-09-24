@@ -1,49 +1,158 @@
 context("compute_bin")
 
-test_that("bin_vector preserves dates and times", {
-  dates <- as.Date("2013-06-01") + 0:100
-  UTCtimes <- as.POSIXct('2001-06-01 21:00', tz = 'UTC') + seq(0, 1000, by = 10)
-  NYtimes <- as.POSIXct('2001-06-01 21:00', tz = 'America/New_York') + 0:10 * 100
+comp_bin <- function(...) {
+  suppressMessages(compute_bin(...))
+}
 
-  res <- bin_vector(dates, width = 30)
+test_that("compute_bin preserves dates and times", {
+  dates <- data.frame(val = as.Date("2013-06-01") + 0:100)
+  NYtimes <- data.frame(
+    val = as.POSIXct('2001-06-01 21:00', tz = 'America/New_York') + 0:10 * 100
+  )
+  UTCtimes <- data.frame(
+    val = as.POSIXct('2001-06-01 21:00', tz = 'UTC') + seq(0, 1000, by = 10)
+  )
+
+  res <- comp_bin(dates, ~val, width = 30)
   expect_true(inherits(res$x_, "Date"))
   expect_true(inherits(res$xmin_, "Date"))
   expect_true(inherits(res$xmax_, "Date"))
-  expect_identical(sum(res$count_), length(dates))
+  expect_identical(sum(res$count_), length(dates$val))
 
-  res <- bin_vector(NYtimes, width = 120)
+  res <- comp_bin(NYtimes, ~val, width = 120)
   expect_true(inherits(res$x_, "POSIXct"))
   expect_true(inherits(res$xmin_, "POSIXct"))
   expect_true(inherits(res$xmax_, "POSIXct"))
-  expect_identical(sum(res$count_), length(NYtimes))
-  expect_identical(attr(NYtimes, "tzone"), attr(res$x_, "tzone"))
+  expect_identical(sum(res$count_), length(NYtimes$val))
+  expect_identical(attr(NYtimes$val, "tzone"), attr(res$x_, "tzone"))
 
-  res <- bin_vector(UTCtimes, width = 120)
-  expect_identical(sum(res$count_), length(UTCtimes))
-  expect_identical(attr(UTCtimes, "tzone"), attr(res$x_, "tzone"))
+  res <- comp_bin(UTCtimes, ~val, width = 120)
+  expect_identical(sum(res$count_), length(UTCtimes$val))
+  expect_identical(attr(UTCtimes$val, "tzone"), attr(res$x_, "tzone"))
+})
+
+test_that("width in lubridate::Period", {
+  UTCtimes <- data.frame(
+    val = as.POSIXct('2001-06-01 21:00', tz = 'UTC') + seq(0, 1000, by = 10)
+  )
+
+  # width specified as a Period from lubridate
+  expect_identical(
+    comp_bin(UTCtimes, ~val, width = lubridate::ms("1 42")),
+    comp_bin(UTCtimes, ~val, width = 102)
+  )
+})
+
+test_that("Closed left or right", {
+  dat <- data.frame(x = c(0, 10))
+
+  res <- comp_bin(dat, ~x, width = 10, pad = FALSE)
+  expect_identical(res$count_, c(1L, 1L))
+  res <- comp_bin(dat, ~x, width = 10, boundary = 5, pad = FALSE)
+  expect_identical(res$count_, c(1L, 1L))
+  res <- comp_bin(dat, ~x, width = 10, boundary = 0, pad = FALSE)
+  expect_identical(res$count_, 2L)
+  res <- comp_bin(dat, ~x, width = 5, boundary = 0, pad = FALSE)
+  expect_identical(res$count_, c(1L, 1L))
+
+  res <- comp_bin(dat, ~x, width = 10, pad = FALSE, closed = "left")
+  expect_identical(res$count_, c(1L, 1L))
+  res <- comp_bin(dat, ~x, width = 10, boundary = 5, pad = FALSE, closed = "left")
+  expect_identical(res$count_, c(1L, 1L))
+  res <- comp_bin(dat, ~x, width = 10, boundary = 0, pad = FALSE, closed = "left")
+  expect_identical(res$count_, c(2L))
+  res <- comp_bin(dat, ~x, width = 5, boundary = 0, pad = FALSE, closed = "left")
+  expect_identical(res$count_, c(1L, 1L))
+})
 
 
-  # Can set boundary
-  res <- bin_vector(dates, width = 30, boundary = as.Date("2013-06-01"),
-                    pad = FALSE)
-  expect_identical(sum(res$count_), length(dates))
-  expect_identical(res$xmin_[1], as.Date("2013-06-01"))
+test_that("Setting boundary and center", {
+  # numeric
+  dat <- data.frame(x = c(0, 30))
 
-  res <- bin_vector(UTCtimes, width = 120,
-                    boundary = as.POSIXct('2001-06-01 21:07', tz = 'UTC'),
-                    pad = FALSE)
-  expect_identical(sum(res$count_), length(UTCtimes))
-  expect_identical(res$xmin_[5], as.POSIXct('2001-06-01 21:07', tz = 'UTC'))
+  # Error if both boundary and center are specified
+  expect_error(comp_bin(dat, ~x, width = 10, bondary = 5, center = 0, pad = FALSE))
 
-  # Can set center
-  res <- bin_vector(dates, width = 30, center=as.Date("2013-07-01"),
-                    pad = FALSE)
-  expect_identical(sum(res$count_), length(dates))
-  expect_identical(res$x_[2], as.Date("2013-07-01"))
+  res <- comp_bin(dat, ~x, width = 10, boundary = 0, pad = FALSE)
+  expect_identical(res$count, c(1L, 0L, 1L))
+  expect_identical(res$xmin_[1], 0)
+  expect_identical(res$xmax_[3], 30)
 
-  res <- bin_vector(UTCtimes, width = 120,
-                    center = as.POSIXct('2001-06-01 21:15', tz = 'UTC'),
-                    pad = FALSE)
-  expect_identical(sum(res$count_), length(UTCtimes))
-  expect_identical(res$x_[8], as.POSIXct('2001-06-01 21:15', tz = 'UTC'))
+  res <- comp_bin(dat, ~x, width = 10, center = 0, pad = FALSE)
+  expect_identical(res$count, c(1L, 0L, 0L, 1L))
+  expect_identical(res$xmin_[1], dat$x[1] - 5)
+  expect_identical(res$xmax_[4], dat$x[2] + 5)
+
+
+  # Date
+  dat <- data.frame(x = as.Date("2013-06-01") + c(0, 30))
+
+  res <- comp_bin(dat, ~x, width = 10, boundary = as.Date("2013-06-01"), pad = FALSE)
+  expect_identical(res$count_, c(1L, 0L, 1L))
+  expect_identical(res$xmin_[1], dat$x[1])
+  expect_identical(res$xmax_[3], dat$x[2])
+
+  res <- comp_bin(dat, ~x, width = 10, center = as.Date("2013-06-01"), pad = FALSE)
+  expect_identical(res$count, c(1L, 0L, 0L, 1L))
+  expect_identical(res$xmin_[1], dat$x[1] - 5)
+  expect_identical(res$xmax_[4], dat$x[2] + 5)
+
+
+  # POSIXct
+  dat <- data.frame(
+    x = as.POSIXct('2001-06-01 21:00', tz = 'America/New_York') + c(0, 30000)
+  )
+
+  res <- comp_bin(dat, ~x, width = 10000, boundary = dat$x[1], pad = FALSE)
+  expect_identical(res$count_, c(1L, 0L, 1L))
+  expect_identical(res$xmin_[1], dat$x[1])
+  expect_identical(res$xmax_[3], dat$x[2])
+
+  res <- comp_bin(dat, ~x, width = 10000, center = dat$x[1], pad = FALSE)
+  expect_identical(res$count, c(1L, 0L, 0L, 1L))
+  expect_identical(res$xmin_[1], dat$x[1] - 5000)
+  expect_identical(res$xmax_[4], dat$x[2] + 5000)
+})
+
+
+test_that("Automatic width", {
+  dat <- data.frame(
+    num = c(0, 25.0),
+    num2 = c(0, 50.0),
+    int = c(1L, 25L),
+    int2 = c(1L, 50L),
+    date = as.Date("2013-06-01") + c(0, 100),
+    posixct = as.POSIXct('2001-06-01 21:00', tz = 'UTC') + c(0, 1000)
+  )
+
+  # numeric
+  res <- suppressMessages(compute_bin(dat, ~num))
+  # Need to use expect_equal to deal with FP error
+  expect_equal(res$width_, rep(25/30, length(res$width_)))
+  res <- suppressMessages(compute_bin(dat, ~num2))
+  expect_equal(res$width_, rep(50/30, length(res$width_)))
+
+  # integer
+  res <- suppressMessages(compute_bin(dat, ~int))
+  expect_true(all(res$width_ == 1L))
+  res <- suppressMessages(compute_bin(dat, ~int2))
+  expect_true(all(res$width_ == 2L))
+
+  # Date
+  res <- suppressMessages(compute_bin(dat, ~date))
+  expect_equal(res$width_, rep(100/30, length(res$width_)))
+
+  # POSIXct
+  res <- suppressMessages(compute_bin(dat, ~posixct))
+  expect_equal(res$width_, rep(1000/30, length(res$width_)))
+})
+
+
+test_that("Bin boundaries across groups", {
+  # Bins should be the same across groups
+  dat <- data.frame(x = c(0:2, 0:2+0.5), g=c('a','a','a', 'b','b','b'))
+  res <- dat %>% group_by(g) %>% compute_bin(~x, width = 1, pad = FALSE)
+  expect_identical(range(res$x_[res$g =='a']), range(res$x_[res$g =='b']))
+  expect_identical(dplyr::groups(res), list(quote(g)))
+  expect_identical(res$count_, rep(1L, 6))
 })
