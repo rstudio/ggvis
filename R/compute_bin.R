@@ -152,15 +152,17 @@ bin_params.numeric <- function(x_range, width = NULL, center = NULL,
   }
 
   if (is.null(width)) {
-    width <- diff(x_range) / 30
-    notify_guess(width, "range / 30")
+    # Find a nice-looking value for width
+    bounds <- pretty(x_range, 30)
+    width <- bounds[2] - bounds[1]
+    notify_guess(width, paste0("range / ", length(bounds)-1))
   }
 
   if (is.null(boundary)) {
     if (is.null(center)) {
       # If neither edge nor center given, compute both using tile layer's
       # algorithm. This puts min and max of data in outer half of their bins.
-      boundary <- tilelayer_origin(x_range, width)
+      boundary <- width / 2
 
     } else {
       # If center given but not boundary, compute boundary.
@@ -221,17 +223,6 @@ bin_params.Date <- function(x_range, width = NULL, center = NULL,
     as_numeric(boundary),
     closed
   )
-}
-
-# Compute origin from x_range and width
-tilelayer_origin <- function(x_range, width) {
-  stopifnot(is.numeric(x_range) && length(x_range) == 2)
-  stopifnot(is.numeric(width) && length(width) == 1)
-  num_central_bins <- trunc(diff(x_range) / width) - 1
-  # width of partial tiles on either side
-  side_width <- (diff(x_range) - num_central_bins * width) / 2
-  x_range[1] + side_width - width
-  # adjust_breaks should be called to handle any round-off fuzziness issues
 }
 
 # Find the left side of left-most bin
