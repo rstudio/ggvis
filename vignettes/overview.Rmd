@@ -37,7 +37,7 @@ Histogram:
 ```{r, echo = FALSE, fig.width = 4}
 # Histogram
 faithful %>% ggvis(~eruptions, fill := "#ffffdd", fill.hover := "#eebbbb") %>%
-  layer_histograms(binwidth = 0.2) %>%
+  layer_histograms(width = 0.2) %>%
   add_axis("x", title = "eruptions") %>%
   add_axis("y", title = "count")
 ```

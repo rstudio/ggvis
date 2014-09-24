@@ -25,16 +25,14 @@
 		{
 			"name" : "scale/stroke",
 			"format" : {
-				"type" : "csv",
-				"parse" : {}
+				"type" : "csv"
 			},
 			"values" : "\"domain\"\n\"1\"\n\"2\"\n\"3\""
 		},
 		{
 			"name" : "scale/x",
 			"format" : {
-				"type" : "csv",
-				"parse" : {}
+				"type" : "csv"
 			},
 			"values" : "\"domain\"\n\"a\"\n\"b\"\n\"c\"\n\"d\""
 		},
@@ -146,16 +144,13 @@
 			"title" : "y"
 		}
 	],
-	"padding" : null,
 	"ggvis_opts" : {
 		"width" : 600,
 		"height" : 400,
 		"keep_aspect" : false,
 		"resizable" : true,
-		"padding" : {},
 		"duration" : 250,
 		"renderer" : "svg",
 		"hover_duration" : 0
-	},
-	"handlers" : null
+	}
 }
