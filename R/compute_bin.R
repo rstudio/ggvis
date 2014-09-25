@@ -151,9 +151,7 @@ bin_params.numeric <- function(x_range, width = NULL, center = NULL,
   }
 
   if (is.null(width)) {
-    width <- diff(x_range) / 30
-    p <- pretty(width)
-    width <- p[which.min(abs(diff(x_range) / p - 30))]
+    width <- prettify(diff(x_range) / 30)
     num_bins <- round(diff(x_range) / width)
     notify_guess(width, paste0("approximately range / ", num_bins))
   }
