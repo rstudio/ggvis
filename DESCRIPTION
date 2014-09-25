@@ -24,6 +24,5 @@ Suggests:
     knitr (>= 1.6),
     rmarkdown
 VignetteBuilder: knitr
-Roxygen: list(wrap = FALSE)
 License: GPL-2
 LazyData: true
