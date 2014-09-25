@@ -152,7 +152,10 @@ bin_params.numeric <- function(x_range, width = NULL, center = NULL,
 
   if (is.null(width)) {
     width <- diff(x_range) / 30
-    notify_guess(width, "range / 30")
+    p <- pretty(width)
+    width <- p[which.min(abs(diff(x_range) / p - 30))]
+    num_bins <- round(diff(x_range) / width)
+    notify_guess(width, paste0("approximately range / ", num_bins))
   }
 
   if (is.null(boundary)) {
@@ -160,6 +163,7 @@ bin_params.numeric <- function(x_range, width = NULL, center = NULL,
       # If neither edge nor center given, compute both using tile layer's
       # algorithm. This puts min and max of data in outer half of their bins.
       boundary <- tilelayer_origin(x_range, width)
+      boundary <- prettify(boundary, width)
 
     } else {
       # If center given but not boundary, compute boundary.
