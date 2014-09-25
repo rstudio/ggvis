@@ -47,7 +47,7 @@ test_that("Closed left or right", {
   dat <- data.frame(x = c(0, 10))
 
   res <- comp_bin(dat, ~x, width = 10, pad = FALSE)
-  expect_identical(res$count_, c(1L, 1L))
+  expect_identical(res$count_, 2L)
   res <- comp_bin(dat, ~x, width = 10, boundary = 5, pad = FALSE)
   expect_identical(res$count_, c(1L, 1L))
   res <- comp_bin(dat, ~x, width = 10, boundary = 0, pad = FALSE)
@@ -56,7 +56,7 @@ test_that("Closed left or right", {
   expect_identical(res$count_, c(1L, 1L))
 
   res <- comp_bin(dat, ~x, width = 10, pad = FALSE, closed = "left")
-  expect_identical(res$count_, c(1L, 1L))
+  expect_identical(res$count_, c(2L))
   res <- comp_bin(dat, ~x, width = 10, boundary = 5, pad = FALSE, closed = "left")
   expect_identical(res$count_, c(1L, 1L))
   res <- comp_bin(dat, ~x, width = 10, boundary = 0, pad = FALSE, closed = "left")
@@ -128,9 +128,9 @@ test_that("Automatic width", {
   # numeric
   res <- suppressMessages(compute_bin(dat, ~num))
   # Need to use expect_equal to deal with FP error
-  expect_equal(res$width_, rep(25/30, length(res$width_)))
+  expect_equal(res$width_, rep(1, length(res$width_)))
   res <- suppressMessages(compute_bin(dat, ~num2))
-  expect_equal(res$width_, rep(50/30, length(res$width_)))
+  expect_equal(res$width_, rep(2, length(res$width_)))
 
   # integer
   res <- suppressMessages(compute_bin(dat, ~int))
@@ -140,11 +140,11 @@ test_that("Automatic width", {
 
   # Date
   res <- suppressMessages(compute_bin(dat, ~date))
-  expect_equal(res$width_, rep(100/30, length(res$width_)))
+  expect_equal(res$width_, rep(4, length(res$width_)))
 
   # POSIXct
   res <- suppressMessages(compute_bin(dat, ~posixct))
-  expect_equal(res$width_, rep(1000/30, length(res$width_)))
+  expect_equal(res$width_, rep(30, length(res$width_)))
 })
 
 
