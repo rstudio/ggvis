@@ -6,24 +6,21 @@
 bin_vector(x, weight = NULL, ...)
 }
 \arguments{
-\item{x}{a vector to bin}
+\item{x}{A vector to bin}
 
-\item{weight}{if specified, an integer vector of the same length as \code{x}
+\item{weight}{If specified, an integer vector of the same length as \code{x}
 representing the number of occurances of each value in \code{x}}
 
-\item{...}{additional arguments passed through to instances of the generic}
+\item{...}{additional arguments passed through to methods.}
 
-\item{width}{the width of a bin}
+\item{width}{The width of a bin}
 
-\item{center}{the center of a bin}
-
-\item{boundary}{the boundary of a bin.  \code{center} and \code{boundary} should
-not both be specified.}
+\item{origin}{The left-most value for bins.}
 
 \item{closed}{One of \code{"right"} or \code{"left"} indicating whether
 right or left edges of bins are included in the bin.}
 
-\item{pad}{a logical indicatign whether the bins should be padded to include
+\item{pad}{A logical indicating whether the bins should be padded to include
 an empty bin on each side.}
 }
 \description{

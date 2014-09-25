@@ -135,14 +135,6 @@ props <- function(..., .props = NULL, inherit = TRUE, env = parent.frame()) {
   )
 }
 
-#' @export
-#' @rdname props
-#' @param prop,value Name of property and the unscaled value that should
-#'   be mapped to it.
-`:=` <- function(prop, value) {
-  stop(":= may only be used inside props", call. = FALSE)
-}
-
 uses_colon_equals <- function(x) {
   is.call(x) && identical(x[[1]], quote(`:=`))
 }

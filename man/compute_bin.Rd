@@ -4,7 +4,7 @@
 \title{Bin data along a continuous variable}
 \usage{
 compute_bin(x, x_var, w_var = NULL, width = NULL, center = NULL,
-  boundary = NULL, closed = c("right", "left"), pad = TRUE)
+  boundary = NULL, closed = c("right", "left"), pad = TRUE, binwidth)
 }
 \arguments{
 \item{x}{Dataset-like object to bin. Built-in methods for data frames,
@@ -13,30 +13,30 @@ grouped data frames and ggvis visualisations.}
 \item{x_var,w_var}{Names of x and weight variables. The x variable must be
 continuous.}
 
-\item{width}{The width of the bins. The default is \code{NULL}, which
-yields 30 bins that cover the range of the data. You should always override
-this value, exploring multiple widths to find the best to illustrate the
-stories in your data.}
+\item{width}{The width of the bins. The default is \code{NULL}, which yields
+30 bins that cover the range of the data. You should always override this
+value, exploring multiple widths to find the best to illustrate the stories
+in your data.}
 
-\item{center}{The center of one of the bins.  Note that if center is above or below
-the range of the data, things will be shifted by an appropriate number of \code{width}s.
-To center on integers,
-for example, use \code{width = 1} and \code{center = 0}, even if \code{0} is
-outside the range of the data.  At most one of \code{center} and \code{boundary} may be
+\item{center}{The center of one of the bins.  Note that if center is above or
+below the range of the data, things will be shifted by an appropriate
+number of \code{width}s. To center on integers, for example, use
+\code{width=1} and \code{center=0}, even if \code{0} is outside the range
+of the data.  At most one of \code{center} and \code{boundary} may be
 specified.}
 
-\item{boundary}{A boundary between two bins. As with \code{center}, things are shifted
-when \code{boundary} is outside the range of the data. For example, to center on
-integers, use \code{width = 1} and \code{boundary = 0.5}, even if \code{1} is outside
-the range of the data.  At most one of \code{center} and \code{boundary} may be
-specified.}
+\item{boundary}{A boundary between two bins. As with \code{center}, things
+are shifted when \code{boundary} is outside the range of the data. For
+example, to center on integers, use \code{width = 1} and \code{boundary =
+0.5}, even if \code{1} is outside the range of the data.  At most one of
+\code{center} and \code{boundary} may be specified.}
 
-\item{closed}{One of \code{"right"} or \code{"left"} indicating whether
-right or left edges of bins are included in the bin.}
+\item{closed}{One of \code{"right"} or \code{"left"} indicating whether right
+or left edges of bins are included in the bin.}
 
-\item{pad}{If \code{TRUE}, adds empty bins at either end of x. This
-ensures frequency polygons touch 0, and adds padding between the data
-and axis for histograms.}
+\item{pad}{If \code{TRUE}, adds empty bins at either end of x. This ensures
+frequency polygons touch 0, and adds padding between the data and axis for
+histograms.}
 }
 \value{
 A data frame with columns:

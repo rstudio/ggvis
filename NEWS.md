@@ -34,6 +34,8 @@
 
 * Using "." in column names now works. (#246)
 
+* Un-exported `:=`, to avoid possible conflict with data.table.
+
 # ggvis 0.3.0.1
 
 * Reconcile shiny dependency at run-time, not build time.

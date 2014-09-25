@@ -1,6 +1,22 @@
 context("props")
 require(shiny)
 
+# Recursively crawl a list and replace any environments with a special
+# environment. This is a workaround for a change in behavior in R 3.2.0
+# for all.equal when given two environments.
+blank_envs <- function(x) {
+  replacement_env <- new.env(parent = emptyenv())
+
+  # Use `x[]<-` to preserve any attributes on x
+  x[] <- lapply(x, function(val) {
+    if (is.environment(val)) replacement_env
+    else if (is.list(val)) blank_envs(val)
+    else val
+  })
+
+  x
+}
+
 test_prop <- function(p, property, value, scale, event = "update") {
   expect_identical(p$property, property)
   expect_identical(p$value, value)
@@ -225,14 +241,16 @@ test_that("merging props", {
   # Utility function: sort props by name
   sortp <- function(p) p[sort(names(p))]
 
-  p_i  <- props(x=~a, z:="red")
-  q_i  <- props(y=~b, z:="blue")
-  q_ni <- props(y=~b, z:="blue", inherit=FALSE)
+  p_i  <- blank_envs(props(x=~a, z:="red"))
+  q_i  <- blank_envs(props(y=~b, z:="blue"))
+  q_ni <- blank_envs(props(y=~b, z:="blue", inherit=FALSE))
 
-  expect_equal(sortp(merge_props(p_i, q_i)), props(x=~a, y=~b, z:="blue"))
+  expect_equal(sortp(merge_props(p_i, q_i)), blank_envs(props(x=~a, y=~b, z:="blue")))
   expect_equal(sortp(merge_props(p_i, q_ni)), q_ni)
-  expect_equal(sortp(merge_props(q_ni, p_i)),
-    props(x=~a, y=~b, z:="red", inherit = FALSE))
+  expect_equal(
+    sortp(merge_props(q_ni, p_i)),
+    blank_envs(props(x=~a, y=~b, z:="red", inherit = FALSE))
+  )
 })
 
 test_that("prop_event_sets splits up props properly", {

@@ -16,7 +16,7 @@ An interactive plot:
 ```{r, message = FALSE, fig.width = 6, fig.height = 4}
 cocaine %>%
   ggvis(x = ~potency) %>%
-  layer_histograms(binwidth = input_slider(1, 20, value = 5))  
+  layer_histograms(width = input_slider(1, 20, value = 5))
 ```
 
 
