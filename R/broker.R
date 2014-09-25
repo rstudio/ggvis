@@ -36,6 +36,10 @@ create_broker <- function(r, controls = NULL, connect = NULL, spec = NULL) {
     spec = spec
   ))
 
+  if (is.null(reactive_id(r))) {
+    reactive_id(r) <- rand_id("reactive_")
+  }
+
   r
 }
 

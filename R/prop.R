@@ -124,7 +124,11 @@ new_prop.default <- function(x, property, scale, offset, mult, env, event,
 #' @export
 new_prop.reactive <- function(x, property, scale, offset, mult, env, event,
                               label) {
-  reactive_id(x) <- rand_id("reactive_")
+
+  if (is.null(reactive_id(x))) {
+    reactive_id(x) <- rand_id("reactive_")
+  }
+
   structure(
     list(
       property = property,
