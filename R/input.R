@@ -36,7 +36,11 @@ create_input <- function(id = rand_id("input_"), default = NULL,
   connect <- function(session, plot_id) {
     shiny::observe({
       value <- session$input[[id]]
-      if (!is.null(value)) {
+      if (is.null(value)) {
+        # Need to explicitly set it to default when input is NULL, because some
+        # inputs give NULL when they're cleared. (#272)
+        vals$x <- default
+      } else {
         vals$x <- value
       }
     })
