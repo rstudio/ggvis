@@ -14,7 +14,7 @@ Imports:
     jsonlite (>= 0.9.11),
     shiny (>= 0.10),
     magrittr,
-    dplyr (>= 0.2.0.9001),
+    dplyr (>= 0.3),
     htmltools (>= 0.2.4)
 Suggests:
     MASS,
