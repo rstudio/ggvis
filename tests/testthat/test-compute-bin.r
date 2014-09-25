@@ -148,11 +148,11 @@ test_that("Automatic width", {
 })
 
 
-test_that("Bin boundaries across groups", {
-  # Bins should be the same across groups
-  dat <- data.frame(x = c(0:2, 0:2+0.1), g=c('a','a','a', 'b','b','b'))
+test_that("Boundaries across groups should be aligned", {
+  dat <- data.frame(x = c(0:2, 0:2+0.7), g=c('a','a','a', 'b','b','b'))
+
   res <- dat %>% group_by(g) %>% compute_bin(~x, width = 1, pad = FALSE)
-  expect_identical(range(res$x_[res$g =='a']), range(res$x_[res$g =='b']))
+  expect_true(length(unique(res$x_ %% 1)) == 1)
   expect_identical(dplyr::groups(res), list(quote(g)))
   expect_identical(res$count_, rep(1L, 6))
 })
