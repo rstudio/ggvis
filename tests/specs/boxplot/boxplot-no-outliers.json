@@ -27,14 +27,26 @@
 			]
 		},
 		{
-			"name" : "dat0/regroup1/boxplot2/boxplot_outliers3",
+			"name" : "dat0/regroup1/boxplot2/boxplot_outliers3_flat",
 			"format" : {
 				"type" : "csv",
 				"parse" : {
 					"value_" : "number"
 				}
 			},
-			"values" : "\"value_\",\"x\"\n,\"\""
+			"values" : "\"x\",\"value_\"\n"
+		},
+		{
+			"name" : "dat0/regroup1/boxplot2/boxplot_outliers3",
+			"source" : "dat0/regroup1/boxplot2/boxplot_outliers3_flat",
+			"transform" : [
+				{
+					"type" : "treefacet",
+					"keys" : [
+						"data.x"
+					]
+				}
+			]
 		},
 		{
 			"name" : "scale/x",

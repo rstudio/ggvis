@@ -66,7 +66,6 @@ constant_vars.grouped_df <- function(data) {
   n <- length(dplyr::group_size(data))
 
   # Get a list of boolean vectors
-  # FIXME: When dplyr #397 is fixed, this can be simplified.
   vecs <- dplyr::do(data, constant_var__ = constant_vars(.))
   vecs <- vecs[["constant_var__"]]
 
