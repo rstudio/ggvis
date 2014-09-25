@@ -170,7 +170,8 @@ apply_axes_defaults <- function(vis) {
     scale <- scales[[axis$scale]]
 
     # If we don't have a title, try to get it from the scale.
-    if (is.null(axis$title)) {
+    # Use [[-indexing to avoid partial name matching of "titleOffset". (#269)
+    if (is.null(axis[["title"]])) {
       axis$title <- scale$label
     }
 

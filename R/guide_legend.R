@@ -182,7 +182,8 @@ apply_legends_defaults <- function(vis) {
     present <- unlist(legend[legs])
     present_scales <- scales[present]
 
-    if (is.null(legend$title)) {
+    # Use [[-indexing to avoid partial name matching of "titleOffset". (#269)
+    if (is.null(legend[["title"]])) {
       legend$title <- present_scales[[1]]$label
     }
 
