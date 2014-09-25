@@ -42,7 +42,9 @@ active_props <- function(data, props) {
   reactive_prop <- function(props, parent_data) {
     force(props)
     force(parent_data)
-    reactive(apply_props(parent_data(), props))
+    reactive({
+      apply_props(parent_data(), props)
+    })
   }
 
   data_out <- list()
