@@ -3,12 +3,15 @@
 \alias{layer_boxplots}
 \title{Display data with a boxplot.}
 \usage{
-layer_boxplots(vis, ..., width = NULL)
+layer_boxplots(vis, ..., coef = 1.5, width = NULL)
 }
 \arguments{
 \item{vis}{Visualisation to modify}
 
 \item{...}{Visual properties used to override defaults.}
+
+\item{coef}{The maximum length of the whiskers as multiple of the
+inter-quartile range. Default value is 1.5.}
 
 \item{width}{Width of each bar. When x is continuous, this controls the width
 in the same units as x. When x is categorical, this controls the width as a

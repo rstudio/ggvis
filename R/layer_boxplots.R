@@ -44,7 +44,7 @@
 #' # Smaller outlier points
 #' mtc %>% ggvis(~cyl, ~mpg) %>% layer_boxplots(size := 20)
 #' @export
-layer_boxplots <- function(vis, ..., width = NULL) {
+layer_boxplots <- function(vis, ..., coef = 1.5, width = NULL) {
 
   new_props <- merge_props(cur_props(vis), props(...))
 
@@ -100,7 +100,7 @@ layer_boxplots <- function(vis, ..., width = NULL) {
     # Group by x variable
     # FIXME: The do_call is a workaround for issue #177
     v <- do_call(group_by, quote(v), .args = list(x_var[[2]]))
-    v <- compute_boxplot(v, y_var)
+    v <- compute_boxplot(v, y_var, coef = coef)
     if (!discrete_x) {
       v <- compute_align(v, x_var, length = width)
     }
