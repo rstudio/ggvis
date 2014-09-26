@@ -77,6 +77,16 @@ compute_model_prediction.data.frame <- function(x, formula, ..., model = NULL,
   model <- model %||% guess_model(x)
   assert_that(is.string(model))
 
+  if (nrow(x) == 0) {
+    res <- data.frame(resp_ = numeric(0), pred_ = numeric(0))
+    if (se) {
+      res$pred_lwr_ <- numeric(0)
+      res$pred_upr_ <- numeric(0)
+      res$pred_se_ <- numeric(0)
+    }
+    return(res)
+  }
+
   restore <- identity
 
   if (is.character(model)) {

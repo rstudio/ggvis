@@ -156,3 +156,21 @@ test_that("Boundaries across groups should be aligned", {
   expect_identical(dplyr::groups(res), list(quote(g)))
   expect_identical(res$count_, rep(1L, 6))
 })
+
+
+test_that("Zero-row inputs", {
+  res <- mtcars[0,] %>% compute_bin(~mpg)
+  expect_equal(nrow(res), 0)
+  expect_true(setequal(
+    names(res),
+    c("count_", "x_", "xmin_", "xmax_", "width_")
+  ))
+
+  # Grouped
+  res <- mtcars[0,] %>% group_by(cyl) %>% compute_bin(~mpg)
+  expect_equal(nrow(res), 0)
+  expect_true(setequal(
+    names(res),
+    c("cyl", "count_", "x_", "xmin_", "xmax_", "width_")
+  ))
+})

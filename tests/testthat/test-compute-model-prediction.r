@@ -66,3 +66,34 @@ test_that("Can control domain", {
           setNames( c("x", "y"))
   expect_equal(res, data.frame(x = 11:20, y = 5 * (11:20)))
 })
+
+
+test_that("Zero-row inputs", {
+  res <- mtcars[0,] %>% compute_model_prediction(wt ~ mpg, model = "lm")
+  expect_equal(nrow(res), 0)
+  expect_true(setequal(names(res), c("pred_", "resp_")))
+
+  res <- mtcars[0,] %>% compute_model_prediction(wt ~ mpg, model = "lm", se = TRUE)
+  expect_equal(nrow(res), 0)
+  expect_true(setequal(
+    names(res),
+    c("pred_", "resp_", "pred_lwr_", "pred_upr_", "pred_se_" )
+  ))
+
+  # Smooth
+  res <- mtcars[0,] %>% compute_smooth(wt ~ mpg)
+  expect_equal(nrow(res), 0)
+  expect_true(setequal(names(res), c("pred_", "resp_")))
+
+  # Grouped
+  res <- mtcars[0,] %>% group_by(cyl) %>%
+    compute_model_prediction(wt ~ mpg, model = "lm", se = FALSE)
+  expect_true(setequal(names(res), c("cyl", "pred_", "resp_")))
+
+  res <- mtcars[0,] %>% group_by(cyl) %>%
+    compute_model_prediction(wt ~ mpg, model = "lm", se = TRUE)
+  expect_true(setequal(
+    names(res),
+    c("cyl", "pred_", "resp_", "pred_lwr_", "pred_upr_", "pred_se_" )
+  ))
+})

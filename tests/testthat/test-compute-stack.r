@@ -25,12 +25,19 @@ test_that("compute_stack works as expected", {
 })
 
 
-test_that("compute_stack works on zero-row data", {
-  dat <- data.frame(a = numeric(0), b = character(0))
-  stacked <- compute_stack(dat, ~a, ~b)
-  expect_equal(nrow(stacked), 0)
-  expect_identical(
-    names(stacked),
-    c("a", "b", "group__", "stack_upr_", "stack_lwr_")
+test_that("Zero-row inputs", {
+  res <- mtcars[0,] %>% compute_stack(~wt, ~cyl)
+  expect_equal(nrow(res), 0)
+  expect_true(setequal(
+    names(res),
+    c(names(mtcars), "group__", "stack_upr_", "stack_lwr_"))
+  )
+
+  # Grouped
+  res <- mtcars %>% group_by(cyl) %>% filter(FALSE) %>% compute_stack(~wt, ~cyl)
+  expect_equal(nrow(res), 0)
+  expect_true(setequal(
+    names(res),
+    c(names(mtcars), "group__", "stack_upr_", "stack_lwr_"))
   )
 })

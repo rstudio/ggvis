@@ -66,6 +66,9 @@ compute_bin.data.frame <- function(x, x_var, w_var = NULL, width = NULL,
 
   x_val <- eval_vector(x, x_var)
 
+  # Special case zero-row input
+  if (length(x_val) == 0) return(bin_out())
+
   params <- bin_params(range2(x_val), width = width, center = center,
                        boundary = boundary, closed = closed)
 
@@ -146,6 +149,11 @@ bin_params <- function(x_range, width = NULL, center = NULL, boundary = NULL,
 bin_params.default <- function(x_range, width = NULL, center = NULL,
                                boundary = NULL, closed = c("right", "left")) {
   closed <- match.arg(closed)
+
+  if (length(x_range) == 0) {
+    return(list(width = width, origin = NULL, closed = closed))
+  }
+
   stopifnot(length(x_range) == 2)
   if (!is.null(boundary) && !is.null(center)) {
     stop("Only one of 'boundary' and 'center' may be specified.")
@@ -183,6 +191,9 @@ bin_params.default <- function(x_range, width = NULL, center = NULL,
 #' @export
 bin_params.POSIXct <- function(x_range, width = NULL, center = NULL,
                                boundary = NULL, closed = c("right", "left")) {
+  if (length(x_range) == 0) {
+    return(list(width = width, origin = NULL, closed = closed))
+  }
 
   if (is.null(width)) {
     bounds <- pretty(x_range, 30)
@@ -204,6 +215,7 @@ bin_params.POSIXct <- function(x_range, width = NULL, center = NULL,
     closed
   )
 }
+
 # Find the left side of left-most bin
 find_origin <- function(x_range, width, boundary) {
   shift <- floor((x_range[1] - boundary) / width)

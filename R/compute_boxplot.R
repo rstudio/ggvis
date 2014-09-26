@@ -31,6 +31,16 @@ compute_boxplot.grouped_df <- function(x, var = NULL, coef = 1.5) {
 compute_boxplot.data.frame <- function(x, var = NULL, coef = 1.5) {
   vals <- eval_vector(x, var)
 
+  # Special case zero-row input
+  if (length(vals) == 0) {
+    n0 <- numeric(0)
+    res <- data.frame(
+      min_ = n0, lower_ = n0, median_ = n0, upper_ = n0, max_ = n0
+    )
+    res$outliers_ <- list()
+    return(res)
+  }
+
   qs <- c(0, 0.25, 0.5, 0.75, 1)
 
   stats <- as.numeric(quantile(vals, qs))
