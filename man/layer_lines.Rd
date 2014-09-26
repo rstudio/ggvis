@@ -17,11 +17,10 @@ to right, whereas \code{layer_paths} will draw a line in whatever order
 appears in the data.
 }
 \examples{
-mtcars2 <- dplyr::mutate(mtcars, cyl = factor(cyl))
-mtcars2 \%>\% ggvis(~wt, ~mpg, stroke = ~cyl) \%>\% layer_lines()
+mtcars \%>\% ggvis(~wt, ~mpg, stroke = ~factor(cyl)) \%>\% layer_lines()
 
 # Equivalent to
-mtcars2 \%>\% ggvis(~wt, ~mpg, stroke = ~cyl) \%>\%
+mtcars \%>\% ggvis(~wt, ~mpg, stroke = ~factor(cyl)) \%>\%
   group_by(cyl) \%>\% dplyr::arrange(wt) \%>\% layer_paths()
 }
 \seealso{

@@ -1,7 +1,7 @@
 {
 	"data" : [
 		{
-			"name" : "mtc0/group_by1/boxplot2_flat",
+			"name" : "mtcars0/group_by1/boxplot2_flat",
 			"format" : {
 				"type" : "csv",
 				"parse" : {
@@ -12,38 +12,38 @@
 					"median_" : "number"
 				}
 			},
-			"values" : "\"min_\",\"max_\",\"cyl\",\"lower_\",\"upper_\",\"median_\"\n21.4,33.9,\"4\",22.8,30.4,26\n17.8,21.4,\"6\",18.65,21,19.7\n13.3,18.7,\"8\",14.4,16.25,15.2"
+			"values" : "\"min_\",\"max_\",\"factor(cyl)\",\"lower_\",\"upper_\",\"median_\"\n21.4,33.9,\"4\",22.8,30.4,26\n17.8,21.4,\"6\",18.65,21,19.7\n13.3,18.7,\"8\",14.4,16.25,15.2"
 		},
 		{
-			"name" : "mtc0/group_by1/boxplot2",
-			"source" : "mtc0/group_by1/boxplot2_flat",
+			"name" : "mtcars0/group_by1/boxplot2",
+			"source" : "mtcars0/group_by1/boxplot2_flat",
 			"transform" : [
 				{
 					"type" : "treefacet",
 					"keys" : [
-						"data.cyl"
+						"data.factor(cyl)"
 					]
 				}
 			]
 		},
 		{
-			"name" : "mtc0/group_by1/boxplot2/boxplot_outliers3_flat",
+			"name" : "mtcars0/group_by1/boxplot2/boxplot_outliers3_flat",
 			"format" : {
 				"type" : "csv",
 				"parse" : {
 					"value_" : "number"
 				}
 			},
-			"values" : "\"value_\",\"cyl\"\n10.4,\"8\"\n10.4,\"8\"\n19.2,\"8\""
+			"values" : "\"value_\",\"factor(cyl)\"\n10.4,\"8\"\n10.4,\"8\"\n19.2,\"8\""
 		},
 		{
-			"name" : "mtc0/group_by1/boxplot2/boxplot_outliers3",
-			"source" : "mtc0/group_by1/boxplot2/boxplot_outliers3_flat",
+			"name" : "mtcars0/group_by1/boxplot2/boxplot_outliers3",
+			"source" : "mtcars0/group_by1/boxplot2/boxplot_outliers3_flat",
 			"transform" : [
 				{
 					"type" : "treefacet",
 					"keys" : [
-						"data.cyl"
+						"data.factor(cyl)"
 					]
 				}
 			]
@@ -116,7 +116,7 @@
 		{
 			"type" : "group",
 			"from" : {
-				"data" : "mtc0/group_by1/boxplot2"
+				"data" : "mtcars0/group_by1/boxplot2"
 			},
 			"marks" : [
 				{
@@ -139,7 +139,7 @@
 							},
 							"x" : {
 								"scale" : "xcenter",
-								"field" : "data.cyl"
+								"field" : "data.factor(cyl)"
 							},
 							"width" : {
 								"value" : 0.5
@@ -147,7 +147,7 @@
 						},
 						"ggvis" : {
 							"data" : {
-								"value" : "mtc0/group_by1/boxplot2"
+								"value" : "mtcars0/group_by1/boxplot2"
 							}
 						}
 					}
@@ -157,7 +157,7 @@
 		{
 			"type" : "group",
 			"from" : {
-				"data" : "mtc0/group_by1/boxplot2"
+				"data" : "mtcars0/group_by1/boxplot2"
 			},
 			"marks" : [
 				{
@@ -172,7 +172,7 @@
 							},
 							"x" : {
 								"scale" : "x",
-								"field" : "data.cyl"
+								"field" : "data.factor(cyl)"
 							},
 							"y" : {
 								"scale" : "y",
@@ -189,7 +189,7 @@
 						},
 						"ggvis" : {
 							"data" : {
-								"value" : "mtc0/group_by1/boxplot2"
+								"value" : "mtcars0/group_by1/boxplot2"
 							}
 						}
 					}
@@ -199,7 +199,7 @@
 		{
 			"type" : "group",
 			"from" : {
-				"data" : "mtc0/group_by1/boxplot2"
+				"data" : "mtcars0/group_by1/boxplot2"
 			},
 			"marks" : [
 				{
@@ -214,7 +214,7 @@
 							},
 							"x" : {
 								"scale" : "x",
-								"field" : "data.cyl"
+								"field" : "data.factor(cyl)"
 							},
 							"y" : {
 								"scale" : "y",
@@ -230,7 +230,7 @@
 						},
 						"ggvis" : {
 							"data" : {
-								"value" : "mtc0/group_by1/boxplot2"
+								"value" : "mtcars0/group_by1/boxplot2"
 							}
 						}
 					}
@@ -240,7 +240,7 @@
 		{
 			"type" : "group",
 			"from" : {
-				"data" : "mtc0/group_by1/boxplot2/boxplot_outliers3"
+				"data" : "mtcars0/group_by1/boxplot2/boxplot_outliers3"
 			},
 			"marks" : [
 				{
@@ -259,12 +259,12 @@
 							},
 							"x" : {
 								"scale" : "xcenter",
-								"field" : "data.cyl"
+								"field" : "data.factor(cyl)"
 							}
 						},
 						"ggvis" : {
 							"data" : {
-								"value" : "mtc0/group_by1/boxplot2/boxplot_outliers3"
+								"value" : "mtcars0/group_by1/boxplot2/boxplot_outliers3"
 							}
 						}
 					}
@@ -282,7 +282,7 @@
 			"orient" : "bottom",
 			"layer" : "back",
 			"grid" : true,
-			"title" : "cyl"
+			"title" : "factor(cyl)"
 		},
 		{
 			"type" : "y",

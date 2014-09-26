@@ -27,13 +27,9 @@
 #' @examples
 #' library(dplyr)
 #'
-#' # Make data set with categorical x
-#' mtc <- mtcars
-#' mtc$cyl <- factor(mtc$cyl)
-#'
-#' mtc %>% ggvis(~cyl, ~mpg) %>% layer_boxplots()
+#' mtcars %>% ggvis(~factor(cyl), ~mpg) %>% layer_boxplots()
 #' # Set the width of the boxes to half the space between tick marks
-#' mtc %>% ggvis(~cyl, ~mpg) %>% layer_boxplots(width = 0.5)
+#' mtcars %>% ggvis(~factor(cyl), ~mpg) %>% layer_boxplots(width = 0.5)
 #'
 #' # Continuous x: boxes fill width between data values
 #' mtcars %>% ggvis(~cyl, ~mpg) %>% layer_boxplots()
@@ -42,7 +38,7 @@
 #' mtcars %>% ggvis(~cyl, ~mpg) %>% layer_boxplots(width = 0.5)
 #'
 #' # Smaller outlier points
-#' mtc %>% ggvis(~cyl, ~mpg) %>% layer_boxplots(size := 20)
+#' mtcars %>% ggvis(~factor(cyl), ~mpg) %>% layer_boxplots(size := 20)
 #' @export
 layer_boxplots <- function(vis, ..., coef = 1.5, width = NULL) {
 

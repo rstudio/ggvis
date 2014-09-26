@@ -5,10 +5,8 @@ mtcars %>%
   layer_boxplots() %>%
   save_spec("boxplot/boxplot-continuous.json")
 
-mtc <- mtcars
-mtc$cyl <- factor(mtc$cyl)
-mtc %>%
-  ggvis(~cyl, ~mpg) %>%
+mtcars %>%
+  ggvis(~factor(cyl), ~mpg) %>%
   layer_boxplots() %>%
   save_spec("boxplot/boxplot-categorical.json")
 
