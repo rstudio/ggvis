@@ -31,10 +31,15 @@
 			"format" : {
 				"type" : "csv",
 				"parse" : {
+					"min_" : "number",
+					"lower_" : "number",
+					"median_" : "number",
+					"upper_" : "number",
+					"max_" : "number",
 					"value_" : "number"
 				}
 			},
-			"values" : "\"x\",\"value_\"\n"
+			"values" : "\"x\",\"min_\",\"lower_\",\"median_\",\"upper_\",\"max_\",\"value_\"\n"
 		},
 		{
 			"name" : "dat0/group_by1/boxplot2/boxplot_outliers3",

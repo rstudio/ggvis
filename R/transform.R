@@ -40,11 +40,7 @@ preserve_constants.grouped_df <- function(input, output) {
   # vars. This is so that can later do a join without duplicate columns.
   keep_vars <- setdiff(names(constants), setdiff(names(output), group_vars))
 
-  # FIXME: The following do.call is necessary because of dplyr issue #398.
-  # It would be less clunky to do this, but it loses grouping:
-  # constants <- constants[, keep_vars, drop = FALSE]
-  constants <- do_call(dplyr::select, quote(constants),
-    .args = dplyr::groups(constants))
+  constants <- constants[, keep_vars, drop = FALSE]
 
   dplyr::inner_join(constants, output, by = group_vars)
 }
