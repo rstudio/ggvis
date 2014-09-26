@@ -98,8 +98,7 @@ layer_boxplots <- function(vis, ..., coef = 1.5, width = NULL) {
     v <- add_props(v, .props = new_box_props)
 
     # Group by x variable
-    # FIXME: The do_call is a workaround for issue #177
-    v <- do_call(group_by, quote(v), .args = list(x_var[[2]]))
+    v <- dplyr::group_by_(v, x_var)
     v <- compute_boxplot(v, y_var, coef = coef)
     if (!discrete_x) {
       v <- compute_align(v, x_var, length = width)
