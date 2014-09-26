@@ -17,16 +17,18 @@ Use \code{auto_group} to group up a dataset on all categorical variables
 specified by props, and have each piece rendered by the same mark.
 }
 \examples{
-# Make cyl a factor (as it really should be)
+# One line
+mtcars \%>\% ggvis(~disp, ~mpg, stroke = ~factor(cyl)) \%>\% layer_paths()
+# One line for each level of cyl
+mtcars2 \%>\% ggvis(~disp, ~mpg, stroke = ~factor(cyl)) \%>\% group_by(cyl) \%>\%
+  layer_paths()
+mtcars2 \%>\% ggvis(~disp, ~mpg, stroke = ~factor(cyl)) \%>\% auto_group() \%>\%
+  layer_paths()
+
+# The grouping column can already be stored as a factor
 mtcars2 <- mtcars
 mtcars2$cyl <- factor(mtcars2$cyl)
-
-# One line
-mtcars2 \%>\% ggvis(~disp,  ~mpg, stroke = ~cyl) \%>\% layer_paths()
-# One line for each level of cyl
-mtcars2 \%>\% ggvis(~disp,  ~mpg, stroke = ~cyl) \%>\% group_by(cyl) \%>\%
-  layer_paths()
-mtcars2 \%>\% ggvis(~disp,  ~mpg, stroke = ~cyl) \%>\% auto_group() \%>\%
+mtcars2 \%>\% ggvis(~disp, ~mpg, stroke = ~cyl) \%>\% auto_group() \%>\%
   layer_paths()
 }
 \seealso{
