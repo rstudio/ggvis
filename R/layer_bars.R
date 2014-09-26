@@ -71,9 +71,8 @@
 #' ToothGrowth %>% group_by(dose) %>%
 #'   ggvis(x = ~supp, y = ~len, fill = ~dose) %>% layer_bars()
 #' # If grouping var is categorical, grouping is done automatically
-#' # FIXME: Currently broken; see #177
-#' # cocaine %>% ggvis(x = ~state, fill = ~as.factor(month)) %>%
-#' #   layer_bars()
+#' cocaine %>% ggvis(x = ~state, fill = ~as.factor(month)) %>%
+#'   layer_bars()
 layer_bars <- function(vis, ..., stack = TRUE, width = NULL) {
   new_props <- merge_props(cur_props(vis), props(...))
 
