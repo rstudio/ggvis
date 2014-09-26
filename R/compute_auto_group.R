@@ -13,9 +13,9 @@
 #' # One line
 #' mtcars %>% ggvis(~disp, ~mpg, stroke = ~factor(cyl)) %>% layer_paths()
 #' # One line for each level of cyl
-#' mtcars2 %>% ggvis(~disp, ~mpg, stroke = ~factor(cyl)) %>% group_by(cyl) %>%
+#' mtcars %>% ggvis(~disp, ~mpg, stroke = ~factor(cyl)) %>% group_by(cyl) %>%
 #'   layer_paths()
-#' mtcars2 %>% ggvis(~disp, ~mpg, stroke = ~factor(cyl)) %>% auto_group() %>%
+#' mtcars %>% ggvis(~disp, ~mpg, stroke = ~factor(cyl)) %>% auto_group() %>%
 #'   layer_paths()
 #'
 #' # The grouping column can already be stored as a factor
