@@ -15,6 +15,7 @@ Imports:
     shiny (>= 0.10),
     magrittr,
     dplyr (>= 0.3),
+    lazyeval,
     htmltools (>= 0.2.4)
 Suggests:
     MASS,

@@ -49,7 +49,7 @@ compute_stack.grouped_df <- function(x, stack_var = NULL, group_var = NULL) {
 
   x <- dplyr::ungroup(x)
   x <- compute_stack(x, stack_var, group_var)
-  x <- dplyr::regroup(x, old_groups)
+  x <- dplyr::group_by_(x, .dots = old_groups)
 
   x
 }
@@ -62,7 +62,7 @@ compute_stack.data.frame <- function(x, stack_var = NULL, group_var = NULL) {
   gvar <- substitute(round_fp(x), list(x = group_var[[2]]))
   x <- do_call(dplyr::mutate, quote(x), group__ = gvar)
 
-  x <- dplyr::regroup(x, list(quote(group__)))
+  x <- dplyr::group_by(x, group__)
 
   # FIXME: mutate evaluates in this function's environment, which isn't right.
   # This is like mutate(x, stack_upr_ = cumsum(stack_var),
