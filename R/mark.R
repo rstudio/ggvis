@@ -19,7 +19,6 @@ mark <- function(type, props, data) {
   check_mark_props(type, names(props))
   props <- merge_props(default_props(type), props, inherit = TRUE)
 
-  # FIXME: check that mark has all the props needed to draw something
   # FIXME: check that the variables in the prop can be found in data
   structure(list(type = type, data = data, props = props), class = "mark")
 }
