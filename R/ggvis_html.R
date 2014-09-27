@@ -36,7 +36,7 @@ ggvis_dependencies <- function() {
     ),
     htmltools::htmlDependency(
       name = "vega",
-      version = "1.4.1",
+      version = "1.4.2",
       src = ggvis_path("lib/vega"),
       script = adjust_min("vega.min.js")
     ),
