@@ -1,120 +1,125 @@
 {
-	"data" : [
-		{
-			"name" : "df0",
-			"format" : {
-				"type" : "csv",
-				"parse" : {
-					"x" : "number",
-					"y" : "number"
-				}
-			},
-			"values" : "\"x\",\"y\"\n0.82535388879478,0.175504838116467\n0.483322170330212,0.92520075570792\n0.0220783790573478,0.605496409814805\n0.39672307879664,0.879450253676623\n0.838725288398564,0.36204455466941\n0.592421213164926,0.239515871042386\n0.706804817542434,0.00647905003279448\n0.0126281732227653,0.154914033133537\n0.150009069126099,0.574154397239909\n0.0603655390441418,0.732962509151548\n0.192939087515697,0.489878148771822\n0.575029835337773,0.870066102826968"
-		},
-		{
-			"name" : "scale/x",
-			"format" : {
-				"type" : "csv",
-				"parse" : {
-					"domain" : "number"
-				}
-			},
-			"values" : "\"domain\"\n-0.0286766825360246\n0.880030144157354"
-		},
-		{
-			"name" : "scale/y",
-			"format" : {
-				"type" : "csv",
-				"parse" : {
-					"domain" : "number"
-				}
-			},
-			"values" : "\"domain\"\n-0.0394570352509618\n0.971136840991676"
-		}
-	],
-	"scales" : [
-		{
-			"name" : "x",
-			"domain" : {
-				"data" : "scale/x",
-				"field" : "data.domain"
-			},
-			"zero" : false,
-			"nice" : false,
-			"clamp" : false,
-			"range" : "width"
-		},
-		{
-			"name" : "y",
-			"domain" : {
-				"data" : "scale/y",
-				"field" : "data.domain"
-			},
-			"zero" : false,
-			"nice" : false,
-			"clamp" : false,
-			"range" : "height"
-		}
-	],
-	"marks" : [
-		{
-			"type" : "line",
-			"properties" : {
-				"update" : {
-					"stroke" : {
-						"value" : "#000000"
-					},
-					"x" : {
-						"scale" : "x",
-						"field" : "data.x"
-					},
-					"y" : {
-						"scale" : "y",
-						"field" : "data.y"
-					}
-				},
-				"ggvis" : {
-					"data" : {
-						"value" : "df0"
-					}
-				}
-			},
-			"from" : {
-				"data" : "df0"
-			}
-		}
-	],
-	"width" : 600,
-	"height" : 400,
-	"legends" : [],
-	"axes" : [
-		{
-			"type" : "x",
-			"scale" : "x",
-			"orient" : "bottom",
-			"layer" : "back",
-			"grid" : true,
-			"title" : "x"
-		},
-		{
-			"type" : "y",
-			"scale" : "y",
-			"orient" : "left",
-			"layer" : "back",
-			"grid" : true,
-			"title" : "y"
-		}
-	],
-	"padding" : null,
-	"ggvis_opts" : {
-		"width" : 600,
-		"height" : 400,
-		"keep_aspect" : false,
-		"resizable" : true,
-		"padding" : {},
-		"duration" : 250,
-		"renderer" : "svg",
-		"hover_duration" : 0
-	},
-	"handlers" : null
+    "data": [
+        {
+            "name": "df0",
+            "format": {
+                "type": "csv",
+                "parse": {
+                    "x": "number",
+                    "y": "number"
+                }
+            },
+            "values": "\"x\",\"y\"\n0.82535388879478,0.175504838116467\n0.483322170330212,0.92520075570792\n0.0220783790573478,0.605496409814805\n0.39672307879664,0.879450253676623\n0.838725288398564,0.36204455466941\n0.592421213164926,0.239515871042386\n0.706804817542434,0.00647905003279448\n0.0126281732227653,0.154914033133537\n0.150009069126099,0.574154397239909\n0.0603655390441418,0.732962509151548\n0.192939087515697,0.489878148771822\n0.575029835337773,0.870066102826968"
+        },
+        {
+            "name": "scale/x",
+            "format": {
+                "type": "csv",
+                "parse": {
+                    "domain": "number"
+                }
+            },
+            "values": "\"domain\"\n-0.0286766825360246\n0.880030144157354"
+        },
+        {
+            "name": "scale/y",
+            "format": {
+                "type": "csv",
+                "parse": {
+                    "domain": "number"
+                }
+            },
+            "values": "\"domain\"\n-0.0394570352509618\n0.971136840991676"
+        }
+    ],
+    "scales": [
+        {
+            "name": "x",
+            "domain": {
+                "data": "scale/x",
+                "field": "data.domain"
+            },
+            "zero": false,
+            "nice": false,
+            "clamp": false,
+            "range": "width"
+        },
+        {
+            "name": "y",
+            "domain": {
+                "data": "scale/y",
+                "field": "data.domain"
+            },
+            "zero": false,
+            "nice": false,
+            "clamp": false,
+            "range": "height"
+        }
+    ],
+    "marks": [
+        {
+            "type": "line",
+            "properties": {
+                "update": {
+                    "stroke": {
+                        "value": "#000000"
+                    },
+                    "x": {
+                        "scale": "x",
+                        "field": "data.x"
+                    },
+                    "y": {
+                        "scale": "y",
+                        "field": "data.y"
+                    }
+                },
+                "ggvis": {
+                    "data": {
+                        "value": "df0"
+                    }
+                }
+            },
+            "from": {
+                "data": "df0"
+            }
+        }
+    ],
+    "width": 600,
+    "height": 400,
+    "legends": [
+
+    ],
+    "axes": [
+        {
+            "type": "x",
+            "scale": "x",
+            "orient": "bottom",
+            "layer": "back",
+            "grid": true,
+            "title": "x"
+        },
+        {
+            "type": "y",
+            "scale": "y",
+            "orient": "left",
+            "layer": "back",
+            "grid": true,
+            "title": "y"
+        }
+    ],
+    "padding": null,
+    "ggvis_opts": {
+        "width": 600,
+        "height": 400,
+        "keep_aspect": false,
+        "resizable": true,
+        "padding": {
+
+        },
+        "duration": 250,
+        "renderer": "svg",
+        "hover_duration": 0
+    },
+    "handlers": null
 }
+
