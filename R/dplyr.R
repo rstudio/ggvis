@@ -10,10 +10,16 @@
 #' @export
 NULL
 
+
 #' Dplyr verbs for ggvis.
 #'
-#' Reactive components must be wrapped in \code{eval} - this makes it
-#' possible to separate out the non-standard evaluation of dplyr and ggvis.
+#' Applying a dplyr verb to a ggvis object creates a reactive transformation:
+#' whenever the underlying data changes the transformation will be recomputed.
+#'
+#' @section Non-standard evaluation:
+#' Both dplyr and shiny do non-standard evaluation, so to help each package
+#' figure out when it should evaluate its code, reactive components in
+#' these functions must be wrapped in \code{eval()}.
 #'
 #' @name dplyr-ggvis
 #' @keywords internal
@@ -44,6 +50,8 @@ NULL
 #'  layer_points()
 #' }
 NULL
+
+# Methods for ggvis objects ----------------------------------------------------
 
 #' @export
 #' @rdname dplyr-ggvis
@@ -137,6 +145,8 @@ extract_inputs <- function(ldots) {
   )
 }
 
+
+# Methods for reactive data frames --------------------------------------------
 
 #' @rdname dplyr-ggvis
 #' @export
