@@ -33,7 +33,7 @@ arrange_.ggvis(.data, ..., .dots)
 
 select_.ggvis(.data, ..., .dots)
 
-\method{filter_}{ggvis}(.data, ..., .dots)
+filter_.ggvis(.data, ..., .dots)
 
 groups.reactive(x)
 
@@ -49,7 +49,7 @@ arrange_.reactive(.data, ..., .dots)
 
 select_.reactive(.data, ..., .dots)
 
-\method{filter_}{reactive}(.data, ..., .dots)
+filter_.reactive(.data, ..., .dots)
 }
 \description{
 Reactive components must be wrapped in \code{eval} - this makes it

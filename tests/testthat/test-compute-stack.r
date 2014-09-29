@@ -34,7 +34,7 @@ test_that("Zero-row inputs", {
   )
 
   # Grouped
-  res <- mtcars %>% group_by(cyl) %>% filter(FALSE) %>% compute_stack(~wt, ~cyl)
+  res <- mtcars %>% group_by(cyl) %>% dplyr::filter(FALSE) %>% compute_stack(~wt, ~cyl)
   expect_equal(nrow(res), 0)
   expect_true(setequal(
     names(res),

@@ -115,28 +115,6 @@ select_.ggvis <- function(.data, ..., .dots) {
   })
 }
 
-# Need to re-export dplyr::filter and filter_ to avoid problems with R CMD check.
-#' Filter
-#'
-#' This is the same as \code{dplyr::\link[dplyr]{filter}} function.
-#' See \code{dplyr::\link[dplyr]{filter}} for more information.
-#'
-#' @param .data A tbl.
-#' @param ... Logical predicates. Multiple conditions are combined with &.
-#' @param .dots Used to work around non-standard evaluation. See
-#'   vignette("nse", package="dplyr") for details.
-#' @importFrom dplyr filter
-#' @name filter
-#' @export
-NULL
-
-#' @name filter_
-#' @rdname filter
-#' @importFrom dplyr filter_
-#' @export
-NULL
-
-#' @method filter_ ggvis
 #' @rdname dplyr-ggvis
 #' @export
 filter_.ggvis <- function(.data, ..., .dots) {
