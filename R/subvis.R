@@ -1,5 +1,6 @@
 #' Create a subvisualisation.
 #'
+#' @keywords internal
 #' @examples
 #' # Examples don't work yet
 #' \dontrun{
