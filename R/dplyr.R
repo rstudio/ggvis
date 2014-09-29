@@ -63,10 +63,11 @@ groups.ggvis <- function(x) {
 #' @rdname dplyr-ggvis
 group_by_.ggvis <- function(.data, ..., .dots, add = FALSE) {
   dots <- lazyeval::all_dots(.dots, ...)
-  pieces <- extract_inputs(dots)
+  pieces <- extract_lazy_inputs(dots)
 
   register_computation(.data, pieces$inputs, "group_by", function(data, args) {
-    dplyr::group_by_(data, .dots = pieces$ldots, add = add)
+    dplyr::group_by_(data, .dots = lapply(pieces$lazy, add_args, args),
+      add = add)
   })
 }
 
@@ -83,10 +84,10 @@ ungroup.ggvis <- function(x) {
 #' @export
 summarise_.ggvis <- function(.data, ..., .dots) {
   dots <- lazyeval::all_dots(.dots, ...)
-  pieces <- extract_inputs(dots)
+  pieces <- extract_lazy_inputs(dots)
 
   register_computation(.data, pieces$inputs, "summarise", function(data, args) {
-    dplyr::summarise_(data, .dots = pieces$ldots)
+    dplyr::summarise_(data, .dots = lapply(pieces$lazy, add_args, args))
   })
 }
 
@@ -94,10 +95,10 @@ summarise_.ggvis <- function(.data, ..., .dots) {
 #' @export
 mutate_.ggvis <- function(.data, ..., .dots) {
   dots <- lazyeval::all_dots(.dots, ...)
-  pieces <- extract_inputs(dots)
+  pieces <- extract_lazy_inputs(dots)
 
   register_computation(.data, pieces$inputs, "mutate", function(data, args) {
-    dplyr::mutate_(data, .dots = pieces$ldots)
+    dplyr::mutate_(data, .dots = lapply(pieces$lazy, add_args, args))
   })
 }
 
@@ -105,10 +106,10 @@ mutate_.ggvis <- function(.data, ..., .dots) {
 #' @export
 arrange_.ggvis <- function(.data, ..., .dots) {
   dots <- lazyeval::all_dots(.dots, ...)
-  pieces <- extract_inputs(dots)
+  pieces <- extract_lazy_inputs(dots)
 
   register_computation(.data, pieces$inputs, "arrange", function(data, args) {
-    dplyr::arrange_(data, .dots = pieces$ldots)
+    dplyr::arrange_(data, .dots = lapply(pieces$lazy, add_args, args))
   })
 }
 
@@ -116,10 +117,10 @@ arrange_.ggvis <- function(.data, ..., .dots) {
 #' @export
 select_.ggvis <- function(.data, ..., .dots) {
   dots <- lazyeval::all_dots(.dots, ...)
-  pieces <- extract_inputs(dots)
+  pieces <- extract_lazy_inputs(dots)
 
   register_computation(.data, pieces$inputs, "select", function(data, args) {
-    dplyr::select_(data, .dots = pieces$ldots)
+    dplyr::select_(data, .dots = lapply(pieces$lazy, add_args, args))
   })
 }
 
@@ -127,23 +128,112 @@ select_.ggvis <- function(.data, ..., .dots) {
 #' @export
 filter_.ggvis <- function(.data, ..., .dots) {
   dots <- lazyeval::all_dots(.dots, ...)
-  pieces <- extract_inputs(dots)
+  pieces <- extract_lazy_inputs(dots)
 
   register_computation(.data, pieces$inputs, "filter", function(data, args) {
-    dplyr::filter_(data, .dots = pieces$ldots)
+    dplyr::filter_(data, .dots = lapply(pieces$lazy, add_args, args))
   })
 }
 
-# FIXME: need to properly extract inputs
-# Given a lazy_dots object, return a list with two items:
-# * ldots: a lazy_dots object
-# * inputs: a list of input (broker) objects
-extract_inputs <- function(ldots) {
-  list(
-    ldots = ldots,
-    inputs = NULL
-  )
+#' Extract reactive inputs from a lazy dots.
+#'
+#' This works by replacing each reactive expression (which must be wrapped
+#' in \code{eval}), with a reference to \code{args$xyz}. Then this function
+#' returns both the modified lazy dots, and a list of reactives that need
+#' to be created.
+#'
+#' @noRd
+#' @examples
+#' # extract_inputs() works with language objects ------------------------------
+#'
+#' # Simple expressions are returned as is
+#' extract_inputs(quote(1))
+#' extract_inputs(quote(x))
+#' extract_inputs(quote(x + y))
+#'
+#' # If the call contains eval, then the subexpression is evalutes, the
+#' # original is replaced with a reference to args, and inputs gains
+#' # a reactive broker
+#' extract_inputs(quote(eval(input_slider(0, 100))))
+#'
+#' slider <- input_slider(0, 100)
+#' extract_inputs(quote(eval(slider) + eval(slider)))
+#'
+#' # extract_lazy_inputs() works with lazy objects -----------------------------
+#' library(lazyeval)
+#' extract_lazy_inputs(lazy(x + y))
+#' extract_lazy_inputs(lazy(x + eval(input_slider(0, 100))))
+#'
+#' s1 <- input_slider(0, 100)
+#' s2 <- input_slider(0, 200)
+#' extract_lazy_inputs(lazy_dots(x + eval(s1), eval(s2), eval(s1) / eval(s2)))
+extract_lazy_inputs <- function(x) {
+  if (inherits(x, "lazy_dots")) {
+    pieces <- lapply(x, extract_lazy_inputs)
+
+    lazy <- lazyeval::as.lazy_dots(pluck(pieces, "lazy"))
+    inputs <- unlist(unname(pluck(pieces, "inputs")), recursive = FALSE)
+    inputs <- inputs[!duplicated(names(inputs))]
+
+    list(
+      lazy = lazy,
+      inputs = inputs
+    )
+  } else if (inherits(x, "lazy")) {
+    new <- extract_inputs(x$expr, x$env)
+
+    x$expr <- new$expr
+    list(lazy = x, inputs = new$inputs)
+  } else {
+    stop("Unknown input type: ", paste0(class(x), collapse = "/"),
+      call. = FALSE)
+  }
 }
+
+extract_inputs <- function(expr, env = parent.frame()) {
+  if (is.name(expr) || is.atomic(expr)) {
+    # Base case
+    list(expr = expr, inputs = list())
+  } else if (is.call(expr) && identical(expr[[1]], quote(eval))) {
+    # If it's a call to eval, it's an input and should be evaluated
+    stopifnot(length(expr) == 2)
+
+    input <- eval(expr[[2]], env)
+    stopifnot(is.broker(input))
+    nm <- names(attr(input, "broker", TRUE)$controls)
+
+    list(
+      expr = substitute(args$nm, list(nm = as.name(nm))),
+      inputs = setNames(list(input), nm)
+    )
+  } else if (is.call(expr)) {
+    # Recursive over arguments and join back together again
+    args_out <- lapply(expr[-1], extract_inputs, env = env)
+
+    args <- pluck(args_out, "expr")
+    inputs <- unlist(pluck(args_out, "inputs"), recursive = FALSE)
+    inputs <- inputs[!duplicated(names(inputs))]
+
+    list(
+      expr = as.call(c(expr[[1]], args)),
+      inputs = inputs
+    )
+  } else {
+    stop("Don't know how to deal with input of type: ", class(expr)[[1]],
+      call. = FALSE)
+  }
+}
+
+# Given a lazy object, modify it so it's environment also gets to
+# access the args list.
+add_args <- function(x, args) {
+  e <- new.env(parent = x$env)
+  e$args <- args
+  x$env <- e
+
+  x
+}
+
 
 
 # Methods for reactive data frames --------------------------------------------
