@@ -15,7 +15,6 @@ install:
   - pandoc --version
 
   - ./travis-tool.sh r_binary_install Rcpp
-  - ./travis-tool.sh github_package hadley/lazy
   - ./travis-tool.sh github_package hadley/dplyr
   - ./travis-tool.sh github_package hadley/testthat
   - ./travis-tool.sh github_package rstudio/htmltools
