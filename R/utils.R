@@ -3,28 +3,6 @@ last <- function(x) {
   x[[length(x)]]
 }
 
-dots <- function(...) {
-  eval(substitute(alist(...)))
-}
-
-named_dots <- function(...) {
-  args <- dots(...)
-  names(args) <- dot_names(...)
-  args
-}
-
-dot_names <- function(...) {
-  args <- dots(...)
-  nms <- names2(args)
-  missing <- nms == ""
-  if (all(!missing)) return(nms)
-
-  defaults <- vapply(args[missing], deparse2, character(1), USE.NAMES = FALSE)
-
-  nms[missing] <- defaults
-  nms
-}
-
 make_call <- function(f, ..., .args = list()) {
   if (is.character(f)) f <- as.name(f)
   as.call(c(list(f, ...), .args))
