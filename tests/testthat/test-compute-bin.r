@@ -74,12 +74,12 @@ test_that("Setting boundary and center", {
   expect_error(comp_bin(dat, ~x, width = 10, bondary = 5, center = 0, pad = FALSE))
 
   res <- comp_bin(dat, ~x, width = 10, boundary = 0, pad = FALSE)
-  expect_identical(res$count, c(1L, 0L, 1L))
+  expect_identical(res$count_, c(1L, 0L, 1L))
   expect_identical(res$xmin_[1], 0)
   expect_identical(res$xmax_[3], 30)
 
   res <- comp_bin(dat, ~x, width = 10, center = 0, pad = FALSE)
-  expect_identical(res$count, c(1L, 0L, 0L, 1L))
+  expect_identical(res$count_, c(1L, 0L, 0L, 1L))
   expect_identical(res$xmin_[1], dat$x[1] - 5)
   expect_identical(res$xmax_[4], dat$x[2] + 5)
 
@@ -93,7 +93,7 @@ test_that("Setting boundary and center", {
   expect_identical(res$xmax_[3], dat$x[2])
 
   res <- comp_bin(dat, ~x, width = 10, center = as.Date("2013-06-01"), pad = FALSE)
-  expect_identical(res$count, c(1L, 0L, 0L, 1L))
+  expect_identical(res$count_, c(1L, 0L, 0L, 1L))
   expect_identical(res$xmin_[1], dat$x[1] - 5)
   expect_identical(res$xmax_[4], dat$x[2] + 5)
 
@@ -109,7 +109,7 @@ test_that("Setting boundary and center", {
   expect_identical(res$xmax_[3], dat$x[2])
 
   res <- comp_bin(dat, ~x, width = 10000, center = dat$x[1], pad = FALSE)
-  expect_identical(res$count, c(1L, 0L, 0L, 1L))
+  expect_identical(res$count_, c(1L, 0L, 0L, 1L))
   expect_identical(res$xmin_[1], dat$x[1] - 5000)
   expect_identical(res$xmax_[4], dat$x[2] + 5000)
 })
