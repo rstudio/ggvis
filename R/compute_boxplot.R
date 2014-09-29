@@ -82,7 +82,7 @@ compute_boxplot_outliers.data.frame <- function(x) {
 
 compute_boxplot_outliers.ggvis <- function(x) {
   register_computation(x, args = NULL, "boxplot_outliers", function(data, args) {
-    output <- do_call(compute_boxplot_outliers, quote(data))
+    output <- compute_boxplot_outliers(data)
     preserve_constants(data, output)
   })
 }

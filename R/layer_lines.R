@@ -21,7 +21,7 @@ layer_lines <- function(vis, ...) {
 
   layer_f(vis, function(x) {
     x <- auto_group(x, exclude = c("x", "y"))
-    x <- do_call(dplyr::arrange, quote(x), x_var)
+    x <- dplyr::arrange_(x, x_var)
     emit_paths(x, props(...))
   })
 }

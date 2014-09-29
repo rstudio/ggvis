@@ -66,7 +66,7 @@ group_by_.ggvis <- function(.data, ..., .dots, add = FALSE) {
 #' @rdname dplyr-ggvis
 ungroup.ggvis <- function(x) {
   register_computation(x, list(), "ungroup", function(data, args) {
-    do_call(dplyr::ungroup, quote(data))
+    dplyr::ungroup(data)
   })
 }
 

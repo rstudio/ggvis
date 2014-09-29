@@ -80,7 +80,7 @@ compute_density.ggvis <- function(x, x_var, w_var = NULL,
     trim = trim, n = n, na.rm = na.rm, ...)
 
   register_computation(x, args, "density", function(data, args) {
-    output <- do_call(compute_density, quote(data), .args = values(args))
+    output <- do_call(compute_density, quote(data), .args = args)
     preserve_constants(data, output)
   })
 }
