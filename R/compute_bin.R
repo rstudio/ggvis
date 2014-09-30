@@ -22,8 +22,7 @@
 #' @param closed One of \code{"right"} or \code{"left"} indicating whether right
 #'   or left edges of bins are included in the bin.
 #' @param pad If \code{TRUE}, adds empty bins at either end of x. This ensures
-#'   frequency polygons touch 0, and adds padding between the data and axis for
-#'   histograms.
+#'   frequency polygons touch 0. Defaults to \code{FALSE}.
 #' @param binwidth Deprecated; use \code{width} instead.
 #' @seealso \code{\link{compute_count}} For counting cases at specific locations
 #'   of a continuous variable. This is useful when the variable is continuous
