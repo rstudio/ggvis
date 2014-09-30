@@ -174,3 +174,10 @@ test_that("Zero-row inputs", {
     c("cyl", "count_", "x_", "xmin_", "xmax_", "width_")
   ))
 })
+
+test_that("weights are added", {
+  df <- data.frame(x = 1:10, y = 1:10)
+
+  binned <- df %>% compute_bin(~x, ~y, width = 1, pad = FALSE)
+  expect_equal(binned$count_, df$y)
+})

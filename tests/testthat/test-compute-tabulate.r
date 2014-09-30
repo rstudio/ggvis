@@ -10,3 +10,10 @@ test_that("Zero-row inputs", {
   expect_equal(nrow(res), 0)
   expect_true(setequal(names(res), c("cyl", "count_", "x_")))
 })
+
+test_that("weights are added", {
+  df <- data.frame(x = factor(rep(1:3, each = 3)), y = rep(2, 9))
+
+  out <- df %>% compute_tabulate(~x, ~y)
+  expect_equal(out$count_, c(6, 6, 6))
+})
