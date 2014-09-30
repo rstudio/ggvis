@@ -1,5 +1,7 @@
 # ggvis 0.3.0.9xxx
 
+* `compute_bin()` now defaults to `pad = FALSE`
+
 * `filter()` is no longer imported and re-exported from dplyr. This
   means that to use `filter()` with ggvis object you'll need to 
   make sure to load dplyr first.

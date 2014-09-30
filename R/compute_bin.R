@@ -45,7 +45,7 @@
 #' mtcars %>% ggvis(~ x_, ~ count_) %>% compute_bin(~mpg) %>% layer_paths()
 compute_bin <- function(x, x_var, w_var = NULL, width = NULL,
                         center = NULL, boundary = NULL,
-                        closed = c("right", "left"), pad = TRUE,
+                        closed = c("right", "left"), pad = FALSE,
                         binwidth) {
   UseMethod("compute_bin")
 }
@@ -53,7 +53,7 @@ compute_bin <- function(x, x_var, w_var = NULL, width = NULL,
 #' @export
 compute_bin.data.frame <- function(x, x_var, w_var = NULL, width = NULL,
                                    center = NULL, boundary = NULL,
-                                   closed = c("right", "left"), pad = TRUE,
+                                   closed = c("right", "left"), pad = FALSE,
                                    binwidth) {
 
   if (!missing(binwidth)) {
@@ -91,7 +91,7 @@ compute_bin.data.frame <- function(x, x_var, w_var = NULL, width = NULL,
 #' @export
 compute_bin.grouped_df <- function(x, x_var, w_var = NULL, width = NULL,
                                    center = NULL, boundary = NULL,
-                                   closed = c("right", "left"), pad = TRUE,
+                                   closed = c("right", "left"), pad = FALSE,
                                    binwidth) {
 
   if (!missing(binwidth)) {
@@ -121,7 +121,7 @@ compute_bin.grouped_df <- function(x, x_var, w_var = NULL, width = NULL,
 #' @export
 compute_bin.ggvis <- function(x, x_var, w_var = NULL, width = NULL,
                               center = NULL, boundary = NULL,
-                              closed = c("right", "left"), pad = TRUE,
+                              closed = c("right", "left"), pad = FALSE,
                               binwidth) {
   if (!missing(binwidth)) {
     width <- binwidth
@@ -246,7 +246,7 @@ bin_vector <- function(x, weight = NULL, ...) {
 #' @export
 bin_vector.numeric <- function(x, weight = NULL, ..., width = 1,
                                origin = NULL, closed = c("right", "left"),
-                               pad = TRUE) {
+                               pad = FALSE) {
   if (length(na.omit(x)) == 0) {
     return(bin_out())
   }
@@ -289,7 +289,7 @@ bin_vector.numeric <- function(x, weight = NULL, ..., width = 1,
 #' @export
 bin_vector.POSIXct <- function(x, weight = NULL, ..., width = 1,
                                origin = NULL, closed = c("right", "left"),
-                               pad = TRUE) {
+                               pad = FALSE) {
 
   # Convert times to raw numbers (seconds since UNIX epoch)
   if (is(width, "Period")) {
@@ -318,7 +318,7 @@ bin_vector.POSIXct <- function(x, weight = NULL, ..., width = 1,
 #' @export
 bin_vector.Date <- function(x, weight = NULL, ..., width = 1,
                             origin = NULL, closed = c("right", "left"),
-                            pad = TRUE) {
+                            pad = FALSE) {
 
   results <- bin_vector(
     as.numeric(x),
