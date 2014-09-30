@@ -181,3 +181,21 @@ test_that("weights are added", {
   binned <- df %>% compute_bin(~x, ~y, width = 1, pad = FALSE)
   expect_equal(binned$count_, df$y)
 })
+
+
+# Bin vector -------------------------------------------------------------------
+
+test_that("NAs get own bin", {
+  x <- c(1:10, NA, NA, NA, NA)
+  binned <- bin_vector(x, width = 100)
+  expect_equal(binned$count_, c(10, 4))
+  expect_equal(binned$x_, c(50, NA))
+})
+
+test_that("only NA, one row of output", {
+  x <- as.numeric(c(NA, NA, NA, NA))
+  binned <- bin_vector(x)
+  expect_equal(binned$count_, 4)
+  expect_equal(binned$x_, NA)
+})
+

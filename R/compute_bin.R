@@ -42,6 +42,14 @@
 #' # It doesn't matter whether you transform inside or outside of a vis
 #' mtcars %>% compute_bin(~mpg) %>% ggvis(~x_, ~count_) %>% layer_paths()
 #' mtcars %>% ggvis(~ x_, ~ count_) %>% compute_bin(~mpg) %>% layer_paths()
+#'
+#' # Missing values get own bin
+#' mtcars2 <- mtcars
+#' mtcars2$mpg[sample(32, 5)] <- NA
+#' mtcars2 %>% compute_bin(~mpg, width = 10)
+#'
+#' # But are currently silently dropped in histograms
+#' mtcars2 %>% ggvis() %>% layer_histograms(~mpg)
 compute_bin <- function(x, x_var, w_var = NULL, width = NULL,
                         center = NULL, boundary = NULL,
                         closed = c("right", "left"), pad = FALSE,
@@ -68,14 +76,8 @@ compute_bin.data.frame <- function(x, x_var, w_var = NULL, width = NULL,
   # Special case zero-row input
   if (length(x_val) == 0) return(bin_out())
 
-  params <- bin_params(range2(x_val), width = width, center = center,
-                       boundary = boundary, closed = closed)
-
-  x_na <- is.na(x_val)
-  if (any(x_na)) {
-    message("compute_bin: NA values ignored for binning.")
-    x_val <- x_val[!x_na]
-  }
+  params <- bin_params(range2(x_val, na.rm = TRUE), width = width,
+                       center = center, boundary = boundary, closed = closed)
 
   if (is.null(w_var)) {
     w_val <- NULL
@@ -244,12 +246,13 @@ bin_vector <- function(x, weight = NULL, ...) {
 
 #' @export
 bin_vector.numeric <- function(x, weight = NULL, ..., width = 1,
-                               origin = NULL, closed = c("right", "left"),
+                               origin = 0, closed = c("right", "left"),
                                pad = FALSE) {
-  if (length(na.omit(x)) == 0) {
-    return(bin_out())
-  }
   closed <- match.arg(closed)
+
+  if (all(is.na(x))) {
+    return(bin_out(length(x), NA, NA, xmin = NA, xmax = NA))
+  }
 
   stopifnot(is.numeric(width) && length(width) == 1)
   stopifnot(is.numeric(origin) && length(origin) == 1)
@@ -263,11 +266,12 @@ bin_vector.numeric <- function(x, weight = NULL, ..., width = 1,
   min_x <- origin
   # Small correction factor so that we don't get an extra bin when, for
   # example, origin=0, max(x)=20, width=10.
-  max_x <- max(x) + (1 - 1e-08) * width
+  max_x <- max(x, na.rm = TRUE) + (1 - 1e-08) * width
   breaks <- seq(min_x, max_x, width)
   fuzzybreaks <- adjust_breaks(breaks, closed = closed)
 
   bins <- cut(x, fuzzybreaks, include.lowest = TRUE, right = (closed == "right"))
+
   left <- breaks[-length(breaks)]
   right <- breaks[-1]
   x <- (left + right) / 2
@@ -280,6 +284,15 @@ bin_vector.numeric <- function(x, weight = NULL, ..., width = 1,
     count <- c(0, count, 0)
     bin_widths <- c(width, bin_widths, width)
     x <- c(x[1] - width, x, x[length(x)] + width)
+  }
+
+  # Add row for missings
+  if (any(is.na(bins))) {
+    count <- c(count, sum(is.na(bins)))
+    left <- c(left, NA)
+    right <- c(right, NA)
+    x <- c(x, NA)
+    bin_widths <- c(bin_widths, NA)
   }
 
   bin_out(count, x, bin_widths)
