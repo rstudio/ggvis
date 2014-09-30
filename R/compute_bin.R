@@ -274,11 +274,11 @@ bin_vector.numeric <- function(x, weight = NULL, ..., width = 1,
   x <- (left + right) / 2
   bin_widths <- diff(breaks)
 
-  count <- as.integer(tapply(weight, bins, sum, na.rm = TRUE))
-  count[is.na(count)] <- 0L
+  count <- as.numeric(tapply(weight, bins, sum, na.rm = TRUE))
+  count[is.na(count)] <- 0
 
   if (pad) {
-    count <- c(0L, count, 0L)
+    count <- c(0, count, 0)
     bin_widths <- c(width, bin_widths, width)
     x <- c(x[1] - width, x, x[length(x)] + width)
   }

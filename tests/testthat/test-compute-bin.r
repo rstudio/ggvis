@@ -17,17 +17,17 @@ test_that("compute_bin preserves dates and times", {
   expect_true(inherits(res$x_, "Date"))
   expect_true(inherits(res$xmin_, "Date"))
   expect_true(inherits(res$xmax_, "Date"))
-  expect_identical(sum(res$count_), length(dates$val))
+  expect_equal(sum(res$count_), length(dates$val))
 
   res <- comp_bin(NYtimes, ~val, width = 120)
   expect_true(inherits(res$x_, "POSIXct"))
   expect_true(inherits(res$xmin_, "POSIXct"))
   expect_true(inherits(res$xmax_, "POSIXct"))
-  expect_identical(sum(res$count_), length(NYtimes$val))
+  expect_equal(sum(res$count_), length(NYtimes$val))
   expect_identical(attr(NYtimes$val, "tzone"), attr(res$x_, "tzone"))
 
   res <- comp_bin(UTCtimes, ~val, width = 120)
-  expect_identical(sum(res$count_), length(UTCtimes$val))
+  expect_equal(sum(res$count_), length(UTCtimes$val))
   expect_identical(attr(UTCtimes$val, "tzone"), attr(res$x_, "tzone"))
 })
 
@@ -47,22 +47,22 @@ test_that("Closed left or right", {
   dat <- data.frame(x = c(0, 10))
 
   res <- comp_bin(dat, ~x, width = 10, pad = FALSE)
-  expect_identical(res$count_, c(1L, 1L))
+  expect_identical(res$count_, c(1, 1))
   res <- comp_bin(dat, ~x, width = 10, boundary = 5, pad = FALSE)
-  expect_identical(res$count_, c(1L, 1L))
+  expect_identical(res$count_, c(1, 1))
   res <- comp_bin(dat, ~x, width = 10, boundary = 0, pad = FALSE)
-  expect_identical(res$count_, 2L)
+  expect_identical(res$count_, 2)
   res <- comp_bin(dat, ~x, width = 5, boundary = 0, pad = FALSE)
-  expect_identical(res$count_, c(1L, 1L))
+  expect_identical(res$count_, c(1, 1))
 
   res <- comp_bin(dat, ~x, width = 10, pad = FALSE, closed = "left")
-  expect_identical(res$count_, c(1L, 1L))
+  expect_identical(res$count_, c(1, 1))
   res <- comp_bin(dat, ~x, width = 10, boundary = 5, pad = FALSE, closed = "left")
-  expect_identical(res$count_, c(1L, 1L))
+  expect_identical(res$count_, c(1, 1))
   res <- comp_bin(dat, ~x, width = 10, boundary = 0, pad = FALSE, closed = "left")
-  expect_identical(res$count_, c(2L))
+  expect_identical(res$count_, c(2))
   res <- comp_bin(dat, ~x, width = 5, boundary = 0, pad = FALSE, closed = "left")
-  expect_identical(res$count_, c(1L, 1L))
+  expect_identical(res$count_, c(1, 1))
 })
 
 
@@ -74,12 +74,12 @@ test_that("Setting boundary and center", {
   expect_error(comp_bin(dat, ~x, width = 10, bondary = 5, center = 0, pad = FALSE))
 
   res <- comp_bin(dat, ~x, width = 10, boundary = 0, pad = FALSE)
-  expect_identical(res$count_, c(1L, 0L, 1L))
+  expect_identical(res$count_, c(1, 0, 1))
   expect_identical(res$xmin_[1], 0)
   expect_identical(res$xmax_[3], 30)
 
   res <- comp_bin(dat, ~x, width = 10, center = 0, pad = FALSE)
-  expect_identical(res$count_, c(1L, 0L, 0L, 1L))
+  expect_identical(res$count_, c(1, 0, 0, 1))
   expect_identical(res$xmin_[1], dat$x[1] - 5)
   expect_identical(res$xmax_[4], dat$x[2] + 5)
 
@@ -88,12 +88,12 @@ test_that("Setting boundary and center", {
   dat <- data.frame(x = as.Date("2013-06-01") + c(0, 30))
 
   res <- comp_bin(dat, ~x, width = 10, boundary = as.Date("2013-06-01"), pad = FALSE)
-  expect_identical(res$count_, c(1L, 0L, 1L))
+  expect_identical(res$count_, c(1, 0, 1))
   expect_identical(res$xmin_[1], dat$x[1])
   expect_identical(res$xmax_[3], dat$x[2])
 
   res <- comp_bin(dat, ~x, width = 10, center = as.Date("2013-06-01"), pad = FALSE)
-  expect_identical(res$count_, c(1L, 0L, 0L, 1L))
+  expect_identical(res$count_, c(1, 0, 0, 1))
   expect_identical(res$xmin_[1], dat$x[1] - 5)
   expect_identical(res$xmax_[4], dat$x[2] + 5)
 
@@ -104,12 +104,12 @@ test_that("Setting boundary and center", {
   )
 
   res <- comp_bin(dat, ~x, width = 10000, boundary = dat$x[1], pad = FALSE)
-  expect_identical(res$count_, c(1L, 0L, 1L))
+  expect_identical(res$count_, c(1, 0, 1))
   expect_identical(res$xmin_[1], dat$x[1])
   expect_identical(res$xmax_[3], dat$x[2])
 
   res <- comp_bin(dat, ~x, width = 10000, center = dat$x[1], pad = FALSE)
-  expect_identical(res$count_, c(1L, 0L, 0L, 1L))
+  expect_identical(res$count_, c(1, 0, 0, 1))
   expect_identical(res$xmin_[1], dat$x[1] - 5000)
   expect_identical(res$xmax_[4], dat$x[2] + 5000)
 })
@@ -154,7 +154,7 @@ test_that("Boundaries across groups should be aligned", {
   res <- dat %>% group_by(g) %>% compute_bin(~x, width = 1, pad = FALSE)
   expect_true(length(unique(res$x_ %% 1)) == 1)
   expect_identical(dplyr::groups(res), list(quote(g)))
-  expect_identical(res$count_, rep(1L, 6))
+  expect_identical(res$count_, rep(1, 6))
 })
 
 
