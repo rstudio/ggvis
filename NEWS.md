@@ -1,5 +1,8 @@
 # ggvis 0.3.0.9xxx
 
+* `compute_model_predictions()` always returns a result, even if there's an
+  error (#102).
+
 * `compute_bin()` now defaults to `pad = FALSE`
 
 * `filter()` is no longer imported and re-exported from dplyr. This

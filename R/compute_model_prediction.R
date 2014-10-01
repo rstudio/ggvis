@@ -78,13 +78,7 @@ compute_model_prediction.data.frame <- function(x, formula, ..., model = NULL,
   assert_that(is.string(model))
 
   if (nrow(x) == 0) {
-    res <- data.frame(resp_ = numeric(0), pred_ = numeric(0))
-    if (se) {
-      res$pred_lwr_ <- numeric(0)
-      res$pred_upr_ <- numeric(0)
-      res$pred_se_ <- numeric(0)
-    }
-    return(res)
+    return(empty_smooth(se))
   }
 
   restore <- identity
@@ -117,15 +111,30 @@ compute_model_prediction.data.frame <- function(x, formula, ..., model = NULL,
     }
   }
 
-  # Create model environment & model call, then evaluate
+  # Create model environment & model call
   env <- new.env(parent = environment(formula))
   env$data <- x
   model_call <- make_call(model, formula, data = quote(data), ...)
-  model <- eval(model_call, env)
 
-  # Make prediction
-  res <- pred_grid(model, x, se = se, level = level, n = n, domain = domain)
-  restore(res)
+  # Fit model and make predictions
+  tryCatch({
+    model <- eval(model_call, env)
+    res <- pred_grid(model, x, se = se, level = level, n = n, domain = domain)
+    restore(res)
+  }, error = function(e) {
+    message(e$message)
+    empty_smooth(se)
+  })
+}
+
+empty_smooth <- function(se = FALSE) {
+  res <- data.frame(resp_ = numeric(0), pred_ = numeric(0))
+  if (se) {
+    res$pred_lwr_ <- numeric(0)
+    res$pred_upr_ <- numeric(0)
+    res$pred_se_ <- numeric(0)
+  }
+  res
 }
 
 #' @export
