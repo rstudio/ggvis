@@ -5,3 +5,4 @@ bench
 ^\.travis\.yml$
 ^node_modules$
 ^NEWS\.md$
+^CONTRIBUTING\.md$
