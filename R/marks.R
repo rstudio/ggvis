@@ -123,6 +123,22 @@ valid_props <- list(
 known_props <- sort(unique(unlist(valid_props)))
 globalVariables(known_props)
 
+# Some marks need more detailed validity checks of their props
+mark_props_validity_checks <- list(
+  image = function(props) {
+    url <- props$url.update
+
+    if (!is.null(url) &&
+        is.prop_constant(url) &&
+        !grepl("http(s)?://", url$value)) {
+
+      warning("image mark's url prop '", props$url.update$value,
+        "' should be an absolute URL (http://... or https://...).",
+        " Referencing local files for url not yet implemented.")
+    }
+  }
+)
+
 default_props <- function(type) {
   switch(type,
     arc = props(fill := "#333333"),

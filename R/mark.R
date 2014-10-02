@@ -15,8 +15,16 @@ mark <- function(type, props, data) {
   if (is.null(data)) stop("No data supplied to mark.", call. = FALSE)
   if (!is.function(data)) stop("data object must be a reactive or a function.")
 
-  # Check that names are correct, then merge in defaults
+  # Check that names are correct
   check_mark_props(type, names(props))
+
+  # Some marks need more detailed validity checks of their props
+  check_valid_props <- mark_props_validity_checks[[type]]
+  if (!is.null(check_valid_props)) {
+    check_valid_props(props)
+  }
+
+  # Merge in defaults
   props <- merge_props(default_props(type), props, inherit = TRUE)
 
   # FIXME: check that the variables in the prop can be found in data
