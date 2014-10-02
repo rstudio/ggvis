@@ -199,7 +199,28 @@ register_computation <- function(vis, args, name, transform = NULL) {
   id <- paste0(data_id(parent_data), "/", name, length(vis$data))
 
   if (shiny::is.reactive(parent_data) || any_apply(args, shiny::is.reactive)) {
-    new_data <- reactive(transform(parent_data(), values(args)))
+    empty <- NULL
+
+    # First time computation is executed, it must succeed. That's used to
+    # determine the specification of the data, and if an error occurs in
+    # subequent run, that specification is sent and the error is printed to
+    # the console
+    new_data <- reactive({
+      if (is.null(empty)) {
+        out <- transform(parent_data(), values(args))
+        empty <<- out[0, , drop = FALSE]
+        out
+      } else {
+        tryCatch(
+          transform(parent_data(), values(args)),
+          error = function(e) {
+            message("Error: ", e$message)
+            data.frame
+          }
+        )
+      }
+    })
+
   } else {
     cache <- transform(parent_data(), args)
     new_data <- function() cache
@@ -211,6 +232,7 @@ register_computation <- function(vis, args, name, transform = NULL) {
 
   vis
 }
+
 
 # Register a list of reactives in the ggvis object's reactives list
 # @param vis A ggvis object.

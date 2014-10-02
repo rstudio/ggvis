@@ -117,14 +117,9 @@ compute_model_prediction.data.frame <- function(x, formula, ..., model = NULL,
   model_call <- make_call(model, formula, data = quote(data), ...)
 
   # Fit model and make predictions
-  tryCatch({
-    model <- eval(model_call, env)
-    res <- pred_grid(model, x, se = se, level = level, n = n, domain = domain)
-    restore(res)
-  }, error = function(e) {
-    message(e$message)
-    empty_smooth(se)
-  })
+  model <- eval(model_call, env)
+  res <- pred_grid(model, x, se = se, level = level, n = n, domain = domain)
+  restore(res)
 }
 
 empty_smooth <- function(se = FALSE) {
