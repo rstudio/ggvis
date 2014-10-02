@@ -75,7 +75,9 @@ NULL
 #' below.
 #'
 #' @param vis A ggvis object.
-#' @param property The name of a property, such as "x", "y", "fill", "stroke", etc.
+#' @param property The name of a visual property, such as "x", "y", "fill",
+#'   "stroke". Note both x and x2 use the "x" scale (similarly for y and y2).
+#'   fillOpacity, opacity and strokeOpacity use the "opacity" scale.
 #' @inheritParams ggvis_scale
 #' @param trans A scale transformation: one of "linear", "log", "pow", "sqrt",
 #'   "quantile", "quantize", "threshold". Default is "linear".

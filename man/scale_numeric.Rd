@@ -11,7 +11,9 @@ scale_numeric(vis, property, domain = NULL, range = NULL, reverse = NULL,
 \arguments{
 \item{vis}{A ggvis object.}
 
-\item{property}{The name of a property, such as "x", "y", "fill", "stroke", etc.}
+\item{property}{The name of a visual property, such as "x", "y", "fill",
+"stroke". Note both x and x2 use the "x" scale (similarly for y and y2).
+fillOpacity, opacity and strokeOpacity use the "opacity" scale.}
 
 \item{domain}{The domain of the scale, representing the set of data values.
 For ordinal scales, a character vector; for quantitative scales, a numeric
