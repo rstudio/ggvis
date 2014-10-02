@@ -412,8 +412,9 @@ check_scales_complete <- function(vis) {
     if (is.null(scale$range)) {
       warning(paste(
         sprintf("Scale '%s' for property '%s' is missing a range.", scale$name, scale$property),
-        "Perhaps you need to specify the range manually?",
-        "See ?scale_nominal or ?scale_numeric for more information."
+        "ggvis tries to automatically provide ranges for scales, but it doesn't know how in this case.",
+        "You must specify the range manually.",
+        "See ?scale_nominal or ?scale_numeric for more information and examples."
       ), call. = FALSE)
     }
   }
