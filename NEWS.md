@@ -1,17 +1,26 @@
 # ggvis 0.3.0.9xxx
 
-* `compute_model_predictions()` always returns a result, even if there's an
-  error (#102).
+## Usability improvements
+
+* Boxplots are now supported, with `layer_boxplots()` and `compute_boxplot()`.
+
+* Much better support for data objects with zero rows.
+
+* Added support for displaying ggvis plots in dynamic UI in Shiny apps. (#165)
+
+* `compute_bin()` uses `width` instead of `binwidth`, and `boundary` instead
+  of `origin`. (#268)
 
 * `compute_bin()` now defaults to `pad = FALSE`
+
+* `compute_model_predictions()` always returns a result, even if there's an
+  error (#102).
 
 * `filter()` is no longer imported and re-exported from dplyr. This
   means that to use `filter()` with ggvis object you'll need to 
   make sure to load dplyr first.
 
 * `compute_smooth()` supports more complex formulas. (#209)
-
-* Boxplots are now supported, with `layer_boxplots()` and `compute_boxplot()`.
 
 * `compute_bin()` and `compute_count()` now preserve date and time properties.
   (#235)
@@ -24,8 +33,6 @@
 * `count_vector()` preserves the order of factor levels. (#223)
 
 * `compute_bin()` now ignores NA's. (#148)
-
-* Updated to Vega 1.4.1. (#193 and #217)
 
 * `layer_bars()` now uses correctly uses `fill` prop when it is passed to the
   function, and not inherited. (#201)
@@ -44,6 +51,15 @@
 * Using "." in column names now works. (#246)
 
 * Un-exported `:=`, to avoid possible conflict with data.table.
+
+## Internal changes
+
+* Updated to Vega 1.4.2. (#193 and #217)
+
+* Switched from RJSONIO to jsonlite.
+
+* Switched to the new non-standard argument evaluation strategy from dplyr 0.3,
+  using the new lazyeval package.
 
 # ggvis 0.3.0.1
 
