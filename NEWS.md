@@ -1,4 +1,4 @@
-# ggvis 0.3.0.9xxx
+# ggvis 0.4
 
 ## Usability improvements
 
