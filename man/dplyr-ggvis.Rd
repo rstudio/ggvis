@@ -2,6 +2,8 @@
 \name{dplyr-ggvis}
 \alias{arrange_.ggvis}
 \alias{arrange_.reactive}
+\alias{distinct_.ggvis}
+\alias{distinct_.reactive}
 \alias{dplyr-ggvis}
 \alias{filter_.ggvis}
 \alias{filter_.reactive}
@@ -11,10 +13,16 @@
 \alias{groups.reactive}
 \alias{mutate_.ggvis}
 \alias{mutate_.reactive}
+\alias{rename_.ggvis}
+\alias{rename_.reactive}
 \alias{select_.ggvis}
 \alias{select_.reactive}
+\alias{slice_.ggvis}
+\alias{slice_.reactive}
 \alias{summarise_.ggvis}
 \alias{summarise_.reactive}
+\alias{transmute_.ggvis}
+\alias{transmute_.reactive}
 \alias{ungroup.ggvis}
 \alias{ungroup.reactive}
 \title{Dplyr verbs for ggvis.}
@@ -35,6 +43,14 @@ select_.ggvis(.data, ..., .dots)
 
 filter_.ggvis(.data, ..., .dots)
 
+distinct_.ggvis(.data, ..., .dots)
+
+slice_.ggvis(.data, ..., .dots)
+
+rename_.ggvis(.data, ..., .dots)
+
+transmute_.ggvis(.data, ..., .dots)
+
 groups.reactive(x)
 
 ungroup.reactive(x)
@@ -50,6 +66,14 @@ arrange_.reactive(.data, ..., .dots)
 select_.reactive(.data, ..., .dots)
 
 filter_.reactive(.data, ..., .dots)
+
+distinct_.reactive(.data, ..., .dots)
+
+slice_.reactive(.data, ..., .dots)
+
+rename_.reactive(.data, ..., .dots)
+
+transmute_.reactive(.data, ..., .dots)
 }
 \description{
 Applying a dplyr verb to a ggvis object creates a reactive transformation:
