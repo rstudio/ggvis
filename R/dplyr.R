@@ -4,7 +4,7 @@
 #' @param ... variables to group by.
 #' @param add By default, when \code{add = FALSE}, \code{group_by} will
 #'   override existing groups. To instead add to the existing groups,
-#'   use \code{add = FALSE}
+#'   use \code{add = TRUE}
 #' @importFrom dplyr group_by
 #' @name group_by
 #' @export
