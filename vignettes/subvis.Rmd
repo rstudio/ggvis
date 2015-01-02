@@ -1,6 +1,16 @@
-# Subvis
+---
+title: "subvis design notes"
+output: html_document
+---
 
-`subvis()` makes ggvis recursive: with `subvis()`, a visualisation can contain other visualisations. A subvisualisation is a tool for working with grouped data. Each group is displayed as a visualisation embedded in a larger context.
+<!--
+%\VignetteEngine{knitr}
+%\VignetteIndexEntry{subvis design notes}
+-->
+
+# Subvis design notes
+
+`subvis()` will make ggvis recursive: with `subvis()`, a visualisation can contain other visualisations. A subvisualisation is a tool for working with grouped data. Each group is displayed as a visualisation embedded in a larger context.
 
 Take this sample from the nasaweather data package. It selects a small number of locations for one year of data.
 
