@@ -63,7 +63,7 @@ mtcars %>%
   layer_points()
 ```
 
-Don't worry if this looks a little strange at first. You'll soon get used to it! This style of programming also allows gives you a lot of power when you start creating a lot of power, and allows you to seemlessly intermingle ggvis and dplyr code:
+Don't worry if this looks a little strange at first. You'll soon get used to it! This style of programming gives you a lot of power, and allows you to seemlessly intermingle ggvis and dplyr code:
 
 ```{r, message = FALSE}
 library(dplyr)
