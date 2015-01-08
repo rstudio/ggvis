@@ -16,9 +16,9 @@
 #' @param hover_duration The amount of time for hover transitions, in
 #'   milliseconds.
 #'
-#' @seealso \code{link{getOption}} and \code{link{options}}, for getting and
+#' @seealso \code{\link{getOption}} and \code{\link{options}}, for getting and
 #'   setting global options.
-#' @seealso \code{link{default_opts}} to see the default options.
+#' @seealso \code{\link{default_opts}} to see the default options.
 #' @examples
 #' mtcars %>%
 #'   ggvis(~wt, ~mpg) %>%

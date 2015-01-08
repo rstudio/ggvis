@@ -44,9 +44,9 @@ mtcars \%>\%
 str(default_options())
 }
 \seealso{
-\code{link{getOption}} and \code{link{options}}, for getting and
+\code{\link{getOption}} and \code{\link{options}}, for getting and
   setting global options.
 
-\code{link{default_opts}} to see the default options.
+\code{\link{default_opts}} to see the default options.
 }
 
