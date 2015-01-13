@@ -1,3 +1,5 @@
+library(ggvis)
+
 var_range <- function(id, label, variable) {
   rng <- range(variable, na.rm = TRUE)
   sliderInput(id, label, rng[1], rng[2], rng)

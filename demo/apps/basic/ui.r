@@ -1,3 +1,5 @@
+library(ggvis)
+
 shinyUI(pageWithSidebar(
   div(),
   sidebarPanel(
