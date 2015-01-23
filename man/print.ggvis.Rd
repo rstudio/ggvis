@@ -28,8 +28,7 @@ presence of reactives or interactive inputs in \code{x}.}
 
 \item{plot_id}{Unique identifier used to identify the plot on the page.}
 
-\item{dest}{Directory in which to save html and depedencies. Created if
-it doesn't already exist.}
+\item{dest}{Deprecated (this no longer works).}
 
 \item{port}{the port on which to start the shiny app. If NULL (the default),
 Shiny will select a random port.}
@@ -41,6 +40,19 @@ Shiny will select a random port.}
 \code{view_static} creates a static web page in a temporary directory;
 \code{view_dynamic} generate a dynamic shiny app and launches it.
 \code{print} automatically picks between the two.
+}
+\details{
+If \code{view_static} is used on a ggvis object that has dynamic components,
+it will output a static plot.
+}
+\examples{
+# In most cases view_static is unnecessary; these will do the same thing:
+mtcars \%>\% ggvis(~wt, ~mpg)
+mtcars \%>\% ggvis(~wt, ~mpg) \%>\% view_static()
+
+# Can find the output file with view_static() and html_print()
+outfile <- mtcars \%>\% ggvis(~wt, ~mpg) \%>\%
+  view_static() \%>\% htmltools::html_print(viewer = NULL)
 }
 \keyword{internal}
 
