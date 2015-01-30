@@ -155,7 +155,6 @@ ggvis = (function(_) {
     prototype.parseSpec = function(spec, opts) {
       var self = this;
       self.spec = spec;
-      self.initialized = false;
       // Merge options passed to this function into options from the spec
       self.opts = $.extend(true, self.spec.ggvis_opts, opts);
 
@@ -168,6 +167,8 @@ ggvis = (function(_) {
         if (opts.hover_duration && opts.hover_duration !== 0) {
           default_hover = false;
         }
+
+        self.initialized = false;
 
         chart = chart({
           el: "#" + self.plotId,
