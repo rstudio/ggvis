@@ -36,6 +36,8 @@ ggvisOutput <- function(plot_id = rand_id("plot_id")) {
 ggvisOutputElements <- function(plot_id = rand_id("plot_id"), spec = NULL,
                                 shiny = TRUE) {
 
+  validate_plot_id(plot_id)
+
   htmltools::attachDependencies(
     htmltools::tagList(
       ggvisPlot(plot_id),
