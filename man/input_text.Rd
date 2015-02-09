@@ -10,9 +10,9 @@ input_text(value, label = "", id = rand_id("text_"), map = identity)
 input_numeric(value, label = "", id = rand_id("numeric_"), map = identity)
 }
 \arguments{
-\item{value}{Initial value}
+\item{value}{Initial value.}
 
-\item{label}{Display label for the control}
+\item{label}{Display label for the control, or \code{NULL} for no label.}
 
 \item{id}{A unique identifier for this input. Usually generated
 automatically.}

@@ -38,8 +38,7 @@ according to some simple heuristics.}
 settings; \code{FALSE} not to; or a custom settings list, such as those
 created using \code{\link{animationOptions}}.}
 
-\item{label}{A descriptive label to be displayed with the widget, or
-\code{NULL}.}
+\item{label}{Display label for the control, or \code{NULL} for no label.}
 
 \item{id}{A unique identifier for this input. Usually generated
 automatically.}

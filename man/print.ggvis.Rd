@@ -8,8 +8,7 @@
 \usage{
 \method{print}{ggvis}(x, dynamic = NA, launch = interactive(), ...)
 
-view_static(x, plot_id = rand_id("plot_"), dest = tempfile(pattern =
-  "ggvis"))
+view_static(x, plot_id = rand_id("plot_"), dest = NULL)
 
 view_dynamic(x, plot_id = rand_id("plot_"), port = NULL, quiet = FALSE)
 }

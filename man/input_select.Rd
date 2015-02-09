@@ -25,7 +25,7 @@ for single-select lists and no values for multiple select lists.}
 
 \item{multiple}{Is selection of multiple items allowed?}
 
-\item{label}{Display label for the control, or \code{NULL}}
+\item{label}{Display label for the control, or \code{NULL} for no label.}
 
 \item{id}{A unique identifier for this input. Usually generated
 automatically.}

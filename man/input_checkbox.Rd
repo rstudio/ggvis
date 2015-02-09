@@ -10,7 +10,7 @@ input_checkbox(value = FALSE, label = "", id = rand_id("checkbox_"),
 \arguments{
 \item{value}{Initial value (\code{TRUE} or \code{FALSE}).}
 
-\item{label}{Display label for the control.}
+\item{label}{Display label for the control, or \code{NULL} for no label.}
 
 \item{id}{A unique identifier for this input. Usually generated
 automatically.}
