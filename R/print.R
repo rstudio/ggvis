@@ -71,10 +71,12 @@ print.ggvis <- function(x, dynamic = NA, launch = interactive(), ...) {
 #' # Can find the output file with view_static() and html_print()
 #' outfile <- mtcars %>% ggvis(~wt, ~mpg) %>%
 #'   view_static() %>% htmltools::html_print(viewer = NULL)
-view_static <- function(x, plot_id = rand_id("plot_"),
-                        dest = tempfile(pattern = "ggvis")) {
+view_static <- function(x, plot_id = rand_id("plot_"), dest = NULL) {
 
-  deprecated("dest", msg = " Please see ?view_static for more information.")
+
+  if (!missing(dest)) {
+    deprecated("dest", msg = " Please see ?view_static for more information.")
+  }
 
   spec <- as.vega(x, dynamic = FALSE)
   htmltools::browsable(
