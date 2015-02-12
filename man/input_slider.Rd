@@ -5,8 +5,9 @@
 \title{Create an interactive slider.}
 \usage{
 input_slider(min, max, value = (min + max)/2, step = NULL, round = FALSE,
-  format = "#,##0.#####", locale = "us", ticks = TRUE, animate = FALSE,
-  label = "", id = rand_id("slider_"), map = identity)
+  format = NULL, locale = "us", ticks = TRUE, animate = FALSE,
+  sep = ",", pre = NULL, post = NULL, label = "",
+  id = rand_id("slider_"), map = identity)
 }
 \arguments{
 \item{min}{The minimum value (inclusive) that can be selected.}
@@ -37,6 +38,12 @@ according to some simple heuristics.}
 \item{animate}{\code{TRUE} to show simple animation controls with default
 settings; \code{FALSE} not to; or a custom settings list, such as those
 created using \code{\link{animationOptions}}.}
+
+\item{sep}{Separator between thousands places in numbers.}
+
+\item{pre}{A prefix string to put in front of the value.}
+
+\item{post}{A suffix string to put after the value.}
 
 \item{label}{Display label for the control, or \code{NULL} for no label.}
 
