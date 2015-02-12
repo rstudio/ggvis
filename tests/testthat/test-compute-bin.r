@@ -199,3 +199,21 @@ test_that("only NA, one row of output", {
   expect_equal(binned$x_, NA)
 })
 
+# Factor on x axis
+
+test_that("take x axis factor and unclass to numeric", {
+  input = data.frame(c=rep(c("c1","c2","c3"),each=3), 
+                  q=rep(c("q1","q2","q3"), 3, each=4), 
+                  v=1:4)
+  output = data.frame(count_ = c(12.0, 0.0 ,12.0, 0.0, 12.0), x_ = seq(1, 3, by = 0.5),
+                      xmin_ = seq(0.75, 2.75, by = 0.5), xmax_ = seq(1.25, 3.25, by = 0.5),
+                      width_ = rep(0.5, 5))
+  x_var_test <- as.formula("~c")
+  expect_equal(compute_bin(input, x_var_test, w_var=NULL,
+                           width = 0.5,
+                           center = NULL, boundary = NULL,
+                           closed = c("right", "left"), pad = FALSE), 
+               output)
+})
+
+

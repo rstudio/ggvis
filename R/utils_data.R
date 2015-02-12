@@ -206,5 +206,10 @@ range2 <- function(..., na.rm = FALSE) {
   if (length(vals) == 0) {
     return(vals)
   }
+  
+  # If vals is a factor, unclass before calling range
+  if (is.factor(...)) {
+    return(range(unclass(...)))
+  }
   range(..., na.rm = na.rm)
 }
