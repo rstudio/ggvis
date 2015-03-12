@@ -20,7 +20,9 @@ hide tooltip for the current element.}
 Add tooltips to a plot.
 }
 \examples{
-\donttest{
+## Run these examples only in interactive R sessions
+if (interactive()) {
+
 all_values <- function(x) {
   if(is.null(x)) return(NULL)
   paste0(names(x), ": ", format(x), collapse = "<br />")
@@ -46,6 +48,7 @@ all_values <- function(x) {
 mtc \%>\% ggvis(x = ~wt, y = ~mpg, key := ~id) \%>\%
   layer_points() \%>\%
   add_tooltip(all_values, "hover")
+
 }
 }
 

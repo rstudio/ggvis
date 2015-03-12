@@ -27,7 +27,9 @@
 #'
 #' \code{p \%>\% bind_shiny("plot", "plot_ui")}
 #' @examples
-#' \donttest{
+#' ## Run these examples only in interactive R sessions
+#' if (interactive()) {
+#'
 #' # Simplest possible app:
 #' library(shiny)
 #' runApp(list(
@@ -43,6 +45,7 @@
 #'       bind_shiny("p", "p_ui")
 #'   }
 #' ))
+#'
 #' }
 #' @name shiny-ggvis
 NULL
