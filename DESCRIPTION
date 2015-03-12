@@ -1,5 +1,5 @@
 Package: ggvis
-Title: Interactive grammar of graphics
+Title: Interactive Grammar of Graphics
 Description: ggvis implements an interactive grammar of graphics, taking the
     best parts of ggplot2, combining them with shiny's reactive framework and
     drawing web graphics using vega.
