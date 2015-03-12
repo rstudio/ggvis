@@ -6,3 +6,4 @@ bench
 ^node_modules$
 ^NEWS\.md$
 ^CONTRIBUTING\.md$
+^cran-comments.md$
