@@ -1,7 +1,7 @@
 {
     "data": [
         {
-            "name": "df0/count1/stack2",
+            "name": ".0/count1/stack2",
             "format": {
                 "type": "csv",
                 "parse": {
@@ -87,12 +87,12 @@
                 },
                 "ggvis": {
                     "data": {
-                        "value": "df0/count1/stack2"
+                        "value": ".0/count1/stack2"
                     }
                 }
             },
             "from": {
-                "data": "df0/count1/stack2"
+                "data": ".0/count1/stack2"
             }
         }
     ],

@@ -1,7 +1,7 @@
 {
     "data": [
         {
-            "name": "mtcars0/group_by1/bin2_flat",
+            "name": ".0/group_by1/bin2_flat",
             "format": {
                 "type": "csv",
                 "parse": {
@@ -13,8 +13,8 @@
             "values": "\"cyl\",\"x_\",\"count_\"\n4,1,0\n4,2,8\n4,3,3\n4,4,0\n6,2,0\n6,3,7\n6,4,0\n8,2,0\n8,3,3\n8,4,8\n8,5,3\n8,6,0"
         },
         {
-            "name": "mtcars0/group_by1/bin2",
-            "source": "mtcars0/group_by1/bin2_flat",
+            "name": ".0/group_by1/bin2",
+            "source": ".0/group_by1/bin2_flat",
             "transform": [
                 {
                     "type": "treefacet",
@@ -97,7 +97,7 @@
         {
             "type": "group",
             "from": {
-                "data": "mtcars0/group_by1/bin2"
+                "data": ".0/group_by1/bin2"
             },
             "marks": [
                 {
@@ -119,7 +119,7 @@
                         },
                         "ggvis": {
                             "data": {
-                                "value": "mtcars0/group_by1/bin2"
+                                "value": ".0/group_by1/bin2"
                             }
                         }
                     }

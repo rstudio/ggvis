@@ -1,7 +1,7 @@
 {
     "data": [
         {
-            "name": "mtcars0/group_by1/boxplot2/align3_flat",
+            "name": ".0/group_by1/boxplot2/align3_flat",
             "format": {
                 "type": "csv",
                 "parse": {
@@ -18,8 +18,8 @@
             "values": "\"cyl\",\"min_\",\"max_\",\"xmin_\",\"xmax_\",\"lower_\",\"upper_\",\"median_\"\n4,21.4,33.9,3,5,22.8,30.4,26\n6,17.8,21.4,5,7,18.65,21,19.7\n8,13.3,18.7,7,9,14.4,16.25,15.2"
         },
         {
-            "name": "mtcars0/group_by1/boxplot2/align3",
-            "source": "mtcars0/group_by1/boxplot2/align3_flat",
+            "name": ".0/group_by1/boxplot2/align3",
+            "source": ".0/group_by1/boxplot2/align3_flat",
             "transform": [
                 {
                     "type": "treefacet",
@@ -30,7 +30,7 @@
             ]
         },
         {
-            "name": "mtcars0/group_by1/boxplot2/align3/boxplot_outliers4_flat",
+            "name": ".0/group_by1/boxplot2/align3/boxplot_outliers4_flat",
             "format": {
                 "type": "csv",
                 "parse": {
@@ -41,8 +41,8 @@
             "values": "\"cyl\",\"value_\"\n8,10.4\n8,10.4\n8,19.2"
         },
         {
-            "name": "mtcars0/group_by1/boxplot2/align3/boxplot_outliers4",
-            "source": "mtcars0/group_by1/boxplot2/align3/boxplot_outliers4_flat",
+            "name": ".0/group_by1/boxplot2/align3/boxplot_outliers4",
+            "source": ".0/group_by1/boxplot2/align3/boxplot_outliers4_flat",
             "transform": [
                 {
                     "type": "treefacet",
@@ -101,7 +101,7 @@
         {
             "type": "group",
             "from": {
-                "data": "mtcars0/group_by1/boxplot2/align3"
+                "data": ".0/group_by1/boxplot2/align3"
             },
             "marks": [
                 {
@@ -132,7 +132,7 @@
                         },
                         "ggvis": {
                             "data": {
-                                "value": "mtcars0/group_by1/boxplot2/align3"
+                                "value": ".0/group_by1/boxplot2/align3"
                             }
                         }
                     }
@@ -142,7 +142,7 @@
         {
             "type": "group",
             "from": {
-                "data": "mtcars0/group_by1/boxplot2/align3"
+                "data": ".0/group_by1/boxplot2/align3"
             },
             "marks": [
                 {
@@ -174,7 +174,7 @@
                         },
                         "ggvis": {
                             "data": {
-                                "value": "mtcars0/group_by1/boxplot2/align3"
+                                "value": ".0/group_by1/boxplot2/align3"
                             }
                         }
                     }
@@ -184,7 +184,7 @@
         {
             "type": "group",
             "from": {
-                "data": "mtcars0/group_by1/boxplot2/align3"
+                "data": ".0/group_by1/boxplot2/align3"
             },
             "marks": [
                 {
@@ -215,7 +215,7 @@
                         },
                         "ggvis": {
                             "data": {
-                                "value": "mtcars0/group_by1/boxplot2/align3"
+                                "value": ".0/group_by1/boxplot2/align3"
                             }
                         }
                     }
@@ -225,7 +225,7 @@
         {
             "type": "group",
             "from": {
-                "data": "mtcars0/group_by1/boxplot2/align3/boxplot_outliers4"
+                "data": ".0/group_by1/boxplot2/align3/boxplot_outliers4"
             },
             "marks": [
                 {
@@ -249,7 +249,7 @@
                         },
                         "ggvis": {
                             "data": {
-                                "value": "mtcars0/group_by1/boxplot2/align3/boxplot_outliers4"
+                                "value": ".0/group_by1/boxplot2/align3/boxplot_outliers4"
                             }
                         }
                     }

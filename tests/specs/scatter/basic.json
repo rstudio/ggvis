@@ -1,7 +1,7 @@
 {
     "data": [
         {
-            "name": "df0",
+            "name": ".0",
             "format": {
                 "type": "csv",
                 "parse": {
@@ -77,12 +77,12 @@
                 },
                 "ggvis": {
                     "data": {
-                        "value": "df0"
+                        "value": ".0"
                     }
                 }
             },
             "from": {
-                "data": "df0"
+                "data": ".0"
             }
         }
     ],
