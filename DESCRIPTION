@@ -17,7 +17,9 @@ Authors@R: c(
     person("Mike", "Bostock", role = c("ctb", "cph"), comment = "D3 library"),
     person(family = "D3 contributors", role = "ctb",
     comment = "D3 library; authors listed at https://github.com/mbostock/d3/graphs/contributors"),
-    person(family = "Trifacta Inc.", role = c("ctb", "cph"),
+    person(family = "Trifacta Inc.", role = "cph",
+    comment = "Vega library"),
+    person(family = "Vega contributors", role = "ctb",
     comment = "Vega library; authors listed at https://github.com/trifacta/vega/graphs/contributors")
     )
 URL: http://ggvis.rstudio.com/
