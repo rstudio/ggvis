@@ -4,8 +4,11 @@ Description: ggvis implements an interactive grammar of graphics, taking the
     best parts of ggplot2, combining them with shiny's reactive framework and
     drawing web graphics using vega.
 Version: 0.4.0.9000
-Author: RStudio, Inc.
-Maintainer: Winston Chang <winston@rstudio.com>
+Authors@R: c(
+    person("Winston", "Chang", role = c("aut", "cre"), email = "winston@rstudio.com"),
+    person("Hadley", "Wickham", role = "aut", email = "hadley@rstudio.com"),
+    person(family = "RStudio", role = "cph")
+    )
 URL: http://ggvis.rstudio.com/
 Depends:
     R (>= 3.0)
