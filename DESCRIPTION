@@ -7,7 +7,18 @@ Version: 0.4.0.9000
 Authors@R: c(
     person("Winston", "Chang", role = c("aut", "cre"), email = "winston@rstudio.com"),
     person("Hadley", "Wickham", role = "aut", email = "hadley@rstudio.com"),
-    person(family = "RStudio", role = "cph")
+    person(family = "RStudio", role = "cph"),
+    person(family = "jQuery Foundation", role = "cph",
+    comment = "jQuery library and jQuery UI library"),
+    person(family = "jQuery contributors", role = c("ctb", "cph"),
+    comment = "jQuery library; authors listed in inst/www/lib/jquery/AUTHORS.txt"),
+    person(family = "jQuery UI contributors", role = c("ctb", "cph"),
+    comment = "jQuery UI library; authors listed in inst/www/lib/jquery-ui/AUTHORS.txt"),
+    person("Mike", "Bostock", role = c("ctb", "cph"), comment = "D3 library"),
+    person(family = "D3 contributors", role = "ctb",
+    comment = "D3 library; authors listed at https://github.com/mbostock/d3/graphs/contributors"),
+    person(family = "Trifacta Inc.", role = c("ctb", "cph"),
+    comment = "Vega library; authors listed at https://github.com/trifacta/vega/graphs/contributors")
     )
 URL: http://ggvis.rstudio.com/
 Depends:
@@ -28,5 +39,5 @@ Suggests:
     knitr (>= 1.6),
     rmarkdown
 VignetteBuilder: knitr
-License: GPL-2
+License: GPL-2 | file LICENSE
 LazyData: true
