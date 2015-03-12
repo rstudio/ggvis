@@ -26,7 +26,7 @@ Depends:
 Imports:
     assertthat,
     jsonlite (>= 0.9.11),
-    shiny (>= 0.10),
+    shiny (>= 0.11.1),
     magrittr,
     dplyr (>= 0.3),
     lazyeval,
