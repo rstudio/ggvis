@@ -1,3 +1,6 @@
+# ggvis 0.4.1.9xxx
+
+
 # ggvis 0.4.1
 
 * input_slider has been updated to work with Shiny 0.11.
