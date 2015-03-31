@@ -1,7 +1,7 @@
 library(ggvis)
 
-shinyUI(pageWithSidebar(
-  div(),
+
+fluidPage(sidebarLayout(
   sidebarPanel(
     sliderInput("n", "Number of points", min = 1, max = nrow(mtcars),
                 value = 10, step = 1),
