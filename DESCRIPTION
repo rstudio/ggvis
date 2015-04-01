@@ -20,7 +20,9 @@ Authors@R: c(
     person(family = "Trifacta Inc.", role = "cph",
     comment = "Vega library"),
     person(family = "Vega contributors", role = "ctb",
-    comment = "Vega library; authors listed at https://github.com/trifacta/vega/graphs/contributors")
+    comment = "Vega library; authors listed at https://github.com/trifacta/vega/graphs/contributors"),
+    person("Sebastián", "Décima", role = c("ctb", "cph"),
+    comment = "javascript-detect-element-resize library")
     )
 URL: http://ggvis.rstudio.com/
 Depends:

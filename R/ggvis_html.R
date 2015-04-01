@@ -22,6 +22,12 @@ ggvis_dependencies <- function() {
       script = "jquery.min.js"
     ),
     htmltools::htmlDependency(
+      name = "detect-resize",
+      version = "0.5.3",
+      src = ggvis_path("lib/detect-resize"),
+      script = "jquery.resize.js"
+    ),
+    htmltools::htmlDependency(
       name = "jquery-ui",
       version = "1.10.4",
       src = ggvis_path("lib/jquery-ui"),
