@@ -207,6 +207,8 @@ ggvis = (function(_) {
           $('.plot-gear-icon').hide();
         }
 
+        self.removeResizeListeners();
+
         if (inPanel()) {
           self.getWrapper().width("auto");
           self.enableAutoResizeToWindow();
@@ -279,6 +281,17 @@ ggvis = (function(_) {
       return height;
     };
 
+    prototype.resizeEventNamespace = function() {
+      return this.plotId + '_ggvis_resize';
+    };
+
+    // Remove any existing resize event listeners
+    prototype.removeResizeListeners = function() {
+      this.disableResizable();
+      this.disableAutoResizeToWindow();
+      this.disableAutoResizeToWrapperParent();
+    };
+
     // Set the width of the chart to the wrapper div. If keep_aspect is true,
     // also set the height to maintain the aspect ratio.
     prototype.resizeToWrapper = function(duration, keep_aspect) {
@@ -310,11 +323,6 @@ ggvis = (function(_) {
       chart.width(newWidth);
       chart.height(newHeight);
       chart.update({ duration: duration });
-      this.trigger('resize', {
-        width: newWidth,
-        height: newHeight,
-        padding: chart.padding()
-      });
     };
 
     // Set height to fill window. Don't need to set width, because the wrapper
@@ -370,11 +378,10 @@ ggvis = (function(_) {
 
     // Make manually resizable (by dragging corner)
     prototype.enableResizable = function() {
-      var $el = this.getDiv().parent();
       var self = this;
 
       // When done resizing, update chart with new width and height
-      $el.resizable({
+      this.getWrapper().resizable({
         helper: "ui-resizable-helper",
         grid: [10, 10],
         handles: "se",
@@ -382,12 +389,18 @@ ggvis = (function(_) {
       });
     };
 
+    prototype.disableResizable = function() {
+      var $wrap = this.getWrapper();
+      if ($wrap.resizable('instance') !== undefined)
+        $wrap.resizable('destroy');
+    };
+
     // Make the plot auto-resize to fit window, if in viewer panel
     prototype.enableAutoResizeToWindow = function() {
       var self = this;
       var debounce_id = null;
 
-      $(window).resize(function() {
+      $(window).on('resize.' + this.resizeEventNamespace(), function() {
         clearTimeout(debounce_id);
         // Debounce to 100ms
         debounce_id = setTimeout(function() {
@@ -395,6 +408,10 @@ ggvis = (function(_) {
           self.resizeToWrapper(0);
         }, 100);
       });
+    };
+
+    prototype.disableAutoResizeToWindow = function() {
+      $(window).off('.' + this.resizeEventNamespace());
     };
 
     // Make the wrapper auto-resize to its parent
@@ -410,6 +427,14 @@ ggvis = (function(_) {
           self.resizeToWrapper(0);
         }, 100);
       });
+    };
+
+    prototype.disableAutoResizeToWrapperParent = function() {
+      // Unfortunately, with the javascript resize listener, there's no way to
+      // test if a resize listener has already been added, and attempting to
+      // remove when none is present results in an error.
+      try { this.getWrapper().parent().removeResize(); }
+      catch(e) {}
     };
 
     // This is called when control outputs for a plot are updated
