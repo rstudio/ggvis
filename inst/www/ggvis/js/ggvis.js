@@ -207,10 +207,25 @@ ggvis = (function(_) {
           $('.plot-gear-icon').hide();
         }
 
+        self.removeResizeListeners();
+
         if (inPanel()) {
+          self.getWrapper().width("auto");
           self.enableAutoResizeToWindow();
-        } else if (opts.resizable) {
-          self.enableResizable();
+
+        } else {
+
+          var $wrap = self.getWrapper();
+          // If auto-width, simply set CSS width to auto. This doesn't work for
+          // height.
+          if (opts.width)  $wrap.width(opts.width);
+          if (opts.height) $wrap.height(opts.height);
+
+          if (opts.width === "auto" || opts.height === "auto") {
+            self.enableAutoResizeToWrapperParent();
+          } else if (opts.resizable) {
+            self.enableResizable();
+          }
         }
 
         // If the data arrived earlier, use it.
@@ -266,6 +281,17 @@ ggvis = (function(_) {
       return height;
     };
 
+    prototype.resizeEventNamespace = function() {
+      return this.plotId + '_ggvis_resize';
+    };
+
+    // Remove any existing resize event listeners
+    prototype.removeResizeListeners = function() {
+      this.disableResizable();
+      this.disableAutoResizeToWindow();
+      this.disableAutoResizeToWrapperParent();
+    };
+
     // Set the width of the chart to the wrapper div. If keep_aspect is true,
     // also set the height to maintain the aspect ratio.
     prototype.resizeToWrapper = function(duration, keep_aspect) {
@@ -297,21 +323,14 @@ ggvis = (function(_) {
       chart.width(newWidth);
       chart.height(newHeight);
       chart.update({ duration: duration });
-      this.trigger('resize', {
-        width: newWidth,
-        height: newHeight,
-        padding: chart.padding()
-      });
     };
 
-    // Set width and height to fill window
-    prototype.resizeToWindow = function(duration) {
+    // Set height to fill window. Don't need to set width, because the wrapper
+    // div should already have width="auto".
+    prototype.resizeWrapperToWindow = function() {
       var $body = $('body');
       var $wrap = this.getWrapper();
-      // In some cases, parent of $wrap is the body, but sometimes it's a div.
-      var $wrapParent = $wrap.parent();
 
-      var extra_width = $body.outerWidth(true) - $wrapParent.width();
       // Use $body.height() here because dynamic plots may have controls that
       // take some vertical space, which we need to take into account.
       var extra_height = $body.outerHeight(true) - $body.height();
@@ -320,38 +339,23 @@ ggvis = (function(_) {
       // The wrapper has overflow:hidden so that objects inside of it won't
       // scrollbars to appear while it's being resized.
       var docEl = document.documentElement;
-      $wrap.width(docEl.clientWidth - extra_width);
-      $wrap.height(docEl.clientHeight - extra_height);
-      // Resize again - needed because if the first resize caused a scrollbar to
-      // disappear, there will be a little extra space.
-      $wrap.width(docEl.clientWidth - extra_width);
       $wrap.height(docEl.clientHeight - extra_height);
 
       // Now if there are any other elements in the body that cause the page to
       // be larger than the window (like controls), we need to shrink the
       // plot so that they end up inside the window.
       $wrap.height(2 * (docEl.clientHeight - extra_height) - $body.height());
-
-      this.resizeToWrapper(duration);
     };
 
-    // Change the dimensions of the wrapper div to fit the plot.
-    // This is useful when the we're not auto-sizing the plot, and the plot is
-    // smaller than the window; if we don't do this, then the div will take the
-    // full window width, but the plot will be smaller.
-    prototype.resizeWrapperToPlot = function() {
-      var $wrap   = this.getWrapper();  // wrapper around $div
-      var $div    = this.getDiv();      // ggvis div, containing $el
-      var $vega   = this.getVegaDiv();  // Immediate wrapper around marks
-      var $gear   = $wrap.find(".plot-gear-icon");
-
-      var width = Math.ceil(this.marksWidth());
-      // There are 5 extra pixels in the bottom
-      var height = Math.ceil(this.marksHeight() + 5);
-
-      $vega.width(width).height(height);
-      $div.width(width).height(height);
-      $wrap.width(width + $gear.width()).height(height);
+    // Resize wrapper to fit its parent
+    prototype.resizeWrapperToParent = function() {
+      // We don't need to set the width, because when this.opts.width==="auto",
+      // the div gets width="auto", and the browser automatically sizes it.
+      // But that strategy doesn't work for height.
+      if (this.opts.height === 'auto') {
+        var $wrap = this.getWrapper();
+        $wrap.height($wrap.parent().height());
+      }
     };
 
     // Run an update on the chart for the first time
@@ -365,19 +369,19 @@ ggvis = (function(_) {
 
       // Resizing to fit has to happen after the initial update
       if (inPanel()) {
-        this.resizeToWindow(0);
+        this.resizeWrapperToWindow();
       } else {
-        this.resizeWrapperToPlot();
+        this.resizeWrapperToParent();
       }
+      this.resizeToWrapper(0);
     };
 
     // Make manually resizable (by dragging corner)
     prototype.enableResizable = function() {
-      var $el = this.getDiv().parent();
       var self = this;
 
       // When done resizing, update chart with new width and height
-      $el.resizable({
+      this.getWrapper().resizable({
         helper: "ui-resizable-helper",
         grid: [10, 10],
         handles: "se",
@@ -385,22 +389,59 @@ ggvis = (function(_) {
       });
     };
 
+    prototype.disableResizable = function() {
+      var $wrap = this.getWrapper();
+      if ($wrap.resizable('instance') !== undefined)
+        $wrap.resizable('destroy');
+    };
+
     // Make the plot auto-resize to fit window, if in viewer panel
     prototype.enableAutoResizeToWindow = function() {
       var self = this;
       var debounce_id = null;
 
-      $(window).resize(function() {
+      $(window).on('resize.' + this.resizeEventNamespace(), function() {
         clearTimeout(debounce_id);
         // Debounce to 100ms
-        debounce_id = setTimeout(function() { self.resizeToWindow(); }, 100);
+        debounce_id = setTimeout(function() {
+          self.resizeWrapperToWindow();
+          self.resizeToWrapper(0);
+        }, 100);
       });
+    };
+
+    prototype.disableAutoResizeToWindow = function() {
+      $(window).off('.' + this.resizeEventNamespace());
+    };
+
+    // Make the wrapper auto-resize to its parent
+    prototype.enableAutoResizeToWrapperParent = function() {
+      var self = this;
+      var debounce_id = null;
+
+      this.getWrapper().parent().resize(function() {
+        clearTimeout(debounce_id);
+        // Debounce to 100ms
+        debounce_id = setTimeout(function() {
+          self.resizeWrapperToParent();
+          self.resizeToWrapper(0);
+        }, 100);
+      });
+    };
+
+    prototype.disableAutoResizeToWrapperParent = function() {
+      // Unfortunately, with the javascript resize listener, there's no way to
+      // test if a resize listener has already been added, and attempting to
+      // remove when none is present results in an error.
+      try { this.getWrapper().parent().removeResize(); }
+      catch(e) {}
     };
 
     // This is called when control outputs for a plot are updated
     prototype.onControlOutput = function() {
       if (inPanel()) {
-        this.resizeToWindow(0);
+        this.resizeWrapperToWindow();
+        this.resizeToWrapper(0);
       }
     };
 
