@@ -8,6 +8,8 @@
 /* Containers for plots shouldn't allow overflow */
 .ggvis-output-container {
   overflow: hidden;
+  /* So that gear can be positioned absolutely inside. */
+  position: relative;
 }
 
 /* Outline box when resizing a plot */
