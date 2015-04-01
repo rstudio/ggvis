@@ -208,6 +208,7 @@ ggvis = (function(_) {
         }
 
         if (inPanel()) {
+          self.getWrapper().width("auto");
           self.enableAutoResizeToWindow();
 
         } else {
@@ -316,14 +317,12 @@ ggvis = (function(_) {
       });
     };
 
-    // Set width and height to fill window
+    // Set height to fill window. Don't need to set width, because the wrapper
+    // div should already have width="auto".
     prototype.resizeWrapperToWindow = function() {
       var $body = $('body');
       var $wrap = this.getWrapper();
-      // In some cases, parent of $wrap is the body, but sometimes it's a div.
-      var $wrapParent = $wrap.parent();
 
-      var extra_width = $body.outerWidth(true) - $wrapParent.width();
       // Use $body.height() here because dynamic plots may have controls that
       // take some vertical space, which we need to take into account.
       var extra_height = $body.outerHeight(true) - $body.height();
@@ -332,11 +331,6 @@ ggvis = (function(_) {
       // The wrapper has overflow:hidden so that objects inside of it won't
       // scrollbars to appear while it's being resized.
       var docEl = document.documentElement;
-      $wrap.width(docEl.clientWidth - extra_width);
-      $wrap.height(docEl.clientHeight - extra_height);
-      // Resize again - needed because if the first resize caused a scrollbar to
-      // disappear, there will be a little extra space.
-      $wrap.width(docEl.clientWidth - extra_width);
       $wrap.height(docEl.clientHeight - extra_height);
 
       // Now if there are any other elements in the body that cause the page to
