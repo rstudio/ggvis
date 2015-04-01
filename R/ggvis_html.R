@@ -29,10 +29,10 @@ ggvis_dependencies <- function() {
     ),
     htmltools::htmlDependency(
       name = "jquery-ui",
-      version = "1.10.4",
+      version = "1.11.4",
       src = ggvis_path("lib/jquery-ui"),
-      script = adjust_min("js/jquery-ui-1.10.4.custom.min.js"),
-      stylesheet = adjust_min("css/smoothness/jquery-ui-1.10.4.custom.min.css")
+      script = adjust_min("jquery-ui.min.js"),
+      stylesheet = adjust_min("jquery-ui.min.css")
     ),
     htmltools::htmlDependency(
       name = "d3",
