@@ -209,8 +209,20 @@ ggvis = (function(_) {
 
         if (inPanel()) {
           self.enableAutoResizeToWindow();
-        } else if (opts.resizable) {
-          self.enableResizable();
+
+        } else {
+
+          var $wrap = self.getWrapper();
+          // If auto-width, simply set CSS width to auto. This doesn't work for
+          // height.
+          if (opts.width)  $wrap.width(opts.width);
+          if (opts.height) $wrap.height(opts.height);
+
+          if (opts.width === "auto" || opts.height === "auto") {
+            self.enableAutoResizeToWrapperParent();
+          } else if (opts.resizable) {
+            self.enableResizable();
+          }
         }
 
         // If the data arrived earlier, use it.
@@ -305,7 +317,7 @@ ggvis = (function(_) {
     };
 
     // Set width and height to fill window
-    prototype.resizeToWindow = function(duration) {
+    prototype.resizeWrapperToWindow = function() {
       var $body = $('body');
       var $wrap = this.getWrapper();
       // In some cases, parent of $wrap is the body, but sometimes it's a div.
@@ -331,27 +343,17 @@ ggvis = (function(_) {
       // be larger than the window (like controls), we need to shrink the
       // plot so that they end up inside the window.
       $wrap.height(2 * (docEl.clientHeight - extra_height) - $body.height());
-
-      this.resizeToWrapper(duration);
     };
 
-    // Change the dimensions of the wrapper div to fit the plot.
-    // This is useful when the we're not auto-sizing the plot, and the plot is
-    // smaller than the window; if we don't do this, then the div will take the
-    // full window width, but the plot will be smaller.
-    prototype.resizeWrapperToPlot = function() {
-      var $wrap   = this.getWrapper();  // wrapper around $div
-      var $div    = this.getDiv();      // ggvis div, containing $el
-      var $vega   = this.getVegaDiv();  // Immediate wrapper around marks
-      var $gear   = $wrap.find(".plot-gear-icon");
-
-      var width = Math.ceil(this.marksWidth());
-      // There are 5 extra pixels in the bottom
-      var height = Math.ceil(this.marksHeight() + 5);
-
-      $vega.width(width).height(height);
-      $div.width(width).height(height);
-      $wrap.width(width + $gear.width()).height(height);
+    // Resize wrapper to fit its parent
+    prototype.resizeWrapperToParent = function() {
+      // We don't need to set the width, because when this.opts.width==="auto",
+      // the div gets width="auto", and the browser automatically sizes it.
+      // But that strategy doesn't work for height.
+      if (this.opts.height === 'auto') {
+        var $wrap = this.getWrapper();
+        $wrap.height($wrap.parent().height());
+      }
     };
 
     // Run an update on the chart for the first time
@@ -365,10 +367,11 @@ ggvis = (function(_) {
 
       // Resizing to fit has to happen after the initial update
       if (inPanel()) {
-        this.resizeToWindow(0);
+        this.resizeWrapperToWindow();
       } else {
-        this.resizeWrapperToPlot();
+        this.resizeWrapperToParent();
       }
+      this.resizeToWrapper(0);
     };
 
     // Make manually resizable (by dragging corner)
@@ -393,14 +396,33 @@ ggvis = (function(_) {
       $(window).resize(function() {
         clearTimeout(debounce_id);
         // Debounce to 100ms
-        debounce_id = setTimeout(function() { self.resizeToWindow(); }, 100);
+        debounce_id = setTimeout(function() {
+          self.resizeWrapperToWindow();
+          self.resizeToWrapper(0);
+        }, 100);
+      });
+    };
+
+    // Make the wrapper auto-resize to its parent
+    prototype.enableAutoResizeToWrapperParent = function() {
+      var self = this;
+      var debounce_id = null;
+
+      this.getWrapper().parent().resize(function() {
+        clearTimeout(debounce_id);
+        // Debounce to 100ms
+        debounce_id = setTimeout(function() {
+          self.resizeWrapperToParent();
+          self.resizeToWrapper(0);
+        }, 100);
       });
     };
 
     // This is called when control outputs for a plot are updated
     prototype.onControlOutput = function() {
       if (inPanel()) {
-        this.resizeToWindow(0);
+        this.resizeWrapperToWindow();
+        this.resizeToWrapper(0);
       }
     };
 

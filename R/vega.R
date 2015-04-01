@@ -64,8 +64,6 @@ as.vega.ggvis <- function(x, session = NULL, dynamic = FALSE, ...) {
     data = c(datasets, scale_datasets),
     scales = lapply(unname(x$scales), as.vega),
     marks = lapply(x$marks, as.vega),
-    width = x$options$width,
-    height = x$options$height,
     legends = compact(lapply(x$legends, as.vega)),
     axes = compact(lapply(x$axes, as.vega)),
     padding = as.vega(x$options$padding),

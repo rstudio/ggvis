@@ -11,23 +11,30 @@ set_options(vis, width = NULL, height = NULL, keep_aspect = NULL,
 \arguments{
 \item{vis}{Visualisation to modify}
 
-\item{width,height}{Width and height of plot, in pixels. Default is 600x400.}
+\item{width,height}{Width and height of plot, in pixels. Default is 600x400.
+\code{width} or \code{height} can also be \code{"auto"}, in which case the
+plot will size to fit in the containing div. This is useful only in a Shiny
+app or custom HTML output. Note that \code{height="auto"} should only be
+used when the plot is placed within a div that has a fixed height; if not,
+automatic height will not work, due to the way that web browsers do
+vertical layout.}
 
-\item{keep_aspect}{Should the aspect ratio be preserved? The default value
-is \code{FALSE}, or the value of \code{getOption("ggvis.keep_aspect")}, if
-it is set.}
+\item{keep_aspect}{Should the aspect ratio be preserved? The default value is
+\code{FALSE}, or the value of \code{getOption("ggvis.keep_aspect")}, if it
+is set.}
 
-\item{resizable}{If TRUE, allow the user to resize the plot.
-The default value is \code{TRUE}, or the value of
-\code{getOption("ggvis.resizable")}, if it is set.}
+\item{resizable}{If TRUE, allow the user to resize the plot. The default
+value is \code{TRUE}, or the value of \code{getOption("ggvis.resizable")},
+if it is set. Not compatible when \code{width} or \code{height} is
+\code{"auto"}.}
 
 \item{padding}{A padding object specifying padding on the top, right, left,
 and bottom. See \code{\link{padding}}.}
 
 \item{duration}{Duration of transitions, in milliseconds.}
 
-\item{renderer}{The renderer to use in the browser. Can be \code{"canvas"}
-or \code{"svg"} (the default).}
+\item{renderer}{The renderer to use in the browser. Can be \code{"canvas"} or
+\code{"svg"} (the default).}
 
 \item{hover_duration}{The amount of time for hover transitions, in
   milliseconds.}
