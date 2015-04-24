@@ -445,10 +445,22 @@ $(function(){ //DOM Ready
       .appendTo('body');
 
     $el.html(data.html);
-    $el.css({
-      left:  data.pagex,
-      top:   data.pagey
-    });
+    // Adjust horizontal position
+    if ($(window).width() < (data.pagex + $el.width() + 10)) {
+      $el
+        .css("left", (data.pagex - $el.outerWidth() - 5) + "px");
+    } else {
+      $el
+        .css("left", (data.pagex + 5) + "px");
+    }
+    // Adjust vertical position
+    if ($(window).height() < (data.pagey + $el.height() + 10)) {
+      $el
+        .css("top", (data.pagey - $el.outerHeight() - 5) + "px");
+    } else {
+      $el
+        .css("top", (data.pagey + 5) + "px");
+    }
   });
 
   ggvis.messages.addHandler("hide_tooltip", function(data, id) {
