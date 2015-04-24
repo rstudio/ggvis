@@ -9,6 +9,7 @@
 #' # In this example we will represent graphically the means of the
 #' # mixture components of the faithful dataset.
 #' # First we compute the means of each component:
+#' library("dplyr")
 #' means <- faithful %>%
 #'   mutate(left = eruptions < 3) %>%
 #'   group_by(left) %>%
