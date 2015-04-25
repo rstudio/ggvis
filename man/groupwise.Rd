@@ -37,5 +37,20 @@ ggvis(mtcars, ~mpg) \%>\%
   layer_histograms() \%>\%
   layer_axial_lines(y := groupwise("height", mult = 0.5),
     stroke := "red", strokeWidth := 4)
+
+# Combining mult and offset makes it is easy to place elements where
+# you want them
+ggvis(faithful) \%>\%
+  layer_histograms(~eruptions) \%>\%
+  emit_rects(props(
+    x := 30, x2 := groupwise("width", -15, 0.5),
+    y := 30, y2 := groupwise("height", -30),
+    fill := "red"
+  )) \%>\%
+  emit_rects(props(
+    x := groupwise("width", 15, 0.5), x2 := groupwise("width", -30),
+    y := groupwise("height", -30), y2 := 30,
+    fill := "blue"
+  ))
 }
 
