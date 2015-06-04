@@ -68,7 +68,7 @@ compute_stack.data.frame <- function(x, stack_var = NULL, group_var = NULL) {
   # but with value of stack_var in the right place.
   args <- list(
     stack_upr_ = bquote(cumsum(.(stack_var[[2]]))),
-    stack_lwr_ = bquote(lag(stack_upr_, default = 0))
+    stack_lwr_ = bquote(dplyr::lag(stack_upr_, default = 0))
   )
   x <- dplyr::mutate_(x, .dots = lazyeval::as.lazy_dots(args, asNamespace("ggvis")))
 
