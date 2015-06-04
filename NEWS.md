@@ -1,5 +1,6 @@
 # ggvis 0.4.1.9xxx
 
+* compatible with dplyr 0.4.2
 
 # ggvis 0.4.1
 
