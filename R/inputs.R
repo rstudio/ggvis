@@ -18,8 +18,9 @@
 #' # You can use map to transform the outputs
 #' input_slider(-5, 5, label = "Log scale", map = function(x) 10 ^ x)
 input_slider <- function(min, max, value = (min + max) / 2, step = NULL,
-                         round = FALSE, format = "#,##0.#####", locale = "us",
-                         ticks = TRUE, animate = FALSE, label = "",
+                         round = FALSE, format = NULL, locale = "us",
+                         ticks = TRUE, animate = FALSE,
+                         sep = ",", pre = NULL, post = NULL, label = "",
                          id = rand_id("slider_"), map = identity) {
 
   assert_that(is.string(label), is.string(id))
@@ -28,9 +29,17 @@ input_slider <- function(min, max, value = (min + max) / 2, step = NULL,
     value <- round_any(value - min, step) + min
   }
 
-  control <- shiny::sliderInput(id, label, min = min, max = max,
-    value = value, step = step, round = round, format = format, locale = locale,
-    ticks = ticks, animate = animate)
+  # Older versions of shiny use `format` and `locale`; newer versions use
+  # `sep`, `pre`, and `post`.
+  if (packageVersion("shiny") >= "0.11") {
+    control <- shiny::sliderInput(id, label, min = min, max = max,
+      value = value, step = step, round = round,
+      ticks = ticks, animate = animate, sep = sep, pre = pre, post = post)
+  } else {
+    control <- shiny::sliderInput(id, label, min = min, max = max,
+      value = value, step = step, round = round, format = format, locale = locale,
+      ticks = ticks, animate = animate)
+  }
 
   create_input(id, value, map, control)
 }

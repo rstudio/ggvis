@@ -1,6 +1,6 @@
 library(ggvis)
 
-shinyServer(function(input, output, session) {
+function(input, output, session) {
   # A reactive subset of mtcars
   mtc <- reactive({ mtcars[1:input$n, ] })
 
@@ -14,4 +14,4 @@ shinyServer(function(input, output, session) {
   output$mtc_table <- renderTable({
     mtc()[, c("wt", "mpg")]
   })
-})
+}

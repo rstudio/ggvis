@@ -109,14 +109,20 @@ $(function(){ //DOM Ready
 
     if (plot.chart) {
       if (command === "update") {
-        // If all data objects have been received, update
-        if (plot.dataReady()) {
-          if (!plot.initialized) {
-            plot.initialUpdate();
-          } else {
-            plot.chart.update({ duration: plot.opts.duration });
+        // When a plot already is present, and a ggvis_vega_spec plus an update
+        // ggvis_command arrive very close together, we need to make sure that
+        // the update happens _after_ the spec is parsed. There's a setTimeout
+        // when Vega processes the spec, so we need one here also. (#700)
+        setTimeout(function() {
+          // If all data objects have been received, update
+          if (plot.dataReady()) {
+            if (!plot.initialized) {
+              plot.initialUpdate();
+            } else {
+              plot.chart.update({ duration: plot.opts.duration });
+            }
           }
-        }
+        }, 1);
       } else {
         console.log("Received unknown ggvis_command.");
       }

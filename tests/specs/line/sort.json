@@ -1,7 +1,7 @@
 {
     "data": [
         {
-            "name": "df0/arrange1",
+            "name": ".0/arrange1",
             "format": {
                 "type": "csv",
                 "parse": {
@@ -75,12 +75,12 @@
                 },
                 "ggvis": {
                     "data": {
-                        "value": "df0/arrange1"
+                        "value": ".0/arrange1"
                     }
                 }
             },
             "from": {
-                "data": "df0/arrange1"
+                "data": ".0/arrange1"
             }
         }
     ],

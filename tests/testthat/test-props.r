@@ -1,5 +1,5 @@
 context("props")
-require(shiny)
+library(shiny)
 
 # Recursively crawl a list and replace any environments with a special
 # environment. This is a workaround for a change in behavior in R 3.2.0

@@ -4,7 +4,7 @@
 #' @param ... variables to group by.
 #' @param add By default, when \code{add = FALSE}, \code{group_by} will
 #'   override existing groups. To instead add to the existing groups,
-#'   use \code{add = FALSE}
+#'   use \code{add = TRUE}
 #' @importFrom dplyr group_by
 #' @name group_by
 #' @export
@@ -134,6 +134,51 @@ filter_.ggvis <- function(.data, ..., .dots) {
     dplyr::filter_(data, .dots = lapply(pieces$lazy, add_args, args))
   })
 }
+
+#' @rdname dplyr-ggvis
+#' @export
+distinct_.ggvis <- function(.data, ..., .dots) {
+  dots <- lazyeval::all_dots(.dots, ...)
+  pieces <- extract_lazy_inputs(dots)
+
+  register_computation(.data, pieces$inputs, "distinct", function(data, args) {
+    dplyr::distinct_(data, .dots = lapply(pieces$lazy, add_args, args))
+  })
+}
+
+#' @rdname dplyr-ggvis
+#' @export
+slice_.ggvis <- function(.data, ..., .dots) {
+  dots <- lazyeval::all_dots(.dots, ...)
+  pieces <- extract_lazy_inputs(dots)
+
+  register_computation(.data, pieces$inputs, "slice", function(data, args) {
+    dplyr::slice_(data, .dots = lapply(pieces$lazy, add_args, args))
+  })
+}
+
+#' @rdname dplyr-ggvis
+#' @export
+rename_.ggvis <- function(.data, ..., .dots) {
+  dots <- lazyeval::all_dots(.dots, ...)
+  pieces <- extract_lazy_inputs(dots)
+
+  register_computation(.data, pieces$inputs, "rename", function(data, args) {
+    dplyr::rename_(data, .dots = lapply(pieces$lazy, add_args, args))
+  })
+}
+
+#' @rdname dplyr-ggvis
+#' @export
+transmute_.ggvis <- function(.data, ..., .dots) {
+  dots <- lazyeval::all_dots(.dots, ...)
+  pieces <- extract_lazy_inputs(dots)
+
+  register_computation(.data, pieces$inputs, "transmute", function(data, args) {
+    dplyr::transmute_(data, .dots = lapply(pieces$lazy, add_args, args))
+  })
+}
+
 
 #' Extract reactive inputs from a lazy dots.
 #'
@@ -273,4 +318,24 @@ select_.reactive <- function(.data, ..., .dots) {
 #' @export
 filter_.reactive <- function(.data, ..., .dots) {
   reactive(dplyr::filter_(.data(), ..., .dots = .dots))
+}
+#' @rdname dplyr-ggvis
+#' @export
+distinct_.reactive <- function(.data, ..., .dots) {
+  reactive(dplyr::distinct_(.data(), ..., .dots = .dots))
+}
+#' @rdname dplyr-ggvis
+#' @export
+slice_.reactive <- function(.data, ..., .dots) {
+  reactive(dplyr::slice_(.data(), ..., .dots = .dots))
+}
+#' @rdname dplyr-ggvis
+#' @export
+rename_.reactive <- function(.data, ..., .dots) {
+  reactive(dplyr::rename_(.data(), ..., .dots = .dots))
+}
+#' @rdname dplyr-ggvis
+#' @export
+transmute_.reactive <- function(.data, ..., .dots) {
+  reactive(dplyr::transmute_(.data(), ..., .dots = .dots))
 }

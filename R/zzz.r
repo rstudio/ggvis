@@ -1,5 +1,5 @@
 .onAttach <- function(...) {
-  if (!interactive()) return()
+  if (!interactive() || stats::runif(1) > 0.1) return()
   packageStartupMessage("The ggvis API is currently rapidly evolving. ",
     "We strongly recommend that you do not rely on this for production, but ",
     "feel free to explore. If you encounter a clear bug, please file a ",

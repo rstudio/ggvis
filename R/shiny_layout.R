@@ -36,6 +36,8 @@ ggvisOutput <- function(plot_id = rand_id("plot_id")) {
 ggvisOutputElements <- function(plot_id = rand_id("plot_id"), spec = NULL,
                                 shiny = TRUE) {
 
+  validate_plot_id(plot_id)
+
   htmltools::attachDependencies(
     htmltools::tagList(
       ggvisPlot(plot_id),
@@ -140,7 +142,7 @@ sidebarBottomPage <- function(sidebarPanel, mainPanel, shiny_headers = TRUE) {
 #' @export
 #' @rdname sidebarBottomPage
 sidebarBottomPanel <- function(...) {
-  htmltools::div(class = "span4 sidebar-bottom",
+  htmltools::div(class = "col-sm-4 sidebar-bottom",
     htmltools::tags$form(class = "well well-small",
       ...
     )
@@ -150,7 +152,7 @@ sidebarBottomPanel <- function(...) {
 #' @rdname sidebarBottomPage
 #' @export
 mainTopPanel <- function(...) {
-  htmltools::div(class = "span8 main-top",
+  htmltools::div(class = "col-sm-8 main-top",
     ...
   )
 }

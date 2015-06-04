@@ -1,4 +1,24 @@
-# ggvis 0.3.0.9xxx
+# ggvis 0.4.1.9xxx
+
+
+# ggvis 0.4.1
+
+* input_slider has been updated to work with Shiny 0.11.
+
+* The parse spec and update events now happen in the correct order. This
+  fixed an issue with plots flashing. (#351)
+
+* Pointer events are now allowed in tooltips (#349)
+
+* Updated to Vega 1.4.3 and D3 3.5.2.
+
+* Startup messages are now shown only one in ten times. (#302)
+
+* Added new dplyr verbs: `distinct`, `rename`, `slice`, and `transmute`. (#299)
+
+* ggvis now gives a warning when key prop values are not unique. (#295)
+
+# ggvis 0.4
 
 ## Usability improvements
 

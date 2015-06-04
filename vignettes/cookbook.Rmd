@@ -185,7 +185,7 @@ cocaine %>% ggvis(~month, fill := "#fff8dc") %>%
 ```
 ## Box plots
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 mtcars %>% ggvis(~factor(cyl), ~mpg) %>% layer_boxplots()
 ```
 

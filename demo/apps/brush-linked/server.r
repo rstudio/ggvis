@@ -24,9 +24,9 @@ shinyServer(function(input, output, session) {
 
   cocaine %>%
     ggvis(~potency) %>%
-    layer_histograms(width = 5, origin = 0) %>%
+    layer_histograms(width = 5, boundary = 0) %>%
     add_data(cocaine_selected) %>%
-    layer_histograms(width = 5, origin = 0, fill := "#dd3333") %>%
+    layer_histograms(width = 5, boundary = 0, fill := "#dd3333") %>%
     set_options(width = 300, height = 300) %>%
     bind_shiny("plot2")
 })

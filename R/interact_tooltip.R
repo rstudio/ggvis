@@ -8,7 +8,9 @@
 #' @param on Should tooltips appear on hover, or on click?
 #' @export
 #' @examples
-#' \donttest{
+#' ## Run these examples only in interactive R sessions
+#' if (interactive()) {
+#'
 #' all_values <- function(x) {
 #'   if(is.null(x)) return(NULL)
 #'   paste0(names(x), ": ", format(x), collapse = "<br />")
@@ -34,6 +36,7 @@
 #' mtc %>% ggvis(x = ~wt, y = ~mpg, key := ~id) %>%
 #'   layer_points() %>%
 #'   add_tooltip(all_values, "hover")
+#'
 #' }
 add_tooltip <- function(vis, html, on = c("hover", "click")) {
   on <- match.arg(on)

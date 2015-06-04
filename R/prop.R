@@ -216,6 +216,11 @@ prop_value.prop_variable <- function(x, data) {
       call. = FALSE)
   }
 
+  if (x$property == "key" && any(duplicated(col))) {
+    warning("All values in column used for 'key' property should be unique,",
+      " but some values are duplicated.")
+  }
+
   rep(col, length.out = nrow(data))
 }
 #' @export

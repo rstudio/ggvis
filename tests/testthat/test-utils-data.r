@@ -142,6 +142,20 @@ test_that("preserve_constants", {
   )
 })
 
+test_that("preserve_constants preserves factor level order", {
+  input <- data.frame(g1 = factor(c('A','B','C'), levels = c('B','A','C')))
+  output <- data.frame(
+    g1 = factor(c('A','B','C'), levels = c('B','A','C')),
+    g2 = factor(c('A','B','C'), levels = c('B','A','C'))
+  )
+
+  expect_identical(preserve_constants(input, output), output)
+
+  # grouped
+  res <- preserve_constants(group_by(input, g1), group_by(output, g1))
+  expect_identical(levels(res$g1), c('B','A','C'))
+  expect_identical(levels(res$g2), c('B','A','C'))
+})
 
 test_that("to_csv", {
   # Zero-row data frame. The trailing \n should be optional.

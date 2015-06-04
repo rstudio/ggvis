@@ -30,6 +30,9 @@
 #' \code{view_dynamic} generate a dynamic shiny app and launches it.
 #' \code{print} automatically picks between the two.
 #'
+#' If \code{view_static} is used on a ggvis object that has dynamic components,
+#' it will output a static plot.
+#'
 #' @param x A ggvis object.
 #' @param dynamic Uses \code{view_dynamic} if \code{TRUE}, \code{view_static} if
 #'   \code{FALSE}. The default, \code{NA}, chooses automatically based on the
@@ -59,10 +62,21 @@ print.ggvis <- function(x, dynamic = NA, launch = interactive(), ...) {
 #' @rdname print.ggvis
 #' @export
 #' @param plot_id Unique identifier used to identify the plot on the page.
-#' @param dest Directory in which to save html and depedencies. Created if
-#'   it doesn't already exist.
-view_static <- function(x, plot_id = rand_id("plot_"),
-                        dest = tempfile(pattern = "ggvis")) {
+#' @param dest Deprecated (this no longer works).
+#' @examples
+#' # In most cases view_static is unnecessary; these will do the same thing:
+#' mtcars %>% ggvis(~wt, ~mpg)
+#' mtcars %>% ggvis(~wt, ~mpg) %>% view_static()
+#'
+#' # Can find the output file with view_static() and html_print()
+#' outfile <- mtcars %>% ggvis(~wt, ~mpg) %>%
+#'   view_static() %>% htmltools::html_print(viewer = NULL)
+view_static <- function(x, plot_id = rand_id("plot_"), dest = NULL) {
+
+
+  if (!missing(dest)) {
+    deprecated("dest", msg = " Please see ?view_static for more information.")
+  }
 
   spec <- as.vega(x, dynamic = FALSE)
   htmltools::browsable(

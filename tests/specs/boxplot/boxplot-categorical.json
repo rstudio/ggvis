@@ -1,7 +1,7 @@
 {
     "data": [
         {
-            "name": "mtcars0/group_by1/boxplot2_flat",
+            "name": ".0/group_by1/boxplot2_flat",
             "format": {
                 "type": "csv",
                 "parse": {
@@ -15,8 +15,8 @@
             "values": "\"min_\",\"max_\",\"factor(cyl)\",\"lower_\",\"upper_\",\"median_\"\n21.4,33.9,\"4\",22.8,30.4,26\n17.8,21.4,\"6\",18.65,21,19.7\n13.3,18.7,\"8\",14.4,16.25,15.2"
         },
         {
-            "name": "mtcars0/group_by1/boxplot2",
-            "source": "mtcars0/group_by1/boxplot2_flat",
+            "name": ".0/group_by1/boxplot2",
+            "source": ".0/group_by1/boxplot2_flat",
             "transform": [
                 {
                     "type": "treefacet",
@@ -27,7 +27,7 @@
             ]
         },
         {
-            "name": "mtcars0/group_by1/boxplot2/boxplot_outliers3_flat",
+            "name": ".0/group_by1/boxplot2/boxplot_outliers3_flat",
             "format": {
                 "type": "csv",
                 "parse": {
@@ -37,8 +37,8 @@
             "values": "\"value_\",\"factor(cyl)\"\n10.4,\"8\"\n10.4,\"8\"\n19.2,\"8\""
         },
         {
-            "name": "mtcars0/group_by1/boxplot2/boxplot_outliers3",
-            "source": "mtcars0/group_by1/boxplot2/boxplot_outliers3_flat",
+            "name": ".0/group_by1/boxplot2/boxplot_outliers3",
+            "source": ".0/group_by1/boxplot2/boxplot_outliers3_flat",
             "transform": [
                 {
                     "type": "treefacet",
@@ -120,7 +120,7 @@
         {
             "type": "group",
             "from": {
-                "data": "mtcars0/group_by1/boxplot2"
+                "data": ".0/group_by1/boxplot2"
             },
             "marks": [
                 {
@@ -151,7 +151,7 @@
                         },
                         "ggvis": {
                             "data": {
-                                "value": "mtcars0/group_by1/boxplot2"
+                                "value": ".0/group_by1/boxplot2"
                             }
                         }
                     }
@@ -161,7 +161,7 @@
         {
             "type": "group",
             "from": {
-                "data": "mtcars0/group_by1/boxplot2"
+                "data": ".0/group_by1/boxplot2"
             },
             "marks": [
                 {
@@ -193,7 +193,7 @@
                         },
                         "ggvis": {
                             "data": {
-                                "value": "mtcars0/group_by1/boxplot2"
+                                "value": ".0/group_by1/boxplot2"
                             }
                         }
                     }
@@ -203,7 +203,7 @@
         {
             "type": "group",
             "from": {
-                "data": "mtcars0/group_by1/boxplot2"
+                "data": ".0/group_by1/boxplot2"
             },
             "marks": [
                 {
@@ -234,7 +234,7 @@
                         },
                         "ggvis": {
                             "data": {
-                                "value": "mtcars0/group_by1/boxplot2"
+                                "value": ".0/group_by1/boxplot2"
                             }
                         }
                     }
@@ -244,7 +244,7 @@
         {
             "type": "group",
             "from": {
-                "data": "mtcars0/group_by1/boxplot2/boxplot_outliers3"
+                "data": ".0/group_by1/boxplot2/boxplot_outliers3"
             },
             "marks": [
                 {
@@ -268,7 +268,7 @@
                         },
                         "ggvis": {
                             "data": {
-                                "value": "mtcars0/group_by1/boxplot2/boxplot_outliers3"
+                                "value": ".0/group_by1/boxplot2/boxplot_outliers3"
                             }
                         }
                     }

@@ -27,7 +27,9 @@
 #'
 #' \code{p \%>\% bind_shiny("plot", "plot_ui")}
 #' @examples
-#' \donttest{
+#' ## Run these examples only in interactive R sessions
+#' if (interactive()) {
+#'
 #' # Simplest possible app:
 #' library(shiny)
 #' runApp(list(
@@ -43,6 +45,7 @@
 #'       bind_shiny("p", "p_ui")
 #'   }
 #' ))
+#'
 #' }
 #' @name shiny-ggvis
 NULL
@@ -55,6 +58,9 @@ NULL
 #' @export
 bind_shiny <- function(vis, plot_id, controls_id = NULL, ...,
                        session = shiny::getDefaultReactiveDomain()) {
+
+  validate_plot_id(plot_id)
+
   if (is.null(session)) {
     stop("bind_shiny() must be run inside a shiny app.", call. = FALSE)
   }
@@ -202,4 +208,10 @@ exec_connectors <- function(r_spec, plot_id, session) {
       connect(session, plot_id)
     }
   })
+}
+
+validate_plot_id <- function(id) {
+  if (grepl(".", id, fixed = TRUE)) {
+    stop("Plot ID '", id, "' is not valid. The ID must not contain a dot (.) character.")
+  }
 }

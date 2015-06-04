@@ -1,7 +1,7 @@
 {
     "data": [
         {
-            "name": "df0/group_by1/arrange2_flat",
+            "name": ".0/group_by1/arrange2_flat",
             "format": {
                 "type": "csv",
                 "parse": {
@@ -11,8 +11,8 @@
             "values": "\"w\",\"y\",\"z\"\n\"a\",0.175504838116467,\"1\"\n\"b\",0.92520075570792,\"1\"\n\"c\",0.605496409814805,\"1\"\n\"d\",0.879450253676623,\"1\"\n\"a\",0.36204455466941,\"2\"\n\"b\",0.239515871042386,\"2\"\n\"c\",0.00647905003279448,\"2\"\n\"d\",0.154914033133537,\"2\"\n\"a\",0.574154397239909,\"3\"\n\"b\",0.732962509151548,\"3\"\n\"c\",0.489878148771822,\"3\"\n\"d\",0.870066102826968,\"3\""
         },
         {
-            "name": "df0/group_by1/arrange2",
-            "source": "df0/group_by1/arrange2_flat",
+            "name": ".0/group_by1/arrange2",
+            "source": ".0/group_by1/arrange2_flat",
             "transform": [
                 {
                     "type": "treefacet",
@@ -93,7 +93,7 @@
         {
             "type": "group",
             "from": {
-                "data": "df0/group_by1/arrange2"
+                "data": ".0/group_by1/arrange2"
             },
             "marks": [
                 {
@@ -115,7 +115,7 @@
                         },
                         "ggvis": {
                             "data": {
-                                "value": "df0/group_by1/arrange2"
+                                "value": ".0/group_by1/arrange2"
                             }
                         }
                     }

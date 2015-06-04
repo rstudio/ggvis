@@ -22,21 +22,27 @@ ggvis_dependencies <- function() {
       script = "jquery.min.js"
     ),
     htmltools::htmlDependency(
+      name = "detect-resize",
+      version = "0.5.3",
+      src = ggvis_path("lib/detect-resize"),
+      script = "jquery.resize.js"
+    ),
+    htmltools::htmlDependency(
       name = "jquery-ui",
-      version = "1.10.4",
+      version = "1.11.4",
       src = ggvis_path("lib/jquery-ui"),
-      script = adjust_min("js/jquery-ui-1.10.4.custom.min.js"),
-      stylesheet = adjust_min("css/smoothness/jquery-ui-1.10.4.custom.min.css")
+      script = adjust_min("jquery-ui.min.js"),
+      stylesheet = adjust_min("jquery-ui.min.css")
     ),
     htmltools::htmlDependency(
       name = "d3",
-      version = "3.4.10",
+      version = "3.5.2",
       src = ggvis_path("lib/d3"),
       script = adjust_min("d3.min.js")
     ),
     htmltools::htmlDependency(
       name = "vega",
-      version = "1.4.2",
+      version = "1.4.3",
       src = ggvis_path("lib/vega"),
       script = adjust_min("vega.min.js")
     ),

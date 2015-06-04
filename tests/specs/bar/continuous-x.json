@@ -1,7 +1,7 @@
 {
     "data": [
         {
-            "name": "pressure0/count1/align2/stack3",
+            "name": ".0/count1/align2/stack3",
             "format": {
                 "type": "csv",
                 "parse": {
@@ -88,12 +88,12 @@
                 },
                 "ggvis": {
                     "data": {
-                        "value": "pressure0/count1/align2/stack3"
+                        "value": ".0/count1/align2/stack3"
                     }
                 }
             },
             "from": {
-                "data": "pressure0/count1/align2/stack3"
+                "data": ".0/count1/align2/stack3"
             }
         }
     ],
