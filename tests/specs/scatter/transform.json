@@ -1,128 +1,119 @@
 {
-    "data": [
-        {
-            "name": ".0",
-            "format": {
-                "type": "csv",
-                "parse": {
-                    "x/y": "number"
-                }
-            },
-            "values": "\"factor(x)\",\"x/y\"\n\"1\",0.2\n\"2\",0.5\n\"3\",1\n\"4\",2\n\"5\",5"
-        },
-        {
-            "name": "scale/x",
-            "format": {
-                "type": "csv",
-                "parse": {
-
-                }
-            },
-            "values": "\"domain\"\n\"1\"\n\"2\"\n\"3\"\n\"4\"\n\"5\""
-        },
-        {
-            "name": "scale/y",
-            "format": {
-                "type": "csv",
-                "parse": {
-                    "domain": "number"
-                }
-            },
-            "values": "\"domain\"\n-0.04\n5.24"
+  "data": [
+    {
+      "name": ".0",
+      "format": {
+        "type": "csv",
+        "parse": {
+          "x/y": "number"
         }
-    ],
-    "scales": [
-        {
-            "name": "x",
-            "type": "ordinal",
-            "domain": {
-                "data": "scale/x",
-                "field": "data.domain"
-            },
-            "points": true,
-            "sort": false,
-            "range": "width",
-            "padding": 0.5
+      },
+      "values": "\"factor(x)\",\"x/y\"\n\"1\",0.2\n\"2\",0.5\n\"3\",1\n\"4\",2\n\"5\",5"
+    },
+    {
+      "name": "scale/x",
+      "format": {
+        "type": "csv",
+        "parse": {}
+      },
+      "values": "\"domain\"\n\"1\"\n\"2\"\n\"3\"\n\"4\"\n\"5\""
+    },
+    {
+      "name": "scale/y",
+      "format": {
+        "type": "csv",
+        "parse": {
+          "domain": "number"
+        }
+      },
+      "values": "\"domain\"\n-0.04\n5.24"
+    }
+  ],
+  "scales": [
+    {
+      "name": "x",
+      "type": "ordinal",
+      "domain": {
+        "data": "scale/x",
+        "field": "data.domain"
+      },
+      "points": true,
+      "sort": false,
+      "range": "width",
+      "padding": 0.5
+    },
+    {
+      "name": "y",
+      "domain": {
+        "data": "scale/y",
+        "field": "data.domain"
+      },
+      "zero": false,
+      "nice": false,
+      "clamp": false,
+      "range": "height"
+    }
+  ],
+  "marks": [
+    {
+      "type": "symbol",
+      "properties": {
+        "update": {
+          "fill": {
+            "value": "#000000"
+          },
+          "size": {
+            "value": 50
+          },
+          "x": {
+            "scale": "x",
+            "field": "data.factor(x)"
+          },
+          "y": {
+            "scale": "y",
+            "field": "data.x/y"
+          }
         },
-        {
-            "name": "y",
-            "domain": {
-                "data": "scale/y",
-                "field": "data.domain"
-            },
-            "zero": false,
-            "nice": false,
-            "clamp": false,
-            "range": "height"
+        "ggvis": {
+          "data": {
+            "value": ".0"
+          }
         }
-    ],
-    "marks": [
-        {
-            "type": "symbol",
-            "properties": {
-                "update": {
-                    "fill": {
-                        "value": "#000000"
-                    },
-                    "size": {
-                        "value": 50
-                    },
-                    "x": {
-                        "scale": "x",
-                        "field": "data.factor(x)"
-                    },
-                    "y": {
-                        "scale": "y",
-                        "field": "data.x/y"
-                    }
-                },
-                "ggvis": {
-                    "data": {
-                        "value": ".0"
-                    }
-                }
-            },
-            "from": {
-                "data": ".0"
-            }
-        }
-    ],
+      },
+      "from": {
+        "data": ".0"
+      }
+    }
+  ],
+  "legends": [],
+  "axes": [
+    {
+      "type": "x",
+      "scale": "x",
+      "orient": "bottom",
+      "layer": "back",
+      "grid": true,
+      "title": "factor(x)"
+    },
+    {
+      "type": "y",
+      "scale": "y",
+      "orient": "left",
+      "layer": "back",
+      "grid": true,
+      "title": "x/y"
+    }
+  ],
+  "padding": null,
+  "ggvis_opts": {
     "width": 600,
     "height": 400,
-    "legends": [
-
-    ],
-    "axes": [
-        {
-            "type": "x",
-            "scale": "x",
-            "orient": "bottom",
-            "layer": "back",
-            "grid": true,
-            "title": "factor(x)"
-        },
-        {
-            "type": "y",
-            "scale": "y",
-            "orient": "left",
-            "layer": "back",
-            "grid": true,
-            "title": "x/y"
-        }
-    ],
-    "padding": null,
-    "ggvis_opts": {
-        "width": 600,
-        "height": 400,
-        "keep_aspect": false,
-        "resizable": true,
-        "padding": {
-
-        },
-        "duration": 250,
-        "renderer": "svg",
-        "hover_duration": 0
-    },
-    "handlers": null
+    "keep_aspect": false,
+    "resizable": true,
+    "padding": {},
+    "duration": 250,
+    "renderer": "svg",
+    "hover_duration": 0
+  },
+  "handlers": null
 }
-

@@ -1,138 +1,131 @@
 {
-    "data": [
-        {
-            "name": ".0/count1/align2/stack3",
-            "format": {
-                "type": "csv",
-                "parse": {
-                    "xmin_": "number",
-                    "xmax_": "number",
-                    "stack_upr_": "number",
-                    "stack_lwr_": "number"
-                }
-            },
-            "values": "\"xmin_\",\"xmax_\",\"stack_upr_\",\"stack_lwr_\"\n-10,10,2e-04,0\n10,30,0.0012,0\n30,50,0.006,0\n50,70,0.03,0\n70,90,0.09,0\n90,110,0.27,0\n110,130,0.75,0\n130,150,1.85,0\n150,170,4.2,0\n170,190,8.8,0\n190,210,17.3,0\n210,230,32.1,0\n230,250,57,0\n250,270,96,0\n270,290,157,0\n290,310,247,0\n310,330,376,0\n330,350,558,0\n350,370,806,0"
-        },
-        {
-            "name": "scale/x",
-            "format": {
-                "type": "csv",
-                "parse": {
-                    "domain": "number"
-                }
-            },
-            "values": "\"domain\"\n-29\n389"
-        },
-        {
-            "name": "scale/y",
-            "format": {
-                "type": "csv",
-                "parse": {
-                    "domain": "number"
-                }
-            },
-            "values": "\"domain\"\n0\n846.3"
+  "data": [
+    {
+      "name": ".0/count1/align2/stack3",
+      "format": {
+        "type": "csv",
+        "parse": {
+          "xmin_": "number",
+          "xmax_": "number",
+          "stack_upr_": "number",
+          "stack_lwr_": "number"
         }
-    ],
-    "scales": [
-        {
-            "name": "x",
-            "domain": {
-                "data": "scale/x",
-                "field": "data.domain"
-            },
-            "zero": false,
-            "nice": false,
-            "clamp": false,
-            "range": "width"
+      },
+      "values": "\"xmin_\",\"xmax_\",\"stack_upr_\",\"stack_lwr_\"\n-10,10,2e-04,0\n10,30,0.0012,0\n30,50,0.006,0\n50,70,0.03,0\n70,90,0.09,0\n90,110,0.27,0\n110,130,0.75,0\n130,150,1.85,0\n150,170,4.2,0\n170,190,8.8,0\n190,210,17.3,0\n210,230,32.1,0\n230,250,57,0\n250,270,96,0\n270,290,157,0\n290,310,247,0\n310,330,376,0\n330,350,558,0\n350,370,806,0"
+    },
+    {
+      "name": "scale/x",
+      "format": {
+        "type": "csv",
+        "parse": {
+          "domain": "number"
+        }
+      },
+      "values": "\"domain\"\n-29\n389"
+    },
+    {
+      "name": "scale/y",
+      "format": {
+        "type": "csv",
+        "parse": {
+          "domain": "number"
+        }
+      },
+      "values": "\"domain\"\n0\n846.3"
+    }
+  ],
+  "scales": [
+    {
+      "name": "x",
+      "domain": {
+        "data": "scale/x",
+        "field": "data.domain"
+      },
+      "zero": false,
+      "nice": false,
+      "clamp": false,
+      "range": "width"
+    },
+    {
+      "name": "y",
+      "domain": {
+        "data": "scale/y",
+        "field": "data.domain"
+      },
+      "zero": false,
+      "nice": false,
+      "clamp": false,
+      "range": "height"
+    }
+  ],
+  "marks": [
+    {
+      "type": "rect",
+      "properties": {
+        "update": {
+          "stroke": {
+            "value": "#000000"
+          },
+          "fill": {
+            "value": "red"
+          },
+          "x": {
+            "scale": "x",
+            "field": "data.xmin_"
+          },
+          "x2": {
+            "scale": "x",
+            "field": "data.xmax_"
+          },
+          "y": {
+            "scale": "y",
+            "field": "data.stack_upr_"
+          },
+          "y2": {
+            "scale": "y",
+            "field": "data.stack_lwr_"
+          }
         },
-        {
-            "name": "y",
-            "domain": {
-                "data": "scale/y",
-                "field": "data.domain"
-            },
-            "zero": false,
-            "nice": false,
-            "clamp": false,
-            "range": "height"
+        "ggvis": {
+          "data": {
+            "value": ".0/count1/align2/stack3"
+          }
         }
-    ],
-    "marks": [
-        {
-            "type": "rect",
-            "properties": {
-                "update": {
-                    "stroke": {
-                        "value": "#000000"
-                    },
-                    "fill": {
-                        "value": "red"
-                    },
-                    "x": {
-                        "scale": "x",
-                        "field": "data.xmin_"
-                    },
-                    "x2": {
-                        "scale": "x",
-                        "field": "data.xmax_"
-                    },
-                    "y": {
-                        "scale": "y",
-                        "field": "data.stack_upr_"
-                    },
-                    "y2": {
-                        "scale": "y",
-                        "field": "data.stack_lwr_"
-                    }
-                },
-                "ggvis": {
-                    "data": {
-                        "value": ".0/count1/align2/stack3"
-                    }
-                }
-            },
-            "from": {
-                "data": ".0/count1/align2/stack3"
-            }
-        }
-    ],
+      },
+      "from": {
+        "data": ".0/count1/align2/stack3"
+      }
+    }
+  ],
+  "legends": [],
+  "axes": [
+    {
+      "type": "x",
+      "scale": "x",
+      "orient": "bottom",
+      "layer": "back",
+      "grid": true,
+      "title": "temperature"
+    },
+    {
+      "type": "y",
+      "scale": "y",
+      "orient": "left",
+      "layer": "back",
+      "grid": true,
+      "title": "pressure"
+    }
+  ],
+  "padding": null,
+  "ggvis_opts": {
     "width": 600,
     "height": 400,
-    "legends": [
-
-    ],
-    "axes": [
-        {
-            "type": "x",
-            "scale": "x",
-            "orient": "bottom",
-            "layer": "back",
-            "grid": true,
-            "title": "temperature"
-        },
-        {
-            "type": "y",
-            "scale": "y",
-            "orient": "left",
-            "layer": "back",
-            "grid": true,
-            "title": "pressure"
-        }
-    ],
-    "padding": null,
-    "ggvis_opts": {
-        "width": 600,
-        "height": 400,
-        "keep_aspect": false,
-        "resizable": true,
-        "padding": {
-
-        },
-        "duration": 250,
-        "renderer": "svg",
-        "hover_duration": 0
-    },
-    "handlers": null
+    "keep_aspect": false,
+    "resizable": true,
+    "padding": {},
+    "duration": 250,
+    "renderer": "svg",
+    "hover_duration": 0
+  },
+  "handlers": null
 }
-

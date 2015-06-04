@@ -1,137 +1,130 @@
 {
-    "data": [
-        {
-            "name": ".0/bin1/stack2",
-            "format": {
-                "type": "csv",
-                "parse": {
-                    "xmin_": "number",
-                    "xmax_": "number",
-                    "stack_upr_": "number",
-                    "stack_lwr_": "number"
-                }
-            },
-            "values": "\"xmin_\",\"xmax_\",\"stack_upr_\",\"stack_lwr_\"\n1.371384e+12,1371470400000,1,0\n1371470400000,1371556800000,0,0\n1371556800000,1371643200000,0,0\n1371643200000,1371729600000,1,0\n1371729600000,1.371816e+12,0,0\n1.371816e+12,1371902400000,0,0\n1371902400000,1371988800000,0,0\n1371988800000,1372075200000,1,0\n1372075200000,1372161600000,3,0\n1372161600000,1.372248e+12,2,0\n1.372248e+12,1372334400000,4,0\n1372334400000,1372420800000,4,0\n1372420800000,1372507200000,3,0\n1372507200000,1372593600000,3,0\n1372593600000,1.37268e+12,1,0\n1.37268e+12,1372766400000,4,0\n1372766400000,1372852800000,2,0\n1372852800000,1372939200000,3,0\n1372939200000,1373025600000,1,0\n1373025600000,1.373112e+12,4,0\n1.373112e+12,1373198400000,0,0\n1373198400000,1373284800000,0,0\n1373284800000,1373371200000,0,0\n1373371200000,1373457600000,0,0\n1373457600000,1.373544e+12,0,0\n1.373544e+12,1373630400000,1,0\n1373630400000,1373716800000,0,0\n1373716800000,1373803200000,0,0\n1373803200000,1373889600000,1,0\n1373889600000,1.373976e+12,0,0\n1.373976e+12,1374062400000,1,0"
-        },
-        {
-            "name": "scale/x",
-            "format": {
-                "type": "csv",
-                "parse": {
-                    "domain": "number"
-                }
-            },
-            "values": "\"domain\"\n1371250080000\n1374196320000"
-        },
-        {
-            "name": "scale/y",
-            "format": {
-                "type": "csv",
-                "parse": {
-                    "domain": "number"
-                }
-            },
-            "values": "\"domain\"\n0\n4.2"
+  "data": [
+    {
+      "name": ".0/bin1/stack2",
+      "format": {
+        "type": "csv",
+        "parse": {
+          "xmin_": "number",
+          "xmax_": "number",
+          "stack_upr_": "number",
+          "stack_lwr_": "number"
         }
-    ],
-    "scales": [
-        {
-            "name": "x",
-            "domain": {
-                "data": "scale/x",
-                "field": "data.domain"
-            },
-            "type": "time",
-            "clamp": false,
-            "range": "width"
+      },
+      "values": "\"xmin_\",\"xmax_\",\"stack_upr_\",\"stack_lwr_\"\n1.371384e+12,1371470400000,1,0\n1371470400000,1371556800000,0,0\n1371556800000,1371643200000,0,0\n1371643200000,1371729600000,1,0\n1371729600000,1.371816e+12,0,0\n1.371816e+12,1371902400000,0,0\n1371902400000,1371988800000,0,0\n1371988800000,1372075200000,1,0\n1372075200000,1372161600000,3,0\n1372161600000,1.372248e+12,2,0\n1.372248e+12,1372334400000,4,0\n1372334400000,1372420800000,4,0\n1372420800000,1372507200000,3,0\n1372507200000,1372593600000,3,0\n1372593600000,1.37268e+12,1,0\n1.37268e+12,1372766400000,4,0\n1372766400000,1372852800000,2,0\n1372852800000,1372939200000,3,0\n1372939200000,1373025600000,1,0\n1373025600000,1.373112e+12,4,0\n1.373112e+12,1373198400000,0,0\n1373198400000,1373284800000,0,0\n1373284800000,1373371200000,0,0\n1373371200000,1373457600000,0,0\n1373457600000,1.373544e+12,0,0\n1.373544e+12,1373630400000,1,0\n1373630400000,1373716800000,0,0\n1373716800000,1373803200000,0,0\n1373803200000,1373889600000,1,0\n1373889600000,1.373976e+12,0,0\n1.373976e+12,1374062400000,1,0"
+    },
+    {
+      "name": "scale/x",
+      "format": {
+        "type": "csv",
+        "parse": {
+          "domain": "number"
+        }
+      },
+      "values": "\"domain\"\n1371250080000\n1374196320000"
+    },
+    {
+      "name": "scale/y",
+      "format": {
+        "type": "csv",
+        "parse": {
+          "domain": "number"
+        }
+      },
+      "values": "\"domain\"\n0\n4.2"
+    }
+  ],
+  "scales": [
+    {
+      "name": "x",
+      "domain": {
+        "data": "scale/x",
+        "field": "data.domain"
+      },
+      "type": "time",
+      "clamp": false,
+      "range": "width"
+    },
+    {
+      "name": "y",
+      "domain": {
+        "data": "scale/y",
+        "field": "data.domain"
+      },
+      "zero": false,
+      "nice": false,
+      "clamp": false,
+      "range": "height"
+    }
+  ],
+  "marks": [
+    {
+      "type": "rect",
+      "properties": {
+        "update": {
+          "stroke": {
+            "value": "#000000"
+          },
+          "fill": {
+            "value": "#333333"
+          },
+          "x": {
+            "scale": "x",
+            "field": "data.xmin_"
+          },
+          "x2": {
+            "scale": "x",
+            "field": "data.xmax_"
+          },
+          "y": {
+            "scale": "y",
+            "field": "data.stack_upr_"
+          },
+          "y2": {
+            "scale": "y",
+            "field": "data.stack_lwr_"
+          }
         },
-        {
-            "name": "y",
-            "domain": {
-                "data": "scale/y",
-                "field": "data.domain"
-            },
-            "zero": false,
-            "nice": false,
-            "clamp": false,
-            "range": "height"
+        "ggvis": {
+          "data": {
+            "value": ".0/bin1/stack2"
+          }
         }
-    ],
-    "marks": [
-        {
-            "type": "rect",
-            "properties": {
-                "update": {
-                    "stroke": {
-                        "value": "#000000"
-                    },
-                    "fill": {
-                        "value": "#333333"
-                    },
-                    "x": {
-                        "scale": "x",
-                        "field": "data.xmin_"
-                    },
-                    "x2": {
-                        "scale": "x",
-                        "field": "data.xmax_"
-                    },
-                    "y": {
-                        "scale": "y",
-                        "field": "data.stack_upr_"
-                    },
-                    "y2": {
-                        "scale": "y",
-                        "field": "data.stack_lwr_"
-                    }
-                },
-                "ggvis": {
-                    "data": {
-                        "value": ".0/bin1/stack2"
-                    }
-                }
-            },
-            "from": {
-                "data": ".0/bin1/stack2"
-            }
-        }
-    ],
+      },
+      "from": {
+        "data": ".0/bin1/stack2"
+      }
+    }
+  ],
+  "legends": [],
+  "axes": [
+    {
+      "type": "x",
+      "scale": "x",
+      "orient": "bottom",
+      "layer": "back",
+      "grid": true,
+      "title": "time"
+    },
+    {
+      "type": "y",
+      "scale": "y",
+      "orient": "left",
+      "layer": "back",
+      "grid": true,
+      "title": "count"
+    }
+  ],
+  "padding": null,
+  "ggvis_opts": {
     "width": 600,
     "height": 400,
-    "legends": [
-
-    ],
-    "axes": [
-        {
-            "type": "x",
-            "scale": "x",
-            "orient": "bottom",
-            "layer": "back",
-            "grid": true,
-            "title": "time"
-        },
-        {
-            "type": "y",
-            "scale": "y",
-            "orient": "left",
-            "layer": "back",
-            "grid": true,
-            "title": "count"
-        }
-    ],
-    "padding": null,
-    "ggvis_opts": {
-        "width": 600,
-        "height": 400,
-        "keep_aspect": false,
-        "resizable": true,
-        "padding": {
-
-        },
-        "duration": 250,
-        "renderer": "svg",
-        "hover_duration": 0
-    },
-    "handlers": null
+    "keep_aspect": false,
+    "resizable": true,
+    "padding": {},
+    "duration": 250,
+    "renderer": "svg",
+    "hover_duration": 0
+  },
+  "handlers": null
 }
-
