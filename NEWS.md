@@ -1,3 +1,7 @@
+# ggvis 0.4.2.9xxx
+
+* Switched from stripped-down build of jQuery UI to a full build. (#410)
+
 # ggvis 0.4.2
 
 * ggvis plots can now resize their width to the containing div, with
