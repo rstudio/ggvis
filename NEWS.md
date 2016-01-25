@@ -1,4 +1,13 @@
-# ggvis 0.4.1.9xxx
+# ggvis 0.4.2.9xxx
+
+* Switched from stripped-down build of jQuery UI to a full build. (#410)
+
+# ggvis 0.4.2
+
+* ggvis plots can now resize their width to the containing div, with
+  `set_options(width = "auto")`. Height can be set automatically as well, but
+  it will only work properly if the containing div has a fixed height, due to
+  the way that web browsers do vertical layout. (#316, #374, #381)
 
 * compatible with dplyr 0.4.2
 
