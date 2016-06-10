@@ -140,7 +140,13 @@ test_that("Automatic width", {
 
   # Date
   res <- comp_bin(dat, ~date)
-  expect_identical(res$width_, rep(2, length(res$width_)))
+  # There was a change in behavior of `pretty` in 3.3.0 which results in
+  # different output from earlier versions.
+  r_version <- as.package_version(paste0(R.Version()$major, ".", R.Version()$minor))
+  if (r_version >= "3.3.0")
+    expect_identical(res$width_, rep(7, length(res$width_)))
+  else
+    expect_identical(res$width_, rep(2, length(res$width_)))
 
   # POSIXct
   res <- comp_bin(dat, ~posixct)
