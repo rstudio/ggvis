@@ -31,7 +31,7 @@ input_slider <- function(min, max, value = (min + max) / 2, step = NULL,
 
   # Older versions of shiny use `format` and `locale`; newer versions use
   # `sep`, `pre`, and `post`.
-  if (packageVersion("shiny") >= "0.11") {
+  if (utils::packageVersion("shiny") >= "0.11") {
     control <- shiny::sliderInput(id, label, min = min, max = max,
       value = value, step = step, round = round,
       ticks = ticks, animate = animate, sep = sep, pre = pre, post = post)

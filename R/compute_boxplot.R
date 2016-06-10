@@ -43,7 +43,7 @@ compute_boxplot.data.frame <- function(x, var = NULL, coef = 1.5) {
 
   qs <- c(0, 0.25, 0.5, 0.75, 1)
 
-  stats <- as.numeric(quantile(vals, qs))
+  stats <- as.numeric(stats::quantile(vals, qs))
   names(stats) <- c("min_", "lower_", "median_", "upper_", "max_")
 
   iqr <- diff(stats[c(2, 4)])

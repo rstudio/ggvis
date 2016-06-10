@@ -249,7 +249,7 @@ extract_inputs <- function(expr, env = parent.frame()) {
 
     list(
       expr = substitute(args$nm, list(nm = as.name(nm))),
-      inputs = setNames(list(input), nm)
+      inputs = stats::setNames(list(input), nm)
     )
   } else if (is.call(expr)) {
     # Recursive over arguments and join back together again

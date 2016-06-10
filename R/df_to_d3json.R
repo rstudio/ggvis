@@ -1,7 +1,7 @@
 # Convert a data object to a D3-structured data object.
 df_to_d3json <- function(x) {
   rows <- nrow(x)
-  colnames <- setNames(names(x), names(x))
+  colnames <- stats::setNames(names(x), names(x))
 
   x <- lapply(x, format_vec_d3json)
 

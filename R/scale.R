@@ -24,7 +24,7 @@ range_prop <- function(x, name) {
 }
 
 named_list <- function(names, ...) {
-  setNames(list(...), names)
+  stats::setNames(list(...), names)
 }
 
 #' Convert the name of a property to the name of its default scale.

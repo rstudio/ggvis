@@ -204,7 +204,7 @@ bin_params.POSIXct <- function(x_range, width = NULL, center = NULL,
 
   # Period object from lubridate package - need lubridate::as.difftime to find
   # the correct generic, instead of base::as.difftime.
-  if (is(width, "Period")) {
+  if (methods::is(width, "Period")) {
     width <- as.numeric(lubridate::as.difftime(width, units = "secs"))
   }
 
@@ -304,7 +304,7 @@ bin_vector.POSIXct <- function(x, weight = NULL, ..., width = 1,
                                pad = FALSE) {
 
   # Convert times to raw numbers (seconds since UNIX epoch)
-  if (is(width, "Period")) {
+  if (methods::is(width, "Period")) {
     width <- as.numeric(lubridate::as.difftime(width, units = "secs"))
   }
 
@@ -374,7 +374,7 @@ bin_out <- function(count = integer(0), x = numeric(0), width = numeric(0),
 adjust_breaks <- function(breaks, closed = "left") {
   closed <- match.arg(closed, c("right", "left"))
 
-  diddle <- 1e-08 * median(diff(breaks))
+  diddle <- 1e-08 * stats::median(diff(breaks))
   if (closed == "right") {
     fuzz <- c(-diddle, rep.int(diddle, length(breaks) - 1))
   } else {

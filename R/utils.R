@@ -73,7 +73,7 @@ all_same <- function(x) {
 # Test whether a file exists and is a directory
 dir.exists <- function(x) {
   res <- file.exists(x) & file.info(x)$isdir
-  setNames(res, x)
+  stats::setNames(res, x)
 }
 
 # Check whether a package is installed, and stop if not
@@ -142,7 +142,7 @@ quickdf <- function(list) {
 
 # Generate a random number to use in IDs
 rand_id <- function(prefix = "") {
-  paste0(prefix, floor(runif(1, 1e8, 1e9-1)))
+  paste0(prefix, floor(stats::runif(1, 1e8, 1e9-1)))
 }
 
 is_missing <- function(x) identical(x, quote(expr = ))

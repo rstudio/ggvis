@@ -34,7 +34,8 @@ Imports:
     magrittr,
     dplyr (>= 0.4.0),
     lazyeval,
-    htmltools (>= 0.2.4)
+    htmltools (>= 0.2.4),
+    methods
 Suggests:
     MASS,
     mgcv,

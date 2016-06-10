@@ -55,7 +55,7 @@ ggvis_dependencies <- function() {
     ),
     htmltools::htmlDependency(
       name = "ggvis",
-      version = as.character(packageVersion("ggvis")),
+      version = as.character(utils::packageVersion("ggvis")),
       src = ggvis_path("ggvis"),
       script = "js/ggvis.js",
       stylesheet = "css/ggvis.css"
@@ -68,7 +68,7 @@ ggvis_dependencies <- function() {
 shiny_dependency <- function() {
   htmltools::htmlDependency(
     name = "shiny-ggvis",
-    version = as.character(packageVersion("ggvis")),
+    version = as.character(utils::packageVersion("ggvis")),
     src = ggvis_path("ggvis"),
     script = "js/shiny-ggvis.js"
   )

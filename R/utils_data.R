@@ -64,7 +64,7 @@ remove_missing.data.frame <- function(x, warn_na = TRUE, finite = FALSE,
     missing <- !finite.cases(x[, vars, drop = FALSE])
     str <- "non-finite"
   } else {
-    missing <- !complete.cases(x[, vars, drop = FALSE])
+    missing <- !stats::complete.cases(x[, vars, drop = FALSE])
     str <- "missing"
   }
 
@@ -177,7 +177,7 @@ data_range <- function(x) UseMethod("data_range")
 #' @export
 data_range.default <- function(x) range2(x, na.rm = TRUE)
 #' @export
-data_range.character <- function(x) unique(na.omit(x))
+data_range.character <- function(x) unique(stats::na.omit(x))
 #' @export
 data_range.factor <- function(x) levels(x)
 

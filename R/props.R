@@ -258,5 +258,5 @@ find_prop_var <- function(props, name) {
     stop("Visual property ", name, " is not a variable", call. = FALSE)
   }
 
-  formula(prop)
+  stats::formula(prop)
 }

@@ -190,8 +190,8 @@ pred_grid.loess <- function(model, data, domain = NULL, n = 80, se = FALSE,
 
   x_rng <- domain %||% range(model$x, na.rm = TRUE)
   x_grid <- seq(x_rng[1], x_rng[2], length = n)
-  grid <- setNames(data.frame(x_grid), model$xnames)
-  resp <- predict(model, newdata = grid, se = se)
+  grid <- stats::setNames(data.frame(x_grid), model$xnames)
+  resp <- stats::predict(model, newdata = grid, se = se)
 
   if (!se) {
     data.frame(
@@ -199,7 +199,7 @@ pred_grid.loess <- function(model, data, domain = NULL, n = 80, se = FALSE,
       resp_ = as.vector(resp)
     )
   } else {
-    ci <- resp$se.fit * qt(level / 2 + .5, resp$df)
+    ci <- resp$se.fit * stats::qt(level / 2 + .5, resp$df)
     data.frame(
       pred_ = x_grid,
       resp_ = resp$fit,
@@ -213,16 +213,16 @@ pred_grid.loess <- function(model, data, domain = NULL, n = 80, se = FALSE,
 #' @export
 pred_grid.lm <- function(model, data, domain = NULL, n = 80, se = FALSE,
                          level = 0.95) {
-  x_var <- get_predict_vars(terms(model))
+  x_var <- get_predict_vars(stats::terms(model))
   if (length(x_var) > 1) {
     stop("Only know how to make grid for one variable", call. = FALSE)
   }
 
   x_rng <- domain %||% range(data[[x_var]], na.rm = TRUE)
   x_grid <- seq(x_rng[1], x_rng[2], length = n)
-  grid <- setNames(data.frame(x_grid), x_var)
+  grid <- stats::setNames(data.frame(x_grid), x_var)
 
-  resp <- predict(model, newdata = grid, se = se,
+  resp <- stats::predict(model, newdata = grid, se = se,
     level = level, interval = if(se) "confidence" else "none")
 
   if (!se) {

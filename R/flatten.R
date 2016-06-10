@@ -11,7 +11,7 @@
 combine_data_props <- function(mark) {
   if (is.ggvis(mark)) return(combine_data_props(mark$marks))
   if (identical(class(mark), "mark")) {
-    return(setNames(list(mark$props), data_id(mark$data)))
+    return(stats::setNames(list(mark$props), data_id(mark$data)))
   }
 
   if (is.mark_group(mark)) {
@@ -32,7 +32,7 @@ combine_data_props <- function(mark) {
     names <- safe_vega_var(vapply(props, prop_label, character(1)))
     ok <- !duplicated(names) & names != ""
 
-    setNames(props[ok], names[ok])
+    stats::setNames(props[ok], names[ok])
   })
 }
 
