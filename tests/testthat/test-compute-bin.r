@@ -140,7 +140,7 @@ test_that("Automatic width", {
 
   # Date
   res <- comp_bin(dat, ~date)
-  expect_identical(res$width_, rep(2, length(res$width_)))
+  expect_identical(res$width_, rep(7, length(res$width_)))
 
   # POSIXct
   res <- comp_bin(dat, ~posixct)
