@@ -11,8 +11,7 @@ test_that("check_mark_props returns helpful suggestion for single incorrect", {
 })
 
 test_that("check_mark_props doesn't give suggestion if really wrong", {
-  expect_that(check_mark_props("symbol", "asdfasdfdsa"),
-              not(throws_error("Did you mean")))
+  expect_error(check_mark_props("symbol", "asdfasdfdsa"), "Unknown properties")
 })
 
 

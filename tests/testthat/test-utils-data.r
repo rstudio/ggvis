@@ -26,7 +26,7 @@ test_that("remove_missing", {
   all_vals <- c(1, NA, NaN, Inf, -Inf)
 
   expect_warning(remove_missing(all_vals))
-  expect_that(remove_missing(all_vals, warn_na = FALSE), not(gives_warning()))
+  expect_warning(remove_missing(all_vals, warn_na = FALSE), NA)
 
   # Vectors
   expect_identical(remove_missing(all_vals, warn_na = FALSE), c(1, Inf, -Inf))
