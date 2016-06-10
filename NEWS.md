@@ -2,6 +2,8 @@
 
 * Switched from stripped-down build of jQuery UI to a full build. (#410)
 
+* Fixed problems for R CMD check in R 3.3.0.
+
 # ggvis 0.4.2
 
 * ggvis plots can now resize their width to the containing div, with
