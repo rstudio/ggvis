@@ -45,3 +45,4 @@ Suggests:
 VignetteBuilder: knitr
 License: GPL-2 | file LICENSE
 LazyData: true
+RoxygenNote: 5.0.1
