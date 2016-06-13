@@ -3,7 +3,7 @@ title: Properties and scales
 ---
 
 <!--
-%\VignetteEngine{knitr}
+%\VignetteEngine{knitr::rmarkdown}
 %\VignetteIndexEntry{Properties and scales}
 -->
 

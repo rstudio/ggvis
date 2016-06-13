@@ -6,7 +6,7 @@ output:
 ---
 
 <!--
-%\VignetteEngine{knitr}
+%\VignetteEngine{knitr::rmarkdown}
 %\VignetteIndexEntry{Axes and legends}
 -->
 

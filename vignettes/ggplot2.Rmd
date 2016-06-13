@@ -3,7 +3,7 @@ title: "ggvis vs ggplot2"
 ---
 
 <!--
-%\VignetteEngine{knitr}
+%\VignetteEngine{knitr::rmarkdown}
 %\VignetteIndexEntry{ggvis vs ggplot2}
 -->
 

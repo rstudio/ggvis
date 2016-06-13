@@ -5,7 +5,7 @@ runtime: shiny
 ---
 
 <!--
-%\VignetteEngine{knitr}
+%\VignetteEngine{knitr::rmarkdown}
 %\VignetteIndexEntry{ggvis basics}
 -->
 

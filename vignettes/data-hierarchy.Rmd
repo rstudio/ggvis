@@ -3,7 +3,7 @@ title: "Data hierarchy"
 ---
 
 <!--
-%\VignetteEngine{knitr}
+%\VignetteEngine{knitr::rmarkdown}
 %\VignetteIndexEntry{Data hierarchy}
 -->
 

@@ -3,7 +3,7 @@ title: Layers
 ---
 
 <!--
-%\VignetteEngine{knitr}
+%\VignetteEngine{knitr::rmarkdown}
 %\VignetteIndexEntry{Marks}
 -->
 

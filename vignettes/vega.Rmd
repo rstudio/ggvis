@@ -4,7 +4,7 @@ output:
   html_document
 ---
 <!--
-%\VignetteEngine{knitr}
+%\VignetteEngine{knitr::rmarkdown}
 %\VignetteIndexEntry{ggvis vs vega/d3}
 -->
 
