@@ -41,7 +41,7 @@ There are two marks that have no equivalent in ggplot2:
 * `mark_image()` allows you to place arbitrary images on a plot. There is
   currently little additional support for this in ggvis, so you'll need to
   make sure the images are publicly available somewhere. If you've found
-  a compelling use-case for `layer_image()`, let us know so we can consider
+  a compelling use-case for `layer_images()`, let us know so we can consider
   how to better support it.
 
 And two vega marks that are not currently implemented in ggvis:

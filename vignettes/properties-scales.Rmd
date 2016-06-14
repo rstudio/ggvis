@@ -290,7 +290,7 @@ mtcars %>% ggvis(y = ~mpg) %>%
 
 ### Multiple properties for one scale
 
-You could also force ggplot2 to use the same scale for properties that would
+You could also force ggvis to use the same scale for properties that would
 otherwise use different scales. I'm not sure of a useful example of this,
 except to force `stroke` and `fill` to use the same scale:
 
