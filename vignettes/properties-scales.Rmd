@@ -86,9 +86,6 @@ mtcars %>% ggvis(x = ~wt, y = ~mpg) %>%
   layer_smooths(stroke = "loess")
 ```
 
-(Note: this isn't currently supported in ggvis because of a limitation
-of vega. See https://github.com/rstudio/ggvis/issues/29 for progress.)
-
 ### Valid properties
 
 Not all marks support all properties. The complete list of all properties is
