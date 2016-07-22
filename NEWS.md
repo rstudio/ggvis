@@ -4,6 +4,8 @@
 
 * Fixed problems for R CMD check in R 3.3.0.
 
+* Remove vignettes due to R CMD check hanging.
+
 # ggvis 0.4.2
 
 * ggvis plots can now resize their width to the containing div, with
