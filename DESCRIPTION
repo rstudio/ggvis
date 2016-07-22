@@ -43,7 +43,6 @@ Suggests:
     testthat (>= 0.8.1),
     knitr (>= 1.6),
     rmarkdown
-VignetteBuilder: knitr
 Encoding: UTF-8
 License: GPL-2 | file LICENSE
 LazyData: true
