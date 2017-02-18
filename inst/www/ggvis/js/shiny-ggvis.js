@@ -4,6 +4,11 @@
 /*global Shiny, ggvis, vg*/
 $(function(){ //DOM Ready
 
+  // This file can be loaded even in non-Shiny contexts. If so, abort; there's
+  // nothing useful we can do.
+  if (!window.Shiny)
+    return;
+
   var _ = window.lodash;
 
   // This custom message binding is needed for shiny to keep track of the
