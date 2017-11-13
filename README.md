@@ -1,6 +1,14 @@
 # ggvis
+[![Build Status](https://travis-ci.org/rstudio/ggvis.svg?branch=master)](https://travis-ci.org/rstudio/ggvis)
 
-[![Build Status](https://travis-ci.org/rstudio/ggvis.png?branch=master)](https://travis-ci.org/rstudio/ggvis)
+## Status
+![](https://img.shields.io/badge/lifecycle-dormant-blue.svg)
+ 
+ggvis is currently dormant. We fundamentally believe in the ideas that underlie ggvis: reactive programming is the right foundation for interactive visualisation. However, we are not currently working on ggvis because we do not see it as the most pressing issue for the R community as you can only use interactive graphics once you've successfuly tackled the rest of the data analysis process.
+
+We will come back to ggvis in the future; in the meantime you might want to try out [plotly](https://plot.ly/ggplot2/getting-started/) or creating inteactive graphics [with shiny](https://blog.rstudio.com/2015/06/16/shiny-0-12-interactive-plots-with-ggplot2/).
+
+## Introduction
 
 The goal of ggvis is to make it easy to describe interactive web graphics in
 R. It combines:
