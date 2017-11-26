@@ -145,6 +145,12 @@ as.vega.mark <- function(mark, in_group = FALSE) {
     }
   }
 
+  # Don't include reference to data when no prop needs it
+  is_variable <- vapply(mark$props, is.prop_variable, logical(1))
+  if (!any(is_variable)) {
+    m$from <- NULL
+  }
+
   if (!is.null(key)) {
     m$key <- paste0("data.", safe_vega_var(prop_label(key)))
   }

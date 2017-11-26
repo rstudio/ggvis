@@ -312,3 +312,20 @@ test_that("band() is created properly", {
   expect_error(prop("x", band()))
   expect_error(props(x = band()))
 })
+
+test_that("groupwise() is created properly", {
+  # Group property is correctly set
+  expect_identical(prop("y", groupwise("height"))$group_prop, "height")
+
+  # Automatic setting of scale, event
+  test_prop(prop("y", groupwise("height")), "y", NULL, NULL, "update")
+
+  # Explicit settings of scale, event
+  test_prop(prop("x", groupwise("height"), scale = "x"), "x", NULL, "x")
+  test_prop(prop("x", groupwise("height"), event = "enter"), "x", NULL, NULL, "enter")
+  test_prop(prop("x", groupwise("height"), scale = "foo"), "x", NULL, "foo")
+
+  # Create with props()
+  test_prop(props("y" = groupwise("width"))$y.update, "y", NULL, "y", "update")
+  test_prop(props(y.enter = groupwise("width"))$y.enter, "y", NULL, "y", "enter")
+})
