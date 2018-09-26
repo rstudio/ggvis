@@ -3,7 +3,7 @@ Title: Interactive Grammar of Graphics
 Description: An implementation of an interactive grammar of graphics, taking the
     best parts of 'ggplot2', combining them with the reactive framework of
     'shiny' and drawing web graphics using 'vega'.
-Version: 0.4.3
+Version: 0.4.3.9000
 Authors@R: c(
     person("Winston", "Chang", role = c("aut", "cre"), email = "winston@rstudio.com"),
     person("Hadley", "Wickham", role = "aut", email = "hadley@rstudio.com"),
