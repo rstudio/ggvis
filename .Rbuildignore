@@ -4,7 +4,6 @@ man-roxygen
 bench
 ^\.travis\.yml$
 ^node_modules$
-^NEWS\.md$
 ^CONTRIBUTING\.md$
 ^revdep$
 ^cran-comments\.md$

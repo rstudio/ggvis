@@ -1,4 +1,4 @@
-# ggvis 0.4.2.9xxx
+# ggvis 0.4.3
 
 * Switched from stripped-down build of jQuery UI to a full build. (#410)
 
