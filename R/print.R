@@ -106,10 +106,11 @@ view_dynamic <- function(x, plot_id = rand_id("plot_"), port = NULL,
   )
 }
 
+
+# Dynamically registered. See zzz.R.
 #' Knit print method for ggvis plots.
 #'
 #' @keywords internal
-#' @export
 knit_print.ggvis <- function(x, options = list(), inline = FALSE, ...) {
   # Set height and width from knitr chunk options
   knitr_opts <- list(
