@@ -53,12 +53,14 @@ NULL
 
 # Methods for ggvis objects ----------------------------------------------------
 
+#' @importFrom dplyr groups
 #' @export
 #' @rdname dplyr-ggvis
 groups.ggvis <- function(x) {
   shiny::isolate(dplyr::groups(x$cur_data()))
 }
 
+#' @importFrom dplyr group_by_
 #' @export
 #' @rdname dplyr-ggvis
 group_by_.ggvis <- function(.data, ..., .dots, add = FALSE) {
@@ -71,6 +73,7 @@ group_by_.ggvis <- function(.data, ..., .dots, add = FALSE) {
   })
 }
 
+#' @importFrom dplyr ungroup
 #' @export
 #' @rdname dplyr-ggvis
 ungroup.ggvis <- function(x) {
@@ -80,6 +83,7 @@ ungroup.ggvis <- function(x) {
 }
 
 
+#' @importFrom dplyr summarise_
 #' @rdname dplyr-ggvis
 #' @export
 summarise_.ggvis <- function(.data, ..., .dots) {
@@ -91,6 +95,7 @@ summarise_.ggvis <- function(.data, ..., .dots) {
   })
 }
 
+#' @importFrom dplyr mutate_
 #' @rdname dplyr-ggvis
 #' @export
 mutate_.ggvis <- function(.data, ..., .dots) {
@@ -102,6 +107,7 @@ mutate_.ggvis <- function(.data, ..., .dots) {
   })
 }
 
+#' @importFrom dplyr arrange_
 #' @rdname dplyr-ggvis
 #' @export
 arrange_.ggvis <- function(.data, ..., .dots) {
@@ -113,6 +119,7 @@ arrange_.ggvis <- function(.data, ..., .dots) {
   })
 }
 
+#' @importFrom dplyr select_
 #' @rdname dplyr-ggvis
 #' @export
 select_.ggvis <- function(.data, ..., .dots) {
@@ -124,6 +131,7 @@ select_.ggvis <- function(.data, ..., .dots) {
   })
 }
 
+#' @importFrom dplyr filter_
 #' @rdname dplyr-ggvis
 #' @export
 filter_.ggvis <- function(.data, ..., .dots) {
@@ -135,6 +143,7 @@ filter_.ggvis <- function(.data, ..., .dots) {
   })
 }
 
+#' @importFrom dplyr distinct_
 #' @rdname dplyr-ggvis
 #' @export
 distinct_.ggvis <- function(.data, ..., .dots) {
@@ -146,6 +155,7 @@ distinct_.ggvis <- function(.data, ..., .dots) {
   })
 }
 
+#' @importFrom dplyr slice_
 #' @rdname dplyr-ggvis
 #' @export
 slice_.ggvis <- function(.data, ..., .dots) {
@@ -157,6 +167,7 @@ slice_.ggvis <- function(.data, ..., .dots) {
   })
 }
 
+#' @importFrom dplyr rename_
 #' @rdname dplyr-ggvis
 #' @export
 rename_.ggvis <- function(.data, ..., .dots) {
@@ -168,6 +179,7 @@ rename_.ggvis <- function(.data, ..., .dots) {
   })
 }
 
+#' @importFrom dplyr transmute_
 #' @rdname dplyr-ggvis
 #' @export
 transmute_.ggvis <- function(.data, ..., .dots) {
