@@ -1,6 +1,3 @@
-#' @importFrom htmltools knit_print.shiny.tag knit_print.shiny.tag.list knit_print.html
-NULL
-
 ggvis_path <- function(x) {
   system.file(package = "ggvis", "www", x)
 }
