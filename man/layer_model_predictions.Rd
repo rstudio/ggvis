@@ -5,8 +5,8 @@
 \alias{layer_smooths}
 \title{Overlay model predictions or a smooth curve.}
 \usage{
-layer_model_predictions(vis, ..., model, formula = NULL, model_args = NULL,
-  se = FALSE, domain = NULL)
+layer_model_predictions(vis, ..., model, formula = NULL,
+  model_args = NULL, se = FALSE, domain = NULL)
 
 layer_smooths(vis, ..., span = 0.75, se = FALSE)
 }
@@ -89,4 +89,3 @@ mtcars \%>\%
   compute_smooth(mpg ~ wt) \%>\%
   layer_paths(~pred_, ~resp_, strokeWidth := 2)
 }
-

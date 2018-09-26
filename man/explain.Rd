@@ -14,4 +14,3 @@ explain(p)
 \seealso{
 \code{dplyr::\link[dplyr]{explain}} for more information.
 }
-

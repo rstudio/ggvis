@@ -14,4 +14,3 @@ scaled_value(scale, value)
 \description{
 These are for use with legends and axes.
 }
-

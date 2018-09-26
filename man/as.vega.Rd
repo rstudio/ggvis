@@ -25,4 +25,3 @@ This generic function powers the coercion of ggvis objects to vega
 compatible data structures.
 }
 \keyword{internal}
-

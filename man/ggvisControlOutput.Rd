@@ -24,4 +24,3 @@ controls are drawn.
 \examples{
 ggvisControlOutput("plot1")
 }
-

@@ -48,6 +48,7 @@ In ggplot2, legend (and axis) properties are part of the scales
 specification. In vega, they are separate, which allows the specification
 of multiple legends, and more flexible linkage between scales and legends.
 }
+
 \examples{
 mtcars \%>\% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) \%>\%
   layer_points() \%>\%
@@ -110,4 +111,3 @@ mtcars \%>\% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) \%>\%
     )
   )
 }
-

@@ -26,4 +26,3 @@ axis_props(ticks = NULL, majorTicks = NULL, minorTicks = NULL,
 The items in each of the lists can be a literal value, like \code{5} or
 "blue", or they can be a \code{\link{scaled_value}} object.
 }
-

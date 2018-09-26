@@ -19,4 +19,3 @@ ggvis_message(session, type, data = NULL, id = NULL)
 This will be sent to the client and passed to a handler in ggvis.messages on
 the client side. The handler is specified by \code{type}.
 }
-

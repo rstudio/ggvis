@@ -21,4 +21,3 @@ a reactive that returns a such a vector.}
 Add arbitrary scales to ggvis.
 }
 \keyword{internal}
-

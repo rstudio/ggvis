@@ -10,4 +10,3 @@ default_options()
 This returns an object containing the default options for ggvis.
 }
 \keyword{internal}
-

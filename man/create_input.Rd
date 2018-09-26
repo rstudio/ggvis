@@ -31,4 +31,3 @@ inputs. If you are a ggvis user, please use one of the more specific input
 functions starting with the \code{input_}.
 }
 \keyword{internal}
-

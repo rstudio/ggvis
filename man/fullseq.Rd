@@ -20,4 +20,3 @@ Generate sequence of fixed size intervals covering range.
 \code{\link[plyr]{round_any}}
 }
 \keyword{internal}
-

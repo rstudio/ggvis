@@ -4,7 +4,8 @@
 \alias{waggle}
 \title{Waggle back and forth between two numbers}
 \usage{
-waggle(min, max, value = (min + max)/2, step = (max - min)/50, fps = 10)
+waggle(min, max, value = (min + max)/2, step = (max - min)/50,
+  fps = 10)
 }
 \arguments{
 \item{min}{A minimum value.}
@@ -28,4 +29,3 @@ mtcars \%>\% ggvis(~mpg, ~wt) \%>\%
  layer_points() \%>\%
  layer_smooths(span = span)
 }
-

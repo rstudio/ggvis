@@ -31,4 +31,3 @@ controls. In this case, a reactive expression is still needed, although
 it can be a dummy value, like \code{reactive(NULL)}.
 }
 \keyword{internal}
-

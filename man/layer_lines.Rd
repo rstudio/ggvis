@@ -27,4 +27,3 @@ mtcars \%>\% ggvis(~wt, ~mpg, stroke = ~factor(cyl)) \%>\%
 \seealso{
 \code{\link{layer_paths}}
 }
-

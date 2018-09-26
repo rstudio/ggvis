@@ -24,6 +24,7 @@ layer_guess(vis, ...)
   \item Continuous x and y, \code{\link{layer_points}}
 }
 }
+
 \examples{
 # A scatterplot:
 mtcars \%>\% ggvis(~mpg, ~wt)
@@ -33,4 +34,3 @@ mtcars \%>\% ggvis(~mpg, ~wt) \%>\% layer_guess()
 mtcars \%>\% ggvis(~mpg)
 mtcars \%>\% ggvis(~mpg) \%>\% layer_guess()
 }
-

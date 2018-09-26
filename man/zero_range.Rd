@@ -47,4 +47,3 @@ zero_range(c(-Inf, Inf))  # FALSE
 zero_range(c(Inf, Inf))   # TRUE
 
 }
-

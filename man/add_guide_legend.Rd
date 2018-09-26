@@ -12,4 +12,3 @@ add_guide_legend(...)
 \description{
 This function has been replaced with \code{\link{add_legend}}.
 }
-

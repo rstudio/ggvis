@@ -51,4 +51,3 @@ hec \%>\% ggvis(~Hair, ~Freq, fill = ~Eye, fillOpacity := 0.5) \%>\%
   group_by(Eye) \%>\%
   layer_bars(width = 1)
 }
-

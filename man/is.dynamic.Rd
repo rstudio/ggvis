@@ -10,4 +10,3 @@ is.dynamic(x)
 Determine if an ggvis is dynamic (i.e. needs to be run in a shiny app)
 }
 \keyword{internal}
-

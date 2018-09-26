@@ -24,4 +24,3 @@ propname_to_scale(c("foo", "bar"))
 propname_to_scale(c("opacity", "fillOpacity", "strokeOpacity"))
 }
 \keyword{internal}
-

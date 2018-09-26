@@ -72,4 +72,3 @@ mtcars \%>\%
 \code{\link{compute_count}} For counting cases at specific values
   of a variable.
 }
-

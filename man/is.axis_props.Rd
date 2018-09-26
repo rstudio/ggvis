@@ -13,4 +13,3 @@ is.axis_props(x)
 Tests whether an object is an axis_props object
 }
 \keyword{internal}
-

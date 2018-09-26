@@ -40,4 +40,4 @@ mtcars \%>\% ggvis(~wt, ~mpg) \%>\%
 Other interactive input: \code{\link{input_select}},
   \code{\link{input_slider}}, \code{\link{input_text}}
 }
-
+\concept{interactive input}

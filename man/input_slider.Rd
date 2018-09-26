@@ -4,10 +4,10 @@
 \alias{input_slider}
 \title{Create an interactive slider.}
 \usage{
-input_slider(min, max, value = (min + max)/2, step = NULL, round = FALSE,
-  format = NULL, locale = "us", ticks = TRUE, animate = FALSE,
-  sep = ",", pre = NULL, post = NULL, label = "",
-  id = rand_id("slider_"), map = identity)
+input_slider(min, max, value = (min + max)/2, step = NULL,
+  round = FALSE, format = NULL, locale = "us", ticks = TRUE,
+  animate = FALSE, sep = ",", pre = NULL, post = NULL,
+  label = "", id = rand_id("slider_"), map = identity)
 }
 \arguments{
 \item{min}{The minimum value (inclusive) that can be selected.}
@@ -73,4 +73,4 @@ input_slider(-5, 5, label = "Log scale", map = function(x) 10 ^ x)
 Other interactive input: \code{\link{input_checkbox}},
   \code{\link{input_select}}, \code{\link{input_text}}
 }
-
+\concept{interactive input}

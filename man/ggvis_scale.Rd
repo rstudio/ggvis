@@ -77,4 +77,3 @@ ggvis_scale("x", "ord")
 \url{https://github.com/trifacta/vega/wiki/Scales}
 }
 \keyword{internal}
-

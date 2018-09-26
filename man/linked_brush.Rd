@@ -44,4 +44,3 @@ mtcars \%>\%
  lb$input() \%>\%
  layer_points(fill := "red", data = reactive(mtcars[lb$selected(), ]))
 }
-

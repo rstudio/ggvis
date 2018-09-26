@@ -33,4 +33,3 @@ base \%>\% layer_rects(width = band(mult = 0.75))
 base \%>\% layer_rects(width = band()) \%>\%
   scale_nominal("x", padding = 0.25, points = FALSE)
 }
-

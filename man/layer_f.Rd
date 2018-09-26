@@ -25,4 +25,3 @@ mtcars \%>\% ggvis(~mpg) \%>\%
   layer_points(y = ~wt)
 }
 \keyword{internal}
-

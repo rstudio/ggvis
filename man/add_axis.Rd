@@ -77,6 +77,7 @@ In ggplot2, axis (and legend) properties are part of the scales
 specification. In vega, they are separate, which allows the specification
 of multiple axes, and more flexible linkage between scales and axes.
 }
+
 \examples{
 mtcars \%>\% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) \%>\%
   layer_points() \%>\%
@@ -110,4 +111,3 @@ mtcars \%>\% ggvis(x = ~wt, y = ~mpg) \%>\% layer_points() \%>\%
 Vega axis documentation:
   \url{https://github.com/trifacta/vega/wiki/Axes}
 }
-

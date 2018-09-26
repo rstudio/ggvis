@@ -5,8 +5,8 @@
 \title{Set options for a ggvis plot}
 \usage{
 set_options(vis, width = NULL, height = NULL, keep_aspect = NULL,
-  resizable = NULL, padding = NULL, duration = NULL, renderer = NULL,
-  hover_duration = NULL)
+  resizable = NULL, padding = NULL, duration = NULL,
+  renderer = NULL, hover_duration = NULL)
 }
 \arguments{
 \item{vis}{Visualisation to modify}
@@ -58,4 +58,3 @@ str(default_options())
 
 \code{\link{default_options}} to see the default options.
 }
-

@@ -4,10 +4,10 @@
 \alias{scale_numeric}
 \title{Add a numeric scale to a ggvis object.}
 \usage{
-scale_numeric(vis, property, domain = NULL, range = NULL, reverse = NULL,
-  round = NULL, trans = NULL, clamp = NULL, exponent = NULL,
-  nice = NULL, zero = NULL, expand = NULL, name = property,
-  label = NULL, override = NULL)
+scale_numeric(vis, property, domain = NULL, range = NULL,
+  reverse = NULL, round = NULL, trans = NULL, clamp = NULL,
+  exponent = NULL, nice = NULL, zero = NULL, expand = NULL,
+  name = property, label = NULL, override = NULL)
 }
 \arguments{
 \item{vis}{A ggvis object.}
@@ -108,4 +108,4 @@ p \%>\% scale_numeric("x", domain = c(NA, 3), clamp = TRUE, nice = FALSE)
 Other scales: \code{\link{scale_datetime}},
   \code{\link{scale_ordinal}}
 }
-
+\concept{scales}

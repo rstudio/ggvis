@@ -15,4 +15,3 @@ use \code{add = TRUE}}
 \description{
 Divide data into groups.
 }
-

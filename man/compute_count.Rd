@@ -52,4 +52,3 @@ mtcars \%>\%
 
 \code{\link{compute_align}} For calculating the "width" of data.
 }
-

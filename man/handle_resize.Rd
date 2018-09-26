@@ -2,8 +2,8 @@
 % Please edit documentation in R/handle_resize.R
 \name{handle_resize}
 \alias{handle_resize}
-\alias{plot_height}
 \alias{plot_width}
+\alias{plot_height}
 \title{Handlers and interactive inputs for plot sizing.}
 \usage{
 handle_resize(vis, on_resize)
@@ -37,4 +37,3 @@ mtcars \%>\% ggvis(~mpg, ~wt) \%>\%
 mtcars \%>\% ggvis(~mpg, ~wt) \%>\% layer_text(text := plot_width())
 mtcars \%>\% ggvis(~mpg, ~wt) \%>\% layer_text(text := plot_height())
 }
-

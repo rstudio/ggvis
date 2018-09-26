@@ -23,4 +23,3 @@ The resulting object has the following fields:
 }
 }
 \keyword{internal}
-

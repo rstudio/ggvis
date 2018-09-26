@@ -4,9 +4,10 @@
 \alias{scale_datetime}
 \title{Add a date-time scale to a ggvis object.}
 \usage{
-scale_datetime(vis, property, domain = NULL, range = NULL, reverse = NULL,
-  round = NULL, utc = NULL, clamp = NULL, nice = NULL, expand = NULL,
-  name = property, label = NULL, override = NULL)
+scale_datetime(vis, property, domain = NULL, range = NULL,
+  reverse = NULL, round = NULL, utc = NULL, clamp = NULL,
+  nice = NULL, expand = NULL, name = property, label = NULL,
+  override = NULL)
 }
 \arguments{
 \item{vis}{A ggvis object.}
@@ -94,4 +95,4 @@ p \%>\% scale_datetime("x", utc = TRUE)
 Other scales: \code{\link{scale_numeric}},
   \code{\link{scale_ordinal}}
 }
-
+\concept{scales}

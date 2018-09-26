@@ -35,4 +35,3 @@ mtcars2 \%>\% ggvis(~disp, ~mpg, stroke = ~cyl) \%>\% auto_group() \%>\%
 \seealso{
 To manually specify grouping variables, see \code{\link{group_by}}.
 }
-

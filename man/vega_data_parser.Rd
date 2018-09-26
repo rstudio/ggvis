@@ -13,4 +13,3 @@ vega_data_parser(x)
 This is used to specify the data type so that the appropriate parser is used
 when Vega receives the data.
 }
-

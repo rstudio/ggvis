@@ -4,7 +4,8 @@
 \alias{add_data}
 \title{Add dataset to a visualisation}
 \usage{
-add_data(vis, data, name = deparse2(substitute(data)), add_suffix = TRUE)
+add_data(vis, data, name = deparse2(substitute(data)),
+  add_suffix = TRUE)
 }
 \arguments{
 \item{vis}{Visualisation to modify.}
@@ -25,4 +26,3 @@ Add dataset to a visualisation
 mtcars \%>\% ggvis(~mpg, ~wt) \%>\% layer_points()
 NULL \%>\% ggvis(~mpg, ~wt) \%>\% add_data(mtcars) \%>\% layer_points()
 }
-

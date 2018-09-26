@@ -54,4 +54,3 @@ mtcars \%>\% ggvis(x = ~factor(cyl)) \%>\% layer_bars()
   of a continuous variable. This is useful when the variable is continuous
   but the data is granular.
 }
-

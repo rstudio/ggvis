@@ -20,4 +20,3 @@ base <- mtcars \%>\% ggvis(~mpg, ~wt) \%>\% layer_points()
 base \%>\% show_spec()
 base \%>\% show_spec("scales")
 }
-

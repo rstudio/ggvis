@@ -16,4 +16,3 @@ layer_points(ggvis(mtcars, ~mpg, ~wt))
 # you can write
 mtcars \%>\% ggvis(~mpg, ~wt) \%>\% layer_points()
 }
-

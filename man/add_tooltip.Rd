@@ -51,4 +51,3 @@ mtc \%>\% ggvis(x = ~wt, y = ~mpg, key := ~id) \%>\%
 
 }
 }
-

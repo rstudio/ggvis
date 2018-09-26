@@ -35,4 +35,3 @@ mtcars \%>\% group_by(cyl) \%>\% compute_boxplot(~mpg)
 \seealso{
 \code{\link{layer_boxplots}}
 }
-

@@ -5,7 +5,8 @@
 \title{Bin data along a continuous variable}
 \usage{
 compute_bin(x, x_var, w_var = NULL, width = NULL, center = NULL,
-  boundary = NULL, closed = c("right", "left"), pad = FALSE, binwidth)
+  boundary = NULL, closed = c("right", "left"), pad = FALSE,
+  binwidth)
 }
 \arguments{
 \item{x}{Dataset-like object to bin. Built-in methods for data frames,
@@ -73,4 +74,3 @@ mtcars2 \%>\% ggvis() \%>\% layer_histograms(~mpg)
   of a continuous variable. This is useful when the variable is continuous
   but the data is granular.
 }
-

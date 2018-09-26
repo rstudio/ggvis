@@ -85,4 +85,3 @@ mtcars \%>\% ggvis() \%>\%
   compute_model_prediction(mpg ~ wt) \%>\%
   layer_paths(~pred_, ~resp_)
 }
-

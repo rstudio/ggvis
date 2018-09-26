@@ -13,4 +13,3 @@ is.scaled_value(x)
 Tests whether an object is a scaled_value object
 }
 \keyword{internal}
-

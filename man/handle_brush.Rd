@@ -33,4 +33,3 @@ mtcars \%>\%
     show_tooltip(session, page_loc$r + 5, page_loc$t, html = nrow(items))
   })
 }
-

@@ -27,4 +27,3 @@ mtcars \%>\% ggvis(x = ~wt) \%>\% export_png()
 \url{https://github.com/trifacta/vega} for information on installing
   \code{vg2png} and \code{vg2svg}.
 }
-

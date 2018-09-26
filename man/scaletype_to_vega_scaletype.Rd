@@ -13,4 +13,3 @@ scaletype_to_vega_scaletype(type)
 Given the type of a ggvis scale, get the name of its corresponding vega scale
 }
 \keyword{internal}
-

@@ -18,4 +18,3 @@ plotting area. For example, with legends.
 \seealso{
 \code{\link{add_legend}} for a usage example.
 }
-

@@ -13,4 +13,3 @@ is.ggvis(x)
 Is an object a ggvis object?
 }
 \keyword{internal}
-

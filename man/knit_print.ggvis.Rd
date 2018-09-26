@@ -10,4 +10,3 @@ knit_print.ggvis(x, options = list(), inline = FALSE, ...)
 Knit print method for ggvis plots.
 }
 \keyword{internal}
-

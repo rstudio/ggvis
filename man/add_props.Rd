@@ -4,7 +4,8 @@
 \alias{add_props}
 \title{Add visual properties to a visualisation}
 \usage{
-add_props(vis, ..., .props = NULL, inherit = NULL, env = parent.frame())
+add_props(vis, ..., .props = NULL, inherit = NULL,
+  env = parent.frame())
 }
 \arguments{
 \item{vis}{Visualisation to modify.}
@@ -34,4 +35,3 @@ mtcars \%>\% ggvis(~wt, ~mpg) \%>\% layer_points()
 mtcars \%>\% ggvis() \%>\% add_props(~wt, ~mpg) \%>\% layer_points()
 mtcars \%>\% ggvis(~wt) \%>\% add_props(y = ~mpg) \%>\% layer_points()
 }
-

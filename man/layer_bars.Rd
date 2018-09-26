@@ -45,6 +45,7 @@ that is, the smallest difference between any two x values.
 If the x variable is categorical, then a categorical x axis will be used. By
 default, the width of each bar is 0.9 times the space between the items.
 }
+
 \examples{
 # Discrete x: bar graph of counts at each x value
 cocaine \%>\% ggvis(~state) \%>\% layer_bars()
@@ -88,4 +89,3 @@ cocaine \%>\% ggvis(x = ~state, fill = ~as.factor(month)) \%>\%
 \code{\link{compute_count}} and \code{\link{compute_tabulate}} for
   more information on how data is transformed.
 }
-

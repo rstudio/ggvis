@@ -20,4 +20,3 @@ view_spec(path, ...)
 These functions are mainly useful for testing.
 }
 \keyword{internal}
-

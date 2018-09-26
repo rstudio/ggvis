@@ -62,6 +62,7 @@ you're displaying the data in a suboptimal way. For example, there is
 no default for a numeric shape scale, because there's no obvious way to
 map continuous values to discrete shapes.
 }
+
 \examples{
 p <- mtcars \%>\%
   ggvis(x = ~wt, y = ~mpg, fill = ~factor(cyl), stroke = ~hp) \%>\%
@@ -75,4 +76,3 @@ p \%>\% scale_nominal("fill")
 p \%>\% scale_numeric("x", trans = "log")
 p \%>\% scale_numeric("stroke", range = c("red", "blue"))
 }
-

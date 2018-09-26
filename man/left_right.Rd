@@ -30,4 +30,3 @@ opacity <- up_down(0, 1, value = 0.9, step = 0.05)
 mtcars \%>\% ggvis(~mpg, ~wt, size := size, opacity := opacity) \%>\%
   layer_points()
 }
-

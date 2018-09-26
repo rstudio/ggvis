@@ -28,4 +28,3 @@ an empty bin on each side.}
 A generic and several implementations for binning vectors.
 }
 \keyword{internal}
-

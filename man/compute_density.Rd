@@ -4,8 +4,8 @@
 \alias{compute_density}
 \title{Compute density of data.}
 \usage{
-compute_density(x, x_var, w_var = NULL, kernel = "gaussian", trim = FALSE,
-  n = 256L, na.rm = FALSE, ...)
+compute_density(x, x_var, w_var = NULL, kernel = "gaussian",
+  trim = FALSE, n = 256L, na.rm = FALSE, ...)
 }
 \arguments{
 \item{x}{Dataset (data frame, \code{grouped_df} or ggvis) object to work
@@ -42,4 +42,3 @@ mtcars \%>\% group_by(cyl) \%>\% compute_density(~mpg, n = 5)
 mtcars \%>\% ggvis(~mpg) \%>\% compute_density(~mpg, n = 5) \%>\%
   layer_points(~pred_, ~resp_)
 }
-

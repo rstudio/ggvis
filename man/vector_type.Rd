@@ -18,4 +18,3 @@ something useful more for visualisation, yielding one of "datetime",
 \code{default_scale}, which uses this when picking the default
   scale.
 }
-

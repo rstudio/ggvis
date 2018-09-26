@@ -36,4 +36,3 @@ mtcars \%>\% ggvis(~mpg, ~wt) \%>\% layer_points() \%>\%
 mtcars \%>\% ggvis(~mpg, ~wt) \%>\% layer_points() \%>\%
   handle_hover(function(data, ...) str(data))
 }
-

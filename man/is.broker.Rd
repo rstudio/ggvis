@@ -12,4 +12,3 @@ is.broker(x)
 \description{
 Determine if an object is a broker object
 }
-

@@ -20,4 +20,3 @@ This is an internal-facing function similar to ggvisOutput, but with more
 options.
 }
 \keyword{internal}
-

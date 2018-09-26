@@ -16,4 +16,3 @@ set_scale_label(vis, scale, label)
 \description{
 Set the label for a scale
 }
-

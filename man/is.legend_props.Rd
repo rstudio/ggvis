@@ -13,4 +13,3 @@ is.legend_props(x)
 Tests whether an object is a legend_props object
 }
 \keyword{internal}
-

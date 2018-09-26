@@ -43,4 +43,3 @@ mtcars \%>\%
   layer_points() \%>\%
   layer_smooths()
 }
-

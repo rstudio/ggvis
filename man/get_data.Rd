@@ -17,4 +17,3 @@ p <- cocaine \%>\% ggvis(~price) \%>\% layer_bars()
 get_data(p)
 
 }
-

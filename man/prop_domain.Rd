@@ -14,4 +14,3 @@ prop_domain(x, data)
 \description{
 Property domain.
 }
-

@@ -14,4 +14,3 @@
 \description{
 Print out the structure of a ggvis object in a friendly format
 }
-

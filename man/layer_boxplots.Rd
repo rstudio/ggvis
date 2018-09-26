@@ -55,4 +55,3 @@ mtcars \%>\% ggvis(~factor(cyl), ~mpg) \%>\% layer_boxplots(size := 20)
 \code{\link{compute_boxplot}} for more information on how data is
   transformed.
 }
-
