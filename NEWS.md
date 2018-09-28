@@ -1,3 +1,7 @@
+# ggvis 0.4.4
+
+* Various fixes to S3 method registration.
+
 # ggvis 0.4.3
 
 * Switched from stripped-down build of jQuery UI to a full build. (#410)
