@@ -1,3 +1,6 @@
+# ggvis 0.4.4.9000
+
+
 # ggvis 0.4.4
 
 * Various fixes to S3 method registration.
