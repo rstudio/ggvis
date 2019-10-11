@@ -80,7 +80,7 @@ tidy_items <- function(items) {
     attr(x, "row.names") <- .set_row_names(1L)
     x
   })
-  items <- dplyr::rbind_all(dfs)
+  items <- dplyr::bind_rows(dfs)
 
   if (is.numeric(items$key__)) {
     items$key__ <- as.character(items$key__ + 1)
