@@ -1,5 +1,6 @@
 # ggvis 0.4.4.9000
 
+* Switch from `dplyr::rbind_all()` to `dplyr::bind_rows()`, becuase `rbind_all` is being removed from dplyr 0.8.4. ([#482](https://github.com/rstudio/ggvis/pull/482))
 
 # ggvis 0.4.4
 
