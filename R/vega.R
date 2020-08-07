@@ -117,7 +117,7 @@ as.vega.mark <- function(mark, in_group = FALSE) {
   properties$ggvis$data <- list(value = data_id)
 
   group_vars <- dplyr::groups(shiny::isolate(mark$data()))
-  if (!in_group && !is.null(group_vars)) {
+  if (!in_group && length(group_vars)) {
     # FIXME: probably should go away and just use subvis
 
     # String representation of groups
