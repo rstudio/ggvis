@@ -22,7 +22,7 @@
 #' @param title A title for the legend. By default, it uses the name the fields
 #'   used in the legend. Use \code{""} to suppress the title.
 #' @param format The formatting pattern for axis labels. Vega uses D3's format
-#'   pattern: \url{https://github.com/mbostock/d3/wiki/Formatting}
+#'   pattern.
 #' @param values  Explicitly set the visible legend values.
 #' @param properties Optional mark property definitions for custom legend
 #'   styling. Should be an object created by \code{\link{legend_props}}, with

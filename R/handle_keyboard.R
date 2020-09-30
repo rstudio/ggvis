@@ -72,7 +72,7 @@ up_down <- function(min, max, value = (min + max) / 2,
 #' was pressed. The second is the current value of the reactive.
 #'
 #' The keyboard event handling in ggvis is implemented with
-#'   \href{mousetrap}{http://craig.is/killing/mice}, so you can specify keys
+#'   \href{mousetrap}{https://craig.is/killing/mice}, so you can specify keys
 #'   like \code{c("C", "Shift + X", "F2", "up"))}.
 #'
 #' Also, unlike inputs, keyboard events add no HTML controls, but they do add

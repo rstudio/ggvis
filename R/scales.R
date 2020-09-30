@@ -265,7 +265,7 @@ scale_datetime <- function(vis, property, domain = NULL, range = NULL,
 #'   according to their natural order. Default is \code{FALSE}.
 #' @seealso \code{\link{scales}}, \code{\link{scale_numeric}},
 #'   \url{https://github.com/trifacta/vega/wiki/Scales#ordinal-scale-properties},
-#'   \url{https://github.com/mbostock/d3/wiki/Ordinal-Scales}
+#'   \url{https://github.com/d3/d3/wiki/Ordinal-Scales}
 #' @family scales
 #' @export
 #' @examples

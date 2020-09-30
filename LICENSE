@@ -7,7 +7,7 @@ these components are included below):
 
 - jQuery, https://github.com/jquery/jquery
 - jQuery UI (some components), https://github.com/jquery/jquery-ui
-- D3, https://github.com/mbostock/d3
+- D3, https://github.com/d3/d3
 - Vega, https://github.com/trifacta/vega
 - javascript-detect-element-resize, https://github.com/sdecima/javascript-detect-element-resize
 

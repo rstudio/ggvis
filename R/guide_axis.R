@@ -26,7 +26,7 @@
 #' @param title_offset The offset (in pixels) from the axis at which to place
 #'   the title.
 #' @param format The formatting pattern for axis labels. Vega uses D3's format
-#'   pattern: \url{https://github.com/mbostock/d3/wiki/Formatting}
+#'   pattern.
 #' @param ticks A desired number of ticks. The resulting number may be different
 #'   so that values are "nice" (multiples of 2, 5, 10) and lie within the
 #'   underlying scale's range.
