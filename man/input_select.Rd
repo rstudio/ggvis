@@ -6,27 +6,43 @@
 \alias{input_checkboxgroup}
 \title{Create interactive control to select one (or more options) from a list.}
 \usage{
-input_select(choices, selected = NULL, multiple = FALSE, label = "",
-  id = rand_id("select_"), map = identity, selectize = FALSE)
+input_select(
+  choices,
+  selected = NULL,
+  multiple = FALSE,
+  label = "",
+  id = rand_id("select_"),
+  map = identity,
+  selectize = FALSE
+)
 
-input_radiobuttons(choices, selected = NULL, label = "",
-  id = rand_id("radio_"), map = identity)
+input_radiobuttons(
+  choices,
+  selected = NULL,
+  label = "",
+  id = rand_id("radio_"),
+  map = identity
+)
 
-input_checkboxgroup(choices, selected = NULL, label = "",
-  id = rand_id("radio_"), map = identity)
+input_checkboxgroup(
+  choices,
+  selected = NULL,
+  label = "",
+  id = rand_id("radio_"),
+  map = identity
+)
 }
 \arguments{
 \item{choices}{List of values to select from. If elements of the list are
-named, then that name rather than the value is displayed to the user.
-This can also be a named list whose elements are (either named or
-unnamed) lists or vectors. If this is the case, the outermost names
-will be used as the "optgroup" label for the elements in the respective
-sublist. This allows you to group and label similar choices. See the
-example section for a small demo of this feature.}
+named, then that name --- rather than the value --- is displayed to the
+user. It's also possible to group related inputs by providing a named list
+whose elements are (either named or unnamed) lists, vectors, or factors. In
+this case, the outermost names will be used as the group labels (leveraging
+the \verb{<optgroup>} HTML tag) for the elements in the respective sublist. See
+the example section for a small demo of this feature.}
 
-\item{selected}{The initially selected value (or multiple values if
-\code{multiple = TRUE}). If not specified then defaults to the first value
-for single-select lists and no values for multiple select lists.}
+\item{selected}{The initially selected value (or multiple values if \code{multiple = TRUE}). If not specified then defaults to the first value for
+single-select lists and no values for multiple select lists.}
 
 \item{multiple}{Is selection of multiple items allowed?}
 
@@ -86,7 +102,9 @@ mtcars \%>\% ggvis(x = ~wt, y = ~mpg) \%>\%
   )
 }
 \seealso{
-Other interactive input: \code{\link{input_checkbox}},
-  \code{\link{input_slider}}, \code{\link{input_text}}
+Other interactive input: 
+\code{\link{input_checkbox}()},
+\code{\link{input_slider}()},
+\code{\link{input_text}()}
 }
 \concept{interactive input}

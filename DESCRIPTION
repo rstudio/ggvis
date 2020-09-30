@@ -46,4 +46,4 @@ Suggests:
 Encoding: UTF-8
 License: GPL-2 | file LICENSE
 LazyData: true
-RoxygenNote: 6.1.0.9000
+RoxygenNote: 7.1.1

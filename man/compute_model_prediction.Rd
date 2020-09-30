@@ -5,8 +5,17 @@
 \alias{compute_smooth}
 \title{Create a model of a data set and compute predictions.}
 \usage{
-compute_model_prediction(x, formula, ..., model = NULL, se = FALSE,
-  level = 0.95, n = 80L, domain = NULL, method)
+compute_model_prediction(
+  x,
+  formula,
+  ...,
+  model = NULL,
+  se = FALSE,
+  level = 0.95,
+  n = 80L,
+  domain = NULL,
+  method
+)
 
 compute_smooth(x, formula, ..., span = 0.75, se = FALSE)
 }

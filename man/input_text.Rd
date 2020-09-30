@@ -7,8 +7,7 @@
 \usage{
 input_text(value, label = "", id = rand_id("text_"), map = identity)
 
-input_numeric(value, label = "", id = rand_id("numeric_"),
-  map = identity)
+input_numeric(value, label = "", id = rand_id("numeric_"), map = identity)
 }
 \arguments{
 \item{value}{Initial value.}
@@ -33,7 +32,9 @@ size_num <- input_numeric(label = "Point size", value = 25)
 mtcars \%>\% ggvis(~wt, ~mpg, size := size_num) \%>\% layer_points()
 }
 \seealso{
-Other interactive input: \code{\link{input_checkbox}},
-  \code{\link{input_select}}, \code{\link{input_slider}}
+Other interactive input: 
+\code{\link{input_checkbox}()},
+\code{\link{input_select}()},
+\code{\link{input_slider}()}
 }
 \concept{interactive input}

@@ -4,8 +4,12 @@
 \alias{create_input}
 \title{Create a new interactive "input" object.}
 \usage{
-create_input(id = rand_id("input_"), default = NULL, map = identity,
-  controls = NULL)
+create_input(
+  id = rand_id("input_"),
+  default = NULL,
+  map = identity,
+  controls = NULL
+)
 }
 \arguments{
 \item{id}{The name of the input object in the Shiny app, such as

@@ -4,8 +4,15 @@
 \alias{axis_props}
 \title{Create an axis_props object for controlling axis properties.}
 \usage{
-axis_props(ticks = NULL, majorTicks = NULL, minorTicks = NULL,
-  grid = NULL, labels = NULL, title = NULL, axis = NULL)
+axis_props(
+  ticks = NULL,
+  majorTicks = NULL,
+  minorTicks = NULL,
+  grid = NULL,
+  labels = NULL,
+  title = NULL,
+  axis = NULL
+)
 }
 \arguments{
 \item{ticks}{A named list of line properties for ticks.}

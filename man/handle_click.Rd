@@ -28,11 +28,11 @@ handle_hover(vis, on_mouse_over = NULL, on_mouse_out = NULL)
 Handle mouse actions on marks.
 }
 \examples{
-location <- function(location, ...) cat(location$x, "x", location$y, "\\n")
+location <- function(location, ...) cat(location$x, "x", location$y, "\n")
 mtcars \%>\% ggvis(~mpg, ~wt) \%>\% layer_points() \%>\%
   handle_click(location)
 mtcars \%>\% ggvis(~mpg, ~wt) \%>\% layer_points() \%>\%
-  handle_hover(function(...) cat("over\\n"), function(...) cat("off\\n"))
+  handle_hover(function(...) cat("over\n"), function(...) cat("off\n"))
 mtcars \%>\% ggvis(~mpg, ~wt) \%>\% layer_points() \%>\%
   handle_hover(function(data, ...) str(data))
 }

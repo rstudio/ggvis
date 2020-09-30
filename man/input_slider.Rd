@@ -4,10 +4,23 @@
 \alias{input_slider}
 \title{Create an interactive slider.}
 \usage{
-input_slider(min, max, value = (min + max)/2, step = NULL,
-  round = FALSE, format = NULL, locale = "us", ticks = TRUE,
-  animate = FALSE, sep = ",", pre = NULL, post = NULL,
-  label = "", id = rand_id("slider_"), map = identity)
+input_slider(
+  min,
+  max,
+  value = (min + max)/2,
+  step = NULL,
+  round = FALSE,
+  format = NULL,
+  locale = "us",
+  ticks = TRUE,
+  animate = FALSE,
+  sep = ",",
+  pre = NULL,
+  post = NULL,
+  label = "",
+  id = rand_id("slider_"),
+  map = identity
+)
 }
 \arguments{
 \item{min}{The minimum value (inclusive) that can be selected.}
@@ -39,7 +52,7 @@ according to some simple heuristics.}
 
 \item{animate}{\code{TRUE} to show simple animation controls with default
 settings; \code{FALSE} not to; or a custom settings list, such as those
-created using \code{\link{animationOptions}}.}
+created using \code{\link[shiny:sliderInput]{animationOptions()}}.}
 
 \item{sep}{Separator between thousands places in numbers.}
 
@@ -70,7 +83,9 @@ input_slider(0, 100, c(25, 75))
 input_slider(-5, 5, label = "Log scale", map = function(x) 10 ^ x)
 }
 \seealso{
-Other interactive input: \code{\link{input_checkbox}},
-  \code{\link{input_select}}, \code{\link{input_text}}
+Other interactive input: 
+\code{\link{input_checkbox}()},
+\code{\link{input_select}()},
+\code{\link{input_text}()}
 }
 \concept{interactive input}

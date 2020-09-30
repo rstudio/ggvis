@@ -5,8 +5,15 @@
 \alias{hide_legend}
 \title{Add a vega legend specification to a ggvis plot}
 \usage{
-add_legend(vis, scales = NULL, orient = "right", title = NULL,
-  format = NULL, values = NULL, properties = NULL)
+add_legend(
+  vis,
+  scales = NULL,
+  orient = "right",
+  title = NULL,
+  format = NULL,
+  values = NULL,
+  properties = NULL
+)
 
 hide_legend(vis, scales)
 }

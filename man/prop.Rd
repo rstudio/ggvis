@@ -8,8 +8,16 @@
 \alias{is.prop_reactive}
 \title{Create a property.}
 \usage{
-prop(property, x, scale = NULL, offset = NULL, mult = NULL,
-  env = parent.frame(), event = NULL, label = NULL)
+prop(
+  property,
+  x,
+  scale = NULL,
+  offset = NULL,
+  mult = NULL,
+  env = parent.frame(),
+  event = NULL,
+  label = NULL
+)
 
 is.prop(x)
 

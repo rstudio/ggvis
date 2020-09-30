@@ -5,9 +5,19 @@
 \alias{is.ggvis_scale}
 \title{Create a new ggvis_scale object.}
 \usage{
-ggvis_scale(property, name = property, label = name, type = NULL,
-  domain = NULL, range = NULL, reverse = NULL, round = NULL, ...,
-  subclass = NULL, override = NULL)
+ggvis_scale(
+  property,
+  name = property,
+  label = name,
+  type = NULL,
+  domain = NULL,
+  range = NULL,
+  reverse = NULL,
+  round = NULL,
+  ...,
+  subclass = NULL,
+  override = NULL
+)
 
 is.ggvis_scale(x)
 }

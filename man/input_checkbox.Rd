@@ -4,8 +4,12 @@
 \alias{input_checkbox}
 \title{Create an interactive checkbox.}
 \usage{
-input_checkbox(value = FALSE, label = "", id = rand_id("checkbox_"),
-  map = identity)
+input_checkbox(
+  value = FALSE,
+  label = "",
+  id = rand_id("checkbox_"),
+  map = identity
+)
 }
 \arguments{
 \item{value}{Initial value (\code{TRUE} or \code{FALSE}).}
@@ -37,7 +41,9 @@ mtcars \%>\% ggvis(~wt, ~mpg) \%>\%
   layer_model_predictions(model = model_type)
 }
 \seealso{
-Other interactive input: \code{\link{input_select}},
-  \code{\link{input_slider}}, \code{\link{input_text}}
+Other interactive input: 
+\code{\link{input_select}()},
+\code{\link{input_slider}()},
+\code{\link{input_text}()}
 }
 \concept{interactive input}

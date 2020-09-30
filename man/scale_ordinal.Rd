@@ -6,17 +6,50 @@
 \alias{scale_logical}
 \title{Add a ordinal, nominal, or logical scale to a ggvis object.}
 \usage{
-scale_ordinal(vis, property, domain = NULL, range = NULL,
-  reverse = NULL, round = NULL, points = NULL, padding = NULL,
-  sort = NULL, name = property, label = NULL, override = NULL)
+scale_ordinal(
+  vis,
+  property,
+  domain = NULL,
+  range = NULL,
+  reverse = NULL,
+  round = NULL,
+  points = NULL,
+  padding = NULL,
+  sort = NULL,
+  name = property,
+  label = NULL,
+  override = NULL
+)
 
-scale_nominal(vis, property, domain = NULL, range = NULL,
-  reverse = NULL, round = NULL, points = NULL, padding = NULL,
-  sort = NULL, name = property, label = NULL, override = NULL)
+scale_nominal(
+  vis,
+  property,
+  domain = NULL,
+  range = NULL,
+  reverse = NULL,
+  round = NULL,
+  points = NULL,
+  padding = NULL,
+  sort = NULL,
+  name = property,
+  label = NULL,
+  override = NULL
+)
 
-scale_logical(vis, property, domain = NULL, range = NULL,
-  reverse = NULL, round = NULL, points = NULL, padding = NULL,
-  sort = NULL, name = property, label = NULL, override = NULL)
+scale_logical(
+  vis,
+  property,
+  domain = NULL,
+  range = NULL,
+  reverse = NULL,
+  round = NULL,
+  points = NULL,
+  padding = NULL,
+  sort = NULL,
+  name = property,
+  label = NULL,
+  override = NULL
+)
 }
 \arguments{
 \item{vis}{A ggvis object.}
@@ -108,7 +141,8 @@ mtcars \%>\% ggvis(x = ~wt, y = ~mpg, opacity = ~factor(cyl)) \%>\%
   \url{https://github.com/trifacta/vega/wiki/Scales#ordinal-scale-properties},
   \url{https://github.com/mbostock/d3/wiki/Ordinal-Scales}
 
-Other scales: \code{\link{scale_datetime}},
-  \code{\link{scale_numeric}}
+Other scales: 
+\code{\link{scale_datetime}()},
+\code{\link{scale_numeric}()}
 }
 \concept{scales}

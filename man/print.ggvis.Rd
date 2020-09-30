@@ -10,8 +10,7 @@
 
 view_static(x, plot_id = rand_id("plot_"), dest = NULL)
 
-view_dynamic(x, plot_id = rand_id("plot_"), port = NULL,
-  quiet = FALSE)
+view_dynamic(x, plot_id = rand_id("plot_"), port = NULL, quiet = FALSE)
 }
 \arguments{
 \item{x}{A ggvis object.}

@@ -4,8 +4,14 @@
 \alias{layer_densities}
 \title{Transformation: density estimate}
 \usage{
-layer_densities(vis, ..., kernel = "gaussian", adjust = 1,
-  density_args = list(), area = TRUE)
+layer_densities(
+  vis,
+  ...,
+  kernel = "gaussian",
+  adjust = 1,
+  density_args = list(),
+  area = TRUE
+)
 }
 \arguments{
 \item{vis}{The visualisation to modify}

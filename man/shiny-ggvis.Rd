@@ -7,11 +7,15 @@
 \alias{ggvisOutput}
 \title{Connect a ggvis graphic to a shiny app.}
 \usage{
-bind_shiny(vis, plot_id, controls_id = NULL, ...,
-  session = shiny::getDefaultReactiveDomain())
+bind_shiny(
+  vis,
+  plot_id,
+  controls_id = NULL,
+  ...,
+  session = shiny::getDefaultReactiveDomain()
+)
 
-bind_shiny_ui(vis, controls_id,
-  session = shiny::getDefaultReactiveDomain())
+bind_shiny_ui(vis, controls_id, session = shiny::getDefaultReactiveDomain())
 
 ggvisOutput(plot_id = rand_id("plot_id"))
 }

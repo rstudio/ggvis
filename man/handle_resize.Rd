@@ -30,7 +30,7 @@ Handlers and interactive inputs for plot sizing.
 # This example just prints out the current dimensions to the console
 mtcars \%>\% ggvis(~mpg, ~wt) \%>\%
   layer_points() \%>\%
-  handle_resize(function(width, height, ...) cat(width, "x", height, "\\n"))
+  handle_resize(function(width, height, ...) cat(width, "x", height, "\n"))
 
 # Use plot_width() and plot_height() to dynamically get the plot size
 # inside the plot.

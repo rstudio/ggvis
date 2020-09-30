@@ -4,8 +4,13 @@
 \alias{legend_props}
 \title{Create an axis_props object for controlling legend properties.}
 \usage{
-legend_props(title = NULL, labels = NULL, symbols = NULL,
-  gradient = NULL, legend = NULL)
+legend_props(
+  title = NULL,
+  labels = NULL,
+  symbols = NULL,
+  gradient = NULL,
+  legend = NULL
+)
 }
 \arguments{
 \item{title}{A named list of text properties for the legend title.}

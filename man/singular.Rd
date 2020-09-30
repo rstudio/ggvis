@@ -7,8 +7,15 @@
 \usage{
 singular()
 
-scale_singular(vis, property, name = property, label = name,
-  points = TRUE, domain = NULL, override = NULL)
+scale_singular(
+  vis,
+  property,
+  name = property,
+  label = name,
+  points = TRUE,
+  domain = NULL,
+  override = NULL
+)
 }
 \arguments{
 \item{vis}{A ggvis object.}

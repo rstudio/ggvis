@@ -4,9 +4,17 @@
 \alias{compute_bin}
 \title{Bin data along a continuous variable}
 \usage{
-compute_bin(x, x_var, w_var = NULL, width = NULL, center = NULL,
-  boundary = NULL, closed = c("right", "left"), pad = FALSE,
-  binwidth)
+compute_bin(
+  x,
+  x_var,
+  w_var = NULL,
+  width = NULL,
+  center = NULL,
+  boundary = NULL,
+  closed = c("right", "left"),
+  pad = FALSE,
+  binwidth
+)
 }
 \arguments{
 \item{x}{Dataset-like object to bin. Built-in methods for data frames,

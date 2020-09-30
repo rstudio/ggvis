@@ -5,12 +5,26 @@
 \alias{layer_freqpolys}
 \title{Display binned data}
 \usage{
-layer_histograms(vis, ..., width = NULL, center = NULL,
-  boundary = NULL, closed = c("right", "left"), stack = TRUE,
-  binwidth)
+layer_histograms(
+  vis,
+  ...,
+  width = NULL,
+  center = NULL,
+  boundary = NULL,
+  closed = c("right", "left"),
+  stack = TRUE,
+  binwidth
+)
 
-layer_freqpolys(vis, ..., width = NULL, center = NULL,
-  boundary = NULL, closed = c("right", "left"), binwidth)
+layer_freqpolys(
+  vis,
+  ...,
+  width = NULL,
+  center = NULL,
+  boundary = NULL,
+  closed = c("right", "left"),
+  binwidth
+)
 }
 \arguments{
 \item{vis}{Visualisation to modify}

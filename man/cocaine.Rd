@@ -4,7 +4,9 @@
 \name{cocaine}
 \alias{cocaine}
 \title{Cocaine seizures in the US.}
-\format{Data frame with 3380 observations of 5 variables.}
+\format{
+Data frame with 3380 observations of 5 variables.
+}
 \usage{
 cocaine
 }

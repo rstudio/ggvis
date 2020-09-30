@@ -4,8 +4,7 @@
 \alias{ggvisOutputElements}
 \title{Create HTML elements for ggvis output}
 \usage{
-ggvisOutputElements(plot_id = rand_id("plot_id"), spec = NULL,
-  shiny = TRUE)
+ggvisOutputElements(plot_id = rand_id("plot_id"), spec = NULL, shiny = TRUE)
 }
 \arguments{
 \item{plot_id}{Unique identifier to use for the div containing the ggvis plot.}
