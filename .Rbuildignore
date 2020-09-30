@@ -7,3 +7,4 @@ bench
 ^CONTRIBUTING\.md$
 ^revdep$
 ^cran-comments\.md$
+^\.github$
