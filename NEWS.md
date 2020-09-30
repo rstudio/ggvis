@@ -1,4 +1,4 @@
-# ggvis 0.4.5.9000
+# ggvis 0.4.6
 
 * Fixed #483: Basic example did not work in R 4.0. (#485)
 
