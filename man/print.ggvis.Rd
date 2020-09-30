@@ -45,6 +45,8 @@ If \code{view_static} is used on a ggvis object that has dynamic components,
 it will output a static plot.
 }
 \examples{
+## Run these examples only in interactive R sessions
+if (interactive()) {
 # In most cases view_static is unnecessary; these will do the same thing:
 mtcars \%>\% ggvis(~wt, ~mpg)
 mtcars \%>\% ggvis(~wt, ~mpg) \%>\% view_static()
@@ -52,5 +54,6 @@ mtcars \%>\% ggvis(~wt, ~mpg) \%>\% view_static()
 # Can find the output file with view_static() and html_print()
 outfile <- mtcars \%>\% ggvis(~wt, ~mpg) \%>\%
   view_static() \%>\% htmltools::html_print(viewer = NULL)
+}
 }
 \keyword{internal}

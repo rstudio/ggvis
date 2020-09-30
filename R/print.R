@@ -64,6 +64,8 @@ print.ggvis <- function(x, dynamic = NA, launch = interactive(), ...) {
 #' @param plot_id Unique identifier used to identify the plot on the page.
 #' @param dest Deprecated (this no longer works).
 #' @examples
+#' ## Run these examples only in interactive R sessions
+#' if (interactive()) {
 #' # In most cases view_static is unnecessary; these will do the same thing:
 #' mtcars %>% ggvis(~wt, ~mpg)
 #' mtcars %>% ggvis(~wt, ~mpg) %>% view_static()
@@ -71,6 +73,7 @@ print.ggvis <- function(x, dynamic = NA, launch = interactive(), ...) {
 #' # Can find the output file with view_static() and html_print()
 #' outfile <- mtcars %>% ggvis(~wt, ~mpg) %>%
 #'   view_static() %>% htmltools::html_print(viewer = NULL)
+#' }
 view_static <- function(x, plot_id = rand_id("plot_"), dest = NULL) {
 
 
