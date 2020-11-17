@@ -17,11 +17,11 @@
 #'   group_by(cyl) %>% dplyr::arrange(wt) %>% layer_paths()
 layer_lines <- function(vis, ...) {
 
-  x_var <- vis$cur_props$x$value
+  x_var <- vis$cur_props$x.update$value
 
   layer_f(vis, function(x) {
     x <- auto_group(x, exclude = c("x", "y"))
-    x <- dplyr::arrange_(x, x_var)
+    x <- dplyr::arrange(x, !!x_var)
     emit_paths(x, props(...))
   })
 }

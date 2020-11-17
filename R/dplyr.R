@@ -60,16 +60,15 @@ groups.ggvis <- function(x) {
   shiny::isolate(dplyr::groups(x$cur_data()))
 }
 
-#' @importFrom dplyr group_by_
+#' @importFrom dplyr group_by
 #' @export
 #' @rdname dplyr-ggvis
-group_by_.ggvis <- function(.data, ..., .dots, add = FALSE) {
-  dots <- lazyeval::all_dots(.dots, ...)
+group_by.ggvis <- function(.data, ..., .add = FALSE) {
+  dots <- rlang::enquos(...)
   pieces <- extract_lazy_inputs(dots)
 
   register_computation(.data, pieces$inputs, "group_by", function(data, args) {
-    dplyr::group_by_(data, .dots = lapply(pieces$lazy, add_args, args),
-      add = add)
+    dplyr::group_by(data, !!!lapply(pieces$lazy, add_args, args), .add = .add)
   })
 }
 
@@ -82,112 +81,110 @@ ungroup.ggvis <- function(x) {
   })
 }
 
-
-#' @importFrom dplyr summarise_
+#' @importFrom dplyr summarise
 #' @rdname dplyr-ggvis
 #' @export
-summarise_.ggvis <- function(.data, ..., .dots) {
-  dots <- lazyeval::all_dots(.dots, ...)
+summarise.ggvis <- function (.data, ...) {
+  dots <- rlang::enquos(...)
   pieces <- extract_lazy_inputs(dots)
 
   register_computation(.data, pieces$inputs, "summarise", function(data, args) {
-    dplyr::summarise_(data, .dots = lapply(pieces$lazy, add_args, args))
+    summarise(data, !!!lapply(pieces$lazy, add_args, args))
   })
 }
 
-#' @importFrom dplyr mutate_
+#' @importFrom dplyr mutate
 #' @rdname dplyr-ggvis
 #' @export
-mutate_.ggvis <- function(.data, ..., .dots) {
-  dots <- lazyeval::all_dots(.dots, ...)
+mutate.ggvis <- function(.data, ...) {
+  dots <- rlang::enquos(...)
   pieces <- extract_lazy_inputs(dots)
 
   register_computation(.data, pieces$inputs, "mutate", function(data, args) {
-    dplyr::mutate_(data, .dots = lapply(pieces$lazy, add_args, args))
+    dplyr::mutate(data, !!!lapply(pieces$lazy, add_args, args))
   })
 }
 
-#' @importFrom dplyr arrange_
+#' @importFrom dplyr arrange
 #' @rdname dplyr-ggvis
 #' @export
-arrange_.ggvis <- function(.data, ..., .dots) {
-  dots <- lazyeval::all_dots(.dots, ...)
+arrange.ggvis <- function(.data, ...) {
+  dots <- rlang::enquos(...)
   pieces <- extract_lazy_inputs(dots)
 
   register_computation(.data, pieces$inputs, "arrange", function(data, args) {
-    dplyr::arrange_(data, .dots = lapply(pieces$lazy, add_args, args))
+    dplyr::arrange(data, !!!lapply(pieces$lazy, add_args, args))
   })
 }
 
-#' @importFrom dplyr select_
+#' @importFrom dplyr select
 #' @rdname dplyr-ggvis
 #' @export
-select_.ggvis <- function(.data, ..., .dots) {
-  dots <- lazyeval::all_dots(.dots, ...)
+select.ggvis <- function(.data, ...) {
+  dots <- rlang::enquos(...)
   pieces <- extract_lazy_inputs(dots)
 
   register_computation(.data, pieces$inputs, "select", function(data, args) {
-    dplyr::select_(data, .dots = lapply(pieces$lazy, add_args, args))
+    dplyr::select(data, !!!lapply(pieces$lazy, add_args, args))
   })
 }
 
-#' @importFrom dplyr filter_
 #' @rdname dplyr-ggvis
-#' @export
-filter_.ggvis <- function(.data, ..., .dots) {
-  dots <- lazyeval::all_dots(.dots, ...)
+# exported on load
+filter.ggvis <- function(.data, ...) {
+  dots <- rlang::enquos(...)
   pieces <- extract_lazy_inputs(dots)
 
   register_computation(.data, pieces$inputs, "filter", function(data, args) {
-    dplyr::filter_(data, .dots = lapply(pieces$lazy, add_args, args))
+    dplyr::filter(data, !!!lapply(pieces$lazy, add_args, args))
   })
 }
 
-#' @importFrom dplyr distinct_
+#' @importFrom dplyr distinct
 #' @rdname dplyr-ggvis
 #' @export
-distinct_.ggvis <- function(.data, ..., .dots) {
-  dots <- lazyeval::all_dots(.dots, ...)
+distinct.ggvis <- function(.data, ...) {
+  dots <- rlang::enquos(...)
   pieces <- extract_lazy_inputs(dots)
 
   register_computation(.data, pieces$inputs, "distinct", function(data, args) {
-    dplyr::distinct_(data, .dots = lapply(pieces$lazy, add_args, args))
+    dplyr::distinct(data, !!!lapply(pieces$lazy, add_args, args))
   })
 }
 
-#' @importFrom dplyr slice_
+#' @importFrom dplyr slice
 #' @rdname dplyr-ggvis
 #' @export
-slice_.ggvis <- function(.data, ..., .dots) {
-  dots <- lazyeval::all_dots(.dots, ...)
+slice.ggvis <- function(.data, ...) {
+  dots <- rlang::enquos(...)
   pieces <- extract_lazy_inputs(dots)
 
   register_computation(.data, pieces$inputs, "slice", function(data, args) {
-    dplyr::slice_(data, .dots = lapply(pieces$lazy, add_args, args))
+    dplyr::slice(data, !!!lapply(pieces$lazy, add_args, args))
   })
 }
 
-#' @importFrom dplyr rename_
+#' @importFrom dplyr rename
 #' @rdname dplyr-ggvis
 #' @export
-rename_.ggvis <- function(.data, ..., .dots) {
-  dots <- lazyeval::all_dots(.dots, ...)
+rename.ggvis <- function(.data, ...) {
+  dots <- rlang::enquos(...)
   pieces <- extract_lazy_inputs(dots)
 
   register_computation(.data, pieces$inputs, "rename", function(data, args) {
-    dplyr::rename_(data, .dots = lapply(pieces$lazy, add_args, args))
+    dplyr::rename(data, !!!lapply(pieces$lazy, add_args, args))
   })
 }
 
-#' @importFrom dplyr transmute_
+#' @importFrom dplyr transmute
 #' @rdname dplyr-ggvis
 #' @export
-transmute_.ggvis <- function(.data, ..., .dots) {
-  dots <- lazyeval::all_dots(.dots, ...)
+transmute.ggvis <- function(.data, ...) {
+  dots <- rlang::enquos(...)
   pieces <- extract_lazy_inputs(dots)
 
   register_computation(.data, pieces$inputs, "transmute", function(data, args) {
-    dplyr::transmute_(data, .dots = lapply(pieces$lazy, add_args, args))
+    dplyr::transmute(data, !!!lapply(pieces$lazy, add_args, args))
   })
 }
 
@@ -225,10 +222,10 @@ transmute_.ggvis <- function(.data, ..., .dots) {
 #' s2 <- input_slider(0, 200)
 #' extract_lazy_inputs(lazy_dots(x + eval(s1), eval(s2), eval(s1) / eval(s2)))
 extract_lazy_inputs <- function(x) {
-  if (inherits(x, "lazy_dots")) {
+  if (inherits(x, "quosures")) {
     pieces <- lapply(x, extract_lazy_inputs)
 
-    lazy <- lazyeval::as.lazy_dots(pluck(pieces, "lazy"))
+    lazy <- rlang::new_quosures(pluck(pieces, "lazy"))
     inputs <- unlist(unname(pluck(pieces, "inputs")), recursive = FALSE)
     inputs <- inputs[!duplicated(names(inputs))]
 
@@ -236,8 +233,8 @@ extract_lazy_inputs <- function(x) {
       lazy = lazy,
       inputs = inputs
     )
-  } else if (inherits(x, "lazy")) {
-    new <- extract_inputs(x$expr, x$env)
+  } else if (inherits(x, "quosure")) {
+    new <- extract_inputs(rlang::quo_get_expr(x), rlang::quo_get_env(x))
 
     x$expr <- new$expr
     list(lazy = x, inputs = new$inputs)
@@ -284,11 +281,10 @@ extract_inputs <- function(expr, env = parent.frame()) {
 # Given a lazy object, modify it so it's environment also gets to
 # access the args list.
 add_args <- function(x, args) {
-  e <- new.env(parent = x$env)
+  e <- new.env(parent = rlang::quo_get_env(x))
   e$args <- args
-  x$env <- e
 
-  x
+  rlang::new_quosure(x$expr, e)
 }
 
 
@@ -303,51 +299,51 @@ groups.reactive <- function(x) reactive(dplyr::groups(x()))
 ungroup.reactive <- function(x) reactive(dplyr::ungroup(x()))
 #' @rdname dplyr-ggvis
 #' @export
-group_by_.reactive <- function(.data, ..., .dots, add = FALSE) {
-  reactive(dplyr::group_by_(.data(), ..., .dots = .dots, add = add))
+group_by.reactive <- function(.data, ..., add = FALSE) {
+  reactive(dplyr::group_by(.data(), ..., add = add))
 }
 #' @rdname dplyr-ggvis
 #' @export
-summarise_.reactive <- function(.data, ..., .dots) {
-  reactive(dplyr::summarise_(.data(), ..., .dots = .dots))
+summarise.reactive <- function(.data, ...) {
+  reactive(dplyr::summarise(.data(), ...))
 }
 #' @rdname dplyr-ggvis
 #' @export
-mutate_.reactive <- function(.data, ..., .dots) {
-  reactive(dplyr::mutate_(.data(), ..., .dots = .dots))
+mutate.reactive <- function(.data, ...) {
+  reactive(dplyr::mutate(.data(), ...))
 }
 #' @rdname dplyr-ggvis
 #' @export
-arrange_.reactive <- function(.data, ..., .dots) {
-  reactive(dplyr::arrange_(.data(), ..., .dots = .dots))
+arrange.reactive <- function(.data, ...) {
+  reactive(dplyr::arrange(.data(), ...))
 }
 #' @rdname dplyr-ggvis
 #' @export
-select_.reactive <- function(.data, ..., .dots) {
-  reactive(dplyr::select_(.data(), ..., .dots = .dots))
+select.reactive <- function(.data, ...) {
+  reactive(dplyr::select(.data(), ...))
+}
+#' @rdname dplyr-ggvis
+# exported onLoad
+filter.reactive <- function(.data, ...) {
+  reactive(dplyr::filter(.data(), ...))
 }
 #' @rdname dplyr-ggvis
 #' @export
-filter_.reactive <- function(.data, ..., .dots) {
-  reactive(dplyr::filter_(.data(), ..., .dots = .dots))
+distinct.reactive <- function(.data, ...) {
+  reactive(dplyr::distinct(.data(), ...))
 }
 #' @rdname dplyr-ggvis
 #' @export
-distinct_.reactive <- function(.data, ..., .dots) {
-  reactive(dplyr::distinct_(.data(), ..., .dots = .dots))
+slice.reactive <- function(.data, ...) {
+  reactive(dplyr::slice(.data(), ...))
 }
 #' @rdname dplyr-ggvis
 #' @export
-slice_.reactive <- function(.data, ..., .dots) {
-  reactive(dplyr::slice_(.data(), ..., .dots = .dots))
+rename.reactive <- function(.data, ...) {
+  reactive(dplyr::rename(.data(), ...))
 }
 #' @rdname dplyr-ggvis
 #' @export
-rename_.reactive <- function(.data, ..., .dots) {
-  reactive(dplyr::rename_(.data(), ..., .dots = .dots))
-}
-#' @rdname dplyr-ggvis
-#' @export
-transmute_.reactive <- function(.data, ..., .dots) {
-  reactive(dplyr::transmute_(.data(), ..., .dots = .dots))
+transmute.reactive <- function(.data, ...) {
+  reactive(dplyr::transmute(.data(), ...))
 }

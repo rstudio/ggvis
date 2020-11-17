@@ -9,6 +9,9 @@
 }
 
 .onLoad <- function(libname, pkgname) {
+  register_s3_method("dplyr", "filter", "ggvis")
+  register_s3_method("dplyr", "filter", "reactive")
+
   # ggvis provides methods for knitr::knit_print, but knitr isn't a Depends or
   # Imports of ggvis, only a Suggests. This code snippet manually registers
   # our method(s) with S3 once both ggvis and knitr are loaded.
