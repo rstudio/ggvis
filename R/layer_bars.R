@@ -32,7 +32,6 @@
 #'   proportion of the spacing between items (default is 0.9).
 #' @param stack If there are multiple bars to be drawn at an x location, should
 #'   the bars be stacked? If FALSE, the bars will be overplotted on each other.
-#' @inheritParams compute_count
 #' @seealso \code{\link{layer_histograms}} For bar graphs of counts at each unique
 #'   x value, in contrast to a histogram's bins along x ranges.
 #' @seealso \code{\link{compute_count}} and \code{\link{compute_tabulate}} for

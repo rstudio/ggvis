@@ -5,7 +5,6 @@
 #'
 #' @export
 #' @seealso \code{dplyr::\link[dplyr]{explain}} for more information.
-#' @inheritParams dplyr::explain
 #' @importFrom dplyr explain
 #' @name explain
 #' @examples

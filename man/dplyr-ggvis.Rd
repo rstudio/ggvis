@@ -3,78 +3,78 @@
 \name{dplyr-ggvis}
 \alias{dplyr-ggvis}
 \alias{groups.ggvis}
-\alias{group_by_.ggvis}
+\alias{group_by.ggvis}
 \alias{ungroup.ggvis}
-\alias{summarise_.ggvis}
-\alias{mutate_.ggvis}
-\alias{arrange_.ggvis}
-\alias{select_.ggvis}
-\alias{filter_.ggvis}
-\alias{distinct_.ggvis}
-\alias{slice_.ggvis}
-\alias{rename_.ggvis}
-\alias{transmute_.ggvis}
+\alias{summarise.ggvis}
+\alias{mutate.ggvis}
+\alias{arrange.ggvis}
+\alias{select.ggvis}
+\alias{filter.ggvis}
+\alias{distinct.ggvis}
+\alias{slice.ggvis}
+\alias{rename.ggvis}
+\alias{transmute.ggvis}
 \alias{groups.reactive}
 \alias{ungroup.reactive}
-\alias{group_by_.reactive}
-\alias{summarise_.reactive}
-\alias{mutate_.reactive}
-\alias{arrange_.reactive}
-\alias{select_.reactive}
-\alias{filter_.reactive}
-\alias{distinct_.reactive}
-\alias{slice_.reactive}
-\alias{rename_.reactive}
-\alias{transmute_.reactive}
+\alias{group_by.reactive}
+\alias{summarise.reactive}
+\alias{mutate.reactive}
+\alias{arrange.reactive}
+\alias{select.reactive}
+\alias{filter.reactive}
+\alias{distinct.reactive}
+\alias{slice.reactive}
+\alias{rename.reactive}
+\alias{transmute.reactive}
 \title{Dplyr verbs for ggvis.}
 \usage{
 \method{groups}{ggvis}(x)
 
-\method{group_by_}{ggvis}(.data, ..., .dots, add = FALSE)
+\method{group_by}{ggvis}(.data, ..., .add = FALSE)
 
 \method{ungroup}{ggvis}(x)
 
-\method{summarise_}{ggvis}(.data, ..., .dots)
+\method{summarise}{ggvis}(.data, ...)
 
-\method{mutate_}{ggvis}(.data, ..., .dots)
+\method{mutate}{ggvis}(.data, ...)
 
-\method{arrange_}{ggvis}(.data, ..., .dots)
+\method{arrange}{ggvis}(.data, ...)
 
-\method{select_}{ggvis}(.data, ..., .dots)
+\method{select}{ggvis}(.data, ...)
 
-\method{filter_}{ggvis}(.data, ..., .dots)
+filter.ggvis(.data, ...)
 
-\method{distinct_}{ggvis}(.data, ..., .dots)
+\method{distinct}{ggvis}(.data, ...)
 
-\method{slice_}{ggvis}(.data, ..., .dots)
+\method{slice}{ggvis}(.data, ...)
 
-\method{rename_}{ggvis}(.data, ..., .dots)
+\method{rename}{ggvis}(.data, ...)
 
-\method{transmute_}{ggvis}(.data, ..., .dots)
+\method{transmute}{ggvis}(.data, ...)
 
 \method{groups}{reactive}(x)
 
 \method{ungroup}{reactive}(x)
 
-\method{group_by_}{reactive}(.data, ..., .dots, add = FALSE)
+\method{group_by}{reactive}(.data, ..., add = FALSE)
 
-\method{summarise_}{reactive}(.data, ..., .dots)
+\method{summarise}{reactive}(.data, ...)
 
-\method{mutate_}{reactive}(.data, ..., .dots)
+\method{mutate}{reactive}(.data, ...)
 
-\method{arrange_}{reactive}(.data, ..., .dots)
+\method{arrange}{reactive}(.data, ...)
 
-\method{select_}{reactive}(.data, ..., .dots)
+\method{select}{reactive}(.data, ...)
 
-\method{filter_}{reactive}(.data, ..., .dots)
+filter.reactive(.data, ...)
 
-\method{distinct_}{reactive}(.data, ..., .dots)
+\method{distinct}{reactive}(.data, ...)
 
-\method{slice_}{reactive}(.data, ..., .dots)
+\method{slice}{reactive}(.data, ...)
 
-\method{rename_}{reactive}(.data, ..., .dots)
+\method{rename}{reactive}(.data, ...)
 
-\method{transmute_}{reactive}(.data, ..., .dots)
+\method{transmute}{reactive}(.data, ...)
 }
 \description{
 Applying a dplyr verb to a ggvis object creates a reactive transformation:

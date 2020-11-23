@@ -40,5 +40,5 @@ auto_group <- function(vis, exclude = NULL) {
   if (!any(countable)) return(vis)
 
   group_vars <- lapply(unname(props[countable]), "[[", "value")
-  dplyr::group_by_(vis, .dots = group_vars)
+  dplyr::group_by(vis, !!!group_vars)
 }

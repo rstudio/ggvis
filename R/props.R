@@ -126,7 +126,7 @@
 props <- function(..., .props = NULL, inherit = TRUE, env = parent.frame()) {
   check_empty_args()
 
-  args <- pluck(lazyeval::lazy_dots(...), "expr")
+  args <- dots(...)
   all <- args_to_props(c(args, .props), env)
 
   structure(
@@ -134,6 +134,10 @@ props <- function(..., .props = NULL, inherit = TRUE, env = parent.frame()) {
     inherit = inherit,
     class = "ggvis_props"
   )
+}
+
+dots <- function(...) {
+  as.list(substitute(...()))
 }
 
 uses_colon_equals <- function(x) {
