@@ -1,7 +1,7 @@
 #' Create a new ggvis_scale object.
 #'
 #' A scale object is a close mapping to a vega mark object. Vega scales
-#' are documented in \url{https://github.com/trifacta/vega/wiki/Scales}.
+#' are documented in \url{https://vega.github.io/vega/docs/scales/}.
 #'
 #' This function is designed to be used by authors of new types of scale.
 #' If you are a ggvis user, please use one of the more specific scale
@@ -42,7 +42,7 @@
 #'   data. If \code{FALSE}, the \code{domain} will not behave this way. If
 #'   left \code{NULL}, then it will be treated as \code{TRUE} whenever
 #'   \code{domain} is non-NULL.
-#' @seealso \url{https://github.com/trifacta/vega/wiki/Scales}
+#' @seealso \url{https://vega.github.io/vega/docs/scales/}
 #' @export
 #' @keywords internal
 #' @examples

@@ -124,5 +124,5 @@ mtcars \%>\% ggvis(x = ~wt, y = ~mpg) \%>\% layer_points() \%>\%
 }
 \seealso{
 Vega axis documentation:
-  \url{https://github.com/trifacta/vega/wiki/Axes}
+  \url{https://vega.github.io/vega/docs/axes/}
 }

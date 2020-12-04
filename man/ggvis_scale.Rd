@@ -68,7 +68,7 @@ left \code{NULL}, then it will be treated as \code{TRUE} whenever
 }
 \description{
 A scale object is a close mapping to a vega mark object. Vega scales
-are documented in \url{https://github.com/trifacta/vega/wiki/Scales}.
+are documented in \url{https://vega.github.io/vega/docs/scales/}.
 }
 \details{
 This function is designed to be used by authors of new types of scale.
@@ -84,6 +84,6 @@ ggvis_scale("x", type = "linear")
 ggvis_scale("x", "ord")
 }
 \seealso{
-\url{https://github.com/trifacta/vega/wiki/Scales}
+\url{https://vega.github.io/vega/docs/scales/}
 }
 \keyword{internal}

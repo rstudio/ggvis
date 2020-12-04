@@ -101,7 +101,7 @@ p \%>\% scale_datetime("x", utc = TRUE)
 }
 \seealso{
 \code{\link{scales}}, \code{\link{scale_numeric}},
-  \url{https://github.com/trifacta/vega/wiki/Scales#time-scale-properties}
+  \url{https://vega.github.io/vega/docs/scales/#time}
 
 Other scales: 
 \code{\link{scale_numeric}()},

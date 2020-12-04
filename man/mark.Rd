@@ -18,7 +18,7 @@ is.mark(x)
 }
 \description{
 A mark object is a close mapping to a vega mark object. Vega marks
-are documented in \url{https://github.com/trifacta/vega/wiki/Marks}.
+are documented in \url{https://vega.github.io/vega/docs/marks/}.
 }
 \details{
 This function is designed to be used by authors of new types of mark.

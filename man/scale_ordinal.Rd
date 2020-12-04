@@ -138,8 +138,7 @@ mtcars \%>\% ggvis(x = ~wt, y = ~mpg, opacity = ~factor(cyl)) \%>\%
 }
 \seealso{
 \code{\link{scales}}, \code{\link{scale_numeric}},
-  \url{https://github.com/trifacta/vega/wiki/Scales#ordinal-scale-properties},
-  \url{https://github.com/d3/d3/wiki/Ordinal-Scales}
+  \url{https://vega.github.io/vega/docs/scales/#ordinal}.
 
 Other scales: 
 \code{\link{scale_datetime}()},

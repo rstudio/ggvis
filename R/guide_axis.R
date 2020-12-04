@@ -46,7 +46,7 @@
 #'   Should be an object created by \code{\link{axis_props}}, with properties
 #'   for ticks, majorTicks, minorTicks, grid, labels, title, and axis.
 #' @seealso Vega axis documentation:
-#'   \url{https://github.com/trifacta/vega/wiki/Axes}
+#'   \url{https://vega.github.io/vega/docs/axes/}
 #' @export
 #' @examples
 #' mtcars %>% ggvis(x = ~wt, y = ~mpg, fill = ~cyl) %>%

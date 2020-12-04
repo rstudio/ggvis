@@ -99,7 +99,7 @@ NULL
 #'   positional scales (x and y), \code{expand} will default to 0.05. For other
 #'   scales, it will default to 0.
 #' @seealso \code{\link{scales}}, \code{\link{scale_ordinal}},
-#'   \url{https://github.com/trifacta/vega/wiki/Scales#quantitative-scale-properties}
+#'   \url{https://vega.github.io/vega/docs/scales/#quantitative}
 #' @family scales
 #' @export
 #' @examples
@@ -179,7 +179,7 @@ scale_numeric <- function(vis, property, domain = NULL, range = NULL,
 #'   domain.
 #' @param utc if \code{TRUE}, uses UTC times. Default is \code{FALSE}.
 #' @seealso \code{\link{scales}}, \code{\link{scale_numeric}},
-#'   \url{https://github.com/trifacta/vega/wiki/Scales#time-scale-properties}
+#'   \url{https://vega.github.io/vega/docs/scales/#time}
 #' @family scales
 #' @export
 #' @examples
@@ -264,8 +264,7 @@ scale_datetime <- function(vis, property, domain = NULL, range = NULL,
 #' @param sort  If \code{TRUE}, the values in the scale domain will be sorted
 #'   according to their natural order. Default is \code{FALSE}.
 #' @seealso \code{\link{scales}}, \code{\link{scale_numeric}},
-#'   \url{https://github.com/trifacta/vega/wiki/Scales#ordinal-scale-properties},
-#'   \url{https://github.com/d3/d3/wiki/Ordinal-Scales}
+#'   \url{https://vega.github.io/vega/docs/scales/#ordinal}.
 #' @family scales
 #' @export
 #' @examples
