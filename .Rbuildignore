@@ -8,3 +8,4 @@ bench
 ^revdep$
 ^cran-comments\.md$
 ^\.github$
+^CRAN-RELEASE$

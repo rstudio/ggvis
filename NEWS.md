@@ -1,3 +1,5 @@
+# ggvis (development version)
+
 # ggvis 0.4.7
 
 * Switched from lazyeval to tidy eval (#487).
