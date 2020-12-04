@@ -22,7 +22,7 @@ R. It combines:
 
 * data transformation pipelines from [dplyr](https://github.com/tidyverse/dplyr).
 
-ggvis graphics are rendered with [vega](https://github.com/trifacta/vega), so you can generate both raster graphics with [HTML5 canvas](https://diveintohtml5.info/canvas.html) and vector graphics with
+ggvis graphics are rendered with [vega](https://github.com/trifacta/vega), so you can generate both raster graphics with HTML5 canvas and vector graphics with
 [svg](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics). ggvis is less flexible than raw [d3](https://d3js.org/) or vega, but is much more succinct and is tailored to the needs of exploratory data analysis.
 
 If you find a bug, please file a minimal reproducible example at https://github.com/rstudio/ggvis/issues. If you're not sure if something is a bug, you'd like to discuss new features or have any other questions about ggvis, please join us on the mailing list: https://groups.google.com/group/ggvis.
