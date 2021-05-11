@@ -45,7 +45,7 @@ ggvis_dependencies <- function() {
     ),
     htmltools::htmlDependency(
       name = "lodash",
-      version = "4.17.15",
+      version = "4.17.21",
       src = ggvis_path("lib/lodash"),
       script = adjust_min("lodash.min.js"),
       head = "<script>var lodash = _.noConflict();</script>"
