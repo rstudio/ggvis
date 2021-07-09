@@ -84,7 +84,13 @@ compute_bin.data.frame <- function(x, x_var, w_var = NULL, width = NULL,
   } else {
     w_val <- eval_vector(x, w_var)
   }
-
+  
+  # If x_val is a factor, unclass and use bin_vector.numeric for 
+  # width dimensions.
+  if (is.factor(x_val)) {
+    x_val <- as.numeric(unclass(x_val))
+  }
+  
   bin_vector(x_val, weight = w_val, width = params$width,
              origin = params$origin, closed = params$closed, pad = pad)
 }
