@@ -103,20 +103,20 @@ as.vega.mark_group <- function(x, ...) {
 
 # Given a ggvis mark object, output a vega mark object
 #' @export
-as.vega.mark <- function(mark, in_group = FALSE) {
-  data_id <- data_id(mark$data)
+as.vega.mark <- function(x, in_group = FALSE, ...) {
+  data_id <- data_id(x$data)
 
   # Pull out key from props, if present
-  key <- mark$props$key
-  mark$props$key <- NULL
+  key <- x$props$key
+  x$props$key <- NULL
 
   # Add the custom ggvis properties set for storing ggvis-specific information
   # in the Vega spec.
-  properties <- as.vega(mark$props)
+  properties <- as.vega(x$props)
   properties$ggvis <- list()
   properties$ggvis$data <- list(value = data_id)
 
-  group_vars <- dplyr::groups(shiny::isolate(mark$data()))
+  group_vars <- dplyr::groups(shiny::isolate(x$data()))
   if (!in_group && length(group_vars)) {
     # FIXME: probably should go away and just use subvis
 
@@ -128,7 +128,7 @@ as.vega.mark <- function(mark, in_group = FALSE) {
       from = list(data = data_id),
       marks = list(
         list(
-          type = mark$type,
+          type = x$type,
           properties = properties
         )
       )
@@ -136,7 +136,7 @@ as.vega.mark <- function(mark, in_group = FALSE) {
 
   } else {
     m <- list(
-      type = mark$type,
+      type = x$type,
       properties = properties
     )
     if (!in_group) {
@@ -152,7 +152,7 @@ as.vega.mark <- function(mark, in_group = FALSE) {
 }
 
 #' @export
-as.vega.ggvis_props <- function(x, default_scales = NULL) {
+as.vega.ggvis_props <- function(x, default_scales = NULL, ...) {
   x <- prop_event_sets(x)
 
   # Given a list of property sets (enter, update, etc.), return appropriate
@@ -169,7 +169,7 @@ as.vega.ggvis_props <- function(x, default_scales = NULL) {
 }
 
 #' @export
-as.vega.ggvis_axis <- function(x) {
+as.vega.ggvis_axis <- function(x, ...) {
   if (isTRUE(x$hide)) return(NULL)
 
   if (empty(x$properties)) {

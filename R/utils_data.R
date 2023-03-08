@@ -33,7 +33,7 @@ remove_missing <- function(x, warn_na = TRUE, finite = FALSE, ...) {
 }
 
 #' @export
-remove_missing.default <- function(x, warn_na = TRUE, finite = FALSE) {
+remove_missing.default <- function(x, warn_na = TRUE, finite = FALSE, ...) {
   if (!is.atomic(x)) {
     stop("Input to remove_missing.default must be a vector.")
   }
@@ -56,7 +56,7 @@ remove_missing.default <- function(x, warn_na = TRUE, finite = FALSE) {
 
 #' @export
 remove_missing.data.frame <- function(x, warn_na = TRUE, finite = FALSE,
-    vars = names(x)) {
+    vars = names(x), ...) {
 
   vars <- intersect(vars, names(x))
 
@@ -78,7 +78,7 @@ remove_missing.data.frame <- function(x, warn_na = TRUE, finite = FALSE,
 
 #' @export
 remove_missing.split_df <- function(x, warn_na = TRUE, finite = FALSE,
-    vars = names(x)) {
+    vars = names(x), ...) {
   x[] <- lapply(x, remove_missing, warn_na, vars, finite)
   x
 }
@@ -104,7 +104,7 @@ finite.cases <- function(x) {
 to_csv <- function(x, header = TRUE, ...) UseMethod("to_csv")
 
 #' @export
-to_csv.data.frame <- function(x, header = TRUE) {
+to_csv.data.frame <- function(x, header = TRUE, ...) {
   x <- lapply(x, format_vec_csv)
 
   # Collapse across rows, yielding each row of CSV text

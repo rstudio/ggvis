@@ -75,7 +75,7 @@ group_by.ggvis <- function(.data, ..., .add = FALSE) {
 #' @importFrom dplyr ungroup
 #' @export
 #' @rdname dplyr-ggvis
-ungroup.ggvis <- function(x) {
+ungroup.ggvis <- function(x, ...) {
   register_computation(x, list(), "ungroup", function(data, args) {
     dplyr::ungroup(data)
   })
@@ -296,7 +296,7 @@ add_args <- function(x, args) {
 groups.reactive <- function(x) reactive(dplyr::groups(x()))
 #' @rdname dplyr-ggvis
 #' @export
-ungroup.reactive <- function(x) reactive(dplyr::ungroup(x()))
+ungroup.reactive <- function(x, ...) reactive(dplyr::ungroup(x()))
 #' @rdname dplyr-ggvis
 #' @export
 group_by.reactive <- function(.data, ..., add = FALSE) {

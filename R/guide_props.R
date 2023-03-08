@@ -36,7 +36,7 @@ axis_props <- function(ticks = NULL, majorTicks = NULL, minorTicks = NULL,
 is.axis_props <- function(x) inherits(x, "axis_props")
 
 #' @export
-as.vega.axis_props <- function(x) {
+as.vega.axis_props <- function(x, ...) {
   as_value <- function(item) {
     lapply(item, function(val) {
       if (is.scaled_value(val)) {
@@ -110,4 +110,4 @@ scaled_value <- function(scale, value) {
 is.scaled_value <- function(x) inherits(x, "scaled_value")
 
 #' @export
-as.vega.scaled_value <- function(x) x
+as.vega.scaled_value <- function(x, ...) x

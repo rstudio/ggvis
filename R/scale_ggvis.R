@@ -91,7 +91,7 @@ format.ggvis_scale <- format.ggvis_axis
 print.ggvis_scale <- print.ggvis_axis
 
 #' @export
-as.vega.ggvis_scale <- function(x) {
+as.vega.ggvis_scale <- function(x, ...) {
   if (shiny::is.reactive(x$domain)) {
     # Replace the domain with something that grabs it from the domain data
     x$domain <- list(

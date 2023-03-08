@@ -103,7 +103,7 @@ padding <- function(top = NULL, right = NULL, bottom = NULL, left = NULL) {
 }
 
 #' @export
-as.vega.padding <- function(x) {
+as.vega.padding <- function(x, ...) {
   if (length(x) == 0) {
     NULL
   } else {
