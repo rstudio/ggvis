@@ -32,7 +32,7 @@
 
 \method{group_by}{ggvis}(.data, ..., .add = FALSE)
 
-\method{ungroup}{ggvis}(x)
+\method{ungroup}{ggvis}(x, ...)
 
 \method{summarise}{ggvis}(.data, ...)
 
@@ -54,7 +54,7 @@ filter.ggvis(.data, ...)
 
 \method{groups}{reactive}(x)
 
-\method{ungroup}{reactive}(x)
+\method{ungroup}{reactive}(x, ...)
 
 \method{group_by}{reactive}(.data, ..., add = FALSE)
 

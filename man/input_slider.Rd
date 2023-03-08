@@ -23,19 +23,18 @@ input_slider(
 )
 }
 \arguments{
-\item{min}{The minimum value (inclusive) that can be selected.}
+\item{min, max}{The minimum and maximum values (inclusive) that can be
+selected.}
 
-\item{max}{The maximum value (inclusive) that can be selected.}
-
-\item{value}{The initial value of the slider. A numeric vector of length one
-will create a regular slider; a numeric vector of length two will create a
-double-ended range slider. A warning will be issued if the value doesn't
-fit between \code{min} and \code{max}.}
+\item{value}{The initial value of the slider, either a number, a date
+(class Date), or a date-time (class POSIXt). A length one vector will
+create a regular slider; a length two vector will create a double-ended
+range slider. Must lie between \code{min} and \code{max}.}
 
 \item{step}{Specifies the interval between each selectable value on the
-slider (if \code{NULL}, a heuristic is used to determine the step size). If
-the values are dates, \code{step} is in days; if the values are times
-(POSIXt), \code{step} is in seconds.}
+slider. Either \code{NULL}, the default, which uses a heuristic to determine the
+step size or a single number. If the values are dates, \code{step} is in days;
+if the values are date-times, \code{step} is in seconds.}
 
 \item{round}{\code{TRUE} to round all values to the nearest integer;
 \code{FALSE} if no rounding is desired; or an integer to round to that
@@ -43,16 +42,12 @@ number of digits (for example, 1 will round to the nearest 10, and -2 will
 round to the nearest .01). Any rounding will be applied after snapping to
 the nearest step.}
 
-\item{format}{Deprecated.}
-
-\item{locale}{Deprecated.}
-
 \item{ticks}{\code{FALSE} to hide tick marks, \code{TRUE} to show them
 according to some simple heuristics.}
 
 \item{animate}{\code{TRUE} to show simple animation controls with default
 settings; \code{FALSE} not to; or a custom settings list, such as those
-created using \code{\link[shiny:sliderInput]{animationOptions()}}.}
+created using \code{\link[shiny:animationOptions]{animationOptions()}}.}
 
 \item{sep}{Separator between thousands places in numbers.}
 
