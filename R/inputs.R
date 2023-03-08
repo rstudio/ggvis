@@ -5,6 +5,8 @@
 #'   automatically.
 #' @param map A function with single argument \code{x}, the value of the
 #'   control on the client. Returns a modified value.
+#' @param format A string specifying how to format the value.
+#' @param locale A string specifying the locale to use for formatting.
 #' @family interactive input
 #' @export
 #' @examples
