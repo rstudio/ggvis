@@ -245,6 +245,7 @@ bin_vector <- function(x, weight = NULL, ...) {
 }
 
 #' @export
+#' @rdname bin_vector
 bin_vector.numeric <- function(x, weight = NULL, ..., width = 1,
                                origin = 0, closed = c("right", "left"),
                                pad = FALSE) {

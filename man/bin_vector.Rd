@@ -2,9 +2,20 @@
 % Please edit documentation in R/compute_bin.R
 \name{bin_vector}
 \alias{bin_vector}
+\alias{bin_vector.numeric}
 \title{Bin vectors}
 \usage{
 bin_vector(x, weight = NULL, ...)
+
+\method{bin_vector}{numeric}(
+  x,
+  weight = NULL,
+  ...,
+  width = 1,
+  origin = 0,
+  closed = c("right", "left"),
+  pad = FALSE
+)
 }
 \arguments{
 \item{x}{A vector to bin}
