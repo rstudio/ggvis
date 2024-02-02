@@ -13,9 +13,6 @@ add_scale(vis, scale, data_domain = TRUE)
 
 \item{data_domain}{Should the domain be controlled by a data set which is
 added to the spec? Should only be set to FALSE in special cases.}
-
-\item{domain}{Either a vector with static values for the domain, or
-a reactive that returns a such a vector.}
 }
 \description{
 Add arbitrary scales to ggvis.

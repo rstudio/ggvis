@@ -165,8 +165,6 @@ add_mark <- function(vis, type = NULL, props = NULL, data = NULL,
 #'
 #' @param vis Visualisation to modify.
 #' @param scale Scale object
-#' @param domain Either a vector with static values for the domain, or
-#'   a reactive that returns a such a vector.
 #' @param data_domain Should the domain be controlled by a data set which is
 #'   added to the spec? Should only be set to FALSE in special cases.
 #' @keywords internal
