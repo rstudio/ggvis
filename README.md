@@ -1,10 +1,5 @@
 # ggvis
 
-<!-- badges: start -->
-[![R-CMD-check](https://github.com/rstudio/ggvis/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/rstudio/ggvis/actions/workflows/R-CMD-check.yaml)
-[![Codecov test coverage](https://codecov.io/gh/rstudio/ggvis/branch/main/graph/badge.svg)](https://app.codecov.io/gh/rstudio/ggvis?branch=main)
-<!-- badges: end -->
-
 ## Status
 ![](https://img.shields.io/badge/lifecycle-dormant-blue.svg)
 
