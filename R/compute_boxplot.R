@@ -72,14 +72,17 @@ compute_boxplot.ggvis <- function(x, var = NULL, coef = 1.5) {
 
 compute_boxplot_outliers <- function(x) UseMethod("compute_boxplot_outliers")
 
+#' @export
 compute_boxplot_outliers.grouped_df <- function(x) {
   dplyr::do(x, compute_boxplot_outliers(.))
 }
 
+#' @export
 compute_boxplot_outliers.data.frame <- function(x) {
   data.frame(value_ = unlist(x$outliers_))
 }
 
+#' @export
 compute_boxplot_outliers.ggvis <- function(x) {
   register_computation(x, args = NULL, "boxplot_outliers", function(data, args) {
     output <- compute_boxplot_outliers(data)
