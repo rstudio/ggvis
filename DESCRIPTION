@@ -2,9 +2,9 @@ Package: ggvis
 Title: Interactive Grammar of Graphics
 Version: 0.4.8
 Authors@R: c(
-    person("Winston", "Chang", , "winston@rstudio.com", role = c("aut", "cre")),
-    person("Hadley", "Wickham", , "hadley@rstudio.com", role = "aut"),
-    person(, "RStudio", role = "cph"),
+    person("Hadley", "Wickham", , "hadley@posit.co", role = c("aut", "cre")),
+    person("Winston", "Chang", , "winston@posit.co", role = "aut"),
+    person(, "Posit", role = "cph"),
     person(, "jQuery Foundation", role = "cph",
            comment = "jQuery library and jQuery UI library"),
     person(, "jQuery contributors", role = c("ctb", "cph"),
