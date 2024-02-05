@@ -1,6 +1,6 @@
 Package: ggvis
 Title: Interactive Grammar of Graphics
-Version: 0.4.8
+Version: 0.4.9
 Authors@R: c(
     person("Hadley", "Wickham", , "hadley@posit.co", role = c("aut", "cre")),
     person("Winston", "Chang", , "winston@posit.co", role = "aut"),
