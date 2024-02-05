@@ -1,3 +1,7 @@
+# ggvis (0.4.9)
+
+* Fixes for R CMD check.
+
 # ggvis (0.4.8)
 
 * Fix signatures of some S3 methods.
