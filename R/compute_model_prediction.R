@@ -15,7 +15,7 @@
 #'   returning predictions with \code{\link{predict}}. If not supplied, will use
 #'   \code{\link{loess}} for <= 1000 points, otherwise it will use
 #'   \code{\link[mgcv]{gam}}. Other modelling functions that will work include
-#'   \code{\link{lm}}, \code{\link{glm}} and \code{\link[MASS]{rlm}}.
+#'   \code{\link{lm}}, \code{\link{glm}}, \code{\link[quantreg]{rq}}, and \code{\link[MASS]{rlm}}.
 #' @param formula Formula passed to modelling function. Can use any variables
 #'   from data.
 #' @param se include standard errors in output? Requires appropriate method of
@@ -241,6 +241,36 @@ pred_grid.lm <- function(model, data, domain = NULL, n = 80, se = FALSE,
   }
 }
 
+#' @export
+pred_grid.rq <- function(model, data, domain = NULL, n = 80, se = FALSE,
+                         level = 0.95) {
+  x_var <- get_predict_vars(terms(model))
+  if (length(x_var) > 1) {
+    stop("Only know how to make grid for one variable", call. = FALSE)
+  }
+
+  x_rng <- domain %||% range(data[[x_var]], na.rm = TRUE)
+  x_grid <- seq(x_rng[1], x_rng[2], length = n)
+  grid <- setNames(data.frame(x_grid), x_var)
+
+  # Much like `pred_grid.lm` but *do not* pass `se` to `predict.rq` here
+  resp <- predict(model, newdata = grid,
+                  level = level, interval = if(se) "confidence" else "none")
+
+  if (!se) {
+    data.frame(
+      pred_ = x_grid,
+      resp_ = as.vector(resp)
+    )
+  } else {
+    data.frame(
+      pred_ = x_grid,
+      resp_ = resp[, "fit"],
+      resp_lwr_ = resp[, "lower"],
+      resp_upr_ = resp[, "higher"]
+    )
+  }
+}
 
 # Given a formula object, return a character vector of predictor variables
 get_predict_vars <- function(f) {
