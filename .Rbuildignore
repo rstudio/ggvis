@@ -11,3 +11,4 @@ bench
 ^CRAN-RELEASE$
 ^codecov\.yml$
 ^CRAN-SUBMISSION$
+^demo$
